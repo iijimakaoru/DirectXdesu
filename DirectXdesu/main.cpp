@@ -86,7 +86,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	IDXGISwapChain4* swapchain = nullptr;
 	ID3D12CommandAllocator* cmdAllocater = nullptr;
 	ID3D12GraphicsCommandList* cmdList = nullptr;
-	ID3D12CommandQueue* commandQueue = nullptr;
+	ID3D12CommandQueue* cmdQueue = nullptr;
 	ID3D12DescriptorHeap* rtvHeap = nullptr;
 
 	// DXGIファクトリーの生成
@@ -168,7 +168,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	// コマンドキューの設定
 	D3D12_COMMAND_QUEUE_DESC cmdQueueDesc{};
 	// コマンドキューを生成
-	result = dev->CreateCommandQueue(&cmdQueueDesc, IID_PPV_ARGS(&commandQueue));
+	result = dev->CreateCommandQueue(&cmdQueueDesc, IID_PPV_ARGS(&cmdQueue));
 	assert(SUCCEEDED(result));
 #pragma endregion
 
@@ -185,7 +185,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	swapChainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 	// スワップチェーンの生成
 	result = dxgiFactory->CreateSwapChainForHwnd(
-		commandQueue, handle, &swapChainDesc, nullptr, nullptr,
+		cmdQueue, handle, &swapChainDesc, nullptr, nullptr,
 		(IDXGISwapChain1**)&swapchain);
 	assert(SUCCEEDED(result));
 #pragma endregion
@@ -233,27 +233,6 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	result = dev->CreateFence(fenceVal, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence));
 #pragma endregion
 
-#pragma region リソースバリア
-	// バックバッファの番号を取得
-	UINT bbIndex = swapchain->GetCurrentBackBufferIndex();
-
-	// 1.リソースバリアで書き込み可能に変更
-	D3D12_RESOURCE_BARRIER barrierDesc{};
-	barrierDesc.Transition.pResource = backBuffers[bbIndex];
-	barrierDesc.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
-	barrierDesc.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
-	cmdList->ResourceBarrier(1, &barrierDesc);
-#pragma endregion
-
-#pragma region 描画先
-	// 2. 描画先の変更
-	// レンダーターゲートビューのハンドルを取得
-	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = rtvHeap->GetCPUDescriptorHandleForHeapStart();
-	rtvHandle.ptr += bbIndex * dev->GetDescriptorHandleIncrementSize(rtvHeapDesc.Type);
-	cmdList->OMSetRenderTargets(1, &rtvHandle, false, nullptr);
-#pragma endregion
-
-
 	// ウィンドウ表示
 	// ゲームループ
 	while (true)
@@ -268,10 +247,48 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 		{
 			break;
 		}
+#pragma region リソースバリア
+		// バックバッファの番号を取得
+		UINT bbIndex = swapchain->GetCurrentBackBufferIndex();
+
+		// 1.リソースバリアで書き込み可能に変更
+		D3D12_RESOURCE_BARRIER barrierDesc{};
+		barrierDesc.Transition.pResource = backBuffers[bbIndex];
+		barrierDesc.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
+		barrierDesc.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
+		cmdList->ResourceBarrier(1, &barrierDesc);
+#pragma endregion
+
+#pragma region 描画先
+		// 2. 描画先の変更
+		// レンダーターゲートビューのハンドルを取得
+		D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = rtvHeap->GetCPUDescriptorHandleForHeapStart();
+		rtvHandle.ptr += bbIndex * dev->GetDescriptorHandleIncrementSize(rtvHeapDesc.Type);
+		cmdList->OMSetRenderTargets(1, &rtvHandle, false, nullptr);
+#pragma endregion
+
+#pragma region 画面クリア
+		// 3. 画面クリア
+		FLOAT clearColor[] = { 0.1f,0.25f,0.5f,0.0f };
+		cmdList->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
+#pragma endregion
+
+#pragma region 描画
+		// 描画コマンドここから
+		// 描画コマンドここまで
+#pragma endregion
+
+#pragma region リソースバリアを戻す
+		barrierDesc.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
+		barrierDesc.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
+		cmdList->ResourceBarrier(1, &barrierDesc);
+#pragma endregion
 	}
 
 	// ウィンドウクラスを登録解除
 	UnregisterClass(window.lpszClassName, window.hInstance);
+
+
 	//ShowWindow(win->Get(), SW_SHOW);
 
 	//while (msg.message != WM_QUIT)

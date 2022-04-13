@@ -30,6 +30,15 @@ LRESULT WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	_In_ LPSTR lpCmdLine, _In_ int nCmdShow)
 {
+#ifdef DEBUG
+	// デバッグレイヤーをオンに
+	ID3D12Ddebug* debugController;
+	if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&debugController))))
+	{
+		debugController->EnableDebugLayer();
+	}
+#endif
+
 	// 変数
 #pragma region ウィンドウ
 	// ウィンドウサイズ
@@ -66,10 +75,9 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 		nullptr);
 	// ウィンドウを表示状態にする
 	ShowWindow(handle, SW_SHOW);
-#pragma endregion
-
 	// メッセージ格納用構造体
 	MSG msg{};
+#pragma endregion
 
 	//Window* win = new Window();
 	HRESULT result;
@@ -105,6 +113,15 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 			tmpAdapter = adapters[i];
 			break;
 		}
+	}
+
+	// パフォーマンスが高いものから順に、全てのアダプターを列挙する
+	for (UINT i = 0; dxgiFactory->EnumAdapterByGpuPreference(i,
+		DXGI_GPU_PREFERENCE_HIGH_PERFORMANCE,
+		IID_PPV_ARGS(&tmpAdapter)) != DXGI_ERROR_NOT_FOUND; i++)
+	{
+		// 動的配列に追加
+		adapters.push_back(tmpAdapter);
 	}
 #pragma endregion
 
@@ -201,20 +218,27 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 		// レンダーターゲートビューの設定
 		D3D12_RENDER_TARGET_VIEW_DESC rtvDesc{};
 		// シェーダーの計算結果をSKGBに変換して書き込む
+		rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+		rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
 		// レンダーターゲートビューの生成
+		dev->CreateRenderTargetView(backBuffers[i], &rtvDesc, rtvHandle);
 	}
 #pragma endregion
 
+#pragma region フェンス
+	// フェンスの生成
+	ID3D12Fence* fence = nullptr;
+	UINT64 fenceVal = 0;
 
+	result = dev->CreateFence(fenceVal, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence));
+#pragma endregion
 
-	// パフォーマンスが高いものから順に、全てのアダプターを列挙する
-	for (UINT i = 0; dxgiFactory->EnumAdapterByGpuPreference(i,
-		DXGI_GPU_PREFERENCE_HIGH_PERFORMANCE,
-		IID_PPV_ARGS(&tmpAdapter)) != DXGI_ERROR_NOT_FOUND; i++)
-	{
-		// 動的配列に追加
-		adapters.push_back(tmpAdapter);
-	}
+#pragma region リソースバリア
+	// バックバッファの番号を取得
+
+	// 1.リソースバリアで書き込み可能に変更
+#pragma endregion
+
 
 	// ウィンドウ表示
 	// ゲームループ

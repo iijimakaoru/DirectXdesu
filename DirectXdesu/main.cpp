@@ -235,8 +235,22 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 
 #pragma region リソースバリア
 	// バックバッファの番号を取得
+	UINT bbIndex = swapchain->GetCurrentBackBufferIndex();
 
 	// 1.リソースバリアで書き込み可能に変更
+	D3D12_RESOURCE_BARRIER barrierDesc{};
+	barrierDesc.Transition.pResource = backBuffers[bbIndex];
+	barrierDesc.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
+	barrierDesc.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
+	cmdList->ResourceBarrier(1, &barrierDesc);
+#pragma endregion
+
+#pragma region 描画先
+	// 2. 描画先の変更
+	// レンダーターゲートビューのハンドルを取得
+	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = rtvHeap->GetCPUDescriptorHandleForHeapStart();
+	rtvHandle.ptr += bbIndex * dev->GetDescriptorHandleIncrementSize(rtvHeapDesc.Type);
+	cmdList->OMSetRenderTargets(1, &rtvHandle, false, nullptr);
 #pragma endregion
 
 

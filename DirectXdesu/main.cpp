@@ -7,11 +7,14 @@
 #include <d3d12.h>
 #include <dxgi1_6.h>
 #include <cassert>
+#include <DirectXMath.h>
 #ifdef DEBUG
 #include <iostream>
 #endif
 #pragma comment(lib, "d3d12.lib")
 #pragma comment(lib, "dxgi.lib")
+
+using namespace DirectX;
 
 // ウィンドウプロシージャ
 LRESULT WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
@@ -79,6 +82,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	MSG msg{};
 #pragma endregion
 
+#pragma region DirectX初期化
 	HRESULT result;
 	ID3D12Device* dev = nullptr;
 	IDXGIFactory6* dxgiFactory = nullptr;
@@ -231,6 +235,75 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 
 	result = dev->CreateFence(fenceVal, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence));
 #pragma endregion
+#pragma endregion
+
+#pragma region 描画初期化
+
+#pragma region 頂点データ
+	// 頂点データ
+	XMFLOAT3 vertices[] = {
+		{-0.5f,-0.5f,0.0f},// 左下
+		{-0.5f,+0.5f,0.0f},// 左上
+		{+0.5f,-0.5f,0.0f} // 右下
+	};
+	// 頂点データ全体のサイズ = 頂点データ一つ分のサイズ * 頂点データの要素数
+	UINT sizeVB = static_cast<UINT>(sizeof(XMFLOAT3) * _countof(vertices));
+#pragma endregion
+
+#pragma region 頂点バッファ
+#pragma region 頂点バッファの確保
+	// 頂点バッファの設定
+	D3D12_HEAP_PROPERTIES heapProp{};
+	heapProp.Type = D3D12_HEAP_TYPE_UPLOAD;
+	// リソース設定
+	D3D12_RESOURCE_DESC resDesc{};
+	resDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
+	resDesc.Width = sizeVB;
+	resDesc.Height = 1;
+	resDesc.DepthOrArraySize = 1;
+	resDesc.MipLevels = 1;
+	resDesc.SampleDesc.Count = 1;
+	resDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+	// 頂点バッファの生成
+	ID3D12Resource* vertBuff = nullptr;
+	result = dev->CreateCommittedResource(
+		&heapProp,
+		D3D12_HEAP_FLAG_NONE,
+		&resDesc,
+		D3D12_RESOURCE_STATE_GENERIC_READ,
+		nullptr,
+		IID_PPV_ARGS(&vertBuff));
+	assert(SUCCEEDED(result));
+#pragma endregion
+#pragma region 頂点バッファへのデータ転送
+	// GPU上のバッファに対応した仮想メモリを取得
+	XMFLOAT3* vertMap = nullptr;
+	result = vertBuff->Map(0, nullptr, (void**)&vertMap);
+	assert(SUCCEEDED(result));
+	// 全頂点に対して
+	for (int i = 0; i < _countof(vertices); i++)
+	{
+		vertMap[i] = vertices[i];
+	}
+	// 繋がりを解除
+	vertBuff->Unmap(0, nullptr);
+#pragma endregion
+
+#pragma region 頂点バッファビューの作成
+	// 頂点バッファビューの作成
+	D3D12_VERTEX_BUFFER_VIEW vbView{};
+	// GPU仮想アドレス
+	vbView.BufferLocation = vertBuff->GetGPUVirtualAddress();
+	// 頂点バッファのサイズ
+	vbView.SizeInBytes = sizeVB;
+	// 頂点一つ分のデータサイズ
+	vbView.StrideInBytes = sizeof(XMFLOAT3);
+#pragma endregion	
+#pragma endregion
+
+	
+#pragma endregion
+
 
 	// ウィンドウ表示
 	// ゲームループ

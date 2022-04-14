@@ -79,11 +79,10 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	MSG msg{};
 #pragma endregion
 
-	//Window* win = new Window();
 	HRESULT result;
 	ID3D12Device* dev = nullptr;
 	IDXGIFactory6* dxgiFactory = nullptr;
-	IDXGISwapChain4* swapchain = nullptr;
+	IDXGISwapChain4* swapChain = nullptr;
 	ID3D12CommandAllocator* cmdAllocater = nullptr;
 	ID3D12GraphicsCommandList* cmdList = nullptr;
 	ID3D12CommandQueue* cmdQueue = nullptr;
@@ -186,7 +185,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	// スワップチェーンの生成
 	result = dxgiFactory->CreateSwapChainForHwnd(
 		cmdQueue, handle, &swapChainDesc, nullptr, nullptr,
-		(IDXGISwapChain1**)&swapchain);
+		(IDXGISwapChain1**)&swapChain);
 	assert(SUCCEEDED(result));
 #pragma endregion
 
@@ -210,7 +209,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	for (size_t i = 0; i < backBuffers.size(); i++)
 	{
 		// スワップチェーンからバッファを取得
-		swapchain->GetBuffer((UINT)i, IID_PPV_ARGS(&backBuffers[i]));
+		swapChain->GetBuffer((UINT)i, IID_PPV_ARGS(&backBuffers[i]));
 		// デスクリプタヒープのハンドルを取得
 		D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = rtvHeap->GetCPUDescriptorHandleForHeapStart();
 		// 裏か表かでアドレスがずれる
@@ -249,7 +248,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 		}
 #pragma region リソースバリア
 		// バックバッファの番号を取得
-		UINT bbIndex = swapchain->GetCurrentBackBufferIndex();
+		UINT bbIndex = swapChain->GetCurrentBackBufferIndex();
 
 		// 1.リソースバリアで書き込み可能に変更
 		D3D12_RESOURCE_BARRIER barrierDesc{};
@@ -283,28 +282,42 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 		barrierDesc.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
 		cmdList->ResourceBarrier(1, &barrierDesc);
 #pragma endregion
+
+#pragma region コマンドのフラッシュ
+		// 命令のクローズ
+		result = cmdList->Close();
+		assert(SUCCEEDED(result));
+		// コマンドリストの実行
+		ID3D12CommandList* cmdLists[] = { cmdList };
+		cmdQueue->ExecuteCommandLists(1, cmdLists);
+
+		// 画面に表示するバッファをフリップ(裏表の入れ替え)
+		result = swapChain->Present(1, 0);
+		assert(SUCCEEDED(result));
+#pragma endregion
+
+#pragma region コマンド完了待ち
+		// コマンドの完了を待つ
+		cmdQueue->Signal(fence, ++fenceVal);
+		if (fence->GetCompletedValue() != fenceVal)
+		{
+			HANDLE event = CreateEvent(nullptr, false, false, nullptr);
+			fence->SetEventOnCompletion(fenceVal, event);
+			WaitForSingleObject(event, INFINITE);
+			CloseHandle(event);
+		}
+
+		// キューをクリア
+		result = cmdAllocater->Reset();
+		assert(SUCCEEDED(result));
+		// 再びコマンドを貯める準備
+		result = cmdList->Reset(cmdAllocater, nullptr);
+		assert(SUCCEEDED(result));
+#pragma endregion
 	}
 
 	// ウィンドウクラスを登録解除
 	UnregisterClass(window.lpszClassName, window.hInstance);
-
-
-	//ShowWindow(win->Get(), SW_SHOW);
-
-	//while (msg.message != WM_QUIT)
-	//{
-	//	// 呼び出し側スレッドが所有しているウィンドウに送信されたメッセージの保留されている物を取得
-	//	if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
-	//	{
-	//		// 仮想キーメッセージを文字メッセージに変換
-	//		TranslateMessage(&msg);
-	//		// 1つのウィンドウプロシージャにメッセージを送出する
-	//		DispatchMessage(&msg);
-	//	}
-	//}
-
-	//// ウィンドウクラスの解放
-	//delete win;
 
 	return 0;
 }

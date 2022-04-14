@@ -455,6 +455,40 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 
 #pragma region 描画
 		// 描画コマンドここから
+		// ビューポート設定コマンド
+		D3D12_VIEWPORT viewport{};
+		viewport.Width = window_width;
+		viewport.Height = window_height;
+		viewport.TopLeftX = 0;
+		viewport.TopLeftY = 0;
+		viewport.MinDepth = 0.0f;
+		viewport.MaxDepth = 1.0f;
+
+		// ビューポート設定コマンドをコマンドリストに積む
+		cmdList->RSSetViewports(1, &viewport);
+
+		// シザー矩形
+		D3D12_RECT scissorRect{};
+		scissorRect.left = 0;									// 切り抜き座標左
+		scissorRect.right = scissorRect.left + window_width;	// 切り抜き座標右
+		scissorRect.top = 0;									// 切り抜き座標上
+		scissorRect.bottom = scissorRect.top + window_height;	// 切り抜き座標下
+
+		// シザー矩形設定コマンドをコマンドリストに積む
+		cmdList->RSSetScissorRects(1, &scissorRect);
+
+		// パイプラインステートとルートシグネチャの設定コマンド
+		cmdList->SetPipelineState(pipelineState);
+		cmdList->SetGraphicsRootSignature(rootSignature);
+
+		// プリミティブ形状の設定コマンド
+		cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+		// 頂点バッファビューの設定コマンド
+		cmdList->IASetVertexBuffers(0, 1, &vbView);
+
+		// 描画コマンド
+		cmdList->DrawInstanced(_countof(vertices), 1, 0, 0);
 		// 描画コマンドここまで
 #pragma endregion
 

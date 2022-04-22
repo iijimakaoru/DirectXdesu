@@ -497,14 +497,12 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 		// ‘SƒL[‚Ì“ü—Íó‘Ô‚ðŠ“¾
 		BYTE key[256] = {};
 		keyboad->GetDeviceState(sizeof(key), key);
-		if (key[DIK_SPACE])
-		{
+		if (key[DIK_SPACE]) {
 			bRed = 0.25f;
 			bGreen = 0.1f;
 			bBule = 0.5f;
 		}
-		else
-		{
+		else {
 			bRed = 0.1f;
 			bGreen = 0.25f;
 			bBule = 0.5f;

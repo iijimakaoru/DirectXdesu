@@ -9,12 +9,16 @@
 #include <cassert>
 #include <DirectXMath.h>
 #include <d3dcompiler.h>
+#define DIRECTINPUT_VERSION  0x0800
+#include <dinput.h>
 #ifdef DEBUG
 #include <iostream>
 #endif
 #pragma comment(lib, "d3d12.lib")
 #pragma comment(lib, "dxgi.lib")
 #pragma comment(lib, "d3dcompiler.Lib")
+#pragma comment(lib, "dinput8.lib")
+#pragma comment(lib, "dxguid.lib")
 
 using namespace DirectX;
 
@@ -93,6 +97,9 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	ID3D12GraphicsCommandList* cmdList = nullptr;
 	ID3D12CommandQueue* cmdQueue = nullptr;
 	ID3D12DescriptorHeap* rtvHeap = nullptr;
+	float bRed = 0.1f;
+	float bGreen = 0.25f;
+	float bBule = 0.5f;
 
 	// DXGIファクトリーの生成
 	result = CreateDXGIFactory(IID_PPV_ARGS(&dxgiFactory));
@@ -237,6 +244,30 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 
 	result = dev->CreateFence(fenceVal, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence));
 #pragma endregion
+
+#pragma region DirectInputの初期化
+	IDirectInput8* directInput = nullptr;
+	result = DirectInput8Create(
+		window.hInstance,
+		DIRECTINPUT_VERSION,
+		IID_IDirectInput8,
+		(void**)&directInput,
+		nullptr
+	);
+	assert(SUCCEEDED(result));
+	// キーボードデバイスの生成
+	IDirectInputDevice8* keyboad = nullptr;
+	result = directInput->CreateDevice(GUID_SysKeyboard, &keyboad, NULL);
+	assert(SUCCEEDED(result));
+	// 入力データ形式のセット
+	result = keyboad->SetDataFormat(&c_dfDIKeyboard);
+	assert(SUCCEEDED(result));
+	// 排他制御レベルのセット
+	result = keyboad->SetCooperativeLevel(
+		handle, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE | DISCL_NOWINKEY
+	);
+	assert(SUCCEEDED(result));
+#pragma endregion
 #pragma endregion
 
 #pragma region 描画初期化
@@ -353,9 +384,15 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 
 	// 頂点レイアウト
 	D3D12_INPUT_ELEMENT_DESC inputLayout[] = {
-		{"POSITION",0,DXGI_FORMAT_R32G32B32_FLOAT,0,
-		D3D12_APPEND_ALIGNED_ELEMENT,
-		D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0},
+		{
+			"POSITION",
+			0,
+			DXGI_FORMAT_R32G32B32_FLOAT,
+			0,
+			D3D12_APPEND_ALIGNED_ELEMENT,
+			D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,
+			0
+		},
 	};
 
 	// グラフィックスパイプライン設定
@@ -427,6 +464,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 		{
 			break;
 		}
+
 #pragma region リソースバリア
 		// バックバッファの番号を取得
 		UINT bbIndex = swapChain->GetCurrentBackBufferIndex();
@@ -449,8 +487,28 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 
 #pragma region 画面クリア
 		// 3. 画面クリア
-		FLOAT clearColor[] = { 0.1f,0.25f,0.5f,0.0f };
+		FLOAT clearColor[] = { bRed,bGreen,bBule,0.0f };
 		cmdList->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
+#pragma endregion
+
+#pragma region キーボード
+		// キーボードの情報取得
+		keyboad->Acquire();
+		// 全キーの入力状態を所得
+		BYTE key[256] = {};
+		keyboad->GetDeviceState(sizeof(key), key);
+		if (key[DIK_SPACE])
+		{
+			bRed = 0.25f;
+			bGreen = 0.1f;
+			bBule = 0.5f;
+		}
+		else
+		{
+			bRed = 0.1f;
+			bGreen = 0.25f;
+			bBule = 0.5f;
+		}
 #pragma endregion
 
 #pragma region 描画

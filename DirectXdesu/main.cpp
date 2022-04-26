@@ -3,7 +3,6 @@
 #include<vector>
 #include<string>
 #include "Window.h"
-#include "Std.h"
 #include <d3d12.h>
 #include <dxgi1_6.h>
 #include <cassert>
@@ -22,20 +21,6 @@
 
 using namespace DirectX;
 
-// ウィンドウプロシージャ
-LRESULT WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
-{
-	// ウィンドウが破棄されたとき
-	if (msg == WM_DESTROY)
-	{
-		// osに対してアプリケーション終了を伝える
-		PostQuitMessage(0);
-		return 0;
-	}
-
-	return DefWindowProc(hwnd, msg, wparam, lparam);
-}
-
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	_In_ LPSTR lpCmdLine, _In_ int nCmdShow)
 {
@@ -50,42 +35,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 
 	// 変数
 #pragma region ウィンドウ
-	// ウィンドウサイズ
-	const int window_width = 1280;
-	const int window_height = 720;
-
-	// ウィンドウクラスの設定
-	WNDCLASSEX window{};
-	window.cbSize = sizeof(WNDCLASSEX);
-	window.lpfnWndProc = (WNDPROC)WindowProc;
-	window.lpszClassName = L"DirectX12";
-	window.lpszMenuName = L"DirectX12";
-	window.hInstance = GetModuleHandle(nullptr);
-	window.hCursor = LoadCursor(NULL, IDC_ARROW);
-
-	// ウィンドウクラスをOSに登録する
-	RegisterClassEx(&window);
-	// ウィンドウサイズ
-	RECT rect = { 0,0,window_width,window_height };
-	// 自分でサイズを調整する
-	AdjustWindowRect(&rect, WS_OVERLAPPEDWINDOW, false);
-	// ウィンドウ作成
-	HWND handle = CreateWindow(
-		window.lpszClassName,
-		window.lpszMenuName,
-		WS_OVERLAPPEDWINDOW,
-		CW_USEDEFAULT,
-		CW_USEDEFAULT,
-		(rect.right - rect.left),
-		(rect.bottom - rect.top),
-		nullptr,
-		nullptr,
-		window.hInstance,
-		nullptr);
-	// ウィンドウを表示状態にする
-	ShowWindow(handle, SW_SHOW);
-	// メッセージ格納用構造体
-	MSG msg{};
+	Window* win = new Window;
 #pragma endregion
 
 #pragma region DirectX初期化
@@ -197,7 +147,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	swapChainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 	// スワップチェーンの生成
 	result = dxgiFactory->CreateSwapChainForHwnd(
-		cmdQueue, handle, &swapChainDesc, nullptr, nullptr,
+		cmdQueue, win->handle, &swapChainDesc, nullptr, nullptr,
 		(IDXGISwapChain1**)&swapChain);
 	assert(SUCCEEDED(result));
 #pragma endregion
@@ -248,7 +198,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 #pragma region DirectInputの初期化
 	IDirectInput8* directInput = nullptr;
 	result = DirectInput8Create(
-		window.hInstance,
+		win->window.hInstance,
 		DIRECTINPUT_VERSION,
 		IID_IDirectInput8,
 		(void**)&directInput,
@@ -264,7 +214,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	assert(SUCCEEDED(result));
 	// 排他制御レベルのセット
 	result = keyboad->SetCooperativeLevel(
-		handle, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE | DISCL_NOWINKEY
+		win->handle, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE | DISCL_NOWINKEY
 	);
 	assert(SUCCEEDED(result));
 #pragma endregion
@@ -454,16 +404,15 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	// ゲームループ
 	while (true)
 	{
-		if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
-		{
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
-		}
 
-		if (msg.message == WM_QUIT)
+#pragma region ウィンドウメッセージ
+		win->Update();
+
+		if (win->breakFlag)
 		{
 			break;
 		}
+#pragma endregion
 
 #pragma region リソースバリア
 		// バックバッファの番号を取得
@@ -496,11 +445,18 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 		keyboad->Acquire();
 		// 全キーの入力状態を所得
 		BYTE key[256] = {};
+		BYTE oldkey[256] = {};
 		keyboad->GetDeviceState(sizeof(key), key);
+		keyboad->GetDeviceState(sizeof(oldkey), oldkey);
+		for (int i = 0; i < 256; ++i)
+		{
+			oldkey[i] = key[i];
+		}
+
 		if (key[DIK_SPACE]) {
-			bRed = 0.25f;
-			bGreen = 0.1f;
-			bBule = 0.5f;
+			bRed = 1.0f;
+			bGreen = 0.7f;
+			bBule = 1.0f;
 		}
 		else {
 			bRed = 0.1f;
@@ -513,12 +469,15 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 		// 描画コマンドここから
 		// ビューポート設定コマンド
 		D3D12_VIEWPORT viewport{};
-		viewport.Width = window_width;
-		viewport.Height = window_height;
-		viewport.TopLeftX = 0;
-		viewport.TopLeftY = 0;
-		viewport.MinDepth = 0.0f;
-		viewport.MaxDepth = 1.0f;
+		/*D3D12_VIEWPORT viewport{};
+		D3D12_VIEWPORT viewport{};
+		D3D12_VIEWPORT viewport{};*/
+		viewport.Width = win->window_width - 500;   // 横幅
+		viewport.Height = win->window_height - 500; // 縦幅
+		viewport.TopLeftX = 0;                 // 左上x
+		viewport.TopLeftY = 0;				   // 左上y
+		viewport.MinDepth = 0.0f;			   // 最小深度
+		viewport.MaxDepth = 1.0f;			   // 最大深度
 
 		// ビューポート設定コマンドをコマンドリストに積む
 		cmdList->RSSetViewports(1, &viewport);
@@ -526,9 +485,9 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 		// シザー矩形
 		D3D12_RECT scissorRect{};
 		scissorRect.left = 0;									// 切り抜き座標左
-		scissorRect.right = scissorRect.left + window_width;	// 切り抜き座標右
+		scissorRect.right = scissorRect.left + win->window_width;	// 切り抜き座標右
 		scissorRect.top = 0;									// 切り抜き座標上
-		scissorRect.bottom = scissorRect.top + window_height;	// 切り抜き座標下
+		scissorRect.bottom = scissorRect.top +win-> window_height;	// 切り抜き座標下
 
 		// シザー矩形設定コマンドをコマンドリストに積む
 		cmdList->RSSetScissorRects(1, &scissorRect);
@@ -586,9 +545,6 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 		assert(SUCCEEDED(result));
 #pragma endregion
 	}
-
-	// ウィンドウクラスを登録解除
-	UnregisterClass(window.lpszClassName, window.hInstance);
 
 	return 0;
 }

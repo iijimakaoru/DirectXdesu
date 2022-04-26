@@ -1,26 +1,27 @@
 #pragma once
 #include <Windows.h>
-#include "Std.h"
 
 class Window
 {
 public:
-	// コンストラクタ
 	Window();
-	// デストラクタ
 	~Window();
-	// ウィンドウハンドル
-	HWND Get() const
-	{
-		return handle;
-	}
+	void Update();
+	static LRESULT WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
 
-private:
-	static LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
-	void CreateWnd();
+	// ウィンドウサイズ
+	const int window_width = 1280;
+	const int window_height = 720;
+	bool breakFlag = false;
 
-	WNDCLASSEX window;
-	RECT rect;
+	// ウィンドウクラスの設定
+	WNDCLASSEX window{};
+
+	// ウィンドウサイズ
+	RECT rect = { 0,0,window_width,window_height };
+	// メッセージ格納用構造体
+	MSG msg{};
+
 	HWND handle;
 };
 

@@ -143,7 +143,6 @@
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="std.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <ItemGroup>

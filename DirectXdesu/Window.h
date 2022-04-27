@@ -16,7 +16,6 @@ public:
 
 	// ウィンドウクラスの設定
 	WNDCLASSEX window{};
-
 	// ウィンドウサイズ
 	RECT rect = { 0,0,window_width,window_height };
 	// メッセージ格納用構造体

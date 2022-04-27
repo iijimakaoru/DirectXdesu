@@ -7,17 +7,13 @@
 #include <string>
 #include"Window.h"
 
-#pragma region using namespace
-
-using namespace std;
-
-#pragma endregion using namespace
+#pragma comment(lib, "d3d12.lib")
+#pragma comment(lib, "dxgi.lib")
 
 class Dx12
 {
 public:
 	Dx12(Window window);
-	~Dx12();
 	void SetDXGIFactory();
 	void SetAdapter();
 	void SetDevice(IDXGIAdapter4* tmpAdapter);
@@ -28,7 +24,6 @@ public:
 	void SetBackBuffer();
 	void SetFence();
 	
-	// 基礎変数
 	HRESULT result;
 	ID3D12Device* dev = nullptr;
 	IDXGIFactory6* dxgiFactory = nullptr;
@@ -37,6 +32,9 @@ public:
 	ID3D12GraphicsCommandList* cmdList = nullptr;
 	ID3D12CommandQueue* cmdQueue = nullptr;
 	ID3D12DescriptorHeap* rtvHeap = nullptr;
+	float bRed = 0.1f;
+	float bGreen = 0.25f;
+	float bBule = 0.5f;
 
 	// 対応レベルの配列
 	D3D_FEATURE_LEVEL levels[4] =
@@ -52,19 +50,17 @@ public:
 	// コマンドキューの設定
 	D3D12_COMMAND_QUEUE_DESC cmdQueueDesc{};
 
-
 	// スワップチェーンの設定
 	DXGI_SWAP_CHAIN_DESC1 swapChainDesc{};
 
 	// デスクリプタヒープの設定
 	D3D12_DESCRIPTOR_HEAP_DESC rtvHeapDesc{};
 
+	// バックバッファ
+	std::vector<ID3D12Resource*> backBuffers;
+
 	// フェンスの生成
 	ID3D12Fence* fence = nullptr;
 	UINT64 fenceVal = 0;
-
-	float bRed;
-	float bGreen;
-	float bBule;
 };
 

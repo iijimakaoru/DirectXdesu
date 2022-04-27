@@ -4,6 +4,22 @@ Dx12::Dx12(Window window) {
 	bRed = 0.1f;
 	bGreen = 0.25f;
 	bBule = 0.5f;
+
+	SetDXGIFactory();
+
+	SetAdapter();
+
+	SetCommandList();
+
+	SetCommandQueue();
+
+	SetSwapChain(window);
+
+	SetDescriptor();
+
+	SetBackBuffer();
+
+	SetFence();
 }
 
 void Dx12::SetDXGIFactory() {
@@ -13,11 +29,19 @@ void Dx12::SetDXGIFactory() {
 }
 
 void Dx12::SetAdapter() {
-#pragma region アダプタ
 	// アダプターの列挙用
 	std::vector<IDXGIAdapter4*> adapters;
 	// ここに特定のアダプターオブジェクトが入る
 	IDXGIAdapter4* tmpAdapter = nullptr;
+
+	// パフォーマンスが高いものから順に、全てのアダプターを列挙する
+	for (UINT i = 0; dxgiFactory->EnumAdapterByGpuPreference(i,
+		DXGI_GPU_PREFERENCE_HIGH_PERFORMANCE,
+		IID_PPV_ARGS(&tmpAdapter)) != DXGI_ERROR_NOT_FOUND; i++)
+	{
+		// 動的配列に追加
+		adapters.push_back(tmpAdapter);
+	}
 
 	// 妥当なアダプタを選別する
 	for (size_t i = 0; i < adapters.size(); i++)
@@ -35,15 +59,9 @@ void Dx12::SetAdapter() {
 		}
 	}
 
-	// パフォーマンスが高いものから順に、全てのアダプターを列挙する
-	for (UINT i = 0; dxgiFactory->EnumAdapterByGpuPreference(i,
-		DXGI_GPU_PREFERENCE_HIGH_PERFORMANCE,
-		IID_PPV_ARGS(&tmpAdapter)) != DXGI_ERROR_NOT_FOUND; i++)
-	{
-		// 動的配列に追加
-		adapters.push_back(tmpAdapter);
-	}
-#pragma endregion
+	SetDevice(tmpAdapter);
+
+	tmpAdapter->Release();
 }
 
 void Dx12::SetDevice(IDXGIAdapter4* tmpAdapter) {
@@ -60,7 +78,6 @@ void Dx12::SetDevice(IDXGIAdapter4* tmpAdapter) {
 }
 
 void Dx12::SetCommandList() {
-#pragma region コマンドリスト
 	// コマンドアロケーター生成
 	result = dev->CreateCommandAllocator(
 		D3D12_COMMAND_LIST_TYPE_DIRECT,
@@ -73,38 +90,28 @@ void Dx12::SetCommandList() {
 		cmdAllocater, nullptr,
 		IID_PPV_ARGS(&cmdList));
 	assert(SUCCEEDED(result));
-#pragma endregion
 }
 
 void Dx12::SetCommandQueue() {
-#pragma region コマンドキュー
 	// コマンドキューを生成
 	result = dev->CreateCommandQueue(&cmdQueueDesc, IID_PPV_ARGS(&cmdQueue));
 	assert(SUCCEEDED(result));
-#pragma endregion
 }
 
 void Dx12::SetSwapChain(Window window) {
-#pragma region スワップチェーン
-	// スワップチェーンの生成
-	swapChainDesc.Width = 1280;
-	swapChainDesc.Height = 720;
+	swapChainDesc.Width = window.window_width;
+	swapChainDesc.Height = window.window_height;
 	swapChainDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 	swapChainDesc.SampleDesc.Count = 1;
 	swapChainDesc.BufferUsage = DXGI_USAGE_BACK_BUFFER;
 	swapChainDesc.BufferCount = 2;
 	swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
 	swapChainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
-
+	// スワップチェーンの生成
 	result = dxgiFactory->CreateSwapChainForHwnd(
-		cmdQueue,
-		window.handle,
-		&swapChainDesc,
-		nullptr,
-		nullptr,
+		cmdQueue, window.handle, &swapChainDesc, nullptr, nullptr,
 		(IDXGISwapChain1**)&swapChain);
 	assert(SUCCEEDED(result));
-#pragma endregion
 }
 
 void Dx12::SetDescriptor() {
@@ -115,11 +122,7 @@ void Dx12::SetDescriptor() {
 }
 
 void Dx12::SetBackBuffer() {
-	// バックバッファ
-	std::vector<ID3D12Resource*> backBuffers;
 	backBuffers.resize(swapChainDesc.BufferCount);
-
-#pragma region レンダーターゲートビュー
 	// スワップチェーンの全てのバッファについて処理する
 	for (size_t i = 0; i < backBuffers.size(); i++)
 	{
@@ -137,7 +140,6 @@ void Dx12::SetBackBuffer() {
 		// レンダーターゲートビューの生成
 		dev->CreateRenderTargetView(backBuffers[i], &rtvDesc, rtvHandle);
 	}
-#pragma endregion
 }
 
 void Dx12::SetFence() {

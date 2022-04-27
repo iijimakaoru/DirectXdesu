@@ -286,19 +286,23 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 #pragma region 描画
 		// 描画コマンドここから
 		// ビューポート設定コマンド
-		D3D12_VIEWPORT viewport{};
-		/*D3D12_VIEWPORT viewport{};
-		D3D12_VIEWPORT viewport{};
-		D3D12_VIEWPORT viewport{};*/
-		viewport.Width = win.window_width - 500;   // 横幅
-		viewport.Height = win.window_height - 500; // 縦幅
-		viewport.TopLeftX = 0;                 // 左上x
-		viewport.TopLeftY = 0;				   // 左上y
-		viewport.MinDepth = 0.0f;			   // 最小深度
-		viewport.MaxDepth = 1.0f;			   // 最大深度
+		D3D12_VIEWPORT viewport[3]{};
+		viewport[0].Width = win.window_width - 500;   // 横幅
+		viewport[0].Height = win.window_height - 500; // 縦幅
+		viewport[0].TopLeftX = 0;                 // 左上x
+		viewport[0].TopLeftY = 0;				   // 左上y
+		viewport[0].MinDepth = 0.0f;			   // 最小深度
+		viewport[0].MaxDepth = 1.0f;			   // 最大深度
+		viewport[1].Width = win.window_width + 500;
+		viewport[1].Height = win.window_height - 500;
+		viewport[1].TopLeftX = 0;
+		viewport[1].TopLeftY = 0;
+		viewport[1].MinDepth = 0.0f;
+		viewport[1].MaxDepth = 1.0f;
 
 		// ビューポート設定コマンドをコマンドリストに積む
-		dx.cmdList->RSSetViewports(1, &viewport);
+		dx.cmdList->RSSetViewports(1, &viewport[0]);
+		//dx.cmdList->RSSetViewports(2, &viewport[1]);
 
 		// シザー矩形
 		D3D12_RECT scissorRect{};
@@ -363,6 +367,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 		dx.result = dx.cmdList->Reset(dx.cmdAllocater, nullptr);
 		assert(SUCCEEDED(dx.result));
 #pragma endregion
+
 	}
 
 	return 0;

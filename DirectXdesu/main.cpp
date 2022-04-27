@@ -286,46 +286,62 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 #pragma region 描画
 		// 描画コマンドここから
 		// ビューポート設定コマンド
-		D3D12_VIEWPORT viewport[3]{};
-		viewport[0].Width = win.window_width - 500;   // 横幅
-		viewport[0].Height = win.window_height - 500; // 縦幅
+		D3D12_VIEWPORT viewport[4]{};
+		viewport[0].Width = 1000;   // 横幅
+		viewport[0].Height = 400; // 縦幅
 		viewport[0].TopLeftX = 0;                 // 左上x
 		viewport[0].TopLeftY = 0;				   // 左上y
 		viewport[0].MinDepth = 0.0f;			   // 最小深度
 		viewport[0].MaxDepth = 1.0f;			   // 最大深度
-		viewport[1].Width = win.window_width + 500;
-		viewport[1].Height = win.window_height - 500;
-		viewport[1].TopLeftX = 0;
+
+		viewport[1].Width = 100;
+		viewport[1].Height = 400;
+		viewport[1].TopLeftX = 1000;
 		viewport[1].TopLeftY = 0;
 		viewport[1].MinDepth = 0.0f;
 		viewport[1].MaxDepth = 1.0f;
 
+		viewport[2].Width = 800;
+		viewport[2].Height = 500;
+		viewport[2].TopLeftX = 0;
+		viewport[2].TopLeftY = 300;
+		viewport[2].MinDepth = 0.0f;
+		viewport[2].MaxDepth = 1.0f;
+
+		viewport[3].Width = 500;
+		viewport[3].Height = 400;
+		viewport[3].TopLeftX = 600;
+		viewport[3].TopLeftY = 300;
+		viewport[3].MinDepth = 0.0f;
+		viewport[3].MaxDepth = 1.0f;
+
 		// ビューポート設定コマンドをコマンドリストに積む
-		dx.cmdList->RSSetViewports(1, &viewport[0]);
-		//dx.cmdList->RSSetViewports(2, &viewport[1]);
+		for (int i = 0; i < 4; i++){
+			dx.cmdList->RSSetViewports(1, &viewport[i]);
 
-		// シザー矩形
-		D3D12_RECT scissorRect{};
-		scissorRect.left = 0;									// 切り抜き座標左
-		scissorRect.right = scissorRect.left + win.window_width;	// 切り抜き座標右
-		scissorRect.top = 0;									// 切り抜き座標上
-		scissorRect.bottom = scissorRect.top + win.window_height;	// 切り抜き座標下
+			// シザー矩形
+			D3D12_RECT scissorRect{};
+			scissorRect.left = 0;									// 切り抜き座標左
+			scissorRect.right = scissorRect.left + win.window_width;	// 切り抜き座標右
+			scissorRect.top = 0;									// 切り抜き座標上
+			scissorRect.bottom = scissorRect.top + win.window_height;	// 切り抜き座標下
 
-		// シザー矩形設定コマンドをコマンドリストに積む
-		dx.cmdList->RSSetScissorRects(1, &scissorRect);
+			// シザー矩形設定コマンドをコマンドリストに積む
+			dx.cmdList->RSSetScissorRects(1, &scissorRect);
 
-		// パイプラインステートとルートシグネチャの設定コマンド
-		dx.cmdList->SetPipelineState(pipelineState);
-		dx.cmdList->SetGraphicsRootSignature(rootSignature);
+			// パイプラインステートとルートシグネチャの設定コマンド
+			dx.cmdList->SetPipelineState(pipelineState);
+			dx.cmdList->SetGraphicsRootSignature(rootSignature);
 
-		// プリミティブ形状の設定コマンド
-		dx.cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+			// プリミティブ形状の設定コマンド
+			dx.cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-		// 頂点バッファビューの設定コマンド
-		dx.cmdList->IASetVertexBuffers(0, 1, &vbView);
+			// 頂点バッファビューの設定コマンド
+			dx.cmdList->IASetVertexBuffers(0, 1, &vbView);
 
-		// 描画コマンド
-		dx.cmdList->DrawInstanced(_countof(vertices), 1, 0, 0);
+			// 描画コマンド
+			dx.cmdList->DrawInstanced(_countof(vertices), 1, 0, 0);
+		}
 		// 描画コマンドここまで
 #pragma endregion
 

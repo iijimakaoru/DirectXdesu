@@ -3,7 +3,7 @@
 #include<vector>
 #include<string>
 #include "Window.h"
-#include "Dx12.h"
+#include "DirectInit.h"
 #include "Input.h"
 #include <d3d12.h>
 #include <dxgi1_6.h>
@@ -40,7 +40,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 #pragma endregion
 
 #pragma region DirectX初期化
-	Dx12 dx(win);
+	DirectInit dx(win);
 #pragma endregion
 
 #pragma region DirectInputの初期化
@@ -173,36 +173,39 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	};
 
 	// グラフィックスパイプライン設定
-	D3D12_GRAPHICS_PIPELINE_STATE_DESC pipelineDesc{};
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC pipelineDesc[2]{};
 
-	// シェーダーの設定
-	pipelineDesc.VS.pShaderBytecode = vsBlob->GetBufferPointer();
-	pipelineDesc.VS.BytecodeLength = vsBlob->GetBufferSize();
-	pipelineDesc.PS.pShaderBytecode = psBlob->GetBufferPointer();
-	pipelineDesc.PS.BytecodeLength = psBlob->GetBufferSize();
+	for (int i = 0; i < 2; i++) {
+		// シェーダーの設定
+		pipelineDesc[i].VS.pShaderBytecode = vsBlob->GetBufferPointer();
+		pipelineDesc[i].VS.BytecodeLength = vsBlob->GetBufferSize();
+		pipelineDesc[i].PS.pShaderBytecode = psBlob->GetBufferPointer();
+		pipelineDesc[i].PS.BytecodeLength = psBlob->GetBufferSize();
 
-	// サンプルマスクの設定
-	pipelineDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
+		// サンプルマスクの設定
+		pipelineDesc[i].SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
 
-	// ラスタライザの設定
-	pipelineDesc.RasterizerState.CullMode = D3D12_CULL_MODE_NONE;
-	pipelineDesc.RasterizerState.FillMode = D3D12_FILL_MODE_SOLID;
-	pipelineDesc.RasterizerState.DepthClipEnable = true;
+		// ラスタライザの設定
+		pipelineDesc[i].RasterizerState.CullMode = D3D12_CULL_MODE_NONE;
+		pipelineDesc[i].RasterizerState.DepthClipEnable = true;
 
-	// ブレンドステート
-	pipelineDesc.BlendState.RenderTarget[0].RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
+		// ブレンドステート
+		pipelineDesc[i].BlendState.RenderTarget[0].RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
 
-	// 頂点レイアウトの設定
-	pipelineDesc.InputLayout.pInputElementDescs = inputLayout;
-	pipelineDesc.InputLayout.NumElements = _countof(inputLayout);
+		// 頂点レイアウトの設定
+		pipelineDesc[i].InputLayout.pInputElementDescs = inputLayout;
+		pipelineDesc[i].InputLayout.NumElements = _countof(inputLayout);
 
-	// 図形の形状設定
-	pipelineDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+		// 図形の形状設定
+		pipelineDesc[i].PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 
-	// その他の設定
-	pipelineDesc.NumRenderTargets = 1;
-	pipelineDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
-	pipelineDesc.SampleDesc.Count = 1;
+		// その他の設定
+		pipelineDesc[i].NumRenderTargets = 1;
+		pipelineDesc[i].RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+		pipelineDesc[i].SampleDesc.Count = 1;
+	}
+	pipelineDesc[0].RasterizerState.FillMode = D3D12_FILL_MODE_SOLID;
+	pipelineDesc[1].RasterizerState.FillMode = D3D12_FILL_MODE_WIREFRAME;
 
 	// ルートシグネチャ
 	ID3D12RootSignature* rootSignature;
@@ -211,39 +214,42 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	rootSignatureDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
 	// ルートシグネチャのシリアライズ
 	ID3DBlob* rootSigBlob = nullptr;
-	dx.result = D3D12SerializeRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1_0,
-		&rootSigBlob, &errorBlob);
+	dx.result = D3D12SerializeRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1_0, &rootSigBlob, &errorBlob);
 	assert(SUCCEEDED(dx.result));
-	dx.result = dx.dev->CreateRootSignature(0, rootSigBlob->GetBufferPointer(), rootSigBlob->GetBufferSize(),
-		IID_PPV_ARGS(&rootSignature));
+	dx.result = dx.dev->CreateRootSignature(0, rootSigBlob->GetBufferPointer(), rootSigBlob->GetBufferSize(), IID_PPV_ARGS(&rootSignature));
 	assert(SUCCEEDED(dx.result));
 	rootSigBlob->Release();
+
 	// パイプラインにルートシグネチャをセット
-	pipelineDesc.pRootSignature = rootSignature;
+	pipelineDesc[0].pRootSignature = rootSignature;
+	pipelineDesc[1].pRootSignature = rootSignature;
 
 	// パイプラインステート
-	ID3D12PipelineState* pipelineState = nullptr;
-	dx.result = dx.dev->CreateGraphicsPipelineState(&pipelineDesc, IID_PPV_ARGS(&pipelineState));
+	ID3D12PipelineState* pipelineState[2] = { nullptr };
+	dx.result = dx.dev->CreateGraphicsPipelineState(&pipelineDesc[0], IID_PPV_ARGS(&pipelineState[0]));
 	assert(SUCCEEDED(dx.result));
+
+	dx.result = dx.dev->CreateGraphicsPipelineState(&pipelineDesc[1], IID_PPV_ARGS(&pipelineState[1]));
+	assert(SUCCEEDED(dx.result));
+
+	bool isChange = false;
 #pragma endregion
 
 	// ウィンドウ表示
 	// ゲームループ
-	while (true)
-	{
+	while (true) {
 		win.Update();
 		input.Update(dx.result);
 #pragma region ウィンドウメッセージ
 
-		if (win.breakFlag || input.IsPush(DIK_ESCAPE))
-		{
+		if (win.breakFlag || input.IsPush(DIK_ESCAPE)) {
 			break;
 		}
 #pragma endregion
 
 		// 更新
 #pragma region キーボード
-		if (input.IsPush(DIK_SPACE)){
+		if (input.IsPush(DIK_SPACE)) {
 			dx.bRed = 1.0f;
 			dx.bGreen = 0.7f;
 			dx.bBule = 1.0f;
@@ -252,6 +258,15 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 			dx.bRed = 0.1f;
 			dx.bGreen = 0.25f;
 			dx.bBule = 0.5f;
+		}
+
+		if (input.IsTriger(DIK_2)) {
+			if (!isChange) {
+				isChange = true;
+			}
+			else {
+				isChange = false;
+			}
 		}
 #pragma endregion
 
@@ -316,7 +331,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 		viewport[3].MaxDepth = 1.0f;
 
 		// ビューポート設定コマンドをコマンドリストに積む
-		for (int i = 0; i < 4; i++){
+		for (int i = 0; i < 4; i++) {
 			dx.cmdList->RSSetViewports(1, &viewport[i]);
 
 			// シザー矩形
@@ -330,7 +345,12 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 			dx.cmdList->RSSetScissorRects(1, &scissorRect);
 
 			// パイプラインステートとルートシグネチャの設定コマンド
-			dx.cmdList->SetPipelineState(pipelineState);
+			if (!isChange) {
+				dx.cmdList->SetPipelineState(pipelineState[0]);
+			}
+			else {
+				dx.cmdList->SetPipelineState(pipelineState[1]);
+			}
 			dx.cmdList->SetGraphicsRootSignature(rootSignature);
 
 			// プリミティブ形状の設定コマンド

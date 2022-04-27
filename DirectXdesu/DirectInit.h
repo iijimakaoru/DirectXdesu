@@ -10,10 +10,10 @@
 #pragma comment(lib, "d3d12.lib")
 #pragma comment(lib, "dxgi.lib")
 
-class Dx12
+class DirectInit
 {
 public:
-	Dx12(Window window);
+	DirectInit(Window window);
 	void SetDXGIFactory();
 	void SetAdapter();
 	void SetDevice(IDXGIAdapter4* tmpAdapter);

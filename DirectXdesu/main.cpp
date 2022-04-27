@@ -4,6 +4,7 @@
 #include<string>
 #include "Window.h"
 #include "Dx12.h"
+#include "Input.h"
 #include <d3d12.h>
 #include <dxgi1_6.h>
 #include <cassert>
@@ -34,7 +35,6 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	}
 #endif
 
-	// 変数
 #pragma region ウィンドウ
 	Window win;
 #pragma endregion
@@ -44,28 +44,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 #pragma endregion
 
 #pragma region DirectInputの初期化
-	IDirectInput8* directInput = nullptr;
-	dx.result = DirectInput8Create(
-		win.window.hInstance,
-		DIRECTINPUT_VERSION,
-		IID_IDirectInput8,
-		(void**)&directInput,
-		nullptr
-	);
-	assert(SUCCEEDED(dx.result));
-	// キーボードデバイスの生成
-	IDirectInputDevice8* keyboad = nullptr;
-	dx.result = directInput->CreateDevice(GUID_SysKeyboard, &keyboad, NULL);
-	assert(SUCCEEDED(dx.result));
-	// 入力データ形式のセット
-	dx.result = keyboad->SetDataFormat(&c_dfDIKeyboard);
-	assert(SUCCEEDED(dx.result));
-	// 排他制御レベルのセット
-	dx.result = keyboad->SetCooperativeLevel(
-		win.handle, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE | DISCL_NOWINKEY
-	);
-	assert(SUCCEEDED(dx.result));
-#pragma endregion
+	Input input(dx.result, win.window, win.handle);
 #pragma endregion
 
 #pragma region 描画初期化
@@ -252,15 +231,31 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	// ゲームループ
 	while (true)
 	{
-
-#pragma region ウィンドウメッセージ
 		win.Update();
+		input.Update(dx.result);
+#pragma region ウィンドウメッセージ
 
-		if (win.breakFlag)
+		if (win.breakFlag || input.IsPush(DIK_ESCAPE))
 		{
 			break;
 		}
 #pragma endregion
+
+		// 更新
+#pragma region キーボード
+		if (input.IsPush(DIK_SPACE)){
+			dx.bRed = 1.0f;
+			dx.bGreen = 0.7f;
+			dx.bBule = 1.0f;
+		}
+		else {
+			dx.bRed = 0.1f;
+			dx.bGreen = 0.25f;
+			dx.bBule = 0.5f;
+		}
+#pragma endregion
+
+		// 描画
 
 #pragma region リソースバリア
 		// バックバッファの番号を取得
@@ -286,31 +281,6 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 		// 3. 画面クリア
 		FLOAT clearColor[] = { dx.bRed,dx.bGreen,dx.bBule,0.0f };
 		dx.cmdList->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
-#pragma endregion
-
-#pragma region キーボード
-		// キーボードの情報取得
-		keyboad->Acquire();
-		// 全キーの入力状態を所得
-		BYTE key[256] = {};
-		BYTE oldkey[256] = {};
-		keyboad->GetDeviceState(sizeof(key), key);
-		keyboad->GetDeviceState(sizeof(oldkey), oldkey);
-		for (int i = 0; i < 256; ++i)
-		{
-			oldkey[i] = key[i];
-		}
-
-		if (key[DIK_SPACE]) {
-			dx.bRed = 1.0f;
-			dx.bGreen = 0.7f;
-			dx.bBule = 1.0f;
-		}
-		else {
-			dx.bRed = 0.1f;
-			dx.bGreen = 0.25f;
-			dx.bBule = 0.5f;
-		}
 #pragma endregion
 
 #pragma region 描画

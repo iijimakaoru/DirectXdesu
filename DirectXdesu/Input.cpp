@@ -60,7 +60,7 @@ bool Input::IsPress(int keyNum) {
 }
 
 bool Input::IsTriger(int keyNum) {
-	if (key[keyNum] && !key[keyNum]) {
+	if (key[keyNum] && !oldkey[keyNum]) {
 		return true;
 	}
 	return false;

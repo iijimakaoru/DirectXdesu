@@ -53,23 +53,37 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 #pragma endregion
 
 #pragma region 描画初期化
+	// 頂点データ構造体
+	struct Vertex
+	{
+		XMFLOAT3 pos; // xyz座標
+		XMFLOAT2 uv;  // uv座標
+	};
 
 	// 頂点データ
-	XMFLOAT3 vertices[] = {
-		{-0.5f,-0.5f,0.0f},// 左下
-		{-0.5f,+0.5f,0.0f},// 左上
-		{+0.5f,-0.5f,0.0f},// 右下
-		{+0.5f,+0.5f,0.0f} // 右上
+	//XMFLOAT3 vertices[] = {
+	//	{-0.5f,-0.5f,0.0f},// 左下
+	//	{-0.5f,+0.5f,0.0f},// 左上
+	//	{+0.5f,-0.5f,0.0f},// 右下
+	//	{+0.5f,+0.5f,0.0f} // 右上
+	//};
+
+	Vertex vertices[] = {
+		//  x	  y	   z	  u	   v
+		{{-0.4f,-0.4f,0.0f},{0.0f,1.0f}},// 左下
+		{{-0.4f,+0.4f,0.0f},{0.0f,0.0f}},// 左上
+		{{+0.4f,-0.4f,0.0f},{1.0f,1.0f}},// 右下
+		{{+0.4f,+0.4f,0.0f},{1.0f,0.0f}},// 右上 
 	};
 
 	// インデックスデータ
-	uint16_t indices[] = {
-		0,1,2,
-		1,2,3,
+	unsigned short indices[] = {
+		0, 1, 2, // 三角形1つ目
+		1, 2, 3, // 三角形2つ目
 	};
 
 	// 頂点データ全体のサイズ = 頂点データ一つ分のサイズ * 頂点データの要素数
-	UINT sizeVB = static_cast<UINT>(sizeof(XMFLOAT3) * _countof(vertices));
+	UINT sizeVB = static_cast<UINT>(sizeof(vertices[0]) * _countof(vertices));
 
 	// 頂点バッファの設定
 	D3D12_HEAP_PROPERTIES heapProp{};
@@ -110,10 +124,34 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 
 	// インデックスバッファの生成
 	ID3D12Resource* indexBuff = nullptr;
-	dx.result = dx.dev->Crea
+	dx.result = dx.dev->CreateCommittedResource(
+		&heapProp,
+		D3D12_HEAP_FLAG_NONE,
+		&resDesc,
+		D3D12_RESOURCE_STATE_GENERIC_READ,
+		nullptr,
+		IID_PPV_ARGS(&indexBuff));
+
+	// インデックスバッファをマッピング
+	uint16_t* indexMap = nullptr;
+	dx.result = indexBuff->Map(0, nullptr, (void**)&indexMap);
+
+	// 全インデックスに対して
+	for (int i = 0; i < _countof(indices); i++) {
+		indexMap[i] = indices[i];
+	}
+
+	// マッピング解除
+	indexBuff->Unmap(0, nullptr);
+
+	// インデックスバッファビュー
+	D3D12_INDEX_BUFFER_VIEW ibView{};
+	ibView.BufferLocation = indexBuff->GetGPUVirtualAddress();
+	ibView.Format = DXGI_FORMAT_R16_UINT;
+	ibView.SizeInBytes = sizeIB;
 
 	// GPU上のバッファに対応した仮想メモリを取得
-	XMFLOAT3* vertMap = nullptr;
+	Vertex* vertMap = nullptr;
 	dx.result = vertBuff->Map(0, nullptr, (void**)&vertMap);
 	assert(SUCCEEDED(dx.result));
 
@@ -136,7 +174,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	vbView.SizeInBytes = sizeVB;
 
 	// 頂点一つ分のデータサイズ
-	vbView.StrideInBytes = sizeof(XMFLOAT3);
+	vbView.StrideInBytes = sizeof(vertices[0]);
 
 	ID3D10Blob* vsBlob = nullptr; // 頂点シェーダーオブジェクト
 	ID3D10Blob* psBlob = nullptr; // ピクセルシェーダーオブジェクト
@@ -196,14 +234,15 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 
 	// 頂点レイアウト
 	D3D12_INPUT_ELEMENT_DESC inputLayout[] = {
-		{
-			"POSITION",
-			0,
-			DXGI_FORMAT_R32G32B32_FLOAT,
-			0,
+		{// xyz座標
+			"POSITION",0,DXGI_FORMAT_R32G32B32_FLOAT,0,
 			D3D12_APPEND_ALIGNED_ELEMENT,
-			D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,
-			0
+			D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0
+		},
+		{// uv座標
+			"TEXCOORD",0,DXGI_FORMAT_R32G32_FLOAT,0,
+			D3D12_APPEND_ALIGNED_ELEMENT,
+			D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0
 		},
 	};
 
@@ -275,6 +314,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	// ヒープ設定
 	D3D12_HEAP_PROPERTIES cbHeapProp{};
 	cbHeapProp.Type = D3D12_HEAP_TYPE_UPLOAD;
+
 	// リソース設定
 	D3D12_RESOURCE_DESC cbResourceDesc{};
 	cbResourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
@@ -400,23 +440,18 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 
 #pragma region 描画
 		// 描画コマンドここから
+
 		// ビューポート設定コマンド
-		D3D12_VIEWPORT viewport[3]{};
-		viewport[0].Width = win.window_width - 500;   // 横幅
-		viewport[0].Height = win.window_height - 500; // 縦幅
-		viewport[0].TopLeftX = 0;                 // 左上x
-		viewport[0].TopLeftY = 0;				   // 左上y
-		viewport[0].MinDepth = 0.0f;			   // 最小深度
-		viewport[0].MaxDepth = 1.0f;			   // 最大深度
-		viewport[1].Width = win.window_width + 500;
-		viewport[1].Height = win.window_height - 500;
-		viewport[1].TopLeftX = 0;
-		viewport[1].TopLeftY = 0;
-		viewport[1].MinDepth = 0.0f;
-		viewport[1].MaxDepth = 1.0f;
+		D3D12_VIEWPORT viewport{};
+		viewport.Width = win.window_width;   // 横幅
+		viewport.Height = win.window_height; // 縦幅
+		viewport.TopLeftX = 0;                 // 左上x
+		viewport.TopLeftY = 0;				   // 左上y
+		viewport.MinDepth = 0.0f;			   // 最小深度
+		viewport.MaxDepth = 1.0f;			   // 最大深度
 
 		// ビューポート設定コマンドをコマンドリストに積む
-		dx.cmdList->RSSetViewports(1, &viewport[0]);
+		dx.cmdList->RSSetViewports(1, &viewport);
 
 		// シザー矩形
 		D3D12_RECT scissorRect{};
@@ -435,13 +470,17 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 		// プリミティブ形状の設定コマンド
 		dx.cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
+		// インデックスバッファビューの設定コマンド
+		dx.cmdList->IASetIndexBuffer(&ibView);
+
 		// 頂点バッファビューの設定コマンド
 		dx.cmdList->IASetVertexBuffers(0, 1, &vbView);
 
 		dx.cmdList->SetGraphicsRootConstantBufferView(0, constBufferMaterial->GetGPUVirtualAddress());
 
 		// 描画コマンド
-		dx.cmdList->DrawInstanced(_countof(vertices), 1, 0, 0);
+		//dx.cmdList->DrawInstanced(_countof(vertices), 1, 0, 0);
+		dx.cmdList->DrawIndexedInstanced(_countof(indices), 1, 0, 0, 0);
 		// 描画コマンドここまで
 #pragma endregion
 

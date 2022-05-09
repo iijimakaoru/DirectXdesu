@@ -49,4 +49,9 @@
     <FxCompile Include="BasicVS.hlsl" />
     <FxCompile Include="BasicPS.hlsl" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Basic.hlsli">
+      <Filter>ヘッダー ファイル</Filter>
+    </None>
+  </ItemGroup>
 </Project>

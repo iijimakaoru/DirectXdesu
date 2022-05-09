@@ -57,11 +57,15 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	// 頂点データ
 	XMFLOAT3 vertices[] = {
 		{-0.5f,-0.5f,0.0f},// 左下
-		{+0.5f,-0.5f,0.0f},// 右下
-		{-0.5f,0.0f,0.0f},// 左中
-		{+0.5f,0.0f,0.0f},// 右中
 		{-0.5f,+0.5f,0.0f},// 左上
+		{+0.5f,-0.5f,0.0f},// 右下
 		{+0.5f,+0.5f,0.0f} // 右上
+	};
+
+	// インデックスデータ
+	uint16_t indices[] = {
+		0,1,2,
+		1,2,3,
 	};
 
 	// 頂点データ全体のサイズ = 頂点データ一つ分のサイズ * 頂点データの要素数
@@ -91,6 +95,22 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 		nullptr,
 		IID_PPV_ARGS(&vertBuff));
 	assert(SUCCEEDED(dx.result));
+
+	// インデックスデータ全体のサイズ
+	UINT sizeIB = static_cast<UINT>(sizeof(uint16_t) * _countof(indices));
+
+	// リソース設定
+	resDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
+	resDesc.Width = sizeIB;
+	resDesc.Height = 1;
+	resDesc.DepthOrArraySize = 1;
+	resDesc.MipLevels = 1;
+	resDesc.SampleDesc.Count = 1;
+	resDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+
+	// インデックスバッファの生成
+	ID3D12Resource* indexBuff = nullptr;
+	dx.result = dx.dev->Crea
 
 	// GPU上のバッファに対応した仮想メモリを取得
 	XMFLOAT3* vertMap = nullptr;

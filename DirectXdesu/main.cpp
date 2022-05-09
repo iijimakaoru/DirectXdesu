@@ -57,8 +57,11 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	// 頂点データ
 	XMFLOAT3 vertices[] = {
 		{-0.5f,-0.5f,0.0f},// 左下
+		{+0.5f,-0.5f,0.0f},// 右下
+		{-0.5f,0.0f,0.0f},// 左中
+		{+0.5f,0.0f,0.0f},// 右中
 		{-0.5f,+0.5f,0.0f},// 左上
-		{+0.5f,-0.5f,0.0f} // 右下
+		{+0.5f,+0.5f,0.0f} // 右上
 	};
 
 	// 頂点データ全体のサイズ = 頂点データ一つ分のサイズ * 頂点データの要素数
@@ -244,6 +247,11 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	blenddesc.SrcBlend = D3D12_BLEND_SRC_ALPHA;
 	blenddesc.DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
 
+	float colorR = 1.0f;
+	float colorG = 0.0f;
+	float colorB = 0.0f;
+	float colorA = 0.5f;
+
 	// ヒープ設定
 	D3D12_HEAP_PROPERTIES cbHeapProp{};
 	cbHeapProp.Type = D3D12_HEAP_TYPE_UPLOAD;
@@ -277,7 +285,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	assert(SUCCEEDED(dx.result));
 
 	// 値を書き込むと自動的に転送される
-	constMapMaterial->color = XMFLOAT4(1, 0, 0, 0.8f);
+	constMapMaterial->color = XMFLOAT4(colorR, colorG, colorB, colorA);
 
 	// ルートパラメータの設定
 	D3D12_ROOT_PARAMETER rootParam = {};
@@ -329,8 +337,9 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 #pragma endregion
 
 		// 更新
+		constMapMaterial->color = XMFLOAT4(colorR, colorG, colorB, colorA);
 #pragma region キーボード
-		if (input.IsPush(DIK_SPACE)){
+		if (input.IsPush(DIK_SPACE)) {
 			dx.bRed = 1.0f;
 			dx.bGreen = 0.7f;
 			dx.bBule = 1.0f;

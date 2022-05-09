@@ -147,6 +147,7 @@
   <ItemGroup>
     <ClInclude Include="DirectInit.h" />
     <ClInclude Include="Input.h" />
+    <ClInclude Include="Enum.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <ItemGroup>

@@ -1,4 +1,9 @@
-float4 main(float4 pos : SV_POSITION) : SV_TARGET
+cbuffer ConstBufferDataMaterial : register(b0) 
 {
-	return float4(1, 0, 0, 1);
+	float4 color;
+};
+
+float4 main() : SV_TARGET
+{
+	return color;
 }

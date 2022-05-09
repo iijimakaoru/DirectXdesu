@@ -139,12 +139,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Blend.cpp" />
     <ClCompile Include="Dx12.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Blend.h" />
     <ClInclude Include="Dx12.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="Window.h" />

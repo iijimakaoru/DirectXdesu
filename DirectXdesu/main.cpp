@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include<vector>
 #include<string>
+#include<DirectXTex.h>
 #include "Window.h"
 #include "Dx12.h"
 #include "Input.h"

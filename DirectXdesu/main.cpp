@@ -347,12 +347,37 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	// 値を書き込むと自動的に転送される
 	constMapMaterial->color = XMFLOAT4(colorR, colorG, colorB, colorA);
 
+	// デスクリプタレンジの設定
+	D3D12_DESCRIPTOR_RANGE descriptorRange{};
+	descriptorRange.NumDescriptors = 1;
+	descriptorRange.RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
+	descriptorRange.BaseShaderRegister = 0;
+	descriptorRange.OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+
 	// ルートパラメータの設定
-	D3D12_ROOT_PARAMETER rootParam = {};
-	rootParam.ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
-	rootParam.Descriptor.ShaderRegister = 0;
-	rootParam.Descriptor.RegisterSpace = 0;
-	rootParam.ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
+	D3D12_ROOT_PARAMETER rootParam[2] = {};
+	// 定数バッファ0番
+	rootParam[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+	rootParam[0].Descriptor.ShaderRegister = 0;
+	rootParam[0].Descriptor.RegisterSpace = 0;
+	rootParam[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
+	// テクスチャレジスタ0番
+	rootParam[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+	rootParam[1].DescriptorTable.pDescriptorRanges = &descriptorRange;
+	rootParam[1].DescriptorTable.NumDescriptorRanges = 1;
+	rootParam[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
+
+	// テクスチャサンブラーの設定
+	D3D12_STATIC_SAMPLER_DESC samplerDesc{};
+	samplerDesc.AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+	samplerDesc.AddressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+	samplerDesc.AddressW = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+	samplerDesc.BorderColor = D3D12_STATIC_BORDER_COLOR_TRANSPARENT_BLACK;
+	samplerDesc.Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR;
+	samplerDesc.MaxLOD = D3D12_FLOAT32_MAX;
+	samplerDesc.MinLOD = 0.0f;
+	samplerDesc.ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER;
+	samplerDesc.ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 
 	// ルートシグネチャ
 	ID3D12RootSignature* rootSignature;
@@ -360,8 +385,10 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	// ルートシグネチャの設定
 	D3D12_ROOT_SIGNATURE_DESC rootSignatureDesc{};
 	rootSignatureDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
-	rootSignatureDesc.pParameters = &rootParam;
-	rootSignatureDesc.NumParameters = 1;
+	rootSignatureDesc.pParameters = rootParam;
+	rootSignatureDesc.NumParameters = _countof(rootParam);
+	rootSignatureDesc.pStaticSamplers = &samplerDesc;
+	rootSignatureDesc.NumStaticSamplers = 1;
 
 	// ルートシグネチャのシリアライズ
 	ID3DBlob* rootSigBlob = nullptr;
@@ -380,6 +407,96 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	ID3D12PipelineState* pipelineState = nullptr;
 	dx.result = dx.dev->CreateGraphicsPipelineState(&pipelineDesc, IID_PPV_ARGS(&pipelineState));
 	assert(SUCCEEDED(dx.result));
+
+	// 横方向ピクセル数
+	const size_t textureWidth = 256;
+
+	// 縦方向ピクセル数
+	const size_t textureHeight = 256;
+
+	// 配列の要素数
+	const size_t imageDataCount = textureWidth * textureHeight;
+
+	// 画像イメージデータ配列
+	XMFLOAT4* imageData = new XMFLOAT4[imageDataCount];
+
+	// 全ピクセルの色初期化
+	for (size_t i = 0; i < imageDataCount; i++){
+		imageData[i].x = 1.0f;	// R
+		imageData[i].y = 0.0f;	// G
+		imageData[i].z = 0.0f;	// B
+		imageData[i].w = 1.0f;	// A
+	}
+
+	// ヒープ設定
+	D3D12_HEAP_PROPERTIES textureHeapProp{};
+	textureHeapProp.Type = D3D12_HEAP_TYPE_CUSTOM;
+	textureHeapProp.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_WRITE_BACK;
+	textureHeapProp.MemoryPoolPreference = D3D12_MEMORY_POOL_L0;
+
+	// リソース設定
+	D3D12_RESOURCE_DESC textureResourceDesc{};
+	textureResourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+	textureResourceDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	textureResourceDesc.Width = textureWidth;
+	textureResourceDesc.Height = textureHeight;
+	textureResourceDesc.DepthOrArraySize = 1;
+	textureResourceDesc.MipLevels = 1;
+	textureResourceDesc.SampleDesc.Count = 1;
+
+	// テクスチャバッファの作成
+	ID3D12Resource* texBuff = nullptr;
+	dx.result = dx.dev->CreateCommittedResource(
+		&textureHeapProp,
+		D3D12_HEAP_FLAG_NONE,
+		&textureResourceDesc,
+		D3D12_RESOURCE_STATE_GENERIC_READ,
+		nullptr,
+		IID_PPV_ARGS(&texBuff)
+	);
+
+	// テクスチャバッファにデータ転送
+	dx.result = texBuff->WriteToSubresource(
+		0,
+		nullptr,
+		imageData,
+		sizeof(XMFLOAT4) * textureWidth,
+		sizeof(XMFLOAT4) * imageDataCount
+	);
+
+	// 元データ解放
+	delete[] imageData;
+
+	// SRVの最大個数
+	const size_t kMaxSRVCount = 2056;
+
+	// デスクリプタヒープの設定
+	D3D12_DESCRIPTOR_HEAP_DESC srvHeapDesc = {};
+	srvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+	srvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+	srvHeapDesc.NumDescriptors = kMaxSRVCount;
+
+	// 設定を元にSRV用デスクリプタヒープを生成
+	ID3D12DescriptorHeap* srvHeap = nullptr;
+	dx.result = dx.dev->CreateDescriptorHeap(
+		&srvHeapDesc,
+		IID_PPV_ARGS(&srvHeap)
+	);
+	assert(SUCCEEDED(dx.result));
+
+	// SRVヒープの先頭ハンドルを取得
+	D3D12_CPU_DESCRIPTOR_HANDLE srvHandle = srvHeap->GetCPUDescriptorHandleForHeapStart();
+
+	// シェーダーリソースビュー設定
+	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
+	srvDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+	srvDesc.Texture2D.MipLevels = 1;
+
+	// ハンドルの指す位置にシェーダーリソースビュー作成
+	dx.dev->CreateShaderResourceView(texBuff, &srvDesc, srvHandle);
+
 #pragma endregion
 
 	// ウィンドウ表示
@@ -475,8 +592,14 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 
 		// 頂点バッファビューの設定コマンド
 		dx.cmdList->IASetVertexBuffers(0, 1, &vbView);
-
+		// CBV
 		dx.cmdList->SetGraphicsRootConstantBufferView(0, constBufferMaterial->GetGPUVirtualAddress());
+		// SRV
+		dx.cmdList->SetDescriptorHeaps(1, &srvHeap);
+		// 先頭ハンドルを取得
+		D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle = srvHeap->GetGPUDescriptorHandleForHeapStart();
+		// SRVヒープの先頭にあるSRVをルートパラメータ1番の設定
+		dx.cmdList->SetGraphicsRootDescriptorTable(1, srvGpuHandle);
 
 		// 描画コマンド
 		//dx.cmdList->DrawInstanced(_countof(vertices), 1, 0, 0);

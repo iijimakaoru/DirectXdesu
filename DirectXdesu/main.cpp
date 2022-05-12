@@ -1,8 +1,8 @@
 #include <Windows.h>
 #include <stdio.h>
-#include<vector>
-#include<string>
-#include<DirectXTex.h>
+#include <vector>
+#include <string>
+#include <DirectXTex.h>
 #include "Window.h"
 #include "Dx12.h"
 #include "Input.h"
@@ -11,7 +11,6 @@
 #include <cassert>
 #include <DirectXMath.h>
 #include <d3dcompiler.h>
-#define DIRECTINPUT_VERSION  0x0800
 #include <dinput.h>
 #ifdef DEBUG
 #include <iostream>
@@ -62,19 +61,12 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	};
 
 	// 頂点データ
-	//XMFLOAT3 vertices[] = {
-	//	{-0.5f,-0.5f,0.0f},// 左下
-	//	{-0.5f,+0.5f,0.0f},// 左上
-	//	{+0.5f,-0.5f,0.0f},// 右下
-	//	{+0.5f,+0.5f,0.0f} // 右上
-	//};
-
 	Vertex vertices[] = {
 		//  x	  y	   z	  u	   v
-		{{-0.4f,-0.4f,0.0f},{0.0f,1.0f}},// 左下
-		{{-0.4f,+0.4f,0.0f},{0.0f,0.0f}},// 左上
-		{{+0.4f,-0.4f,0.0f},{1.0f,1.0f}},// 右下
-		{{+0.4f,+0.4f,0.0f},{1.0f,0.0f}},// 右上 
+		{{-0.4f,-0.4f,0.0f},{0.0f,1.0f}}, // 左下
+		{{-0.4f,+0.4f,0.0f},{0.0f,0.0f}}, // 左上
+		{{+0.4f,-0.4f,0.0f},{1.0f,1.0f}}, // 右下
+		{{+0.4f,+0.4f,0.0f},{1.0f,0.0f}}  // 右上
 	};
 
 	// インデックスデータ

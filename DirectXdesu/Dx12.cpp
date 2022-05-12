@@ -31,28 +31,26 @@ void Dx12::SetDXGIFactory() {
 void Dx12::SetAdapter() {
 	// アダプターの列挙用
 	std::vector<IDXGIAdapter4*> adapters;
+
 	// ここに特定のアダプターオブジェクトが入る
 	IDXGIAdapter4* tmpAdapter = nullptr;
 
 	// パフォーマンスが高いものから順に、全てのアダプターを列挙する
 	for (UINT i = 0; dxgiFactory->EnumAdapterByGpuPreference(i,
 		DXGI_GPU_PREFERENCE_HIGH_PERFORMANCE,
-		IID_PPV_ARGS(&tmpAdapter)) != DXGI_ERROR_NOT_FOUND; i++)
-	{
+		IID_PPV_ARGS(&tmpAdapter)) != DXGI_ERROR_NOT_FOUND; i++) {
 		// 動的配列に追加
 		adapters.push_back(tmpAdapter);
 	}
 
 	// 妥当なアダプタを選別する
-	for (size_t i = 0; i < adapters.size(); i++)
-	{
+	for (size_t i = 0; i < adapters.size(); i++) {
 		DXGI_ADAPTER_DESC3 adapterDesc;
 		// アダプターの情報を取得
 		adapters[i]->GetDesc3(&adapterDesc);
 
 		// ソフトウェアデバイスを回避
-		if (!(adapterDesc.Flags & DXGI_ADAPTER_FLAG3_SOFTWARE))
-		{
+		if (!(adapterDesc.Flags & DXGI_ADAPTER_FLAG3_SOFTWARE)) {
 			// デバイスを採用してループを抜ける
 			tmpAdapter = adapters[i];
 			break;
@@ -65,11 +63,9 @@ void Dx12::SetAdapter() {
 }
 
 void Dx12::SetDevice(IDXGIAdapter4* tmpAdapter) {
-	for (size_t i = 0; i < _countof(levels); i++)
-	{
+	for (size_t i = 0; i < _countof(levels); i++) {
 		result = D3D12CreateDevice(tmpAdapter, levels[i], IID_PPV_ARGS(&dev));
-		if (result == S_OK)
-		{
+		if (result == S_OK) {
 			// デバイスを生成できた時点でループを抜ける
 			featureLevel = levels[i];
 			break;

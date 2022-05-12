@@ -173,7 +173,7 @@
     <None Include="Basic.hlsli" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\Desktop\LE2A_03_イイジマ_カオル\DirectXTex-feb2022\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">
+    <ProjectReference Include="..\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">
       <Project>{04cc41ef-3b57-4fff-927d-bd1dc5f3062d}</Project>
     </ProjectReference>
   </ItemGroup>

@@ -302,7 +302,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	float colorR = 1.0f;
 	float colorG = 0.0f;
 	float colorB = 0.0f;
-	float colorA = 0.5f;
+	float colorA = 1.0f;
 
 	// ヒープ設定
 	D3D12_HEAP_PROPERTIES cbHeapProp{};
@@ -332,7 +332,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 
 	// 定数バッファのマッピング
 	ConstBufferDataMaterial* constMapMaterial = nullptr;
-	dx.result = constBufferMaterial->Map(0,
+	dx.result = constBufferMaterial->Map(
+		0,
 		nullptr,
 		(void**)&constMapMaterial);
 	assert(SUCCEEDED(dx.result));
@@ -411,18 +412,18 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	const size_t imageDataCount = textureWidth * textureHeight;
 
 	// 画像イメージデータ配列
-	XMFLOAT4* imageData = new XMFLOAT4[imageDataCount];
+	//XMFLOAT4* imageData = new XMFLOAT4[imageDataCount];
 
 	TexMetadata metadata{};
 	ScratchImage scraychImg{};
 
-	// 全ピクセルの色初期化
-	for (size_t i = 0; i < imageDataCount; i++){
-		imageData[i].x = 1.0f;	// R
-		imageData[i].y = 0.0f;	// G
-		imageData[i].z = 0.0f;	// B
-		imageData[i].w = 1.0f;	// A
-	}
+	//// 全ピクセルの色初期化
+	//for (size_t i = 0; i < imageDataCount; i++){
+	//	imageData[i].x = 1.0f;	// R
+	//	imageData[i].y = 0.0f;	// G
+	//	imageData[i].z = 0.0f;	// B
+	//	imageData[i].w = 1.0f;	// A
+	//}
 
 	dx.result = LoadFromWICFile(
 		L"Resources/mario.jpg",
@@ -538,6 +539,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 
 		// 更新
 		constMapMaterial->color = XMFLOAT4(colorR, colorG, colorB, colorA);
+
 #pragma region キーボード
 		if (input.IsPush(DIK_SPACE)) {
 			dx.bRed = 1.0f;
@@ -548,6 +550,17 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 			dx.bRed = 0.1f;
 			dx.bGreen = 0.25f;
 			dx.bBule = 0.5f;
+		}
+
+		if (input.IsPush(DIK_1)) {
+			colorR = 1.0f;
+			colorG = 0.0f;
+			colorB = 1.0f;
+		}
+		else {
+			colorR = 1.0f;
+			colorG = 1.0f;
+			colorB = 1.0f;
 		}
 #pragma endregion
 

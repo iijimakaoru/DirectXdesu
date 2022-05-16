@@ -51,7 +51,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	// 座標
 	XMFLOAT3 pos;
 
-	scale = { 1.0f,0.5f,1.0f };
+	scale = { 1.0f,1.0f,1.0f };
 	rotation = { 0.0f,0.0f,0.0f };
 	pos = { 0.0f,0.0f,0.0f };
 
@@ -73,10 +73,36 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	// 頂点データ
 	Vertex vertices[] = {
 		//  x	  y	   z	  u	   v
-		{{-50.0f,-50.0f,  0.0f},{0.0f,1.0f}}, // 左下
-		{{-50.0f, 50.0f,  0.0f},{0.0f,0.0f}}, // 左上
-		{{ 50.0f,-50.0f,  0.0f},{1.0f,1.0f}}, // 右下
-		{{ 50.0f, 50.0f,  0.0f},{1.0f,0.0f}}  // 右上
+		// 前
+		{{-5.0f,-5.0f,-5.0f},{0.0f,1.0f}}, // 左下
+		{{-5.0f, 5.0f,-5.0f},{0.0f,0.0f}}, // 左上
+		{{ 5.0f,-5.0f,-5.0f},{1.0f,1.0f}}, // 右下
+		{{ 5.0f, 5.0f,-5.0f},{1.0f,0.0f}}, // 右上
+		// 後
+		{{-5.0f,-5.0f, 5.0f},{0.0f,1.0f}}, // 左下
+		{{-5.0f, 5.0f, 5.0f},{0.0f,0.0f}}, // 左上
+		{{ 5.0f,-5.0f, 5.0f},{1.0f,1.0f}}, // 右下
+		{{ 5.0f, 5.0f, 5.0f},{1.0f,0.0f}}, // 右上
+		// 左
+		{{-5.0f,-5.0f,-5.0f},{0.0f,1.0f}}, // 左下
+		{{-5.0f,-5.0f, 5.0f},{0.0f,0.0f}}, // 左上
+		{{-5.0f, 5.0f,-5.0f},{1.0f,1.0f}}, // 右下
+		{{-5.0f, 5.0f, 5.0f},{1.0f,0.0f}}, // 右上
+		// 右
+		{{ 5.0f,-5.0f,-5.0f},{0.0f,1.0f}}, // 左下
+		{{ 5.0f,-5.0f, 5.0f},{0.0f,0.0f}}, // 左上
+		{{ 5.0f, 5.0f,-5.0f},{1.0f,1.0f}}, // 右下
+		{{ 5.0f, 5.0f, 5.0f},{1.0f,0.0f}}, // 右上
+		// 下
+		{{-5.0f,-5.0f,-5.0f},{0.0f,1.0f}}, // 左下
+		{{-5.0f,-5.0f, 5.0f},{0.0f,0.0f}}, // 左上
+		{{ 5.0f,-5.0f,-5.0f},{1.0f,1.0f}}, // 右下
+		{{ 5.0f,-5.0f, 5.0f},{1.0f,0.0f}}, // 右上
+		// 上
+		{{-5.0f, 5.0f,-5.0f},{0.0f,1.0f}}, // 左下
+		{{-5.0f, 5.0f, 5.0f},{0.0f,0.0f}}, // 左上
+		{{ 5.0f, 5.0f,-5.0f},{1.0f,1.0f}}, // 右下
+		{{ 5.0f, 5.0f, 5.0f},{1.0f,0.0f}}  // 右上
 	};
 	// 頂点データ全体のサイズ = 頂点データ一つ分のサイズ * 頂点データの要素数
 	UINT sizeVB = static_cast<UINT>(sizeof(vertices[0]) * _countof(vertices));
@@ -109,8 +135,24 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 #pragma region インデックスデータ
 	// インデックスデータ
 	unsigned short indices[] = {
+		// 前
 		0, 1, 2, // 三角形1つ目
 		1, 2, 3, // 三角形2つ目
+		// 後
+		4, 5, 6,
+		5, 6, 7,
+		// 左
+		0, 4, 1,
+		4, 1, 5,
+		// 右
+		2, 6, 3,
+		6, 3, 7,
+		// 下
+		0, 4, 2,
+		4, 2, 6,
+		// 上
+		1, 5, 3,
+		5, 3, 7
 	};
 	// インデックスデータ全体のサイズ
 	UINT sizeIB = static_cast<UINT>(sizeof(uint16_t) * _countof(indices));
@@ -370,7 +412,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 #pragma region 行列
 	// ビュー変換行列
 	XMMATRIX matView;
-	XMFLOAT3 eye(0, 0, -150);
+	XMFLOAT3 eye(0, 0, -100);
 	XMFLOAT3 target(0, 0, 0);
 	XMFLOAT3 up(0, 1, 0);
 	matView = XMMatrixLookAtLH(XMLoadFloat3(&eye),
@@ -385,13 +427,10 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	// 回転行列
 	XMMATRIX matRot;
 	matRot = XMMatrixIdentity();
-	matRot *= XMMatrixRotationX(XMConvertToRadians(rotation.x)); // X軸
-	matRot *= XMMatrixRotationY(XMConvertToRadians(rotation.y)); // Y軸
-	matRot *= XMMatrixRotationZ(XMConvertToRadians(rotation.z)); // Z軸
 	// 平行移動行列
 	XMMATRIX matTrans;
 	matTrans = XMMatrixIdentity(); // x,y,z移動
-
+	// ワールド行列に乗算
 	matWorld = XMMatrixIdentity();
 	matWorld *= matScale; // ワールド行列にスケーリングを乗算
 	matWorld *= matRot; // ワールド行列に回転を乗算
@@ -633,44 +672,46 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 			colorB = 1.0f;
 		}
 		constMapMaterial->color = XMFLOAT4(colorR, colorG, colorB, colorA);
-		// カメラ移動
-		//if (input.IsPush(DIK_D) || input.IsPush(DIK_A)) {
-		//	if (input.IsPush(DIK_D)) {
-		//		angle += XMConvertToRadians(1.0f);
-		//	}
-		//	else if (input.IsPush(DIK_A)) {
-		//		angle -= XMConvertToRadians(1.0f);
-		//	}
-		//	// angleラジアンy軸回転
-		//	eye.x = -150 * sin(angle);
-		//	eye.z = -150 * cos(angle);
-		//	// ビュー変換行列
-		//	matView = XMMatrixLookAtLH(XMLoadFloat3(&eye),
-		//		XMLoadFloat3(&target),
-		//		XMLoadFloat3(&up));
-		//}
-		// 図形回転
-		if (input.IsPush(DIK_W) ||
-			input.IsPush(DIK_S) ||
-			input.IsPush(DIK_A) ||
-			input.IsPush(DIK_D)) {
-			if (input.IsPush(DIK_W)) {
-				rotation.x = 1.0f;
-			} else if (input.IsPush(DIK_S)) {
-				rotation.x = -1.0f;
+		//カメラ移動
+		if (input.IsPush(DIK_D) || input.IsPush(DIK_A)) {
+			if (input.IsPush(DIK_D)) {
+				angle += XMConvertToRadians(1.0f);
 			}
+			else if (input.IsPush(DIK_A)) {
+				angle -= XMConvertToRadians(1.0f);
+			}
+			// angleラジアンy軸回転
+			eye.x = -100 * sin(angle);
+			eye.z = -100 * cos(angle);
+			// ビュー変換行列
+			matView = XMMatrixLookAtLH(XMLoadFloat3(&eye),
+				XMLoadFloat3(&target),
+				XMLoadFloat3(&up));
+		}
+		//// 図形回転
+		//if (input.IsPush(DIK_W) ||
+		//	input.IsPush(DIK_S) ||
+		//	input.IsPush(DIK_A) ||
+		//	input.IsPush(DIK_D)) {
+		//	if (input.IsPush(DIK_W)) {
+		//		rotation.x = 1.0f;
+		//	}
+		//	else if (input.IsPush(DIK_S)) {
+		//		rotation.x = -1.0f;
+		//	}
 
-			if (input.IsPush(DIK_A)) {
-				rotation.y = -1.0f;
-			} else if (input.IsPush(DIK_D)) {
-				rotation.y = 1.0f;
-			}
-		}
-		else {
-			rotation.x = 0.0f;
-			rotation.y = 0.0f;
-			rotation.z = 0.0f;
-		}
+		//	if (input.IsPush(DIK_A)) {
+		//		rotation.y = -1.0f;
+		//	}
+		//	else if (input.IsPush(DIK_D)) {
+		//		rotation.y = 1.0f;
+		//	}
+		//}
+		//else {
+		//	rotation.x = 0.0f;
+		//	rotation.y = 0.0f;
+		//	rotation.z = 0.0f;
+		//}
 		// 移動
 		if (input.IsPush(DIK_UP) ||
 			input.IsPush(DIK_DOWN) ||

@@ -44,31 +44,24 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 #pragma endregion
 
 #pragma region 描画初期化
+
+#pragma region 頂点データ
 	// 頂点データ構造体
 	struct Vertex
 	{
 		XMFLOAT3 pos; // xyz座標
 		XMFLOAT2 uv;  // uv座標
 	};
-
 	// 頂点データ
 	Vertex vertices[] = {
 		//  x	  y	   z	  u	   v
-		{{  0.0f,100.0f,0.0f},{0.0f,1.0f}}, // 左下
-		{{  0.0f,  0.0f,0.0f},{0.0f,0.0f}}, // 左上
-		{{100.0f,100.0f,0.0f},{1.0f,1.0f}}, // 右下
-		{{100.0f,  0.0f,0.0f},{1.0f,0.0f}}  // 右上
+		{{-50.0f,-50.0f,  0.0f},{0.0f,1.0f}}, // 左下
+		{{-50.0f, 50.0f,  0.0f},{0.0f,0.0f}}, // 左上
+		{{ 50.0f,-50.0f,  0.0f},{1.0f,1.0f}}, // 右下
+		{{ 50.0f, 50.0f,  0.0f},{1.0f,0.0f}}  // 右上
 	};
-
-	// インデックスデータ
-	unsigned short indices[] = {
-		0, 1, 2, // 三角形1つ目
-		1, 2, 3, // 三角形2つ目
-	};
-
 	// 頂点データ全体のサイズ = 頂点データ一つ分のサイズ * 頂点データの要素数
 	UINT sizeVB = static_cast<UINT>(sizeof(vertices[0]) * _countof(vertices));
-
 #pragma region 頂点バッファ確保
 	// 頂点バッファの設定
 	D3D12_HEAP_PROPERTIES heapProp{};
@@ -93,10 +86,16 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 		IID_PPV_ARGS(&vertBuff));
 	assert(SUCCEEDED(dx.result));
 #pragma endregion
+#pragma endregion
 
+#pragma region インデックスデータ
+	// インデックスデータ
+	unsigned short indices[] = {
+		0, 1, 2, // 三角形1つ目
+		1, 2, 3, // 三角形2つ目
+	};
 	// インデックスデータ全体のサイズ
 	UINT sizeIB = static_cast<UINT>(sizeof(uint16_t) * _countof(indices));
-
 	// リソース設定
 	resDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
 	resDesc.Width = sizeIB;
@@ -105,7 +104,6 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	resDesc.MipLevels = 1;
 	resDesc.SampleDesc.Count = 1;
 	resDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
-
 	// インデックスバッファの生成
 	ID3D12Resource* indexBuff = nullptr;
 	dx.result = dx.dev->CreateCommittedResource(
@@ -115,24 +113,21 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
 		IID_PPV_ARGS(&indexBuff));
-
 	// インデックスバッファをマッピング
 	uint16_t* indexMap = nullptr;
 	dx.result = indexBuff->Map(0, nullptr, (void**)&indexMap);
-
 	// 全インデックスに対して
 	for (int i = 0; i < _countof(indices); i++) {
 		indexMap[i] = indices[i];
 	}
-
 	// マッピング解除
 	indexBuff->Unmap(0, nullptr);
-
 	// インデックスバッファビュー
 	D3D12_INDEX_BUFFER_VIEW ibView{};
 	ibView.BufferLocation = indexBuff->GetGPUVirtualAddress();
 	ibView.Format = DXGI_FORMAT_R16_UINT;
 	ibView.SizeInBytes = sizeIB;
+#pragma endregion
 
 #pragma region 頂点バッファへのデータ転送
 	// GPU上のバッファに対応した仮想メモリを取得
@@ -359,11 +354,35 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 		nullptr,
 		(void**)&constMapTransform);
 	assert(SUCCEEDED(dx.result));
-	constMapTransform->mat = XMMatrixIdentity();
-	constMapTransform->mat.r[0].m128_f32[0] = 2.0f / win.window_width;
-	constMapTransform->mat.r[1].m128_f32[1] = -2.0f / win.window_height;
-	constMapTransform->mat.r[3].m128_f32[0] = -1.0f;
-	constMapTransform->mat.r[3].m128_f32[1] =  1.0f;
+#pragma region 行列
+	// ビュー変換行列
+	XMMATRIX matView;
+	XMFLOAT3 eye( 0, 0, -150);
+	XMFLOAT3 target(0, 0, 0);
+	XMFLOAT3 up(0, 1, 0);
+	matView = XMMatrixLookAtLH(XMLoadFloat3(&eye),
+		XMLoadFloat3(&target),
+		XMLoadFloat3(&up));
+	float angle = 0.0f; // カメラの回転角
+	//// 平行投影の計算
+	//constMapTransform->mat = XMMatrixOrthographicOffCenterLH(
+	//	0, win.window_width,
+	//	win.window_height, 0,
+	//	0, 1.0f
+	//);
+	// 
+	// 射影変換行列
+	XMMATRIX matProjection = XMMatrixPerspectiveFovLH(
+		XMConvertToRadians(45.0f),						// 上下画角45度
+		(float)win.window_width / win.window_height,	// アスペクト比(画面横幅/画面縦幅)
+		0.1f, 1000.0f									// 前端、奥端
+	);
+
+
+	// 定数バッファに転送
+	constMapTransform->mat = matView * matProjection;
+#pragma endregion
+
 #pragma endregion
 	// 値を書き込むと自動的に転送される
 	constMapMaterial->color = XMFLOAT4(colorR, colorG, colorB, colorA);
@@ -561,6 +580,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 		constMapMaterial->color = XMFLOAT4(colorR, colorG, colorB, colorA);
 
 #pragma region キーボード処理
+		// 背景色変え
 		if (input.IsPush(DIK_SPACE)) {
 			dx.bRed = 1.0f;
 			dx.bGreen = 0.7f;
@@ -571,7 +591,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 			dx.bGreen = 0.25f;
 			dx.bBule = 0.5f;
 		}
-
+		// 画像色変え
 		if (input.IsPush(DIK_1)) {
 			colorR = 1.0f;
 			colorG = 0.0f;
@@ -582,6 +602,25 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 			colorG = 1.0f;
 			colorB = 1.0f;
 		}
+		// 画像回転
+		if (input.IsPush(DIK_D) || input.IsPush(DIK_A)) {
+			if (input.IsPush(DIK_D)) {
+				angle += XMConvertToRadians(1.0f);
+			}
+			else if (input.IsPush(DIK_A)) {
+				angle -= XMConvertToRadians(1.0f);
+			}
+			// angleラジアンy軸回転
+			eye.x = -150 * sin(angle);
+			eye.z = -150 * cos(angle);
+			// ビュー変換行列
+			matView = XMMatrixLookAtLH(XMLoadFloat3(&eye),
+				XMLoadFloat3(&target),
+				XMLoadFloat3(&up));
+		}
+
+		// 定数バッファに転送
+		constMapTransform->mat = matView * matProjection;
 #pragma endregion
 #pragma endregion
 

@@ -44,7 +44,25 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 #pragma endregion
 
 #pragma region 描画初期化
+	// スケーリング倍率
+	XMFLOAT3 scale;
+	// 回転角
+	XMFLOAT3 rotation;
+	// 座標
+	XMFLOAT3 pos;
 
+	scale = { 1.0f,0.5f,1.0f };
+	rotation = { 0.0f,0.0f,0.0f };
+	pos = { 0.0f,0.0f,0.0f };
+
+	// 速さ
+	float speed = 0.0f;
+
+	// 画像の色
+	float colorR = 1.0f;
+	float colorG = 1.0f;
+	float colorB = 1.0f;
+	float colorA = 1.0f;
 #pragma region 頂点データ
 	// 頂点データ構造体
 	struct Vertex
@@ -288,11 +306,6 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	blenddesc.BlendOp = D3D12_BLEND_OP_ADD;
 	blenddesc.SrcBlend = D3D12_BLEND_SRC_ALPHA;
 	blenddesc.DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
-	// 画像の色
-	float colorR = 1.0f;
-	float colorG = 1.0f;
-	float colorB = 1.0f;
-	float colorA = 1.0f;
 #pragma region 定数バッファ
 	// ヒープ設定
 	D3D12_HEAP_PROPERTIES cbHeapProp{};
@@ -357,13 +370,32 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 #pragma region 行列
 	// ビュー変換行列
 	XMMATRIX matView;
-	XMFLOAT3 eye( 0, 0, -150);
+	XMFLOAT3 eye(0, 0, -150);
 	XMFLOAT3 target(0, 0, 0);
 	XMFLOAT3 up(0, 1, 0);
 	matView = XMMatrixLookAtLH(XMLoadFloat3(&eye),
 		XMLoadFloat3(&target),
 		XMLoadFloat3(&up));
 	float angle = 0.0f; // カメラの回転角
+	// ワールド変換行列
+	XMMATRIX matWorld;
+	// スケーリング行列
+	XMMATRIX matScale;
+	matScale = XMMatrixScaling(scale.x, scale.y, scale.z);
+	// 回転行列
+	XMMATRIX matRot;
+	matRot = XMMatrixIdentity();
+	matRot *= XMMatrixRotationX(XMConvertToRadians(rotation.x)); // X軸
+	matRot *= XMMatrixRotationY(XMConvertToRadians(rotation.y)); // Y軸
+	matRot *= XMMatrixRotationZ(XMConvertToRadians(rotation.z)); // Z軸
+	// 平行移動行列
+	XMMATRIX matTrans;
+	matTrans = XMMatrixIdentity(); // x,y,z移動
+
+	matWorld = XMMatrixIdentity();
+	matWorld *= matScale; // ワールド行列にスケーリングを乗算
+	matWorld *= matRot; // ワールド行列に回転を乗算
+	matWorld *= matTrans; // ワールド行列に平行移動を乗算
 	//// 平行投影の計算
 	//constMapTransform->mat = XMMatrixOrthographicOffCenterLH(
 	//	0, win.window_width,
@@ -380,7 +412,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 
 
 	// 定数バッファに転送
-	constMapTransform->mat = matView * matProjection;
+	constMapTransform->mat = matWorld * matView * matProjection;
 #pragma endregion
 
 #pragma endregion
@@ -577,8 +609,6 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 
 		// 更新
 #pragma region DirectX毎フレーム処理
-		constMapMaterial->color = XMFLOAT4(colorR, colorG, colorB, colorA);
-
 #pragma region キーボード処理
 		// 背景色変え
 		if (input.IsPush(DIK_SPACE)) {
@@ -602,33 +632,100 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 			colorG = 1.0f;
 			colorB = 1.0f;
 		}
-		// 画像回転
-		if (input.IsPush(DIK_D) || input.IsPush(DIK_A)) {
-			if (input.IsPush(DIK_D)) {
-				angle += XMConvertToRadians(1.0f);
+		constMapMaterial->color = XMFLOAT4(colorR, colorG, colorB, colorA);
+		// カメラ移動
+		//if (input.IsPush(DIK_D) || input.IsPush(DIK_A)) {
+		//	if (input.IsPush(DIK_D)) {
+		//		angle += XMConvertToRadians(1.0f);
+		//	}
+		//	else if (input.IsPush(DIK_A)) {
+		//		angle -= XMConvertToRadians(1.0f);
+		//	}
+		//	// angleラジアンy軸回転
+		//	eye.x = -150 * sin(angle);
+		//	eye.z = -150 * cos(angle);
+		//	// ビュー変換行列
+		//	matView = XMMatrixLookAtLH(XMLoadFloat3(&eye),
+		//		XMLoadFloat3(&target),
+		//		XMLoadFloat3(&up));
+		//}
+		// 図形回転
+		if (input.IsPush(DIK_W) ||
+			input.IsPush(DIK_S) ||
+			input.IsPush(DIK_A) ||
+			input.IsPush(DIK_D)) {
+			if (input.IsPush(DIK_W)) {
+				rotation.x = 1.0f;
+			} else if (input.IsPush(DIK_S)) {
+				rotation.x = -1.0f;
 			}
-			else if (input.IsPush(DIK_A)) {
-				angle -= XMConvertToRadians(1.0f);
+
+			if (input.IsPush(DIK_A)) {
+				rotation.y = -1.0f;
+			} else if (input.IsPush(DIK_D)) {
+				rotation.y = 1.0f;
 			}
-			// angleラジアンy軸回転
-			eye.x = -150 * sin(angle);
-			eye.z = -150 * cos(angle);
-			// ビュー変換行列
-			matView = XMMatrixLookAtLH(XMLoadFloat3(&eye),
-				XMLoadFloat3(&target),
-				XMLoadFloat3(&up));
 		}
+		else {
+			rotation.x = 0.0f;
+			rotation.y = 0.0f;
+			rotation.z = 0.0f;
+		}
+		// 移動
+		if (input.IsPush(DIK_UP) ||
+			input.IsPush(DIK_DOWN) ||
+			input.IsPush(DIK_RIGHT) ||
+			input.IsPush(DIK_LEFT)) {
+			speed = 1.0f;
+			if (input.IsPush(DIK_UP)) {
+				pos.z += speed;
+			}
+			if (input.IsPush(DIK_DOWN)) {
+				pos.z -= speed;
+			}
+			if (input.IsPush(DIK_RIGHT)) {
+				pos.x += speed;
+			}
+			if (input.IsPush(DIK_LEFT)) {
+				pos.x -= speed;
+			}
+		}
+		else {
+			speed = 0.0f;
+		}
+#pragma endregion
+
+#pragma region 行列
+		// ビュー行列の計算
+		matView = XMMatrixLookAtLH(XMLoadFloat3(&eye), XMLoadFloat3(&target), XMLoadFloat3(&up));
+		// 射影行列の計算
+		matProjection = XMMatrixPerspectiveFovLH(
+			XMConvertToRadians(45.0f),						// 上下画角45度
+			(float)win.window_width / win.window_height,	// アスペクト比(画面横幅/画面縦幅)
+			0.1f, 1000.0f									// 前端、奥端
+		);
+
+		matScale = XMMatrixScaling(scale.x, scale.y, scale.z); // スケーリングを行列の計算
+		matRot *= XMMatrixRotationX(XMConvertToRadians(rotation.x)); // X軸
+		matRot *= XMMatrixRotationY(XMConvertToRadians(rotation.y)); // Y軸
+		matRot *= XMMatrixRotationZ(XMConvertToRadians(rotation.z)); // Z軸
+		matTrans = XMMatrixTranslation(pos.x, pos.y, pos.z); // x,y,z移動
+
+		matWorld = XMMatrixIdentity();
+		matWorld *= matScale; // ワールド行列にスケーリングを乗算
+		matWorld *= matRot; // ワールド行列に回転を乗算
+		matWorld *= matTrans; // ワールド行列に平行移動を乗算
 
 		// 定数バッファに転送
-		constMapTransform->mat = matView * matProjection;
+		constMapTransform->mat = matWorld * matView * matProjection;
 #pragma endregion
+
 #pragma endregion
 
 		// 描画
 #pragma region リソースバリア
 		// バックバッファの番号を取得
 		UINT bbIndex = dx.swapChain->GetCurrentBackBufferIndex();
-
 		// 1.リソースバリアで書き込み可能に変更
 		D3D12_RESOURCE_BARRIER barrierDesc{};
 		barrierDesc.Transition.pResource = dx.backBuffers[bbIndex];
@@ -665,7 +762,6 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 		// ビューポート設定コマンドをコマンドリストに積む
 		dx.cmdList->RSSetViewports(1, &viewport);
 #pragma endregion
-
 #pragma region シザー矩形設定
 		// シザー矩形
 		D3D12_RECT scissorRect{};
@@ -676,18 +772,15 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 		// シザー矩形設定コマンドをコマンドリストに積む
 		dx.cmdList->RSSetScissorRects(1, &scissorRect);
 #pragma endregion
-
 #pragma region パイプラインステート設定
 		// パイプラインステートとルートシグネチャの設定コマンド
 		dx.cmdList->SetPipelineState(pipelineState);
 		dx.cmdList->SetGraphicsRootSignature(rootSignature);
 #pragma endregion
-
 #pragma region プリミティブ形状
 		// プリミティブ形状の設定コマンド
 		dx.cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 #pragma endregion
-
 		// インデックスバッファビューの設定コマンド
 		dx.cmdList->IASetIndexBuffer(&ibView);
 #pragma region 頂点バッファビューの設定コマンド

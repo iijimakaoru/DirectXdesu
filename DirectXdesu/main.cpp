@@ -1,10 +1,10 @@
 #include <stdio.h>
 #include <DirectXTex.h>
+#include <DirectXMath.h>
+#include <d3dcompiler.h>
 #include "KWindow.h"
 #include "KDirectInit.h"
 #include "KInput.h"
-#include <DirectXMath.h>
-#include <d3dcompiler.h>
 #ifdef DEBUG
 #include <iostream>
 #endif
@@ -105,6 +105,9 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	float colorG = 1.0f;
 	float colorB = 1.0f;
 	float colorA = 1.0f;
+
+	// カメラの距離
+	float lenZ = -100;
 #pragma region 頂点データ
 	// 頂点データ構造体
 	struct Vertex
@@ -230,6 +233,30 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	ibView.BufferLocation = indexBuff->GetGPUVirtualAddress();
 	ibView.Format = DXGI_FORMAT_R16_UINT;
 	ibView.SizeInBytes = sizeIB;
+#pragma endregion
+
+#pragma region 法線の計算
+	for (int i = 0; i < 36 / 3; i++) {
+		// 三角形１つごとに計算
+		unsigned short indices0 = indices[i * 3 + 0];
+		unsigned short indices1 = indices[i * 3 + 1];
+		unsigned short indices2 = indices[i * 3 + 2];
+		// 三角形を構成する頂点座標をベクトルに代入
+		XMVECTOR p0 = XMLoadFloat3(&vertices[indices0].pos);
+		XMVECTOR p1 = XMLoadFloat3(&vertices[indices1].pos);
+		XMVECTOR p2 = XMLoadFloat3(&vertices[indices2].pos);
+		// p0 → p1ベクトル、p0 → p2ベクトルを計算 (ベクトルの減算)
+		XMVECTOR v1 = XMVectorSubtract(p1, p0);
+		XMVECTOR v2 = XMVectorSubtract(p2, p0);
+		// 外積は両方から垂直なベクトル
+		XMVECTOR normal = XMVector3Cross(v1, v2);
+		// 正規化(長さを１にする)
+		normal = XMVector3Normalize(normal);
+		// 求めた法線を頂点データに代入
+		XMStoreFloat3(&vertices[indices0].normal, normal);
+		XMStoreFloat3(&vertices[indices1].normal, normal);
+		XMStoreFloat3(&vertices[indices2].normal, normal);
+	}
 #pragma endregion
 
 #pragma region 頂点バッファへのデータ転送
@@ -403,7 +430,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	cbResourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 	// 定数バッファの生成
 	ID3D12Resource* constBufferMaterial = nullptr;
-	ID3D12Resource* constBuffTransform = nullptr;
+	ID3D12Resource* constBuffTransform0 = nullptr;
+	ID3D12Resource* constBuffTransform1 = nullptr;
 	dx.result = dx.dev->CreateCommittedResource(
 		&cbHeapProp,
 		D3D12_HEAP_FLAG_NONE,
@@ -414,7 +442,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	assert(SUCCEEDED(dx.result));
 	// 定数バッファのマッピング
 	ConstBufferDataMaterial* constMapMaterial = nullptr;
-	ConstBufferDataTransform* constMapTransform = nullptr;
+	ConstBufferDataTransform* constMapTransform0 = nullptr;
+	ConstBufferDataTransform* constMapTransform1 = nullptr;
 	dx.result = constBufferMaterial->Map(
 		0,
 		nullptr,
@@ -441,57 +470,35 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 		&cbResourceDesc,
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
-		IID_PPV_ARGS(&constBuffTransform));
+		IID_PPV_ARGS(&constBuffTransform0));
+	assert(SUCCEEDED(dx.result));
+	dx.result = dx.dev->CreateCommittedResource(
+		&cbHeapProp,
+		D3D12_HEAP_FLAG_NONE,
+		&cbResourceDesc,
+		D3D12_RESOURCE_STATE_GENERIC_READ,
+		nullptr,
+		IID_PPV_ARGS(&constBuffTransform1));
 	assert(SUCCEEDED(dx.result));
 	// 定数バッファのマッピング
-	dx.result = constBuffTransform->Map(
+	dx.result = constBuffTransform0->Map(
 		0,
 		nullptr,
-		(void**)&constMapTransform);
+		(void**)&constMapTransform0);
+	assert(SUCCEEDED(dx.result));
+	dx.result = constBuffTransform1->Map(
+		0,
+		nullptr,
+		(void**)&constMapTransform1);
 	assert(SUCCEEDED(dx.result));
 #pragma region 行列
 	// ビュー変換行列
 	XMMATRIX matView;
-	XMFLOAT3 eye(0, 0, -100);
+	XMFLOAT3 eye(0, 0, lenZ);
 	XMFLOAT3 target(0, 0, 0);
 	XMFLOAT3 up(0, 1, 0);
-	matView = XMMatrixLookAtLH(XMLoadFloat3(&eye),
-		XMLoadFloat3(&target),
-		XMLoadFloat3(&up));
-	float angle = 0.0f; // カメラの回転角
-	// ワールド変換行列
-	XMMATRIX matWorld;
-	// スケーリング行列
-	XMMATRIX matScale;
-	matScale = XMMatrixScaling(scale.x, scale.y, scale.z);
-	// 回転行列
-	XMMATRIX matRot;
-	matRot = XMMatrixIdentity();
-	// 平行移動行列
-	XMMATRIX matTrans;
-	matTrans = XMMatrixIdentity(); // x,y,z移動
-	// ワールド行列に乗算
-	matWorld = XMMatrixIdentity();
-	matWorld *= matScale; // ワールド行列にスケーリングを乗算
-	matWorld *= matRot; // ワールド行列に回転を乗算
-	matWorld *= matTrans; // ワールド行列に平行移動を乗算
-	// 平行投影の計算
-	constMapTransform->mat = XMMatrixOrthographicOffCenterLH(
-		0, win.window_width,
-		win.window_height, 0,
-		0, 1.0f
-	);
-	 
-	// 射影変換行列
-	XMMATRIX matProjection = XMMatrixPerspectiveFovLH(
-		XMConvertToRadians(45.0f),						// 上下画角45度
-		(float)win.window_width / win.window_height,	// アスペクト比(画面横幅/画面縦幅)
-		0.1f, 1000.0f									// 前端、奥端
-	);
-
-
-	// 定数バッファに転送
-	constMapTransform->mat = matWorld * matView * matProjection;
+	float angleX = 0.0f; // カメラの回転角
+	float angleY = 0.0f;
 #pragma endregion
 
 #pragma endregion
@@ -568,19 +575,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	// 配列の要素数
 	const size_t imageDataCount = textureWidth * textureHeight;
 
-	// 画像イメージデータ配列
-	//XMFLOAT4* imageData = new XMFLOAT4[imageDataCount];
-
 	TexMetadata metadata{};
 	ScratchImage scraychImg{};
-
-	//// 全ピクセルの色初期化
-	//for (size_t i = 0; i < imageDataCount; i++){
-	//	imageData[i].x = 1.0f;	// R
-	//	imageData[i].y = 0.0f;	// G
-	//	imageData[i].z = 0.0f;	// B
-	//	imageData[i].w = 1.0f;	// A
-	//}
 
 	dx.result = LoadFromWICFile(
 		L"Resources/mario.jpg",
@@ -643,9 +639,6 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 		);
 		assert(SUCCEEDED(dx.result));
 	}
-
-	// 元データ解放
-	//delete[] imageData;
 
 	// SRVの最大個数
 	const size_t kMaxSRVCount = 2056;
@@ -717,52 +710,58 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 			colorB = 1.0f;
 		}
 		constMapMaterial->color = XMFLOAT4(colorR, colorG, colorB, colorA);
-		////カメラ移動
-		//if (input.IsPush(DIK_D) || input.IsPush(DIK_A)) {
-		//	if (input.IsPush(DIK_D)) {
-		//		angle += XMConvertToRadians(1.0f);
-		//	}
-		//	else if (input.IsPush(DIK_A)) {
-		//		angle -= XMConvertToRadians(1.0f);
-		//	}
-		//	// angleラジアンy軸回転
-		//	eye.x = -100 * sin(angle);
-		//	eye.z = -100 * cos(angle);
-		//	// ビュー変換行列
-		//	matView = XMMatrixLookAtLH(XMLoadFloat3(&eye),
-		//		XMLoadFloat3(&target),
-		//		XMLoadFloat3(&up));
-		//}
-		// 図形回転
-		if (input.IsPush(DIK_W) ||
-			input.IsPush(DIK_S) ||
-			input.IsPush(DIK_A) ||
-			input.IsPush(DIK_D)) {
-			if (input.IsPush(DIK_W)) {
-				rotation.x = 1.0f;
+		//カメラ移動
+		if (input.IsPush(DIK_D) || input.IsPush(DIK_A) ||
+			input.IsPush(DIK_W) || input.IsPush(DIK_S)) {
+			if (input.IsPush(DIK_D)) {
+				angleX += XMConvertToRadians(1.0f);
 			}
-			else if (input.IsPush(DIK_S)) {
-				rotation.x = -1.0f;
-			}
-			else {
-				rotation.x = 0.0f;
+			else if (input.IsPush(DIK_A)) {
+				angleX -= XMConvertToRadians(1.0f);
 			}
 
-			if (input.IsPush(DIK_A)) {
-				rotation.y = -1.0f;
+			if (input.IsPush(DIK_W)){
+				angleY -= XMConvertToRadians(1.0f);
 			}
-			else if (input.IsPush(DIK_D)) {
-				rotation.y = 1.0f;
+			else if (input.IsPush(DIK_S)) {
+				angleY += XMConvertToRadians(1.0f);
 			}
-			else {
-				rotation.y = 0.0f;
-			}
+
+			// angleラジアンy軸回転
+			eye.x = lenZ * sinf(angleX);
+			eye.y = lenZ * sinf(angleY);
+			eye.z = lenZ * cosf(angleX) * cosf(angleY);
 		}
-		else {
-			rotation.x = 0.0f;
-			rotation.y = 0.0f;
-			rotation.z = 0.0f;
-		}
+		//// 図形回転
+		//if (input.IsPush(DIK_W) ||
+		//	input.IsPush(DIK_S) ||
+		//	input.IsPush(DIK_A) ||
+		//	input.IsPush(DIK_D)) {
+		//	if (input.IsPush(DIK_W)) {
+		//		rotation.x = 1.0f;
+		//	}
+		//	else if (input.IsPush(DIK_S)) {
+		//		rotation.x = -1.0f;
+		//	}
+		//	else {
+		//		rotation.x = 0.0f;
+		//	}
+
+		//	if (input.IsPush(DIK_A)) {
+		//		rotation.y = -1.0f;
+		//	}
+		//	else if (input.IsPush(DIK_D)) {
+		//		rotation.y = 1.0f;
+		//	}
+		//	else {
+		//		rotation.y = 0.0f;
+		//	}
+		//}
+		//else {
+		//	rotation.x = 0.0f;
+		//	rotation.y = 0.0f;
+		//	rotation.z = 0.0f;
+		//}
 		// 移動
 		if (input.IsPush(DIK_UP) ||
 			input.IsPush(DIK_DOWN) ||
@@ -790,26 +789,65 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 #pragma region 行列
 		// ビュー行列の計算
 		matView = XMMatrixLookAtLH(XMLoadFloat3(&eye), XMLoadFloat3(&target), XMLoadFloat3(&up));
-		// 射影行列の計算
-		matProjection = XMMatrixPerspectiveFovLH(
+		// 射影変換行列の計算
+		XMMATRIX matProjection = XMMatrixPerspectiveFovLH(
 			XMConvertToRadians(45.0f),						// 上下画角45度
 			(float)win.window_width / win.window_height,	// アスペクト比(画面横幅/画面縦幅)
 			0.1f, 1000.0f									// 前端、奥端
 		);
 
-		matScale = XMMatrixScaling(scale.x, scale.y, scale.z); // スケーリングを行列の計算
-		matRot *= XMMatrixRotationX(XMConvertToRadians(rotation.x)); // X軸
-		matRot *= XMMatrixRotationY(XMConvertToRadians(rotation.y)); // Y軸
-		matRot *= XMMatrixRotationZ(XMConvertToRadians(rotation.z)); // Z軸
-		matTrans = XMMatrixTranslation(pos.x, pos.y, pos.z); // x,y,z移動
+#pragma region 0番オブジェクトの毎フレーム処理
+		// ワールド変換行列
+		XMMATRIX matWorld0 = XMMatrixIdentity();
+		// スケーリング行列
+		XMMATRIX matScale0 = XMMatrixScaling(scale.x, scale.y, scale.z);
+		// 回転行列
+		XMMATRIX matRot0 = XMMatrixIdentity();
+		// 平行移動行列
+		XMMATRIX matTrans0 = XMMatrixIdentity(); // x,y,z移動
 
-		matWorld = XMMatrixIdentity();
-		matWorld *= matScale; // ワールド行列にスケーリングを乗算
-		matWorld *= matRot; // ワールド行列に回転を乗算
-		matWorld *= matTrans; // ワールド行列に平行移動を乗算
+		matScale0 = XMMatrixScaling(scale.x, scale.y, scale.z); // スケーリングを行列の計算
+		matRot0 *= XMMatrixRotationX(XMConvertToRadians(rotation.x)); // X軸
+		matRot0 *= XMMatrixRotationY(XMConvertToRadians(rotation.y)); // Y軸
+		matRot0 *= XMMatrixRotationZ(XMConvertToRadians(rotation.z)); // Z軸
+		matTrans0 = XMMatrixTranslation(pos.x, pos.y, pos.z); // x,y,z移動
+
+		// ワールド行列に乗算
+		matWorld0 = XMMatrixIdentity();
+		matWorld0 *= matScale0; // ワールド行列にスケーリングを乗算
+		matWorld0 *= matRot0; // ワールド行列に回転を乗算
+		matWorld0 *= matTrans0; // ワールド行列に平行移動を乗算
 
 		// 定数バッファに転送
-		constMapTransform->mat = matWorld * matView * matProjection;
+		constMapTransform0->mat = matWorld0 * matView * matProjection;
+#pragma endregion
+
+#pragma region 1番オブジェクトの毎フレーム処理
+		// ワールド変換行列
+		XMMATRIX matWorld1 = XMMatrixIdentity();
+		// スケーリング行列
+		XMMATRIX matScale1 = XMMatrixScaling(scale.x, scale.y, scale.z);
+		// 回転行列
+		XMMATRIX matRot1 = XMMatrixIdentity();
+		// 平行移動行列
+		XMMATRIX matTrans1 = XMMatrixIdentity(); // x,y,z移動
+
+		matScale1 = XMMatrixScaling(1.0f, 1.0f, 1.0f); // スケーリングを行列の計算
+		matRot1 *= XMMatrixRotationX(XMConvertToRadians(0)); // X軸
+		matRot1 *= XMMatrixRotationY(XMConvertToRadians(XM_PI / 4.0f)); // Y軸
+		matRot1 *= XMMatrixRotationZ(XMConvertToRadians(0)); // Z軸
+		matTrans1 = XMMatrixTranslation(-20.0f, 0, 0); // x,y,z移動
+
+		// ワールド行列に乗算
+		matWorld1 = XMMatrixIdentity();
+		matWorld1 *= matScale1; // ワールド行列にスケーリングを乗算
+		matWorld1 *= matRot1; // ワールド行列に回転を乗算
+		matWorld1 *= matTrans1; // ワールド行列に平行移動を乗算
+
+		// 定数バッファに転送
+		constMapTransform1->mat = matWorld1 * matView * matProjection;
+#pragma endregion
+
 #pragma endregion
 
 #pragma endregion
@@ -890,11 +928,13 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 		D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle = srvHeap->GetGPUDescriptorHandleForHeapStart();
 		// SRVヒープの先頭にあるSRVをルートパラメータ1番の設定
 		dx.cmdList->SetGraphicsRootDescriptorTable(1, srvGpuHandle);
-		// 定数バッファビューの設定コマンド
-		dx.cmdList->SetGraphicsRootConstantBufferView(2, constBuffTransform->GetGPUVirtualAddress());
 #pragma region 描画コマンド
 		// 描画コマンド
-		//dx.cmdList->DrawInstanced(_countof(vertices), 1, 0, 0);
+		// 0番定数バッファビューの設定コマンド
+		dx.cmdList->SetGraphicsRootConstantBufferView(2, constBuffTransform0->GetGPUVirtualAddress());
+		dx.cmdList->DrawIndexedInstanced(_countof(indices), 1, 0, 0, 0);
+		// 1番定数バッファビューの設定コマンド
+		dx.cmdList->SetGraphicsRootConstantBufferView(2, constBuffTransform1->GetGPUVirtualAddress());
 		dx.cmdList->DrawIndexedInstanced(_countof(indices), 1, 0, 0, 0);
 #pragma endregion
 		// 描画コマンドここまで

@@ -1,6 +1,6 @@
-#include "Dx12.h"
+#include "KDirectInit.h"
 
-Dx12::Dx12(Window window) {
+KDirectInit::KDirectInit(KWindow window) {
 	bRed = 0.1f;
 	bGreen = 0.25f;
 	bBule = 0.5f;
@@ -22,13 +22,13 @@ Dx12::Dx12(Window window) {
 	SetFence();
 }
 
-void Dx12::SetDXGIFactory() {
+void KDirectInit::SetDXGIFactory() {
 	// DXGIファクトリーの生成
 	result = CreateDXGIFactory(IID_PPV_ARGS(&dxgiFactory));
 	assert(SUCCEEDED(result));
 }
 
-void Dx12::SetAdapter() {
+void KDirectInit::SetAdapter() {
 	// アダプターの列挙用
 	std::vector<IDXGIAdapter4*> adapters;
 
@@ -62,7 +62,7 @@ void Dx12::SetAdapter() {
 	tmpAdapter->Release();
 }
 
-void Dx12::SetDevice(IDXGIAdapter4* tmpAdapter) {
+void KDirectInit::SetDevice(IDXGIAdapter4* tmpAdapter) {
 	for (size_t i = 0; i < _countof(levels); i++) {
 		result = D3D12CreateDevice(tmpAdapter, levels[i], IID_PPV_ARGS(&dev));
 		if (result == S_OK) {
@@ -73,7 +73,7 @@ void Dx12::SetDevice(IDXGIAdapter4* tmpAdapter) {
 	}
 }
 
-void Dx12::SetCommandList() {
+void KDirectInit::SetCommandList() {
 	// コマンドアロケーター生成
 	result = dev->CreateCommandAllocator(
 		D3D12_COMMAND_LIST_TYPE_DIRECT,
@@ -88,13 +88,13 @@ void Dx12::SetCommandList() {
 	assert(SUCCEEDED(result));
 }
 
-void Dx12::SetCommandQueue() {
+void KDirectInit::SetCommandQueue() {
 	// コマンドキューを生成
 	result = dev->CreateCommandQueue(&cmdQueueDesc, IID_PPV_ARGS(&cmdQueue));
 	assert(SUCCEEDED(result));
 }
 
-void Dx12::SetSwapChain(Window window) {
+void KDirectInit::SetSwapChain(KWindow window) {
 	swapChainDesc.Width = window.window_width;
 	swapChainDesc.Height = window.window_height;
 	swapChainDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
@@ -110,14 +110,14 @@ void Dx12::SetSwapChain(Window window) {
 	assert(SUCCEEDED(result));
 }
 
-void Dx12::SetDescriptor() {
+void KDirectInit::SetDescriptor() {
 	rtvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
 	rtvHeapDesc.NumDescriptors = swapChainDesc.BufferCount;
 	// デスクリプタヒープの生成
 	dev->CreateDescriptorHeap(&rtvHeapDesc, IID_PPV_ARGS(&rtvHeap));
 }
 
-void Dx12::SetBackBuffer() {
+void KDirectInit::SetBackBuffer() {
 	backBuffers.resize(swapChainDesc.BufferCount);
 	// スワップチェーンの全てのバッファについて処理する
 	for (size_t i = 0; i < backBuffers.size(); i++)
@@ -138,6 +138,6 @@ void Dx12::SetBackBuffer() {
 	}
 }
 
-void Dx12::SetFence() {
+void KDirectInit::SetFence() {
 	result = dev->CreateFence(fenceVal, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence));
 }

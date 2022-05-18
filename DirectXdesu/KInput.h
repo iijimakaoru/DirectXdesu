@@ -3,10 +3,10 @@
 #define DIRECTINPUT_VERSION  0x0800
 #pragma comment(lib, "dinput8.lib")
 #pragma comment(lib, "dxguid.lib")
-class Input
+class KInput
 {
 public:
-	Input(HRESULT& result, WNDCLASSEX w, HWND hwnd);
+	KInput(HRESULT& result, WNDCLASSEX w, HWND hwnd);
 	void Init(HRESULT& result, WNDCLASSEX w, HWND hwnd);
 	void Update(HRESULT& result);
 	void KeyInit();

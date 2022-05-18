@@ -5,21 +5,21 @@
 #include <wrl.h>
 #include <vector>
 #include <string>
-#include"Window.h"
+#include"KWindow.h"
 
 #pragma comment(lib, "d3d12.lib")
 #pragma comment(lib, "dxgi.lib")
 
-class Dx12
+class KDirectInit
 {
 public:
-	Dx12(Window window);
+	KDirectInit(KWindow window);
 	void SetDXGIFactory();
 	void SetAdapter();
 	void SetDevice(IDXGIAdapter4* tmpAdapter);
 	void SetCommandList();
 	void SetCommandQueue();
-	void SetSwapChain(Window window);
+	void SetSwapChain(KWindow window);
 	void SetDescriptor();
 	void SetBackBuffer();
 	void SetFence();

@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <DirectXTex.h>
-#include "Window.h"
-#include "Dx12.h"
-#include "Input.h"
+#include "KWindow.h"
+#include "KDirectInit.h"
+#include "KInput.h"
 #include <DirectXMath.h>
 #include <d3dcompiler.h>
 #ifdef DEBUG
@@ -35,12 +35,12 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 #endif
 
 #pragma region ウィンドウ
-	Window win;
+	KWindow win;
 #pragma endregion
 
 #pragma region DirectX初期化
-	Dx12 dx(win);
-	Input input(dx.result, win.window, win.handle);
+	KDirectInit dx(win);
+	KInput input(dx.result, win.window, win.handle);
 #pragma endregion
 
 #pragma region 描画初期化
@@ -475,13 +475,13 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	matWorld *= matScale; // ワールド行列にスケーリングを乗算
 	matWorld *= matRot; // ワールド行列に回転を乗算
 	matWorld *= matTrans; // ワールド行列に平行移動を乗算
-	//// 平行投影の計算
-	//constMapTransform->mat = XMMatrixOrthographicOffCenterLH(
-	//	0, win.window_width,
-	//	win.window_height, 0,
-	//	0, 1.0f
-	//);
-	// 
+	// 平行投影の計算
+	constMapTransform->mat = XMMatrixOrthographicOffCenterLH(
+		0, win.window_width,
+		win.window_height, 0,
+		0, 1.0f
+	);
+	 
 	// 射影変換行列
 	XMMATRIX matProjection = XMMatrixPerspectiveFovLH(
 		XMConvertToRadians(45.0f),						// 上下画角45度
@@ -744,12 +744,18 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 			else if (input.IsPush(DIK_S)) {
 				rotation.x = -1.0f;
 			}
+			else {
+				rotation.x = 0.0f;
+			}
 
 			if (input.IsPush(DIK_A)) {
 				rotation.y = -1.0f;
 			}
 			else if (input.IsPush(DIK_D)) {
 				rotation.y = 1.0f;
+			}
+			else {
+				rotation.y = 0.0f;
 			}
 		}
 		else {

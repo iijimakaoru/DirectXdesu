@@ -144,16 +144,16 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Blend.cpp" />
-    <ClCompile Include="Dx12.cpp" />
-    <ClCompile Include="Input.cpp" />
+    <ClCompile Include="KDirectInit.cpp" />
+    <ClCompile Include="KInput.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Window.cpp" />
+    <ClCompile Include="KWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Blend.h" />
-    <ClInclude Include="Dx12.h" />
-    <ClInclude Include="Input.h" />
-    <ClInclude Include="Window.h" />
+    <ClInclude Include="KDirectInit.h" />
+    <ClInclude Include="KInput.h" />
+    <ClInclude Include="KWindow.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="BasicPS.hlsl">

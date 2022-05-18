@@ -44,6 +44,49 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 #pragma endregion
 
 #pragma region 描画初期化
+#pragma region 深度バッファ
+	// リソース設定
+	D3D12_RESOURCE_DESC depthResourceDesc{};
+	depthResourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+	depthResourceDesc.Width = win.window_width; // レンダーターゲットに合わせる
+	depthResourceDesc.Height = win.window_height; // レンダーターゲットに合わせる
+	depthResourceDesc.DepthOrArraySize = 1;
+	depthResourceDesc.Format = DXGI_FORMAT_D32_FLOAT; // 深度値フォーマット
+	depthResourceDesc.SampleDesc.Count = 1;
+	depthResourceDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL; // デプスステンシル
+	// 深度値用ヒーププロパティ
+	D3D12_HEAP_PROPERTIES depthHeapProp{};
+	depthHeapProp.Type = D3D12_HEAP_TYPE_DEFAULT;
+	// 深度値のクリア設定
+	D3D12_CLEAR_VALUE depthClearValue{};
+	depthClearValue.DepthStencil.Depth = 1.0f;
+	depthClearValue.Format = DXGI_FORMAT_D32_FLOAT; // 深度値フォーマット
+	// リソース生成
+	ID3D12Resource* depthBuff = nullptr;
+	dx.result = dx.dev->CreateCommittedResource(
+		&depthHeapProp,
+		D3D12_HEAP_FLAG_NONE,
+		&depthResourceDesc,
+		D3D12_RESOURCE_STATE_DEPTH_WRITE,
+		&depthClearValue,
+		IID_PPV_ARGS(&depthBuff));
+	// 深度ビュー用デスクリプタヒープ作成
+	D3D12_DESCRIPTOR_HEAP_DESC dsvHeapDesc{};
+	dsvHeapDesc.NumDescriptors = 1; // 深度ビューは1つ
+	dsvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV; // デプスステンシルビュー
+	ID3D12DescriptorHeap* dsvHeap = nullptr;
+	dx.result = dx.dev->CreateDescriptorHeap(&dsvHeapDesc, IID_PPV_ARGS(&dsvHeap));
+	// 深度ビュー作成
+	D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc = {};
+	dsvDesc.Format = DXGI_FORMAT_D32_FLOAT; // 深度値フォーマット
+	dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
+	dx.dev->CreateDepthStencilView(
+		depthBuff,
+		&dsvDesc,
+		dsvHeap->GetCPUDescriptorHandleForHeapStart());
+#pragma endregion
+
+
 	// スケーリング倍率
 	XMFLOAT3 scale;
 	// 回転角
@@ -136,23 +179,23 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	// インデックスデータ
 	unsigned short indices[] = {
 		// 前
-		0, 1, 2, // 三角形1つ目
-		1, 2, 3, // 三角形2つ目
+		 0, 1, 2, // 三角形1つ目
+		 1, 2, 3, // 三角形2つ目
 		// 後
-		4, 5, 6,
-		5, 6, 7,
+		 4, 5, 6,
+		 5, 6, 7,
 		// 左
-		0, 4, 1,
-		4, 1, 5,
+		 8, 9,10,
+		 9,10,11,
 		// 右
-		2, 6, 3,
-		6, 3, 7,
+		12,13,14,
+		13,14,15,
 		// 下
-		0, 4, 2,
-		4, 2, 6,
+		16,17,18,
+		17,18,19,
 		// 上
-		1, 5, 3,
-		5, 3, 7
+		20,21,22,
+		21,22,23
 	};
 	// インデックスデータ全体のサイズ
 	UINT sizeIB = static_cast<UINT>(sizeof(uint16_t) * _countof(indices));
@@ -511,6 +554,11 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	rootSigBlob->Release();
 	// パイプラインにルートシグネチャをセット
 	pipelineDesc.pRootSignature = rootSignature;
+	// デプスステンシルステートの設定
+	pipelineDesc.DepthStencilState.DepthEnable = true; // 深度テスト
+	pipelineDesc.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL; // 書き込み許可
+	pipelineDesc.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_LESS; // 小さければ合格
+	pipelineDesc.DSVFormat = DXGI_FORMAT_D32_FLOAT; // 深度値フォーマット
 	// パイプラインステート
 	ID3D12PipelineState* pipelineState = nullptr;
 	dx.result = dx.dev->CreateGraphicsPipelineState(&pipelineDesc, IID_PPV_ARGS(&pipelineState));
@@ -672,46 +720,46 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 			colorB = 1.0f;
 		}
 		constMapMaterial->color = XMFLOAT4(colorR, colorG, colorB, colorA);
-		//カメラ移動
-		if (input.IsPush(DIK_D) || input.IsPush(DIK_A)) {
-			if (input.IsPush(DIK_D)) {
-				angle += XMConvertToRadians(1.0f);
-			}
-			else if (input.IsPush(DIK_A)) {
-				angle -= XMConvertToRadians(1.0f);
-			}
-			// angleラジアンy軸回転
-			eye.x = -100 * sin(angle);
-			eye.z = -100 * cos(angle);
-			// ビュー変換行列
-			matView = XMMatrixLookAtLH(XMLoadFloat3(&eye),
-				XMLoadFloat3(&target),
-				XMLoadFloat3(&up));
-		}
-		//// 図形回転
-		//if (input.IsPush(DIK_W) ||
-		//	input.IsPush(DIK_S) ||
-		//	input.IsPush(DIK_A) ||
-		//	input.IsPush(DIK_D)) {
-		//	if (input.IsPush(DIK_W)) {
-		//		rotation.x = 1.0f;
+		////カメラ移動
+		//if (input.IsPush(DIK_D) || input.IsPush(DIK_A)) {
+		//	if (input.IsPush(DIK_D)) {
+		//		angle += XMConvertToRadians(1.0f);
 		//	}
-		//	else if (input.IsPush(DIK_S)) {
-		//		rotation.x = -1.0f;
+		//	else if (input.IsPush(DIK_A)) {
+		//		angle -= XMConvertToRadians(1.0f);
 		//	}
+		//	// angleラジアンy軸回転
+		//	eye.x = -100 * sin(angle);
+		//	eye.z = -100 * cos(angle);
+		//	// ビュー変換行列
+		//	matView = XMMatrixLookAtLH(XMLoadFloat3(&eye),
+		//		XMLoadFloat3(&target),
+		//		XMLoadFloat3(&up));
+		//}
+		// 図形回転
+		if (input.IsPush(DIK_W) ||
+			input.IsPush(DIK_S) ||
+			input.IsPush(DIK_A) ||
+			input.IsPush(DIK_D)) {
+			if (input.IsPush(DIK_W)) {
+				rotation.x = 1.0f;
+			}
+			else if (input.IsPush(DIK_S)) {
+				rotation.x = -1.0f;
+			}
 
-		//	if (input.IsPush(DIK_A)) {
-		//		rotation.y = -1.0f;
-		//	}
-		//	else if (input.IsPush(DIK_D)) {
-		//		rotation.y = 1.0f;
-		//	}
-		//}
-		//else {
-		//	rotation.x = 0.0f;
-		//	rotation.y = 0.0f;
-		//	rotation.z = 0.0f;
-		//}
+			if (input.IsPush(DIK_A)) {
+				rotation.y = -1.0f;
+			}
+			else if (input.IsPush(DIK_D)) {
+				rotation.y = 1.0f;
+			}
+		}
+		else {
+			rotation.x = 0.0f;
+			rotation.y = 0.0f;
+			rotation.z = 0.0f;
+		}
 		// 移動
 		if (input.IsPush(DIK_UP) ||
 			input.IsPush(DIK_DOWN) ||
@@ -780,13 +828,16 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 		// レンダーターゲートビューのハンドルを取得
 		D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = dx.rtvHeap->GetCPUDescriptorHandleForHeapStart();
 		rtvHandle.ptr += bbIndex * dx.dev->GetDescriptorHandleIncrementSize(dx.rtvHeapDesc.Type);
-		dx.cmdList->OMSetRenderTargets(1, &rtvHandle, false, nullptr);
+		// 深度ステンシルビュー用デスクリプタヒープのハンドルを取得
+		D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = dsvHeap->GetCPUDescriptorHandleForHeapStart();
+		dx.cmdList->OMSetRenderTargets(1, &rtvHandle, false, &dsvHandle);
 #pragma endregion
 
 #pragma region 画面クリア
 		// 3. 画面クリア
 		FLOAT clearColor[] = { dx.bRed,dx.bGreen,dx.bBule,0.0f };
 		dx.cmdList->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
+		dx.cmdList->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 #pragma endregion
 
 #pragma region 描画

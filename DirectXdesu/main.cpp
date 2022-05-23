@@ -5,6 +5,7 @@
 #include "KWindow.h"
 #include "KDirectInit.h"
 #include "KInput.h"
+#include "KDepth.h"
 #ifdef DEBUG
 #include <iostream>
 #endif
@@ -129,58 +130,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 
 #pragma region 描画初期化
 #pragma region 深度バッファ
-	// リソース設定
-	D3D12_RESOURCE_DESC depthResourceDesc{};
-	depthResourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
-	depthResourceDesc.Width = win.window_width; // レンダーターゲットに合わせる
-	depthResourceDesc.Height = win.window_height; // レンダーターゲットに合わせる
-	depthResourceDesc.DepthOrArraySize = 1;
-	depthResourceDesc.Format = DXGI_FORMAT_D32_FLOAT; // 深度値フォーマット
-	depthResourceDesc.SampleDesc.Count = 1;
-	depthResourceDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL; // デプスステンシル
-	// 深度値用ヒーププロパティ
-	D3D12_HEAP_PROPERTIES depthHeapProp{};
-	depthHeapProp.Type = D3D12_HEAP_TYPE_DEFAULT;
-	// 深度値のクリア設定
-	D3D12_CLEAR_VALUE depthClearValue{};
-	depthClearValue.DepthStencil.Depth = 1.0f;
-	depthClearValue.Format = DXGI_FORMAT_D32_FLOAT; // 深度値フォーマット
-	// リソース生成
-	ID3D12Resource* depthBuff = nullptr;
-	dx.result = dx.dev->CreateCommittedResource(
-		&depthHeapProp,
-		D3D12_HEAP_FLAG_NONE,
-		&depthResourceDesc,
-		D3D12_RESOURCE_STATE_DEPTH_WRITE,
-		&depthClearValue,
-		IID_PPV_ARGS(&depthBuff));
-	// 深度ビュー用デスクリプタヒープ作成
-	D3D12_DESCRIPTOR_HEAP_DESC dsvHeapDesc{};
-	dsvHeapDesc.NumDescriptors = 1; // 深度ビューは1つ
-	dsvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV; // デプスステンシルビュー
-	ID3D12DescriptorHeap* dsvHeap = nullptr;
-	dx.result = dx.dev->CreateDescriptorHeap(&dsvHeapDesc, IID_PPV_ARGS(&dsvHeap));
-	// 深度ビュー作成
-	D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc = {};
-	dsvDesc.Format = DXGI_FORMAT_D32_FLOAT; // 深度値フォーマット
-	dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
-	dx.dev->CreateDepthStencilView(
-		depthBuff,
-		&dsvDesc,
-		dsvHeap->GetCPUDescriptorHandleForHeapStart());
+	KDepth depth(dx, win);
 #pragma endregion
-
-	//// スケーリング倍率
-	//XMFLOAT3 scale;
-	//// 回転角
-	//XMFLOAT3 rotation;
-	//// 座標
-	//XMFLOAT3 pos;
-
-	//scale = { 1.0f,1.0f,1.0f };
-	//rotation = { 0.0f,0.0f,0.0f };
-	//pos = { 0.0f,0.0f,0.0f };
-
 	// 速さ
 	float speed = 0.0f;
 
@@ -194,8 +145,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	float lenZ = -100;
 #pragma region 頂点データ
 	// 頂点データ構造体
-	struct Vertex
-	{
+	struct Vertex{
 		XMFLOAT3 pos;	 // xyz座標
 		XMFLOAT3 normal; // 法線ベクトル
 		XMFLOAT2 uv;	 // uv座標
@@ -877,7 +827,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 		D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = dx.rtvHeap->GetCPUDescriptorHandleForHeapStart();
 		rtvHandle.ptr += bbIndex * dx.dev->GetDescriptorHandleIncrementSize(dx.rtvHeapDesc.Type);
 		// 深度ステンシルビュー用デスクリプタヒープのハンドルを取得
-		D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = dsvHeap->GetCPUDescriptorHandleForHeapStart();
+		D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = depth.dsvHeap->GetCPUDescriptorHandleForHeapStart();
 		dx.cmdList->OMSetRenderTargets(1, &rtvHandle, false, &dsvHandle);
 #pragma endregion
 

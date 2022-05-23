@@ -144,6 +144,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Blend.cpp" />
+    <ClCompile Include="KDepth.cpp" />
     <ClCompile Include="KDirectInit.cpp" />
     <ClCompile Include="KInput.cpp" />
     <ClCompile Include="main.cpp" />
@@ -151,6 +152,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Blend.h" />
+    <ClInclude Include="KDepth.h" />
     <ClInclude Include="KDirectInit.h" />
     <ClInclude Include="KInput.h" />
     <ClInclude Include="KWindow.h" />

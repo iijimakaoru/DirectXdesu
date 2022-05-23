@@ -6,6 +6,7 @@
 #include "KDirectInit.h"
 #include "KInput.h"
 #include "KDepth.h"
+//#include "Object3D.h"
 #ifdef DEBUG
 #include <iostream>
 #endif
@@ -38,9 +39,7 @@ struct Object3d {
 	Object3d* parent = nullptr;
 };
 
-void InitializeObject3d(Object3d* object, ID3D12Device* dev) {
-	HRESULT result;
-
+void InitializeObject3d(HRESULT result, Object3d* object, ID3D12Device* dev) {
 	// ヒープ設定
 	D3D12_HEAP_PROPERTIES cbHeapProp{};
 	cbHeapProp.Type = D3D12_HEAP_TYPE_UPLOAD;
@@ -451,11 +450,6 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	cbResourceDesc.SampleDesc.Count = 1;
 	cbResourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 
-	// 3Dオブジェクトの数
-	const size_t kObjectCount = 50;
-	// 3Dオブジェクトの配列
-	Object3d object3d[kObjectCount];
-
 	// 定数バッファの生成
 	ID3D12Resource* constBufferMaterial = nullptr;
 	dx.result = dx.dev->CreateCommittedResource(
@@ -474,9 +468,17 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 		(void**)&constMapMaterial);
 	assert(SUCCEEDED(dx.result));
 
+	//// 3Dオブジェクト初期化
+	//Object3D object3d(dx.result, dx.dev);
+
+	// 3Dオブジェクトの数
+	const size_t kObjectCount = 50;
+	// 3Dオブジェクトの配列
+	Object3d object3d[kObjectCount];
+
 	for (int i = 0; i < _countof(object3d); i++) {
 		// 初期化
-		InitializeObject3d(&object3d[i], dx.dev);
+		InitializeObject3d(dx.result, &object3d[i], dx.dev);
 
 		if (i > 0) {
 			object3d[i].parent = &object3d[i - 1];
@@ -678,8 +680,6 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	// ゲームループ
 	while (true)
 	{
-		win.Update();
-		input.Update(dx.result);
 #pragma region ウィンドウメッセージ
 		if (win.breakFlag || input.IsPush(DIK_ESCAPE))
 		{
@@ -689,6 +689,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 
 		// 更新
 #pragma region DirectX毎フレーム処理
+		win.Update();
+		input.Update(dx.result);
 #pragma region キーボード処理
 		// 背景色変え
 		if (input.IsPush(DIK_SPACE)) {

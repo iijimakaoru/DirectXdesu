@@ -149,6 +149,7 @@
     <ClCompile Include="KInput.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="KWindow.cpp" />
+    <ClCompile Include="Object3D.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Blend.h" />
@@ -156,6 +157,7 @@
     <ClInclude Include="KDirectInit.h" />
     <ClInclude Include="KInput.h" />
     <ClInclude Include="KWindow.h" />
+    <ClInclude Include="Object3D.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="BasicPS.hlsl">

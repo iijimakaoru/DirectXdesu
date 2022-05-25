@@ -7,6 +7,7 @@
 #include "KInput.h"
 #include "KDepth.h"
 #include "KVertex.h"
+#include "KIndex.h"
 //#include "Object3D.h"
 #ifdef DEBUG
 #include <iostream>
@@ -148,72 +149,19 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 #pragma endregion
 
 #pragma region インデックスデータ
-	// インデックスデータ
-	unsigned short indices[] = {
-		// 前
-		 0, 1, 2, // 三角形1つ目
-		 2, 1, 3, // 三角形2つ目
-		// 後
-		 4, 5, 6,
-		 6, 5, 7,
-		 // 左
-		  8, 9,10,
-		 10, 9,11,
-		 // 右
-		 12,13,14,
-		 14,13,15,
-		 // 下
-		 16,17,18,
-		 18,17,19,
-		 // 上
-		 20,21,22,
-		 22,21,23
-	};
-	// インデックスデータ全体のサイズ
-	UINT sizeIB = static_cast<UINT>(sizeof(uint16_t) * _countof(indices));
-	// リソース設定
-	vertex.resDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-	vertex.resDesc.Width = sizeIB;
-	vertex.resDesc.Height = 1;
-	vertex.resDesc.DepthOrArraySize = 1;
-	vertex.resDesc.MipLevels = 1;
-	vertex.resDesc.SampleDesc.Count = 1;
-	vertex.resDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
-	// インデックスバッファの生成
-	ID3D12Resource* indexBuff = nullptr;
-	dx.result = dx.dev->CreateCommittedResource(
-		&vertex.heapProp,
-		D3D12_HEAP_FLAG_NONE,
-		&vertex.resDesc,
-		D3D12_RESOURCE_STATE_GENERIC_READ,
-		nullptr,
-		IID_PPV_ARGS(&indexBuff));
-	// インデックスバッファをマッピング
-	uint16_t* indexMap = nullptr;
-	dx.result = indexBuff->Map(0, nullptr, (void**)&indexMap);
-	// 全インデックスに対して
-	for (int i = 0; i < _countof(indices); i++) {
-		indexMap[i] = indices[i];
-	}
-	// マッピング解除
-	indexBuff->Unmap(0, nullptr);
-	// インデックスバッファビュー
-	D3D12_INDEX_BUFFER_VIEW ibView{};
-	ibView.BufferLocation = indexBuff->GetGPUVirtualAddress();
-	ibView.Format = DXGI_FORMAT_R16_UINT;
-	ibView.SizeInBytes = sizeIB;
+	KIndex index(dx, vertex);
 #pragma endregion
 
 #pragma region 法線の計算
-	for (int i = 0; i < 36 / 3; i++) {
+	for (int i = 0; i < _countof(indices) / 3; i++) {
 		// 三角形１つごとに計算
 		unsigned short indices0 = indices[i * 3 + 0];
 		unsigned short indices1 = indices[i * 3 + 1];
 		unsigned short indices2 = indices[i * 3 + 2];
 		// 三角形を構成する頂点座標をベクトルに代入
-		XMVECTOR p0 = XMLoadFloat3(&vertex.vertices[indices0].pos);
-		XMVECTOR p1 = XMLoadFloat3(&vertex.vertices[indices1].pos);
-		XMVECTOR p2 = XMLoadFloat3(&vertex.vertices[indices2].pos);
+		XMVECTOR p0 = XMLoadFloat3(&vertices[indices0].pos);
+		XMVECTOR p1 = XMLoadFloat3(&vertices[indices1].pos);
+		XMVECTOR p2 = XMLoadFloat3(&vertices[indices2].pos);
 		// p0 → p1ベクトル、p0 → p2ベクトルを計算 (ベクトルの減算)
 		XMVECTOR v1 = XMVectorSubtract(p1, p0);
 		XMVECTOR v2 = XMVectorSubtract(p2, p0);
@@ -222,9 +170,9 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 		// 正規化(長さを１にする)
 		normal = XMVector3Normalize(normal);
 		// 求めた法線を頂点データに代入
-		XMStoreFloat3(&vertex.vertices[indices0].normal, normal);
-		XMStoreFloat3(&vertex.vertices[indices1].normal, normal);
-		XMStoreFloat3(&vertex.vertices[indices2].normal, normal);
+		XMStoreFloat3(&vertices[indices0].normal, normal);
+		XMStoreFloat3(&vertices[indices1].normal, normal);
+		XMStoreFloat3(&vertices[indices2].normal, normal);
 	}
 #pragma endregion
 
@@ -234,8 +182,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	dx.result = vertex.vertBuff->Map(0, nullptr, (void**)&vertMap);
 	assert(SUCCEEDED(dx.result));
 	// 全頂点に対して
-	for (int i = 0; i < _countof(vertex.vertices); i++) {
-		vertMap[i] = vertex.vertices[i];
+	for (int i = 0; i < _countof(vertices); i++) {
+		vertMap[i] = vertices[i];
 	}
 	// 繋がりを解除
 	vertex.vertBuff->Unmap(0, nullptr);
@@ -249,7 +197,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	// 頂点バッファのサイズ
 	vbView.SizeInBytes = vertex.sizeVB;
 	// 頂点一つ分のデータサイズ
-	vbView.StrideInBytes = sizeof(vertex.vertices[0]);
+	vbView.StrideInBytes = sizeof(vertices[0]);
 #pragma endregion
 
 #pragma region 頂点シェーダーファイルの読み込みとコンパイル
@@ -810,7 +758,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 		dx.cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 #pragma endregion
 		// インデックスバッファビューの設定コマンド
-		dx.cmdList->IASetIndexBuffer(&ibView);
+		dx.cmdList->IASetIndexBuffer(&index.ibView);
 #pragma region 頂点バッファビューの設定コマンド
 		// 頂点バッファビューの設定コマンド
 		dx.cmdList->IASetVertexBuffers(0, 1, &vbView);
@@ -826,7 +774,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 #pragma region 描画コマンド
 		// 描画コマンド
 		for (int i = 0; i < _countof(object3d); i++) {
-			DrawObject3d(&object3d[i], dx.cmdList, vbView, ibView, _countof(indices));
+			DrawObject3d(&object3d[i], dx.cmdList, vbView, index.ibView, _countof(indices));
 		}
 #pragma endregion
 		// 描画コマンドここまで

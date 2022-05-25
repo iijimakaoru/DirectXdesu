@@ -7,7 +7,6 @@
 #include "KInput.h"
 #include "KDepth.h"
 #include "KVertex.h"
-#include "KIndex.h"
 //#include "Object3D.h"
 #ifdef DEBUG
 #include <iostream>
@@ -148,61 +147,16 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	KVertex vertex(dx);
 #pragma endregion
 
-#pragma region インデックスデータ
-	KIndex index(dx, vertex);
-#pragma endregion
-
-#pragma region 法線の計算
-	for (int i = 0; i < _countof(indices) / 3; i++) {
-		// 三角形１つごとに計算
-		unsigned short indices0 = indices[i * 3 + 0];
-		unsigned short indices1 = indices[i * 3 + 1];
-		unsigned short indices2 = indices[i * 3 + 2];
-		// 三角形を構成する頂点座標をベクトルに代入
-		XMVECTOR p0 = XMLoadFloat3(&vertices[indices0].pos);
-		XMVECTOR p1 = XMLoadFloat3(&vertices[indices1].pos);
-		XMVECTOR p2 = XMLoadFloat3(&vertices[indices2].pos);
-		// p0 → p1ベクトル、p0 → p2ベクトルを計算 (ベクトルの減算)
-		XMVECTOR v1 = XMVectorSubtract(p1, p0);
-		XMVECTOR v2 = XMVectorSubtract(p2, p0);
-		// 外積は両方から垂直なベクトル
-		XMVECTOR normal = XMVector3Cross(v1, v2);
-		// 正規化(長さを１にする)
-		normal = XMVector3Normalize(normal);
-		// 求めた法線を頂点データに代入
-		XMStoreFloat3(&vertices[indices0].normal, normal);
-		XMStoreFloat3(&vertices[indices1].normal, normal);
-		XMStoreFloat3(&vertices[indices2].normal, normal);
-	}
-#pragma endregion
-
 #pragma region 頂点バッファへのデータ転送
-	// GPU上のバッファに対応した仮想メモリを取得
-	Vertex* vertMap = nullptr;
-	dx.result = vertex.vertBuff->Map(0, nullptr, (void**)&vertMap);
-	assert(SUCCEEDED(dx.result));
-	// 全頂点に対して
-	for (int i = 0; i < _countof(vertices); i++) {
-		vertMap[i] = vertices[i];
-	}
-	// 繋がりを解除
-	vertex.vertBuff->Unmap(0, nullptr);
+	vertex.VertMap();
 #pragma endregion
 
 #pragma region 頂点バッファビュー作成
-	// 頂点バッファビューの作成
-	D3D12_VERTEX_BUFFER_VIEW vbView{};
-	// GPU仮想アドレス
-	vbView.BufferLocation = vertex.vertBuff->GetGPUVirtualAddress();
-	// 頂点バッファのサイズ
-	vbView.SizeInBytes = vertex.sizeVB;
-	// 頂点一つ分のデータサイズ
-	vbView.StrideInBytes = sizeof(vertices[0]);
+	vertex.CreateVBView();
 #pragma endregion
 
 #pragma region 頂点シェーダーファイルの読み込みとコンパイル
 	ID3D10Blob* vsBlob = nullptr; // 頂点シェーダーオブジェクト
-	ID3D10Blob* psBlob = nullptr; // ピクセルシェーダーオブジェクト
 	ID3D10Blob* errorBlob = nullptr; // エラーオブジェクト
 
 	// 頂点シェーダーの読み込みとコンパイル
@@ -234,6 +188,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 #pragma endregion
 
 #pragma region ピクセルシェーダの読み込みとコンパイル
+	ID3D10Blob* psBlob = nullptr; // ピクセルシェーダーオブジェクト
 	// ピクセルシェーダの読み込みとコンパイル
 	dx.result = D3DCompileFromFile(
 		L"BasicPS.hlsl",
@@ -263,27 +218,6 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	}
 #pragma endregion
 
-#pragma region 頂点レイアウト
-	// 頂点レイアウト
-	D3D12_INPUT_ELEMENT_DESC inputLayout[] = {
-		{// xyz座標
-			"POSITION",										// セマンティック名
-			0,												// 同じセマンティック名が複数あるときに使うインデックス
-			DXGI_FORMAT_R32G32B32_FLOAT,					// 要素数とビット数を表す
-			0,												// 入力スロットインデックス
-			D3D12_APPEND_ALIGNED_ELEMENT,					// データのオフセット
-			D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,		// 入力データ種別
-			0												// 一度に描画するインスタンス数
-		},
-		{// 法線ベクトル
-			"NORMAL",0,DXGI_FORMAT_R32G32B32_FLOAT,0,D3D12_APPEND_ALIGNED_ELEMENT,D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0
-		},
-		{// uv座標
-			"TEXCOORD",0,DXGI_FORMAT_R32G32_FLOAT,0,D3D12_APPEND_ALIGNED_ELEMENT,D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0
-		},
-	};
-#pragma endregion
-
 #pragma region グラフィックスパイプライン設定
 	// グラフィックスパイプライン設定
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC pipelineDesc{};
@@ -301,8 +235,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	// ブレンドステート
 	pipelineDesc.BlendState.RenderTarget[0].RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
 	// 頂点レイアウトの設定
-	pipelineDesc.InputLayout.pInputElementDescs = inputLayout;
-	pipelineDesc.InputLayout.NumElements = _countof(inputLayout);
+	pipelineDesc.InputLayout.pInputElementDescs = vertex.inputLayout;
+	pipelineDesc.InputLayout.NumElements = _countof(vertex.inputLayout);
 	// 図形の形状設定
 	pipelineDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 	// その他の設定
@@ -351,9 +285,6 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 		nullptr,
 		(void**)&constMapMaterial);
 	assert(SUCCEEDED(dx.result));
-
-	//// 3Dオブジェクト初期化
-	//Object3D object3d(dx.result, dx.dev);
 
 	// 3Dオブジェクトの数
 	const size_t kObjectCount = 50;
@@ -692,7 +623,6 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 		}
 #pragma endregion
 
-
 #pragma endregion
 
 		// 描画
@@ -758,10 +688,10 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 		dx.cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 #pragma endregion
 		// インデックスバッファビューの設定コマンド
-		dx.cmdList->IASetIndexBuffer(&index.ibView);
+		dx.cmdList->IASetIndexBuffer(&vertex.ibView);
 #pragma region 頂点バッファビューの設定コマンド
 		// 頂点バッファビューの設定コマンド
-		dx.cmdList->IASetVertexBuffers(0, 1, &vbView);
+		dx.cmdList->IASetVertexBuffers(0, 1, &vertex.vbView);
 #pragma endregion
 		// CBV
 		dx.cmdList->SetGraphicsRootConstantBufferView(0, constBufferMaterial->GetGPUVirtualAddress());
@@ -774,7 +704,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 #pragma region 描画コマンド
 		// 描画コマンド
 		for (int i = 0; i < _countof(object3d); i++) {
-			DrawObject3d(&object3d[i], dx.cmdList, vbView, index.ibView, _countof(indices));
+			DrawObject3d(&object3d[i], dx.cmdList, vertex.vbView, vertex.ibView, _countof(indices));
 		}
 #pragma endregion
 		// 描画コマンドここまで

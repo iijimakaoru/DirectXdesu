@@ -144,7 +144,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Blend.cpp" />
-    <ClCompile Include="KIndex.cpp" />
+    <ClCompile Include="KGPlin.cpp" />
     <ClCompile Include="KDepth.cpp" />
     <ClCompile Include="KDirectInit.cpp" />
     <ClCompile Include="KInput.cpp" />
@@ -155,7 +155,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Blend.h" />
-    <ClInclude Include="KIndex.h" />
+    <ClInclude Include="KGPlin.h" />
     <ClInclude Include="KDepth.h" />
     <ClInclude Include="KDirectInit.h" />
     <ClInclude Include="KInput.h" />

@@ -8,6 +8,7 @@
 #include "KDepth.h"
 #include "KVertex.h"
 #include "KVertexShader.h"
+#include "KPixelShader.h"
 //#include "Object3D.h"
 #ifdef DEBUG
 #include <iostream>
@@ -157,49 +158,21 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 #pragma endregion
 
 #pragma region 頂点シェーダー
-	KVertexShader vertexShader(dx);
+	KVertexShader vtShader(dx);
 #pragma endregion
 
-#pragma region ピクセルシェーダの読み込みとコンパイル
-	ID3D10Blob* psBlob = nullptr; // ピクセルシェーダーオブジェクト
-	ID3D10Blob* errorBlob = nullptr; // エラーオブジェクト
-	// ピクセルシェーダの読み込みとコンパイル
-	dx.result = D3DCompileFromFile(
-		L"BasicPS.hlsl",
-		nullptr,
-		D3D_COMPILE_STANDARD_FILE_INCLUDE,
-		"main", "ps_5_0",
-		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,
-		0,
-		&psBlob, &errorBlob);
-#pragma endregion
-
-#pragma region シェーダーコードのエラー
-	// エラーがでたら
-	if (FAILED(dx.result))
-	{
-		// erroeBlobからエラー内容をstring型にコピー
-		std::string error;
-		error.resize(errorBlob->GetBufferSize());
-
-		std::copy_n((char*)errorBlob->GetBufferPointer(),
-			errorBlob->GetBufferSize(),
-			error.begin());
-		error += "\n";
-		// エラー内容を出力ウィンドウに表示
-		OutputDebugStringA(error.c_str());
-		assert(0);
-	}
+#pragma region ピクセルシェーダ
+	KPixelShader pxShader(dx);
 #pragma endregion
 
 #pragma region グラフィックスパイプライン設定
 	// グラフィックスパイプライン設定
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC pipelineDesc{};
 	// シェーダーの設定
-	pipelineDesc.VS.pShaderBytecode = vertexShader.vsBlob->GetBufferPointer();
-	pipelineDesc.VS.BytecodeLength = vertexShader.vsBlob->GetBufferSize();
-	pipelineDesc.PS.pShaderBytecode = psBlob->GetBufferPointer();
-	pipelineDesc.PS.BytecodeLength = psBlob->GetBufferSize();
+	pipelineDesc.VS.pShaderBytecode = vtShader.vsBlob->GetBufferPointer();
+	pipelineDesc.VS.BytecodeLength = vtShader.vsBlob->GetBufferSize();
+	pipelineDesc.PS.pShaderBytecode = pxShader.psBlob->GetBufferPointer();
+	pipelineDesc.PS.BytecodeLength = pxShader.psBlob->GetBufferSize();
 	// サンプルマスクの設定
 	pipelineDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
 	// ラスタライザの設定
@@ -344,7 +317,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	// ルートシグネチャのシリアライズ
 	ID3DBlob* rootSigBlob = nullptr;
 	dx.result = D3D12SerializeRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1_0,
-		&rootSigBlob, &errorBlob);
+		&rootSigBlob, &pxShader.errorBlob);
 	assert(SUCCEEDED(dx.result));
 	dx.result = dx.dev->CreateRootSignature(0, rootSigBlob->GetBufferPointer(), rootSigBlob->GetBufferSize(),
 		IID_PPV_ARGS(&rootSignature));

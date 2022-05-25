@@ -6,6 +6,7 @@
 #include "KDirectInit.h"
 #include "KInput.h"
 #include "KDepth.h"
+#include "KVertex.h"
 //#include "Object3D.h"
 #ifdef DEBUG
 #include <iostream>
@@ -143,72 +144,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	// カメラの距離
 	float lenZ = -100;
 #pragma region 頂点データ
-	// 頂点データ構造体
-	struct Vertex{
-		XMFLOAT3 pos;	 // xyz座標
-		XMFLOAT3 normal; // 法線ベクトル
-		XMFLOAT2 uv;	 // uv座標
-	};
-	// 頂点データ
-	Vertex vertices[] = {
-		//  x	  y	   z	  u	   v
-		// 前
-		{{-5.0f,-5.0f,-5.0f},{},{0.0f,1.0f}}, // 左下
-		{{-5.0f, 5.0f,-5.0f},{},{0.0f,0.0f}}, // 左上
-		{{ 5.0f,-5.0f,-5.0f},{},{1.0f,1.0f}}, // 右下
-		{{ 5.0f, 5.0f,-5.0f},{},{1.0f,0.0f}}, // 右上
-		// 後
-		{{ 5.0f,-5.0f, 5.0f},{},{1.0f,1.0f}}, // 右下
-		{{ 5.0f, 5.0f, 5.0f},{},{1.0f,0.0f}}, // 右上
-		{{-5.0f,-5.0f, 5.0f},{},{0.0f,1.0f}}, // 左下
-		{{-5.0f, 5.0f, 5.0f},{},{0.0f,0.0f}}, // 左上
-		// 左
-		{{-5.0f,-5.0f,-5.0f},{},{0.0f,1.0f}}, // 左下
-		{{-5.0f,-5.0f, 5.0f},{},{0.0f,0.0f}}, // 左上
-		{{-5.0f, 5.0f,-5.0f},{},{1.0f,1.0f}}, // 右下
-		{{-5.0f, 5.0f, 5.0f},{},{1.0f,0.0f}}, // 右上
-		// 右
-		{{ 5.0f, 5.0f,-5.0f},{},{1.0f,1.0f}}, // 右下
-		{{ 5.0f, 5.0f, 5.0f},{},{1.0f,0.0f}}, // 右上
-		{{ 5.0f,-5.0f,-5.0f},{},{0.0f,1.0f}}, // 左下
-		{{ 5.0f,-5.0f, 5.0f},{},{0.0f,0.0f}}, // 左上
-		// 下
-		{{ 5.0f,-5.0f,-5.0f},{},{1.0f,1.0f}}, // 右下
-		{{ 5.0f,-5.0f, 5.0f},{},{1.0f,0.0f}}, // 右上
-		{{-5.0f,-5.0f,-5.0f},{},{0.0f,1.0f}}, // 左下
-		{{-5.0f,-5.0f, 5.0f},{},{0.0f,0.0f}}, // 左上
-		// 上
-		{{-5.0f, 5.0f,-5.0f},{},{0.0f,1.0f}}, // 左下
-		{{-5.0f, 5.0f, 5.0f},{},{0.0f,0.0f}}, // 左上
-		{{ 5.0f, 5.0f,-5.0f},{},{1.0f,1.0f}}, // 右下
-		{{ 5.0f, 5.0f, 5.0f},{},{1.0f,0.0f}}  // 右上
-	};
-	// 頂点データ全体のサイズ = 頂点データ一つ分のサイズ * 頂点データの要素数
-	UINT sizeVB = static_cast<UINT>(sizeof(vertices[0]) * _countof(vertices));
-#pragma region 頂点バッファ確保
-	// 頂点バッファの設定
-	D3D12_HEAP_PROPERTIES heapProp{};
-	heapProp.Type = D3D12_HEAP_TYPE_UPLOAD;
-	// リソース設定
-	D3D12_RESOURCE_DESC resDesc{};
-	resDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-	resDesc.Width = sizeVB;
-	resDesc.Height = 1;
-	resDesc.DepthOrArraySize = 1;
-	resDesc.MipLevels = 1;
-	resDesc.SampleDesc.Count = 1;
-	resDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
-	// 頂点バッファの生成
-	ID3D12Resource* vertBuff = nullptr;
-	dx.result = dx.dev->CreateCommittedResource(
-		&heapProp,
-		D3D12_HEAP_FLAG_NONE,
-		&resDesc,
-		D3D12_RESOURCE_STATE_GENERIC_READ,
-		nullptr,
-		IID_PPV_ARGS(&vertBuff));
-	assert(SUCCEEDED(dx.result));
-#pragma endregion
+	KVertex vertex(dx);
 #pragma endregion
 
 #pragma region インデックスデータ
@@ -236,19 +172,19 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	// インデックスデータ全体のサイズ
 	UINT sizeIB = static_cast<UINT>(sizeof(uint16_t) * _countof(indices));
 	// リソース設定
-	resDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-	resDesc.Width = sizeIB;
-	resDesc.Height = 1;
-	resDesc.DepthOrArraySize = 1;
-	resDesc.MipLevels = 1;
-	resDesc.SampleDesc.Count = 1;
-	resDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+	vertex.resDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
+	vertex.resDesc.Width = sizeIB;
+	vertex.resDesc.Height = 1;
+	vertex.resDesc.DepthOrArraySize = 1;
+	vertex.resDesc.MipLevels = 1;
+	vertex.resDesc.SampleDesc.Count = 1;
+	vertex.resDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 	// インデックスバッファの生成
 	ID3D12Resource* indexBuff = nullptr;
 	dx.result = dx.dev->CreateCommittedResource(
-		&heapProp,
+		&vertex.heapProp,
 		D3D12_HEAP_FLAG_NONE,
-		&resDesc,
+		&vertex.resDesc,
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
 		IID_PPV_ARGS(&indexBuff));
@@ -275,9 +211,9 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 		unsigned short indices1 = indices[i * 3 + 1];
 		unsigned short indices2 = indices[i * 3 + 2];
 		// 三角形を構成する頂点座標をベクトルに代入
-		XMVECTOR p0 = XMLoadFloat3(&vertices[indices0].pos);
-		XMVECTOR p1 = XMLoadFloat3(&vertices[indices1].pos);
-		XMVECTOR p2 = XMLoadFloat3(&vertices[indices2].pos);
+		XMVECTOR p0 = XMLoadFloat3(&vertex.vertices[indices0].pos);
+		XMVECTOR p1 = XMLoadFloat3(&vertex.vertices[indices1].pos);
+		XMVECTOR p2 = XMLoadFloat3(&vertex.vertices[indices2].pos);
 		// p0 → p1ベクトル、p0 → p2ベクトルを計算 (ベクトルの減算)
 		XMVECTOR v1 = XMVectorSubtract(p1, p0);
 		XMVECTOR v2 = XMVectorSubtract(p2, p0);
@@ -286,34 +222,34 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 		// 正規化(長さを１にする)
 		normal = XMVector3Normalize(normal);
 		// 求めた法線を頂点データに代入
-		XMStoreFloat3(&vertices[indices0].normal, normal);
-		XMStoreFloat3(&vertices[indices1].normal, normal);
-		XMStoreFloat3(&vertices[indices2].normal, normal);
+		XMStoreFloat3(&vertex.vertices[indices0].normal, normal);
+		XMStoreFloat3(&vertex.vertices[indices1].normal, normal);
+		XMStoreFloat3(&vertex.vertices[indices2].normal, normal);
 	}
 #pragma endregion
 
 #pragma region 頂点バッファへのデータ転送
 	// GPU上のバッファに対応した仮想メモリを取得
 	Vertex* vertMap = nullptr;
-	dx.result = vertBuff->Map(0, nullptr, (void**)&vertMap);
+	dx.result = vertex.vertBuff->Map(0, nullptr, (void**)&vertMap);
 	assert(SUCCEEDED(dx.result));
 	// 全頂点に対して
-	for (int i = 0; i < _countof(vertices); i++) {
-		vertMap[i] = vertices[i];
+	for (int i = 0; i < _countof(vertex.vertices); i++) {
+		vertMap[i] = vertex.vertices[i];
 	}
 	// 繋がりを解除
-	vertBuff->Unmap(0, nullptr);
+	vertex.vertBuff->Unmap(0, nullptr);
 #pragma endregion
 
 #pragma region 頂点バッファビュー作成
 	// 頂点バッファビューの作成
 	D3D12_VERTEX_BUFFER_VIEW vbView{};
 	// GPU仮想アドレス
-	vbView.BufferLocation = vertBuff->GetGPUVirtualAddress();
+	vbView.BufferLocation = vertex.vertBuff->GetGPUVirtualAddress();
 	// 頂点バッファのサイズ
-	vbView.SizeInBytes = sizeVB;
+	vbView.SizeInBytes = vertex.sizeVB;
 	// 頂点一つ分のデータサイズ
-	vbView.StrideInBytes = sizeof(vertices[0]);
+	vbView.StrideInBytes = sizeof(vertex.vertices[0]);
 #pragma endregion
 
 #pragma region 頂点シェーダーファイルの読み込みとコンパイル
@@ -667,10 +603,10 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 
 	// シェーダーリソースビュー設定
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
-	srvDesc.Format = resDesc.Format;
+	srvDesc.Format = vertex.resDesc.Format;
 	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-	srvDesc.Texture2D.MipLevels = resDesc.MipLevels;
+	srvDesc.Texture2D.MipLevels = vertex.resDesc.MipLevels;
 
 	// ハンドルの指す位置にシェーダーリソースビュー作成
 	dx.dev->CreateShaderResourceView(texBuff, &srvDesc, srvHandle);

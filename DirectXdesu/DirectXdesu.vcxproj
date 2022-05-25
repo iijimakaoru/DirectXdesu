@@ -147,6 +147,7 @@
     <ClCompile Include="KDepth.cpp" />
     <ClCompile Include="KDirectInit.cpp" />
     <ClCompile Include="KInput.cpp" />
+    <ClCompile Include="KVertex.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="KWindow.cpp" />
     <ClCompile Include="Object3D.cpp" />
@@ -156,6 +157,7 @@
     <ClInclude Include="KDepth.h" />
     <ClInclude Include="KDirectInit.h" />
     <ClInclude Include="KInput.h" />
+    <ClInclude Include="KVertex.h" />
     <ClInclude Include="KWindow.h" />
     <ClInclude Include="Object3D.h" />
   </ItemGroup>

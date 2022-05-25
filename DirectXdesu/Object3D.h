@@ -30,10 +30,10 @@ struct Object3d {
 class Object3D
 {
 public:
-	Object3D(HRESULT result, ID3D12Device* dev);
-	void Initialize(HRESULT result, ID3D12Device* dev);
-	void Update(XMMATRIX& matView, XMMATRIX& matProjection);
-	void Draw(ID3D12GraphicsCommandList* cmdList, D3D12_VERTEX_BUFFER_VIEW& vbview,
+	Object3D(HRESULT result, Object3d* object, ID3D12Device* dev);
+	void Initialize(HRESULT result, Object3d* object, ID3D12Device* dev);
+	void Update(Object3d* object, XMMATRIX& matView, XMMATRIX& matProjection);
+	void Draw(Object3d* object, ID3D12GraphicsCommandList* cmdList, D3D12_VERTEX_BUFFER_VIEW& vbview,
 		D3D12_INDEX_BUFFER_VIEW& ibView, UINT numIndices);
 
 	// ÉqÅ[Évê›íË

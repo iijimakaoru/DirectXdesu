@@ -5,10 +5,13 @@
 #include <wrl.h>
 #include <vector>
 #include <string>
+#include <DirectXTex.h>
 #include"KWindow.h"
 
 #pragma comment(lib, "d3d12.lib")
 #pragma comment(lib, "dxgi.lib")
+
+using namespace DirectX;
 
 class KDirectInit
 {

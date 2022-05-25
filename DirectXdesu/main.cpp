@@ -9,13 +9,12 @@
 #include "KVertex.h"
 #include "KVertexShader.h"
 #include "KPixelShader.h"
+#include "KTexture.h"
 //#include "Object3D.h"
 #ifdef DEBUG
 #include <iostream>
 #endif
 #pragma comment(lib, "d3dcompiler.Lib")
-
-using namespace DirectX;
 
 // 定数バッファ用データ構造体(マテリアル)
 struct ConstBufferDataMaterial {
@@ -147,14 +146,6 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	float lenZ = -100;
 #pragma region 頂点データ
 	KVertex vertex(dx);
-#pragma endregion
-
-#pragma region 頂点バッファへのデータ転送
-	vertex.VertMap();
-#pragma endregion
-
-#pragma region 頂点バッファビュー作成
-	vertex.CreateVBView();
 #pragma endregion
 
 #pragma region 頂点シェーダー
@@ -335,12 +326,14 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	dx.result = dx.dev->CreateGraphicsPipelineState(&pipelineDesc, IID_PPV_ARGS(&pipelineState));
 	assert(SUCCEEDED(dx.result));
 #pragma endregion
-	// 横方向ピクセル数
-	const size_t textureWidth = 256;
-	// 縦方向ピクセル数
-	const size_t textureHeight = 256;
-	// 配列の要素数
-	const size_t imageDataCount = textureWidth * textureHeight;
+	//// 横方向ピクセル数
+	//const size_t textureWidth = 256;
+	//// 縦方向ピクセル数
+	//const size_t textureHeight = 256;
+	//// 配列の要素数
+	//const size_t imageDataCount = textureWidth * textureHeight;
+
+	//KTexture texture(dx, vertex);
 
 	TexMetadata metadata{};
 	ScratchImage scraychImg{};
@@ -363,6 +356,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 		scraychImg = std::move(mipChain);
 		metadata = scraychImg.GetMetadata();
 	}
+
 	// 読み込んだディフューズテクスチャをSRGBとして扱う
 	metadata.format = MakeSRGB(metadata.format);
 
@@ -436,6 +430,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 
 	// ハンドルの指す位置にシェーダーリソースビュー作成
 	dx.dev->CreateShaderResourceView(texBuff, &srvDesc, srvHandle);
+
 #pragma endregion
 
 	// ウィンドウ表示
@@ -443,8 +438,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	while (true)
 	{
 #pragma region ウィンドウメッセージ
-		if (win.breakFlag || input.IsPush(DIK_ESCAPE))
-		{
+		if (win.breakFlag || input.IsPush(DIK_ESCAPE)) {
 			break;
 		}
 #pragma endregion

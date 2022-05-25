@@ -2,6 +2,8 @@
 
 KVertex::KVertex(KDirectInit dx) {
 	KVertexInit(dx);
+	VertMap();
+	CreateVBView();
 }
 
 void KVertex::KVertexInit(KDirectInit dx) {

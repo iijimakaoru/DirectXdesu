@@ -7,6 +7,7 @@
 #include "KInput.h"
 #include "KDepth.h"
 #include "KVertex.h"
+#include "KVertexShader.h"
 //#include "Object3D.h"
 #ifdef DEBUG
 #include <iostream>
@@ -155,40 +156,13 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	vertex.CreateVBView();
 #pragma endregion
 
-#pragma region 頂点シェーダーファイルの読み込みとコンパイル
-	ID3D10Blob* vsBlob = nullptr; // 頂点シェーダーオブジェクト
-	ID3D10Blob* errorBlob = nullptr; // エラーオブジェクト
-
-	// 頂点シェーダーの読み込みとコンパイル
-	dx.result = D3DCompileFromFile(
-		L"BasicVS.hlsl",
-		nullptr,
-		D3D_COMPILE_STANDARD_FILE_INCLUDE,
-		"main", "vs_5_0",
-		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,
-		0,
-		&vsBlob, &errorBlob);
-#pragma endregion
-
-#pragma region シェーダーコードのエラー
-	// エラーがでたら
-	if (FAILED(dx.result)) {
-		// erroeBlobからエラー内容をstring型にコピー
-		std::string error;
-		error.resize(errorBlob->GetBufferSize());
-
-		std::copy_n((char*)errorBlob->GetBufferPointer(),
-			errorBlob->GetBufferSize(),
-			error.begin());
-		error += "\n";
-		// エラー内容を出力ウィンドウに表示
-		OutputDebugStringA(error.c_str());
-		assert(0);
-	}
+#pragma region 頂点シェーダー
+	KVertexShader vertexShader(dx);
 #pragma endregion
 
 #pragma region ピクセルシェーダの読み込みとコンパイル
 	ID3D10Blob* psBlob = nullptr; // ピクセルシェーダーオブジェクト
+	ID3D10Blob* errorBlob = nullptr; // エラーオブジェクト
 	// ピクセルシェーダの読み込みとコンパイル
 	dx.result = D3DCompileFromFile(
 		L"BasicPS.hlsl",
@@ -222,8 +196,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	// グラフィックスパイプライン設定
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC pipelineDesc{};
 	// シェーダーの設定
-	pipelineDesc.VS.pShaderBytecode = vsBlob->GetBufferPointer();
-	pipelineDesc.VS.BytecodeLength = vsBlob->GetBufferSize();
+	pipelineDesc.VS.pShaderBytecode = vertexShader.vsBlob->GetBufferPointer();
+	pipelineDesc.VS.BytecodeLength = vertexShader.vsBlob->GetBufferSize();
 	pipelineDesc.PS.pShaderBytecode = psBlob->GetBufferPointer();
 	pipelineDesc.PS.BytecodeLength = psBlob->GetBufferSize();
 	// サンプルマスクの設定

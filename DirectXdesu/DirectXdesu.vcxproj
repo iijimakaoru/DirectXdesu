@@ -152,6 +152,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="KWindow.cpp" />
     <ClCompile Include="Object3D.cpp" />
+    <ClCompile Include="KVertexShader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Blend.h" />
@@ -162,6 +163,7 @@
     <ClInclude Include="KVertex.h" />
     <ClInclude Include="KWindow.h" />
     <ClInclude Include="Object3D.h" />
+    <ClInclude Include="KVertexShader.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="BasicPS.hlsl">

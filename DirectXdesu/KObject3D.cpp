@@ -38,8 +38,8 @@ void KObject3D::Initialize(HRESULT result, ID3D12Device* dev) {
 			object3d[i].parent = &object3d[i - 1];
 
 			object3d[i].scale = { 0.9f,0.9f,0.9f };
-			object3d[i].rot = { 0.0f,0.0f,XMConvertToRadians(30.0f) };
 			object3d[i].pos = { 0.0f,0.0f,-8.0f };
+			object3d[i].rot = { 0.0f,0.0f,XMConvertToRadians(30.0f) };
 		}
 	}
 }
@@ -47,7 +47,7 @@ void KObject3D::Initialize(HRESULT result, ID3D12Device* dev) {
 void KObject3D::Update(XMMATRIX& matView, XMMATRIX& matProjection) {
 	for (int i = 0; i < _countof(object3d); i++) {
 		XMMATRIX matScale, matRot, matTrans;
-
+		// 親オブジェクト要素
 		matScale = XMMatrixScaling(object3d[i].scale.x, object3d[i].scale.y, object3d[i].scale.z);
 		matRot = XMMatrixIdentity();
 		matRot *= XMMatrixRotationZ(object3d[i].rot.z);
@@ -65,6 +65,8 @@ void KObject3D::Update(XMMATRIX& matView, XMMATRIX& matProjection) {
 		if (object3d[i].parent != nullptr) {
 			object3d[i].matWorld *= object3d[i].parent->matWorld;
 		}
+
+		object3d[1].rot.z += XMConvertToRadians(30.0f);
 
 		object3d[i].constMapTransform->mat = object3d[i].matWorld * matView * matProjection;
 	}

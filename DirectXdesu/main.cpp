@@ -10,15 +10,11 @@
 #include "KTexture.h"
 #include "KObject3D.h"
 #include "ViewProjection.h"
+#include "KMaterial.h"
 #ifdef DEBUG
 #include <iostream>
 #endif
 #pragma comment(lib, "d3dcompiler.Lib")
-
-// 定数バッファ用データ構造体(マテリアル)
-struct ConstBufferDataMaterial {
-	XMFLOAT4 color; // 色
-};
 
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	_In_ LPSTR lpCmdLine, _In_ int nCmdShow)
@@ -48,14 +44,6 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	// 速さ
 	float speed = 0.0f;
 
-	// 画像の色
-	float colorR = 1.0f;
-	float colorG = 1.0f;
-	float colorB = 1.0f;
-	float colorA = 1.0f;
-
-	//// カメラの距離
-	//float lenZ = -100;
 #pragma region 頂点データ
 	KVertex vertex(dx);
 #pragma endregion
@@ -104,36 +92,11 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	blenddesc.BlendOp = D3D12_BLEND_OP_ADD;
 	blenddesc.SrcBlend = D3D12_BLEND_SRC_ALPHA;
 	blenddesc.DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
+
 #pragma region 定数バッファ
-	// ヒープ設定
-	D3D12_HEAP_PROPERTIES cbHeapProp{};
-	cbHeapProp.Type = D3D12_HEAP_TYPE_UPLOAD;
-	// リソース設定
-	D3D12_RESOURCE_DESC cbResourceDesc{};
-	cbResourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-	cbResourceDesc.Width = (sizeof(ConstBufferDataMaterial) + 0xff) & ~0xff;
-	cbResourceDesc.Height = 1;
-	cbResourceDesc.DepthOrArraySize = 1;
-	cbResourceDesc.MipLevels = 1;
-	cbResourceDesc.SampleDesc.Count = 1;
-	cbResourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
-	// 定数バッファの生成
-	ID3D12Resource* constBufferMaterial = nullptr;
-	dx.result = dx.dev->CreateCommittedResource(
-		&cbHeapProp,
-		D3D12_HEAP_FLAG_NONE,
-		&cbResourceDesc,
-		D3D12_RESOURCE_STATE_GENERIC_READ,
-		nullptr,
-		IID_PPV_ARGS(&constBufferMaterial));
-	assert(SUCCEEDED(dx.result));
-	// 定数バッファのマッピング
-	ConstBufferDataMaterial* constMapMaterial = nullptr;
-	dx.result = constBufferMaterial->Map(
-		0,
-		nullptr,
-		(void**)&constMapMaterial);
-	assert(SUCCEEDED(dx.result));
+#pragma region マテリアル
+	KMaterial material(dx.result, dx.dev);
+#pragma endregion
 
 #pragma region 3Dオブジェクト初期化
 	KObject3D object3d(dx.result, dx.dev);
@@ -144,8 +107,6 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 #pragma endregion
 
 #pragma endregion
-	// 値を書き込むと自動的に転送される
-	constMapMaterial->color = XMFLOAT4(colorR, colorG, colorB, colorA);
 	// デスクリプタレンジの設定
 	D3D12_DESCRIPTOR_RANGE descriptorRange{};
 	descriptorRange.NumDescriptors = 1;
@@ -229,8 +190,13 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 
 		// 更新
 #pragma region DirectX毎フレーム処理
+#pragma region ウィンドウアップデート
 		win.Update();
+#pragma endregion
+
+#pragma region inputアップデート
 		input.Update(dx.result);
+#pragma endregion
 #pragma region キーボード処理
 		// 背景色変え
 		if (input.IsPush(DIK_SPACE)) {
@@ -245,48 +211,36 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 		}
 		// 画像色変え
 		if (input.IsPush(DIK_1)) {
-			colorR = 1.0f;
-			colorG = 0.0f;
-			colorB = 1.0f;
+			material.colorR = 1.0f;
+			material.colorG = 0.0f;
+			material.colorB = 1.0f;
 		}
 		else {
-			colorR = 1.0f;
-			colorG = 1.0f;
-			colorB = 1.0f;
+			material.colorR = 1.0f;
+			material.colorG = 1.0f;
+			material.colorB = 1.0f;
 		}
-		constMapMaterial->color = XMFLOAT4(colorR, colorG, colorB, colorA);
-		
-		//// 図形回転
-		//if (input.IsPush(DIK_W) ||
-		//	input.IsPush(DIK_S) ||
-		//	input.IsPush(DIK_A) ||
-		//	input.IsPush(DIK_D)) {
-		//	if (input.IsPush(DIK_W)) {
-		//		rotation.x = 1.0f;
-		//	}
-		//	else if (input.IsPush(DIK_S)) {
-		//		rotation.x = -1.0f;
-		//	}
-		//	else {
-		//		rotation.x = 0.0f;
-		//	}
 
-		//	if (input.IsPush(DIK_A)) {
-		//		rotation.y = -1.0f;
-		//	}
-		//	else if (input.IsPush(DIK_D)) {
-		//		rotation.y = 1.0f;
-		//	}
-		//	else {
-		//		rotation.y = 0.0f;
-		//	}
-		//}
-		//else {
-		//	rotation.x = 0.0f;
-		//	rotation.y = 0.0f;
-		//	rotation.z = 0.0f;
-		//}
-		 ////カメラ移動
+		// 図形回転
+		if (input.IsPush(DIK_C) ||
+			input.IsPush(DIK_B) ||
+			input.IsPush(DIK_F) ||
+			input.IsPush(DIK_V)) {
+			if (input.IsPush(DIK_F)) {
+				object3d.object3d[0].rot.x += 0.1f;
+			}
+			else if (input.IsPush(DIK_V)) {
+				object3d.object3d[0].rot.x -= 0.1f;
+			}
+
+			if (input.IsPush(DIK_C)) {
+				object3d.object3d[0].rot.y -= 0.1f;
+			}
+			else if (input.IsPush(DIK_B)) {
+				object3d.object3d[0].rot.y += 0.1f;
+			}
+		}
+		////カメラ移動
 		if (input.IsPush(DIK_D) || input.IsPush(DIK_A) ||
 			input.IsPush(DIK_W) || input.IsPush(DIK_S)) {
 			if (input.IsPush(DIK_D)) {
@@ -332,12 +286,16 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 		}
 #pragma endregion
 
+#pragma region 画像色アップデート
+		material.Update();
+#pragma endregion
+
 #pragma region ビューのアップデート
 		viewProjection.Update(win.window_width, win.window_height);
 #pragma endregion
 
 #pragma region 3Dオブジェクトのアップデート
-		object3d.Update(viewProjection.matView,viewProjection.matProjection);
+		object3d.Update(viewProjection.matView, viewProjection.matProjection);
 #pragma endregion
 
 #pragma endregion
@@ -411,7 +369,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 		dx.cmdList->IASetVertexBuffers(0, 1, &vertex.vbView);
 #pragma endregion
 		// CBV
-		dx.cmdList->SetGraphicsRootConstantBufferView(0, constBufferMaterial->GetGPUVirtualAddress());
+		dx.cmdList->SetGraphicsRootConstantBufferView(0, material.constBufferMaterial->GetGPUVirtualAddress());
 		// SRV
 		dx.cmdList->SetDescriptorHeaps(1, &texture.srvHeap);
 		// 先頭ハンドルを取得

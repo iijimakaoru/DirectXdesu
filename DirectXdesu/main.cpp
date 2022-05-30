@@ -326,110 +326,10 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	dx.result = dx.dev->CreateGraphicsPipelineState(&pipelineDesc, IID_PPV_ARGS(&pipelineState));
 	assert(SUCCEEDED(dx.result));
 #pragma endregion
-	//// 横方向ピクセル数
-	//const size_t textureWidth = 256;
-	//// 縦方向ピクセル数
-	//const size_t textureHeight = 256;
-	//// 配列の要素数
-	//const size_t imageDataCount = textureWidth * textureHeight;
-
-	//KTexture texture(dx, vertex);
-
-	TexMetadata metadata{};
-	ScratchImage scraychImg{};
-
-	dx.result = LoadFromWICFile(
-		L"Resources/mario.jpg",
-		WIC_FLAGS_NONE,
-		&metadata, scraychImg);
-
-	ScratchImage mipChain{};
-	// ミニマップ作成
-	dx.result = GenerateMipMaps(
-		scraychImg.GetImages(),
-		scraychImg.GetImageCount(),
-		scraychImg.GetMetadata(),
-		TEX_FILTER_DEFAULT,
-		0, mipChain
-	);
-	if (SUCCEEDED(dx.result)) {
-		scraychImg = std::move(mipChain);
-		metadata = scraychImg.GetMetadata();
-	}
-
-	// 読み込んだディフューズテクスチャをSRGBとして扱う
-	metadata.format = MakeSRGB(metadata.format);
-
-	// ヒープ設定
-	D3D12_HEAP_PROPERTIES textureHeapProp{};
-	textureHeapProp.Type = D3D12_HEAP_TYPE_CUSTOM;
-	textureHeapProp.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_WRITE_BACK;
-	textureHeapProp.MemoryPoolPreference = D3D12_MEMORY_POOL_L0;
-	// リソース設定
-	D3D12_RESOURCE_DESC textureResourceDesc{};
-	textureResourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
-	textureResourceDesc.Format = metadata.format;
-	textureResourceDesc.Width = metadata.width;
-	textureResourceDesc.Height = (UINT)metadata.height;
-	textureResourceDesc.DepthOrArraySize = (UINT16)metadata.arraySize;
-	textureResourceDesc.MipLevels = (UINT16)metadata.mipLevels;
-	textureResourceDesc.SampleDesc.Count = 1;
-
-	// テクスチャバッファの作成
-	ID3D12Resource* texBuff = nullptr;
-	dx.result = dx.dev->CreateCommittedResource(
-		&textureHeapProp,
-		D3D12_HEAP_FLAG_NONE,
-		&textureResourceDesc,
-		D3D12_RESOURCE_STATE_GENERIC_READ,
-		nullptr,
-		IID_PPV_ARGS(&texBuff)
-	);
-
-	// 全ミニマップについて
-	for (size_t i = 0; i < metadata.mipLevels; i++) {
-		// ミニマップレベルを指定してイメージを取得
-		const Image* img = scraychImg.GetImage(i, 0, 0);
-		// テクスチャバッファにデータ転送
-		dx.result = texBuff->WriteToSubresource(
-			(UINT)i,
-			nullptr,
-			img->pixels,
-			(UINT)img->rowPitch,
-			(UINT)img->slicePitch
-		);
-		assert(SUCCEEDED(dx.result));
-	}
-
-	// SRVの最大個数
-	const size_t kMaxSRVCount = 2056;
-
-	// デスクリプタヒープの設定
-	D3D12_DESCRIPTOR_HEAP_DESC srvHeapDesc = {};
-	srvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
-	srvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-	srvHeapDesc.NumDescriptors = kMaxSRVCount;
-
-	// 設定を元にSRV用デスクリプタヒープを生成
-	ID3D12DescriptorHeap* srvHeap = nullptr;
-	dx.result = dx.dev->CreateDescriptorHeap(
-		&srvHeapDesc,
-		IID_PPV_ARGS(&srvHeap)
-	);
-	assert(SUCCEEDED(dx.result));
-
-	// SRVヒープの先頭ハンドルを取得
-	D3D12_CPU_DESCRIPTOR_HANDLE srvHandle = srvHeap->GetCPUDescriptorHandleForHeapStart();
-
-	// シェーダーリソースビュー設定
-	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
-	srvDesc.Format = vertex.resDesc.Format;
-	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-	srvDesc.Texture2D.MipLevels = vertex.resDesc.MipLevels;
-
-	// ハンドルの指す位置にシェーダーリソースビュー作成
-	dx.dev->CreateShaderResourceView(texBuff, &srvDesc, srvHandle);
+	
+#pragma region テクスチャ初期化
+	KTexture texture(dx, vertex);
+#pragma endregion
 
 #pragma endregion
 
@@ -637,9 +537,9 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 		// CBV
 		dx.cmdList->SetGraphicsRootConstantBufferView(0, constBufferMaterial->GetGPUVirtualAddress());
 		// SRV
-		dx.cmdList->SetDescriptorHeaps(1, &srvHeap);
+		dx.cmdList->SetDescriptorHeaps(1, &texture.srvHeap);
 		// 先頭ハンドルを取得
-		D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle = srvHeap->GetGPUDescriptorHandleForHeapStart();
+		D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle = texture.srvHeap->GetGPUDescriptorHandleForHeapStart();
 		// SRVヒープの先頭にあるSRVをルートパラメータ1番の設定
 		dx.cmdList->SetGraphicsRootDescriptorTable(1, srvGpuHandle);
 #pragma region 描画コマンド

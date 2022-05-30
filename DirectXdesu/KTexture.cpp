@@ -7,6 +7,7 @@ KTexture::KTexture(KDirectInit dx, KVertex vertex) {
 	GeneTextureBuff(dx);
 	SendData(dx);
 	SetDRTHeap();
+	GeneDRTHeap(dx);
 	GetSrvHandle();
 	SetSRV(dx,vertex);
 	CreateSRV(dx);
@@ -92,11 +93,10 @@ void KTexture::GeneDRTHeap(KDirectInit dx) {
 		IID_PPV_ARGS(&srvHeap)
 	);
 	assert(SUCCEEDED(dx.result));
-	srvHandle = srvHeap->GetCPUDescriptorHandleForHeapStart();
 }
 
 void KTexture::GetSrvHandle() {
-	
+	srvHandle = srvHeap->GetCPUDescriptorHandleForHeapStart();
 }
 
 void KTexture::SetSRV(KDirectInit dx, KVertex vertex) {
@@ -104,10 +104,9 @@ void KTexture::SetSRV(KDirectInit dx, KVertex vertex) {
 	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
 	srvDesc.Texture2D.MipLevels = vertex.resDesc.MipLevels;
-	// ハンドルの指す位置にシェーダーリソースビュー作成
-	dx.dev->CreateShaderResourceView(texBuff, &srvDesc, srvHandle);
 }
 
 void KTexture::CreateSRV(KDirectInit dx) {
-	
+	// ハンドルの指す位置にシェーダーリソースビュー作成
+	dx.dev->CreateShaderResourceView(texBuff, &srvDesc, srvHandle);
 }

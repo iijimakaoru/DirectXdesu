@@ -1,6 +1,4 @@
 #include <stdio.h>
-#include <DirectXTex.h>
-#include <DirectXMath.h>
 #include <d3dcompiler.h>
 #include "KWindow.h"
 #include "KDirectInit.h"
@@ -10,7 +8,7 @@
 #include "KVertexShader.h"
 #include "KPixelShader.h"
 #include "KTexture.h"
-//#include "Object3D.h"
+#include "KObject3D.h"
 #ifdef DEBUG
 #include <iostream>
 #endif
@@ -20,93 +18,6 @@
 struct ConstBufferDataMaterial {
 	XMFLOAT4 color; // 色
 };
-
-// 定数バッファ用データ構造体(3D変換行列)
-struct ConstBufferDataTransform {
-	XMMATRIX mat; // 3D変換行列
-};
-
-struct Object3d {
-	// 定数バッファ(行列)
-	ID3D12Resource* constBuffTransform = {};
-	// 定数バッファマップ(行列)
-	ConstBufferDataTransform* constMapTransform = {};
-	// アフィン変換
-	XMFLOAT3 scale = { 1,1,1 };
-	XMFLOAT3 rot = { 0,0,0 };
-	XMFLOAT3 pos = { 0,0,0 };
-	// ワールド変換行列
-	XMMATRIX matWorld = {};
-	// 親オブジェクトへのポインタ
-	Object3d* parent = nullptr;
-};
-
-void InitializeObject3d(HRESULT result, Object3d* object, ID3D12Device* dev) {
-	// ヒープ設定
-	D3D12_HEAP_PROPERTIES cbHeapProp{};
-	cbHeapProp.Type = D3D12_HEAP_TYPE_UPLOAD;
-	// リソース設定
-	D3D12_RESOURCE_DESC cbResourceDesc{};
-	cbResourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-	cbResourceDesc.Width = (sizeof(ConstBufferDataTransform) + 0xff) & ~0xff;
-	cbResourceDesc.Height = 1;
-	cbResourceDesc.DepthOrArraySize = 1;
-	cbResourceDesc.MipLevels = 1;
-	cbResourceDesc.SampleDesc.Count = 1;
-	cbResourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
-	// 定数バッファの生成
-	result = dev->CreateCommittedResource(
-		&cbHeapProp,
-		D3D12_HEAP_FLAG_NONE,
-		&cbResourceDesc,
-		D3D12_RESOURCE_STATE_GENERIC_READ,
-		nullptr,
-		IID_PPV_ARGS(&object->constBuffTransform)
-	);
-	assert(SUCCEEDED(result));
-	// 定数バッファのマッピング
-	result = object->constBuffTransform->Map(
-		0,
-		nullptr,
-		(void**)&object->constMapTransform
-	);
-	assert(SUCCEEDED(result));
-}
-
-void UpdateObject3d(Object3d* object, XMMATRIX& matView, XMMATRIX& matProjection) {
-	XMMATRIX matScale, matRot, matTrans;
-
-	matScale = XMMatrixScaling(object->scale.x, object->scale.y, object->scale.z);
-	matRot = XMMatrixIdentity();
-	matRot *= XMMatrixRotationZ(object->rot.z);
-	matRot *= XMMatrixRotationX(object->rot.x);
-	matRot *= XMMatrixRotationY(object->rot.y);
-	matTrans = XMMatrixTranslation(
-		object->pos.x, object->pos.y, object->pos.z
-	);
-
-	object->matWorld = XMMatrixIdentity();
-	object->matWorld *= matScale;
-	object->matWorld *= matRot;
-	object->matWorld *= matTrans;
-
-	if (object->parent != nullptr) {
-		object->matWorld *= object->parent->matWorld;
-	}
-
-	object->constMapTransform->mat = object->matWorld * matView * matProjection;
-}
-
-void DrawObject3d(Object3d* object, ID3D12GraphicsCommandList* cmdList, D3D12_VERTEX_BUFFER_VIEW& vbview,
-	D3D12_INDEX_BUFFER_VIEW& ibView, UINT numIndices) {
-	cmdList->IASetVertexBuffers(0, 1, &vbview);
-	cmdList->IASetIndexBuffer(&ibView);
-	cmdList->SetGraphicsRootConstantBufferView(
-		2,
-		object->constBuffTransform->GetGPUVirtualAddress()
-	);
-	cmdList->DrawIndexedInstanced(numIndices, 1, 0, 0, 0);
-}
 
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	_In_ LPSTR lpCmdLine, _In_ int nCmdShow)
@@ -224,23 +135,10 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 		(void**)&constMapMaterial);
 	assert(SUCCEEDED(dx.result));
 
-	// 3Dオブジェクトの数
-	const size_t kObjectCount = 50;
-	// 3Dオブジェクトの配列
-	Object3d object3d[kObjectCount];
+#pragma region 3Dオブジェクト初期化
+	KObject3D object3d(dx.result, dx.dev);
+#pragma endregion
 
-	for (int i = 0; i < _countof(object3d); i++) {
-		// 初期化
-		InitializeObject3d(dx.result, &object3d[i], dx.dev);
-
-		if (i > 0) {
-			object3d[i].parent = &object3d[i - 1];
-
-			object3d[i].scale = { 0.9f,0.9f,0.9f };
-			object3d[i].rot = { 0.0f,0.0f,XMConvertToRadians(30.0f) };
-			object3d[i].pos = { 0.0f,0.0f,-8.0f };
-		}
-	}
 #pragma region 行列
 	// ビュー変換行列
 	XMMATRIX matView;
@@ -326,7 +224,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	dx.result = dx.dev->CreateGraphicsPipelineState(&pipelineDesc, IID_PPV_ARGS(&pipelineState));
 	assert(SUCCEEDED(dx.result));
 #pragma endregion
-	
+
 #pragma region テクスチャ初期化
 	KTexture texture(dx, vertex);
 #pragma endregion
@@ -430,16 +328,16 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 			input.IsPush(DIK_LEFT)) {
 			speed = 1.0f;
 			if (input.IsPush(DIK_UP)) {
-				object3d[0].pos.y += speed;
+				object3d.object3d[0].pos.y += speed;
 			}
 			if (input.IsPush(DIK_DOWN)) {
-				object3d[0].pos.y -= speed;
+				object3d.object3d[0].pos.y -= speed;
 			}
 			if (input.IsPush(DIK_RIGHT)) {
-				object3d[0].pos.x += speed;
+				object3d.object3d[0].pos.x += speed;
 			}
 			if (input.IsPush(DIK_LEFT)) {
-				object3d[0].pos.x -= speed;
+				object3d.object3d[0].pos.x -= speed;
 			}
 		}
 		else {
@@ -459,9 +357,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 #pragma endregion
 
 #pragma region 3Dオブジェクトのアップデート
-		for (size_t i = 0; i < _countof(object3d); i++) {
-			UpdateObject3d(&object3d[i], matView, matProjection);
-		}
+		object3d.Update(matView, matProjection);
 #pragma endregion
 
 #pragma endregion
@@ -544,9 +440,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 		dx.cmdList->SetGraphicsRootDescriptorTable(1, srvGpuHandle);
 #pragma region 描画コマンド
 		// 描画コマンド
-		for (int i = 0; i < _countof(object3d); i++) {
-			DrawObject3d(&object3d[i], dx.cmdList, vertex.vbView, vertex.ibView, _countof(indices));
-		}
+		object3d.Draw(dx.cmdList, vertex.vbView, vertex.ibView, _countof(indices));
 #pragma endregion
 		// 描画コマンドここまで
 #pragma endregion

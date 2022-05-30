@@ -9,6 +9,7 @@
 #include "KPixelShader.h"
 #include "KTexture.h"
 #include "KObject3D.h"
+#include "ViewProjection.h"
 #ifdef DEBUG
 #include <iostream>
 #endif
@@ -53,8 +54,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	float colorB = 1.0f;
 	float colorA = 1.0f;
 
-	// カメラの距離
-	float lenZ = -100;
+	//// カメラの距離
+	//float lenZ = -100;
 #pragma region 頂点データ
 	KVertex vertex(dx);
 #pragma endregion
@@ -139,21 +140,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 #pragma endregion
 
 #pragma region 行列
-	// ビュー変換行列
-	XMMATRIX matView;
-	XMFLOAT3 eye(0, 0, lenZ);
-	XMFLOAT3 target(0, 0, 0);
-	XMFLOAT3 up(0, 1, 0);
-	matView = XMMatrixLookAtLH(XMLoadFloat3(&eye), XMLoadFloat3(&target), XMLoadFloat3(&up));
-	float angleX = 0.0f; // カメラの回転角X
-	float angleY = 0.0f; // カメラの回転角Y
-
-	// 射影変換行列の計算
-	XMMATRIX matProjection = XMMatrixPerspectiveFovLH(
-		XMConvertToRadians(45.0f),						// 上下画角45度
-		(float)win.window_width / win.window_height,	// アスペクト比(画面横幅/画面縦幅)
-		0.1f, 1000.0f									// 前端、奥端
-	);
+	ViewProjection viewProjection(win.window_width, win.window_height);
 #pragma endregion
 
 #pragma endregion
@@ -268,28 +255,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 			colorB = 1.0f;
 		}
 		constMapMaterial->color = XMFLOAT4(colorR, colorG, colorB, colorA);
-		//カメラ移動
-		if (input.IsPush(DIK_D) || input.IsPush(DIK_A) ||
-			input.IsPush(DIK_W) || input.IsPush(DIK_S)) {
-			if (input.IsPush(DIK_D)) {
-				angleX += XMConvertToRadians(1.0f);
-			}
-			else if (input.IsPush(DIK_A)) {
-				angleX -= XMConvertToRadians(1.0f);
-			}
-
-			if (input.IsPush(DIK_W)) {
-				angleY -= XMConvertToRadians(1.0f);
-			}
-			else if (input.IsPush(DIK_S)) {
-				angleY += XMConvertToRadians(1.0f);
-			}
-
-			// angleラジアンy軸回転
-			eye.x = lenZ * sinf(angleX);
-			eye.y = lenZ * sinf(angleY);
-			eye.z = lenZ * cosf(angleX) * cosf(angleY);
-		}
+		
 		//// 図形回転
 		//if (input.IsPush(DIK_W) ||
 		//	input.IsPush(DIK_S) ||
@@ -320,6 +286,28 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 		//	rotation.y = 0.0f;
 		//	rotation.z = 0.0f;
 		//}
+		 ////カメラ移動
+		if (input.IsPush(DIK_D) || input.IsPush(DIK_A) ||
+			input.IsPush(DIK_W) || input.IsPush(DIK_S)) {
+			if (input.IsPush(DIK_D)) {
+				viewProjection.angleX += XMConvertToRadians(1.0f);
+			}
+			else if (input.IsPush(DIK_A)) {
+				viewProjection.angleX -= XMConvertToRadians(1.0f);
+			}
+
+			if (input.IsPush(DIK_W)) {
+				viewProjection.angleY -= XMConvertToRadians(1.0f);
+			}
+			else if (input.IsPush(DIK_S)) {
+				viewProjection.angleY += XMConvertToRadians(1.0f);
+			}
+
+			// angleラジアンy軸回転
+			viewProjection.eye.x = viewProjection.lenZ * sinf(viewProjection.angleX);
+			viewProjection.eye.y = viewProjection.lenZ * sinf(viewProjection.angleY);
+			viewProjection.eye.z = viewProjection.lenZ * cosf(viewProjection.angleX) * cosf(viewProjection.angleY);
+		}
 		// 移動
 		if (input.IsPush(DIK_UP) ||
 			input.IsPush(DIK_DOWN) ||
@@ -344,19 +332,12 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 		}
 #pragma endregion
 
-#pragma region 行列
-		// ビュー行列の計算
-		matView = XMMatrixLookAtLH(XMLoadFloat3(&eye), XMLoadFloat3(&target), XMLoadFloat3(&up));
-		// 射影変換行列の計算
-		matProjection = XMMatrixPerspectiveFovLH(
-			XMConvertToRadians(45.0f),						// 上下画角45度
-			(float)win.window_width / win.window_height,	// アスペクト比(画面横幅/画面縦幅)
-			0.1f, 1000.0f									// 前端、奥端
-		);
+#pragma region ビューのアップデート
+		viewProjection.Update(win.window_width, win.window_height);
 #pragma endregion
 
 #pragma region 3Dオブジェクトのアップデート
-		object3d.Update(matView, matProjection);
+		object3d.Update(viewProjection.matView,viewProjection.matProjection);
 #pragma endregion
 
 #pragma endregion

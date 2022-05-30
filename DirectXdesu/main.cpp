@@ -116,7 +116,6 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	cbResourceDesc.MipLevels = 1;
 	cbResourceDesc.SampleDesc.Count = 1;
 	cbResourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
-
 	// 定数バッファの生成
 	ID3D12Resource* constBufferMaterial = nullptr;
 	dx.result = dx.dev->CreateCommittedResource(

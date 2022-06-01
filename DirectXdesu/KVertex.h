@@ -1,6 +1,7 @@
 #pragma once
 #include <DirectXMath.h>
 #include "KDirectInit.h"
+#include "Vector3.h"
 
 using namespace DirectX;
 

@@ -1,6 +1,7 @@
 #pragma once
 #include <d3d12.h>
 #include <DirectXMath.h>
+#include "Vector3.h"
 
 using namespace DirectX;
 
@@ -18,9 +19,9 @@ struct Object3d {
 	// 定数バッファマップ(行列)
 	ConstBufferDataTransform* constMapTransform = {};
 	// アフィン変換
-	XMFLOAT3 scale = { 1,1,1 };
-	XMFLOAT3 rot = { 0,0,0 };
-	XMFLOAT3 pos = { 0,0,0 };
+	Vector3 scale = { 1,1,1 };
+	Vector3 rot = { 0,0,0 };
+	Vector3 pos = { 0,0,0 };
 	// ワールド変換行列
 	XMMATRIX matWorld = {};
 	// 親オブジェクトへのポインタ

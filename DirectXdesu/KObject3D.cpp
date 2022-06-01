@@ -66,8 +66,6 @@ void KObject3D::Update(XMMATRIX& matView, XMMATRIX& matProjection) {
 			object3d[i].matWorld *= object3d[i].parent->matWorld;
 		}
 
-		object3d[1].rot.z += XMConvertToRadians(30.0f);
-
 		object3d[i].constMapTransform->mat = object3d[i].matWorld * matView * matProjection;
 	}
 }

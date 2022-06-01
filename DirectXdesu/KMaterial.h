@@ -13,6 +13,7 @@ struct ConstBufferDataMaterial {
 class KMaterial
 {
 public:
+	KMaterial();
 	KMaterial(HRESULT result, ID3D12Device* dev);
 	void Initialize(HRESULT result, ID3D12Device* dev);
 	void Update();

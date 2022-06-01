@@ -26,7 +26,7 @@ public:
 	void SetDescriptor();
 	void SetBackBuffer();
 	void SetFence();
-	
+
 	HRESULT result;
 	ID3D12Device* dev = nullptr;
 	IDXGIFactory6* dxgiFactory = nullptr;
@@ -40,7 +40,7 @@ public:
 	float bBule = 0.5f;
 
 	// ‘Î‰žƒŒƒxƒ‹‚Ì”z—ñ
-	D3D_FEATURE_LEVEL levels[4] ={
+	D3D_FEATURE_LEVEL levels[4] = {
 		D3D_FEATURE_LEVEL_12_1,
 		D3D_FEATURE_LEVEL_12_0,
 		D3D_FEATURE_LEVEL_11_1,

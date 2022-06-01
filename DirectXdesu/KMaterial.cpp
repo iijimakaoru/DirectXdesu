@@ -4,6 +4,10 @@ KMaterial::KMaterial(HRESULT result,ID3D12Device* dev) {
 	Initialize(result, dev);
 }
 
+KMaterial::KMaterial() {
+
+}
+
 void KMaterial::Initialize(HRESULT result, ID3D12Device* dev) {
 	// ‰æ‘œ‚ÌF
 	colorR = 1.0f;

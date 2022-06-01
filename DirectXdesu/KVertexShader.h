@@ -5,6 +5,7 @@
 class KVertexShader
 {
 public:
+	KVertexShader();
 	KVertexShader(KDirectInit dx);
 	void Init(KDirectInit dx);
 	void Error(KDirectInit dx);

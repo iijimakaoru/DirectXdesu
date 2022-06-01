@@ -1,5 +1,7 @@
 #include "KVertexShader.h"
 
+KVertexShader::KVertexShader(){}
+
 KVertexShader::KVertexShader(KDirectInit dx) {
 	Init(dx);
 	Error(dx);

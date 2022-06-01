@@ -5,6 +5,7 @@
 class KPixelShader
 {
 public:
+	KPixelShader();
 	KPixelShader(KDirectInit dx);
 	void Init(KDirectInit dx);
 	void Error(KDirectInit dx);

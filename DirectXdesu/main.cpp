@@ -11,6 +11,7 @@
 #include "KObject3D.h"
 #include "ViewProjection.h"
 #include "KMaterial.h"
+#include "KGPlin.h"
 #ifdef DEBUG
 #include <iostream>
 #endif
@@ -48,128 +49,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	KVertex vertex(dx);
 #pragma endregion
 
-#pragma region 頂点シェーダー
-	KVertexShader vtShader(dx);
-#pragma endregion
-
-#pragma region ピクセルシェーダ
-	KPixelShader pxShader(dx);
-#pragma endregion
-
 #pragma region グラフィックスパイプライン設定
-	// グラフィックスパイプライン設定
-	D3D12_GRAPHICS_PIPELINE_STATE_DESC pipelineDesc{};
-	// シェーダーの設定
-	pipelineDesc.VS.pShaderBytecode = vtShader.vsBlob->GetBufferPointer();
-	pipelineDesc.VS.BytecodeLength = vtShader.vsBlob->GetBufferSize();
-	pipelineDesc.PS.pShaderBytecode = pxShader.psBlob->GetBufferPointer();
-	pipelineDesc.PS.BytecodeLength = pxShader.psBlob->GetBufferSize();
-	// サンプルマスクの設定
-	pipelineDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
-	// ラスタライザの設定
-	pipelineDesc.RasterizerState.CullMode = D3D12_CULL_MODE_BACK; // 背面をカリング
-	pipelineDesc.RasterizerState.FillMode = D3D12_FILL_MODE_SOLID;
-	pipelineDesc.RasterizerState.DepthClipEnable = true;
-	// ブレンドステート
-	pipelineDesc.BlendState.RenderTarget[0].RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
-	// 頂点レイアウトの設定
-	pipelineDesc.InputLayout.pInputElementDescs = vertex.inputLayout;
-	pipelineDesc.InputLayout.NumElements = _countof(vertex.inputLayout);
-	// 図形の形状設定
-	pipelineDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-	// その他の設定
-	pipelineDesc.NumRenderTargets = 1;
-	pipelineDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
-	pipelineDesc.SampleDesc.Count = 1;
-	// レンダーターゲットのブレンド設定
-	D3D12_RENDER_TARGET_BLEND_DESC& blenddesc = pipelineDesc.BlendState.RenderTarget[0];
-	blenddesc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
-	blenddesc.BlendEnable = true;
-	blenddesc.BlendOpAlpha = D3D12_BLEND_OP_ADD;
-	blenddesc.SrcBlendAlpha = D3D12_BLEND_ONE;
-	blenddesc.DestBlendAlpha = D3D12_BLEND_ZERO;
-	// 半透明合成
-	blenddesc.BlendOp = D3D12_BLEND_OP_ADD;
-	blenddesc.SrcBlend = D3D12_BLEND_SRC_ALPHA;
-	blenddesc.DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
-
-#pragma region 定数バッファ
-#pragma region マテリアル
-	KMaterial material(dx.result, dx.dev);
-#pragma endregion
-
-#pragma region 3Dオブジェクト初期化
-	KObject3D object3d(dx.result, dx.dev);
-#pragma endregion
-
-#pragma region 行列
-	ViewProjection viewProjection(win.window_width, win.window_height);
-#pragma endregion
-
-#pragma endregion
-	// デスクリプタレンジの設定
-	D3D12_DESCRIPTOR_RANGE descriptorRange{};
-	descriptorRange.NumDescriptors = 1;
-	descriptorRange.RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
-	descriptorRange.BaseShaderRegister = 0;
-	descriptorRange.OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
-	// ルートパラメータの設定
-	D3D12_ROOT_PARAMETER rootParam[3] = {};
-	// 定数バッファ0番
-	rootParam[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
-	rootParam[0].Descriptor.ShaderRegister = 0;
-	rootParam[0].Descriptor.RegisterSpace = 0;
-	rootParam[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
-	// テクスチャレジスタ0番
-	rootParam[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
-	rootParam[1].DescriptorTable.pDescriptorRanges = &descriptorRange;
-	rootParam[1].DescriptorTable.NumDescriptorRanges = 1;
-	rootParam[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
-	// 定数バッファ1番
-	rootParam[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
-	rootParam[2].Descriptor.ShaderRegister = 1;
-	rootParam[2].Descriptor.RegisterSpace = 0;
-	rootParam[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
-	// テクスチャサンブラーの設定
-	D3D12_STATIC_SAMPLER_DESC samplerDesc{};
-	samplerDesc.AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
-	samplerDesc.AddressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
-	samplerDesc.AddressW = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
-	samplerDesc.BorderColor = D3D12_STATIC_BORDER_COLOR_TRANSPARENT_BLACK;
-	samplerDesc.Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR;
-	samplerDesc.MaxLOD = D3D12_FLOAT32_MAX;
-	samplerDesc.MinLOD = 0.0f;
-	samplerDesc.ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER;
-	samplerDesc.ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-	// ルートシグネチャ
-	ID3D12RootSignature* rootSignature;
-	// ルートシグネチャの設定
-	D3D12_ROOT_SIGNATURE_DESC rootSignatureDesc{};
-	rootSignatureDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
-	rootSignatureDesc.pParameters = rootParam;
-	rootSignatureDesc.NumParameters = _countof(rootParam);
-	rootSignatureDesc.pStaticSamplers = &samplerDesc;
-	rootSignatureDesc.NumStaticSamplers = 1;
-	// ルートシグネチャのシリアライズ
-	ID3DBlob* rootSigBlob = nullptr;
-	dx.result = D3D12SerializeRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1_0,
-		&rootSigBlob, &pxShader.errorBlob);
-	assert(SUCCEEDED(dx.result));
-	dx.result = dx.dev->CreateRootSignature(0, rootSigBlob->GetBufferPointer(), rootSigBlob->GetBufferSize(),
-		IID_PPV_ARGS(&rootSignature));
-	assert(SUCCEEDED(dx.result));
-	rootSigBlob->Release();
-	// パイプラインにルートシグネチャをセット
-	pipelineDesc.pRootSignature = rootSignature;
-	// デプスステンシルステートの設定
-	pipelineDesc.DepthStencilState.DepthEnable = true; // 深度テスト
-	pipelineDesc.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL; // 書き込み許可
-	pipelineDesc.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_LESS; // 小さければ合格
-	pipelineDesc.DSVFormat = DXGI_FORMAT_D32_FLOAT; // 深度値フォーマット
-	// パイプラインステート
-	ID3D12PipelineState* pipelineState = nullptr;
-	dx.result = dx.dev->CreateGraphicsPipelineState(&pipelineDesc, IID_PPV_ARGS(&pipelineState));
-	assert(SUCCEEDED(dx.result));
+	KGPlin Gpipeline(dx, dx.result, dx.dev, win.window_width, win.window_height, vertex);
 #pragma endregion
 
 #pragma region テクスチャ初期化
@@ -211,14 +92,14 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 		}
 		// 画像色変え
 		if (input.IsPush(DIK_1)) {
-			material.colorR = 1.0f;
-			material.colorG = 0.0f;
-			material.colorB = 1.0f;
+			Gpipeline.material->colorR = 1.0f;
+			Gpipeline.material->colorG = 0.0f;
+			Gpipeline.material->colorB = 1.0f;
 		}
 		else {
-			material.colorR = 1.0f;
-			material.colorG = 1.0f;
-			material.colorB = 1.0f;
+			Gpipeline.material->colorR = 1.0f;
+			Gpipeline.material->colorG = 1.0f;
+			Gpipeline.material->colorB = 1.0f;
 		}
 
 		// 図形回転
@@ -227,40 +108,40 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 			input.IsPush(DIK_F) ||
 			input.IsPush(DIK_V)) {
 			if (input.IsPush(DIK_F)) {
-				object3d.object3d[0].rot.x += 0.1f;
+				Gpipeline.object3d->object3d[0].rot.x += 0.1f;
 			}
 			else if (input.IsPush(DIK_V)) {
-				object3d.object3d[0].rot.x -= 0.1f;
+				Gpipeline.object3d->object3d[0].rot.x -= 0.1f;
 			}
 
 			if (input.IsPush(DIK_C)) {
-				object3d.object3d[0].rot.y -= 0.1f;
+				Gpipeline.object3d->object3d[0].rot.y -= 0.1f;
 			}
 			else if (input.IsPush(DIK_B)) {
-				object3d.object3d[0].rot.y += 0.1f;
+				Gpipeline.object3d->object3d[0].rot.y += 0.1f;
 			}
 		}
 		////カメラ移動
 		if (input.IsPush(DIK_D) || input.IsPush(DIK_A) ||
 			input.IsPush(DIK_W) || input.IsPush(DIK_S)) {
 			if (input.IsPush(DIK_D)) {
-				viewProjection.angleX += XMConvertToRadians(1.0f);
+				Gpipeline.viewProjection->angleX += XMConvertToRadians(1.0f);
 			}
 			else if (input.IsPush(DIK_A)) {
-				viewProjection.angleX -= XMConvertToRadians(1.0f);
+				Gpipeline.viewProjection->angleX -= XMConvertToRadians(1.0f);
 			}
 
 			if (input.IsPush(DIK_W)) {
-				viewProjection.angleY -= XMConvertToRadians(1.0f);
+				Gpipeline.viewProjection->angleY -= XMConvertToRadians(1.0f);
 			}
 			else if (input.IsPush(DIK_S)) {
-				viewProjection.angleY += XMConvertToRadians(1.0f);
+				Gpipeline.viewProjection->angleY += XMConvertToRadians(1.0f);
 			}
 
 			// angleラジアンy軸回転
-			viewProjection.eye.x = viewProjection.lenZ * sinf(viewProjection.angleX);
-			viewProjection.eye.y = viewProjection.lenZ * sinf(viewProjection.angleY);
-			viewProjection.eye.z = viewProjection.lenZ * cosf(viewProjection.angleX) * cosf(viewProjection.angleY);
+			Gpipeline.viewProjection->eye.x = Gpipeline.viewProjection->lenZ * sinf(Gpipeline.viewProjection->angleX);
+			Gpipeline.viewProjection->eye.y = Gpipeline.viewProjection->lenZ * sinf(Gpipeline.viewProjection->angleY);
+			Gpipeline.viewProjection->eye.z = Gpipeline.viewProjection->lenZ * cosf(Gpipeline.viewProjection->angleX) * cosf(Gpipeline.viewProjection->angleY);
 		}
 		// 移動
 		if (input.IsPush(DIK_UP) ||
@@ -269,16 +150,16 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 			input.IsPush(DIK_LEFT)) {
 			speed = 1.0f;
 			if (input.IsPush(DIK_UP)) {
-				object3d.object3d[0].pos.y += speed;
+				Gpipeline.object3d->object3d[0].pos.y += speed;
 			}
 			if (input.IsPush(DIK_DOWN)) {
-				object3d.object3d[0].pos.y -= speed;
+				Gpipeline.object3d->object3d[0].pos.y -= speed;
 			}
 			if (input.IsPush(DIK_RIGHT)) {
-				object3d.object3d[0].pos.x += speed;
+				Gpipeline.object3d->object3d[0].pos.x += speed;
 			}
 			if (input.IsPush(DIK_LEFT)) {
-				object3d.object3d[0].pos.x -= speed;
+				Gpipeline.object3d->object3d[0].pos.x -= speed;
 			}
 		}
 		else {
@@ -287,15 +168,15 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 #pragma endregion
 
 #pragma region 画像色アップデート
-		material.Update();
+		Gpipeline.material->Update();
 #pragma endregion
 
 #pragma region ビューのアップデート
-		viewProjection.Update(win.window_width, win.window_height);
+		Gpipeline.viewProjection->Update(win.window_width, win.window_height);
 #pragma endregion
 
 #pragma region 3Dオブジェクトのアップデート
-		object3d.Update(viewProjection.matView, viewProjection.matProjection);
+		Gpipeline.object3d->Update(Gpipeline.viewProjection->matView, Gpipeline.viewProjection->matProjection);
 #pragma endregion
 
 #pragma endregion
@@ -355,8 +236,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 #pragma endregion
 #pragma region パイプラインステート設定
 		// パイプラインステートとルートシグネチャの設定コマンド
-		dx.cmdList->SetPipelineState(pipelineState);
-		dx.cmdList->SetGraphicsRootSignature(rootSignature);
+		dx.cmdList->SetPipelineState(Gpipeline.pipelineState);
+		dx.cmdList->SetGraphicsRootSignature(Gpipeline.rootSignature);
 #pragma endregion
 #pragma region プリミティブ形状
 		// プリミティブ形状の設定コマンド
@@ -369,7 +250,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 		dx.cmdList->IASetVertexBuffers(0, 1, &vertex.vbView);
 #pragma endregion
 		// CBV
-		dx.cmdList->SetGraphicsRootConstantBufferView(0, material.constBufferMaterial->GetGPUVirtualAddress());
+		dx.cmdList->SetGraphicsRootConstantBufferView(0, Gpipeline.material->constBufferMaterial->GetGPUVirtualAddress());
 		// SRV
 		dx.cmdList->SetDescriptorHeaps(1, &texture.srvHeap);
 		// 先頭ハンドルを取得
@@ -378,7 +259,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 		dx.cmdList->SetGraphicsRootDescriptorTable(1, srvGpuHandle);
 #pragma region 描画コマンド
 		// 描画コマンド
-		object3d.Draw(dx.cmdList, vertex.vbView, vertex.ibView, _countof(indices));
+		Gpipeline.object3d->Draw(dx.cmdList, vertex.vbView, vertex.ibView, _countof(indices));
 #pragma endregion
 		// 描画コマンドここまで
 #pragma endregion

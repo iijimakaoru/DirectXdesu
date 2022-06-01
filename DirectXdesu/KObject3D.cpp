@@ -1,5 +1,7 @@
 #include "KObject3D.h"
 
+KObject3D::KObject3D(){}
+
 KObject3D::KObject3D(HRESULT result, ID3D12Device* dev) {
 	Initialize(result, dev);
 }

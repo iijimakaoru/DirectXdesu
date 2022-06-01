@@ -1,5 +1,7 @@
 #include "KPixelShader.h"
 
+KPixelShader::KPixelShader(){}
+
 KPixelShader::KPixelShader(KDirectInit dx) {
 	Init(dx);
 	Error(dx);

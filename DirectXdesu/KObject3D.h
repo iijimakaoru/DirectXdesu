@@ -31,6 +31,7 @@ struct Object3d {
 class KObject3D
 {
 public:
+	KObject3D();
 	KObject3D(HRESULT result, ID3D12Device* dev);
 	void Initialize(HRESULT result, ID3D12Device* dev);
 	void Update(XMMATRIX& matView, XMMATRIX& matProjection);

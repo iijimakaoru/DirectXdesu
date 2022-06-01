@@ -1,6 +1,8 @@
 #include "ViewProjection.h"
 #include "KWindow.h"
 
+ViewProjection::ViewProjection(){}
+
 ViewProjection::ViewProjection(int width, int height) {
 	Initialize(width, height);
 }

@@ -8,7 +8,7 @@
 #include "KVertexShader.h"
 #include "KPixelShader.h"
 #include "KTexture.h"
-#include "KObject3D.h"
+#include "KWorldTransform.h"
 #include "ViewProjection.h"
 #include "KMaterial.h"
 #include "KGPlin.h"
@@ -78,6 +78,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 #pragma region inputアップデート
 		input.Update(dx.result);
 #pragma endregion
+
 #pragma region キーボード処理
 		// 背景色変え
 		if (input.IsPush(DIK_SPACE)) {
@@ -115,10 +116,10 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 			}
 
 			if (input.IsPush(DIK_C)) {
-				Gpipeline.object3d->object3d[0].rot.y -= 0.1f;
+				Gpipeline.object3d->object3d[0].rot.y += 0.1f;
 			}
 			else if (input.IsPush(DIK_B)) {
-				Gpipeline.object3d->object3d[0].rot.y += 0.1f;
+				Gpipeline.object3d->object3d[0].rot.y -= 0.1f;
 			}
 		}
 		////カメラ移動
@@ -150,10 +151,10 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 			input.IsPush(DIK_LEFT)) {
 			speed = 1.0f;
 			if (input.IsPush(DIK_UP)) {
-				Gpipeline.object3d->object3d[0].pos.y += speed;
+				Gpipeline.object3d->object3d[0].pos.z += speed;
 			}
 			if (input.IsPush(DIK_DOWN)) {
-				Gpipeline.object3d->object3d[0].pos.y -= speed;
+				Gpipeline.object3d->object3d[0].pos.z -= speed;
 			}
 			if (input.IsPush(DIK_RIGHT)) {
 				Gpipeline.object3d->object3d[0].pos.x += speed;
@@ -283,8 +284,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 #pragma region コマンド完了待ち
 		// コマンドの完了を待つ
 		dx.cmdQueue->Signal(dx.fence, ++dx.fenceVal);
-		if (dx.fence->GetCompletedValue() != dx.fenceVal)
-		{
+		if (dx.fence->GetCompletedValue() != dx.fenceVal) {
 			HANDLE event = CreateEvent(nullptr, false, false, nullptr);
 			dx.fence->SetEventOnCompletion(dx.fenceVal, event);
 			WaitForSingleObject(event, INFINITE);

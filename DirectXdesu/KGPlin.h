@@ -1,7 +1,7 @@
 #pragma once
 #include <d3d12.h>
 #include "KMaterial.h"
-#include "KObject3D.h"
+#include "KWorldTransform.h"
 #include "ViewProjection.h"
 #include "KMaterial.h"
 #include "ViewProjection.h"
@@ -26,6 +26,7 @@ public:
 	void RootSig(HRESULT result, ID3D12Device* dev);
 	void PipelineState(HRESULT result, ID3D12Device* dev);
 
+	// シェーダークラス呼び込み
 	KPixelShader* pxShader;
 	KVertexShader* vtShader;
 	// グラフィックスパイプライン設定
@@ -35,7 +36,7 @@ public:
 	// マテリアル
 	KMaterial* material;
 	// 3Dオブジェクト
-	KObject3D* object3d;
+	KWorldTransform* object3d;
 	// ビュープロジェクション
 	ViewProjection* viewProjection;
 	// デスクリプタレンジの設定

@@ -58,7 +58,7 @@ void KGPlin::Buffer(HRESULT result, ID3D12Device* dev, int width, int height) {
 #pragma endregion
 
 #pragma region 3Dオブジェクト初期化
-	object3d = new KObject3D(result, dev);
+	object3d = new KWorldTransform(result, dev);
 #pragma endregion
 
 #pragma region 行列

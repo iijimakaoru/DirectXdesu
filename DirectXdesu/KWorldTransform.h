@@ -28,16 +28,17 @@ struct Object3d {
 	Object3d* parent = nullptr;
 };
 
-class KObject3D
+class KWorldTransform
 {
 public:
-	KObject3D();
-	KObject3D(HRESULT result, ID3D12Device* dev);
+	KWorldTransform();
+	KWorldTransform(HRESULT result, ID3D12Device* dev);
 	void Initialize(HRESULT result, ID3D12Device* dev);
 	void Update(XMMATRIX& matView, XMMATRIX& matProjection);
 	void Draw(ID3D12GraphicsCommandList* cmdList, D3D12_VERTEX_BUFFER_VIEW& vbview,
 		D3D12_INDEX_BUFFER_VIEW& ibView, UINT numIndices);
 
+	ID3D12Device* dev;
 	// ヒープ設定
 	D3D12_HEAP_PROPERTIES cbHeapProp{};
 	// リソース設定

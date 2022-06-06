@@ -6,7 +6,7 @@ class KTexture
 {
 public:
 	KTexture(KDirectInit dx, KVertex vertex);
-	void LoadGraph(KDirectInit dx);
+	void LoadTexture(KDirectInit dx);
 	void GeneMipMap(KDirectInit dx);
 	void SetTextureBuff();
 	void GeneTextureBuff(KDirectInit dx);

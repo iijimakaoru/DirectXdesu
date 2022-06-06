@@ -1,7 +1,7 @@
 #include "KTexture.h"
 
 KTexture::KTexture(KDirectInit dx, KVertex vertex) {
-	LoadGraph(dx);
+	LoadTexture(dx);
 	GeneMipMap(dx);
 	SetTextureBuff();
 	GeneTextureBuff(dx);
@@ -13,7 +13,7 @@ KTexture::KTexture(KDirectInit dx, KVertex vertex) {
 	CreateSRV(dx);
 }
 
-void KTexture::LoadGraph(KDirectInit dx) {
+void KTexture::LoadTexture(KDirectInit dx) {
 	dx.result = LoadFromWICFile(
 		L"Resources/kitanai.jpg",
 		WIC_FLAGS_NONE,
@@ -29,6 +29,7 @@ void KTexture::GeneMipMap(KDirectInit dx) {
 		TEX_FILTER_DEFAULT,
 		0, mipChain
 	);
+
 	if (SUCCEEDED(dx.result)) {
 		scraychImg = std::move(mipChain);
 		metadata = scraychImg.GetMetadata();

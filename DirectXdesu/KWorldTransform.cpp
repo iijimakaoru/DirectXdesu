@@ -1,12 +1,13 @@
-#include "KObject3D.h"
+#include "KWorldTransform.h"
 
-KObject3D::KObject3D(){}
+KWorldTransform::KWorldTransform(){}
 
-KObject3D::KObject3D(HRESULT result, ID3D12Device* dev) {
-	Initialize(result, dev);
+KWorldTransform::KWorldTransform(HRESULT result, ID3D12Device* dev) {
+	Initialize(result,dev);
 }
 
-void KObject3D::Initialize(HRESULT result, ID3D12Device* dev) {
+void KWorldTransform::Initialize(HRESULT result, ID3D12Device* dev) {
+
 	for (int i = 0; i < _countof(object3d); i++) {
 		// ヒープ設定
 		cbHeapProp.Type = D3D12_HEAP_TYPE_UPLOAD;
@@ -40,15 +41,17 @@ void KObject3D::Initialize(HRESULT result, ID3D12Device* dev) {
 			object3d[i].parent = &object3d[i - 1];
 
 			object3d[i].scale = { 0.9f,0.9f,0.9f };
-			object3d[i].pos = { 0.0f,0.0f,-8.0f };
+			object3d[i].pos = { 5.0f,0.0f,0.0f };
 			object3d[i].rot = { 0.0f,0.0f,XMConvertToRadians(30.0f) };
 		}
 	}
 }
 
-void KObject3D::Update(XMMATRIX& matView, XMMATRIX& matProjection) {
+void KWorldTransform::Update(XMMATRIX& matView, XMMATRIX& matProjection) {
 	for (int i = 0; i < _countof(object3d); i++) {
+		// マトリックス
 		XMMATRIX matScale, matRot, matTrans;
+
 		// 親オブジェクト要素
 		matScale = XMMatrixScaling(object3d[i].scale.x, object3d[i].scale.y, object3d[i].scale.z);
 		matRot = XMMatrixIdentity();
@@ -72,7 +75,7 @@ void KObject3D::Update(XMMATRIX& matView, XMMATRIX& matProjection) {
 	}
 }
 
-void KObject3D::Draw(ID3D12GraphicsCommandList* cmdList, D3D12_VERTEX_BUFFER_VIEW& vbview,
+void KWorldTransform::Draw(ID3D12GraphicsCommandList* cmdList, D3D12_VERTEX_BUFFER_VIEW& vbview,
 	D3D12_INDEX_BUFFER_VIEW& ibView, UINT numIndices) {
 	for (int i = 0; i < _countof(object3d); i++) {
 		cmdList->IASetVertexBuffers(0, 1, &vbview);

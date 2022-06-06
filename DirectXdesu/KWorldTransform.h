@@ -38,7 +38,7 @@ public:
 	void Draw(ID3D12GraphicsCommandList* cmdList, D3D12_VERTEX_BUFFER_VIEW& vbview,
 		D3D12_INDEX_BUFFER_VIEW& ibView, UINT numIndices);
 
-	ID3D12Device* dev;
+	Vector3 rotResult[kObjectCount];
 	// ヒープ設定
 	D3D12_HEAP_PROPERTIES cbHeapProp{};
 	// リソース設定

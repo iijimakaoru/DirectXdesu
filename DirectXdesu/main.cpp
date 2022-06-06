@@ -43,7 +43,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	KDepth depth(dx, win);
 #pragma endregion
 	// 速さ
-	float speed = 0.0f;
+	float speed = 1.0f;
 
 #pragma region 頂点データ
 	KVertex vertex(dx);
@@ -56,6 +56,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 #pragma region テクスチャ初期化
 	KTexture texture(dx, vertex);
 #pragma endregion
+	Vector3 center = { 0,0,1 };
 
 #pragma endregion
 
@@ -102,8 +103,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 			Gpipeline.material->colorG = 1.0f;
 			Gpipeline.material->colorB = 1.0f;
 		}
-
-		// 図形回転
+		// 図形縦回転
 		if (input.IsPush(DIK_C) ||
 			input.IsPush(DIK_B) ||
 			input.IsPush(DIK_F) ||
@@ -114,19 +114,13 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 			else if (input.IsPush(DIK_V)) {
 				Gpipeline.object3d->object3d[0].rot.x -= 0.1f;
 			}
-
-			if (input.IsPush(DIK_C)) {
-				Gpipeline.object3d->object3d[0].rot.y += 0.1f;
-			}
-			else if (input.IsPush(DIK_B)) {
-				Gpipeline.object3d->object3d[0].rot.y -= 0.1f;
-			}
 		}
 		////カメラ移動
 		if (input.IsPush(DIK_D) || input.IsPush(DIK_A) ||
 			input.IsPush(DIK_W) || input.IsPush(DIK_S)) {
 			if (input.IsPush(DIK_D)) {
 				Gpipeline.viewProjection->angleX += XMConvertToRadians(1.0f);
+
 			}
 			else if (input.IsPush(DIK_A)) {
 				Gpipeline.viewProjection->angleX -= XMConvertToRadians(1.0f);
@@ -149,23 +143,28 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 			input.IsPush(DIK_DOWN) ||
 			input.IsPush(DIK_RIGHT) ||
 			input.IsPush(DIK_LEFT)) {
-			speed = 1.0f;
 			if (input.IsPush(DIK_UP)) {
-				Gpipeline.object3d->object3d[0].pos.z += speed;
+				speed = 1;
 			}
 			if (input.IsPush(DIK_DOWN)) {
-				Gpipeline.object3d->object3d[0].pos.z -= speed;
+				speed = -1;
 			}
 			if (input.IsPush(DIK_RIGHT)) {
-				Gpipeline.object3d->object3d[0].pos.x += speed;
+				Gpipeline.object3d->object3d[0].rot.y -= 0.1f;
 			}
 			if (input.IsPush(DIK_LEFT)) {
-				Gpipeline.object3d->object3d[0].pos.x -= speed;
+				Gpipeline.object3d->object3d[0].rot.y += 0.1f;
 			}
 		}
 		else {
-			speed = 0.0f;
+			speed = 0;
 		}
+
+		Gpipeline.object3d->rotResult[0].x = sin(Gpipeline.object3d->object3d[0].rot.y) * center.z;
+		Gpipeline.object3d->rotResult[0].z = cos(Gpipeline.object3d->object3d[0].rot.y) * center.z;
+
+		Gpipeline.object3d->object3d[0].pos.x += (speed) * Gpipeline.object3d->rotResult[0].x;
+		Gpipeline.object3d->object3d[0].pos.z += (speed) * Gpipeline.object3d->rotResult[0].z;
 #pragma endregion
 
 #pragma region 画像色アップデート

@@ -15,7 +15,7 @@ KTexture::KTexture(KDirectInit dx, KVertex vertex) {
 
 void KTexture::LoadTexture(KDirectInit dx) {
 	dx.result = LoadFromWICFile(
-		L"Resources/kitanai.jpg",
+		L"Resources/haikei.jpg",
 		WIC_FLAGS_NONE,
 		&metadata, scraychImg);
 }

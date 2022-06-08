@@ -6,13 +6,13 @@ class KTexture
 {
 public:
 	KTexture(KDirectInit dx, KVertex vertex);
-	void LoadTexture(KDirectInit dx);
+	void LoadTexture(KDirectInit dx,int i);
 	void GeneMipMap(KDirectInit dx);
 	void SetTextureBuff();
 	void GeneTextureBuff(KDirectInit dx);
 	void SendData(KDirectInit dx);
-	void SetDRTHeap();
-	void GeneDRTHeap(KDirectInit dx);
+	void SetDescHeap();
+	void GeneDescHeap(KDirectInit dx);
 	void GetSrvHandle();
 	void SetSRV(KDirectInit dx,KVertex vertex);
 	void CreateSRV(KDirectInit dx);
@@ -21,6 +21,8 @@ public:
 	ScratchImage scraychImg{};
 
 	ScratchImage mipChain{};
+
+	const wchar_t* msg[2] = { L"Resources/kitanai.jpg",L"Resources/haikei.jpg" };
 
 	// ÉqÅ[Évê›íË
 	D3D12_HEAP_PROPERTIES textureHeapProp{};

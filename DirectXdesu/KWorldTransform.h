@@ -11,7 +11,7 @@ struct ConstBufferDataTransform {
 };
 
 // 3Dオブジェクトの数
-const size_t kObjectCount = 1;
+const size_t kObjectCount = 2;
 
 struct Object3d {
 	// 定数バッファ(行列)

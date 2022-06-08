@@ -39,12 +39,9 @@ void KWorldTransform::Initialize(HRESULT result, ID3D12Device* dev) {
 
 		// 親オブジェクト以外の初期化
 		if (i > 0) {
-			object3d[i].parent = &object3d[i - 1];
-
-			rotResult[i] = { 0,0,1 };
-			object3d[i].scale = { 0.9f,0.9f,0.9f };
-			object3d[i].pos = { 0.0f,0.0f,-5.0f };
-			object3d[i].rot = { XMConvertToRadians(30.0f),0.0f,0.0f };
+			object3d[i].pos.z = 50;
+			object3d[i].scale.x *= 25;
+			object3d[i].scale.y *= 25;
 		}
 	}
 }

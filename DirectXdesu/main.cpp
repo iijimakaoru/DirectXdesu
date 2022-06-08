@@ -166,8 +166,6 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 #pragma endregion
 		Gpipeline.object3d->object3d[0].rot.z += XMConvertToRadians(5);
 
-		Gpipeline.viewProjection->eye.z -= 1;
-
 		// 前ベクトル
 		Gpipeline.object3d->rotResult[0].x = sin(Gpipeline.object3d->object3d[0].rot.y) * center.z;
 		Gpipeline.object3d->rotResult[0].z = cos(Gpipeline.object3d->object3d[0].rot.y) * center.z;

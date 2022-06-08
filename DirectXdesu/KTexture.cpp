@@ -1,23 +1,23 @@
 #include "KTexture.h"
 
 KTexture::KTexture(KDirectInit dx, KVertex vertex) {
-
-	LoadTexture(dx);
-	GeneMipMap(dx);
-	SetTextureBuff();
-	GeneTextureBuff(dx);
-	SendData(dx);
-
-	SetDRTHeap();
-	GeneDRTHeap(dx);
+	for (int i = 0; i < _countof(msg); i++) {
+		LoadTexture(dx, i);
+		GeneMipMap(dx);
+		SetTextureBuff();
+		GeneTextureBuff(dx);
+		SendData(dx);
+	}
+	SetDescHeap();
+	GeneDescHeap(dx);
 	GetSrvHandle();
 	SetSRV(dx,vertex);
 	CreateSRV(dx);
 }
 
-void KTexture::LoadTexture(KDirectInit dx) {
+void KTexture::LoadTexture(KDirectInit dx,int i) {
 	dx.result = LoadFromWICFile(
-		L"Resources/kitanai.jpg",
+		msg[i],
 		WIC_FLAGS_NONE,
 		&metadata, scraychImg);
 }
@@ -84,13 +84,13 @@ void KTexture::SendData(KDirectInit dx) {
 	}
 }
 
-void KTexture::SetDRTHeap() {
+void KTexture::SetDescHeap() {
 	srvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
 	srvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 	srvHeapDesc.NumDescriptors = kMaxSRVCount;
 }
 
-void KTexture::GeneDRTHeap(KDirectInit dx) {
+void KTexture::GeneDescHeap(KDirectInit dx) {
 	dx.result = dx.dev->CreateDescriptorHeap(
 		&srvHeapDesc,
 		IID_PPV_ARGS(&srvHeap)

@@ -43,7 +43,7 @@ void KWorldTransform::Initialize(HRESULT result, ID3D12Device* dev) {
 
 			rotResult[i] = { 0,0,1 };
 			object3d[i].scale = { 0.9f,0.9f,0.9f };
-			object3d[i].pos = { 0.0f,0.0f,-5.0f };
+			object3d[i].pos = { 0.0f,0.0f,-10.0f };
 			object3d[i].rot = { XMConvertToRadians(30.0f),0.0f,0.0f };
 		}
 	}

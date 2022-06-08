@@ -11,8 +11,8 @@ public:
 	void SetTextureBuff();
 	void GeneTextureBuff(KDirectInit dx);
 	void SendData(KDirectInit dx);
-	void SetDRTHeap();
-	void GeneDRTHeap(KDirectInit dx);
+	void SetDescHeap();
+	void GeneDescHeap(KDirectInit dx);
 	void GetSrvHandle();
 	void SetSRV(KDirectInit dx,KVertex vertex);
 	void CreateSRV(KDirectInit dx);

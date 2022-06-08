@@ -6,8 +6,8 @@ KTexture::KTexture(KDirectInit dx, KVertex vertex) {
 	SetTextureBuff();
 	GeneTextureBuff(dx);
 	SendData(dx);
-	SetDRTHeap();
-	GeneDRTHeap(dx);
+	SetDescHeap();
+	GeneDescHeap(dx);
 	GetSrvHandle();
 	SetSRV(dx,vertex);
 	CreateSRV(dx);
@@ -82,13 +82,13 @@ void KTexture::SendData(KDirectInit dx) {
 	}
 }
 
-void KTexture::SetDRTHeap() {
+void KTexture::SetDescHeap() {
 	srvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
 	srvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 	srvHeapDesc.NumDescriptors = kMaxSRVCount;
 }
 
-void KTexture::GeneDRTHeap(KDirectInit dx) {
+void KTexture::GeneDescHeap(KDirectInit dx) {
 	dx.result = dx.dev->CreateDescriptorHeap(
 		&srvHeapDesc,
 		IID_PPV_ARGS(&srvHeap)

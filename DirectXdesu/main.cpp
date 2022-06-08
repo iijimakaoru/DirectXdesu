@@ -123,35 +123,35 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 			else if (input.IsPush(DIK_A)) {
 				Gpipeline.viewProjection->angleX -= XMConvertToRadians(1.0f);
 			}
-
 			if (input.IsPush(DIK_W)) {
 				Gpipeline.viewProjection->angleY -= XMConvertToRadians(1.0f);
 			}
 			else if (input.IsPush(DIK_S)) {
 				Gpipeline.viewProjection->angleY += XMConvertToRadians(1.0f);
 			}
-
 			// angleƒ‰ƒWƒAƒ“yŽ²‰ñ“]
 			Gpipeline.viewProjection->eye.x = Gpipeline.viewProjection->lenZ * sinf(Gpipeline.viewProjection->angleX);
 			Gpipeline.viewProjection->eye.y = Gpipeline.viewProjection->lenZ * sinf(Gpipeline.viewProjection->angleY);
 			Gpipeline.viewProjection->eye.z = Gpipeline.viewProjection->lenZ * cosf(Gpipeline.viewProjection->angleX) * cosf(Gpipeline.viewProjection->angleY);
 		}
-		// ˆÚ“®
-		if (input.IsPush(DIK_UP) ||
-			input.IsPush(DIK_DOWN) ||
-			input.IsPush(DIK_RIGHT) ||
-			input.IsPush(DIK_LEFT)) {
-			if (input.IsPush(DIK_UP)) {
-				speed = 1;
-			}
-			if (input.IsPush(DIK_DOWN)) {
-				speed = -1;
-			}
+		// ‰¡‰ñ“]
+		if (input.IsPush(DIK_RIGHT) ||
+			input.IsPush(DIK_LEFT)){
 			if (input.IsPush(DIK_RIGHT)) {
 				Gpipeline.object3d->object3d[0].rot.y -= 0.1f;
 			}
 			if (input.IsPush(DIK_LEFT)) {
 				Gpipeline.object3d->object3d[0].rot.y += 0.1f;
+			}
+		}
+		// ˆÚ“®
+		if (input.IsPush(DIK_UP) ||
+			input.IsPush(DIK_DOWN)) {
+			if (input.IsPush(DIK_UP)) {
+				speed = 1;
+			}
+			if (input.IsPush(DIK_DOWN)) {
+				speed = -1;
 			}
 		}
 		else {

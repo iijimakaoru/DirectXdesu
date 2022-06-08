@@ -26,10 +26,4 @@ void ViewProjection::Initialize(int width, int height) {
 
 void ViewProjection::Update(int width, int height) {
 	matView = XMMatrixLookAtLH(XMLoadFloat3(&eye), XMLoadFloat3(&target), XMLoadFloat3(&up));
-
-	matProjection = XMMatrixPerspectiveFovLH(
-		XMConvertToRadians(45.0f),						// 上下画角45度
-		(float)width / height,							// アスペクト比(画面横幅/画面縦幅)
-		0.1f, 1000.0f									// 前端、奥端
-	);
 }

@@ -1,11 +1,13 @@
 #include "KTexture.h"
 
 KTexture::KTexture(KDirectInit dx, KVertex vertex) {
+
 	LoadTexture(dx);
 	GeneMipMap(dx);
 	SetTextureBuff();
 	GeneTextureBuff(dx);
 	SendData(dx);
+
 	SetDRTHeap();
 	GeneDRTHeap(dx);
 	GetSrvHandle();

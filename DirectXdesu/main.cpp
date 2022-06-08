@@ -43,7 +43,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	KDepth depth(dx, win);
 #pragma endregion
 	// 速さ
-	float speed = 1.0f;
+	float speed = 0.0f;
+	float speedY = 0.0f;
 
 #pragma region 頂点データ
 	KVertex vertex(dx);
@@ -148,23 +149,31 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 				speed = -1;
 			}
 			if (input.IsPush(DIK_RIGHT)) {
-				Gpipeline.object3d->object3d[0].rot.y -= 0.1f;
+				speedY = 1;
+				//Gpipeline.object3d->object3d[0].rot.y -= 0.1f;
 			}
 			if (input.IsPush(DIK_LEFT)) {
-				Gpipeline.object3d->object3d[0].rot.y += 0.1f;
+				speedY = -1;
+				//Gpipeline.object3d->object3d[0].rot.y += 0.1f;
 			}
 		}
-		else {
+		if (input.IsNPush(DIK_UP) && input.IsNPush(DIK_DOWN)) {
 			speed = 0;
 		}
+		if (input.IsNPush(DIK_RIGHT) && input.IsNPush(DIK_LEFT)){
+			speedY = 0;
+		}
+#pragma endregion
+		Gpipeline.object3d->object3d[0].rot.z += XMConvertToRadians(5);
+
+		Gpipeline.viewProjection->eye.z -= 1;
+
 		// 前ベクトル
 		Gpipeline.object3d->rotResult[0].x = sin(Gpipeline.object3d->object3d[0].rot.y) * center.z;
 		Gpipeline.object3d->rotResult[0].z = cos(Gpipeline.object3d->object3d[0].rot.y) * center.z;
 		// 移動
-		Gpipeline.object3d->object3d[0].pos.x += (speed)*Gpipeline.object3d->rotResult[0].x;
-		Gpipeline.object3d->object3d[0].pos.z += (speed)*Gpipeline.object3d->rotResult[0].z;
-#pragma endregion
-
+		Gpipeline.object3d->object3d[0].pos.x += (speedY);
+		Gpipeline.object3d->object3d[0].pos.y += (speed);
 #pragma region 画像色アップデート
 		Gpipeline.material->Update();
 #pragma endregion

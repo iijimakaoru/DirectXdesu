@@ -104,14 +104,13 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 			Gpipeline.material->colorB = 1.0f;
 		}
 		// 図形縦回転
-		if (input.IsPush(DIK_C) ||
-			input.IsPush(DIK_B) ||
-			input.IsPush(DIK_F) ||
+		if (input.IsPush(DIK_F) ||
 			input.IsPush(DIK_V)) {
 			if (input.IsPush(DIK_F)) {
 				Gpipeline.object3d->object3d[0].rot.x += 0.1f;
 			}
-			else if (input.IsPush(DIK_V)) {
+
+			if (input.IsPush(DIK_V)) {
 				Gpipeline.object3d->object3d[0].rot.x -= 0.1f;
 			}
 		}
@@ -120,7 +119,6 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 			input.IsPush(DIK_W) || input.IsPush(DIK_S)) {
 			if (input.IsPush(DIK_D)) {
 				Gpipeline.viewProjection->angleX += XMConvertToRadians(1.0f);
-
 			}
 			else if (input.IsPush(DIK_A)) {
 				Gpipeline.viewProjection->angleX -= XMConvertToRadians(1.0f);
@@ -159,12 +157,12 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 		else {
 			speed = 0;
 		}
-
+		// 前ベクトル
 		Gpipeline.object3d->rotResult[0].x = sin(Gpipeline.object3d->object3d[0].rot.y) * center.z;
 		Gpipeline.object3d->rotResult[0].z = cos(Gpipeline.object3d->object3d[0].rot.y) * center.z;
-
-		Gpipeline.object3d->object3d[0].pos.x += (speed) * Gpipeline.object3d->rotResult[0].x;
-		Gpipeline.object3d->object3d[0].pos.z += (speed) * Gpipeline.object3d->rotResult[0].z;
+		// 移動
+		Gpipeline.object3d->object3d[0].pos.x += (speed)*Gpipeline.object3d->rotResult[0].x;
+		Gpipeline.object3d->object3d[0].pos.z += (speed)*Gpipeline.object3d->rotResult[0].z;
 #pragma endregion
 
 #pragma region 画像色アップデート

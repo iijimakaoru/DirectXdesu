@@ -54,13 +54,16 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	XMFLOAT3 vertices[] = {
 		{-0.5f,-0.5f,0.0f},// 左下
 		{-0.5f,+0.5f,0.0f},// 左上
-		{+0.5f,-0.5f,0.0f} // 右下
-	};
-
-	XMFLOAT3 vertices2[] = {
+		{+0.5f,-0.5f,0.0f},// 右下
 		{+0.5f,+0.5f,0.0f},// 左下
 		{+0.5f,-0.5f,0.0f},// 左上
 		{-0.5f,+0.5f,0.0f} // 右下
+	};
+
+	XMFLOAT3 vertices2[] = {
+		{-0.5f,-0.5f,0.0f},// 左下
+		{-0.5f,+0.5f,0.0f},// 左上
+		{+0.5f,-0.5f,0.0f} // 右下
 	};
 
 	// 頂点データ全体のサイズ = 頂点データ一つ分のサイズ * 頂点データの要素数
@@ -79,7 +82,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	resDesc[0].DepthOrArraySize = resDesc[1].DepthOrArraySize = 1;
 	resDesc[0].MipLevels = resDesc[1].MipLevels = 1;
 	resDesc[0].SampleDesc.Count = resDesc[1].SampleDesc.Count = 1;
-	resDesc[0].Layout = resDesc[1] .Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+	resDesc[0].Layout = resDesc[1].Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 	// 頂点バッファの生成
 	ID3D12Resource* vertBuff = nullptr;
 	dx.result = dx.dev->CreateCommittedResource(
@@ -115,7 +118,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	{
 		vertMap[i] = vertices[i];
 	}
-	for (int i = 0; i < _countof(vertices); i++)
+	for (int i = 0; i < _countof(vertices2); i++)
 	{
 		vertMap2[i] = vertices2[i];
 	}
@@ -233,7 +236,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	pipelineDesc.PrimitiveTopologyType = pipelineDesc2.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 
 	// その他の設定
-	pipelineDesc.NumRenderTargets =pipelineDesc2.NumRenderTargets = 1;
+	pipelineDesc.NumRenderTargets = pipelineDesc2.NumRenderTargets = 1;
 	pipelineDesc.RTVFormats[0] = pipelineDesc2.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
 	pipelineDesc.SampleDesc.Count = pipelineDesc2.SampleDesc.Count = 1;
 
@@ -294,7 +297,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 			dx.bBule = 0.5f;
 		}
 
-		if (input.IsTriger(DIK_1)){
+		if (input.IsTriger(DIK_1)) {
 			if (isMode == Triangle)
 			{
 				isMode = Box;
@@ -353,13 +356,6 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 		viewport[0].MinDepth = 0.0f;			   // 最小深度
 		viewport[0].MaxDepth = 1.0f;			   // 最大深度
 
-		viewport[4].Width = 1000;   // 横幅
-		viewport[4].Height = 400; // 縦幅
-		viewport[4].TopLeftX = 0;                 // 左上x
-		viewport[4].TopLeftY = 0;				   // 左上y
-		viewport[4].MinDepth = 0.0f;			   // 最小深度
-		viewport[4].MaxDepth = 1.0f;			   // 最大深度
-
 		viewport[1].Width = 100;
 		viewport[1].Height = 400;
 		viewport[1].TopLeftX = 1000;
@@ -409,11 +405,12 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 
 			// 頂点バッファビューの設定コマンド
 			dx.cmdList->IASetVertexBuffers(0, 1, &vbView);
-			dx.cmdList->IASetVertexBuffers(0, 1, &vbView2);
+			if (isMode != Triangle) {
+				dx.cmdList->IASetVertexBuffers(0, 1, &vbView2);
+			}
 
 			// 描画コマンド
 			dx.cmdList->DrawInstanced(_countof(vertices), 1, 0, 0);
-			dx.cmdList->DrawInstanced(_countof(vertices2), 1, 0, 0);
 		}
 		// 描画コマンドここまで
 #pragma endregion

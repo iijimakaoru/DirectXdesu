@@ -1,9 +1,9 @@
 #include "KWorldTransform.h"
 
-KWorldTransform::KWorldTransform(){}
+KWorldTransform::KWorldTransform() {}
 
 KWorldTransform::KWorldTransform(HRESULT result, ID3D12Device* dev) {
-	Initialize(result,dev);
+	Initialize(result, dev);
 }
 
 void KWorldTransform::Initialize(HRESULT result, ID3D12Device* dev) {
@@ -75,14 +75,16 @@ void KWorldTransform::Update(XMMATRIX& matView, XMMATRIX& matProjection) {
 }
 
 void KWorldTransform::Draw(ID3D12GraphicsCommandList* cmdList, D3D12_VERTEX_BUFFER_VIEW& vbview,
-	D3D12_INDEX_BUFFER_VIEW& ibView, UINT numIndices) {
+	D3D12_INDEX_BUFFER_VIEW& ibView, UINT numIndices, D3D12_GPU_DESCRIPTOR_HANDLE* srvGpuHandle) {
+	// SRVヒープの先頭にあるSRVをルートパラメータ1番の設定
+	//for (int j = 0; j < 2; j++) {
+		
+	//}
 	for (int i = 0; i < _countof(object3d); i++) {
+		cmdList->SetGraphicsRootDescriptorTable(1, srvGpuHandle[i]);
 		cmdList->IASetVertexBuffers(0, 1, &vbview);
 		cmdList->IASetIndexBuffer(&ibView);
-		cmdList->SetGraphicsRootConstantBufferView(
-			2,
-			object3d[i].constBuffTransform->GetGPUVirtualAddress()
-		);
+		cmdList->SetGraphicsRootConstantBufferView(2, object3d[i].constBuffTransform->GetGPUVirtualAddress());
 		cmdList->DrawIndexedInstanced(numIndices, 1, 0, 0, 0);
 	}
 }

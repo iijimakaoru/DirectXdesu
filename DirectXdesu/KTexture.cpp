@@ -1,21 +1,23 @@
 #include "KTexture.h"
 
 KTexture::KTexture(KDirectInit dx, KVertex vertex) {
-	for (int i = 0; i < _countof(msg); i++) {
+	for (int i = 0; i < 2; i++) {
 		LoadTexture(dx, i);
 		GeneMipMap(dx);
 		SetTextureBuff();
-		GeneTextureBuff(dx);
-		SendData(dx);
+		GeneTextureBuff(dx, i);
+		SendData(dx, i);
 	}
 	SetDescHeap();
 	GeneDescHeap(dx);
-	GetSrvHandle();
-	SetSRV(dx,vertex);
-	CreateSRV(dx);
+	GetSrvHandle(dx);
+	SetSRV(dx, vertex);
+	for (int i = 0; i < 2; i++) {
+		CreateSRV(dx, i);
+	}
 }
 
-void KTexture::LoadTexture(KDirectInit dx,int i) {
+void KTexture::LoadTexture(KDirectInit dx, int i) {
 	dx.result = LoadFromWICFile(
 		msg[i],
 		WIC_FLAGS_NONE,
@@ -56,25 +58,24 @@ void KTexture::SetTextureBuff() {
 	textureResourceDesc.SampleDesc.Count = 1;
 }
 
-void KTexture::GeneTextureBuff(KDirectInit dx) {
+void KTexture::GeneTextureBuff(KDirectInit dx, int i) {
 	dx.result = dx.dev->CreateCommittedResource(
 		&textureHeapProp,
 		D3D12_HEAP_FLAG_NONE,
 		&textureResourceDesc,
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
-		IID_PPV_ARGS(&texBuff)
-	);
+		IID_PPV_ARGS(&texBuff[i]));
 }
 
-void KTexture::SendData(KDirectInit dx) {
+void KTexture::SendData(KDirectInit dx, int i) {
 	// 全ミニマップについて
-	for (size_t i = 0; i < metadata.mipLevels; i++) {
+	for (size_t j = 0; j < metadata.mipLevels; j++) {
 		// ミニマップレベルを指定してイメージを取得
-		const Image* img = scraychImg.GetImage(i, 0, 0);
+		const Image* img = scraychImg.GetImage(j, 0, 0);
 		// テクスチャバッファにデータ転送
-		dx.result = texBuff->WriteToSubresource(
-			(UINT)i,
+		dx.result = texBuff[i]->WriteToSubresource(
+			(UINT)j,
 			nullptr,
 			img->pixels,
 			(UINT)img->rowPitch,
@@ -93,13 +94,19 @@ void KTexture::SetDescHeap() {
 void KTexture::GeneDescHeap(KDirectInit dx) {
 	dx.result = dx.dev->CreateDescriptorHeap(
 		&srvHeapDesc,
-		IID_PPV_ARGS(&srvHeap)
-	);
+		IID_PPV_ARGS(&srvHeap));
 	assert(SUCCEEDED(dx.result));
 }
 
-void KTexture::GetSrvHandle() {
-	srvHandle = srvHeap->GetCPUDescriptorHandleForHeapStart();
+void KTexture::GetSrvHandle(KDirectInit dx) {
+	// CBV,SRV,UAVの一個分のサイズを取得
+	UINT descriptorSize = dx.dev->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+	for (int i = 0; i < 2; i++) {
+		// SRVヒープの先頭ハンドルを取得
+		srvHandle[i] = srvHeap->GetCPUDescriptorHandleForHeapStart();
+		// ハンドルを１つ進める
+		srvHandle[i].ptr += descriptorSize * i;
+	}
 }
 
 void KTexture::SetSRV(KDirectInit dx, KVertex vertex) {
@@ -109,7 +116,7 @@ void KTexture::SetSRV(KDirectInit dx, KVertex vertex) {
 	srvDesc.Texture2D.MipLevels = vertex.resDesc.MipLevels;
 }
 
-void KTexture::CreateSRV(KDirectInit dx) {
+void KTexture::CreateSRV(KDirectInit dx, int i) {
 	// ハンドルの指す位置にシェーダーリソースビュー作成
-	dx.dev->CreateShaderResourceView(texBuff, &srvDesc, srvHandle);
+	dx.dev->CreateShaderResourceView(texBuff[i], &srvDesc, srvHandle[i]);
 }

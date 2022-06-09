@@ -59,6 +59,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 #pragma endregion
 	Vector3 center = { 0,0,1 };
 
+	bool hoge = false;
 #pragma endregion
 
 	// ウィンドウ表示
@@ -160,7 +161,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 		if (input.IsNPush(DIK_UP) && input.IsNPush(DIK_DOWN)) {
 			speed = 0;
 		}
-		if (input.IsNPush(DIK_RIGHT) && input.IsNPush(DIK_LEFT)){
+		if (input.IsNPush(DIK_RIGHT) && input.IsNPush(DIK_LEFT)) {
 			speedY = 0;
 		}
 #pragma endregion
@@ -258,13 +259,19 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 		dx.cmdList->SetGraphicsRootConstantBufferView(0, Gpipeline.material->constBufferMaterial->GetGPUVirtualAddress());
 		// SRV
 		dx.cmdList->SetDescriptorHeaps(1, &texture.srvHeap);
+		// CBV,SRV,UAVの一個分のサイズを取得
+		UINT descriptorSize = dx.dev->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 		// 先頭ハンドルを取得
-		D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle = texture.srvHeap->GetGPUDescriptorHandleForHeapStart();
-		// SRVヒープの先頭にあるSRVをルートパラメータ1番の設定
-		dx.cmdList->SetGraphicsRootDescriptorTable(1, srvGpuHandle);
+		D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle[2] = {};
+		for (int i = 0; i < 2; i++) {
+			srvGpuHandle[i] = texture.srvHeap->GetGPUDescriptorHandleForHeapStart();
+
+			// ハンドルを１つ進める
+			srvGpuHandle[i].ptr += descriptorSize * i;
+		}
 #pragma region 描画コマンド
 		// 描画コマンド
-		Gpipeline.object3d->Draw(dx.cmdList, vertex.vbView, vertex.ibView, _countof(indices));
+		Gpipeline.object3d->Draw(dx.cmdList, vertex.vbView, vertex.ibView, _countof(indices), srvGpuHandle);
 #pragma endregion
 		// 描画コマンドここまで
 #pragma endregion

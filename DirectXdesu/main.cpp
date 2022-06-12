@@ -17,6 +17,11 @@
 #endif
 #pragma comment(lib, "d3dcompiler.Lib")
 
+enum Mode {
+	BAIO,
+	CAMERA
+};
+
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	_In_ LPSTR lpCmdLine, _In_ int nCmdShow)
 {
@@ -42,9 +47,12 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 #pragma region 深度バッファ
 	KDepth depth(dx, win);
 #pragma endregion
-	// 速さ
+	// 速さ(バイオモード)
 	float speed = 1.0f;
 
+	// 速さ(カメラ視点モード)
+	float speedX = 1.0f;
+	float speedZ = 1.0f;
 #pragma region 頂点データ
 	KVertex vertex(dx);
 #pragma endregion
@@ -59,6 +67,12 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	Vector3 center = { 0,0,1 };
 
 #pragma endregion
+
+	Vector3 centerVec = {};
+	Vector3 sideVec = {};
+	Vector3 tmpVec = { 0,1,0 };
+	bool isChange = false;
+	int moveMode = BAIO;
 
 	// ウィンドウ表示
 	// ゲームループ
@@ -103,66 +117,90 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 			Gpipeline.material->colorG = 1.0f;
 			Gpipeline.material->colorB = 1.0f;
 		}
-		// 図形縦回転
-		if (input.IsPush(DIK_F) ||
-			input.IsPush(DIK_V)) {
-			if (input.IsPush(DIK_F)) {
-				Gpipeline.object3d->object3d[0].rot.x += 0.1f;
+		if (input.IsTriger(DIK_Q)) {
+			if (!isChange){
+				isChange = true;
+			}
+			else {
+				isChange = false;
 			}
 
-			if (input.IsPush(DIK_V)) {
-				Gpipeline.object3d->object3d[0].rot.x -= 0.1f;
+			if (isChange) {
+				moveMode = CAMERA;
+			}
+			else {
+				moveMode = BAIO;
 			}
 		}
-		////カメラ移動
-		if (input.IsPush(DIK_D) || input.IsPush(DIK_A) ||
-			input.IsPush(DIK_W) || input.IsPush(DIK_S)) {
-			if (input.IsPush(DIK_D)) {
-				Gpipeline.viewProjection->angleX += XMConvertToRadians(1.0f);
+		// カメラ視点モード
+		if (moveMode == CAMERA) {
+			////カメラ移動
+			if (input.IsPush(DIK_RIGHT) || input.IsPush(DIK_LEFT) ||
+				input.IsPush(DIK_UP) || input.IsPush(DIK_DOWN)) {
+				if (input.IsPush(DIK_RIGHT)) {
+					Gpipeline.viewProjection->angleX -= XMConvertToRadians(1.0f);
+				}
+				else if (input.IsPush(DIK_LEFT)) {
+					Gpipeline.viewProjection->angleX += XMConvertToRadians(1.0f);
+				}
+				if (input.IsPush(DIK_UP)) {
+					Gpipeline.viewProjection->angleY -= XMConvertToRadians(1.0f);
+				}
+				else if (input.IsPush(DIK_DOWN)) {
+					Gpipeline.viewProjection->angleY += XMConvertToRadians(1.0f);
+				}
+				// angleラジアンy軸回転
+				Gpipeline.viewProjection->eye.x = Gpipeline.viewProjection->lenZ * sinf(Gpipeline.viewProjection->angleX);
+				Gpipeline.viewProjection->eye.y = Gpipeline.viewProjection->lenZ * sinf(Gpipeline.viewProjection->angleY);
+				Gpipeline.viewProjection->eye.z = Gpipeline.viewProjection->lenZ * cosf(Gpipeline.viewProjection->angleX) * cosf(Gpipeline.viewProjection->angleY);
 			}
-			else if (input.IsPush(DIK_A)) {
-				Gpipeline.viewProjection->angleX -= XMConvertToRadians(1.0f);
+			// 移動
+			if (input.IsPush(DIK_D) ||
+				input.IsPush(DIK_A) ||
+				input.IsPush(DIK_W) ||
+				input.IsPush(DIK_S)) {
+				centerVec.x = Gpipeline.object3d->object3d[0].pos.x - Gpipeline.viewProjection->eye.x;
+				centerVec.y = Gpipeline.object3d->object3d[0].pos.y - Gpipeline.viewProjection->eye.y;
+				centerVec.z = Gpipeline.object3d->object3d[0].pos.z - Gpipeline.viewProjection->eye.z;
+				centerVec.normalize();
+				sideVec = tmpVec.cross(centerVec);
+				sideVec.normalize();
 			}
-			if (input.IsPush(DIK_W)) {
-				Gpipeline.viewProjection->angleY -= XMConvertToRadians(1.0f);
-			}
-			else if (input.IsPush(DIK_S)) {
-				Gpipeline.viewProjection->angleY += XMConvertToRadians(1.0f);
-			}
-			// angleラジアンy軸回転
-			Gpipeline.viewProjection->eye.x = Gpipeline.viewProjection->lenZ * sinf(Gpipeline.viewProjection->angleX);
-			Gpipeline.viewProjection->eye.y = Gpipeline.viewProjection->lenZ * sinf(Gpipeline.viewProjection->angleY);
-			Gpipeline.viewProjection->eye.z = Gpipeline.viewProjection->lenZ * cosf(Gpipeline.viewProjection->angleX) * cosf(Gpipeline.viewProjection->angleY);
+			// 移動
+			Gpipeline.object3d->object3d[0].pos.x += (input.IsPush(DIK_W) - input.IsPush(DIK_S))*centerVec.x;
+			Gpipeline.object3d->object3d[0].pos.z += (input.IsPush(DIK_W) - input.IsPush(DIK_S)) * centerVec.z;
+			Gpipeline.object3d->object3d[0].pos.x += (input.IsPush(DIK_D) - input.IsPush(DIK_A))*sideVec.x;
+			Gpipeline.object3d->object3d[0].pos.z += (input.IsPush(DIK_D) - input.IsPush(DIK_A)) * sideVec.z;
 		}
-		// 横回転
-		if (input.IsPush(DIK_RIGHT) ||
-			input.IsPush(DIK_LEFT)){
-			if (input.IsPush(DIK_RIGHT)) {
-				Gpipeline.object3d->object3d[0].rot.y -= 0.1f;
-			}
-			if (input.IsPush(DIK_LEFT)) {
-				Gpipeline.object3d->object3d[0].rot.y += 0.1f;
-			}
-		}
-		// 移動
-		if (input.IsPush(DIK_UP) ||
-			input.IsPush(DIK_DOWN)) {
-			if (input.IsPush(DIK_UP)) {
-				speed = 1;
-			}
-			if (input.IsPush(DIK_DOWN)) {
-				speed = -1;
-			}
-		}
+		// バイオモード
 		else {
-			speed = 0;
+			// 横回転
+			if (input.IsPush(DIK_RIGHT) ||
+				input.IsPush(DIK_LEFT)) {
+				if (input.IsPush(DIK_RIGHT)) {
+					Gpipeline.object3d->object3d[0].rot.y -= 0.1f;
+				}
+				if (input.IsPush(DIK_LEFT)) {
+					Gpipeline.object3d->object3d[0].rot.y += 0.1f;
+				}
+			}
+			// 移動
+			if (input.IsPush(DIK_UP) ||
+				input.IsPush(DIK_DOWN)) {
+				if (input.IsPush(DIK_UP)) {
+					speed = 1;
+				}
+				if (input.IsPush(DIK_DOWN)) {
+					speed = -1;
+				}
+			}
+			// 前ベクトル
+			Gpipeline.object3d->rotResult[0].x = sin(Gpipeline.object3d->object3d[0].rot.y) * center.z;
+			Gpipeline.object3d->rotResult[0].z = cos(Gpipeline.object3d->object3d[0].rot.y) * center.z;
+			// 移動
+			Gpipeline.object3d->object3d[0].pos.x += (input.IsPush(DIK_UP) - input.IsPush(DIK_DOWN))*Gpipeline.object3d->rotResult[0].x;
+			Gpipeline.object3d->object3d[0].pos.z += (input.IsPush(DIK_UP) - input.IsPush(DIK_DOWN))*Gpipeline.object3d->rotResult[0].z;
 		}
-		// 前ベクトル
-		Gpipeline.object3d->rotResult[0].x = sin(Gpipeline.object3d->object3d[0].rot.y) * center.z;
-		Gpipeline.object3d->rotResult[0].z = cos(Gpipeline.object3d->object3d[0].rot.y) * center.z;
-		// 移動
-		Gpipeline.object3d->object3d[0].pos.x += (speed)*Gpipeline.object3d->rotResult[0].x;
-		Gpipeline.object3d->object3d[0].pos.z += (speed)*Gpipeline.object3d->rotResult[0].z;
 #pragma endregion
 
 #pragma region 画像色アップデート

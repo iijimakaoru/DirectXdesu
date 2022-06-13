@@ -159,9 +159,9 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 				input.IsPush(DIK_A) ||
 				input.IsPush(DIK_W) ||
 				input.IsPush(DIK_S)) {
-				centerVec.x = Gpipeline.object3d->object3d[0].pos.x - Gpipeline.viewProjection->eye.x;
-				centerVec.y = Gpipeline.object3d->object3d[0].pos.y - Gpipeline.viewProjection->eye.y;
-				centerVec.z = Gpipeline.object3d->object3d[0].pos.z - Gpipeline.viewProjection->eye.z;
+				centerVec.x = Gpipeline.viewProjection->target.x - Gpipeline.viewProjection->eye.x;
+				centerVec.y = Gpipeline.viewProjection->target.y - Gpipeline.viewProjection->eye.y;
+				centerVec.z = Gpipeline.viewProjection->target.z - Gpipeline.viewProjection->eye.z;
 				centerVec.normalize();
 				sideVec = tmpVec.cross(centerVec);
 				sideVec.normalize();

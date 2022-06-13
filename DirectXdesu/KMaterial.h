@@ -2,12 +2,13 @@
 #include <d3d12.h>
 #include <DirectXMath.h>
 #include <DirectXTex.h>
+#include "Vector4.h"
 
 using namespace DirectX;
 
 // 定数バッファ用データ構造体(マテリアル)
 struct ConstBufferDataMaterial {
-	XMFLOAT4 color; // 色
+	Vector4 color; // 色
 };
 
 class KMaterial

@@ -40,9 +40,9 @@ void KMaterial::Initialize(HRESULT result, ID3D12Device* dev) {
 		(void**)&constMapMaterial);
 	assert(SUCCEEDED(result));
 	// ’l‚ð‘‚«ž‚Þ‚ÆŽ©“®“I‚É“]‘—‚³‚ê‚é
-	constMapMaterial->color = XMFLOAT4(colorR, colorG, colorB, colorA);
+	constMapMaterial->color = Vector4(colorR, colorG, colorB, colorA);
 }
 
 void KMaterial::Update() {
-	constMapMaterial->color = XMFLOAT4(colorR, colorG, colorB, colorA);
+	constMapMaterial->color = Vector4(colorR, colorG, colorB, colorA);
 }

@@ -11,7 +11,7 @@ struct ConstBufferDataTransform {
 };
 
 // 3Dオブジェクトの数
-const size_t kObjectCount = 50;
+const size_t kObjectCount = 51;
 
 struct Object3d {
 	// 定数バッファ(行列)
@@ -39,6 +39,7 @@ public:
 		D3D12_INDEX_BUFFER_VIEW& ibView, UINT numIndices);
 
 	Vector3 rotResult[kObjectCount];
+	Vector3 cRotResult;
 	// ヒープ設定
 	D3D12_HEAP_PROPERTIES cbHeapProp{};
 	// リソース設定

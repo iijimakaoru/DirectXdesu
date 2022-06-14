@@ -38,7 +38,7 @@ void KWorldTransform::Initialize(HRESULT result, ID3D12Device* dev) {
 		assert(SUCCEEDED(result));
 
 		// 親オブジェクト以外の初期化
-		if (i > 0) {
+		if (i > 0 && i < 50) {
 			object3d[i].parent = &object3d[i - 1];
 
 			rotResult[i] = { 0,0,1 };

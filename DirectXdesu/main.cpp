@@ -58,6 +58,10 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 #pragma endregion
 	Vector3 center = { 0,0,1 };
 
+	bool camera = false;
+
+	float cameraLen = 100;
+
 #pragma endregion
 
 	// ウィンドウ表示
@@ -117,26 +121,30 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 		////カメラ移動
 		if (input.IsPush(DIK_D) || input.IsPush(DIK_A) ||
 			input.IsPush(DIK_W) || input.IsPush(DIK_S)) {
-			if (input.IsPush(DIK_D)) {
-				Gpipeline.viewProjection->angleX += XMConvertToRadians(1.0f);
-			}
-			else if (input.IsPush(DIK_A)) {
-				Gpipeline.viewProjection->angleX -= XMConvertToRadians(1.0f);
-			}
-			if (input.IsPush(DIK_W)) {
-				Gpipeline.viewProjection->angleY -= XMConvertToRadians(1.0f);
-			}
-			else if (input.IsPush(DIK_S)) {
-				Gpipeline.viewProjection->angleY += XMConvertToRadians(1.0f);
-			}
-			// angleラジアンy軸回転
-			Gpipeline.viewProjection->eye.x = Gpipeline.viewProjection->lenZ * sinf(Gpipeline.viewProjection->angleX);
-			Gpipeline.viewProjection->eye.y = Gpipeline.viewProjection->lenZ * sinf(Gpipeline.viewProjection->angleY);
-			Gpipeline.viewProjection->eye.z = Gpipeline.viewProjection->lenZ * cosf(Gpipeline.viewProjection->angleX) * cosf(Gpipeline.viewProjection->angleY);
+			//if (input.IsPush(DIK_D)) {
+			//	Gpipeline.viewProjection->angleX += XMConvertToRadians(1.0f);
+			//}
+			//else if (input.IsPush(DIK_A)) {
+			//	Gpipeline.viewProjection->angleX -= XMConvertToRadians(1.0f);
+			//}
+			//if (input.IsPush(DIK_W)) {
+			//	Gpipeline.viewProjection->angleY -= XMConvertToRadians(1.0f);
+			//}
+			//else if (input.IsPush(DIK_S)) {
+			//	Gpipeline.viewProjection->angleY += XMConvertToRadians(1.0f);
+			//}
+			//// angleラジアンy軸回転
+			//Gpipeline.viewProjection->eye.x = Gpipeline.viewProjection->lenZ * sinf(Gpipeline.viewProjection->angleX);
+			//Gpipeline.viewProjection->eye.y = Gpipeline.viewProjection->lenZ * sinf(Gpipeline.viewProjection->angleY);
+			//Gpipeline.viewProjection->eye.z = Gpipeline.viewProjection->lenZ * cosf(Gpipeline.viewProjection->angleX) * cosf(Gpipeline.viewProjection->angleY);
 		}
+
+		Gpipeline.viewProjection->target.x = Gpipeline.object3d->object3d[0].pos.x;
+		Gpipeline.viewProjection->target.y = Gpipeline.object3d->object3d[0].pos.y;
+		Gpipeline.viewProjection->target.z = Gpipeline.object3d->object3d[0].pos.z;
 		// 横回転
 		if (input.IsPush(DIK_RIGHT) ||
-			input.IsPush(DIK_LEFT)){
+			input.IsPush(DIK_LEFT)) {
 			if (input.IsPush(DIK_RIGHT)) {
 				Gpipeline.object3d->object3d[0].rot.y -= 0.1f;
 			}
@@ -163,6 +171,15 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 		// 移動
 		Gpipeline.object3d->object3d[0].pos.x += (speed)*Gpipeline.object3d->rotResult[0].x;
 		Gpipeline.object3d->object3d[0].pos.z += (speed)*Gpipeline.object3d->rotResult[0].z;
+
+		// 障害物
+		Gpipeline.object3d->object3d[50].pos.x = 0;
+		Gpipeline.object3d->object3d[50].pos.y = 0;
+		Gpipeline.object3d->object3d[50].pos.z = 30;
+
+		Gpipeline.object3d->object3d[50].scale.x = 1;
+		Gpipeline.object3d->object3d[50].scale.y = 1;
+		Gpipeline.object3d->object3d[50].scale.z = 1;
 #pragma endregion
 
 #pragma region 画像色アップデート

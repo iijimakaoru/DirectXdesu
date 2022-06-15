@@ -5,8 +5,7 @@
 #include "ViewProjection.h"
 #include "KMaterial.h"
 #include "ViewProjection.h"
-#include "KVertexShader.h"
-#include "KPixelShader.h"
+#include "KShader.h"
 #include "KVertex.h"
 #include "KDirectInit.h"
 
@@ -26,9 +25,8 @@ public:
 	void RootSig(HRESULT result, ID3D12Device* dev);
 	void PipelineState(HRESULT result, ID3D12Device* dev);
 
-	// シェーダークラス呼び込み
-	KPixelShader* pxShader;
-	KVertexShader* vtShader;
+	// シェーダー
+	Shader* shader;
 	// グラフィックスパイプライン設定
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC pipelineDesc{};
 	// レンダーターゲットのブレンド設定
@@ -36,7 +34,7 @@ public:
 	// マテリアル
 	KMaterial* material;
 	// 3Dオブジェクト
-	KWorldTransform* object3d;
+	Object3D* object3d;
 	// ビュープロジェクション
 	ViewProjection* viewProjection;
 	// デスクリプタレンジの設定

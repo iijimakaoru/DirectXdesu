@@ -154,9 +154,9 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="KWindow.cpp" />
     <ClCompile Include="KWorldTransform.cpp" />
-    <ClCompile Include="KVertexShader.cpp" />
-    <ClCompile Include="KPixelShader.cpp" />
+    <ClCompile Include="KShader.cpp" />
     <ClCompile Include="KTexture.cpp" />
+    <ClCompile Include="Matrix4.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="TextureManager.cpp" />
     <ClCompile Include="Vector2.cpp" />
@@ -175,9 +175,9 @@
     <ClInclude Include="KVertex.h" />
     <ClInclude Include="KWindow.h" />
     <ClInclude Include="KWorldTransform.h" />
-    <ClInclude Include="KVertexShader.h" />
-    <ClInclude Include="KPixelShader.h" />
+    <ClInclude Include="KShader.h" />
     <ClInclude Include="KTexture.h" />
+    <ClInclude Include="Matrix4.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="TextureManager.h" />
     <ClInclude Include="Vector2.h" />

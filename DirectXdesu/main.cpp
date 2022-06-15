@@ -5,8 +5,6 @@
 #include "KInput.h"
 #include "KDepth.h"
 #include "KVertex.h"
-#include "KVertexShader.h"
-#include "KPixelShader.h"
 #include "KTexture.h"
 #include "KWorldTransform.h"
 #include "ViewProjection.h"
@@ -92,6 +90,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 			dx.bGreen = 0.25f;
 			dx.bBule = 0.5f;
 		}
+
 		// ‰æ‘œF•Ï‚¦
 		if (input.IsPush(DIK_1)) {
 			Gpipeline.material->colorR = 1.0f;
@@ -103,6 +102,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 			Gpipeline.material->colorG = 1.0f;
 			Gpipeline.material->colorB = 1.0f;
 		}
+
 		// }Œ`c‰ñ“]
 		if (input.IsPush(DIK_F) ||
 			input.IsPush(DIK_V)) {

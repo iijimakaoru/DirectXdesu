@@ -28,11 +28,11 @@ struct Object3d {
 	Object3d* parent = nullptr;
 };
 
-class KWorldTransform
+class Object3D
 {
 public:
-	KWorldTransform();
-	KWorldTransform(HRESULT result, ID3D12Device* dev);
+	Object3D();
+	Object3D(HRESULT result, ID3D12Device* dev);
 	void Initialize(HRESULT result, ID3D12Device* dev);
 	void Update(XMMATRIX& matView, XMMATRIX& matProjection);
 	void Draw(ID3D12GraphicsCommandList* cmdList, D3D12_VERTEX_BUFFER_VIEW& vbview,

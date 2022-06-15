@@ -1,12 +1,12 @@
 #include "KWorldTransform.h"
 
-KWorldTransform::KWorldTransform(){}
+Object3D::Object3D(){}
 
-KWorldTransform::KWorldTransform(HRESULT result, ID3D12Device* dev) {
+Object3D::Object3D(HRESULT result, ID3D12Device* dev) {
 	Initialize(result,dev);
 }
 
-void KWorldTransform::Initialize(HRESULT result, ID3D12Device* dev) {
+void Object3D::Initialize(HRESULT result, ID3D12Device* dev) {
 
 	for (int i = 0; i < _countof(object3d); i++) {
 		// ヒープ設定
@@ -49,7 +49,7 @@ void KWorldTransform::Initialize(HRESULT result, ID3D12Device* dev) {
 	}
 }
 
-void KWorldTransform::Update(XMMATRIX& matView, XMMATRIX& matProjection) {
+void Object3D::Update(XMMATRIX& matView, XMMATRIX& matProjection) {
 	for (int i = 0; i < _countof(object3d); i++) {
 		// マトリックス
 		XMMATRIX matScale, matRot, matTrans;
@@ -77,7 +77,7 @@ void KWorldTransform::Update(XMMATRIX& matView, XMMATRIX& matProjection) {
 	}
 }
 
-void KWorldTransform::Draw(ID3D12GraphicsCommandList* cmdList, D3D12_VERTEX_BUFFER_VIEW& vbview,
+void Object3D::Draw(ID3D12GraphicsCommandList* cmdList, D3D12_VERTEX_BUFFER_VIEW& vbview,
 	D3D12_INDEX_BUFFER_VIEW& ibView, UINT numIndices) {
 	for (int i = 0; i < _countof(object3d); i++) {
 		cmdList->IASetVertexBuffers(0, 1, &vbview);

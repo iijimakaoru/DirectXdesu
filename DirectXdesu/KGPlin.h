@@ -1,7 +1,7 @@
 #pragma once
 #include <d3d12.h>
 #include "KMaterial.h"
-#include "KWorldTransform.h"
+#include "KObject3D.h"
 #include "ViewProjection.h"
 #include "KMaterial.h"
 #include "ViewProjection.h"

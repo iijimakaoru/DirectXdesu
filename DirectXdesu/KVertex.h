@@ -2,8 +2,11 @@
 #include <DirectXMath.h>
 #include "KDirectInit.h"
 #include "Vector3.h"
+#include <vector>
 
 using namespace DirectX;
+
+std::vector<int>;
 
 // 頂点データ構造体
 struct Vertex {
@@ -14,7 +17,7 @@ struct Vertex {
 
 // 頂点データ
 static Vertex vertices[] = {
-	//  x	  y	    z		  u	   v
+	//  x	  y	    z	 n    u	   v
 	// 前
 	{{-5.0f,-5.0f,-5.0f},{},{0.0f,1.0f}}, // 左下
 	{{-5.0f, 5.0f,-5.0f},{},{0.0f,0.0f}}, // 左上

@@ -153,7 +153,7 @@
     <ClCompile Include="KVertex.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="KWindow.cpp" />
-    <ClCompile Include="KWorldTransform.cpp" />
+    <ClCompile Include="KObject3D.cpp" />
     <ClCompile Include="KShader.cpp" />
     <ClCompile Include="KTexture.cpp" />
     <ClCompile Include="Matrix4.cpp" />
@@ -174,7 +174,7 @@
     <ClInclude Include="KMaterial.h" />
     <ClInclude Include="KVertex.h" />
     <ClInclude Include="KWindow.h" />
-    <ClInclude Include="KWorldTransform.h" />
+    <ClInclude Include="KObject3D.h" />
     <ClInclude Include="KShader.h" />
     <ClInclude Include="KTexture.h" />
     <ClInclude Include="Matrix4.h" />

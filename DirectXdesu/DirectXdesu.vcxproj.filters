@@ -54,7 +54,7 @@
     <ClCompile Include="main.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="KWorldTransform.cpp">
+    <ClCompile Include="KObject3D.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="KGPlin.cpp">
@@ -116,7 +116,7 @@
     <ClInclude Include="KInput.h">
       <Filter>ヘッダー ファイル\Input</Filter>
     </ClInclude>
-    <ClInclude Include="KWorldTransform.h">
+    <ClInclude Include="KObject3D.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="KGPlin.h">

@@ -6,7 +6,7 @@
 #include "KDepth.h"
 #include "KVertex.h"
 #include "KTexture.h"
-#include "KWorldTransform.h"
+#include "KObject3D.h"
 #include "ViewProjection.h"
 #include "KMaterial.h"
 #include "KGPlin.h"

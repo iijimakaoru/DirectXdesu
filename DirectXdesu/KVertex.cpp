@@ -1,12 +1,14 @@
 #include "KVertex.h"
 
-KVertex::KVertex(KDirectInit dx) {
-	KVertexInit(dx);
-	VertMap();
-	CreateVBView();
+KVertex::KVertex() {};
+
+KVertex::KVertex(KDirectInit dx, std::vector<Vertex> vertices, std::vector<short> indices) {
+	KVertexInit(dx, vertices, indices);
+	VertMap(vertices);
+	CreateVBView(vertices);
 }
 
-void KVertex::KVertexInit(KDirectInit dx) {
+void KVertex::KVertexInit(KDirectInit dx, std::vector<Vertex> vertices, std::vector<short> indices) {
 #pragma region 頂点
 	// 頂点データ全体のサイズ = 頂点データ一つ分のサイズ * 頂点データの要素数
 	sizeVB = static_cast<UINT>(sizeof(vertices[0]) * vertices.size());
@@ -88,7 +90,7 @@ void KVertex::KVertexInit(KDirectInit dx) {
 #pragma endregion
 }
 
-void KVertex::VertMap() {
+void KVertex::VertMap(std::vector<Vertex> vertices) {
 	HRESULT result;
 	// GPU上のバッファに対応した仮想メモリを取得
 	Vertex* vertMap = nullptr;
@@ -102,7 +104,7 @@ void KVertex::VertMap() {
 	vertBuff->Unmap(0, nullptr);
 }
 
-void KVertex::CreateVBView() {
+void KVertex::CreateVBView(std::vector<Vertex> vertices) {
 	// GPU仮想アドレス
 	vbView.BufferLocation = vertBuff->GetGPUVirtualAddress();
 	// 頂点バッファのサイズ

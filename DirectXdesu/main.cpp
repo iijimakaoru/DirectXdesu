@@ -10,6 +10,7 @@
 #include "ViewProjection.h"
 #include "KMaterial.h"
 #include "KGPlin.h"
+#include "KModel.h"
 #ifdef DEBUG
 #include <iostream>
 #endif
@@ -37,6 +38,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 #pragma endregion
 
 #pragma region 描画初期化
+
+	KModel model = Cube();
 #pragma region 深度バッファ
 	KDepth depth(dx, win);
 #pragma endregion
@@ -44,11 +47,11 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	float speed = 1.0f;
 
 #pragma region 頂点データ
-	KVertex vertex(dx);
+	KVertex vertex(dx,model.vertices,model.indices);
 #pragma endregion
 
 #pragma region グラフィックスパイプライン設定
-	KGPlin Gpipeline(dx, dx.result, dx.dev, win.window_width, win.window_height, vertex);
+	KGPlin Gpipeline(dx, dx.result, dx.dev, win.window_width, win.window_height);
 #pragma endregion
 
 #pragma region テクスチャ初期化
@@ -257,7 +260,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 		dx.cmdList->SetGraphicsRootDescriptorTable(1, srvGpuHandle);
 #pragma region 描画コマンド
 		// 描画コマンド
-		Gpipeline.object3d->Draw(dx.cmdList, vertex.vbView, vertex.ibView, indices.size());
+		Gpipeline.object3d->Draw(dx.cmdList, vertex.vbView, vertex.ibView, model.indices.size());
 #pragma endregion
 		// 描画コマンドここまで
 #pragma endregion

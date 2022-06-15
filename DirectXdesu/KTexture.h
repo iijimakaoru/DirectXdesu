@@ -27,7 +27,7 @@ public:
 	// リソース設定
 	D3D12_RESOURCE_DESC textureResourceDesc{};
 	// テクスチャバッファの生成
-	ID3D12Resource* texBuff = nullptr;
+	ID3D12Resource* texBuff = { nullptr };
 	// SRVの最大個数
 	const size_t kMaxSRVCount = 2056;
 	// デスクリプタヒープの設定

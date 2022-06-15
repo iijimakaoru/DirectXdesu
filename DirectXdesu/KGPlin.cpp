@@ -2,9 +2,9 @@
 
 KGPlin::KGPlin() {}
 KGPlin::KGPlin(KDirectInit dx,HRESULT result, ID3D12Device* dev,
-	int width, int height, KVertex vertex) {
+	int width, int height) {
 	shader = new Shader(dx);
-	GPipeline(vertex);
+	GPipeline();
 	Render();
 	Buffer(result, dev, width, height);
 	DescRipRan();
@@ -14,7 +14,7 @@ KGPlin::KGPlin(KDirectInit dx,HRESULT result, ID3D12Device* dev,
 	PipelineState(result, dev);
 }
 
-void KGPlin::GPipeline(KVertex vertex) {
+void KGPlin::GPipeline() {
 	// シェーダーの設定
 	pipelineDesc.VS.pShaderBytecode = shader->vsBlob->GetBufferPointer();
 	pipelineDesc.VS.BytecodeLength = shader->vsBlob->GetBufferSize();
@@ -29,8 +29,8 @@ void KGPlin::GPipeline(KVertex vertex) {
 	// ブレンドステート
 	pipelineDesc.BlendState.RenderTarget[0].RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
 	// 頂点レイアウトの設定
-	pipelineDesc.InputLayout.pInputElementDescs = vertex.inputLayout;
-	pipelineDesc.InputLayout.NumElements = _countof(vertex.inputLayout);
+	pipelineDesc.InputLayout.pInputElementDescs = inputLayout;
+	pipelineDesc.InputLayout.NumElements = _countof(inputLayout);
 	// 図形の形状設定
 	pipelineDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 	// その他の設定

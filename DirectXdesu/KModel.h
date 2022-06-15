@@ -2,19 +2,18 @@
 #include <vector>
 #include "KVertex.h"
 
-class KModel 
-{
+class KModel : public KVertex{
 public:
 	// 頂点データ
-	static std::vector<Vertex> vertices;
+	std::vector<Vertex> vertices;
 	// インデックスデータ
-	static std::vector<short> indices;
+	std::vector<short> indices;
+	// modelusakusei
+	void CreateModel(KDirectInit dx);
 };
 
-class Cube : public KModel
-{
+class Cube : public KModel{
 public:
 	Cube();
 	~Cube(){};
-
 };

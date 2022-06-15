@@ -9,13 +9,32 @@
 #include "KVertex.h"
 #include "KDirectInit.h"
 
+// 頂点レイアウト
+static D3D12_INPUT_ELEMENT_DESC inputLayout[3] = {
+	{// xyz座標
+		"POSITION",										// セマンティック名
+		0,												// 同じセマンティック名が複数あるときに使うインデックス
+		DXGI_FORMAT_R32G32B32_FLOAT,					// 要素数とビット数を表す
+		0,												// 入力スロットインデックス
+		D3D12_APPEND_ALIGNED_ELEMENT,					// データのオフセット
+		D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,		// 入力データ種別
+		0												// 一度に描画するインスタンス数
+	},
+	{// 法線ベクトル
+		"NORMAL",0,DXGI_FORMAT_R32G32B32_FLOAT,0,D3D12_APPEND_ALIGNED_ELEMENT,D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0
+	},
+	{// uv座標
+		"TEXCOORD",0,DXGI_FORMAT_R32G32_FLOAT,0,D3D12_APPEND_ALIGNED_ELEMENT,D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0
+	},
+};
+
 class KGPlin
 {
 public:
 	KGPlin();
 	KGPlin(KDirectInit dx,HRESULT result, ID3D12Device* dev,
-		int width, int height, KVertex vertex);
-	void GPipeline(KVertex vertex);
+		int width, int height);
+	void GPipeline();
 	void Render();
 	void Buffer(HRESULT result, ID3D12Device* dev,
 		int width, int height);

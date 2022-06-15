@@ -3,10 +3,11 @@
 #include "KDirectInit.h"
 #include "Vector3.h"
 #include <vector>
+//#include "KModel.h"
 
 using namespace DirectX;
 
-std::vector<int>;
+//std::vector<int>;
 
 // 頂点データ構造体
 struct Vertex {
@@ -14,9 +15,8 @@ struct Vertex {
 	XMFLOAT3 normal; // 法線ベクトル
 	XMFLOAT2 uv;	 // uv座標
 };
-
 // 頂点データ
-static Vertex vertices[] = {
+static std::vector<Vertex> vertices = {
 	//  x	  y	    z	 n    u	   v
 	// 前
 	{{-5.0f,-5.0f,-5.0f},{},{0.0f,1.0f}}, // 左下
@@ -51,7 +51,7 @@ static Vertex vertices[] = {
 };
 
 // インデックスデータ
-static unsigned short indices[] = {
+static std::vector<short> indices = {
 	// 前
 	 0, 1, 2, // 三角形1つ目
 	 2, 1, 3, // 三角形2つ目

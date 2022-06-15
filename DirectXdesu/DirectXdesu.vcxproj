@@ -144,12 +144,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Blend.cpp" />
+    <ClCompile Include="ConstBuffer.cpp" />
     <ClCompile Include="GameScene.cpp" />
     <ClCompile Include="KGPlin.cpp" />
     <ClCompile Include="KDepth.cpp" />
     <ClCompile Include="KDirectInit.cpp" />
     <ClCompile Include="KInput.cpp" />
     <ClCompile Include="KMaterial.cpp" />
+    <ClCompile Include="KModel.cpp" />
     <ClCompile Include="KVertex.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="KWindow.cpp" />
@@ -166,12 +168,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Blend.h" />
+    <ClInclude Include="ConstBuffer.h" />
     <ClInclude Include="GameScene.h" />
     <ClInclude Include="KGPlin.h" />
     <ClInclude Include="KDepth.h" />
     <ClInclude Include="KDirectInit.h" />
     <ClInclude Include="KInput.h" />
     <ClInclude Include="KMaterial.h" />
+    <ClInclude Include="KModel.h" />
     <ClInclude Include="KVertex.h" />
     <ClInclude Include="KWindow.h" />
     <ClInclude Include="KObject3D.h" />

@@ -257,7 +257,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 		dx.cmdList->SetGraphicsRootDescriptorTable(1, srvGpuHandle);
 #pragma region 描画コマンド
 		// 描画コマンド
-		Gpipeline.object3d->Draw(dx.cmdList, vertex.vbView, vertex.ibView, _countof(indices));
+		Gpipeline.object3d->Draw(dx.cmdList, vertex.vbView, vertex.ibView, indices.size());
 #pragma endregion
 		// 描画コマンドここまで
 #pragma endregion

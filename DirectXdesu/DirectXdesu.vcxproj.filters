@@ -193,7 +193,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Basic.hlsli">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>リソース ファイル</Filter>
     </None>
   </ItemGroup>
 </Project>

@@ -1,6 +1,5 @@
 // マテリアル
-cbuffer ConstBufferDataMaterial : register(b0)
-{
+cbuffer ConstBufferDataMaterial : register(b0) {
 	// 色
 	float4 color;
 };

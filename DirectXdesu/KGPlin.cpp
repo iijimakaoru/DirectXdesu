@@ -90,7 +90,11 @@ void KGPlin::RootParam() {
 	rootParam[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
 }
 
+/// <summary>
+/// 画像の引き伸ばし
+/// </summary>
 void KGPlin::Sampler() {
+	// サンプラー
 	samplerDesc.AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
 	samplerDesc.AddressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
 	samplerDesc.AddressW = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
@@ -103,16 +107,22 @@ void KGPlin::Sampler() {
 }
 
 void KGPlin::RootSig(HRESULT result, ID3D12Device* dev) {
+	// ルートシグネチャ
 	rootSignatureDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
 	rootSignatureDesc.pParameters = rootParam;
 	rootSignatureDesc.NumParameters = _countof(rootParam);
 	rootSignatureDesc.pStaticSamplers = &samplerDesc;
 	rootSignatureDesc.NumStaticSamplers = 1;
 
-	result = D3D12SerializeRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1_0,
-		&rootSigBlob, &shader->errorBlob);
+	result = D3D12SerializeRootSignature(
+		&rootSignatureDesc, 
+		D3D_ROOT_SIGNATURE_VERSION_1_0,
+		&rootSigBlob, 
+		&shader->errorBlob);
 	assert(SUCCEEDED(result));
-	result = dev->CreateRootSignature(0, rootSigBlob->GetBufferPointer(), rootSigBlob->GetBufferSize(),
+	result = dev->CreateRootSignature(0,
+		rootSigBlob->GetBufferPointer(),
+		rootSigBlob->GetBufferSize(),
 		IID_PPV_ARGS(&rootSignature));
 	assert(SUCCEEDED(result));
 	rootSigBlob->Release();

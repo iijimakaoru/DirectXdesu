@@ -1,8 +1,9 @@
 #pragma once
 #include "KDirectInit.h"
 #include <d3dcompiler.h>
+#include "ShaderManager.h"
 
-class KPixelShader
+class KPixelShader 
 {
 public:
 	KPixelShader();

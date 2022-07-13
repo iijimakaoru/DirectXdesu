@@ -156,6 +156,7 @@
     <ClCompile Include="KVertexShader.cpp" />
     <ClCompile Include="KPixelShader.cpp" />
     <ClCompile Include="KTexture.cpp" />
+    <ClCompile Include="ShaderManager.cpp" />
     <ClCompile Include="Vector2.cpp" />
     <ClCompile Include="Vector3.cpp" />
     <ClCompile Include="Vector4.cpp" />
@@ -174,6 +175,7 @@
     <ClInclude Include="KVertexShader.h" />
     <ClInclude Include="KPixelShader.h" />
     <ClInclude Include="KTexture.h" />
+    <ClInclude Include="ShaderManager.h" />
     <ClInclude Include="Vector2.h" />
     <ClInclude Include="Vector3.h" />
     <ClInclude Include="Vector4.h" />

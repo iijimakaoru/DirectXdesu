@@ -1,7 +1,7 @@
 #include "KGPlin.h"
 
 KGPlin::KGPlin() {}
-KGPlin::KGPlin(KDirectInit dx,HRESULT result, ID3D12Device* dev,
+KGPlin::KGPlin(KDirectInit dx, HRESULT result, ID3D12Device* dev,
 	int width, int height, KVertex vertex) {
 	vtShader = new KVertexShader(dx);
 	pxShader = new KPixelShader(dx);

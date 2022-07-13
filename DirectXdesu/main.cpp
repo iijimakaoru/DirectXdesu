@@ -136,7 +136,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 		}
 		// ‰¡‰ñ“]
 		if (input.IsPush(DIK_RIGHT) ||
-			input.IsPush(DIK_LEFT)){
+			input.IsPush(DIK_LEFT)) {
 			if (input.IsPush(DIK_RIGHT)) {
 				Gpipeline.object3d->object3d[0].rot.y -= 0.1f;
 			}

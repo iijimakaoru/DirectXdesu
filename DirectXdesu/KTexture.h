@@ -1,21 +1,20 @@
 #pragma once
-#include "KDirectInit.h"
 #include "KVertex.h"
 
 class KTexture
 {
 public:
-	KTexture(KDirectInit dx, KVertex vertex);
-	void LoadTexture(KDirectInit dx);
-	void GeneMipMap(KDirectInit dx);
+	KTexture(ID3D12Device* dev,KVertex vertex);
+	void LoadTexture();
+	void GeneMipMap();
 	void SetTextureBuff();
-	void GeneTextureBuff(KDirectInit dx);
-	void SendData(KDirectInit dx);
+	void GeneTextureBuff(ID3D12Device* dev);
+	void SendData();
 	void SetDescHeap();
-	void GeneDescHeap(KDirectInit dx);
+	void GeneDescHeap(ID3D12Device* dev);
 	void GetSrvHandle();
-	void SetSRV(KDirectInit dx,KVertex vertex);
-	void CreateSRV(KDirectInit dx);
+	void SetSRV(KVertex vertex);
+	void CreateSRV(ID3D12Device* dev);
 
 	TexMetadata metadata{};
 	ScratchImage scraychImg{};
@@ -38,5 +37,7 @@ public:
 	D3D12_CPU_DESCRIPTOR_HANDLE srvHandle;
 	// シェーダーリソースビュー設定
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
+
+	HRESULT result;
 };
 

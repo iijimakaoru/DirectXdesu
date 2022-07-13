@@ -1,12 +1,12 @@
 #include "KDepth.h"
 
-KDepth::KDepth(KDirectInit dx, KWindow win) {
+KDepth::KDepth(ID3D12Device* dev, KWindow win) {
 	SetResource(win);
 	HeapDepth();
 	SetClwarDepth();
-	GeneResource(dx);
-	CreatDevHeap(dx);
-	CreatDepthView(dx);
+	GeneResource(dev);
+	CreatDevHeap(dev);
+	CreatDepthView(dev);
 }
 
 void KDepth::SetResource(KWindow win) {
@@ -28,9 +28,9 @@ void KDepth::SetClwarDepth() {
 	depthClearValue.Format = DXGI_FORMAT_D32_FLOAT; // 深度値フォーマット
 }
 
-void KDepth::GeneResource(KDirectInit dx) {
+void KDepth::GeneResource(ID3D12Device* dev) {
 	depthBuff = nullptr;
-	dx.result = dx.dev->CreateCommittedResource(
+	result = dev->CreateCommittedResource(
 		&depthHeapProp,
 		D3D12_HEAP_FLAG_NONE,
 		&depthResourceDesc,
@@ -39,17 +39,17 @@ void KDepth::GeneResource(KDirectInit dx) {
 		IID_PPV_ARGS(&depthBuff));
 }
 
-void KDepth::CreatDevHeap(KDirectInit dx) {
+void KDepth::CreatDevHeap(ID3D12Device* dev) {
 	dsvHeapDesc.NumDescriptors = 1; // 深度ビューは1つ
 	dsvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV; // デプスステンシルビュー
 	dsvHeap = nullptr;
-	dx.result = dx.dev->CreateDescriptorHeap(&dsvHeapDesc, IID_PPV_ARGS(&dsvHeap));
+	result = dev->CreateDescriptorHeap(&dsvHeapDesc, IID_PPV_ARGS(&dsvHeap));
 }
 
-void KDepth::CreatDepthView(KDirectInit dx) {
+void KDepth::CreatDepthView(ID3D12Device* dev) {
 	dsvDesc.Format = DXGI_FORMAT_D32_FLOAT; // 深度値フォーマット
 	dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
-	dx.dev->CreateDepthStencilView(
+	dev->CreateDepthStencilView(
 		depthBuff,
 		&dsvDesc,
 		dsvHeap->GetCPUDescriptorHandleForHeapStart());

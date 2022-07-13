@@ -6,9 +6,9 @@
 class KInput
 {
 public:
-	KInput(HRESULT& result, WNDCLASSEX w, HWND hwnd);
-	void Init(HRESULT& result, WNDCLASSEX w, HWND hwnd);
-	void Update(HRESULT& result);
+	KInput(WNDCLASSEX w, HWND hwnd);
+	void Init(WNDCLASSEX w, HWND hwnd);
+	void Update();
 	void KeyInit();
 
 	bool IsPush(int keyNum);
@@ -26,5 +26,7 @@ public:
 
 	// キーボードデバイスの生成
 	IDirectInputDevice8* keyboad = nullptr;
+
+	HRESULT result;
 };
 

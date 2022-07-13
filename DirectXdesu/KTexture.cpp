@@ -1,28 +1,28 @@
 #include "KTexture.h"
 
-KTexture::KTexture(KDirectInit dx, KVertex vertex) {
-	LoadTexture(dx);
-	GeneMipMap(dx);
+KTexture::KTexture(ID3D12Device* dev,KVertex vertex) {
+	LoadTexture();
+	GeneMipMap();
 	SetTextureBuff();
-	GeneTextureBuff(dx);
-	SendData(dx);
+	GeneTextureBuff(dev);
+	SendData();
 	SetDescHeap();
-	GeneDescHeap(dx);
+	GeneDescHeap(dev);
 	GetSrvHandle();
-	SetSRV(dx,vertex);
-	CreateSRV(dx);
+	SetSRV(vertex);
+	CreateSRV(dev);
 }
 
-void KTexture::LoadTexture(KDirectInit dx) {
-	dx.result = LoadFromWICFile(
+void KTexture::LoadTexture() {
+	result = LoadFromWICFile(
 		L"Resources/haikei.jpg",
 		WIC_FLAGS_NONE,
 		&metadata, scraychImg);
 }
 
-void KTexture::GeneMipMap(KDirectInit dx) {
+void KTexture::GeneMipMap() {
 	// ミニマップ作成
-	dx.result = GenerateMipMaps(
+	result = GenerateMipMaps(
 		scraychImg.GetImages(),
 		scraychImg.GetImageCount(),
 		scraychImg.GetMetadata(),
@@ -30,7 +30,7 @@ void KTexture::GeneMipMap(KDirectInit dx) {
 		0, mipChain
 	);
 
-	if (SUCCEEDED(dx.result)) {
+	if (SUCCEEDED(result)) {
 		scraychImg = std::move(mipChain);
 		metadata = scraychImg.GetMetadata();
 	}
@@ -54,8 +54,8 @@ void KTexture::SetTextureBuff() {
 	textureResourceDesc.SampleDesc.Count = 1;
 }
 
-void KTexture::GeneTextureBuff(KDirectInit dx) {
-	dx.result = dx.dev->CreateCommittedResource(
+void KTexture::GeneTextureBuff(ID3D12Device* dev) {
+	result = dev->CreateCommittedResource(
 		&textureHeapProp,
 		D3D12_HEAP_FLAG_NONE,
 		&textureResourceDesc,
@@ -65,20 +65,20 @@ void KTexture::GeneTextureBuff(KDirectInit dx) {
 	);
 }
 
-void KTexture::SendData(KDirectInit dx) {
+void KTexture::SendData() {
 	// 全ミニマップについて
 	for (size_t i = 0; i < metadata.mipLevels; i++) {
 		// ミニマップレベルを指定してイメージを取得
 		const Image* img = scraychImg.GetImage(i, 0, 0);
 		// テクスチャバッファにデータ転送
-		dx.result = texBuff->WriteToSubresource(
+		result = texBuff->WriteToSubresource(
 			(UINT)i,
 			nullptr,
 			img->pixels,
 			(UINT)img->rowPitch,
 			(UINT)img->slicePitch
 		);
-		assert(SUCCEEDED(dx.result));
+		assert(SUCCEEDED(result));
 	}
 }
 
@@ -88,26 +88,26 @@ void KTexture::SetDescHeap() {
 	srvHeapDesc.NumDescriptors = kMaxSRVCount;
 }
 
-void KTexture::GeneDescHeap(KDirectInit dx) {
-	dx.result = dx.dev->CreateDescriptorHeap(
+void KTexture::GeneDescHeap(ID3D12Device* dev) {
+	result = dev->CreateDescriptorHeap(
 		&srvHeapDesc,
 		IID_PPV_ARGS(&srvHeap)
 	);
-	assert(SUCCEEDED(dx.result));
+	assert(SUCCEEDED(result));
 }
 
 void KTexture::GetSrvHandle() {
 	srvHandle = srvHeap->GetCPUDescriptorHandleForHeapStart();
 }
 
-void KTexture::SetSRV(KDirectInit dx, KVertex vertex) {
+void KTexture::SetSRV(KVertex vertex) {
 	srvDesc.Format = vertex.resDesc.Format;
 	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
 	srvDesc.Texture2D.MipLevels = vertex.resDesc.MipLevels;
 }
 
-void KTexture::CreateSRV(KDirectInit dx) {
+void KTexture::CreateSRV(ID3D12Device* dev) {
 	// ハンドルの指す位置にシェーダーリソースビュー作成
-	dx.dev->CreateShaderResourceView(texBuff, &srvDesc, srvHandle);
+	dev->CreateShaderResourceView(texBuff, &srvDesc, srvHandle);
 }

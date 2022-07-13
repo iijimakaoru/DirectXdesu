@@ -1,11 +1,11 @@
 #include "KInput.h"
 #include <cassert>
 
-KInput::KInput(HRESULT& result, WNDCLASSEX w, HWND hwnd) {
-	Init(result, w, hwnd);
+KInput::KInput(WNDCLASSEX w, HWND hwnd) {
+	Init(w, hwnd);
 }
 
-void KInput::Init(HRESULT& result, WNDCLASSEX w, HWND hwnd) {
+void KInput::Init(WNDCLASSEX w, HWND hwnd) {
 	// 入力初期化
 	result = DirectInput8Create(w.hInstance, DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&directInput, nullptr);
 	assert(SUCCEEDED(result));
@@ -23,7 +23,7 @@ void KInput::Init(HRESULT& result, WNDCLASSEX w, HWND hwnd) {
 	assert(SUCCEEDED(result));
 }
 
-void KInput::Update(HRESULT& result) {
+void KInput::Update() {
 	// キーボードの情報取得
 	keyboad->Acquire();
 

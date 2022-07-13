@@ -1,14 +1,14 @@
 #include "KMaterial.h"
 
-KMaterial::KMaterial(HRESULT result,ID3D12Device* dev) {
-	Initialize(result, dev);
+KMaterial::KMaterial(ID3D12Device* dev) {
+	Initialize(dev);
 }
 
 KMaterial::KMaterial() {
 
 }
 
-void KMaterial::Initialize(HRESULT result, ID3D12Device* dev) {
+void KMaterial::Initialize(ID3D12Device* dev) {
 	// ‰æ‘œ‚ÌF
 	colorR = 1.0f;
 	colorG = 1.0f;

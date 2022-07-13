@@ -14,17 +14,16 @@ class KGPlin
 {
 public:
 	KGPlin();
-	KGPlin(KDirectInit dx,HRESULT result, ID3D12Device* dev,
-		int width, int height, KVertex vertex);
+	KGPlin(KDirectInit dx,ID3D12Device* dev, int width, int height, KVertex vertex);
 	void GPipeline(KVertex vertex);
 	void Render();
-	void Buffer(HRESULT result, ID3D12Device* dev,
+	void Buffer(ID3D12Device* dev,
 		int width, int height);
 	void DescRipRan();
 	void RootParam();
 	void Sampler();
-	void RootSig(HRESULT result, ID3D12Device* dev);
-	void PipelineState(HRESULT result, ID3D12Device* dev);
+	void RootSig(ID3D12Device* dev);
+	void PipelineState(ID3D12Device* dev);
 
 	// シェーダークラス呼び込み
 	KPixelShader* pxShader;
@@ -53,5 +52,7 @@ public:
 	ID3DBlob* rootSigBlob = nullptr;
 	// パイプラインステート
 	ID3D12PipelineState* pipelineState = nullptr;
+
+	HRESULT result;
 };
 

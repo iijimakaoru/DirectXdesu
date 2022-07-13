@@ -32,8 +32,8 @@ class KWorldTransform
 {
 public:
 	KWorldTransform();
-	KWorldTransform(HRESULT result, ID3D12Device* dev);
-	void Initialize(HRESULT result, ID3D12Device* dev);
+	KWorldTransform(ID3D12Device* dev);
+	void Initialize(ID3D12Device* dev);
 	void Update(XMMATRIX& matView, XMMATRIX& matProjection);
 	void Draw(ID3D12GraphicsCommandList* cmdList, D3D12_VERTEX_BUFFER_VIEW& vbview,
 		D3D12_INDEX_BUFFER_VIEW& ibView, UINT numIndices);
@@ -45,5 +45,7 @@ public:
 	D3D12_RESOURCE_DESC cbResourceDesc{};
 	// 3Dオブジェクトの配列
 	Object3d object3d[kObjectCount];
+
+	HRESULT result;
 };
 

@@ -14,8 +14,8 @@ class KMaterial
 {
 public:
 	KMaterial();
-	KMaterial(HRESULT result, ID3D12Device* dev);
-	void Initialize(HRESULT result, ID3D12Device* dev);
+	KMaterial(ID3D12Device* dev);
+	void Initialize(ID3D12Device* dev);
 	void Update();
 
 	// 画像の色
@@ -31,5 +31,7 @@ public:
 	ID3D12Resource* constBufferMaterial = nullptr;
 	// 定数バッファのマッピング
 	ConstBufferDataMaterial* constMapMaterial = nullptr;
+
+	HRESULT result;
 };
 

@@ -4,6 +4,8 @@
 class KDepth
 {
 public:
+	HRESULT result;
+
 	// ÉäÉ\Å[ÉXê›íË
 	D3D12_RESOURCE_DESC depthResourceDesc{};
 
@@ -23,11 +25,11 @@ public:
 
 	ID3D12DescriptorHeap* dsvHeap{};
 
-	KDepth(KDirectInit dx, KWindow win);
+	KDepth(ID3D12Device* dev, KWindow win);
 	void SetResource(KWindow win);
 	void HeapDepth();
 	void SetClwarDepth();
-	void GeneResource(KDirectInit dx);
-	void CreatDevHeap(KDirectInit dx);
-	void CreatDepthView(KDirectInit dx);
+	void GeneResource(ID3D12Device* dev);
+	void CreatDevHeap(ID3D12Device* dev);
+	void CreatDepthView(ID3D12Device* dev);
 };

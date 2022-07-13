@@ -35,12 +35,12 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 
 #pragma region DirectX初期化
 	KDirectInit dx(win);
-	KInput input(dx.result, win.window, win.handle);
+	KInput input(win.window, win.handle);
 #pragma endregion
 
 #pragma region 描画初期化
 #pragma region 深度バッファ
-	KDepth depth(dx, win);
+	KDepth depth(dx.dev, win);
 #pragma endregion
 	// 速さ
 	float speed = 1.0f;
@@ -50,11 +50,11 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 #pragma endregion
 
 #pragma region グラフィックスパイプライン設定
-	KGPlin Gpipeline(dx, dx.result, dx.dev, win.window_width, win.window_height, vertex);
+	KGPlin Gpipeline(dx, dx.dev, win.window_width, win.window_height, vertex);
 #pragma endregion
 
 #pragma region テクスチャ初期化
-	KTexture texture(dx, vertex);
+	KTexture texture(dx.dev, vertex);
 #pragma endregion
 	Vector3 center = { 0,0,1 };
 
@@ -77,7 +77,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 #pragma endregion
 
 #pragma region inputアップデート
-		input.Update(dx.result);
+		input.Update();
 #pragma endregion
 
 #pragma region キーボード処理

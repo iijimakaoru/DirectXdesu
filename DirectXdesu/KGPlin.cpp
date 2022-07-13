@@ -1,18 +1,17 @@
 #include "KGPlin.h"
 
 KGPlin::KGPlin() {}
-KGPlin::KGPlin(KDirectInit dx, HRESULT result, ID3D12Device* dev,
-	int width, int height, KVertex vertex) {
+KGPlin::KGPlin(KDirectInit dx, ID3D12Device* dev, int width, int height, KVertex vertex) {
 	vtShader = new KVertexShader(dx);
 	pxShader = new KPixelShader(dx);
 	GPipeline(vertex);
 	Render();
-	Buffer(result, dev, width, height);
+	Buffer(dev, width, height);
 	DescRipRan();
 	RootParam();
 	Sampler();
-	RootSig(result, dev);
-	PipelineState(result, dev);
+	RootSig(dev);
+	PipelineState(dev);
 }
 
 void KGPlin::GPipeline(KVertex vertex) {
@@ -52,13 +51,13 @@ void KGPlin::Render() {
 	blenddesc.DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
 }
 
-void KGPlin::Buffer(HRESULT result, ID3D12Device* dev, int width, int height) {
+void KGPlin::Buffer(ID3D12Device* dev, int width, int height) {
 #pragma region マテリアル
-	material = new KMaterial(result, dev);
+	material = new KMaterial(dev);
 #pragma endregion
 
 #pragma region 3Dオブジェクト初期化
-	object3d = new KWorldTransform(result, dev);
+	object3d = new KWorldTransform(dev);
 #pragma endregion
 
 #pragma region 行列
@@ -103,7 +102,7 @@ void KGPlin::Sampler() {
 	samplerDesc.ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 }
 
-void KGPlin::RootSig(HRESULT result, ID3D12Device* dev) {
+void KGPlin::RootSig(ID3D12Device* dev) {
 	rootSignatureDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
 	rootSignatureDesc.pParameters = rootParam;
 	rootSignatureDesc.NumParameters = _countof(rootParam);
@@ -126,7 +125,7 @@ void KGPlin::RootSig(HRESULT result, ID3D12Device* dev) {
 	pipelineDesc.DSVFormat = DXGI_FORMAT_D32_FLOAT; // 深度値フォーマット
 }
 
-void KGPlin::PipelineState(HRESULT result, ID3D12Device* dev) {
+void KGPlin::PipelineState(ID3D12Device* dev) {
 	result = dev->CreateGraphicsPipelineState(&pipelineDesc, IID_PPV_ARGS(&pipelineState));
 	assert(SUCCEEDED(result));
 }

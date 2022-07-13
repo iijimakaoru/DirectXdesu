@@ -2,11 +2,11 @@
 
 KWorldTransform::KWorldTransform(){}
 
-KWorldTransform::KWorldTransform(HRESULT result, ID3D12Device* dev) {
-	Initialize(result,dev);
+KWorldTransform::KWorldTransform(ID3D12Device* dev) {
+	Initialize(dev);
 }
 
-void KWorldTransform::Initialize(HRESULT result, ID3D12Device* dev) {
+void KWorldTransform::Initialize(ID3D12Device* dev) {
 
 	for (int i = 0; i < _countof(object3d); i++) {
 		// ƒq[ƒvÝ’è

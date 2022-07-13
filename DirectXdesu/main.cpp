@@ -53,6 +53,17 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 
 #pragma region テクスチャ初期化
 	KTexture texture(dx.dev, vertex);
+	/*UINT incrementSize = dx.dev->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+	texture.srvHandle.ptr += incrementSize;
+
+	D3D12_RESOURCE_DESC textureResourceDesc2{};
+	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc2{};
+	srvDesc2.Format = textureResourceDesc2.Format;
+	srvDesc2.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+	srvDesc2.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+	srvDesc2.Texture2D.MipLevels = textureResourceDesc2.MipLevels;
+
+	dx.dev->CreateShaderResourceView(texture.texBuff2, &srvDesc2, texture.srvHandle);*/
 #pragma endregion
 	Vector3 center = { 0,0,1 };
 
@@ -251,6 +262,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 		dx.cmdList->SetDescriptorHeaps(1, &texture.srvHeap);
 		// 先頭ハンドルを取得
 		D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle = texture.srvHeap->GetGPUDescriptorHandleForHeapStart();
+		srvGpuHandle.ptr += texture.incrementSize;
 		// SRVヒープの先頭にあるSRVをルートパラメータ1番の設定
 		dx.cmdList->SetGraphicsRootDescriptorTable(1, srvGpuHandle);
 #pragma region 描画コマンド

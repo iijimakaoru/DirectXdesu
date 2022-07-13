@@ -84,8 +84,7 @@ void KWorldTransform::Draw(ID3D12GraphicsCommandList* cmdList, D3D12_VERTEX_BUFF
 		cmdList->IASetIndexBuffer(&ibView);
 		cmdList->SetGraphicsRootConstantBufferView(
 			2,
-			object3d[i].constBuffTransform->GetGPUVirtualAddress()
-		);
+			object3d[i].constBuffTransform->GetGPUVirtualAddress());
 		cmdList->DrawIndexedInstanced(numIndices, 1, 0, 0, 0);
 	}
 }

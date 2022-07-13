@@ -18,9 +18,9 @@
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	_In_ LPSTR lpCmdLine, _In_ int nCmdShow)
 {
-#ifdef DEBUG
+#ifdef _DEBUG
 	// デバッグレイヤーをオンに
-	ID3D12Ddebug* debugController;
+	ID3D12Debug* debugController;
 	if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&debugController))))
 	{
 		debugController->EnableDebugLayer();
@@ -52,18 +52,17 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 #pragma endregion
 
 #pragma region テクスチャ初期化
-	KTexture texture(dx.dev, vertex);
+	KTexture texture(dx.dev);
 	UINT incrementSize = dx.dev->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 	texture.srvHandle.ptr += incrementSize;
 
-	D3D12_RESOURCE_DESC textureResourceDesc2{};
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc2{};
-	srvDesc2.Format = textureResourceDesc2.Format;
+	srvDesc2.Format = texture.texBuff2->GetDesc().Format;
 	srvDesc2.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 	srvDesc2.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-	srvDesc2.Texture2D.MipLevels = textureResourceDesc2.MipLevels;
+	srvDesc2.Texture2D.MipLevels = texture.texBuff2->GetDesc().MipLevels;
 
-	//dx.dev->CreateShaderResourceView(texture.texBuff2, &srvDesc2, texture.srvHandle);
+	dx.dev->CreateShaderResourceView(texture.texBuff2, &srvDesc2, texture.srvHandle);
 #pragma endregion
 	Vector3 center = { 0,0,1 };
 
@@ -262,9 +261,17 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 		dx.cmdList->SetDescriptorHeaps(1, &texture.srvHeap);
 		// 先頭ハンドルを取得
 		D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle = texture.srvHeap->GetGPUDescriptorHandleForHeapStart();
-		srvGpuHandle.ptr += texture.incrementSize;
+		srvGpuHandle.ptr += incrementSize * 0;
+		D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle2 = texture.srvHeap->GetGPUDescriptorHandleForHeapStart();
+		srvGpuHandle2.ptr += incrementSize * 1;
 		// SRVヒープの先頭にあるSRVをルートパラメータ1番の設定
-		dx.cmdList->SetGraphicsRootDescriptorTable(1, srvGpuHandle);
+		if (input.IsPush(DIK_SPACE)) {
+			dx.cmdList->SetGraphicsRootDescriptorTable(1, srvGpuHandle2);
+		}
+		else {
+			dx.cmdList->SetGraphicsRootDescriptorTable(1, srvGpuHandle);
+		}
+		
 #pragma region 描画コマンド
 		// 描画コマンド
 		Gpipeline.object3d->Draw(dx.cmdList, vertex.vbView, vertex.ibView, _countof(indices));

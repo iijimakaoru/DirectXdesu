@@ -6,7 +6,7 @@ KVertex::KVertex(KDirectInit dx) {
 	CreateVBView();
 }
 
-void KVertex::KVertexInit(KDirectInit dx) {
+void KVertex::KVertexInit(KDirectInit& dx) {
 #pragma region 頂点
 	// 頂点データ全体のサイズ = 頂点データ一つ分のサイズ * 頂点データの要素数
 	sizeVB = static_cast<UINT>(sizeof(vertices[0]) * _countof(vertices));

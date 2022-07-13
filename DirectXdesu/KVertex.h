@@ -73,7 +73,7 @@ class KVertex
 {
 public:
 	KVertex(KDirectInit dx);
-	void KVertexInit(KDirectInit dx);
+	void KVertexInit(KDirectInit& dx);
 	void VertMap();
 	void CreateVBView();
 

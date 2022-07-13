@@ -4,7 +4,7 @@
 class KTexture
 {
 public:
-	KTexture(ID3D12Device* dev,KVertex vertex);
+	KTexture(ID3D12Device* dev);
 	void LoadTexture();
 	void GeneMipMap();
 	void SetTextureBuff();
@@ -13,7 +13,7 @@ public:
 	void SetDescHeap();
 	void GeneDescHeap(ID3D12Device* dev);
 	void GetSrvHandle(ID3D12Device* dev);
-	void SetSRV(KVertex vertex);
+	void SetSRV();
 	void CreateSRV(ID3D12Device* dev);
 
 	TexMetadata metadata{};
@@ -23,8 +23,6 @@ public:
 
 	ScratchImage mipChain{};
 	ScratchImage mipChain2{};
-
-	UINT incrementSize;
 
 	// ÉqÅ[Évê›íË
 	D3D12_HEAP_PROPERTIES textureHeapProp{};

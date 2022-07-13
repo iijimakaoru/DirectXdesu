@@ -268,6 +268,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 
 			// ハンドルを１つ進める
 			srvGpuHandle[i].ptr += descriptorSize * i;
+
+			dx.cmdList->SetGraphicsRootDescriptorTable(1, srvGpuHandle[i]);
 		}
 #pragma region 描画コマンド
 		// 描画コマンド

@@ -5,8 +5,6 @@
 #include "KInput.h"
 #include "KDepth.h"
 #include "KVertex.h"
-#include "KVertexShader.h"
-#include "KPixelShader.h"
 #include "KTexture.h"
 #include "KWorldTransform.h"
 #include "ViewProjection.h"
@@ -50,7 +48,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 #pragma endregion
 
 #pragma region グラフィックスパイプライン設定
-	KGPlin Gpipeline(dx, dx.dev, win.window_width, win.window_height, vertex);
+	KGPlin Gpipeline(dx.dev, win.window_width, win.window_height, vertex);
 #pragma endregion
 
 #pragma region テクスチャ初期化

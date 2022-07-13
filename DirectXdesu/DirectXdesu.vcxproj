@@ -149,12 +149,11 @@
     <ClCompile Include="KDirectInit.cpp" />
     <ClCompile Include="KInput.cpp" />
     <ClCompile Include="KMaterial.cpp" />
+    <ClCompile Include="KShader.cpp" />
     <ClCompile Include="KVertex.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="KWindow.cpp" />
     <ClCompile Include="KWorldTransform.cpp" />
-    <ClCompile Include="KVertexShader.cpp" />
-    <ClCompile Include="KPixelShader.cpp" />
     <ClCompile Include="KTexture.cpp" />
     <ClCompile Include="ShaderManager.cpp" />
     <ClCompile Include="Vector2.cpp" />
@@ -169,11 +168,10 @@
     <ClInclude Include="KDirectInit.h" />
     <ClInclude Include="KInput.h" />
     <ClInclude Include="KMaterial.h" />
+    <ClInclude Include="KShader.h" />
     <ClInclude Include="KVertex.h" />
     <ClInclude Include="KWindow.h" />
     <ClInclude Include="KWorldTransform.h" />
-    <ClInclude Include="KVertexShader.h" />
-    <ClInclude Include="KPixelShader.h" />
     <ClInclude Include="KTexture.h" />
     <ClInclude Include="ShaderManager.h" />
     <ClInclude Include="Vector2.h" />

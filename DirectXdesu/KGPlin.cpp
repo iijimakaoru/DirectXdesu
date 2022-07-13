@@ -1,9 +1,10 @@
 #include "KGPlin.h"
 
 KGPlin::KGPlin() {}
-KGPlin::KGPlin(KDirectInit dx, ID3D12Device* dev, int width, int height, KVertex vertex) {
-	vtShader = new KVertexShader(dx);
-	pxShader = new KPixelShader(dx);
+KGPlin::KGPlin(ID3D12Device* dev, int width, int height, KVertex vertex) {
+	/*vtShader = new KVertexShader(dx);
+	pxShader = new KPixelShader(dx);*/
+	shader = new KShader();
 	GPipeline(vertex);
 	Render();
 	Buffer(dev, width, height);
@@ -16,10 +17,10 @@ KGPlin::KGPlin(KDirectInit dx, ID3D12Device* dev, int width, int height, KVertex
 
 void KGPlin::GPipeline(KVertex vertex) {
 	// シェーダーの設定
-	pipelineDesc.VS.pShaderBytecode = vtShader->vsBlob->GetBufferPointer();
-	pipelineDesc.VS.BytecodeLength = vtShader->vsBlob->GetBufferSize();
-	pipelineDesc.PS.pShaderBytecode = pxShader->psBlob->GetBufferPointer();
-	pipelineDesc.PS.BytecodeLength = pxShader->psBlob->GetBufferSize();
+	pipelineDesc.VS.pShaderBytecode = shader->vsBlob->GetBufferPointer();
+	pipelineDesc.VS.BytecodeLength = shader->vsBlob->GetBufferSize();
+	pipelineDesc.PS.pShaderBytecode = shader->psBlob->GetBufferPointer();
+	pipelineDesc.PS.BytecodeLength = shader->psBlob->GetBufferSize();
 	// サンプルマスクの設定
 	pipelineDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
 	// ラスタライザの設定
@@ -110,7 +111,7 @@ void KGPlin::RootSig(ID3D12Device* dev) {
 	rootSignatureDesc.NumStaticSamplers = 1;
 
 	result = D3D12SerializeRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1_0,
-		&rootSigBlob, &pxShader->errorBlob);
+		&rootSigBlob, &shader->errorBlob);
 	assert(SUCCEEDED(result));
 	result = dev->CreateRootSignature(0, rootSigBlob->GetBufferPointer(), rootSigBlob->GetBufferSize(),
 		IID_PPV_ARGS(&rootSignature));

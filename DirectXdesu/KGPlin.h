@@ -5,8 +5,7 @@
 #include "ViewProjection.h"
 #include "KMaterial.h"
 #include "ViewProjection.h"
-#include "KVertexShader.h"
-#include "KPixelShader.h"
+#include "KShader.h"
 #include "KVertex.h"
 #include "KDirectInit.h"
 
@@ -14,7 +13,7 @@ class KGPlin
 {
 public:
 	KGPlin();
-	KGPlin(KDirectInit dx,ID3D12Device* dev, int width, int height, KVertex vertex);
+	KGPlin(ID3D12Device* dev, int width, int height, KVertex vertex);
 	void GPipeline(KVertex vertex);
 	void Render();
 	void Buffer(ID3D12Device* dev,
@@ -26,8 +25,9 @@ public:
 	void PipelineState(ID3D12Device* dev);
 
 	// シェーダークラス呼び込み
-	KPixelShader* pxShader;
-	KVertexShader* vtShader;
+	/*KPixelShader* pxShader;
+	KVertexShader* vtShader;*/
+	KShader* shader;
 	// グラフィックスパイプライン設定
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC pipelineDesc{};
 	// レンダーターゲットのブレンド設定

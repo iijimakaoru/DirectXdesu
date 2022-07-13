@@ -7,7 +7,10 @@ KInput::KInput(HRESULT& result, WNDCLASSEX w, HWND hwnd) {
 
 void KInput::Init(HRESULT& result, WNDCLASSEX w, HWND hwnd) {
 	// 入力初期化
-	result = DirectInput8Create(w.hInstance, DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&directInput, nullptr);
+	result = DirectInput8Create(w.hInstance,
+		DIRECTINPUT_VERSION,
+		IID_IDirectInput8,
+		(void**)&directInput, nullptr);
 	assert(SUCCEEDED(result));
 
 	// キーボードデバイスの生成
@@ -19,7 +22,10 @@ void KInput::Init(HRESULT& result, WNDCLASSEX w, HWND hwnd) {
 	assert(SUCCEEDED(result));
 
 	// 排他制御レベルのセット
-	result = keyboad->SetCooperativeLevel(hwnd, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE | DISCL_NOWINKEY);
+	result = keyboad->SetCooperativeLevel(hwnd,
+		DISCL_FOREGROUND |
+		DISCL_NONEXCLUSIVE |
+		DISCL_NOWINKEY);
 	assert(SUCCEEDED(result));
 }
 

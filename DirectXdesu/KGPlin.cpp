@@ -15,6 +15,7 @@ KGPlin::KGPlin(KDirectInit dx,HRESULT result, ID3D12Device* dev,
 }
 
 void KGPlin::GPipeline() {
+	// グラフィックスパイプライン設定
 	// シェーダーの設定
 	pipelineDesc.VS.pShaderBytecode = shader->vsBlob->GetBufferPointer();
 	pipelineDesc.VS.BytecodeLength = shader->vsBlob->GetBufferSize();
@@ -40,6 +41,7 @@ void KGPlin::GPipeline() {
 }
 
 void KGPlin::Render() {
+	// レンダーターゲットのブレンド設定
 	blenddesc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
 	blenddesc.BlendEnable = true;
 	blenddesc.BlendOpAlpha = D3D12_BLEND_OP_ADD;

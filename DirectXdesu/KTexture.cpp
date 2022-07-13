@@ -18,6 +18,10 @@ void KTexture::LoadTexture(KDirectInit dx) {
 		L"Resources/haikei.jpg",
 		WIC_FLAGS_NONE,
 		&metadata, scraychImg);
+	dx.result = LoadFromWICFile(
+		L"Resources/kitanai.jpg",
+		WIC_FLAGS_NONE,
+		&metadata2, scraychImg2);
 }
 
 void KTexture::GeneMipMap(KDirectInit dx) {
@@ -27,8 +31,7 @@ void KTexture::GeneMipMap(KDirectInit dx) {
 		scraychImg.GetImageCount(),
 		scraychImg.GetMetadata(),
 		TEX_FILTER_DEFAULT,
-		0, mipChain
-	);
+		0, mipChain);
 
 	if (SUCCEEDED(dx.result)) {
 		scraychImg = std::move(mipChain);
@@ -61,8 +64,14 @@ void KTexture::GeneTextureBuff(KDirectInit dx) {
 		&textureResourceDesc,
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
-		IID_PPV_ARGS(&texBuff)
-	);
+		IID_PPV_ARGS(&texBuff));
+	dx.result = dx.dev->CreateCommittedResource(
+		&textureHeapProp,
+		D3D12_HEAP_FLAG_NONE,
+		&textureResourceDesc2,
+		D3D12_RESOURCE_STATE_GENERIC_READ,
+		nullptr,
+		IID_PPV_ARGS(&texBuff2));
 }
 
 void KTexture::SendData(KDirectInit dx) {

@@ -273,9 +273,9 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 
 	int isMode = Triangle;
 	bool isChange = false;
-	float red = 0;
-	float green = 1;
-	float bule = 0;
+	float red = 0.5;
+	float green = 0.5;
+	float bule = 0.5;
 	float rSpeed = -0.01f;
 	float gSpeed = 0.01f;
 	float bSpeed = -0.01f;

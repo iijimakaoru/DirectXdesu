@@ -15,12 +15,12 @@ KTexture::KTexture(ID3D12Device* dev) {
 
 void KTexture::LoadTexture() {
 	result = LoadFromWICFile(
-		L"Resources/haikei.jpg",
+		L"Resources/kitanai.jpg",
 		WIC_FLAGS_NONE,
 		&metadata, scraychImg);
 
 	result = LoadFromWICFile(
-		L"Resources/kitanai.jpg",
+		L"Resources/haikei.jpg",
 		WIC_FLAGS_NONE,
 		&metadata2, scraychImg2);
 }

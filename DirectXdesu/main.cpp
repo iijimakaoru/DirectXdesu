@@ -104,10 +104,18 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 			dx.bBule = 0.5f;
 		}
 		// âÊëúêFïœÇ¶
-		if (Gpipeline.material->colorR == 0 || Gpipeline.material->colorR == 1) {
+		if (Gpipeline.material->colorR <= 0 || Gpipeline.material->colorR >= 1) {
 			rSpeed *= -1;
 		}
+		if (Gpipeline.material->colorG <= 0 || Gpipeline.material->colorG >= 1) {
+			gSpeed *= -1;
+		}
+		if (Gpipeline.material->colorB <= 0 || Gpipeline.material->colorB >= 1) {
+			bSpeed *= -1;
+		}
 		Gpipeline.material->colorR += rSpeed;
+		Gpipeline.material->colorG += gSpeed;
+		Gpipeline.material->colorB += bSpeed;
 		// ê}å`ècâÒì]
 		if (input.IsPush(DIK_F) ||
 			input.IsPush(DIK_V)) {

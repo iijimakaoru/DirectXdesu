@@ -11,7 +11,6 @@ public:
 	std::vector<short> indices;
 
 	std::unique_ptr<KVertex> vertex;
-	//KVertex* vertex = nullptr;
 
 	// modelusakusei
 	void CreateModel(ID3D12Device* dev);

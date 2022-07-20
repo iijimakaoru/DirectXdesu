@@ -10,9 +10,9 @@ KMaterial::KMaterial() {
 
 void KMaterial::Initialize(ID3D12Device* dev) {
 	// ‰æ‘œ‚ÌF
-	colorR = 1.0f;
-	colorG = 1.0f;
-	colorB = 1.0f;
+	colorR = 0.5f;
+	colorG = 0.5f;
+	colorB = 0.5f;
 	colorA = 1.0f;
 	// ƒq[ƒvİ’è
 	cbHeapProp.Type = D3D12_HEAP_TYPE_UPLOAD;

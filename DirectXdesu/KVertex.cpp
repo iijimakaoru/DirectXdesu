@@ -2,13 +2,13 @@
 
 KVertex::KVertex() {};
 
-KVertex::KVertex(KDirectInit dx, std::vector<Vertex> vertices, std::vector<short> indices) {
-	KVertexInit(dx, vertices, indices);
+KVertex::KVertex(ID3D12Device* dev, std::vector<Vertex> vertices, std::vector<short> indices) {
+	KVertexInit(dev, vertices, indices);
 	VertMap(vertices);
 	CreateVBView(vertices);
 }
 
-void KVertex::KVertexInit(KDirectInit dx, std::vector<Vertex> vertices, std::vector<short> indices) {
+void KVertex::KVertexInit(ID3D12Device* dev, std::vector<Vertex> vertices, std::vector<short> indices) {
 #pragma region 頂点
 	// 頂点データ全体のサイズ = 頂点データ一つ分のサイズ * 頂点データの要素数
 	sizeVB = static_cast<UINT>(sizeof(vertices[0]) * vertices.size());
@@ -23,14 +23,14 @@ void KVertex::KVertexInit(KDirectInit dx, std::vector<Vertex> vertices, std::vec
 	resDesc.SampleDesc.Count = 1;
 	resDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 
-	dx.result = dx.dev->CreateCommittedResource(
+	result = dev->CreateCommittedResource(
 		&heapProp,
 		D3D12_HEAP_FLAG_NONE,
 		&resDesc,
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
 		IID_PPV_ARGS(&vertBuff));
-	assert(SUCCEEDED(dx.result));
+	assert(SUCCEEDED(result));
 #pragma endregion
 
 #pragma region インデックス
@@ -44,7 +44,7 @@ void KVertex::KVertexInit(KDirectInit dx, std::vector<Vertex> vertices, std::vec
 	resDesc.SampleDesc.Count = 1;
 	resDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 
-	dx.result = dx.dev->CreateCommittedResource(
+	result = dev->CreateCommittedResource(
 		&heapProp,
 		D3D12_HEAP_FLAG_NONE,
 		&resDesc,
@@ -52,7 +52,7 @@ void KVertex::KVertexInit(KDirectInit dx, std::vector<Vertex> vertices, std::vec
 		nullptr,
 		IID_PPV_ARGS(&indexBuff));
 
-	dx.result = indexBuff->Map(0, nullptr, (void**)&indexMap);
+	result = indexBuff->Map(0, nullptr, (void**)&indexMap);
 	// 全インデックスに対して
 	for (int i = 0; i < indices.size(); i++) {
 		indexMap[i] = indices[i];

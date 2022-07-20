@@ -9,7 +9,7 @@ public:
 	// インデックスデータ
 	std::vector<short> indices;
 	// modelusakusei
-	void CreateModel(KDirectInit dx);
+	void CreateModel(ID3D12Device* dev);
 };
 
 class Cube : public KModel{

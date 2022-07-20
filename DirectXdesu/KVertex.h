@@ -19,8 +19,8 @@ class KVertex
 {
 public:
 	KVertex();
-	KVertex(KDirectInit dx, std::vector<Vertex> vertices, std::vector<short> indices);
-	void KVertexInit(KDirectInit dx, std::vector<Vertex> vertices, std::vector<short> indices);
+	KVertex(ID3D12Device* dev, std::vector<Vertex> vertices, std::vector<short> indices);
+	void KVertexInit(ID3D12Device* dev, std::vector<Vertex> vertices, std::vector<short> indices);
 	void VertMap(std::vector<Vertex> vertices);
 	void CreateVBView(std::vector<Vertex> vertices);
 
@@ -42,5 +42,7 @@ public:
 	D3D12_INDEX_BUFFER_VIEW ibView{};
 	// 頂点バッファビューの作成
 	D3D12_VERTEX_BUFFER_VIEW vbView{};
+
+	HREFTYPE result;
 };
 

@@ -57,7 +57,7 @@ Cube::Cube() {
 	};
 }
 
-void KModel::CreateModel(KDirectInit dx)
+void KModel::CreateModel(ID3D12Device* dev)
 {
-	KVertex(dx, vertices, indices);
+	KVertex(dev, vertices, indices);
 }

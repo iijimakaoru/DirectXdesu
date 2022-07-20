@@ -150,6 +150,7 @@
     <ClCompile Include="KDirectInit.cpp" />
     <ClCompile Include="KInput.cpp" />
     <ClCompile Include="KMaterial.cpp" />
+    <ClCompile Include="KModel.cpp" />
     <ClCompile Include="KShader.cpp" />
     <ClCompile Include="KVertex.cpp" />
     <ClCompile Include="main.cpp" />
@@ -170,6 +171,7 @@
     <ClInclude Include="KDirectInit.h" />
     <ClInclude Include="KInput.h" />
     <ClInclude Include="KMaterial.h" />
+    <ClInclude Include="KModel.h" />
     <ClInclude Include="KShader.h" />
     <ClInclude Include="KVertex.h" />
     <ClInclude Include="KWindow.h" />

@@ -2,7 +2,7 @@
 #include <vector>
 #include "KVertex.h"
 
-class KModel : public KVertex {
+class Model : public KVertex {
 public:
 	// 頂点データ
 	std::vector<Vertex> vertices;
@@ -12,7 +12,7 @@ public:
 	void CreateModel(KDirectInit dx);
 };
 
-class Cube : public KModel {
+class Cube : public Model {
 public:
 	Cube();
 	~Cube() {};

@@ -72,8 +72,8 @@ static unsigned short indices[] = {
 class KVertex
 {
 public:
-	KVertex(KDirectInit dx);
-	void KVertexInit(KDirectInit& dx);
+	KVertex(ID3D12Device* dev);
+	void KVertexInit(ID3D12Device* dev);
 	void VertMap();
 	void CreateVBView();
 
@@ -114,5 +114,7 @@ public:
 			"TEXCOORD",0,DXGI_FORMAT_R32G32_FLOAT,0,D3D12_APPEND_ALIGNED_ELEMENT,D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0
 		},
 	};
+
+	HRESULT result;
 };
 

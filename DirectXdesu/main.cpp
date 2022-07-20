@@ -44,7 +44,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	float speed = 1.0f;
 
 #pragma region 頂点データ
-	KVertex vertex(dx);
+	KVertex vertex(dx.dev);
 #pragma endregion
 
 #pragma region グラフィックスパイプライン設定

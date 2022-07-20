@@ -44,10 +44,10 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	// 速さ
 	float speed = 1.0f;
 
-	KModel model;
+	KModel model = Cube();
 
 #pragma region 頂点データ
-	KVertex vertex(dx.dev);
+	KVertex vertex(dx.dev, model.vertices, model.indices);
 #pragma endregion
 
 #pragma region グラフィックスパイプライン設定
@@ -277,7 +277,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 		
 #pragma region 描画コマンド
 		// 描画コマンド
-		Gpipeline.object3d->Draw(dx.cmdList, vertex.vbView, vertex.ibView, _countof(indices));
+		Gpipeline.object3d->Draw(dx.cmdList, vertex.vbView, vertex.ibView, model.indices);
 #pragma endregion
 		// 描画コマンドここまで
 #pragma endregion

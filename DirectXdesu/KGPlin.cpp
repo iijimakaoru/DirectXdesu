@@ -1,11 +1,9 @@
 #include "KGPlin.h"
 
 KGPlin::KGPlin() {}
-KGPlin::KGPlin(ID3D12Device* dev, int width, int height, KVertex vertex) {
-	/*vtShader = new KVertexShader(dx);
-	pxShader = new KPixelShader(dx);*/
+KGPlin::KGPlin(ID3D12Device* dev, int width, int height) {
 	shader = new KShader();
-	GPipeline(vertex);
+	GPipeline();
 	Render();
 	Buffer(dev, width, height);
 	DescRipRan();
@@ -15,7 +13,7 @@ KGPlin::KGPlin(ID3D12Device* dev, int width, int height, KVertex vertex) {
 	PipelineState(dev);
 }
 
-void KGPlin::GPipeline(KVertex vertex) {
+void KGPlin::GPipeline() {
 	// シェーダーの設定
 	pipelineDesc.VS.pShaderBytecode = shader->vsBlob->GetBufferPointer();
 	pipelineDesc.VS.BytecodeLength = shader->vsBlob->GetBufferSize();

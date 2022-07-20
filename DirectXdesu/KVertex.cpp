@@ -2,13 +2,19 @@
 
 KVertex::KVertex() {};
 
-KVertex::KVertex(ID3D12Device* dev, std::vector<Vertex> vertices, std::vector<short> indices) {
+KVertex::KVertex(ID3D12Device* dev, std::vector<Vertex>& vertices, std::vector<short>& indices) {
 	KVertexInit(dev, vertices, indices);
 	VertMap(vertices);
 	CreateVBView(vertices);
 }
 
-void KVertex::KVertexInit(ID3D12Device* dev, std::vector<Vertex> vertices, std::vector<short> indices) {
+void KVertex::CreateKVertex(ID3D12Device* dev, std::vector<Vertex>& vertices, std::vector<short>& indices) {
+	KVertexInit(dev, vertices, indices);
+	VertMap(vertices);
+	CreateVBView(vertices);
+}
+
+void KVertex::KVertexInit(ID3D12Device* dev, std::vector<Vertex>& vertices, std::vector<short>& indices) {
 #pragma region 頂点
 	// 頂点データ全体のサイズ = 頂点データ一つ分のサイズ * 頂点データの要素数
 	sizeVB = static_cast<UINT>(sizeof(vertices[0]) * vertices.size());
@@ -90,7 +96,7 @@ void KVertex::KVertexInit(ID3D12Device* dev, std::vector<Vertex> vertices, std::
 #pragma endregion
 }
 
-void KVertex::VertMap(std::vector<Vertex> vertices) {
+void KVertex::VertMap(std::vector<Vertex>& vertices) {
 	HRESULT result;
 	// GPU上のバッファに対応した仮想メモリを取得
 	Vertex* vertMap = nullptr;
@@ -104,7 +110,7 @@ void KVertex::VertMap(std::vector<Vertex> vertices) {
 	vertBuff->Unmap(0, nullptr);
 }
 
-void KVertex::CreateVBView(std::vector<Vertex> vertices) {
+void KVertex::CreateVBView(std::vector<Vertex>& vertices) {
 	// GPU仮想アドレス
 	vbView.BufferLocation = vertBuff->GetGPUVirtualAddress();
 	// 頂点バッファのサイズ

@@ -43,17 +43,13 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 #pragma endregion
 	// 速さ
 	float speed = 1.0f;
-
-	KModel model = Cube();
-
-#pragma region 頂点データ
-	KVertex vertex(dx.dev, model.vertices, model.indices);
+#pragma region モデル
+	KModel model = Triangle();
+	model.CreateModel(dx.dev);
 #pragma endregion
-
 #pragma region グラフィックスパイプライン設定
-	KGPlin Gpipeline(dx.dev, win.window_width, win.window_height, vertex);
+	KGPlin Gpipeline(dx.dev, win.window_width, win.window_height);
 #pragma endregion
-
 #pragma region テクスチャ初期化
 	KTexture texture(dx.dev);
 	UINT incrementSize = dx.dev->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
@@ -68,6 +64,10 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	dx.dev->CreateShaderResourceView(texture.texBuff2, &srvDesc2, texture.srvHandle);
 #pragma endregion
 	Vector3 center = { 0,0,1 };
+
+	float rSpeed = -0.02f;
+	float gSpeed = 0.02f;
+	float bSpeed = -0.02f;
 
 #pragma endregion
 
@@ -104,16 +104,10 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 			dx.bBule = 0.5f;
 		}
 		// 画像色変え
-		if (input.IsPush(DIK_1)) {
-			Gpipeline.material->colorR = 1.0f;
-			Gpipeline.material->colorG = 0.0f;
-			Gpipeline.material->colorB = 1.0f;
+		if (Gpipeline.material->colorR == 0 || Gpipeline.material->colorR == 1) {
+			rSpeed *= -1;
 		}
-		else {
-			Gpipeline.material->colorR = 1.0f;
-			Gpipeline.material->colorG = 1.0f;
-			Gpipeline.material->colorB = 1.0f;
-		}
+		Gpipeline.material->colorR += rSpeed;
 		// 図形縦回転
 		if (input.IsPush(DIK_F) ||
 			input.IsPush(DIK_V)) {
@@ -253,10 +247,10 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 		dx.cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 #pragma endregion
 		// インデックスバッファビューの設定コマンド
-		dx.cmdList->IASetIndexBuffer(&vertex.ibView);
+		dx.cmdList->IASetIndexBuffer(&model.vertex->ibView);
 #pragma region 頂点バッファビューの設定コマンド
 		// 頂点バッファビューの設定コマンド
-		dx.cmdList->IASetVertexBuffers(0, 1, &vertex.vbView);
+		dx.cmdList->IASetVertexBuffers(0, 1, &model.vertex->vbView);
 #pragma endregion
 		// CBV
 		dx.cmdList->SetGraphicsRootConstantBufferView(0, Gpipeline.material->constBufferMaterial->GetGPUVirtualAddress());
@@ -277,7 +271,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 		
 #pragma region 描画コマンド
 		// 描画コマンド
-		Gpipeline.object3d->Draw(dx.cmdList, vertex.vbView, vertex.ibView, model.indices.size());
+		Gpipeline.object3d->Draw(dx.cmdList, model.vertex->vbView, model.vertex->ibView, model.indices.size());
 #pragma endregion
 		// 描画コマンドここまで
 #pragma endregion

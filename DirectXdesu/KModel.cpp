@@ -57,7 +57,19 @@ Cube::Cube() {
 	};
 }
 
+Triangle::Triangle() {
+	vertices = {
+		{{-5.0f,-5.0f,-5.0f},{},{0.0f,1.0f}}, // ¶‰º
+		{{-5.0f, 5.0f,-5.0f},{},{0.0f,0.0f}}, // ¶ã
+		{{ 5.0f,-5.0f,-5.0f},{},{1.0f,1.0f}}  // ‰E‰º
+	};
+
+	indices = {
+		 0, 1, 2, // OŠpŒ`1‚Â–Ú
+	};
+}
+
 void KModel::CreateModel(ID3D12Device* dev)
 {
-	KVertex(dev, vertices, indices);
+	vertex.reset(new KVertex(dev, vertices, indices));
 }

@@ -19,10 +19,11 @@ class KVertex
 {
 public:
 	KVertex();
-	KVertex(ID3D12Device* dev, std::vector<Vertex> vertices, std::vector<short> indices);
-	void KVertexInit(ID3D12Device* dev, std::vector<Vertex> vertices, std::vector<short> indices);
-	void VertMap(std::vector<Vertex> vertices);
-	void CreateVBView(std::vector<Vertex> vertices);
+	void CreateKVertex(ID3D12Device* dev, std::vector<Vertex>& vertices, std::vector<short>& indices);
+	KVertex(ID3D12Device* dev, std::vector<Vertex>& vertices, std::vector<short>& indices);
+	void KVertexInit(ID3D12Device* dev, std::vector<Vertex>& vertices, std::vector<short>& indices);
+	void VertMap(std::vector<Vertex>& vertices);
+	void CreateVBView(std::vector<Vertex>& vertices);
 
 	// 頂点データ全体のサイズ = 頂点データ一つ分のサイズ * 頂点データの要素数
 	UINT sizeVB;

@@ -32,8 +32,8 @@ class KGPlin
 {
 public:
 	KGPlin();
-	KGPlin(ID3D12Device* dev, int width, int height, KVertex vertex);
-	void GPipeline(KVertex vertex);
+	KGPlin(ID3D12Device* dev, int width, int height);
+	void GPipeline();
 	void Render();
 	void Buffer(ID3D12Device* dev,
 		int width, int height);

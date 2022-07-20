@@ -44,11 +44,21 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	// 速さ
 	float speed = 1.0f;
 #pragma region モデル
-	KModel model = Triangle();
-	model.CreateModel(dx.dev);
+	KModel triangle = Triangle();
+	triangle.CreateModel(dx.dev);
+	KModel cube = Cube();
+	cube.CreateModel(dx.dev);
 #pragma endregion
 #pragma region グラフィックスパイプライン設定
 	KGPlin Gpipeline(dx.dev, win.window_width, win.window_height);
+
+	// 3Dオブジェクト
+	KWorldTransform* object3d[ObjectNum] = { nullptr };
+#pragma region 3Dオブジェクト初期化
+	for (int i = 0; i < ObjectNum; i++) {
+		object3d[i] = new KWorldTransform(dx.dev);
+	}
+#pragma endregion
 #pragma endregion
 #pragma region テクスチャ初期化
 	KTexture texture(dx.dev);
@@ -68,6 +78,9 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	float rSpeed = -0.02f;
 	float gSpeed = 0.02f;
 	float bSpeed = -0.02f;
+
+	object3d[1] = object3d[0];
+	object3d[1]->object3d.pos.x = object3d[0]->object3d.pos.x + 20;
 
 #pragma endregion
 
@@ -94,9 +107,9 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 #pragma region キーボード処理
 		// 背景色変え
 		if (input.IsPush(DIK_SPACE)) {
-			dx.bRed = 1.0f;
-			dx.bGreen = 0.7f;
-			dx.bBule = 1.0f;
+			dx.bRed = 0.5f;
+			dx.bGreen = 0.5f;
+			dx.bBule = 0.5f;
 		}
 		else {
 			dx.bRed = 0.1f;
@@ -120,11 +133,11 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 		if (input.IsPush(DIK_F) ||
 			input.IsPush(DIK_V)) {
 			if (input.IsPush(DIK_F)) {
-				Gpipeline.object3d->object3d[0].rot.x += 0.1f;
+				object3d[0]->object3d.rot.x += 0.1f;
 			}
 
 			if (input.IsPush(DIK_V)) {
-				Gpipeline.object3d->object3d[0].rot.x -= 0.1f;
+				object3d[0]->object3d.rot.x -= 0.1f;
 			}
 		}
 		////カメラ移動
@@ -151,10 +164,10 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 		if (input.IsPush(DIK_RIGHT) ||
 			input.IsPush(DIK_LEFT)) {
 			if (input.IsPush(DIK_RIGHT)) {
-				Gpipeline.object3d->object3d[0].rot.y -= 0.1f;
+				object3d[0]->object3d.rot.y -= 0.1f;
 			}
 			if (input.IsPush(DIK_LEFT)) {
-				Gpipeline.object3d->object3d[0].rot.y += 0.1f;
+				object3d[0]->object3d.rot.y += 0.1f;
 			}
 		}
 		// 移動
@@ -171,11 +184,11 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 			speed = 0;
 		}
 		// 前ベクトル
-		Gpipeline.object3d->rotResult[0].x = sin(Gpipeline.object3d->object3d[0].rot.y) * center.z;
-		Gpipeline.object3d->rotResult[0].z = cos(Gpipeline.object3d->object3d[0].rot.y) * center.z;
+		object3d[0]->rotResult.x = sin(object3d[0]->object3d.rot.y) * center.z;
+		object3d[0]->rotResult.z = cos(object3d[0]->object3d.rot.y) * center.z;
 		// 移動
-		Gpipeline.object3d->object3d[0].pos.x += (speed)*Gpipeline.object3d->rotResult[0].x;
-		Gpipeline.object3d->object3d[0].pos.z += (speed)*Gpipeline.object3d->rotResult[0].z;
+		object3d[0]->object3d.pos.x += (speed)*object3d[0]->rotResult.x;
+		object3d[0]->object3d.pos.z += (speed)*object3d[0]->rotResult.z;
 #pragma endregion
 
 #pragma region 画像色アップデート
@@ -187,12 +200,15 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 #pragma endregion
 
 #pragma region 3Dオブジェクトのアップデート
-		Gpipeline.object3d->Update(Gpipeline.viewProjection->matView, Gpipeline.viewProjection->matProjection);
+		object3d[0]->Update(Gpipeline.viewProjection->matView, Gpipeline.viewProjection->matProjection);
 #pragma endregion
 
 #pragma endregion
 
 		// 描画
+		object3d[0]->SetModel(&cube);
+		object3d[1]->SetModel(&triangle);
+
 #pragma region リソースバリア
 		// バックバッファの番号を取得
 		UINT bbIndex = dx.swapChain->GetCurrentBackBufferIndex();
@@ -254,12 +270,12 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 		// プリミティブ形状の設定コマンド
 		dx.cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 #pragma endregion
-		// インデックスバッファビューの設定コマンド
-		dx.cmdList->IASetIndexBuffer(&model.vertex->ibView);
-#pragma region 頂点バッファビューの設定コマンド
-		// 頂点バッファビューの設定コマンド
-		dx.cmdList->IASetVertexBuffers(0, 1, &model.vertex->vbView);
-#pragma endregion
+//		// インデックスバッファビューの設定コマンド
+//		dx.cmdList->IASetIndexBuffer(&model.vertex->ibView);
+//#pragma region 頂点バッファビューの設定コマンド
+//		// 頂点バッファビューの設定コマンド
+//		dx.cmdList->IASetVertexBuffers(0, 1, &model.vertex->vbView);
+//#pragma endregion
 		// CBV
 		dx.cmdList->SetGraphicsRootConstantBufferView(0, Gpipeline.material->constBufferMaterial->GetGPUVirtualAddress());
 		// SRV
@@ -279,7 +295,9 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 		
 #pragma region 描画コマンド
 		// 描画コマンド
-		Gpipeline.object3d->Draw(dx.cmdList, model.vertex->vbView, model.vertex->ibView, model.indices.size());
+		for (int i = 0; i < ObjectNum; i++) {
+			object3d[i]->Draw(dx.cmdList);
+		}
 #pragma endregion
 		// 描画コマンドここまで
 #pragma endregion

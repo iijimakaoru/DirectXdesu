@@ -55,10 +55,6 @@ void KGPlin::Buffer(ID3D12Device* dev, int width, int height) {
 	material = new KMaterial(dev);
 #pragma endregion
 
-#pragma region 3Dオブジェクト初期化
-	object3d = new KWorldTransform(dev);
-#pragma endregion
-
 #pragma region 行列
 	viewProjection = new ViewProjection(width, height);
 #pragma endregion

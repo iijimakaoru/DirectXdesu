@@ -6,9 +6,11 @@ KWorldTransform::KWorldTransform(ID3D12Device* dev) {
 	Initialize(dev);
 }
 
-void KWorldTransform::Initialize(ID3D12Device* dev) {
+void KWorldTransform::SetModel(KModel* model) {
+	this->model = model;
+}
 
-	for (int i = 0; i < _countof(object3d); i++) {
+void KWorldTransform::Initialize(ID3D12Device* dev) {
 		// ヒープ設定
 		cbHeapProp.Type = D3D12_HEAP_TYPE_UPLOAD;
 		// リソース設定
@@ -26,63 +28,41 @@ void KWorldTransform::Initialize(ID3D12Device* dev) {
 			&cbResourceDesc,
 			D3D12_RESOURCE_STATE_GENERIC_READ,
 			nullptr,
-			IID_PPV_ARGS(&object3d[i].constBuffTransform)
+			IID_PPV_ARGS(&object3d.constBuffTransform)
 		);
 		assert(SUCCEEDED(result));
 		// 定数バッファのマッピング
-		result = object3d[i].constBuffTransform->Map(
+		result = object3d.constBuffTransform->Map(
 			0,
 			nullptr,
-			(void**)&object3d[i].constMapTransform
+			(void**)&object3d.constMapTransform
 		);
 		assert(SUCCEEDED(result));
-
-		// 親オブジェクト以外の初期化
-		if (i > 0) {
-			object3d[i].parent = &object3d[i - 1];
-
-			rotResult[i] = { 0,0,1 };
-			object3d[i].scale = { 0.9f,0.9f,0.9f };
-			object3d[i].pos = { 0.0f,0.0f,-10.0f };
-			object3d[i].rot = { XMConvertToRadians(30.0f),0.0f,0.0f };
-		}
-	}
 }
 
 void KWorldTransform::Update(XMMATRIX& matView, XMMATRIX& matProjection) {
-	for (int i = 0; i < _countof(object3d); i++) {
 		// マトリックス
 		XMMATRIX matScale, matRot, matTrans;
 
 		// 親オブジェクト要素
-		matScale = XMMatrixScaling(object3d[i].scale.x, object3d[i].scale.y, object3d[i].scale.z);
+		matScale = XMMatrixScaling(object3d.scale.x, object3d.scale.y, object3d.scale.z);
 		matRot = XMMatrixIdentity();
-		matRot *= XMMatrixRotationZ(object3d[i].rot.z);
-		matRot *= XMMatrixRotationX(object3d[i].rot.x);
-		matRot *= XMMatrixRotationY(object3d[i].rot.y);
-		matTrans = XMMatrixTranslation(
-			object3d[i].pos.x, object3d[i].pos.y, object3d[i].pos.z
-		);
+		matRot *= XMMatrixRotationZ(object3d.rot.z);
+		matRot *= XMMatrixRotationX(object3d.rot.x);
+		matRot *= XMMatrixRotationY(object3d.rot.y);
+		matTrans = XMMatrixTranslation(object3d.pos.x, object3d.pos.y, object3d.pos.z);
 
-		object3d[i].matWorld = XMMatrixIdentity();
-		object3d[i].matWorld *= matScale;
-		object3d[i].matWorld *= matRot;
-		object3d[i].matWorld *= matTrans;
+		object3d.matWorld = XMMatrixIdentity();
+		object3d.matWorld *= matScale;
+		object3d.matWorld *= matRot;
+		object3d.matWorld *= matTrans;
 
-		if (object3d[i].parent != nullptr) {
-			object3d[i].matWorld *= object3d[i].parent->matWorld;
-		}
-
-		object3d[i].constMapTransform->mat = object3d[i].matWorld * matView * matProjection;
-	}
+		object3d.constMapTransform->mat = object3d.matWorld * matView * matProjection;
 }
 
-void KWorldTransform::Draw(ID3D12GraphicsCommandList* cmdList, D3D12_VERTEX_BUFFER_VIEW& vbview,
-	D3D12_INDEX_BUFFER_VIEW& ibView, UINT numIndices) {
-	for (int i = 0; i < _countof(object3d); i++) {
-		cmdList->IASetVertexBuffers(0, 1, &vbview);
-		cmdList->IASetIndexBuffer(&ibView);
-		cmdList->SetGraphicsRootConstantBufferView(2, object3d[i].constBuffTransform->GetGPUVirtualAddress());
-		cmdList->DrawIndexedInstanced(numIndices, 1, 0, 0, 0);
-	}
+void KWorldTransform::Draw(ID3D12GraphicsCommandList* cmdList) {
+		cmdList->IASetVertexBuffers(0, 1, &model->vertex->vbView);
+		cmdList->IASetIndexBuffer(&model->vertex->ibView);
+		cmdList->SetGraphicsRootConstantBufferView(2, object3d.constBuffTransform->GetGPUVirtualAddress());
+		cmdList->DrawIndexedInstanced(model->indices.size(), 1, 0, 0, 0);
 }

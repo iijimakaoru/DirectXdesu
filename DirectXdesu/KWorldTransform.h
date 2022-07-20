@@ -2,6 +2,8 @@
 #include <d3d12.h>
 #include <DirectXMath.h>
 #include "Vector3.h"
+#include "KModel.h"
+//#include <memory>
 
 using namespace DirectX;
 
@@ -10,8 +12,7 @@ struct ConstBufferDataTransform {
 	XMMATRIX mat; // 3D変換行列
 };
 
-// 3Dオブジェクトの数
-const size_t kObjectCount = 1;
+const int ObjectNum = 2;
 
 struct Object3d {
 	// 定数バッファ(行列)
@@ -33,19 +34,21 @@ class KWorldTransform
 public:
 	KWorldTransform();
 	KWorldTransform(ID3D12Device* dev);
+	void SetModel(KModel* model);
 	void Initialize(ID3D12Device* dev);
 	void Update(XMMATRIX& matView, XMMATRIX& matProjection);
-	void Draw(ID3D12GraphicsCommandList* cmdList, D3D12_VERTEX_BUFFER_VIEW& vbview,
-		D3D12_INDEX_BUFFER_VIEW& ibView, UINT numIndices);
+	void Draw(ID3D12GraphicsCommandList* cmdList);
 
-	Vector3 rotResult[kObjectCount];
+	Vector3 rotResult;
 	// ヒープ設定
 	D3D12_HEAP_PROPERTIES cbHeapProp{};
 	// リソース設定
 	D3D12_RESOURCE_DESC cbResourceDesc{};
 	// 3Dオブジェクトの配列
-	Object3d object3d[kObjectCount];
+	Object3d object3d;
 
 	HRESULT result;
+
+	KModel* model = nullptr;
 };
 

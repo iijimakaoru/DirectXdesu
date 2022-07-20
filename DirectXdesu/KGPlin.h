@@ -44,8 +44,6 @@ public:
 	void PipelineState(ID3D12Device* dev);
 
 	// シェーダークラス呼び込み
-	/*KPixelShader* pxShader;
-	KVertexShader* vtShader;*/
 	KShader* shader;
 	// グラフィックスパイプライン設定
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC pipelineDesc{};
@@ -53,8 +51,6 @@ public:
 	D3D12_RENDER_TARGET_BLEND_DESC& blenddesc = pipelineDesc.BlendState.RenderTarget[0];
 	// マテリアル
 	KMaterial* material;
-	// 3Dオブジェクト
-	KWorldTransform* object3d;
 	// ビュープロジェクション
 	ViewProjection* viewProjection;
 	// デスクリプタレンジの設定

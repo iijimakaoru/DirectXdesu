@@ -234,10 +234,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	assert(SUCCEEDED(dx.result));
 
 	ConstBufferDataMaterial* constMapMaterial = nullptr;
-	dx.result = constBufferMaterial->Map(0, nullptr, (void**)&constBufferMaterial);
+	dx.result = constBufferMaterial->Map(0, nullptr, (void**)&constMapMaterial);
 	assert(SUCCEEDED(dx.result));
-
-	constMapMaterial->color = XMFLOAT4(1, 0, 0, 0.5f);
 
 	D3D12_ROOT_PARAMETER rootParam = {};
 	rootParam.ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
@@ -275,6 +273,12 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 
 	int isMode = Triangle;
 	bool isChange = false;
+	float red = 0;
+	float green = 1;
+	float bule = 0;
+	float rSpeed = -0.01f;
+	float gSpeed = 0.01f;
+	float bSpeed = -0.01f;
 #pragma endregion
 
 	// ウィンドウ表示
@@ -320,6 +324,23 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 			}
 		}
 #pragma endregion
+		if (red <= 0 || red >= 1)
+		{
+			rSpeed *= -1;
+		}
+		if (green <= 0 || green >= 1)
+		{
+			gSpeed *= -1;
+		}
+		if (bule <= 0 || bule >= 1)
+		{
+			bSpeed *= -1;
+		}
+		red += rSpeed;
+		green += gSpeed;
+		bule += bSpeed;
+
+		constMapMaterial->color = XMFLOAT4(red, green, bule, 1);
 
 		// 描画
 

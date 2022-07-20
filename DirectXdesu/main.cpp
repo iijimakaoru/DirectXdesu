@@ -24,6 +24,10 @@
 
 using namespace DirectX;
 
+struct ConstBufferDataMaterial {
+	XMFLOAT4 color;
+};
+
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	_In_ LPSTR lpCmdLine, _In_ int nCmdShow)
 {
@@ -55,20 +59,10 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 		{-0.5f,-0.5f,0.0f},// 左下
 		{-0.5f,+0.5f,0.0f},// 左上
 		{+0.5f,-0.5f,0.0f},// 右下
-		{+0.5f,+0.5f,0.0f},// 左下
-		{+0.5f,-0.5f,0.0f},// 左上
-		{-0.5f,+0.5f,0.0f} // 右下
-	};
-
-	XMFLOAT3 vertices2[] = {
-		{-0.5f,-0.5f,0.0f},// 左下
-		{-0.5f,+0.5f,0.0f},// 左上
-		{+0.5f,-0.5f,0.0f} // 右下
 	};
 
 	// 頂点データ全体のサイズ = 頂点データ一つ分のサイズ * 頂点データの要素数
 	UINT sizeVB = static_cast<UINT>(sizeof(XMFLOAT3) * _countof(vertices));
-	UINT sizeVB2 = static_cast<UINT>(sizeof(XMFLOAT3) * _countof(vertices2));
 
 	// 頂点バッファの設定
 	D3D12_HEAP_PROPERTIES heapProp[2]{};
@@ -77,7 +71,6 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	D3D12_RESOURCE_DESC resDesc[2]{};
 	resDesc[0].Dimension = resDesc[1].Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
 	resDesc[0].Width = sizeVB;
-	resDesc[1].Width = sizeVB2;
 	resDesc[0].Height = resDesc[1].Height = 1;
 	resDesc[0].DepthOrArraySize = resDesc[1].DepthOrArraySize = 1;
 	resDesc[0].MipLevels = resDesc[1].MipLevels = 1;
@@ -94,23 +87,9 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 		IID_PPV_ARGS(&vertBuff));
 	assert(SUCCEEDED(dx.result));
 
-	ID3D12Resource* vertBuff2 = nullptr;
-	dx.result = dx.dev->CreateCommittedResource(
-		&heapProp[1],
-		D3D12_HEAP_FLAG_NONE,
-		&resDesc[1],
-		D3D12_RESOURCE_STATE_GENERIC_READ,
-		nullptr,
-		IID_PPV_ARGS(&vertBuff2));
-	assert(SUCCEEDED(dx.result));
-
 	// GPU上のバッファに対応した仮想メモリを取得
 	XMFLOAT3* vertMap = nullptr;
 	dx.result = vertBuff->Map(0, nullptr, (void**)&vertMap);
-	assert(SUCCEEDED(dx.result));
-
-	XMFLOAT3* vertMap2 = nullptr;
-	dx.result = vertBuff2->Map(0, nullptr, (void**)&vertMap2);
 	assert(SUCCEEDED(dx.result));
 
 	// 全頂点に対して
@@ -118,26 +97,17 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	{
 		vertMap[i] = vertices[i];
 	}
-	for (int i = 0; i < _countof(vertices2); i++)
-	{
-		vertMap2[i] = vertices2[i];
-	}
 	// 繋がりを解除
 	vertBuff->Unmap(0, nullptr);
-	vertBuff2->Unmap(0, nullptr);
 
 	// 頂点バッファビューの作成
 	D3D12_VERTEX_BUFFER_VIEW vbView{};
-	D3D12_VERTEX_BUFFER_VIEW vbView2{};
 	// GPU仮想アドレス
 	vbView.BufferLocation = vertBuff->GetGPUVirtualAddress();
-	vbView2.BufferLocation = vertBuff2->GetGPUVirtualAddress();
 	// 頂点バッファのサイズ
 	vbView.SizeInBytes = sizeVB;
-	vbView2.SizeInBytes = sizeVB2;
 	// 頂点一つ分のデータサイズ
 	vbView.StrideInBytes = sizeof(XMFLOAT3);
-	vbView2.StrideInBytes = sizeof(XMFLOAT3);
 
 	ID3D10Blob* vsBlob = nullptr; // 頂点シェーダーオブジェクト
 	ID3D10Blob* psBlob = nullptr; // ピクセルシェーダーオブジェクト
@@ -242,12 +212,46 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 
 	pipelineDesc.RasterizerState.FillMode = D3D12_FILL_MODE_SOLID;
 	pipelineDesc2.RasterizerState.FillMode = D3D12_FILL_MODE_WIREFRAME;
+	D3D12_HEAP_PROPERTIES cbHeapProp{};
+	cbHeapProp.Type = D3D12_HEAP_TYPE_UPLOAD;
+	D3D12_RESOURCE_DESC cbResouceDesc{};
+	cbResouceDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
+	cbResouceDesc.Width = (sizeof(ConstBufferDataMaterial) + 0xff) & ~0xff;
+	cbResouceDesc.Height = 1;
+	cbResouceDesc.DepthOrArraySize = 1;
+	cbResouceDesc.MipLevels = 1;
+	cbResouceDesc.SampleDesc.Count = 1;
+	cbResouceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+
+	ID3D12Resource* constBufferMaterial = nullptr;
+	dx.result = dx.dev->CreateCommittedResource(
+		&cbHeapProp,
+		D3D12_HEAP_FLAG_NONE,
+		&cbResouceDesc,
+		D3D12_RESOURCE_STATE_GENERIC_READ,
+		nullptr,
+		IID_PPV_ARGS(&constBufferMaterial));
+	assert(SUCCEEDED(dx.result));
+
+	ConstBufferDataMaterial* constMapMaterial = nullptr;
+	dx.result = constBufferMaterial->Map(0, nullptr, (void**)&constBufferMaterial);
+	assert(SUCCEEDED(dx.result));
+
+	constMapMaterial->color = XMFLOAT4(1, 0, 0, 0.5f);
+
+	D3D12_ROOT_PARAMETER rootParam = {};
+	rootParam.ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+	rootParam.Descriptor.ShaderRegister = 0;
+	rootParam.Descriptor.RegisterSpace = 0;
+	rootParam.ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
 
 	// ルートシグネチャ
 	ID3D12RootSignature* rootSignature;
 	// ルートシグネチャの設定
 	D3D12_ROOT_SIGNATURE_DESC rootSignatureDesc{};
 	rootSignatureDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
+	rootSignatureDesc.pParameters = &rootParam;
+	rootSignatureDesc.NumParameters = 1;
 	// ルートシグネチャのシリアライズ
 	ID3DBlob* rootSigBlob = nullptr;
 	dx.result = D3D12SerializeRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1_0, &rootSigBlob, &errorBlob);
@@ -349,33 +353,12 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 		// 描画コマンドここから
 		// ビューポート設定コマンド
 		D3D12_VIEWPORT viewport[8]{};
-		viewport[0].Width = 1000;   // 横幅
-		viewport[0].Height = 400; // 縦幅
+		viewport[0].Width = win.window_width;   // 横幅
+		viewport[0].Height = win.window_height; // 縦幅
 		viewport[0].TopLeftX = 0;                 // 左上x
 		viewport[0].TopLeftY = 0;				   // 左上y
 		viewport[0].MinDepth = 0.0f;			   // 最小深度
 		viewport[0].MaxDepth = 1.0f;			   // 最大深度
-
-		viewport[1].Width = 100;
-		viewport[1].Height = 400;
-		viewport[1].TopLeftX = 1000;
-		viewport[1].TopLeftY = 0;
-		viewport[1].MinDepth = 0.0f;
-		viewport[1].MaxDepth = 1.0f;
-
-		viewport[2].Width = 800;
-		viewport[2].Height = 500;
-		viewport[2].TopLeftX = 0;
-		viewport[2].TopLeftY = 300;
-		viewport[2].MinDepth = 0.0f;
-		viewport[2].MaxDepth = 1.0f;
-
-		viewport[3].Width = 500;
-		viewport[3].Height = 400;
-		viewport[3].TopLeftX = 600;
-		viewport[3].TopLeftY = 400;
-		viewport[3].MinDepth = 0.0f;
-		viewport[3].MaxDepth = 1.0f;
 
 		// ビューポート設定コマンドをコマンドリストに積む
 		for (int i = 0; i < 8; i++) {
@@ -392,12 +375,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 			dx.cmdList->RSSetScissorRects(1, &scissorRect);
 
 			// パイプラインステートとルートシグネチャの設定コマンド
-			if (!isChange) {
-				dx.cmdList->SetPipelineState(pipelineState);
-			}
-			else {
-				dx.cmdList->SetPipelineState(pipelineState2);
-			}
+			dx.cmdList->SetPipelineState(pipelineState);
+
 			dx.cmdList->SetGraphicsRootSignature(rootSignature);
 
 			// プリミティブ形状の設定コマンド
@@ -405,9 +384,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 
 			// 頂点バッファビューの設定コマンド
 			dx.cmdList->IASetVertexBuffers(0, 1, &vbView);
-			if (isMode != Triangle) {
-				dx.cmdList->IASetVertexBuffers(0, 1, &vbView2);
-			}
+
+			dx.cmdList->SetGraphicsRootConstantBufferView(0, constBufferMaterial->GetGPUVirtualAddress());
 
 			// 描画コマンド
 			dx.cmdList->DrawInstanced(_countof(vertices), 1, 0, 0);

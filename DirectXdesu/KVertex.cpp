@@ -1,15 +1,17 @@
 #include "KVertex.h"
 
-KVertex::KVertex(ID3D12Device* dev) {
-	KVertexInit(dev);
-	VertMap();
-	CreateVBView();
+KVertex::KVertex() {};
+
+KVertex::KVertex(ID3D12Device* dev, std::vector<Vertex> vertices, std::vector<short> indices) {
+	KVertexInit(dev, vertices, indices);
+	VertMap(vertices);
+	CreateVBView(vertices);
 }
 
-void KVertex::KVertexInit(ID3D12Device* dev) {
+void KVertex::KVertexInit(ID3D12Device* dev, std::vector<Vertex> vertices, std::vector<short> indices) {
 #pragma region 頂点
 	// 頂点データ全体のサイズ = 頂点データ一つ分のサイズ * 頂点データの要素数
-	sizeVB = static_cast<UINT>(sizeof(vertices[0]) * _countof(vertices));
+	sizeVB = static_cast<UINT>(sizeof(vertices[0]) * vertices.size());
 
 	heapProp.Type = D3D12_HEAP_TYPE_UPLOAD;
 
@@ -32,7 +34,7 @@ void KVertex::KVertexInit(ID3D12Device* dev) {
 #pragma endregion
 
 #pragma region インデックス
-	sizeIB = static_cast<UINT>(sizeof(uint16_t) * _countof(indices));
+	sizeIB = static_cast<UINT>(sizeof(uint16_t) * indices.size());
 
 	resDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
 	resDesc.Width = sizeIB;
@@ -52,7 +54,7 @@ void KVertex::KVertexInit(ID3D12Device* dev) {
 
 	result = indexBuff->Map(0, nullptr, (void**)&indexMap);
 	// 全インデックスに対して
-	for (int i = 0; i < _countof(indices); i++) {
+	for (int i = 0; i < indices.size(); i++) {
 		indexMap[i] = indices[i];
 	}
 	// マッピング解除
@@ -64,7 +66,7 @@ void KVertex::KVertexInit(ID3D12Device* dev) {
 #pragma endregion
 
 #pragma region 法線の計算
-	for (int i = 0; i < _countof(indices) / 3; i++) {
+	for (int i = 0; i < indices.size() / 3; i++) {
 		// 三角形１つごとに計算
 		unsigned short indices0 = indices[i * 3 + 0];
 		unsigned short indices1 = indices[i * 3 + 1];
@@ -88,21 +90,21 @@ void KVertex::KVertexInit(ID3D12Device* dev) {
 #pragma endregion
 }
 
-void KVertex::VertMap() {
+void KVertex::VertMap(std::vector<Vertex> vertices) {
 	HRESULT result;
 	// GPU上のバッファに対応した仮想メモリを取得
 	Vertex* vertMap = nullptr;
 	result = vertBuff->Map(0, nullptr, (void**)&vertMap);
 	assert(SUCCEEDED(result));
 	// 全頂点に対して
-	for (int i = 0; i < _countof(vertices); i++) {
+	for (int i = 0; i < vertices.size(); i++) {
 		vertMap[i] = vertices[i];
 	}
 	// 繋がりを解除
 	vertBuff->Unmap(0, nullptr);
 }
 
-void KVertex::CreateVBView() {
+void KVertex::CreateVBView(std::vector<Vertex> vertices) {
 	// GPU仮想アドレス
 	vbView.BufferLocation = vertBuff->GetGPUVirtualAddress();
 	// 頂点バッファのサイズ

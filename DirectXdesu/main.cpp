@@ -10,6 +10,7 @@
 #include "ViewProjection.h"
 #include "KMaterial.h"
 #include "KGPlin.h"
+#include "KModel.h"
 #ifdef DEBUG
 #include <iostream>
 #endif
@@ -42,6 +43,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 #pragma endregion
 	// 速さ
 	float speed = 1.0f;
+
+	KModel model;
 
 #pragma region 頂点データ
 	KVertex vertex(dx.dev);

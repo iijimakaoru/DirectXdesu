@@ -27,3 +27,9 @@ public:
 	Triangle();
 	~Triangle(){}
 };
+
+class Line : public KModel {
+public:
+	Line();
+	~Line(){}
+};

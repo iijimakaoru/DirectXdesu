@@ -34,10 +34,7 @@ void KMaterial::Initialize(ID3D12Device* dev) {
 		IID_PPV_ARGS(&constBufferMaterial));
 	assert(SUCCEEDED(result));
 	// 定数バッファのマッピング
-	result = constBufferMaterial->Map(
-		0,
-		nullptr,
-		(void**)&constMapMaterial);
+	result = constBufferMaterial->Map(0, nullptr, (void**)&constMapMaterial);
 	assert(SUCCEEDED(result));
 	// 値を書き込むと自動的に転送される
 	constMapMaterial->color = XMFLOAT4(colorR, colorG, colorB, colorA);

@@ -48,16 +48,34 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	triangle.CreateModel(dx.dev);
 	KModel cube = Cube();
 	cube.CreateModel(dx.dev);
+	KModel line = Line();
+	line.CreateModel(dx.dev);
 #pragma endregion
 #pragma region グラフィックスパイプライン設定
 	KGPlin Gpipeline(dx.dev, win.window_width, win.window_height);
-
-	// 3Dオブジェクト
-	KWorldTransform* object3d[ObjectNum] = { nullptr };
 #pragma region 3Dオブジェクト初期化
+	const int ObjectNum = 2;
+	const int LineNum = 6;
+	// 3Dオブジェクト
+	KWorldTransform object3d[ObjectNum];
+	KWorldTransform lineObject[LineNum];
 	for (int i = 0; i < ObjectNum; i++) {
-		object3d[i] = new KWorldTransform(dx.dev);
+		//object3d[i] = new KWorldTransform(dx.dev);
+		object3d[i].Initialize(*dx.dev);
 	}
+	object3d[0].SetModel(&triangle);
+	object3d[1].SetModel(&cube);
+	for (int i = 0; i < LineNum; i++) {
+		lineObject[i].Initialize(*dx.dev);
+		lineObject[i].SetModel(&line);
+	}
+	lineObject[1].transform.pos.x = lineObject[0].transform.pos.x + 20;
+	lineObject[2].transform.pos.x = lineObject[0].transform.pos.x - 20;
+	lineObject[3].transform.rot.y = XMConvertToRadians(90);
+	lineObject[4].transform.rot.y = XMConvertToRadians(90);
+	lineObject[4].transform.pos.z = lineObject[3].transform.pos.z + 20;
+	lineObject[5].transform.rot.y = XMConvertToRadians(90);
+	lineObject[5].transform.pos.z = lineObject[3].transform.pos.z - 20;
 #pragma endregion
 #pragma endregion
 #pragma region テクスチャ初期化
@@ -127,11 +145,11 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 		if (input.IsPush(DIK_C) ||
 			input.IsPush(DIK_V)) {
 			if (input.IsPush(DIK_C)) {
-				object3d[0]->transform.rot.z += 0.1f;
+				object3d[0].transform.rot.z += 0.1f;
 			}
 
 			if (input.IsPush(DIK_V)) {
-				object3d[0]->transform.rot.z -= 0.1f;
+				object3d[0].transform.rot.z -= 0.1f;
 			}
 		}
 		////カメラ移動
@@ -178,13 +196,19 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 		//	speed = 0;
 		//}
 		// 前ベクトル
-		object3d[0]->rotResult.x = sin(object3d[0]->transform.rot.y) * center.z;
-		object3d[0]->rotResult.z = cos(object3d[0]->transform.rot.y) * center.z;
+		object3d[0].rotResult.x = sin(object3d[0].transform.rot.y) * center.z;
+		object3d[0].rotResult.z = cos(object3d[0].transform.rot.y) * center.z;
 		// 移動
 		/*object3d[0]->transform.pos.x += (speed)*object3d[0]->rotResult.x;
 		object3d[0]->transform.pos.z += (speed)*object3d[0]->rotResult.z;*/
-		object3d[0]->transform.pos.x += (input.IsPush(DIK_RIGHT) - input.IsPush(DIK_LEFT)) * speed;
-		object3d[0]->transform.pos.z += (input.IsPush(DIK_UP) - input.IsPush(DIK_DOWN)) * speed;
+		object3d[0].transform.pos.x += (input.IsPush(DIK_RIGHT) - input.IsPush(DIK_LEFT)) * speed;
+		object3d[0].transform.pos.z += (input.IsPush(DIK_UP) - input.IsPush(DIK_DOWN)) * speed;
+
+		object3d[1].transform.pos.x = object3d[0].transform.pos.x + 15;
+		object3d[1].transform.pos.z = object3d[0].transform.pos.z;
+		object3d[1].transform.pos.y = object3d[0].transform.pos.y + 10;
+
+		object3d[1].transform.rot = object3d[0].transform.rot;
 #pragma endregion
 
 #pragma region 画像色アップデート
@@ -196,15 +220,17 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 #pragma endregion
 
 #pragma region 3Dオブジェクトのアップデート
-		object3d[0]->Update(Gpipeline.viewProjection->matView, Gpipeline.viewProjection->matProjection);
+		for (int i = 0; i < ObjectNum; i++) {
+			object3d[i].Update(Gpipeline.viewProjection->matView, Gpipeline.viewProjection->matProjection);
+		}
+		for (int i = 0; i < LineNum; i++) {
+			lineObject[i].Update(Gpipeline.viewProjection->matView, Gpipeline.viewProjection->matProjection);
+		}
 #pragma endregion
 
 #pragma endregion
 
 		// 描画
-		object3d[0]->SetModel(&triangle);
-		object3d[1]->SetModel(&cube);
-
 #pragma region リソースバリア
 		// バックバッファの番号を取得
 		UINT bbIndex = dx.swapChain->GetCurrentBackBufferIndex();
@@ -273,7 +299,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 		// 先頭ハンドルを取得
 		D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle = texture.srvHeap->GetGPUDescriptorHandleForHeapStart();
 		srvGpuHandle.ptr += texture.incrementSize * 0;
-		D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle2 = texture.srvHeap->GetGPUDescriptorHandleForHeapStart();
+		D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle2 = srvGpuHandle;
 		srvGpuHandle2.ptr += texture.incrementSize * 1;
 		// SRVヒープの先頭にあるSRVをルートパラメータ1番の設定
 		if (input.IsPush(DIK_SPACE)) {
@@ -286,7 +312,10 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 #pragma region 描画コマンド
 		// 描画コマンド
 		for (int i = 0; i < ObjectNum; i++) {
-			object3d[i]->Draw(dx.cmdList);
+			object3d[i].Draw(dx.cmdList);
+		}
+		for (int i = 0; i < LineNum; i++) {
+			lineObject[i].Draw(dx.cmdList);
 		}
 #pragma endregion
 		// 描画コマンドここまで

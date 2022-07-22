@@ -12,8 +12,6 @@ struct ConstBufferDataTransform {
 	XMMATRIX mat; // 3D変換行列
 };
 
-const int ObjectNum = 2;
-
 struct Object3d {
 	// 定数バッファ(行列)
 	ID3D12Resource* constBuffTransform = {};
@@ -33,9 +31,9 @@ class KWorldTransform
 {
 public:
 	KWorldTransform();
-	KWorldTransform(ID3D12Device* dev);
+	KWorldTransform(ID3D12Device& dev);
 	void SetModel(KModel* model);
-	void Initialize(ID3D12Device* dev);
+	void Initialize(ID3D12Device& dev);
 	void Update(XMMATRIX& matView, XMMATRIX& matProjection);
 	void Draw(ID3D12GraphicsCommandList* cmdList);
 

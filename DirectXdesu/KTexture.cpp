@@ -111,8 +111,7 @@ void KTexture::SendData() {
 			nullptr,
 			img->pixels,
 			(UINT)img->rowPitch,
-			(UINT)img->slicePitch
-		);
+			(UINT)img->slicePitch);
 		assert(SUCCEEDED(result));
 	}
 
@@ -126,8 +125,7 @@ void KTexture::SendData() {
 			nullptr,
 			img->pixels,
 			(UINT)img->rowPitch,
-			(UINT)img->slicePitch
-		);
+			(UINT)img->slicePitch);
 		assert(SUCCEEDED(result));
 	}
 }

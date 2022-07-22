@@ -147,8 +147,9 @@ void KTexture::GeneDescHeap(ID3D12Device* dev) {
 
 void KTexture::GetSrvHandle(ID3D12Device* dev) {
 	srvHandle = srvHeap->GetCPUDescriptorHandleForHeapStart();
-	/*UINT incrementSize = dev->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-	srvHandle.ptr += incrementSize;*/
+	srvHandle2 = srvHandle;
+	incrementSize = dev->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+	srvHandle2.ptr += incrementSize;
 }
 
 void KTexture::SetSRV() {
@@ -157,14 +158,14 @@ void KTexture::SetSRV() {
 	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
 	srvDesc.Texture2D.MipLevels = textureResourceDesc.MipLevels;
 
-	/*srvDesc2.Format = textureResourceDesc2.Format;
+	srvDesc2.Format = texBuff2->GetDesc().Format;
 	srvDesc2.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 	srvDesc2.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-	srvDesc2.Texture2D.MipLevels = textureResourceDesc2.MipLevels;*/
+	srvDesc2.Texture2D.MipLevels = texBuff2->GetDesc().MipLevels;
 }
 
 void KTexture::CreateSRV(ID3D12Device* dev) {
 	// ハンドルの指す位置にシェーダーリソースビュー作成
 	dev->CreateShaderResourceView(texBuff, &srvDesc, srvHandle);
-	//dev->CreateShaderResourceView(texBuff2, &srvDesc2, srvHandle);
+	dev->CreateShaderResourceView(texBuff2, &srvDesc2, srvHandle2);
 }

@@ -62,25 +62,13 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 #pragma endregion
 #pragma region テクスチャ初期化
 	KTexture texture(dx.dev);
-	UINT incrementSize = dx.dev->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-	texture.srvHandle.ptr += incrementSize;
-
-	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc2{};
-	srvDesc2.Format = texture.texBuff2->GetDesc().Format;
-	srvDesc2.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-	srvDesc2.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-	srvDesc2.Texture2D.MipLevels = texture.texBuff2->GetDesc().MipLevels;
-
-	dx.dev->CreateShaderResourceView(texture.texBuff2, &srvDesc2, texture.srvHandle);
 #pragma endregion
 	Vector3 center = { 0,0,1 };
 
 	float rSpeed = -0.02f;
 	float gSpeed = 0.02f;
 	float bSpeed = -0.02f;
-
-	object3d[1] = object3d[0];
-	object3d[1]->object3d.pos.x = object3d[0]->object3d.pos.x + 20;
+	float aSpeed = -0.02f;
 
 #pragma endregion
 
@@ -126,18 +114,24 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 		if (Gpipeline.material->colorB <= 0 || Gpipeline.material->colorB >= 1) {
 			bSpeed *= -1;
 		}
+		if (Gpipeline.material->colorA <= 0 || Gpipeline.material->colorA >= 1) {
+			aSpeed *= -1;
+		}
 		Gpipeline.material->colorR += rSpeed;
 		Gpipeline.material->colorG += gSpeed;
 		Gpipeline.material->colorB += bSpeed;
+		if (input.IsPush(DIK_X)) {
+			Gpipeline.material->colorA += aSpeed;
+		}
 		// 図形縦回転
-		if (input.IsPush(DIK_F) ||
+		if (input.IsPush(DIK_C) ||
 			input.IsPush(DIK_V)) {
-			if (input.IsPush(DIK_F)) {
-				object3d[0]->object3d.rot.x += 0.1f;
+			if (input.IsPush(DIK_C)) {
+				object3d[0]->transform.rot.z += 0.1f;
 			}
 
 			if (input.IsPush(DIK_V)) {
-				object3d[0]->object3d.rot.x -= 0.1f;
+				object3d[0]->transform.rot.z -= 0.1f;
 			}
 		}
 		////カメラ移動
@@ -160,35 +154,37 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 			Gpipeline.viewProjection->eye.y = Gpipeline.viewProjection->lenZ * sinf(Gpipeline.viewProjection->angleY);
 			Gpipeline.viewProjection->eye.z = Gpipeline.viewProjection->lenZ * cosf(Gpipeline.viewProjection->angleX) * cosf(Gpipeline.viewProjection->angleY);
 		}
-		// 横回転
-		if (input.IsPush(DIK_RIGHT) ||
-			input.IsPush(DIK_LEFT)) {
-			if (input.IsPush(DIK_RIGHT)) {
-				object3d[0]->object3d.rot.y -= 0.1f;
-			}
-			if (input.IsPush(DIK_LEFT)) {
-				object3d[0]->object3d.rot.y += 0.1f;
-			}
-		}
-		// 移動
-		if (input.IsPush(DIK_UP) ||
-			input.IsPush(DIK_DOWN)) {
-			if (input.IsPush(DIK_UP)) {
-				speed = 1;
-			}
-			if (input.IsPush(DIK_DOWN)) {
-				speed = -1;
-			}
-		}
-		else {
-			speed = 0;
-		}
+		//// 横回転
+		//if (input.IsPush(DIK_RIGHT) ||
+		//	input.IsPush(DIK_LEFT)) {
+		//	if (input.IsPush(DIK_RIGHT)) {
+		//		object3d[0]->transform.rot.y -= 0.1f;
+		//	}
+		//	if (input.IsPush(DIK_LEFT)) {
+		//		object3d[0]->transform.rot.y += 0.1f;
+		//	}
+		//}
+		//// 移動
+		//if (input.IsPush(DIK_UP) ||
+		//	input.IsPush(DIK_DOWN)) {
+		//	if (input.IsPush(DIK_UP)) {
+		//		speed = 1;
+		//	}
+		//	if (input.IsPush(DIK_DOWN)) {
+		//		speed = -1;
+		//	}
+		//}
+		//else {
+		//	speed = 0;
+		//}
 		// 前ベクトル
-		object3d[0]->rotResult.x = sin(object3d[0]->object3d.rot.y) * center.z;
-		object3d[0]->rotResult.z = cos(object3d[0]->object3d.rot.y) * center.z;
+		object3d[0]->rotResult.x = sin(object3d[0]->transform.rot.y) * center.z;
+		object3d[0]->rotResult.z = cos(object3d[0]->transform.rot.y) * center.z;
 		// 移動
-		object3d[0]->object3d.pos.x += (speed)*object3d[0]->rotResult.x;
-		object3d[0]->object3d.pos.z += (speed)*object3d[0]->rotResult.z;
+		/*object3d[0]->transform.pos.x += (speed)*object3d[0]->rotResult.x;
+		object3d[0]->transform.pos.z += (speed)*object3d[0]->rotResult.z;*/
+		object3d[0]->transform.pos.x += (input.IsPush(DIK_RIGHT) - input.IsPush(DIK_LEFT)) * speed;
+		object3d[0]->transform.pos.z += (input.IsPush(DIK_UP) - input.IsPush(DIK_DOWN)) * speed;
 #pragma endregion
 
 #pragma region 画像色アップデート
@@ -206,8 +202,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 #pragma endregion
 
 		// 描画
-		object3d[0]->SetModel(&cube);
-		object3d[1]->SetModel(&triangle);
+		object3d[0]->SetModel(&triangle);
+		object3d[1]->SetModel(&cube);
 
 #pragma region リソースバリア
 		// バックバッファの番号を取得
@@ -270,21 +266,15 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 		// プリミティブ形状の設定コマンド
 		dx.cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 #pragma endregion
-//		// インデックスバッファビューの設定コマンド
-//		dx.cmdList->IASetIndexBuffer(&model.vertex->ibView);
-//#pragma region 頂点バッファビューの設定コマンド
-//		// 頂点バッファビューの設定コマンド
-//		dx.cmdList->IASetVertexBuffers(0, 1, &model.vertex->vbView);
-//#pragma endregion
 		// CBV
 		dx.cmdList->SetGraphicsRootConstantBufferView(0, Gpipeline.material->constBufferMaterial->GetGPUVirtualAddress());
 		// SRV
 		dx.cmdList->SetDescriptorHeaps(1, &texture.srvHeap);
 		// 先頭ハンドルを取得
 		D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle = texture.srvHeap->GetGPUDescriptorHandleForHeapStart();
-		srvGpuHandle.ptr += incrementSize * 0;
+		srvGpuHandle.ptr += texture.incrementSize * 0;
 		D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle2 = texture.srvHeap->GetGPUDescriptorHandleForHeapStart();
-		srvGpuHandle2.ptr += incrementSize * 1;
+		srvGpuHandle2.ptr += texture.incrementSize * 1;
 		// SRVヒープの先頭にあるSRVをルートパラメータ1番の設定
 		if (input.IsPush(DIK_SPACE)) {
 			dx.cmdList->SetGraphicsRootDescriptorTable(1, srvGpuHandle2);

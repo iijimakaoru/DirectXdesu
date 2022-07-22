@@ -45,7 +45,7 @@ public:
 	// リソース設定
 	D3D12_RESOURCE_DESC cbResourceDesc{};
 	// 3Dオブジェクトの配列
-	Object3d object3d;
+	Object3d transform;
 
 	HRESULT result;
 

@@ -40,9 +40,12 @@ public:
 	ID3D12DescriptorHeap* srvHeap = nullptr;
 	// SRVヒープの先頭ハンドルを取得
 	D3D12_CPU_DESCRIPTOR_HANDLE srvHandle;
+	D3D12_CPU_DESCRIPTOR_HANDLE srvHandle2;
 	// シェーダーリソースビュー設定
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc2{};
+
+	UINT incrementSize;
 
 	HRESULT result;
 };

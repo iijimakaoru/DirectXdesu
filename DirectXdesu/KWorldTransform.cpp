@@ -6,8 +6,8 @@ KWorldTransform::KWorldTransform(ID3D12Device& dev) {
 	Initialize(dev);
 }
 
-void KWorldTransform::SetTexture() {
-
+void KWorldTransform::SetTexture(KTexture* texture) {
+	this->texture = texture;
 }
 
 void KWorldTransform::SetModel(KModel* model) {
@@ -37,6 +37,8 @@ void KWorldTransform::Initialize(ID3D12Device& dev) {
 	// 定数バッファのマッピング
 	result = transform.constBuffTransform->Map(0, nullptr, (void**)&transform.constMapTransform);
 	assert(SUCCEEDED(result));
+
+	material = new KMaterial(&dev);
 }
 
 void KWorldTransform::Update(XMMATRIX& matView, XMMATRIX& matProjection) {
@@ -57,9 +59,21 @@ void KWorldTransform::Update(XMMATRIX& matView, XMMATRIX& matProjection) {
 	transform.matWorld *= matTrans;
 
 	transform.constMapTransform->mat = transform.matWorld * matView * matProjection;
+
+	material->Update();
 }
 
 void KWorldTransform::Draw(ID3D12GraphicsCommandList* cmdList) {
+	// CBV
+	cmdList->SetGraphicsRootConstantBufferView(0, material->constBufferMaterial->GetGPUVirtualAddress());
+	// SRV
+	cmdList->SetDescriptorHeaps(1, &texture->srvHeap);
+	// 先頭ハンドルを取得
+	D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle = texture->srvHeap->GetGPUDescriptorHandleForHeapStart();
+	srvGpuHandle.ptr += texture->incrementSize * 0;
+	// SRVヒープの先頭にあるSRVをルートパラメータ1番の設定
+	cmdList->SetGraphicsRootDescriptorTable(1, srvGpuHandle);
+
 	cmdList->IASetVertexBuffers(0, 1, &model->vertex->vbView);
 	cmdList->IASetIndexBuffer(&model->vertex->ibView);
 	cmdList->SetGraphicsRootConstantBufferView(2, transform.constBuffTransform->GetGPUVirtualAddress());

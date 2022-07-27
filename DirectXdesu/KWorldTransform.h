@@ -3,6 +3,8 @@
 #include <DirectXMath.h>
 #include "Vector3.h"
 #include "KModel.h"
+#include "KTexture.h"
+#include "KMaterial.h"
 //#include <memory>
 
 using namespace DirectX;
@@ -32,7 +34,7 @@ class KWorldTransform
 public:
 	KWorldTransform();
 	KWorldTransform(ID3D12Device& dev);
-	void SetTexture();
+	void SetTexture(KTexture* texture);
 	void SetModel(KModel* model);
 	void Initialize(ID3D12Device& dev);
 	void Update(XMMATRIX& matView, XMMATRIX& matProjection);
@@ -49,5 +51,10 @@ public:
 	HRESULT result;
 
 	KModel* model = nullptr;
+
+	KTexture* texture = nullptr;
+
+	// ƒ}ƒeƒŠƒAƒ‹
+	KMaterial* material = nullptr;
 };
 

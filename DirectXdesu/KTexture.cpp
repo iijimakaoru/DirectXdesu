@@ -1,7 +1,7 @@
 #include "KTexture.h"
 
-KTexture::KTexture(ID3D12Device* dev) {
-	LoadTexture();
+KTexture::KTexture(ID3D12Device* dev, const wchar_t* msg) {
+	LoadTexture(msg);
 	GeneMipMap();
 	SetTextureBuff();
 	GeneTextureBuff(dev);
@@ -13,9 +13,9 @@ KTexture::KTexture(ID3D12Device* dev) {
 	CreateSRV(dev);
 }
 
-void KTexture::LoadTexture() {
+void KTexture::LoadTexture(const wchar_t* msg) {
 	result = LoadFromWICFile(
-		L"Resources/mario.jpg",
+		msg,
 		WIC_FLAGS_NONE,
 		&metadata, scraychImg);
 

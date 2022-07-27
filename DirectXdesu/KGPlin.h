@@ -1,10 +1,5 @@
 #pragma once
 #include <d3d12.h>
-#include "KMaterial.h"
-#include "KWorldTransform.h"
-#include "ViewProjection.h"
-#include "KMaterial.h"
-#include "ViewProjection.h"
 #include "KShader.h"
 #include "KVertex.h"
 #include "KDirectInit.h"

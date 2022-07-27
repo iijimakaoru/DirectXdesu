@@ -4,11 +4,9 @@
 #include "KDirectInit.h"
 #include "KInput.h"
 #include "KDepth.h"
-#include "KVertex.h"
 #include "KTexture.h"
 #include "KWorldTransform.h"
 #include "ViewProjection.h"
-#include "KMaterial.h"
 #include "KGPlin.h"
 #include "KModel.h"
 #ifdef DEBUG
@@ -61,6 +59,14 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	KModel line = Line();
 	line.CreateModel(dx.dev);
 #pragma endregion
+
+#pragma region テクスチャ初期化
+	const wchar_t* msg = L"Resources/mario.jpg";
+	const wchar_t* msg2 = L"Resources/いーじゃん.jpg";
+	KTexture texture(dx.dev, msg);
+	KTexture texture2(dx.dev, msg2);
+#pragma endregion
+
 #pragma region グラフィックスパイプライン設定
 	KGPlin Gpipeline(dx.dev);
 #pragma region 3Dオブジェクト初期化
@@ -68,13 +74,18 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	const int LineNum = 6;
 	// 3Dオブジェクト
 	KWorldTransform object3d[ObjectNum];
-	KWorldTransform lineObject[LineNum];
+	//KWorldTransform lineObject[LineNum];
 	for (int i = 0; i < ObjectNum; i++) {
 		object3d[i].Initialize(*dx.dev);
+		if (i > 0) {
+			object3d[i].material->colorR = object3d[i].material->colorG = object3d[i].material->colorB = 1.0f;
+		}
 	}
 	object3d[0].SetModel(&triangle);
+	object3d[0].SetTexture(&texture);
 	object3d[1].SetModel(&cube);
-	for (int i = 0; i < LineNum; i++) {
+	object3d[1].SetTexture(&texture2);
+	/*for (int i = 0; i < LineNum; i++) {
 		lineObject[i].Initialize(*dx.dev);
 		lineObject[i].SetModel(&line);
 	}
@@ -84,13 +95,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	lineObject[4].transform.rot.y = XMConvertToRadians(90);
 	lineObject[4].transform.pos.z = lineObject[3].transform.pos.z + 20;
 	lineObject[5].transform.rot.y = XMConvertToRadians(90);
-	lineObject[5].transform.pos.z = lineObject[3].transform.pos.z - 20;
-#pragma endregion
-
-#pragma region マテリアル
-	// マテリアル
-	KMaterial* material;
-	material = new KMaterial(dx.dev);
+	lineObject[5].transform.pos.z = lineObject[3].transform.pos.z - 20;*/
 #pragma endregion
 
 #pragma region ビュー
@@ -99,9 +104,6 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	viewProjection = new ViewProjection(win.window_width, win.window_height);
 #pragma endregion
 
-#pragma endregion
-#pragma region テクスチャ初期化
-	KTexture texture(dx.dev);
 #pragma endregion
 	Vector3 center = { 0,0,1 };
 
@@ -145,23 +147,23 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 			dx.bBule = 0.5f;
 		}
 		// 画像色変え
-		if (material->colorR <= 0 || material->colorR >= 1) {
+		if (object3d[0].material->colorR <= 0 || object3d[0].material->colorR >= 1) {
 			rSpeed *= -1;
 		}
-		if (material->colorG <= 0 || material->colorG >= 1) {
+		if (object3d[0].material->colorG <= 0 || object3d[0].material->colorG >= 1) {
 			gSpeed *= -1;
 		}
-		if (material->colorB <= 0 || material->colorB >= 1) {
+		if (object3d[0].material->colorB <= 0 || object3d[0].material->colorB >= 1) {
 			bSpeed *= -1;
 		}
-		if (material->colorA <= 0 || material->colorA >= 1) {
+		if (object3d[0].material->colorA <= 0 || object3d[0].material->colorA >= 1) {
 			aSpeed *= -1;
 		}
-		material->colorR += rSpeed;
-		material->colorG += gSpeed;
-		material->colorB += bSpeed;
+		object3d[0].material->colorR += rSpeed;
+		object3d[0].material->colorG += gSpeed;
+		object3d[0].material->colorB += bSpeed;
 		if (input.IsPush(DIK_X)) {
-			material->colorA += aSpeed;
+			object3d[0].material->colorA += aSpeed;
 		}
 		// 図形縦回転
 		if (input.IsPush(DIK_C) ||
@@ -234,7 +236,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 #pragma endregion
 
 #pragma region 画像色アップデート
-		material->Update();
+		//material->Update();
 #pragma endregion
 
 #pragma region ビューのアップデート
@@ -245,9 +247,9 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 		for (int i = 0; i < ObjectNum; i++) {
 			object3d[i].Update(viewProjection->matView, viewProjection->matProjection);
 		}
-		for (int i = 0; i < LineNum; i++) {
+		/*for (int i = 0; i < LineNum; i++) {
 			lineObject[i].Update(viewProjection->matView, viewProjection->matProjection);
-		}
+		}*/
 #pragma endregion
 
 #pragma endregion
@@ -314,31 +316,15 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 		// プリミティブ形状の設定コマンド
 		dx.cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 #pragma endregion
-		// CBV
-		dx.cmdList->SetGraphicsRootConstantBufferView(0, material->constBufferMaterial->GetGPUVirtualAddress());
-		// SRV
-		dx.cmdList->SetDescriptorHeaps(1, &texture.srvHeap);
-		// 先頭ハンドルを取得
-		D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle = texture.srvHeap->GetGPUDescriptorHandleForHeapStart();
-		srvGpuHandle.ptr += texture.incrementSize * 0;
-		D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle2 = srvGpuHandle;
-		srvGpuHandle2.ptr += texture.incrementSize * 1;
-		// SRVヒープの先頭にあるSRVをルートパラメータ1番の設定
-		if (input.IsPush(DIK_SPACE)) {
-			dx.cmdList->SetGraphicsRootDescriptorTable(1, srvGpuHandle2);
-		}
-		else {
-			dx.cmdList->SetGraphicsRootDescriptorTable(1, srvGpuHandle);
-		}
-		
+
 #pragma region 描画コマンド
 		// 描画コマンド
 		for (int i = 0; i < ObjectNum; i++) {
 			object3d[i].Draw(dx.cmdList);
 		}
-		for (int i = 0; i < LineNum; i++) {
+		/*for (int i = 0; i < LineNum; i++) {
 			lineObject[i].Draw(dx.cmdList);
-		}
+		}*/
 #pragma endregion
 		// 描画コマンドここまで
 #pragma endregion

@@ -5,8 +5,8 @@
 class KTexture
 {
 public:
-	KTexture(ID3D12Device* dev);
-	void LoadTexture();
+	KTexture(ID3D12Device* dev, const wchar_t* msg);
+	void LoadTexture(const wchar_t* msg);
 	void GeneMipMap();
 	void SetTextureBuff();
 	void GeneTextureBuff(ID3D12Device* dev);

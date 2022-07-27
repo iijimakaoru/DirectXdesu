@@ -6,6 +6,10 @@ KWorldTransform::KWorldTransform(ID3D12Device& dev) {
 	Initialize(dev);
 }
 
+void KWorldTransform::SetTexture() {
+
+}
+
 void KWorldTransform::SetModel(KModel* model) {
 	this->model = model;
 }

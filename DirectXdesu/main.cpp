@@ -21,10 +21,11 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 {
 #ifdef _DEBUG
 	// デバッグレイヤーをオンに
-	ID3D12Debug* debugController;
+	ID3D12Debug1* debugController;
 	if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&debugController))))
 	{
 		debugController->EnableDebugLayer();
+		debugController->SetEnableGPUBasedValidation(true);
 	}
 #endif
 
@@ -34,6 +35,15 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 
 #pragma region DirectX初期化
 	KDirectInit dx(win);
+//#ifdef _DEBUG
+//	ID3D12InfoQueue* infoQueue;
+//	if (SUCCEEDED(dx.dev->QueryInterface(IID_PPV_ARGS(&infoQueue)))) {
+//		infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_CORRUPTION, true);
+//		infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_ERROR, true);
+//		infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_WARNING, true);
+//		infoQueue->Release();
+//	}
+//#endif // _DEBUG
 	KInput input(win.window, win.handle);
 #pragma endregion
 
@@ -52,7 +62,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	line.CreateModel(dx.dev);
 #pragma endregion
 #pragma region グラフィックスパイプライン設定
-	KGPlin Gpipeline(dx.dev, win.window_width, win.window_height);
+	KGPlin Gpipeline(dx.dev);
 #pragma region 3Dオブジェクト初期化
 	const int ObjectNum = 2;
 	const int LineNum = 6;
@@ -60,7 +70,6 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	KWorldTransform object3d[ObjectNum];
 	KWorldTransform lineObject[LineNum];
 	for (int i = 0; i < ObjectNum; i++) {
-		//object3d[i] = new KWorldTransform(dx.dev);
 		object3d[i].Initialize(*dx.dev);
 	}
 	object3d[0].SetModel(&triangle);
@@ -77,6 +86,19 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	lineObject[5].transform.rot.y = XMConvertToRadians(90);
 	lineObject[5].transform.pos.z = lineObject[3].transform.pos.z - 20;
 #pragma endregion
+
+#pragma region マテリアル
+	// マテリアル
+	KMaterial* material;
+	material = new KMaterial(dx.dev);
+#pragma endregion
+
+#pragma region ビュー
+	// ビュープロジェクション
+	ViewProjection* viewProjection;
+	viewProjection = new ViewProjection(win.window_width, win.window_height);
+#pragma endregion
+
 #pragma endregion
 #pragma region テクスチャ初期化
 	KTexture texture(dx.dev);
@@ -123,23 +145,23 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 			dx.bBule = 0.5f;
 		}
 		// 画像色変え
-		if (Gpipeline.material->colorR <= 0 || Gpipeline.material->colorR >= 1) {
+		if (material->colorR <= 0 || material->colorR >= 1) {
 			rSpeed *= -1;
 		}
-		if (Gpipeline.material->colorG <= 0 || Gpipeline.material->colorG >= 1) {
+		if (material->colorG <= 0 || material->colorG >= 1) {
 			gSpeed *= -1;
 		}
-		if (Gpipeline.material->colorB <= 0 || Gpipeline.material->colorB >= 1) {
+		if (material->colorB <= 0 || material->colorB >= 1) {
 			bSpeed *= -1;
 		}
-		if (Gpipeline.material->colorA <= 0 || Gpipeline.material->colorA >= 1) {
+		if (material->colorA <= 0 || material->colorA >= 1) {
 			aSpeed *= -1;
 		}
-		Gpipeline.material->colorR += rSpeed;
-		Gpipeline.material->colorG += gSpeed;
-		Gpipeline.material->colorB += bSpeed;
+		material->colorR += rSpeed;
+		material->colorG += gSpeed;
+		material->colorB += bSpeed;
 		if (input.IsPush(DIK_X)) {
-			Gpipeline.material->colorA += aSpeed;
+			material->colorA += aSpeed;
 		}
 		// 図形縦回転
 		if (input.IsPush(DIK_C) ||
@@ -156,21 +178,21 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 		if (input.IsPush(DIK_D) || input.IsPush(DIK_A) ||
 			input.IsPush(DIK_W) || input.IsPush(DIK_S)) {
 			if (input.IsPush(DIK_D)) {
-				Gpipeline.viewProjection->angleX += XMConvertToRadians(1.0f);
+				viewProjection->angleX += XMConvertToRadians(1.0f);
 			}
 			else if (input.IsPush(DIK_A)) {
-				Gpipeline.viewProjection->angleX -= XMConvertToRadians(1.0f);
+				viewProjection->angleX -= XMConvertToRadians(1.0f);
 			}
 			if (input.IsPush(DIK_W)) {
-				Gpipeline.viewProjection->angleY -= XMConvertToRadians(1.0f);
+				viewProjection->angleY -= XMConvertToRadians(1.0f);
 			}
 			else if (input.IsPush(DIK_S)) {
-				Gpipeline.viewProjection->angleY += XMConvertToRadians(1.0f);
+				viewProjection->angleY += XMConvertToRadians(1.0f);
 			}
 			// angleラジアンy軸回転
-			Gpipeline.viewProjection->eye.x = Gpipeline.viewProjection->lenZ * sinf(Gpipeline.viewProjection->angleX);
-			Gpipeline.viewProjection->eye.y = Gpipeline.viewProjection->lenZ * sinf(Gpipeline.viewProjection->angleY);
-			Gpipeline.viewProjection->eye.z = Gpipeline.viewProjection->lenZ * cosf(Gpipeline.viewProjection->angleX) * cosf(Gpipeline.viewProjection->angleY);
+			viewProjection->eye.x = viewProjection->lenZ * sinf(viewProjection->angleX);
+			viewProjection->eye.y = viewProjection->lenZ * sinf(viewProjection->angleY);
+			viewProjection->eye.z = viewProjection->lenZ * cosf(viewProjection->angleX) * cosf(viewProjection->angleY);
 		}
 		//// 横回転
 		//if (input.IsPush(DIK_RIGHT) ||
@@ -212,19 +234,19 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 #pragma endregion
 
 #pragma region 画像色アップデート
-		Gpipeline.material->Update();
+		material->Update();
 #pragma endregion
 
 #pragma region ビューのアップデート
-		Gpipeline.viewProjection->Update(win.window_width, win.window_height);
+		viewProjection->Update(win.window_width, win.window_height);
 #pragma endregion
 
 #pragma region 3Dオブジェクトのアップデート
 		for (int i = 0; i < ObjectNum; i++) {
-			object3d[i].Update(Gpipeline.viewProjection->matView, Gpipeline.viewProjection->matProjection);
+			object3d[i].Update(viewProjection->matView, viewProjection->matProjection);
 		}
 		for (int i = 0; i < LineNum; i++) {
-			lineObject[i].Update(Gpipeline.viewProjection->matView, Gpipeline.viewProjection->matProjection);
+			lineObject[i].Update(viewProjection->matView, viewProjection->matProjection);
 		}
 #pragma endregion
 
@@ -293,7 +315,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 		dx.cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 #pragma endregion
 		// CBV
-		dx.cmdList->SetGraphicsRootConstantBufferView(0, Gpipeline.material->constBufferMaterial->GetGPUVirtualAddress());
+		dx.cmdList->SetGraphicsRootConstantBufferView(0, material->constBufferMaterial->GetGPUVirtualAddress());
 		// SRV
 		dx.cmdList->SetDescriptorHeaps(1, &texture.srvHeap);
 		// 先頭ハンドルを取得

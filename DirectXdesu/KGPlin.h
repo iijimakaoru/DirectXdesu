@@ -32,11 +32,9 @@ class KGPlin
 {
 public:
 	KGPlin();
-	KGPlin(ID3D12Device* dev, int width, int height);
+	KGPlin(ID3D12Device* dev);
 	void GPipeline();
 	void Render();
-	void Buffer(ID3D12Device* dev,
-		int width, int height);
 	void DescRipRan();
 	void RootParam();
 	void Sampler();
@@ -49,10 +47,6 @@ public:
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC pipelineDesc{};
 	// レンダーターゲットのブレンド設定
 	D3D12_RENDER_TARGET_BLEND_DESC& blenddesc = pipelineDesc.BlendState.RenderTarget[0];
-	// マテリアル
-	KMaterial* material;
-	// ビュープロジェクション
-	ViewProjection* viewProjection;
 	// デスクリプタレンジの設定
 	D3D12_DESCRIPTOR_RANGE descriptorRange{};
 	// ルートパラメータの設定

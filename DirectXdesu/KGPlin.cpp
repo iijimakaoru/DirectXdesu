@@ -1,11 +1,10 @@
 #include "KGPlin.h"
 
 KGPlin::KGPlin() {}
-KGPlin::KGPlin(ID3D12Device* dev, int width, int height) {
+KGPlin::KGPlin(ID3D12Device* dev) {
 	shader = new KShader();
 	GPipeline();
 	Render();
-	Buffer(dev, width, height);
 	DescRipRan();
 	RootParam();
 	Sampler();
@@ -48,16 +47,6 @@ void KGPlin::Render() {
 	blenddesc.BlendOp = D3D12_BLEND_OP_ADD;
 	blenddesc.SrcBlend = D3D12_BLEND_SRC_ALPHA;
 	blenddesc.DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
-}
-
-void KGPlin::Buffer(ID3D12Device* dev, int width, int height) {
-#pragma region マテリアル
-	material = new KMaterial(dev);
-#pragma endregion
-
-#pragma region 行列
-	viewProjection = new ViewProjection(width, height);
-#pragma endregion
 }
 
 void KGPlin::DescRipRan() {

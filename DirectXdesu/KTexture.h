@@ -1,5 +1,6 @@
 #pragma once
 #include "KVertex.h"
+#include <string>
 
 class KTexture
 {
@@ -18,20 +19,20 @@ public:
 
 	TexMetadata metadata{};
 	ScratchImage scraychImg{};
-	TexMetadata metadata2{};
-	ScratchImage scraychImg2{};
+	/*TexMetadata metadata2{};
+	ScratchImage scraychImg2{};*/
 
 	ScratchImage mipChain{};
-	ScratchImage mipChain2{};
+	//ScratchImage mipChain2{};
 
 	// ヒープ設定
 	D3D12_HEAP_PROPERTIES textureHeapProp{};
 	// リソース設定
 	D3D12_RESOURCE_DESC textureResourceDesc{};
-	D3D12_RESOURCE_DESC textureResourceDesc2{};
+	//D3D12_RESOURCE_DESC textureResourceDesc2{};
 	// テクスチャバッファの生成
 	ID3D12Resource* texBuff = nullptr;
-	ID3D12Resource* texBuff2 = nullptr;
+	//ID3D12Resource* texBuff2 = nullptr;
 	// SRVの最大個数
 	const size_t kMaxSRVCount = 2056;
 	// デスクリプタヒープの設定
@@ -40,10 +41,10 @@ public:
 	ID3D12DescriptorHeap* srvHeap = nullptr;
 	// SRVヒープの先頭ハンドルを取得
 	D3D12_CPU_DESCRIPTOR_HANDLE srvHandle;
-	D3D12_CPU_DESCRIPTOR_HANDLE srvHandle2;
+	//D3D12_CPU_DESCRIPTOR_HANDLE srvHandle2;
 	// シェーダーリソースビュー設定
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
-	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc2{};
+	//D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc2{};
 
 	UINT incrementSize;
 

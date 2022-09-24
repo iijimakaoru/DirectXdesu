@@ -49,13 +49,13 @@ public:
 	// テクスチャサンブラーの設定
 	D3D12_STATIC_SAMPLER_DESC samplerDesc{};
 	// ルートシグネチャ
-	ID3D12RootSignature* rootSignature;
+	ComPtr<ID3D12RootSignature> rootSignature;
 	// ルートシグネチャの設定
 	D3D12_ROOT_SIGNATURE_DESC rootSignatureDesc{};
 	// ルートシグネチャのシリアライズ
-	ID3DBlob* rootSigBlob = nullptr;
+	ComPtr<ID3DBlob> rootSigBlob;
 	// パイプラインステート
-	ID3D12PipelineState* pipelineState = nullptr;
+	ComPtr<ID3D12PipelineState> pipelineState;
 
 	HRESULT result;
 };

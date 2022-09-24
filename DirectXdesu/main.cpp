@@ -46,17 +46,17 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 #pragma region 描画初期化
 #pragma region 深度バッファ
-	KDepth depth(dx.dev, win);
+	KDepth depth(dx.dev.Get(), win);
 #pragma endregion
 	// 速さ
 	float speed = 1.0f;
 #pragma region モデル
 	KModel triangle = Triangle();
-	triangle.CreateModel(dx.dev);
+	triangle.CreateModel(dx.dev.Get());
 	KModel cube = Cube();
-	cube.CreateModel(dx.dev);
+	cube.CreateModel(dx.dev.Get());
 	KModel line = Line();
-	line.CreateModel(dx.dev);
+	line.CreateModel(dx.dev.Get());
 #pragma endregion
 
 #pragma region テクスチャ初期化
@@ -64,12 +64,12 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	const wchar_t* msg2 = L"Resources/いーじゃん.jpg";
 	const wchar_t* msg3 = L"Resources/haikei.jpg";
 	const wchar_t* msg4 = L"Resources/kitanai.jpg";
-	KTexture texture(dx.dev, msg, msg3);
-	KTexture texture2(dx.dev, msg2, msg4);
+	KTexture texture(dx.dev.Get(), msg, msg3);
+	KTexture texture2(dx.dev.Get(), msg2, msg4);
 #pragma endregion
 
 #pragma region グラフィックスパイプライン設定
-	KGPlin Gpipeline(dx.dev);
+	KGPlin Gpipeline(dx.dev.Get());
 #pragma region 3Dオブジェクト初期化
 	const int ObjectNum = 2;
 	const int LineNum = 6;
@@ -77,7 +77,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	KWorldTransform object3d[ObjectNum];
 	//KWorldTransform lineObject[LineNum];
 	for (int i = 0; i < ObjectNum; i++) {
-		object3d[i].Initialize(*dx.dev);
+		object3d[i].Initialize(*dx.dev.Get());
 		if (i > 0) {
 			object3d[i].material->colorR = object3d[i].material->colorG = object3d[i].material->colorB = 1.0f;
 		}
@@ -261,7 +261,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		UINT bbIndex = dx.swapChain->GetCurrentBackBufferIndex();
 		// 1.リソースバリアで書き込み可能に変更
 		D3D12_RESOURCE_BARRIER barrierDesc{};
-		barrierDesc.Transition.pResource = dx.backBuffers[bbIndex];
+		barrierDesc.Transition.pResource = dx.backBuffers[bbIndex].Get();
 		barrierDesc.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
 		barrierDesc.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
 		dx.cmdList->ResourceBarrier(1, &barrierDesc);
@@ -310,8 +310,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 #pragma endregion
 #pragma region パイプラインステート設定
 		// パイプラインステートとルートシグネチャの設定コマンド
-		dx.cmdList->SetPipelineState(Gpipeline.pipelineState);
-		dx.cmdList->SetGraphicsRootSignature(Gpipeline.rootSignature);
+		dx.cmdList->SetPipelineState(Gpipeline.pipelineState.Get());
+		dx.cmdList->SetGraphicsRootSignature(Gpipeline.rootSignature.Get());
 #pragma endregion
 #pragma region プリミティブ形状
 		// プリミティブ形状の設定コマンド
@@ -355,7 +355,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 #pragma region コマンド完了待ち
 		// コマンドの完了を待つ
-		dx.cmdQueue->Signal(dx.fence, ++dx.fenceVal);
+		dx.cmdQueue->Signal(dx.fence.Get(), ++dx.fenceVal);
 		if (dx.fence->GetCompletedValue() != dx.fenceVal) {
 			HANDLE event = CreateEvent(nullptr, false, false, nullptr);
 			dx.fence->SetEventOnCompletion(dx.fenceVal, event);
@@ -366,7 +366,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		dx.result = dx.cmdAllocater->Reset();
 		assert(SUCCEEDED(dx.result));
 		// 再びコマンドを貯める準備
-		dx.result = dx.cmdList->Reset(dx.cmdAllocater, nullptr);
+		dx.result = dx.cmdList->Reset(dx.cmdAllocater.Get(), nullptr);
 		assert(SUCCEEDED(dx.result));
 #pragma endregion
 	}

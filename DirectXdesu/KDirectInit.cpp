@@ -83,7 +83,7 @@ void KDirectInit::SetCommandList() {
 	// コマンドリスト生成
 	result = dev->CreateCommandList(0,
 		D3D12_COMMAND_LIST_TYPE_DIRECT,
-		cmdAllocater, nullptr,
+		cmdAllocater.Get(), nullptr,
 		IID_PPV_ARGS(&cmdList));
 	assert(SUCCEEDED(result));
 }
@@ -103,10 +103,15 @@ void KDirectInit::SetSwapChain(KWindow window) {
 	swapChainDesc.BufferCount = 2;
 	swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
 	swapChainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
+
+	ComPtr<IDXGISwapChain1> swapchain1;
 	// スワップチェーンの生成
 	result = dxgiFactory->CreateSwapChainForHwnd(
-		cmdQueue, window.handle, &swapChainDesc, nullptr, nullptr,
-		(IDXGISwapChain1**)&swapChain);
+		cmdQueue.Get(), window.handle, &swapChainDesc, nullptr, nullptr,
+		&swapchain1);
+
+	swapchain1.As(&swapChain);
+
 	assert(SUCCEEDED(result));
 }
 
@@ -134,7 +139,7 @@ void KDirectInit::SetBackBuffer() {
 		rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
 		rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
 		// レンダーターゲートビューの生成
-		dev->CreateRenderTargetView(backBuffers[i], &rtvDesc, rtvHandle);
+		dev->CreateRenderTargetView(backBuffers[i].Get(), &rtvDesc, rtvHandle);
 	}
 }
 

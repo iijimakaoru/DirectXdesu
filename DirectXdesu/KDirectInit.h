@@ -13,6 +13,8 @@
 
 using namespace DirectX;
 
+using namespace Microsoft::WRL;
+
 class KDirectInit
 {
 public:
@@ -28,12 +30,12 @@ public:
 	void SetFence();
 
 	HRESULT result;
-	ID3D12Device* dev = nullptr;
-	IDXGIFactory6* dxgiFactory = nullptr;
-	IDXGISwapChain4* swapChain = nullptr;
-	ID3D12CommandAllocator* cmdAllocater = nullptr;
+	ComPtr<ID3D12Device> dev;
+	ComPtr<IDXGIFactory6> dxgiFactory;
+	ComPtr<IDXGISwapChain4> swapChain;
+	ComPtr<ID3D12CommandAllocator> cmdAllocater;
 	ID3D12GraphicsCommandList* cmdList = nullptr;
-	ID3D12CommandQueue* cmdQueue = nullptr;
+	ComPtr<ID3D12CommandQueue> cmdQueue;
 	ID3D12DescriptorHeap* rtvHeap = nullptr;
 	float bRed = 0.1f;
 	float bGreen = 0.25f;
@@ -59,10 +61,10 @@ public:
 	D3D12_DESCRIPTOR_HEAP_DESC rtvHeapDesc{};
 
 	// バックバッファ
-	std::vector<ID3D12Resource*> backBuffers;
+	std::vector<ComPtr<ID3D12Resource>> backBuffers;
 
 	// フェンスの生成
-	ID3D12Fence* fence = nullptr;
+	ComPtr<ID3D12Fence> fence;
 	UINT64 fenceVal = 0;
 };
 

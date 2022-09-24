@@ -9,13 +9,12 @@
 #include "ViewProjection.h"
 #include "KGPlin.h"
 #include "KModel.h"
-#ifdef DEBUG
+#ifdef _DEBUG
 #include <iostream>
 #endif
 #pragma comment(lib, "d3dcompiler.Lib")
 
-int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
-	_In_ LPSTR lpCmdLine, _In_ int nCmdShow)
+int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow)
 {
 #ifdef _DEBUG
 	// デバッグレイヤーをオンに
@@ -33,15 +32,15 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 
 #pragma region DirectX初期化
 	KDirectInit dx(win);
-//#ifdef _DEBUG
-//	ID3D12InfoQueue* infoQueue;
-//	if (SUCCEEDED(dx.dev->QueryInterface(IID_PPV_ARGS(&infoQueue)))) {
-//		infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_CORRUPTION, true);
-//		infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_ERROR, true);
-//		infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_WARNING, true);
-//		infoQueue->Release();
-//	}
-//#endif // _DEBUG
+	//#ifdef _DEBUG
+	//	ID3D12InfoQueue* infoQueue;
+	//	if (SUCCEEDED(dx.dev->QueryInterface(IID_PPV_ARGS(&infoQueue)))) {
+	//		infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_CORRUPTION, true);
+	//		infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_ERROR, true);
+	//		infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_WARNING, true);
+	//		infoQueue->Release();
+	//	}
+	//#endif // _DEBUG
 	KInput input(win.window, win.handle);
 #pragma endregion
 
@@ -81,7 +80,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 			object3d[i].material->colorR = object3d[i].material->colorG = object3d[i].material->colorB = 1.0f;
 		}
 	}
-	object3d[0].SetModel(&triangle);
+	object3d[0].SetModel(&cube);
 	object3d[0].SetTexture(&texture);
 	object3d[1].SetModel(&cube);
 	object3d[1].SetTexture(&texture2);
@@ -196,16 +195,16 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 			viewProjection->eye.y = viewProjection->lenZ * sinf(viewProjection->angleY);
 			viewProjection->eye.z = viewProjection->lenZ * cosf(viewProjection->angleX) * cosf(viewProjection->angleY);
 		}
-		//// 横回転
-		//if (input.IsPush(DIK_RIGHT) ||
-		//	input.IsPush(DIK_LEFT)) {
-		//	if (input.IsPush(DIK_RIGHT)) {
-		//		object3d[0]->transform.rot.y -= 0.1f;
-		//	}
-		//	if (input.IsPush(DIK_LEFT)) {
-		//		object3d[0]->transform.rot.y += 0.1f;
-		//	}
-		//}
+		// 横回転
+		if (input.IsPush(DIK_RIGHT) ||
+			input.IsPush(DIK_LEFT)) {
+			if (input.IsPush(DIK_RIGHT)) {
+				object3d[0].transform.rot.y -= 0.1f;
+			}
+			if (input.IsPush(DIK_LEFT)) {
+				object3d[0].transform.rot.y += 0.1f;
+			}
+		}
 		//// 移動
 		//if (input.IsPush(DIK_UP) ||
 		//	input.IsPush(DIK_DOWN)) {

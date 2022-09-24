@@ -62,8 +62,10 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 #pragma region テクスチャ初期化
 	const wchar_t* msg = L"Resources/mario.jpg";
 	const wchar_t* msg2 = L"Resources/いーじゃん.jpg";
-	KTexture texture(dx.dev, msg);
-	KTexture texture2(dx.dev, msg2);
+	const wchar_t* msg3 = L"Resources/haikei.jpg";
+	const wchar_t* msg4 = L"Resources/kitanai.jpg";
+	KTexture texture(dx.dev, msg, msg3);
+	KTexture texture2(dx.dev, msg2, msg4);
 #pragma endregion
 
 #pragma region グラフィックスパイプライン設定
@@ -319,7 +321,14 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 #pragma region 描画コマンド
 		// 描画コマンド
 		for (int i = 0; i < ObjectNum; i++) {
-			object3d[i].Draw(dx.cmdList);
+			if (!input.IsPush(DIK_SPACE))
+			{
+				object3d[i].Draw(dx.cmdList);
+			}
+			else
+			{
+				object3d[i].SecoundDraw(dx.cmdList);
+			}
 		}
 		/*for (int i = 0; i < LineNum; i++) {
 			lineObject[i].Draw(dx.cmdList);

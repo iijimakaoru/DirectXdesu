@@ -39,6 +39,7 @@ public:
 	void Initialize(ID3D12Device& dev);
 	void Update(XMMATRIX& matView, XMMATRIX& matProjection);
 	void Draw(ID3D12GraphicsCommandList* cmdList);
+	void SecoundDraw(ID3D12GraphicsCommandList* cmdList);
 
 	Vector3 rotResult;
 	// ÉqÅ[Évê›íË

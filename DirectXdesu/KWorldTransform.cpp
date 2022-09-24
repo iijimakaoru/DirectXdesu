@@ -70,7 +70,24 @@ void KWorldTransform::Draw(ID3D12GraphicsCommandList* cmdList) {
 	cmdList->SetDescriptorHeaps(1, &texture->srvHeap);
 	// 先頭ハンドルを取得
 	D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle = texture->srvHeap->GetGPUDescriptorHandleForHeapStart();
-	srvGpuHandle.ptr += texture->incrementSize * 0;
+	// SRVヒープの先頭にあるSRVをルートパラメータ1番の設定
+	cmdList->SetGraphicsRootDescriptorTable(1, srvGpuHandle);
+
+	cmdList->IASetVertexBuffers(0, 1, &model->vertex->vbView);
+	cmdList->IASetIndexBuffer(&model->vertex->ibView);
+	cmdList->SetGraphicsRootConstantBufferView(2, transform.constBuffTransform->GetGPUVirtualAddress());
+	cmdList->DrawIndexedInstanced(model->indices.size(), 1, 0, 0, 0);
+}
+
+void KWorldTransform::SecoundDraw(ID3D12GraphicsCommandList* cmdList)
+{
+	// CBV
+	cmdList->SetGraphicsRootConstantBufferView(0, material->constBufferMaterial->GetGPUVirtualAddress());
+	// SRV
+	cmdList->SetDescriptorHeaps(1, &texture->srvHeap);
+	// 先頭ハンドルを取得
+	D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle = texture->srvHeap->GetGPUDescriptorHandleForHeapStart();
+	srvGpuHandle.ptr += texture->incrementSize * 1;
 	// SRVヒープの先頭にあるSRVをルートパラメータ1番の設定
 	cmdList->SetGraphicsRootDescriptorTable(1, srvGpuHandle);
 

@@ -19,16 +19,22 @@ class KDirectInit
 {
 public:
 	KDirectInit(KWindow window);
-	void SetDXGIFactory();
-	void SetAdapter();
-	void SetDevice(IDXGIAdapter4* tmpAdapter);
-	void SetCommandList();
-	void SetCommandQueue();
-	void SetSwapChain(KWindow window);
-	void SetDescriptor();
-	void SetBackBuffer();
-	void SetFence();
+	void CmdFlash();
+	void CmdClear();
 
+	ComPtr<ID3D12Device> SetDev() { return dev; }
+	ID3D12GraphicsCommandList* SetCmdlist() { return cmdList; }
+	ComPtr<IDXGISwapChain4> SetSChain() { return swapChain; }
+	ComPtr<ID3D12CommandAllocator> SetCmdAllocater() { return cmdAllocater; }
+	ID3D12DescriptorHeap* SetRtvHeap() { return rtvHeap; }
+	D3D12_DESCRIPTOR_HEAP_DESC SetRtvHeapDesc() { return rtvHeapDesc; }
+	std::vector<ComPtr<ID3D12Resource>> SetBackBuffers() { return backBuffers; }
+
+	float bRed = 0.1f;
+	float bGreen = 0.25f;
+	float bBule = 0.5f;
+
+private:
 	HRESULT result;
 	ComPtr<ID3D12Device> dev;
 	ComPtr<IDXGIFactory6> dxgiFactory;
@@ -37,9 +43,6 @@ public:
 	ID3D12GraphicsCommandList* cmdList = nullptr;
 	ComPtr<ID3D12CommandQueue> cmdQueue;
 	ID3D12DescriptorHeap* rtvHeap = nullptr;
-	float bRed = 0.1f;
-	float bGreen = 0.25f;
-	float bBule = 0.5f;
 
 	// 対応レベルの配列
 	D3D_FEATURE_LEVEL levels[4] = {
@@ -66,5 +69,15 @@ public:
 	// フェンスの生成
 	ComPtr<ID3D12Fence> fence;
 	UINT64 fenceVal = 0;
+
+	void DXGIFactory();
+	void Adapter();
+	void Device(IDXGIAdapter4* tmpAdapter);
+	void CommandList();
+	void CommandQueue();
+	void SwapChain(KWindow window);
+	void Descriptor();
+	void BackBuffer();
+	void Fence();
 };
 

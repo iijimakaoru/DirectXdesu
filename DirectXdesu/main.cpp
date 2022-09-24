@@ -26,6 +26,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	}
 #endif
 
+	HRESULT result;
+
 #pragma region ウィンドウ
 	KWindow win;
 #pragma endregion
@@ -46,17 +48,17 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 #pragma region 描画初期化
 #pragma region 深度バッファ
-	KDepth depth(dx.dev.Get(), win);
+	KDepth depth(dx.SetDev().Get(), win);
 #pragma endregion
 	// 速さ
 	float speed = 1.0f;
 #pragma region モデル
 	KModel triangle = Triangle();
-	triangle.CreateModel(dx.dev.Get());
+	triangle.CreateModel(dx.SetDev().Get());
 	KModel cube = Cube();
-	cube.CreateModel(dx.dev.Get());
+	cube.CreateModel(dx.SetDev().Get());
 	KModel line = Line();
-	line.CreateModel(dx.dev.Get());
+	line.CreateModel(dx.SetDev().Get());
 #pragma endregion
 
 #pragma region テクスチャ初期化
@@ -64,12 +66,12 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	const wchar_t* msg2 = L"Resources/いーじゃん.jpg";
 	const wchar_t* msg3 = L"Resources/haikei.jpg";
 	const wchar_t* msg4 = L"Resources/kitanai.jpg";
-	KTexture texture(dx.dev.Get(), msg, msg3);
-	KTexture texture2(dx.dev.Get(), msg2, msg4);
+	KTexture texture(dx.SetDev().Get(), msg, msg3);
+	KTexture texture2(dx.SetDev().Get(), msg2, msg4);
 #pragma endregion
 
 #pragma region グラフィックスパイプライン設定
-	KGPlin Gpipeline(dx.dev.Get());
+	KGPlin Gpipeline(dx.SetDev().Get());
 #pragma region 3Dオブジェクト初期化
 	const int ObjectNum = 2;
 	const int LineNum = 6;
@@ -77,7 +79,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	KWorldTransform object3d[ObjectNum];
 	//KWorldTransform lineObject[LineNum];
 	for (int i = 0; i < ObjectNum; i++) {
-		object3d[i].Initialize(*dx.dev.Get());
+		object3d[i].Initialize(*dx.SetDev().Get());
 		if (i > 0) {
 			object3d[i].material->colorR = object3d[i].material->colorG = object3d[i].material->colorB = 1.0f;
 		}
@@ -258,30 +260,30 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		// 描画
 #pragma region リソースバリア
 		// バックバッファの番号を取得
-		UINT bbIndex = dx.swapChain->GetCurrentBackBufferIndex();
+		UINT bbIndex = dx.SetSChain()->GetCurrentBackBufferIndex();
 		// 1.リソースバリアで書き込み可能に変更
 		D3D12_RESOURCE_BARRIER barrierDesc{};
-		barrierDesc.Transition.pResource = dx.backBuffers[bbIndex].Get();
+		barrierDesc.Transition.pResource = dx.SetBackBuffers()[bbIndex].Get();
 		barrierDesc.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
 		barrierDesc.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
-		dx.cmdList->ResourceBarrier(1, &barrierDesc);
+		dx.SetCmdlist()->ResourceBarrier(1, &barrierDesc);
 #pragma endregion
 
 #pragma region 描画先
 		// 2. 描画先の変更
 		// レンダーターゲートビューのハンドルを取得
-		D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = dx.rtvHeap->GetCPUDescriptorHandleForHeapStart();
-		rtvHandle.ptr += bbIndex * dx.dev->GetDescriptorHandleIncrementSize(dx.rtvHeapDesc.Type);
+		D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = dx.SetRtvHeap()->GetCPUDescriptorHandleForHeapStart();
+		rtvHandle.ptr += bbIndex * dx.SetDev()->GetDescriptorHandleIncrementSize(dx.SetRtvHeapDesc().Type);
 		// 深度ステンシルビュー用デスクリプタヒープのハンドルを取得
 		D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = depth.dsvHeap->GetCPUDescriptorHandleForHeapStart();
-		dx.cmdList->OMSetRenderTargets(1, &rtvHandle, false, &dsvHandle);
+		dx.SetCmdlist()->OMSetRenderTargets(1, &rtvHandle, false, &dsvHandle);
 #pragma endregion
 
 #pragma region 画面クリア
 		// 3. 画面クリア
 		FLOAT clearColor[] = { dx.bRed,dx.bGreen,dx.bBule,0.0f };
-		dx.cmdList->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
-		dx.cmdList->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+		dx.SetCmdlist()->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
+		dx.SetCmdlist()->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 #pragma endregion
 
 #pragma region 描画
@@ -296,7 +298,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		viewport.MinDepth = 0.0f;			   // 最小深度
 		viewport.MaxDepth = 1.0f;			   // 最大深度
 		// ビューポート設定コマンドをコマンドリストに積む
-		dx.cmdList->RSSetViewports(1, &viewport);
+		dx.SetCmdlist()->RSSetViewports(1, &viewport);
 #pragma endregion
 #pragma region シザー矩形設定
 		// シザー矩形
@@ -306,16 +308,16 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		scissorRect.top = 0;									// 切り抜き座標上
 		scissorRect.bottom = scissorRect.top + win.window_height;	// 切り抜き座標下
 		// シザー矩形設定コマンドをコマンドリストに積む
-		dx.cmdList->RSSetScissorRects(1, &scissorRect);
+		dx.SetCmdlist()->RSSetScissorRects(1, &scissorRect);
 #pragma endregion
 #pragma region パイプラインステート設定
 		// パイプラインステートとルートシグネチャの設定コマンド
-		dx.cmdList->SetPipelineState(Gpipeline.pipelineState.Get());
-		dx.cmdList->SetGraphicsRootSignature(Gpipeline.rootSignature.Get());
+		dx.SetCmdlist()->SetPipelineState(Gpipeline.pipelineState.Get());
+		dx.SetCmdlist()->SetGraphicsRootSignature(Gpipeline.rootSignature.Get());
 #pragma endregion
 #pragma region プリミティブ形状
 		// プリミティブ形状の設定コマンド
-		dx.cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		dx.SetCmdlist()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 #pragma endregion
 
 #pragma region 描画コマンド
@@ -323,11 +325,11 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		for (int i = 0; i < ObjectNum; i++) {
 			if (!input.IsPush(DIK_SPACE))
 			{
-				object3d[i].Draw(dx.cmdList);
+				object3d[i].Draw(dx.SetCmdlist());
 			}
 			else
 			{
-				object3d[i].SecoundDraw(dx.cmdList);
+				object3d[i].SecoundDraw(dx.SetCmdlist());
 			}
 		}
 		/*for (int i = 0; i < LineNum; i++) {
@@ -339,35 +341,14 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 #pragma region リソースバリアを戻す
 		barrierDesc.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
 		barrierDesc.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
-		dx.cmdList->ResourceBarrier(1, &barrierDesc);
+		dx.SetCmdlist()->ResourceBarrier(1, &barrierDesc);
 #pragma endregion
 #pragma region コマンドのフラッシュ
-		// 命令のクローズ
-		dx.result = dx.cmdList->Close();
-		assert(SUCCEEDED(dx.result));
-		// コマンドリストの実行
-		ID3D12CommandList* cmdLists[] = { dx.cmdList };
-		dx.cmdQueue->ExecuteCommandLists(1, cmdLists);
-		// 画面に表示するバッファをフリップ(裏表の入れ替え)
-		dx.result = dx.swapChain->Present(1, 0);
-		assert(SUCCEEDED(dx.result));
+		dx.CmdFlash();
 #pragma endregion
 
 #pragma region コマンド完了待ち
-		// コマンドの完了を待つ
-		dx.cmdQueue->Signal(dx.fence.Get(), ++dx.fenceVal);
-		if (dx.fence->GetCompletedValue() != dx.fenceVal) {
-			HANDLE event = CreateEvent(nullptr, false, false, nullptr);
-			dx.fence->SetEventOnCompletion(dx.fenceVal, event);
-			WaitForSingleObject(event, INFINITE);
-			CloseHandle(event);
-		}
-		// キューをクリア
-		dx.result = dx.cmdAllocater->Reset();
-		assert(SUCCEEDED(dx.result));
-		// 再びコマンドを貯める準備
-		dx.result = dx.cmdList->Reset(dx.cmdAllocater.Get(), nullptr);
-		assert(SUCCEEDED(dx.result));
+		dx.CmdClear();
 #pragma endregion
 	}
 

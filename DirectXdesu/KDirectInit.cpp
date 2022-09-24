@@ -5,30 +5,61 @@ KDirectInit::KDirectInit(KWindow window) {
 	bGreen = 0.25f;
 	bBule = 0.5f;
 
-	SetDXGIFactory();
+	DXGIFactory();
 
-	SetAdapter();
+	Adapter();
 
-	SetCommandList();
+	CommandList();
 
-	SetCommandQueue();
+	CommandQueue();
 
-	SetSwapChain(window);
+	SwapChain(window);
 
-	SetDescriptor();
+	Descriptor();
 
-	SetBackBuffer();
+	BackBuffer();
 
-	SetFence();
+	Fence();
 }
 
-void KDirectInit::SetDXGIFactory() {
+void KDirectInit::CmdFlash()
+{
+	// 命令のクローズ
+	result = cmdList->Close();
+	assert(SUCCEEDED(result));
+	// コマンドリストの実行
+	ID3D12CommandList* cmdLists[] = { cmdList };
+	cmdQueue->ExecuteCommandLists(1, cmdLists);
+	// 画面に表示するバッファをフリップ(裏表の入れ替え)
+	result = swapChain->Present(1, 0);
+	assert(SUCCEEDED(result));
+}
+
+void KDirectInit::CmdClear()
+{
+	// コマンドの完了を待つ
+	cmdQueue->Signal(fence.Get(), ++fenceVal);
+	if (fence->GetCompletedValue() != fenceVal) {
+		HANDLE event = CreateEvent(nullptr, false, false, nullptr);
+		fence->SetEventOnCompletion(fenceVal, event);
+		WaitForSingleObject(event, INFINITE);
+		CloseHandle(event);
+	}
+	// キューをクリア
+	result = cmdAllocater->Reset();
+	assert(SUCCEEDED(result));
+	// 再びコマンドを貯める準備
+	result = cmdList->Reset(cmdAllocater.Get(), nullptr);
+	assert(SUCCEEDED(result));
+}
+
+void KDirectInit::DXGIFactory() {
 	// DXGIファクトリーの生成
 	result = CreateDXGIFactory(IID_PPV_ARGS(&dxgiFactory));
 	assert(SUCCEEDED(result));
 }
 
-void KDirectInit::SetAdapter() {
+void KDirectInit::Adapter() {
 	// アダプターの列挙用
 	std::vector<IDXGIAdapter4*> adapters;
 
@@ -57,12 +88,12 @@ void KDirectInit::SetAdapter() {
 		}
 	}
 
-	SetDevice(tmpAdapter);
+	Device(tmpAdapter);
 
 	tmpAdapter->Release();
 }
 
-void KDirectInit::SetDevice(IDXGIAdapter4* tmpAdapter) {
+void KDirectInit::Device(IDXGIAdapter4* tmpAdapter) {
 	for (size_t i = 0; i < _countof(levels); i++) {
 		result = D3D12CreateDevice(tmpAdapter, levels[i], IID_PPV_ARGS(&dev));
 		if (result == S_OK) {
@@ -73,7 +104,7 @@ void KDirectInit::SetDevice(IDXGIAdapter4* tmpAdapter) {
 	}
 }
 
-void KDirectInit::SetCommandList() {
+void KDirectInit::CommandList() {
 	// コマンドアロケーター生成
 	result = dev->CreateCommandAllocator(
 		D3D12_COMMAND_LIST_TYPE_DIRECT,
@@ -88,13 +119,13 @@ void KDirectInit::SetCommandList() {
 	assert(SUCCEEDED(result));
 }
 
-void KDirectInit::SetCommandQueue() {
+void KDirectInit::CommandQueue() {
 	// コマンドキューを生成
 	result = dev->CreateCommandQueue(&cmdQueueDesc, IID_PPV_ARGS(&cmdQueue));
 	assert(SUCCEEDED(result));
 }
 
-void KDirectInit::SetSwapChain(KWindow window) {
+void KDirectInit::SwapChain(KWindow window) {
 	swapChainDesc.Width = window.window_width;
 	swapChainDesc.Height = window.window_height;
 	swapChainDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
@@ -115,14 +146,14 @@ void KDirectInit::SetSwapChain(KWindow window) {
 	assert(SUCCEEDED(result));
 }
 
-void KDirectInit::SetDescriptor() {
+void KDirectInit::Descriptor() {
 	rtvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
 	rtvHeapDesc.NumDescriptors = swapChainDesc.BufferCount;
 	// デスクリプタヒープの生成
 	dev->CreateDescriptorHeap(&rtvHeapDesc, IID_PPV_ARGS(&rtvHeap));
 }
 
-void KDirectInit::SetBackBuffer() {
+void KDirectInit::BackBuffer() {
 	backBuffers.resize(swapChainDesc.BufferCount);
 	// スワップチェーンの全てのバッファについて処理する
 	for (size_t i = 0; i < backBuffers.size(); i++)
@@ -143,6 +174,6 @@ void KDirectInit::SetBackBuffer() {
 	}
 }
 
-void KDirectInit::SetFence() {
+void KDirectInit::Fence() {
 	result = dev->CreateFence(fenceVal, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence));
 }

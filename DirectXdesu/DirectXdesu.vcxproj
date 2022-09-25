@@ -144,6 +144,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Blend.cpp" />
+    <ClCompile Include="DebugText.cpp" />
     <ClCompile Include="GameScence.cpp" />
     <ClCompile Include="KGPlin.cpp" />
     <ClCompile Include="KDepth.cpp" />
@@ -166,6 +167,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Blend.h" />
+    <ClInclude Include="DebugText.h" />
     <ClInclude Include="GameScence.h" />
     <ClInclude Include="KGPlin.h" />
     <ClInclude Include="KDepth.h" />

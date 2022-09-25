@@ -43,6 +43,9 @@
     <Filter Include="ヘッダー ファイル\Math">
       <UniqueIdentifier>{966c2c0b-0747-4189-a3e1-9e24f6077845}</UniqueIdentifier>
     </Filter>
+    <Filter Include="HLSL">
+      <UniqueIdentifier>{8d46f641-b509-490f-b94c-6d3bb85c48ee}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -106,6 +109,9 @@
       <Filter>ソース ファイル\Math</Filter>
     </ClCompile>
     <ClCompile Include="DebugText.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Sprite.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -173,14 +179,30 @@
     <ClInclude Include="DebugText.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="BasicVS.hlsl" />
-    <FxCompile Include="BasicPS.hlsl" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Basic.hlsli">
+    <ClInclude Include="Sprite.h">
       <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="BasicPS.hlsl">
+      <Filter>HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="BasicVS.hlsl">
+      <Filter>HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="SpriteVS.hlsl">
+      <Filter>HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="SpritePS.hlsl">
+      <Filter>HLSL</Filter>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Sprite.hlsli">
+      <Filter>HLSL</Filter>
+    </None>
+    <None Include="Basic.hlsli">
+      <Filter>HLSL</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

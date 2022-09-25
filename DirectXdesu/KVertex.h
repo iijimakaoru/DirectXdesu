@@ -2,6 +2,7 @@
 #include <DirectXMath.h>
 #include "KDirectInit.h"
 #include "Vector3.h"
+#include "Vector2.h"
 #include <vector>
 
 using namespace DirectX;

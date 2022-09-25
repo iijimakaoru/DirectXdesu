@@ -346,7 +346,6 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 #pragma region コマンドのフラッシュ
 		dx.CmdFlash();
 #pragma endregion
-
 #pragma region コマンド完了待ち
 		dx.CmdClear();
 #pragma endregion

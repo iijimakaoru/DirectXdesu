@@ -60,7 +60,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 #pragma endregion
 #pragma region テクスチャ初期化
 	const wchar_t* msg = L"Resources/mario.jpg";
-	const wchar_t* msg2 = L"Resources/いーじゃん.jpg";
+	const wchar_t* msg2 = L"Resources/iijan.jpg";
 	const wchar_t* msg3 = L"Resources/haikei.jpg";
 	const wchar_t* msg4 = L"Resources/kitanai.jpg";
 	KTexture texture(dx.SetDev().Get(), msg, msg3);
@@ -115,7 +115,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	sound = std::make_unique<Sound>();
 	sound->Init();
 
-	SoundData soundData1 = sound->SoundLoadWave("Resources/Alarm01.wav");
+	SoundData soundData1 = sound->SoundLoadWave("Resources/fanfare.wav");
 
 #pragma endregion
 

@@ -13,6 +13,7 @@
 #include <iostream>
 #endif
 #pragma comment(lib, "d3dcompiler.Lib")
+#include "Sound.h"
 
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow)
 {
@@ -25,13 +26,11 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		debugController->SetEnableGPUBasedValidation(true);
 	}
 #endif
-
 	HRESULT result;
 
 #pragma region ウィンドウ
 	KWindow win;
 #pragma endregion
-
 #pragma region DirectX初期化
 	KDirectInit dx(win);
 	//#ifdef _DEBUG
@@ -45,7 +44,6 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	//#endif // _DEBUG
 	KInput input(win.window, win.handle);
 #pragma endregion
-
 #pragma region 描画初期化
 #pragma region 深度バッファ
 	KDepth depth(dx.SetDev().Get(), win);
@@ -60,7 +58,6 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	KModel line = Line();
 	line.CreateModel(dx.SetDev().Get());
 #pragma endregion
-
 #pragma region テクスチャ初期化
 	const wchar_t* msg = L"Resources/mario.jpg";
 	const wchar_t* msg2 = L"Resources/いーじゃん.jpg";
@@ -69,8 +66,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	KTexture texture(dx.SetDev().Get(), msg, msg3);
 	KTexture texture2(dx.SetDev().Get(), msg2, msg4);
 #pragma endregion
-
 #pragma region グラフィックスパイプライン設定
+
 	KGPlin Gpipeline(dx.SetDev().Get());
 #pragma region 3Dオブジェクト初期化
 	const int ObjectNum = 2;
@@ -100,7 +97,6 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	lineObject[5].transform.rot.y = XMConvertToRadians(90);
 	lineObject[5].transform.pos.z = lineObject[3].transform.pos.z - 20;*/
 #pragma endregion
-
 #pragma region ビュー
 	// ビュープロジェクション
 	ViewProjection* viewProjection;
@@ -115,6 +111,12 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	float bSpeed = -0.02f;
 	float aSpeed = -0.02f;
 
+	std::unique_ptr<Sound> sound;
+	sound = std::make_unique<Sound>();
+	sound->Init();
+
+	SoundData soundData1 = sound->SoundLoadWave("Resources/Alarm01.wav");
+
 #pragma endregion
 
 	// ウィンドウ表示
@@ -123,6 +125,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	{
 #pragma region ウィンドウメッセージ
 		if (win.breakFlag || input.IsPush(DIK_ESCAPE)) {
+			sound->GetxAudio().Reset();
+			sound->SoundUnLoad(&soundData1);
 			break;
 		}
 #pragma endregion
@@ -139,15 +143,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 #pragma region キーボード処理
 		// 背景色変え
-		if (input.IsPush(DIK_SPACE)) {
-			dx.bRed = 0.5f;
-			dx.bGreen = 0.5f;
-			dx.bBule = 0.5f;
-		}
-		else {
-			dx.bRed = 0.1f;
-			dx.bGreen = 0.25f;
-			dx.bBule = 0.5f;
+		if (input.IsTriger(DIK_SPACE)) {
+			sound->SoundPlayWave(sound->GetxAudio().Get(), soundData1);
 		}
 		// 画像色変え
 		if (object3d[0].material->colorR <= 0 || object3d[0].material->colorR >= 1) {

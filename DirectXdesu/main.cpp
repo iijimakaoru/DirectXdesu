@@ -115,7 +115,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	sound = std::make_unique<Sound>();
 	sound->Init();
 
-	SoundData soundData1 = sound->SoundLoadWave("Resources/fanfare.wav");
+	SoundData soundData1 = sound->SoundLoadWave("Sound/fanfare.wav");
 
 #pragma endregion
 

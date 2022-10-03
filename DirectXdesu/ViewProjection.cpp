@@ -11,7 +11,7 @@ void ViewProjection::Initialize(int width, int height) {
 	lenZ = -100;
 	angleX = 0.0f;
 	angleY = 0.0f;
-	eye = { 0, 0, lenZ };
+	eye = { angleX, angleY, lenZ };
 	target = { 0, 0, 0 };
 	up = { 0, 1, 0 };
 

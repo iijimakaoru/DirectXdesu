@@ -384,6 +384,31 @@ Sprite SpriteCreate(ID3D12Device* dev, int window_width, int window_height)
 	return sprite;
 }
 
+void SpriteCommonBeginDraw(ID3D12GraphicsCommandList* cmdList,
+	const PipelineSet& pipelineSet,
+	ID3D12DescriptorHeap* descHeap)
+{
+	// パイプラインステートの設定
+	cmdList->SetPipelineState(pipelineSet.pipelineState.Get());
+	// ルートシグネチャの設定
+	cmdList->SetGraphicsRootSignature(pipelineSet.rootSignature.Get());
+	// プリミティブ形状を設定
+	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+	// テクスチャ用デスクリプタヒープの設定
+	ID3D12DescriptorHeap* ppHeaps[] = { descHeap };
+	cmdList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
+}
+
+void SpriteDraw(const Sprite& sprite, ID3D12GraphicsCommandList* cmdList)
+{
+	// 頂点バッファをセット
+	cmdList->IASetVertexBuffers(0, 1, &sprite.vbView);
+	// 定数バッファをセット
+	cmdList->SetGraphicsRootConstantBufferView(0, sprite.constBuff->GetGPUVirtualAddress());
+	// ポリゴンの描画
+	cmdList->DrawInstanced(4, 1, 0, 0);
+}
+
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow)
 {
 #ifdef _DEBUG
@@ -488,6 +513,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 	SoundData soundData1 = sound->SoundLoadWave("Sound/fanfare.wav");
 
+	Sprite sprite;
+	sprite = SpriteCreate(dx.SetDev().Get(), win.window_width, win.window_height);
 #pragma endregion
 
 	// ウィンドウ表示
@@ -703,8 +730,11 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		/*for (int i = 0; i < LineNum; i++) {
 			lineObject[i].Draw(dx.cmdList);
 		}*/
-#pragma endregion
+
+		SpriteCommonBeginDraw(dx.SetCmdlist(), spritePipelineSet, texture.srvHeap);
+		SpriteDraw(sprite, dx.SetCmdlist());
 		// 描画コマンドここまで
+#pragma endregion
 #pragma endregion
 #pragma region リソースバリアを戻す
 		barrierDesc.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;

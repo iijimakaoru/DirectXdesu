@@ -43,7 +43,7 @@
     <Filter Include="ヘッダー ファイル\Math">
       <UniqueIdentifier>{966c2c0b-0747-4189-a3e1-9e24f6077845}</UniqueIdentifier>
     </Filter>
-    <Filter Include="HLSL">
+    <Filter Include="シェーダー">
       <UniqueIdentifier>{8d46f641-b509-490f-b94c-6d3bb85c48ee}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -188,27 +188,30 @@
     <ClInclude Include="Sound.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="ConstBuffer.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="BasicPS.hlsl">
-      <Filter>HLSL</Filter>
+      <Filter>シェーダー</Filter>
     </FxCompile>
     <FxCompile Include="BasicVS.hlsl">
-      <Filter>HLSL</Filter>
+      <Filter>シェーダー</Filter>
     </FxCompile>
     <FxCompile Include="SpriteVS.hlsl">
-      <Filter>HLSL</Filter>
+      <Filter>シェーダー</Filter>
     </FxCompile>
     <FxCompile Include="SpritePS.hlsl">
-      <Filter>HLSL</Filter>
+      <Filter>シェーダー</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Sprite.hlsli">
-      <Filter>HLSL</Filter>
+      <Filter>シェーダー</Filter>
     </None>
     <None Include="Basic.hlsli">
-      <Filter>HLSL</Filter>
+      <Filter>シェーダー</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

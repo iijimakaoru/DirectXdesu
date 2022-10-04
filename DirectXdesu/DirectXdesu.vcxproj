@@ -169,6 +169,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Blend.h" />
+    <ClInclude Include="ConstBuffer.h" />
     <ClInclude Include="DebugText.h" />
     <ClInclude Include="GameScence.h" />
     <ClInclude Include="KGPlin.h" />

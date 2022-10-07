@@ -18,7 +18,47 @@
 #include <d3dx12.h>
 #include "ConstBuffer.h"
 #include "PipelineSet.h"
-#include "Sprite.h"
+#include "Vector4.h"
+
+const int spriteSRVCount = 512;
+
+struct VertexPosUV
+{
+	XMFLOAT3 pos;
+	XMFLOAT2 uv;
+};
+
+struct Sprite
+{
+	// 頂点バッファ
+	ComPtr<ID3D12Resource> vertBuff;
+	//	頂点バッファビュー
+	D3D12_VERTEX_BUFFER_VIEW vbView{};
+	// 定数バッファ
+	ComPtr<ID3D12Resource> constBuff;
+	// Z軸周りの回転角
+	float rotation = 0.0f;
+	// 座標
+	Vector3 position = { 0,0,0 };
+	// ワールド行列
+	XMMATRIX matWorld;
+	// 色
+	XMFLOAT4 color = { 1.0f,1.0f,1.0f,1.0f };
+	// テクスチャ番号
+	UINT texNum = 0;
+};
+
+struct SpriteCommon
+{
+	// パイプラインセット
+	PipelineSet pipelineSet;
+	// 射影行列
+	XMMATRIX matProjection{};
+	// テクスチャ用デスクリプタヒープ
+	ComPtr<ID3D12DescriptorHeap> descHeap;
+	// テクスチャリソース(テクスチャバッファ)の配列
+	ComPtr<ID3D12Resource> texBuff[spriteSRVCount];
+};
 
 PipelineSet Create3DObjectGpipeline(ID3D12Device* dev)
 {
@@ -154,7 +194,7 @@ PipelineSet Create3DObjectGpipeline(ID3D12Device* dev)
 	return pipelineSet;
 }
 
-PipelineSet Create2DObjectGPipeline(ID3D12Device* dev)
+PipelineSet SpriteCreateGraphicsPipeline(ID3D12Device* dev)
 {
 	HRESULT result;
 #pragma region シェーダー読み込みとコンパイル
@@ -291,6 +331,248 @@ PipelineSet Create2DObjectGPipeline(ID3D12Device* dev)
 	return pipelineSet;
 }
 
+Sprite SpriteCreate(ID3D12Device* dev, int window_width, int window_height)
+{
+	HRESULT result = S_FALSE;
+	// 新しいスプライトを作る
+	Sprite sprite{};
+	// 頂点データ
+	VertexPosUV vertices[] =
+	{
+		// x	  y		 z		  u	   v
+		{{  0.0f,100.0f,  0.0f},{0.0f,1.0f}}, // 左下 
+		{{  0.0f,  0.0f,  0.0f},{0.0f,0.0f}}, // 左上
+		{{100.0f,100.0f,  0.0f},{1.0f,1.0f}}, // 右下
+		{{100.0f,  0.0f,  0.0f},{1.0f,0.0f}}, // 右上
+	};
+	// ヒープ設定
+	D3D12_HEAP_PROPERTIES cbHeapProp{};
+	cbHeapProp.Type = D3D12_HEAP_TYPE_UPLOAD;
+	// リソース設定
+	D3D12_RESOURCE_DESC resDesc{};
+	resDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
+	resDesc.Width = static_cast<UINT>(sizeof(vertices));
+	resDesc.Height = 1;
+	resDesc.DepthOrArraySize = 1;
+	resDesc.MipLevels = 1;
+	resDesc.SampleDesc.Count = 1;
+	resDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+
+	D3D12_RESOURCE_DESC cbResourceDesc{};
+	cbResourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
+	cbResourceDesc.Width = (sizeof(ConstBufferData) + 0xff) & ~0xff;
+	cbResourceDesc.Height = 1;
+	cbResourceDesc.DepthOrArraySize = 1;
+	cbResourceDesc.MipLevels = 1;
+	cbResourceDesc.SampleDesc.Count = 1;
+	cbResourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+	// 頂点バッファ生成
+	result = dev->CreateCommittedResource(
+		&cbHeapProp,
+		D3D12_HEAP_FLAG_NONE,
+		&resDesc,
+		D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
+		IID_PPV_ARGS(&sprite.vertBuff)
+	);
+	// 頂点バッファへのデータ転送
+	VertexPosUV* vertMap = nullptr;
+	result = sprite.vertBuff->Map(0, nullptr, (void**)&vertMap);
+	memcpy(vertMap, vertices, sizeof(vertices));
+	sprite.vertBuff->Unmap(0, nullptr);
+	// 頂点バッファビューの作成
+	sprite.vbView.BufferLocation = sprite.vertBuff->GetGPUVirtualAddress();
+	sprite.vbView.SizeInBytes = sizeof(vertices);
+	sprite.vbView.StrideInBytes = sizeof(vertices[0]);
+	// 定数バッファの生成
+	result = dev->CreateCommittedResource(
+		&cbHeapProp,
+		D3D12_HEAP_FLAG_NONE,
+		&cbResourceDesc,
+		D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
+		IID_PPV_ARGS(&sprite.constBuff)
+	);
+	// 定数バッファにデータ転送
+	ConstBufferData* constMap = nullptr;
+	result = sprite.constBuff->Map(0, nullptr, (void**)&constMap);
+	constMap->color = XMFLOAT4(1, 1, 1, 1); // 色指定
+	// 平行投影行列
+	constMap->mat = XMMatrixOrthographicOffCenterLH(0.0f, window_width, window_height, 0.0f, 0.0f, 1.0f);
+	sprite.constBuff->Unmap(0, nullptr);
+
+	return sprite;
+}
+
+void SpriteCommonBeginDraw(ID3D12GraphicsCommandList* cmdList, const SpriteCommon& spriteCommon)
+{
+	// パイプラインステートの設定
+	cmdList->SetPipelineState(spriteCommon.pipelineSet.pipelineState.Get());
+	// ルートシグネチャの設定
+	cmdList->SetGraphicsRootSignature(spriteCommon.pipelineSet.rootSignature.Get());
+	// プリミティブ形状を設定
+	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+	// テクスチャ用デスクリプタヒープの設定
+	ID3D12DescriptorHeap* ppHeaps[] = { spriteCommon.descHeap.Get() };
+	cmdList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
+}
+
+void SpriteDraw(const Sprite& sprite, ID3D12GraphicsCommandList* cmdList,
+	const SpriteCommon& spriteCommon, ID3D12Device* dev)
+{
+	// 頂点バッファをセット
+	cmdList->IASetVertexBuffers(0, 1, &sprite.vbView);
+	// 定数バッファをセット
+	cmdList->SetGraphicsRootConstantBufferView(0, sprite.constBuff->GetGPUVirtualAddress());
+	// シェーダーリソースビューをセット
+	cmdList->SetGraphicsRootDescriptorTable(
+		1, 
+		CD3DX12_GPU_DESCRIPTOR_HANDLE(
+			spriteCommon.descHeap->GetGPUDescriptorHandleForHeapStart(),
+			sprite.texNum,
+			dev->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV)));
+	// ポリゴンの描画
+	cmdList->DrawInstanced(4, 1, 0, 0);
+}
+
+SpriteCommon SpriteCommonCreate(ID3D12Device* dev, int window_width, int window_height)
+{
+	HRESULT result = S_FALSE;
+
+	SpriteCommon spriteCommon{};
+
+	D3D12_DESCRIPTOR_HEAP_DESC descHeapDesc = {};
+	descHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+	descHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+	descHeapDesc.NumDescriptors = spriteSRVCount;
+
+	result = dev->CreateDescriptorHeap(&descHeapDesc, IID_PPV_ARGS(&spriteCommon.descHeap));
+
+	spriteCommon.pipelineSet = SpriteCreateGraphicsPipeline(dev);
+
+	spriteCommon.matProjection = XMMatrixOrthographicOffCenterLH(
+		0.0f, (float)window_width, (float)window_height, 0.0f, 0.0f, 1.0f);
+
+	return spriteCommon;
+}
+
+void SpriteUpdate(Sprite& sprite, const SpriteCommon& spriteCommon)
+{
+	// ワールド行列
+	sprite.matWorld = XMMatrixIdentity();
+	// Z軸回転
+	sprite.matWorld *= XMMatrixRotationZ(XMConvertToRadians(sprite.rotation));
+	// 平行移動
+	sprite.matWorld *= XMMatrixTranslation(sprite.position.x, sprite.position.y, sprite.position.z);
+	// 定数バッファの転送
+	ConstBufferData* constMap = nullptr;
+	HRESULT result = sprite.constBuff->Map(0, nullptr, (void**)&constMap);
+	constMap->mat = sprite.matWorld * spriteCommon.matProjection;
+	constMap->color = sprite.color;
+	sprite.constBuff->Unmap(0, nullptr);
+}
+
+HRESULT SpriteCommonLoadTexture(SpriteCommon& spriteCommon,
+	UINT texnumber, const wchar_t* filename, ID3D12Device* dev)
+{
+	assert(texnumber <= spriteSRVCount - 1);
+
+	HRESULT result;
+#pragma region WICテクスチャのロード
+	TexMetadata metadata{};
+	ScratchImage scraychImg{};
+	// 画像読み込み
+	result = LoadFromWICFile(
+		filename,
+		WIC_FLAGS_NONE,
+		&metadata, scraychImg);
+
+	ScratchImage mipChain{};
+	// ミニマップ作成
+	result = GenerateMipMaps(
+		scraychImg.GetImages(),
+		scraychImg.GetImageCount(),
+		scraychImg.GetMetadata(),
+		TEX_FILTER_DEFAULT,
+		0, mipChain);
+
+	if (SUCCEEDED(result)) {
+		scraychImg = std::move(mipChain);
+		metadata = scraychImg.GetMetadata();
+	}
+
+	// 読み込んだディフューズテクスチャをSRGBとして扱う
+	metadata.format = MakeSRGB(metadata.format);
+#pragma endregion
+#pragma region リソース設定
+	// リソース設定
+	D3D12_RESOURCE_DESC textureResourceDesc{};
+	textureResourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+	textureResourceDesc.Format = metadata.format;
+	textureResourceDesc.Width = metadata.width;
+	textureResourceDesc.Height = (UINT)metadata.height;
+	textureResourceDesc.DepthOrArraySize = (UINT16)metadata.arraySize;
+	textureResourceDesc.MipLevels = (UINT16)metadata.mipLevels;
+	textureResourceDesc.SampleDesc.Count = 1;
+	// ヒープ設定
+	D3D12_HEAP_PROPERTIES textureHeapProp{};
+	textureHeapProp.Type = D3D12_HEAP_TYPE_CUSTOM;
+	textureHeapProp.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_WRITE_BACK;
+	textureHeapProp.MemoryPoolPreference = D3D12_MEMORY_POOL_L0;
+#pragma endregion
+#pragma region テクスチャバッファの生成
+	spriteCommon.texBuff[texnumber] = nullptr;
+	// テクスチャバッファの生成
+	result = dev->CreateCommittedResource(
+		&textureHeapProp,
+		D3D12_HEAP_FLAG_NONE,
+		&textureResourceDesc,
+		D3D12_RESOURCE_STATE_GENERIC_READ,
+		nullptr,
+		IID_PPV_ARGS(&spriteCommon.texBuff[texnumber]));
+#pragma endregion
+#pragma region テクスチャバッファにデータ転送
+	// 全ミニマップについて
+	for (size_t i = 0; i < metadata.mipLevels; i++) {
+		// ミニマップレベルを指定してイメージを取得
+		const Image* img = scraychImg.GetImage(i, 0, 0);
+		// テクスチャバッファにデータ転送
+		result = spriteCommon.texBuff[texnumber]->WriteToSubresource(
+			(UINT)i,
+			nullptr,
+			img->pixels,
+			(UINT)img->rowPitch,
+			(UINT)img->slicePitch);
+		assert(SUCCEEDED(result));
+	}
+#pragma endregion
+
+	D3D12_DESCRIPTOR_HEAP_DESC srvHeapDesc = {};
+	srvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+	srvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+	srvHeapDesc.NumDescriptors = spriteSRVCount;
+
+	ID3D12DescriptorHeap* srvHeap = nullptr;
+	result = dev->CreateDescriptorHeap(&srvHeapDesc, IID_PPV_ARGS(&srvHeap));
+	assert(SUCCEEDED(result));
+
+	// SRVヒープの先頭ハンドルを取得
+	D3D12_CPU_DESCRIPTOR_HANDLE srvHandle;
+	srvHandle = srvHeap->GetCPUDescriptorHandleForHeapStart();
+
+	// シェーダーリソースビュー設定
+	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
+	srvDesc.Format = textureResourceDesc.Format;
+	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+	srvDesc.Texture2D.MipLevels = textureResourceDesc.MipLevels;
+
+	// ハンドルの示す先にシェーダーリソースビュー作成
+	dev->CreateShaderResourceView(spriteCommon.texBuff[texnumber].Get(), &srvDesc,
+		CD3DX12_CPU_DESCRIPTOR_HANDLE(spriteCommon.descHeap->GetCPUDescriptorHandleForHeapStart(),texnumber,
+			dev->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV)));
+
+	return S_OK;
+}
+
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow)
 {
 #ifdef _DEBUG
@@ -347,7 +629,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	// 3Dオブジェクト用パイプライン生成
 	PipelineSet object3dPipelineSet = Create3DObjectGpipeline(dx.SetDev().Get());
 	// スプライト用パイプライン生成
-	PipelineSet spritePipelineSet = Create2DObjectGPipeline(dx.SetDev().Get());
+	PipelineSet spritePipelineSet = SpriteCreateGraphicsPipeline(dx.SetDev().Get());
 #pragma region 3Dオブジェクト初期化
 	const int ObjectNum = 2;
 	const int LineNum = 6;
@@ -396,12 +678,30 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 	SoundData soundData1 = sound->SoundLoadWave("Sound/fanfare.wav");
 
-#pragma region スプライト
-	std::unique_ptr<Sprite> sprite;
-	sprite = std::make_unique<Sprite>();
-#pragma endregion
-	Sprite::SpriteBuff spriteBuff;
-	spriteBuff = sprite->SpriteCreate(dx.SetDev().Get(), win.window_width, win.window_height);
+	SpriteCommon spriteCommon;
+	spriteCommon = SpriteCommonCreate(dx.SetDev().Get(), win.window_width, win.window_height);
+
+	SpriteCommonLoadTexture(spriteCommon, 0, L"Resources/haikei.jpg", dx.SetDev().Get());
+	SpriteCommonLoadTexture(spriteCommon, 1, L"Resources/mario.jpg", dx.SetDev().Get());
+
+	Sprite sprite[2];
+	for (int i = 0; i < _countof(sprite); i++)
+	{
+		sprite[i] = SpriteCreate(dx.SetDev().Get(), win.window_width, win.window_height);
+	}
+	sprite[0].texNum = 0;
+	sprite[1].texNum = 1;
+	sprite[1].rotation = 45;
+	sprite[1].position = { 1280 / 2, 720 / 2,0 };
+	//#pragma region スプライト
+	//	std::unique_ptr<Sprite> sprite;
+	//	sprite = std::make_unique<Sprite>();
+	//
+	//	Sprite::SpriteCommon spriteCommon;
+	//	spriteCommon = sprite->SpriteCommonCreate(dx.SetDev().Get());
+	//#pragma endregion
+	//	Sprite::SpriteBuff spriteBuff;
+	//	spriteBuff = sprite->SpriteCreate(dx.SetDev().Get(), win.window_width, win.window_height);
 #pragma endregion
 
 	// ウィンドウ表示
@@ -418,6 +718,10 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 		// 更新
 #pragma region DirectX毎フレーム処理
+		for (int i = 0; i < _countof(sprite); i++)
+		{
+			SpriteUpdate(sprite[i], spriteCommon);
+		}
 #pragma region ウィンドウアップデート
 		win.Update();
 #pragma endregion
@@ -618,8 +922,11 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 			lineObject[i].Draw(dx.cmdList);
 		}*/
 		// スプライト描画
-		sprite->SpriteCommonBeginDraw(dx.SetCmdlist(), spritePipelineSet, texture.srvHeap);
-		sprite->SpriteDraw(spriteBuff, dx.SetCmdlist());
+		SpriteCommonBeginDraw(dx.SetCmdlist(), spriteCommon);
+		for (int i = 0; i < _countof(sprite); i++)
+		{
+			SpriteDraw(sprite[i], dx.SetCmdlist(), spriteCommon, dx.SetDev().Get());
+		}
 		// 描画コマンドここまで
 #pragma endregion
 #pragma endregion

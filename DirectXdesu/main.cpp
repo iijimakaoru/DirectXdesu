@@ -17,20 +17,8 @@
 #include "Sound.h"
 #include <d3dx12.h>
 #include "ConstBuffer.h"
-
-struct VertexPosUV
-{
-	XMFLOAT3 pos;
-	XMFLOAT2 uv;
-};
-
-struct PipelineSet
-{
-	// パイプラインステート
-	ComPtr<ID3D12PipelineState> pipelineState;
-	// ルートシグネチャ
-	ComPtr<ID3D12RootSignature> rootSignature;
-};
+#include "PipelineSet.h"
+#include "Sprite.h"
 
 PipelineSet Create3DObjectGpipeline(ID3D12Device* dev)
 {
@@ -303,112 +291,6 @@ PipelineSet Create2DObjectGPipeline(ID3D12Device* dev)
 	return pipelineSet;
 }
 
-struct Sprite
-{
-	// 頂点バッファ
-	ComPtr<ID3D12Resource> vertBuff;
-	//	頂点バッファビュー
-	D3D12_VERTEX_BUFFER_VIEW vbView{};
-	// 定数バッファ
-	ComPtr<ID3D12Resource> constBuff;
-};
-
-Sprite SpriteCreate(ID3D12Device* dev, int window_width, int window_height)
-{
-	HRESULT result = S_FALSE;
-	// 新しいスプライトを作る
-	Sprite sprite{};
-	// 頂点データ
-	VertexPosUV vertices[] =
-	{
-		// x	  y		 z		  u	   v
-		{{  0.0f,100.0f,  0.0f},{0.0f,1.0f}}, // 左下 
-		{{  0.0f,  0.0f,  0.0f},{0.0f,0.0f}}, // 左上
-		{{100.0f,100.0f,  0.0f},{1.0f,1.0f}}, // 右下
-		{{100.0f,  0.0f,  0.0f},{1.0f,0.0f}}, // 右上
-	};
-	// ヒープ設定
-	D3D12_HEAP_PROPERTIES cbHeapProp{};
-	cbHeapProp.Type = D3D12_HEAP_TYPE_UPLOAD;
-	// リソース設定
-	D3D12_RESOURCE_DESC resDesc{};
-	resDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-	resDesc.Width = static_cast<UINT>(sizeof(vertices));
-	resDesc.Height = 1;
-	resDesc.DepthOrArraySize = 1;
-	resDesc.MipLevels = 1;
-	resDesc.SampleDesc.Count = 1;
-	resDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
-
-	D3D12_RESOURCE_DESC cbResourceDesc{};
-	cbResourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-	cbResourceDesc.Width = (sizeof(ConstBufferData) + 0xff) & ~0xff;
-	cbResourceDesc.Height = 1;
-	cbResourceDesc.DepthOrArraySize = 1;
-	cbResourceDesc.MipLevels = 1;
-	cbResourceDesc.SampleDesc.Count = 1;
-	cbResourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
-	// 頂点バッファ生成
-	result = dev->CreateCommittedResource(
-		&cbHeapProp,
-		D3D12_HEAP_FLAG_NONE,
-		&resDesc,
-		D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
-		IID_PPV_ARGS(&sprite.vertBuff)
-	);
-	// 頂点バッファへのデータ転送
-	VertexPosUV* vertMap = nullptr;
-	result = sprite.vertBuff->Map(0, nullptr, (void**)&vertMap);
-	memcpy(vertMap, vertices, sizeof(vertices));
-	sprite.vertBuff->Unmap(0, nullptr);
-	// 頂点バッファビューの作成
-	sprite.vbView.BufferLocation = sprite.vertBuff->GetGPUVirtualAddress();
-	sprite.vbView.SizeInBytes = sizeof(vertices);
-	sprite.vbView.StrideInBytes = sizeof(vertices[0]);
-	// 定数バッファの生成
-	result = dev->CreateCommittedResource(
-		&cbHeapProp,
-		D3D12_HEAP_FLAG_NONE,
-		&cbResourceDesc,
-		D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
-		IID_PPV_ARGS(&sprite.constBuff)
-	);
-	// 定数バッファにデータ転送
-	ConstBufferData* constMap = nullptr;
-	result = sprite.constBuff->Map(0, nullptr, (void**)&constMap);
-	constMap->color = XMFLOAT4(1, 1, 1, 1); // 色指定
-	// 平行投影行列
-	constMap->mat = XMMatrixOrthographicOffCenterLH(0.0f, window_width, window_height, 0.0f, 0.0f, 1.0f);
-	sprite.constBuff->Unmap(0, nullptr);
-
-	return sprite;
-}
-
-void SpriteCommonBeginDraw(ID3D12GraphicsCommandList* cmdList,
-	const PipelineSet& pipelineSet,
-	ID3D12DescriptorHeap* descHeap)
-{
-	// パイプラインステートの設定
-	cmdList->SetPipelineState(pipelineSet.pipelineState.Get());
-	// ルートシグネチャの設定
-	cmdList->SetGraphicsRootSignature(pipelineSet.rootSignature.Get());
-	// プリミティブ形状を設定
-	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
-	// テクスチャ用デスクリプタヒープの設定
-	ID3D12DescriptorHeap* ppHeaps[] = { descHeap };
-	cmdList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
-}
-
-void SpriteDraw(const Sprite& sprite, ID3D12GraphicsCommandList* cmdList)
-{
-	// 頂点バッファをセット
-	cmdList->IASetVertexBuffers(0, 1, &sprite.vbView);
-	// 定数バッファをセット
-	cmdList->SetGraphicsRootConstantBufferView(0, sprite.constBuff->GetGPUVirtualAddress());
-	// ポリゴンの描画
-	cmdList->DrawInstanced(4, 1, 0, 0);
-}
-
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow)
 {
 #ifdef _DEBUG
@@ -460,6 +342,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	KTexture texture(dx.SetDev().Get(), msg, msg3);
 	KTexture texture2(dx.SetDev().Get(), msg2, msg4);
 #pragma endregion
+
 #pragma region グラフィックスパイプライン設定
 	// 3Dオブジェクト用パイプライン生成
 	PipelineSet object3dPipelineSet = Create3DObjectGpipeline(dx.SetDev().Get());
@@ -513,8 +396,12 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 	SoundData soundData1 = sound->SoundLoadWave("Sound/fanfare.wav");
 
-	Sprite sprite;
-	sprite = SpriteCreate(dx.SetDev().Get(), win.window_width, win.window_height);
+#pragma region スプライト
+	std::unique_ptr<Sprite> sprite;
+	sprite = std::make_unique<Sprite>();
+#pragma endregion
+	Sprite::SpriteBuff spriteBuff;
+	spriteBuff = sprite->SpriteCreate(dx.SetDev().Get(), win.window_width, win.window_height);
 #pragma endregion
 
 	// ウィンドウ表示
@@ -730,9 +617,9 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		/*for (int i = 0; i < LineNum; i++) {
 			lineObject[i].Draw(dx.cmdList);
 		}*/
-
-		SpriteCommonBeginDraw(dx.SetCmdlist(), spritePipelineSet, texture.srvHeap);
-		SpriteDraw(sprite, dx.SetCmdlist());
+		// スプライト描画
+		sprite->SpriteCommonBeginDraw(dx.SetCmdlist(), spritePipelineSet, texture.srvHeap);
+		sprite->SpriteDraw(spriteBuff, dx.SetCmdlist());
 		// 描画コマンドここまで
 #pragma endregion
 #pragma endregion

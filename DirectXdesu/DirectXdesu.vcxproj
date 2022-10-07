@@ -184,6 +184,7 @@
     <ClInclude Include="KWorldTransform.h" />
     <ClInclude Include="KTexture.h" />
     <ClInclude Include="Matrix4.h" />
+    <ClInclude Include="PipelineSet.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="ShaderManager.h" />
     <ClInclude Include="Sound.h" />

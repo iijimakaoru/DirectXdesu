@@ -28,7 +28,7 @@ struct VertexPosUV
 	XMFLOAT2 uv;
 };
 
-struct Sprite
+struct SpriteInfo
 {
 	// 頂点バッファ
 	ComPtr<ID3D12Resource> vertBuff;
@@ -46,6 +46,20 @@ struct Sprite
 	XMFLOAT4 color = { 1.0f,1.0f,1.0f,1.0f };
 	// テクスチャ番号
 	UINT texNum = 0;
+	// サイズ
+	Vector2 size = { 100,100 };
+	// アンカーポイント
+	Vector2 anchorpoint = { 0.5f,0.5f };
+	// 左右反転
+	bool isFlipX = false;
+	// 上下反転
+	bool isFlipY = false;
+	// テクスチャ左上
+	Vector2 texLeftTop = { 0,0 };
+	// テクスチャ切り出しサイズ
+	Vector2 texSize = { 100,100 };
+	// 非表示
+	bool isInvisible = false;
 };
 
 struct SpriteCommon
@@ -59,6 +73,9 @@ struct SpriteCommon
 	// テクスチャリソース(テクスチャバッファ)の配列
 	ComPtr<ID3D12Resource> texBuff[spriteSRVCount];
 };
+
+void SpriteTransferVertexBuffer(const SpriteInfo& sprite,
+	const SpriteCommon& spriteCommon);
 
 PipelineSet Create3DObjectGpipeline(ID3D12Device* dev)
 {
@@ -331,11 +348,13 @@ PipelineSet SpriteCreateGraphicsPipeline(ID3D12Device* dev)
 	return pipelineSet;
 }
 
-Sprite SpriteCreate(ID3D12Device* dev, int window_width, int window_height)
+SpriteInfo SpriteCreate(ID3D12Device* dev, int window_width, int window_height,
+	UINT texNumber, const SpriteCommon& spriteCommon, Vector2 anchorpoint = {0.5f,0.5f},
+	bool isFlipX = false, bool isFlipY = false)
 {
 	HRESULT result = S_FALSE;
 	// 新しいスプライトを作る
-	Sprite sprite{};
+	SpriteInfo sprite{};
 	// 頂点データ
 	VertexPosUV vertices[] =
 	{
@@ -366,19 +385,43 @@ Sprite SpriteCreate(ID3D12Device* dev, int window_width, int window_height)
 	cbResourceDesc.MipLevels = 1;
 	cbResourceDesc.SampleDesc.Count = 1;
 	cbResourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+
+	// テクスチャ番号コピー
+	sprite.texNum = texNumber;
+
 	// 頂点バッファ生成
 	result = dev->CreateCommittedResource(
 		&cbHeapProp,
 		D3D12_HEAP_FLAG_NONE,
 		&resDesc,
 		D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
-		IID_PPV_ARGS(&sprite.vertBuff)
-	);
-	// 頂点バッファへのデータ転送
-	VertexPosUV* vertMap = nullptr;
-	result = sprite.vertBuff->Map(0, nullptr, (void**)&vertMap);
-	memcpy(vertMap, vertices, sizeof(vertices));
-	sprite.vertBuff->Unmap(0, nullptr);
+		IID_PPV_ARGS(&sprite.vertBuff));
+
+	// 指定番号の画像が読み込み済みなら
+	if (spriteCommon.texBuff[sprite.texNum])
+	{
+		// 
+		D3D12_RESOURCE_DESC resDesc = spriteCommon.texBuff[sprite.texNum]->GetDesc();
+		// 
+		sprite.size = { (float)resDesc.Width, (float)resDesc.Height };
+	}
+
+	// 反転フラグコピー
+	sprite.isFlipX = isFlipX;
+	sprite.isFlipY = isFlipY;
+
+	// アンカーポイントコピー
+	sprite.anchorpoint = anchorpoint;
+
+	// 頂点バッファデータ転送
+	SpriteTransferVertexBuffer(sprite, spriteCommon);
+
+	//// 頂点バッファへのデータ転送
+	//VertexPosUV* vertMap = nullptr;
+	//result = sprite.vertBuff->Map(0, nullptr, (void**)&vertMap);
+	//memcpy(vertMap, vertices, sizeof(vertices));
+	//sprite.vertBuff->Unmap(0, nullptr);
+	
 	// 頂点バッファビューの作成
 	sprite.vbView.BufferLocation = sprite.vertBuff->GetGPUVirtualAddress();
 	sprite.vbView.SizeInBytes = sizeof(vertices);
@@ -415,9 +458,14 @@ void SpriteCommonBeginDraw(ID3D12GraphicsCommandList* cmdList, const SpriteCommo
 	cmdList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 }
 
-void SpriteDraw(const Sprite& sprite, ID3D12GraphicsCommandList* cmdList,
+void SpriteDraw(const SpriteInfo& sprite, ID3D12GraphicsCommandList* cmdList,
 	const SpriteCommon& spriteCommon, ID3D12Device* dev)
 {
+	// 非表示フラグ
+	if (sprite.isInvisible)
+	{
+		return;
+	}
 	// 頂点バッファをセット
 	cmdList->IASetVertexBuffers(0, 1, &sprite.vbView);
 	// 定数バッファをセット
@@ -454,7 +502,7 @@ SpriteCommon SpriteCommonCreate(ID3D12Device* dev, int window_width, int window_
 	return spriteCommon;
 }
 
-void SpriteUpdate(Sprite& sprite, const SpriteCommon& spriteCommon)
+void SpriteUpdate(SpriteInfo& sprite, const SpriteCommon& spriteCommon)
 {
 	// ワールド行列
 	sprite.matWorld = XMMatrixIdentity();
@@ -573,6 +621,65 @@ HRESULT SpriteCommonLoadTexture(SpriteCommon& spriteCommon,
 	return S_OK;
 }
 
+void SpriteTransferVertexBuffer(const SpriteInfo& sprite,
+	const SpriteCommon& spriteCommon)
+{
+	HRESULT result = S_FALSE;
+
+	VertexPosUV vertices[] = {
+		{{},{0.0f,1.0f}}, // 左下
+		{{},{0.0f,0.0f}}, // 左上
+		{{},{1.0f,1.0f}}, // 右下
+		{{},{1.0f,0.0f}}, // 右上
+	};
+
+	enum { LB, LT, RB, RT };
+
+	float left =   (0.0f - sprite.anchorpoint.x) * sprite.size.x;
+	float right =  (1.0f - sprite.anchorpoint.x) * sprite.size.x;
+	float top =	   (0.0f - sprite.anchorpoint.y) * sprite.size.y;
+	float bottom = (1.0f - sprite.anchorpoint.y) * sprite.size.y;
+
+	if (sprite.isFlipX)
+	{
+		left = -left;
+		right = -right;
+	}
+
+	if (sprite.isFlipY)
+	{
+		top = -top;
+		bottom = -bottom;
+	}
+
+	vertices[LB].pos = {  left,bottom,0.0f };
+	vertices[LT].pos = {  left,	  top,0.0f };
+	vertices[RB].pos = { right,bottom,0.0f };
+	vertices[RT].pos = { right,	  top,0.0f };
+
+	if (spriteCommon.texBuff[sprite.texNum])
+	{
+		// 
+		D3D12_RESOURCE_DESC resDesc = spriteCommon.texBuff[sprite.texNum]->GetDesc();
+
+		float tex_left = sprite.texLeftTop.x / resDesc.Width;
+		float tex_right = (sprite.texLeftTop.x + sprite.texSize.x) / resDesc.Width;
+		float tex_top = sprite.texLeftTop.y / resDesc.Height;
+		float tex_bottom = (sprite.texLeftTop.y + sprite.texSize.y) / resDesc.Height;
+
+		vertices[LB].uv = { tex_left,tex_bottom };
+		vertices[LT].uv = { tex_left,tex_top };
+		vertices[RB].uv = { tex_right,tex_bottom };
+		vertices[RT].uv = { tex_right,tex_top };
+	}
+
+	// 頂点バッファへのデータ転送
+	VertexPosUV* vertMap = nullptr;
+	result = sprite.vertBuff->Map(0, nullptr, (void**)&vertMap);
+	memcpy(vertMap, vertices, sizeof(vertices));
+	sprite.vertBuff->Unmap(0, nullptr);
+}
+
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow)
 {
 #ifdef _DEBUG
@@ -677,22 +784,27 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	sound->Init();
 
 	SoundData soundData1 = sound->SoundLoadWave("Sound/fanfare.wav");
-
+#pragma region スプライト
 	SpriteCommon spriteCommon;
 	spriteCommon = SpriteCommonCreate(dx.SetDev().Get(), win.window_width, win.window_height);
 
 	SpriteCommonLoadTexture(spriteCommon, 0, L"Resources/haikei.jpg", dx.SetDev().Get());
 	SpriteCommonLoadTexture(spriteCommon, 1, L"Resources/mario.jpg", dx.SetDev().Get());
 
-	Sprite sprite[2];
+	SpriteInfo sprite[2];
 	for (int i = 0; i < _countof(sprite); i++)
 	{
-		sprite[i] = SpriteCreate(dx.SetDev().Get(), win.window_width, win.window_height);
+		sprite[i] = SpriteCreate(dx.SetDev().Get(), win.window_width, win.window_height,
+			sprite[i].texNum, spriteCommon);
+		sprite[i].size.x = 400.0f;
+		sprite[i].size.y = 200.0f;
+		SpriteTransferVertexBuffer(sprite[i], spriteCommon);
 	}
 	sprite[0].texNum = 0;
 	sprite[1].texNum = 1;
 	sprite[1].rotation = 45;
 	sprite[1].position = { 1280 / 2, 720 / 2,0 };
+#pragma endregion
 	//#pragma region スプライト
 	//	std::unique_ptr<Sprite> sprite;
 	//	sprite = std::make_unique<Sprite>();

@@ -19,7 +19,7 @@ public:
 	// ƒƒ“ƒoŠÖ”‚ÌéŒ¾
 	void Init(ID3D12Device* dev, int window_width, int window_height, UINT texnumber);
 private:
-	Sprite sprites[maxCharCount];
+	SpriteInfo sprites[maxCharCount];
 	int spriteIndex = 0;
 };
 

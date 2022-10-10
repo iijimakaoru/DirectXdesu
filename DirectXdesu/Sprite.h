@@ -67,6 +67,7 @@ struct SpriteCommon
 class Sprite
 {
 public:
+	void Init(ID3D12Device* dev, int window_width, int window_height);
 	void SpriteTransferVertexBuffer(const SpriteInfo& sprite, const SpriteCommon& spriteCommon);
 	PipelineSet SpriteCreateGraphicsPipeline(ID3D12Device* dev);
 	SpriteInfo SpriteCreate(ID3D12Device* dev, int window_width, int window_height, UINT texNumber, 
@@ -81,6 +82,6 @@ public:
 		UINT texnumber, const wchar_t* filename, ID3D12Device* dev);
 
 private:
-
+	
 };
 

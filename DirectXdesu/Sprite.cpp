@@ -1,6 +1,11 @@
 #include "Sprite.h"
 #include "KShader.h"
 
+void Sprite::Init(ID3D12Device* dev, int window_width, int window_height)
+{
+	
+}
+
 void Sprite::SpriteTransferVertexBuffer(const SpriteInfo& sprite, const SpriteCommon& spriteCommon)
 {
 	HRESULT result = S_FALSE;

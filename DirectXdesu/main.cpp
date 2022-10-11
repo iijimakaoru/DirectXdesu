@@ -7,7 +7,6 @@
 #include "KTexture.h"
 #include "KWorldTransform.h"
 #include "ViewProjection.h"
-//#include "KGPlin.h"
 #include "KModel.h"
 #include "KShader.h"
 #ifdef _DEBUG
@@ -174,15 +173,6 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 #pragma endregion
 #pragma region DirectX初期化
 	KDirectInit dx(win);
-	//#ifdef _DEBUG
-	//	ID3D12InfoQueue* infoQueue;
-	//	if (SUCCEEDED(dx.dev->QueryInterface(IID_PPV_ARGS(&infoQueue)))) {
-	//		infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_CORRUPTION, true);
-	//		infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_ERROR, true);
-	//		infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_WARNING, true);
-	//		infoQueue->Release();
-	//	}
-	//#endif // _DEBUG
 	KInput input(win.window, win.handle);
 #pragma endregion
 #pragma region 描画初期化
@@ -223,7 +213,6 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	const int LineNum = 6;
 	// 3Dオブジェクト
 	KWorldTransform object3d[ObjectNum];
-	//KWorldTransform lineObject[LineNum];
 	for (int i = 0; i < ObjectNum; i++) {
 		object3d[i].Initialize(*dx.SetDev().Get());
 		if (i > 0) {
@@ -234,17 +223,6 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	object3d[0].SetTexture(&texture);
 	object3d[1].SetModel(&cube);
 	object3d[1].SetTexture(&texture2);
-	/*for (int i = 0; i < LineNum; i++) {
-		lineObject[i].Initialize(*dx.dev);
-		lineObject[i].SetModel(&line);
-	}
-	lineObject[1].transform.pos.x = lineObject[0].transform.pos.x + 20;
-	lineObject[2].transform.pos.x = lineObject[0].transform.pos.x - 20;
-	lineObject[3].transform.rot.y = XMConvertToRadians(90);
-	lineObject[4].transform.rot.y = XMConvertToRadians(90);
-	lineObject[4].transform.pos.z = lineObject[3].transform.pos.z + 20;
-	lineObject[5].transform.rot.y = XMConvertToRadians(90);
-	lineObject[5].transform.pos.z = lineObject[3].transform.pos.z - 20;*/
 #pragma endregion
 #pragma region ビュー
 	// ビュープロジェクション
@@ -389,19 +367,6 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 				object3d[0].transform.rot.y += 0.1f;
 			}
 		}
-		//// 移動
-		//if (input.IsPush(DIK_UP) ||
-		//	input.IsPush(DIK_DOWN)) {
-		//	if (input.IsPush(DIK_UP)) {
-		//		speed = 1;
-		//	}
-		//	if (input.IsPush(DIK_DOWN)) {
-		//		speed = -1;
-		//	}
-		//}
-		//else {
-		//	speed = 0;
-		//}
 		// 前ベクトル
 		object3d[0].rotResult.x = sin(object3d[0].transform.rot.y) * center.z;
 		object3d[0].rotResult.z = cos(object3d[0].transform.rot.y) * center.z;
@@ -418,10 +383,6 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		object3d[1].transform.rot = object3d[0].transform.rot;
 #pragma endregion
 
-#pragma region 画像色アップデート
-		//material->Update();
-#pragma endregion
-
 #pragma region ビューのアップデート
 		viewProjection->Update(win.window_width, win.window_height);
 #pragma endregion
@@ -430,9 +391,6 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		for (int i = 0; i < ObjectNum; i++) {
 			object3d[i].Update(viewProjection->matView, viewProjection->matProjection);
 		}
-		/*for (int i = 0; i < LineNum; i++) {
-			lineObject[i].Update(viewProjection->matView, viewProjection->matProjection);
-		}*/
 #pragma endregion
 
 #pragma endregion
@@ -512,9 +470,6 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 				object3d[i].SecoundDraw(dx.SetCmdlist());
 			}
 		}
-		/*for (int i = 0; i < LineNum; i++) {
-			lineObject[i].Draw(dx.cmdList);
-		}*/
 		// スプライト描画
 		sprite->SpriteCommonBeginDraw(dx.SetCmdlist(), spriteCommon);
 		for (int i = 0; i < _countof(sprites); i++)

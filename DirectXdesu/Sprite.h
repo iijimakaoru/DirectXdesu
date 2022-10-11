@@ -29,7 +29,7 @@ struct SpriteInfo
 	// Z軸周りの回転角
 	float rotation = 0.0f;
 	// 座標
-	Vector3 position = { 0,0,0 };
+	Vector3 position = { 50,50,0 };
 	// ワールド行列
 	XMMATRIX matWorld;
 	// 色

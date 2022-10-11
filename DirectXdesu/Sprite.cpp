@@ -303,7 +303,8 @@ void Sprite::SpriteCommonBeginDraw(ID3D12GraphicsCommandList* cmdList, const Spr
 	cmdList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 }
 
-void Sprite::SpriteDraw(const SpriteInfo& sprite, ID3D12GraphicsCommandList* cmdList, const SpriteCommon& spriteCommon, ID3D12Device* dev)
+void Sprite::SpriteDraw(const SpriteInfo& sprite, ID3D12GraphicsCommandList* cmdList,
+	const SpriteCommon& spriteCommon, ID3D12Device* dev)
 {
 	// ”ñ•\Ž¦ƒtƒ‰ƒO
 	if (sprite.isInvisible)

@@ -20,6 +20,7 @@
 #include "PipelineSet.h"
 #include "Vector4.h"
 #include "Sprite.h"
+#include "DebugText.h"
 
 PipelineSet Create3DObjectGpipeline(ID3D12Device* dev)
 {
@@ -212,7 +213,6 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	sprite = std::make_unique<Sprite>();
 #pragma endregion
 
-
 #pragma region グラフィックスパイプライン設定
 	// 3Dオブジェクト用パイプライン生成
 	PipelineSet object3dPipelineSet = Create3DObjectGpipeline(dx.SetDev().Get());
@@ -277,15 +277,25 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	{
 		sprites[i] = sprite->SpriteCreate(dx.SetDev().Get(), win.window_width, win.window_height,
 			sprites[i].texNum, spriteCommon);
-		sprites[i].size.x = 400.0f;
-		sprites[i].size.y = 200.0f;
+		sprites[i].size.x = 100.0f;
+		sprites[i].size.y = 100.0f;
 		sprite->SpriteTransferVertexBuffer(sprites[i], spriteCommon);
 	}
 	sprites[0].texNum = 0;
 	sprites[1].texNum = 1;
-	sprites[1].rotation = 45;
-	sprites[1].position = { 1280 / 2, 720 / 2,0 };
+	sprites[1].rotation = 0;
+	sprites[1].position.y = 720 / 2,0;
 #pragma endregion
+
+#pragma region デバッグテキスト
+	std::unique_ptr<DebugText> debugtext;
+	debugtext = std::make_unique<DebugText>();
+	
+	const int debugTextNumber = 2;
+	sprite->SpriteCommonLoadTexture(spriteCommon, debugTextNumber, L"Resources/tex1.png", dx.SetDev().Get());
+	debugtext->Init(dx.SetDev().Get(), win.window_width, win.window_height, debugTextNumber, spriteCommon);
+#pragma endregion
+
 #pragma endregion
 
 	// ウィンドウ表示
@@ -511,6 +521,11 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		{
 			sprite->SpriteDraw(sprites[i], dx.SetCmdlist(), spriteCommon, dx.SetDev().Get());
 		}
+
+		debugtext->Print(spriteCommon, "Hello,DirectX!!", { 200,100 });
+		debugtext->Print(spriteCommon, "Nihon Kogakuin", { 200,200 }, 2.0f);
+
+		debugtext->DrawAll(dx.SetDev().Get(), spriteCommon, dx.SetCmdlist());
 		// 描画コマンドここまで
 #pragma endregion
 #pragma endregion

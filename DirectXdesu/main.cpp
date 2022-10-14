@@ -269,13 +269,13 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	sprites[0].texNum = 0;
 	sprites[1].texNum = 1;
 	sprites[1].rotation = 0;
-	sprites[1].position.y = 720 / 2,0;
+	sprites[1].position.y = 720 / 2, 0;
 #pragma endregion
 
 #pragma region デバッグテキスト
 	std::unique_ptr<DebugText> debugtext;
 	debugtext = std::make_unique<DebugText>();
-	
+
 	const int debugTextNumber = 2;
 	sprite->SpriteCommonLoadTexture(spriteCommon, debugTextNumber, L"Resources/tex1.png", dx->SetDev().Get());
 	debugtext->Init(dx->SetDev().Get(), win->window_width, win->window_height, debugTextNumber, spriteCommon);
@@ -297,7 +297,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 			break;
 		}
 #pragma endregion
-
+#pragma region 更新
 		// 更新
 #pragma region DirectX毎フレーム処理
 		for (int i = 0; i < _countof(sprites); i++)
@@ -312,7 +312,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		input->Update();
 #pragma endregion
 
-#pragma region キーボード処理
+#pragma region 
 		// 背景色変え
 		if (input->IsTriger(DIK_SPACE)) {
 			sound->SoundPlayWave(sound->GetxAudio().Get(), soundData1);
@@ -404,60 +404,11 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 #pragma endregion
 
 #pragma endregion
-
-		// 描画
-#pragma region リソースバリア
-		// バックバッファの番号を取得
-		UINT bbIndex = dx->SetSChain()->GetCurrentBackBufferIndex();
-		// 1.リソースバリアで書き込み可能に変更
-		D3D12_RESOURCE_BARRIER barrierDesc{};
-		barrierDesc.Transition.pResource = dx->SetBackBuffers()[bbIndex].Get();
-		barrierDesc.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
-		barrierDesc.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
-		dx->SetCmdlist()->ResourceBarrier(1, &barrierDesc);
-#pragma endregion
-
-#pragma region 描画先
-		// 2. 描画先の変更
-		// レンダーターゲートビューのハンドルを取得
-		D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = dx->SetRtvHeap()->GetCPUDescriptorHandleForHeapStart();
-		rtvHandle.ptr += bbIndex * dx->SetDev()->GetDescriptorHandleIncrementSize(dx->SetRtvHeapDesc().Type);
-		// 深度ステンシルビュー用デスクリプタヒープのハンドルを取得
-		D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = depth.dsvHeap->GetCPUDescriptorHandleForHeapStart();
-		dx->SetCmdlist()->OMSetRenderTargets(1, &rtvHandle, false, &dsvHandle);
-#pragma endregion
-
-#pragma region 画面クリア
-		// 3. 画面クリア
-		FLOAT clearColor[] = { dx->bRed,dx->bGreen,dx->bBule,0.0f };
-		dx->SetCmdlist()->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
-		dx->SetCmdlist()->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 #pragma endregion
 
 #pragma region 描画
-		// 描画コマンドここから
-#pragma region ビューポート設定コマンド
-		// ビューポート設定コマンド
-		D3D12_VIEWPORT viewport{};
-		viewport.Width = win->window_width;   // 横幅
-		viewport.Height = win->window_height; // 縦幅
-		viewport.TopLeftX = 0;                 // 左上x
-		viewport.TopLeftY = 0;				   // 左上y
-		viewport.MinDepth = 0.0f;			   // 最小深度
-		viewport.MaxDepth = 1.0f;			   // 最大深度
-		// ビューポート設定コマンドをコマンドリストに積む
-		dx->SetCmdlist()->RSSetViewports(1, &viewport);
-#pragma endregion
-#pragma region シザー矩形設定
-		// シザー矩形
-		D3D12_RECT scissorRect{};
-		scissorRect.left = 0;									// 切り抜き座標左
-		scissorRect.right = scissorRect.left + win->window_width;	// 切り抜き座標右
-		scissorRect.top = 0;									// 切り抜き座標上
-		scissorRect.bottom = scissorRect.top + win->window_height;	// 切り抜き座標下
-		// シザー矩形設定コマンドをコマンドリストに積む
-		dx->SetCmdlist()->RSSetScissorRects(1, &scissorRect);
-#pragma endregion
+		// 描画開始
+		dx->PreDraw(depth.dsvHeap, win->window_width, win->window_height);
 #pragma region パイプラインステート設定
 		// パイプラインステートとルートシグネチャの設定コマンド
 		dx->SetCmdlist()->SetPipelineState(object3dPipelineSet.pipelineState.Get());
@@ -493,17 +444,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		debugtext->DrawAll(dx->SetDev().Get(), spriteCommon, dx->SetCmdlist());
 		// 描画コマンドここまで
 #pragma endregion
-#pragma endregion
-#pragma region リソースバリアを戻す
-		barrierDesc.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
-		barrierDesc.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
-		dx->SetCmdlist()->ResourceBarrier(1, &barrierDesc);
-#pragma endregion
-#pragma region コマンドのフラッシュ
-		dx->CmdFlash();
-#pragma endregion
-#pragma region コマンド完了待ち
-		dx->CmdClear();
+		// 描画終了
+		dx->PostDraw();
 #pragma endregion
 	}
 

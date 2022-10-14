@@ -22,6 +22,75 @@ KDirectXCommon::KDirectXCommon(KWinApp window) {
 	Fence();
 }
 
+void KDirectXCommon::PreDraw(ID3D12DescriptorHeap* dsvHeap, int window_width, int window_height)
+{
+#pragma region リソースバリア
+	// バックバッファの番号を取得
+	UINT bbIndex = swapChain->GetCurrentBackBufferIndex();
+	// 1.リソースバリアで書き込み可能に変更
+	barrierDesc.Transition.pResource = backBuffers[bbIndex].Get();
+	barrierDesc.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
+	barrierDesc.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
+	cmdList->ResourceBarrier(1, &barrierDesc);
+#pragma endregion
+
+#pragma region 描画先
+	// 2. 描画先の変更
+	// レンダーターゲートビューのハンドルを取得
+	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = rtvHeap->GetCPUDescriptorHandleForHeapStart();
+	rtvHandle.ptr += bbIndex * dev->GetDescriptorHandleIncrementSize(rtvHeapDesc.Type);
+	// 深度ステンシルビュー用デスクリプタヒープのハンドルを取得
+	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = dsvHeap->GetCPUDescriptorHandleForHeapStart();
+	cmdList->OMSetRenderTargets(1, &rtvHandle, false, &dsvHandle);
+#pragma endregion
+
+#pragma region 画面クリア
+	// 3. 画面クリア
+	FLOAT clearColor[] = { bRed,bGreen,bBule,0.0f };
+	cmdList->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
+	cmdList->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+#pragma endregion
+
+#pragma region ビューポート設定コマンド
+	// ビューポート設定コマンド
+	D3D12_VIEWPORT viewport{};
+	viewport.Width = window_width;   // 横幅
+	viewport.Height = window_height; // 縦幅
+	viewport.TopLeftX = 0;                 // 左上x
+	viewport.TopLeftY = 0;				   // 左上y
+	viewport.MinDepth = 0.0f;			   // 最小深度
+	viewport.MaxDepth = 1.0f;			   // 最大深度
+	// ビューポート設定コマンドをコマンドリストに積む
+	cmdList->RSSetViewports(1, &viewport);
+#pragma endregion
+
+#pragma region シザー矩形設定
+	// シザー矩形
+	D3D12_RECT scissorRect{};
+	scissorRect.left = 0;									// 切り抜き座標左
+	scissorRect.right = scissorRect.left + window_width;	// 切り抜き座標右
+	scissorRect.top = 0;									// 切り抜き座標上
+	scissorRect.bottom = scissorRect.top + window_height;	// 切り抜き座標下
+	// シザー矩形設定コマンドをコマンドリストに積む
+	cmdList->RSSetScissorRects(1, &scissorRect);
+#pragma endregion
+}
+
+void KDirectXCommon::PostDraw()
+{
+#pragma region リソースバリアを戻す
+	barrierDesc.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
+	barrierDesc.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
+	cmdList->ResourceBarrier(1, &barrierDesc);
+#pragma endregion
+#pragma region コマンドのフラッシュ
+	CmdFlash();
+#pragma endregion
+#pragma region コマンド完了待ち
+	CmdClear();
+#pragma endregion
+}
+
 void KDirectXCommon::CmdFlash()
 {
 	// 命令のクローズ

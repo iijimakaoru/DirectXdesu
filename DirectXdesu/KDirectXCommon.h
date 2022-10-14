@@ -19,6 +19,8 @@ class KDirectXCommon
 {
 public:
 	KDirectXCommon(KWinApp window);
+	void PreDraw(ID3D12DescriptorHeap* dsvHeap, int window_width, int window_height);
+	void PostDraw();
 	void CmdFlash();
 	void CmdClear();
 
@@ -69,6 +71,9 @@ private:
 	// フェンスの生成
 	ComPtr<ID3D12Fence> fence;
 	UINT64 fenceVal = 0;
+
+	// 1.リソースバリアで書き込み可能に変更
+	D3D12_RESOURCE_BARRIER barrierDesc{};
 
 	void DXGIFactory();
 	void Adapter();

@@ -2,7 +2,7 @@
 #include <d3d12.h>
 #include "KShader.h"
 #include "KVertex.h"
-#include "KDirectInit.h"
+#include "KDirectXCommon.h"
 
 // 頂点レイアウト
 static D3D12_INPUT_ELEMENT_DESC inputLayout[3] = {

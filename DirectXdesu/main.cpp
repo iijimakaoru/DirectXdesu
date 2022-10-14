@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <d3dcompiler.h>
 #include "KWinApp.h"
-#include "KDirectInit.h"
+#include "KDirectXCommon.h"
 #include "KInput.h"
 #include "KDepth.h"
 #include "KTexture.h"
@@ -169,15 +169,15 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	HRESULT result;
 
 #pragma region ウィンドウ
-	KWinApp win;
+	KWinApp winApp;
 #pragma endregion
 #pragma region DirectX初期化
-	KDirectInit dx(win);
-	KInput input(win.window, win.handle);
+	KDirectXCommon dx(winApp);
+	KInput input(winApp.window, winApp.handle);
 #pragma endregion
 #pragma region 描画初期化
 #pragma region 深度バッファ
-	KDepth depth(dx.SetDev().Get(), win);
+	KDepth depth(dx.SetDev().Get(), winApp);
 #pragma endregion
 	// 速さ
 	float speed = 1.0f;
@@ -227,7 +227,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 #pragma region ビュー
 	// ビュープロジェクション
 	ViewProjection* viewProjection;
-	viewProjection = new ViewProjection(win.window_width, win.window_height);
+	viewProjection = new ViewProjection(winApp.window_width, winApp.window_height);
 #pragma endregion
 
 #pragma endregion
@@ -245,7 +245,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	SoundData soundData1 = sound->SoundLoadWave("Sound/fanfare.wav");
 #pragma region スプライト
 	SpriteCommon spriteCommon;
-	spriteCommon = sprite->SpriteCommonCreate(dx.SetDev().Get(), win.window_width, win.window_height);
+	spriteCommon = sprite->SpriteCommonCreate(dx.SetDev().Get(), winApp.window_width, winApp.window_height);
 
 	sprite->SpriteCommonLoadTexture(spriteCommon, 0, L"Resources/haikei.jpg", dx.SetDev().Get());
 	sprite->SpriteCommonLoadTexture(spriteCommon, 1, L"Resources/mario.jpg", dx.SetDev().Get());
@@ -253,7 +253,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	SpriteInfo sprites[2];
 	for (int i = 0; i < _countof(sprites); i++)
 	{
-		sprites[i] = sprite->SpriteCreate(dx.SetDev().Get(), win.window_width, win.window_height,
+		sprites[i] = sprite->SpriteCreate(dx.SetDev().Get(), winApp.window_width, winApp.window_height,
 			sprites[i].texNum, spriteCommon);
 		sprites[i].size.x = 100.0f;
 		sprites[i].size.y = 100.0f;
@@ -271,7 +271,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	
 	const int debugTextNumber = 2;
 	sprite->SpriteCommonLoadTexture(spriteCommon, debugTextNumber, L"Resources/tex1.png", dx.SetDev().Get());
-	debugtext->Init(dx.SetDev().Get(), win.window_width, win.window_height, debugTextNumber, spriteCommon);
+	debugtext->Init(dx.SetDev().Get(), winApp.window_width, winApp.window_height, debugTextNumber, spriteCommon);
 #pragma endregion
 
 #pragma endregion
@@ -281,7 +281,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	while (true)
 	{
 #pragma region ウィンドウメッセージ
-		if (win.breakFlag || input.IsPush(DIK_ESCAPE)) {
+		if (winApp.breakFlag || input.IsPush(DIK_ESCAPE)) {
 			sound->GetxAudio().Reset();
 			sound->SoundUnLoad(&soundData1);
 			break;
@@ -295,7 +295,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 			sprite->SpriteUpdate(sprites[i], spriteCommon);
 		}
 #pragma region ウィンドウアップデート
-		win.Update();
+		winApp.Update();
 #pragma endregion
 
 #pragma region inputアップデート
@@ -384,7 +384,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 #pragma endregion
 
 #pragma region ビューのアップデート
-		viewProjection->Update(win.window_width, win.window_height);
+		viewProjection->Update(winApp.window_width, winApp.window_height);
 #pragma endregion
 
 #pragma region 3Dオブジェクトのアップデート
@@ -429,8 +429,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 #pragma region ビューポート設定コマンド
 		// ビューポート設定コマンド
 		D3D12_VIEWPORT viewport{};
-		viewport.Width = win.window_width;   // 横幅
-		viewport.Height = win.window_height; // 縦幅
+		viewport.Width = winApp.window_width;   // 横幅
+		viewport.Height = winApp.window_height; // 縦幅
 		viewport.TopLeftX = 0;                 // 左上x
 		viewport.TopLeftY = 0;				   // 左上y
 		viewport.MinDepth = 0.0f;			   // 最小深度
@@ -442,9 +442,9 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		// シザー矩形
 		D3D12_RECT scissorRect{};
 		scissorRect.left = 0;									// 切り抜き座標左
-		scissorRect.right = scissorRect.left + win.window_width;	// 切り抜き座標右
+		scissorRect.right = scissorRect.left + winApp.window_width;	// 切り抜き座標右
 		scissorRect.top = 0;									// 切り抜き座標上
-		scissorRect.bottom = scissorRect.top + win.window_height;	// 切り抜き座標下
+		scissorRect.bottom = scissorRect.top + winApp.window_height;	// 切り抜き座標下
 		// シザー矩形設定コマンドをコマンドリストに積む
 		dx.SetCmdlist()->RSSetScissorRects(1, &scissorRect);
 #pragma endregion

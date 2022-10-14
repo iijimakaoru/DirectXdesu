@@ -66,7 +66,7 @@
     <ClCompile Include="KInput.cpp">
       <Filter>ソース ファイル\Input</Filter>
     </ClCompile>
-    <ClCompile Include="KDirectInit.cpp">
+    <ClCompile Include="KDirectXCommon.cpp">
       <Filter>ソース ファイル\Base</Filter>
     </ClCompile>
     <ClCompile Include="KWinApp.cpp">
@@ -131,7 +131,7 @@
     <ClInclude Include="KWinApp.h">
       <Filter>ヘッダー ファイル\Base</Filter>
     </ClInclude>
-    <ClInclude Include="KDirectInit.h">
+    <ClInclude Include="KDirectXCommon.h">
       <Filter>ヘッダー ファイル\Base</Filter>
     </ClInclude>
     <ClInclude Include="KTexture.h">

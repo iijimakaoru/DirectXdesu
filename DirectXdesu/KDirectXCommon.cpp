@@ -1,6 +1,6 @@
-#include "KDirectInit.h"
+#include "KDirectXCommon.h"
 
-KDirectInit::KDirectInit(KWinApp window) {
+KDirectXCommon::KDirectXCommon(KWinApp window) {
 	bRed = 0.1f;
 	bGreen = 0.25f;
 	bBule = 0.5f;
@@ -22,7 +22,7 @@ KDirectInit::KDirectInit(KWinApp window) {
 	Fence();
 }
 
-void KDirectInit::CmdFlash()
+void KDirectXCommon::CmdFlash()
 {
 	// 命令のクローズ
 	result = cmdList->Close();
@@ -35,7 +35,7 @@ void KDirectInit::CmdFlash()
 	assert(SUCCEEDED(result));
 }
 
-void KDirectInit::CmdClear()
+void KDirectXCommon::CmdClear()
 {
 	// コマンドの完了を待つ
 	cmdQueue->Signal(fence.Get(), ++fenceVal);
@@ -53,13 +53,13 @@ void KDirectInit::CmdClear()
 	assert(SUCCEEDED(result));
 }
 
-void KDirectInit::DXGIFactory() {
+void KDirectXCommon::DXGIFactory() {
 	// DXGIファクトリーの生成
 	result = CreateDXGIFactory(IID_PPV_ARGS(&dxgiFactory));
 	assert(SUCCEEDED(result));
 }
 
-void KDirectInit::Adapter() {
+void KDirectXCommon::Adapter() {
 	// アダプターの列挙用
 	std::vector<IDXGIAdapter4*> adapters;
 
@@ -93,7 +93,7 @@ void KDirectInit::Adapter() {
 	tmpAdapter->Release();
 }
 
-void KDirectInit::Device(IDXGIAdapter4* tmpAdapter) {
+void KDirectXCommon::Device(IDXGIAdapter4* tmpAdapter) {
 	for (size_t i = 0; i < _countof(levels); i++) {
 		result = D3D12CreateDevice(tmpAdapter, levels[i], IID_PPV_ARGS(&dev));
 		if (result == S_OK) {
@@ -104,7 +104,7 @@ void KDirectInit::Device(IDXGIAdapter4* tmpAdapter) {
 	}
 }
 
-void KDirectInit::CommandList() {
+void KDirectXCommon::CommandList() {
 	// コマンドアロケーター生成
 	result = dev->CreateCommandAllocator(
 		D3D12_COMMAND_LIST_TYPE_DIRECT,
@@ -119,13 +119,13 @@ void KDirectInit::CommandList() {
 	assert(SUCCEEDED(result));
 }
 
-void KDirectInit::CommandQueue() {
+void KDirectXCommon::CommandQueue() {
 	// コマンドキューを生成
 	result = dev->CreateCommandQueue(&cmdQueueDesc, IID_PPV_ARGS(&cmdQueue));
 	assert(SUCCEEDED(result));
 }
 
-void KDirectInit::SwapChain(KWinApp window) {
+void KDirectXCommon::SwapChain(KWinApp window) {
 	swapChainDesc.Width = window.window_width;
 	swapChainDesc.Height = window.window_height;
 	swapChainDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
@@ -146,14 +146,14 @@ void KDirectInit::SwapChain(KWinApp window) {
 	assert(SUCCEEDED(result));
 }
 
-void KDirectInit::Descriptor() {
+void KDirectXCommon::Descriptor() {
 	rtvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
 	rtvHeapDesc.NumDescriptors = swapChainDesc.BufferCount;
 	// デスクリプタヒープの生成
 	dev->CreateDescriptorHeap(&rtvHeapDesc, IID_PPV_ARGS(&rtvHeap));
 }
 
-void KDirectInit::BackBuffer() {
+void KDirectXCommon::BackBuffer() {
 	backBuffers.resize(swapChainDesc.BufferCount);
 	// スワップチェーンの全てのバッファについて処理する
 	for (size_t i = 0; i < backBuffers.size(); i++)
@@ -174,6 +174,6 @@ void KDirectInit::BackBuffer() {
 	}
 }
 
-void KDirectInit::Fence() {
+void KDirectXCommon::Fence() {
 	result = dev->CreateFence(fenceVal, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence));
 }

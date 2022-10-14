@@ -1,5 +1,5 @@
 #pragma once
-#include "KDirectInit.h"
+#include "KDirectXCommon.h"
 #include <xaudio2.h>
 #pragma comment(lib,"xaudio2.lib")
 #include <fstream>

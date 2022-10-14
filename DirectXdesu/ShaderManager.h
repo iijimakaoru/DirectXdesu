@@ -1,5 +1,5 @@
 #pragma once
-#include "KDirectInit.h"
+#include "KDirectXCommon.h"
 #include <d3dcompiler.h>
 
 class ShaderManager

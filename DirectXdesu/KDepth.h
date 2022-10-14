@@ -1,6 +1,6 @@
 #pragma once
 #include <d3d12.h>
-#include "KDirectInit.h"
+#include "KDirectXCommon.h"
 class KDepth
 {
 public:

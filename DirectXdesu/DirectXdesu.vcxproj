@@ -148,7 +148,7 @@
     <ClCompile Include="GameScence.cpp" />
     <ClCompile Include="KGPlin.cpp" />
     <ClCompile Include="KDepth.cpp" />
-    <ClCompile Include="KDirectInit.cpp" />
+    <ClCompile Include="KDirectXCommon.cpp" />
     <ClCompile Include="KInput.cpp" />
     <ClCompile Include="KMaterial.cpp" />
     <ClCompile Include="KModel.cpp" />
@@ -174,7 +174,7 @@
     <ClInclude Include="GameScence.h" />
     <ClInclude Include="KGPlin.h" />
     <ClInclude Include="KDepth.h" />
-    <ClInclude Include="KDirectInit.h" />
+    <ClInclude Include="KDirectXCommon.h" />
     <ClInclude Include="KInput.h" />
     <ClInclude Include="KMaterial.h" />
     <ClInclude Include="KModel.h" />

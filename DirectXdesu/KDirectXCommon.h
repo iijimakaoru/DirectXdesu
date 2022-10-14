@@ -15,10 +15,10 @@ using namespace DirectX;
 
 using namespace Microsoft::WRL;
 
-class KDirectInit
+class KDirectXCommon
 {
 public:
-	KDirectInit(KWinApp window);
+	KDirectXCommon(KWinApp window);
 	void CmdFlash();
 	void CmdClear();
 

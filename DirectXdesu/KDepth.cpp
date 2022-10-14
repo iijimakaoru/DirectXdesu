@@ -1,7 +1,7 @@
 #include "KDepth.h"
 
-KDepth::KDepth(ID3D12Device* dev, KWinApp win) {
-	SetResource(win);
+KDepth::KDepth(ID3D12Device* dev, int window_width, int window_height) {
+	SetResource(window_width, window_height);
 	HeapDepth();
 	SetClwarDepth();
 	GeneResource(dev);
@@ -9,10 +9,10 @@ KDepth::KDepth(ID3D12Device* dev, KWinApp win) {
 	CreatDepthView(dev);
 }
 
-void KDepth::SetResource(KWinApp win) {
+void KDepth::SetResource(int window_width, int window_height) {
 	depthResourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
-	depthResourceDesc.Width = win.window_width; // レンダーターゲットに合わせる
-	depthResourceDesc.Height = win.window_height; // レンダーターゲットに合わせる
+	depthResourceDesc.Width = window_width; // レンダーターゲットに合わせる
+	depthResourceDesc.Height = window_height; // レンダーターゲットに合わせる
 	depthResourceDesc.DepthOrArraySize = 1;
 	depthResourceDesc.Format = DXGI_FORMAT_D32_FLOAT; // 深度値フォーマット
 	depthResourceDesc.SampleDesc.Count = 1;

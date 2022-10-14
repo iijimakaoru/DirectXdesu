@@ -183,7 +183,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 #pragma endregion
 #pragma region 描画初期化
 #pragma region 深度バッファ
-	KDepth depth(dx->SetDev().Get(), *win);
+	KDepth* depth = nullptr;
+	depth = new KDepth(dx->SetDev().Get(), win->window_width, win->window_height);
 #pragma endregion
 	// 速さ
 	float speed = 1.0f;
@@ -294,6 +295,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 			delete input;
 			delete win;
 			delete dx;
+			delete depth;
 			break;
 		}
 #pragma endregion
@@ -408,7 +410,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 #pragma region 描画
 		// 描画開始
-		dx->PreDraw(depth.dsvHeap, win->window_width, win->window_height);
+		dx->PreDraw(depth->GetDevHeap(), win->window_width, win->window_height);
 #pragma region パイプラインステート設定
 		// パイプラインステートとルートシグネチャの設定コマンド
 		dx->SetCmdlist()->SetPipelineState(object3dPipelineSet.pipelineState.Get());

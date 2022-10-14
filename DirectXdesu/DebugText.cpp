@@ -37,7 +37,7 @@ void DebugText::Print(const SpriteCommon& spriteCommon, const std::string& text,
 		sprites[spriteIndex].texSize = { fontWidth,fontHeight };
 		sprites[spriteIndex].size = { fontWidth * scale,fontHeight * scale };
 
-		sprite->SpriteTransferVertexBuffer(sprites[spriteIndex], spriteCommon);
+		SpriteTransferVertexBuffer(sprites[spriteIndex], spriteCommon);
 
 		sprite->SpriteUpdate(sprites[spriteIndex], spriteCommon);
 

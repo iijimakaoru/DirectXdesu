@@ -48,6 +48,8 @@ struct SpriteInfo
 	Vector2 texLeftTop = { 0,0 };
 	// テクスチャ切り出しサイズ
 	Vector2 texSize = { 100,100 };
+	// 切り出しフラグ
+	bool isKiridasi = false;
 	// 非表示
 	bool isInvisible = false;
 };

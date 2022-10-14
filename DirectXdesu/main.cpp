@@ -218,17 +218,18 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	const int ObjectNum = 2;
 	const int LineNum = 6;
 	// 3Dオブジェクト
-	KWorldTransform object3d[ObjectNum];
+	KWorldTransform* object3d[ObjectNum];
 	for (int i = 0; i < ObjectNum; i++) {
-		object3d[i].Initialize(*dx->SetDev().Get());
+		object3d[i] = new KWorldTransform();
+		object3d[i]->Initialize(*dx->SetDev().Get());
 		if (i > 0) {
-			object3d[i].material->colorR = object3d[i].material->colorG = object3d[i].material->colorB = 1.0f;
+			object3d[i]->material->colorR = object3d[i]->material->colorG = object3d[i]->material->colorB = 1.0f;
 		}
 	}
-	object3d[0].SetModel(&cube);
-	object3d[0].SetTexture(&texture);
-	object3d[1].SetModel(&cube);
-	object3d[1].SetTexture(&texture2);
+	object3d[0]->SetModel(&cube);
+	object3d[0]->SetTexture(&texture);
+	object3d[1]->SetModel(&cube);
+	object3d[1]->SetTexture(&texture2);
 #pragma endregion
 #pragma region ビュー
 	// ビュープロジェクション
@@ -291,6 +292,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 			sound->GetxAudio().Reset();
 			sound->SoundUnLoad(&soundData1);
 			delete input;
+			delete win;
+			delete dx;
 			break;
 		}
 #pragma endregion
@@ -315,33 +318,33 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 			sound->SoundPlayWave(sound->GetxAudio().Get(), soundData1);
 		}
 		// 画像色変え
-		if (object3d[0].material->colorR <= 0 || object3d[0].material->colorR >= 1) {
+		if (object3d[0]->material->colorR <= 0 || object3d[0]->material->colorR >= 1) {
 			rSpeed *= -1;
 		}
-		if (object3d[0].material->colorG <= 0 || object3d[0].material->colorG >= 1) {
+		if (object3d[0]->material->colorG <= 0 || object3d[0]->material->colorG >= 1) {
 			gSpeed *= -1;
 		}
-		if (object3d[0].material->colorB <= 0 || object3d[0].material->colorB >= 1) {
+		if (object3d[0]->material->colorB <= 0 || object3d[0]->material->colorB >= 1) {
 			bSpeed *= -1;
 		}
-		if (object3d[0].material->colorA <= 0 || object3d[0].material->colorA >= 1) {
+		if (object3d[0]->material->colorA <= 0 || object3d[0]->material->colorA >= 1) {
 			aSpeed *= -1;
 		}
-		object3d[0].material->colorR += rSpeed;
-		object3d[0].material->colorG += gSpeed;
-		object3d[0].material->colorB += bSpeed;
+		object3d[0]->material->colorR += rSpeed;
+		object3d[0]->material->colorG += gSpeed;
+		object3d[0]->material->colorB += bSpeed;
 		if (input->IsPush(DIK_X)) {
-			object3d[0].material->colorA += aSpeed;
+			object3d[0]->material->colorA += aSpeed;
 		}
 		// 図形縦回転
 		if (input->IsPush(DIK_C) ||
 			input->IsPush(DIK_V)) {
 			if (input->IsPush(DIK_C)) {
-				object3d[0].transform.rot.z += 0.1f;
+				object3d[0]->transform.rot.z += 0.1f;
 			}
 
 			if (input->IsPush(DIK_V)) {
-				object3d[0].transform.rot.z -= 0.1f;
+				object3d[0]->transform.rot.z -= 0.1f;
 			}
 		}
 		////カメラ移動
@@ -368,26 +371,26 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		if (input->IsPush(DIK_RIGHT) ||
 			input->IsPush(DIK_LEFT)) {
 			if (input->IsPush(DIK_RIGHT)) {
-				object3d[0].transform.rot.y -= 0.1f;
+				object3d[0]->transform.rot.y -= 0.1f;
 			}
 			if (input->IsPush(DIK_LEFT)) {
-				object3d[0].transform.rot.y += 0.1f;
+				object3d[0]->transform.rot.y += 0.1f;
 			}
 		}
 		// 前ベクトル
-		object3d[0].rotResult.x = sin(object3d[0].transform.rot.y) * center.z;
-		object3d[0].rotResult.z = cos(object3d[0].transform.rot.y) * center.z;
+		object3d[0]->rotResult.x = sin(object3d[0]->transform.rot.y) * center.z;
+		object3d[0]->rotResult.z = cos(object3d[0]->transform.rot.y) * center.z;
 		// 移動
 		/*object3d[0]->transform.pos.x += (speed)*object3d[0]->rotResult.x;
 		object3d[0]->transform.pos.z += (speed)*object3d[0]->rotResult.z;*/
-		object3d[0].transform.pos.x += (input->IsPush(DIK_RIGHT) - input->IsPush(DIK_LEFT)) * speed;
-		object3d[0].transform.pos.z += (input->IsPush(DIK_UP) - input->IsPush(DIK_DOWN)) * speed;
+		object3d[0]->transform.pos.x += (input->IsPush(DIK_RIGHT) - input->IsPush(DIK_LEFT)) * speed;
+		object3d[0]->transform.pos.z += (input->IsPush(DIK_UP) - input->IsPush(DIK_DOWN)) * speed;
 
-		object3d[1].transform.pos.x = object3d[0].transform.pos.x + 15;
-		object3d[1].transform.pos.z = object3d[0].transform.pos.z;
-		object3d[1].transform.pos.y = object3d[0].transform.pos.y + 10;
+		object3d[1]->transform.pos.x = object3d[0]->transform.pos.x + 15;
+		object3d[1]->transform.pos.z = object3d[0]->transform.pos.z;
+		object3d[1]->transform.pos.y = object3d[0]->transform.pos.y + 10;
 
-		object3d[1].transform.rot = object3d[0].transform.rot;
+		object3d[1]->transform.rot = object3d[0]->transform.rot;
 #pragma endregion
 
 #pragma region ビューのアップデート
@@ -396,7 +399,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 #pragma region 3Dオブジェクトのアップデート
 		for (int i = 0; i < ObjectNum; i++) {
-			object3d[i].Update(viewProjection->matView, viewProjection->matProjection);
+			object3d[i]->Update(viewProjection->matView, viewProjection->matProjection);
 		}
 #pragma endregion
 
@@ -470,11 +473,11 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		for (int i = 0; i < ObjectNum; i++) {
 			if (!input->IsPush(DIK_SPACE))
 			{
-				object3d[i].Draw(dx->SetCmdlist());
+				object3d[i]->Draw(dx->SetCmdlist());
 			}
 			else
 			{
-				object3d[i].SecoundDraw(dx->SetCmdlist());
+				object3d[i]->SecoundDraw(dx->SetCmdlist());
 			}
 		}
 		// スプライト描画

@@ -138,7 +138,7 @@ void KDirectXCommon::SwapChain(KWinApp window) {
 	ComPtr<IDXGISwapChain1> swapchain1;
 	// スワップチェーンの生成
 	result = dxgiFactory->CreateSwapChainForHwnd(
-		cmdQueue.Get(), window.handle, &swapChainDesc, nullptr, nullptr,
+		cmdQueue.Get(), window.hwnd, &swapChainDesc, nullptr, nullptr,
 		&swapchain1);
 
 	swapchain1.As(&swapChain);

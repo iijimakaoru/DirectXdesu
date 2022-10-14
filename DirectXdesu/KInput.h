@@ -3,13 +3,16 @@
 #define DIRECTINPUT_VERSION  0x0800
 #pragma comment(lib, "dinput8.lib")
 #pragma comment(lib, "dxguid.lib")
-#include "KDirectXCommon.h"
+#include <wrl.h>
+#include <Windows.h>
+
+using namespace Microsoft::WRL;
 
 class KInput
 {
 public:
-	KInput(WNDCLASSEX w, HWND hwnd);
-	void Init(WNDCLASSEX w, HWND hwnd);
+	KInput();
+	void Init(HINSTANCE hInstance, HWND hwnd);
 	void Update();
 	void KeyInit();
 
@@ -19,6 +22,7 @@ public:
 	bool IsTriger(int keyNum);
 	bool IsRelease(int keyNum);
 
+private:
 	// ‘SƒL[‚Ì“ü—Íó‘Ô‚ğŠ“¾
 	BYTE key[256] = {};
 	BYTE oldkey[256] = {};

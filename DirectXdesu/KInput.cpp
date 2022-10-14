@@ -1,13 +1,13 @@
 #include "KInput.h"
 #include <cassert>
 
-KInput::KInput(WNDCLASSEX w, HWND hwnd) {
-	Init(w, hwnd);
+KInput::KInput() {
+	
 }
 
-void KInput::Init(WNDCLASSEX w, HWND hwnd) {
+void KInput::Init(HINSTANCE hInstance, HWND hwnd) {
 	// ì¸óÕèâä˙âª
-	result = DirectInput8Create(w.hInstance, DIRECTINPUT_VERSION, IID_IDirectInput8, 
+	result = DirectInput8Create(hInstance, DIRECTINPUT_VERSION, IID_IDirectInput8, 
 		(void**)&directInput, nullptr);
 	assert(SUCCEEDED(result));
 

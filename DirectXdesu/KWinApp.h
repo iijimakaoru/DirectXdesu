@@ -21,6 +21,6 @@ public:
 	// メッセージ格納用構造体
 	MSG msg{};
 
-	HWND handle;
+	HWND hwnd;
 };
 

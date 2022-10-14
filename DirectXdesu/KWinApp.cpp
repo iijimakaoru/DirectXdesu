@@ -42,7 +42,7 @@ KWinApp::KWinApp() {
 	AdjustWindowRect(&rect, WS_OVERLAPPEDWINDOW, false);
 
 	// ウィンドウ作成
-	handle = CreateWindow(
+	hwnd = CreateWindow(
 		window.lpszClassName,
 		window.lpszMenuName,
 		WS_OVERLAPPEDWINDOW,
@@ -56,7 +56,7 @@ KWinApp::KWinApp() {
 		nullptr);
 
 	// ウィンドウを表示状態にする
-	ShowWindow(handle, SW_SHOW);
+	ShowWindow(hwnd, SW_SHOW);
 }
 
 KWinApp::~KWinApp() {

@@ -169,33 +169,39 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	HRESULT result;
 
 #pragma region ウィンドウ
-	KWinApp winApp;
+	KWinApp* win = nullptr;
+	win = new KWinApp();
 #pragma endregion
 #pragma region DirectX初期化
-	KDirectXCommon dx(winApp);
-	KInput input(winApp.window, winApp.handle);
+	// KDirectCommon
+	KDirectXCommon* dx = nullptr;
+	dx = new KDirectXCommon(*win);
+	// キーボード入力
+	KInput* input = nullptr;
+	input = new KInput();
+	input->Init(win->window.hInstance, win->hwnd);
 #pragma endregion
 #pragma region 描画初期化
 #pragma region 深度バッファ
-	KDepth depth(dx.SetDev().Get(), winApp);
+	KDepth depth(dx->SetDev().Get(), *win);
 #pragma endregion
 	// 速さ
 	float speed = 1.0f;
 #pragma region モデル
 	KModel triangle = Triangle();
-	triangle.CreateModel(dx.SetDev().Get());
+	triangle.CreateModel(dx->SetDev().Get());
 	KModel cube = Cube();
-	cube.CreateModel(dx.SetDev().Get());
+	cube.CreateModel(dx->SetDev().Get());
 	KModel line = Line();
-	line.CreateModel(dx.SetDev().Get());
+	line.CreateModel(dx->SetDev().Get());
 #pragma endregion
 #pragma region テクスチャ初期化
 	const wchar_t* msg = L"Resources/mario.jpg";
 	const wchar_t* msg2 = L"Resources/iijan.jpg";
 	const wchar_t* msg3 = L"Resources/haikei.jpg";
 	const wchar_t* msg4 = L"Resources/kitanai.jpg";
-	KTexture texture(dx.SetDev().Get(), msg, msg3);
-	KTexture texture2(dx.SetDev().Get(), msg2, msg4);
+	KTexture texture(dx->SetDev().Get(), msg, msg3);
+	KTexture texture2(dx->SetDev().Get(), msg2, msg4);
 #pragma endregion
 
 #pragma region スプライトクラス読み込み
@@ -205,16 +211,16 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 #pragma region グラフィックスパイプライン設定
 	// 3Dオブジェクト用パイプライン生成
-	PipelineSet object3dPipelineSet = Create3DObjectGpipeline(dx.SetDev().Get());
+	PipelineSet object3dPipelineSet = Create3DObjectGpipeline(dx->SetDev().Get());
 	// スプライト用パイプライン生成
-	PipelineSet spritePipelineSet = sprite->SpriteCreateGraphicsPipeline(dx.SetDev().Get());
+	PipelineSet spritePipelineSet = sprite->SpriteCreateGraphicsPipeline(dx->SetDev().Get());
 #pragma region 3Dオブジェクト初期化
 	const int ObjectNum = 2;
 	const int LineNum = 6;
 	// 3Dオブジェクト
 	KWorldTransform object3d[ObjectNum];
 	for (int i = 0; i < ObjectNum; i++) {
-		object3d[i].Initialize(*dx.SetDev().Get());
+		object3d[i].Initialize(*dx->SetDev().Get());
 		if (i > 0) {
 			object3d[i].material->colorR = object3d[i].material->colorG = object3d[i].material->colorB = 1.0f;
 		}
@@ -227,7 +233,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 #pragma region ビュー
 	// ビュープロジェクション
 	ViewProjection* viewProjection;
-	viewProjection = new ViewProjection(winApp.window_width, winApp.window_height);
+	viewProjection = new ViewProjection(win->window_width, win->window_height);
 #pragma endregion
 
 #pragma endregion
@@ -245,15 +251,15 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	SoundData soundData1 = sound->SoundLoadWave("Sound/fanfare.wav");
 #pragma region スプライト
 	SpriteCommon spriteCommon;
-	spriteCommon = sprite->SpriteCommonCreate(dx.SetDev().Get(), winApp.window_width, winApp.window_height);
+	spriteCommon = sprite->SpriteCommonCreate(dx->SetDev().Get(), win->window_width, win->window_height);
 
-	sprite->SpriteCommonLoadTexture(spriteCommon, 0, L"Resources/haikei.jpg", dx.SetDev().Get());
-	sprite->SpriteCommonLoadTexture(spriteCommon, 1, L"Resources/mario.jpg", dx.SetDev().Get());
+	sprite->SpriteCommonLoadTexture(spriteCommon, 0, L"Resources/haikei.jpg", dx->SetDev().Get());
+	sprite->SpriteCommonLoadTexture(spriteCommon, 1, L"Resources/mario.jpg", dx->SetDev().Get());
 
 	SpriteInfo sprites[2];
 	for (int i = 0; i < _countof(sprites); i++)
 	{
-		sprites[i] = sprite->SpriteCreate(dx.SetDev().Get(), winApp.window_width, winApp.window_height,
+		sprites[i] = sprite->SpriteCreate(dx->SetDev().Get(), win->window_width, win->window_height,
 			sprites[i].texNum, spriteCommon);
 		sprites[i].size.x = 100.0f;
 		sprites[i].size.y = 100.0f;
@@ -270,8 +276,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	debugtext = std::make_unique<DebugText>();
 	
 	const int debugTextNumber = 2;
-	sprite->SpriteCommonLoadTexture(spriteCommon, debugTextNumber, L"Resources/tex1.png", dx.SetDev().Get());
-	debugtext->Init(dx.SetDev().Get(), winApp.window_width, winApp.window_height, debugTextNumber, spriteCommon);
+	sprite->SpriteCommonLoadTexture(spriteCommon, debugTextNumber, L"Resources/tex1.png", dx->SetDev().Get());
+	debugtext->Init(dx->SetDev().Get(), win->window_width, win->window_height, debugTextNumber, spriteCommon);
 #pragma endregion
 
 #pragma endregion
@@ -281,9 +287,10 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	while (true)
 	{
 #pragma region ウィンドウメッセージ
-		if (winApp.breakFlag || input.IsPush(DIK_ESCAPE)) {
+		if (win->breakFlag || input->IsPush(DIK_ESCAPE)) {
 			sound->GetxAudio().Reset();
 			sound->SoundUnLoad(&soundData1);
+			delete input;
 			break;
 		}
 #pragma endregion
@@ -295,16 +302,16 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 			sprite->SpriteUpdate(sprites[i], spriteCommon);
 		}
 #pragma region ウィンドウアップデート
-		winApp.Update();
+		win->Update();
 #pragma endregion
 
 #pragma region inputアップデート
-		input.Update();
+		input->Update();
 #pragma endregion
 
 #pragma region キーボード処理
 		// 背景色変え
-		if (input.IsTriger(DIK_SPACE)) {
+		if (input->IsTriger(DIK_SPACE)) {
 			sound->SoundPlayWave(sound->GetxAudio().Get(), soundData1);
 		}
 		// 画像色変え
@@ -323,33 +330,33 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		object3d[0].material->colorR += rSpeed;
 		object3d[0].material->colorG += gSpeed;
 		object3d[0].material->colorB += bSpeed;
-		if (input.IsPush(DIK_X)) {
+		if (input->IsPush(DIK_X)) {
 			object3d[0].material->colorA += aSpeed;
 		}
 		// 図形縦回転
-		if (input.IsPush(DIK_C) ||
-			input.IsPush(DIK_V)) {
-			if (input.IsPush(DIK_C)) {
+		if (input->IsPush(DIK_C) ||
+			input->IsPush(DIK_V)) {
+			if (input->IsPush(DIK_C)) {
 				object3d[0].transform.rot.z += 0.1f;
 			}
 
-			if (input.IsPush(DIK_V)) {
+			if (input->IsPush(DIK_V)) {
 				object3d[0].transform.rot.z -= 0.1f;
 			}
 		}
 		////カメラ移動
-		if (input.IsPush(DIK_D) || input.IsPush(DIK_A) ||
-			input.IsPush(DIK_W) || input.IsPush(DIK_S)) {
-			if (input.IsPush(DIK_D)) {
+		if (input->IsPush(DIK_D) || input->IsPush(DIK_A) ||
+			input->IsPush(DIK_W) || input->IsPush(DIK_S)) {
+			if (input->IsPush(DIK_D)) {
 				viewProjection->angleX += XMConvertToRadians(1.0f);
 			}
-			else if (input.IsPush(DIK_A)) {
+			else if (input->IsPush(DIK_A)) {
 				viewProjection->angleX -= XMConvertToRadians(1.0f);
 			}
-			if (input.IsPush(DIK_W)) {
+			if (input->IsPush(DIK_W)) {
 				viewProjection->angleY -= XMConvertToRadians(1.0f);
 			}
-			else if (input.IsPush(DIK_S)) {
+			else if (input->IsPush(DIK_S)) {
 				viewProjection->angleY += XMConvertToRadians(1.0f);
 			}
 			// angleラジアンy軸回転
@@ -358,12 +365,12 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 			viewProjection->eye.z = viewProjection->lenZ * cosf(viewProjection->angleX) * cosf(viewProjection->angleY);
 		}
 		// 横回転
-		if (input.IsPush(DIK_RIGHT) ||
-			input.IsPush(DIK_LEFT)) {
-			if (input.IsPush(DIK_RIGHT)) {
+		if (input->IsPush(DIK_RIGHT) ||
+			input->IsPush(DIK_LEFT)) {
+			if (input->IsPush(DIK_RIGHT)) {
 				object3d[0].transform.rot.y -= 0.1f;
 			}
-			if (input.IsPush(DIK_LEFT)) {
+			if (input->IsPush(DIK_LEFT)) {
 				object3d[0].transform.rot.y += 0.1f;
 			}
 		}
@@ -373,8 +380,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		// 移動
 		/*object3d[0]->transform.pos.x += (speed)*object3d[0]->rotResult.x;
 		object3d[0]->transform.pos.z += (speed)*object3d[0]->rotResult.z;*/
-		object3d[0].transform.pos.x += (input.IsPush(DIK_RIGHT) - input.IsPush(DIK_LEFT)) * speed;
-		object3d[0].transform.pos.z += (input.IsPush(DIK_UP) - input.IsPush(DIK_DOWN)) * speed;
+		object3d[0].transform.pos.x += (input->IsPush(DIK_RIGHT) - input->IsPush(DIK_LEFT)) * speed;
+		object3d[0].transform.pos.z += (input->IsPush(DIK_UP) - input->IsPush(DIK_DOWN)) * speed;
 
 		object3d[1].transform.pos.x = object3d[0].transform.pos.x + 15;
 		object3d[1].transform.pos.z = object3d[0].transform.pos.z;
@@ -384,7 +391,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 #pragma endregion
 
 #pragma region ビューのアップデート
-		viewProjection->Update(winApp.window_width, winApp.window_height);
+		viewProjection->Update(win->window_width, win->window_height);
 #pragma endregion
 
 #pragma region 3Dオブジェクトのアップデート
@@ -398,30 +405,30 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		// 描画
 #pragma region リソースバリア
 		// バックバッファの番号を取得
-		UINT bbIndex = dx.SetSChain()->GetCurrentBackBufferIndex();
+		UINT bbIndex = dx->SetSChain()->GetCurrentBackBufferIndex();
 		// 1.リソースバリアで書き込み可能に変更
 		D3D12_RESOURCE_BARRIER barrierDesc{};
-		barrierDesc.Transition.pResource = dx.SetBackBuffers()[bbIndex].Get();
+		barrierDesc.Transition.pResource = dx->SetBackBuffers()[bbIndex].Get();
 		barrierDesc.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
 		barrierDesc.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
-		dx.SetCmdlist()->ResourceBarrier(1, &barrierDesc);
+		dx->SetCmdlist()->ResourceBarrier(1, &barrierDesc);
 #pragma endregion
 
 #pragma region 描画先
 		// 2. 描画先の変更
 		// レンダーターゲートビューのハンドルを取得
-		D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = dx.SetRtvHeap()->GetCPUDescriptorHandleForHeapStart();
-		rtvHandle.ptr += bbIndex * dx.SetDev()->GetDescriptorHandleIncrementSize(dx.SetRtvHeapDesc().Type);
+		D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = dx->SetRtvHeap()->GetCPUDescriptorHandleForHeapStart();
+		rtvHandle.ptr += bbIndex * dx->SetDev()->GetDescriptorHandleIncrementSize(dx->SetRtvHeapDesc().Type);
 		// 深度ステンシルビュー用デスクリプタヒープのハンドルを取得
 		D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = depth.dsvHeap->GetCPUDescriptorHandleForHeapStart();
-		dx.SetCmdlist()->OMSetRenderTargets(1, &rtvHandle, false, &dsvHandle);
+		dx->SetCmdlist()->OMSetRenderTargets(1, &rtvHandle, false, &dsvHandle);
 #pragma endregion
 
 #pragma region 画面クリア
 		// 3. 画面クリア
-		FLOAT clearColor[] = { dx.bRed,dx.bGreen,dx.bBule,0.0f };
-		dx.SetCmdlist()->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
-		dx.SetCmdlist()->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+		FLOAT clearColor[] = { dx->bRed,dx->bGreen,dx->bBule,0.0f };
+		dx->SetCmdlist()->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
+		dx->SetCmdlist()->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 #pragma endregion
 
 #pragma region 描画
@@ -429,71 +436,71 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 #pragma region ビューポート設定コマンド
 		// ビューポート設定コマンド
 		D3D12_VIEWPORT viewport{};
-		viewport.Width = winApp.window_width;   // 横幅
-		viewport.Height = winApp.window_height; // 縦幅
+		viewport.Width = win->window_width;   // 横幅
+		viewport.Height = win->window_height; // 縦幅
 		viewport.TopLeftX = 0;                 // 左上x
 		viewport.TopLeftY = 0;				   // 左上y
 		viewport.MinDepth = 0.0f;			   // 最小深度
 		viewport.MaxDepth = 1.0f;			   // 最大深度
 		// ビューポート設定コマンドをコマンドリストに積む
-		dx.SetCmdlist()->RSSetViewports(1, &viewport);
+		dx->SetCmdlist()->RSSetViewports(1, &viewport);
 #pragma endregion
 #pragma region シザー矩形設定
 		// シザー矩形
 		D3D12_RECT scissorRect{};
 		scissorRect.left = 0;									// 切り抜き座標左
-		scissorRect.right = scissorRect.left + winApp.window_width;	// 切り抜き座標右
+		scissorRect.right = scissorRect.left + win->window_width;	// 切り抜き座標右
 		scissorRect.top = 0;									// 切り抜き座標上
-		scissorRect.bottom = scissorRect.top + winApp.window_height;	// 切り抜き座標下
+		scissorRect.bottom = scissorRect.top + win->window_height;	// 切り抜き座標下
 		// シザー矩形設定コマンドをコマンドリストに積む
-		dx.SetCmdlist()->RSSetScissorRects(1, &scissorRect);
+		dx->SetCmdlist()->RSSetScissorRects(1, &scissorRect);
 #pragma endregion
 #pragma region パイプラインステート設定
 		// パイプラインステートとルートシグネチャの設定コマンド
-		dx.SetCmdlist()->SetPipelineState(object3dPipelineSet.pipelineState.Get());
-		dx.SetCmdlist()->SetGraphicsRootSignature(object3dPipelineSet.rootSignature.Get());
+		dx->SetCmdlist()->SetPipelineState(object3dPipelineSet.pipelineState.Get());
+		dx->SetCmdlist()->SetGraphicsRootSignature(object3dPipelineSet.rootSignature.Get());
 #pragma endregion
 #pragma region プリミティブ形状
 		// プリミティブ形状の設定コマンド
-		dx.SetCmdlist()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		dx->SetCmdlist()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 #pragma endregion
 
 #pragma region 描画コマンド
 		// 描画コマンド
 		for (int i = 0; i < ObjectNum; i++) {
-			if (!input.IsPush(DIK_SPACE))
+			if (!input->IsPush(DIK_SPACE))
 			{
-				object3d[i].Draw(dx.SetCmdlist());
+				object3d[i].Draw(dx->SetCmdlist());
 			}
 			else
 			{
-				object3d[i].SecoundDraw(dx.SetCmdlist());
+				object3d[i].SecoundDraw(dx->SetCmdlist());
 			}
 		}
 		// スプライト描画
-		sprite->SpriteCommonBeginDraw(dx.SetCmdlist(), spriteCommon);
+		sprite->SpriteCommonBeginDraw(dx->SetCmdlist(), spriteCommon);
 		for (int i = 0; i < _countof(sprites); i++)
 		{
-			sprite->SpriteDraw(sprites[i], dx.SetCmdlist(), spriteCommon, dx.SetDev().Get());
+			sprite->SpriteDraw(sprites[i], dx->SetCmdlist(), spriteCommon, dx->SetDev().Get());
 		}
 
 		debugtext->Print(spriteCommon, "Hello,DirectX!!", { 200,100 });
 		debugtext->Print(spriteCommon, "Nihon Kogakuin", { 200,200 }, 2.0f);
 
-		debugtext->DrawAll(dx.SetDev().Get(), spriteCommon, dx.SetCmdlist());
+		debugtext->DrawAll(dx->SetDev().Get(), spriteCommon, dx->SetCmdlist());
 		// 描画コマンドここまで
 #pragma endregion
 #pragma endregion
 #pragma region リソースバリアを戻す
 		barrierDesc.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
 		barrierDesc.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
-		dx.SetCmdlist()->ResourceBarrier(1, &barrierDesc);
+		dx->SetCmdlist()->ResourceBarrier(1, &barrierDesc);
 #pragma endregion
 #pragma region コマンドのフラッシュ
-		dx.CmdFlash();
+		dx->CmdFlash();
 #pragma endregion
 #pragma region コマンド完了待ち
-		dx.CmdClear();
+		dx->CmdClear();
 #pragma endregion
 	}
 

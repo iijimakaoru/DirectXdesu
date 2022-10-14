@@ -7,7 +7,8 @@ KInput::KInput(WNDCLASSEX w, HWND hwnd) {
 
 void KInput::Init(WNDCLASSEX w, HWND hwnd) {
 	// 入力初期化
-	result = DirectInput8Create(w.hInstance, DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&directInput, nullptr);
+	result = DirectInput8Create(w.hInstance, DIRECTINPUT_VERSION, IID_IDirectInput8, 
+		(void**)&directInput, nullptr);
 	assert(SUCCEEDED(result));
 
 	// キーボードデバイスの生成

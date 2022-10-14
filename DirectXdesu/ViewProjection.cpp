@@ -1,5 +1,5 @@
 #include "ViewProjection.h"
-#include "KWindow.h"
+#include "KWinApp.h"
 
 ViewProjection::ViewProjection(){}
 

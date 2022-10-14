@@ -3,6 +3,8 @@
 #define DIRECTINPUT_VERSION  0x0800
 #pragma comment(lib, "dinput8.lib")
 #pragma comment(lib, "dxguid.lib")
+#include "KDirectInit.h"
+
 class KInput
 {
 public:
@@ -22,10 +24,10 @@ public:
 	BYTE oldkey[256] = {};
 
 	// 入力生成
-	IDirectInput8* directInput = nullptr;
+	ComPtr<IDirectInput8> directInput = nullptr;
 
 	// キーボードデバイスの生成
-	IDirectInputDevice8* keyboad = nullptr;
+	ComPtr<IDirectInputDevice8> keyboad = nullptr;
 
 	HRESULT result;
 };

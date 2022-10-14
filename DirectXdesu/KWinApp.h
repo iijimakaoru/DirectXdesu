@@ -1,11 +1,11 @@
 #pragma once
 #include <Windows.h>
 
-class KWindow
+class KWinApp
 {
 public:
-	KWindow();
-	~KWindow();
+	KWinApp();
+	~KWinApp();
 	void Update();
 	static LRESULT WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
 

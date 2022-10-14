@@ -69,7 +69,7 @@
     <ClCompile Include="KDirectInit.cpp">
       <Filter>ソース ファイル\Base</Filter>
     </ClCompile>
-    <ClCompile Include="KWindow.cpp">
+    <ClCompile Include="KWinApp.cpp">
       <Filter>ソース ファイル\Base</Filter>
     </ClCompile>
     <ClCompile Include="ViewProjection.cpp">
@@ -128,7 +128,7 @@
     <ClInclude Include="KGPlin.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="KWindow.h">
+    <ClInclude Include="KWinApp.h">
       <Filter>ヘッダー ファイル\Base</Filter>
     </ClInclude>
     <ClInclude Include="KDirectInit.h">

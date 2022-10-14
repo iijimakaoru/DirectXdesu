@@ -6,7 +6,7 @@
 #include <vector>
 #include <string>
 #include <DirectXTex.h>
-#include"KWindow.h"
+#include"KWinApp.h"
 
 #pragma comment(lib, "d3d12.lib")
 #pragma comment(lib, "dxgi.lib")
@@ -18,7 +18,7 @@ using namespace Microsoft::WRL;
 class KDirectInit
 {
 public:
-	KDirectInit(KWindow window);
+	KDirectInit(KWinApp window);
 	void CmdFlash();
 	void CmdClear();
 
@@ -75,7 +75,7 @@ private:
 	void Device(IDXGIAdapter4* tmpAdapter);
 	void CommandList();
 	void CommandQueue();
-	void SwapChain(KWindow window);
+	void SwapChain(KWinApp window);
 	void Descriptor();
 	void BackBuffer();
 	void Fence();

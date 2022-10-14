@@ -25,8 +25,8 @@ public:
 
 	ID3D12DescriptorHeap* dsvHeap{};
 
-	KDepth(ID3D12Device* dev, KWindow win);
-	void SetResource(KWindow win);
+	KDepth(ID3D12Device* dev, KWinApp win);
+	void SetResource(KWinApp win);
 	void HeapDepth();
 	void SetClwarDepth();
 	void GeneResource(ID3D12Device* dev);

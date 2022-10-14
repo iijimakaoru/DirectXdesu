@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <d3dcompiler.h>
-#include "KWindow.h"
+#include "KWinApp.h"
 #include "KDirectInit.h"
 #include "KInput.h"
 #include "KDepth.h"
@@ -169,7 +169,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	HRESULT result;
 
 #pragma region ウィンドウ
-	KWindow win;
+	KWinApp win;
 #pragma endregion
 #pragma region DirectX初期化
 	KDirectInit dx(win);

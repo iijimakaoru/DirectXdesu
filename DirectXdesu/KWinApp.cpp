@@ -1,7 +1,7 @@
-#include "KWindow.h"
+#include "KWinApp.h"
 #include <Windows.h>
 
-LRESULT KWindow::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
+LRESULT KWinApp::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 	// メッセージに応じてゲーム固有の処理を行う 
 	switch (msg) {
 		// ウィンドウが破棄された 
@@ -14,7 +14,7 @@ LRESULT KWindow::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 	return DefWindowProc(hwnd, msg, wparam, lparam);
 }
 
-void KWindow::Update() {
+void KWinApp::Update() {
 	if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
 	{
 		TranslateMessage(&msg);
@@ -27,7 +27,7 @@ void KWindow::Update() {
 	}
 }
 
-KWindow::KWindow() {
+KWinApp::KWinApp() {
 	window.cbSize = sizeof(WNDCLASSEX);
 	window.lpfnWndProc = (WNDPROC)WindowProc;
 	window.lpszClassName = L"DirectX12";
@@ -59,6 +59,6 @@ KWindow::KWindow() {
 	ShowWindow(handle, SW_SHOW);
 }
 
-KWindow::~KWindow() {
+KWinApp::~KWinApp() {
 	UnregisterClass(window.lpszClassName, window.hInstance);
 }

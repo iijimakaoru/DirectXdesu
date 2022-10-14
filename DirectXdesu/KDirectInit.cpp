@@ -1,6 +1,6 @@
 #include "KDirectInit.h"
 
-KDirectInit::KDirectInit(KWindow window) {
+KDirectInit::KDirectInit(KWinApp window) {
 	bRed = 0.1f;
 	bGreen = 0.25f;
 	bBule = 0.5f;
@@ -125,7 +125,7 @@ void KDirectInit::CommandQueue() {
 	assert(SUCCEEDED(result));
 }
 
-void KDirectInit::SwapChain(KWindow window) {
+void KDirectInit::SwapChain(KWinApp window) {
 	swapChainDesc.Width = window.window_width;
 	swapChainDesc.Height = window.window_height;
 	swapChainDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;

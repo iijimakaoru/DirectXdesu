@@ -21,6 +21,8 @@
 #include "Sprite.h"
 #include "DebugText.h"
 
+#include"Player.h"
+
 PipelineSet Create3DObjectGpipeline(ID3D12Device* dev)
 {
 	HRESULT result;

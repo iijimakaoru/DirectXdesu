@@ -159,6 +159,7 @@
     <ClCompile Include="KWorldTransform.cpp" />
     <ClCompile Include="KTexture.cpp" />
     <ClCompile Include="Matrix4.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="ShaderManager.cpp" />
     <ClCompile Include="Sound.cpp" />
     <ClCompile Include="Sprite.cpp" />
@@ -185,6 +186,7 @@
     <ClInclude Include="KTexture.h" />
     <ClInclude Include="Matrix4.h" />
     <ClInclude Include="PipelineSet.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="ShaderManager.h" />
     <ClInclude Include="Sound.h" />

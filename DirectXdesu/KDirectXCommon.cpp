@@ -1,6 +1,6 @@
 #include "KDirectXCommon.h"
 
-KDirectXCommon::KDirectXCommon(KWinApp window) {
+KDirectXCommon::KDirectXCommon(int window_width, int window_height, HWND hwnd) {
 	bRed = 0.1f;
 	bGreen = 0.25f;
 	bBule = 0.5f;
@@ -13,7 +13,7 @@ KDirectXCommon::KDirectXCommon(KWinApp window) {
 
 	CommandQueue();
 
-	SwapChain(window);
+	SwapChain(window_width, window_height, hwnd);
 
 	Descriptor();
 
@@ -97,7 +97,7 @@ void KDirectXCommon::CmdFlash()
 	result = cmdList->Close();
 	assert(SUCCEEDED(result));
 	// コマンドリストの実行
-	ID3D12CommandList* cmdLists[] = { cmdList };
+	ID3D12CommandList* cmdLists[] = { cmdList.Get() };
 	cmdQueue->ExecuteCommandLists(1, cmdLists);
 	// 画面に表示するバッファをフリップ(裏表の入れ替え)
 	result = swapChain->Present(1, 0);
@@ -194,9 +194,9 @@ void KDirectXCommon::CommandQueue() {
 	assert(SUCCEEDED(result));
 }
 
-void KDirectXCommon::SwapChain(KWinApp window) {
-	swapChainDesc.Width = window.window_width;
-	swapChainDesc.Height = window.window_height;
+void KDirectXCommon::SwapChain(int window_width, int window_height, HWND hwnd) {
+	swapChainDesc.Width = window_width;
+	swapChainDesc.Height = window_height;
 	swapChainDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 	swapChainDesc.SampleDesc.Count = 1;
 	swapChainDesc.BufferUsage = DXGI_USAGE_BACK_BUFFER;
@@ -207,7 +207,7 @@ void KDirectXCommon::SwapChain(KWinApp window) {
 	ComPtr<IDXGISwapChain1> swapchain1;
 	// スワップチェーンの生成
 	result = dxgiFactory->CreateSwapChainForHwnd(
-		cmdQueue.Get(), window.hwnd, &swapChainDesc, nullptr, nullptr,
+		cmdQueue.Get(), hwnd, &swapChainDesc, nullptr, nullptr,
 		&swapchain1);
 
 	swapchain1.As(&swapChain);

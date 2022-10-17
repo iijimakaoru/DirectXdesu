@@ -4,6 +4,9 @@
 #include "Vector3.h"
 #include "Vector2.h"
 #include <vector>
+#include <wrl.h>
+
+using namespace Microsoft::WRL;
 
 using namespace DirectX;
 
@@ -33,11 +36,11 @@ public:
 	// リソース設定
 	D3D12_RESOURCE_DESC resDesc{};
 	// 頂点バッファの生成
-	ID3D12Resource* vertBuff = nullptr;
+	ComPtr<ID3D12Resource> vertBuff;
 	// インデックスデータ全体のサイズ
 	UINT sizeIB;
 	// インデックスバッファの生成
-	ID3D12Resource* indexBuff = nullptr;
+	ComPtr<ID3D12Resource> indexBuff;
 	// インデックスバッファをマッピング
 	uint16_t* indexMap = nullptr;
 	// インデックスバッファビュー

@@ -1,6 +1,9 @@
 #pragma once
 #include "KVertex.h"
 #include <string>
+#include <wrl.h>
+
+using namespace Microsoft::WRL;
 
 class KTexture
 {
@@ -31,8 +34,8 @@ public:
 	D3D12_RESOURCE_DESC textureResourceDesc{};
 	D3D12_RESOURCE_DESC textureResourceDesc2{};
 	// テクスチャバッファの生成
-	ID3D12Resource* texBuff = nullptr;
-	ID3D12Resource* texBuff2 = nullptr;
+	ComPtr<ID3D12Resource> texBuff;
+	ComPtr<ID3D12Resource> texBuff2;
 	// SRVの最大個数
 	const size_t kMaxSRVCount = 2056;
 	// デスクリプタヒープの設定

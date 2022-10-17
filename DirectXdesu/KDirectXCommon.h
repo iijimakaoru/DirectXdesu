@@ -18,23 +18,19 @@ using namespace Microsoft::WRL;
 class KDirectXCommon
 {
 public:
-	KDirectXCommon(KWinApp window);
+	KDirectXCommon(int window_width, int window_height, HWND hwnd);
 	void PreDraw(ID3D12DescriptorHeap* dsvHeap, int window_width, int window_height);
 	void PostDraw();
 	void CmdFlash();
 	void CmdClear();
 
 	ComPtr<ID3D12Device> SetDev() { return dev; }
-	ID3D12GraphicsCommandList* SetCmdlist() { return cmdList; }
+	ComPtr<ID3D12GraphicsCommandList> SetCmdlist() { return cmdList; }
 	ComPtr<IDXGISwapChain4> SetSChain() { return swapChain; }
 	ComPtr<ID3D12CommandAllocator> SetCmdAllocater() { return cmdAllocater; }
-	ID3D12DescriptorHeap* SetRtvHeap() { return rtvHeap; }
+	ComPtr<ID3D12DescriptorHeap> SetRtvHeap() { return rtvHeap; }
 	D3D12_DESCRIPTOR_HEAP_DESC SetRtvHeapDesc() { return rtvHeapDesc; }
 	std::vector<ComPtr<ID3D12Resource>> SetBackBuffers() { return backBuffers; }
-
-	float bRed = 0.1f;
-	float bGreen = 0.25f;
-	float bBule = 0.5f;
 
 private:
 	HRESULT result;
@@ -42,9 +38,9 @@ private:
 	ComPtr<IDXGIFactory6> dxgiFactory;
 	ComPtr<IDXGISwapChain4> swapChain;
 	ComPtr<ID3D12CommandAllocator> cmdAllocater;
-	ID3D12GraphicsCommandList* cmdList = nullptr;
+	ComPtr<ID3D12GraphicsCommandList> cmdList;
 	ComPtr<ID3D12CommandQueue> cmdQueue;
-	ID3D12DescriptorHeap* rtvHeap = nullptr;
+	ComPtr<ID3D12DescriptorHeap> rtvHeap;
 
 	// 対応レベルの配列
 	D3D_FEATURE_LEVEL levels[4] = {
@@ -75,12 +71,16 @@ private:
 	// 1.リソースバリアで書き込み可能に変更
 	D3D12_RESOURCE_BARRIER barrierDesc{};
 
+	float bRed = 0.1f;
+	float bGreen = 0.25f;
+	float bBule = 0.5f;
+
 	void DXGIFactory();
 	void Adapter();
 	void Device(IDXGIAdapter4* tmpAdapter);
 	void CommandList();
 	void CommandQueue();
-	void SwapChain(KWinApp window);
+	void SwapChain(int window_width, int window_height, HWND hwnd);
 	void Descriptor();
 	void BackBuffer();
 	void Fence();

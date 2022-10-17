@@ -2,6 +2,9 @@
 #include <d3d12.h>
 #include <DirectXMath.h>
 #include <DirectXTex.h>
+#include <wrl.h>
+
+using namespace Microsoft::WRL;
 
 using namespace DirectX;
 
@@ -28,7 +31,7 @@ public:
 	// リソース設定
 	D3D12_RESOURCE_DESC cbResourceDesc{};
 	// 定数バッファの生成
-	ID3D12Resource* constBufferMaterial = nullptr;
+	ComPtr<ID3D12Resource> constBufferMaterial;
 	// 定数バッファのマッピング
 	ConstBufferDataMaterial* constMapMaterial = nullptr;
 

@@ -164,6 +164,6 @@ void KTexture::SetSRV() {
 
 void KTexture::CreateSRV(ID3D12Device* dev) {
 	// ハンドルの指す位置にシェーダーリソースビュー作成
-	dev->CreateShaderResourceView(texBuff, &srvDesc, srvHandle);
-	dev->CreateShaderResourceView(texBuff2, &srvDesc2, srvHandle2);
+	dev->CreateShaderResourceView(texBuff.Get(), &srvDesc, srvHandle);
+	dev->CreateShaderResourceView(texBuff2.Get(), &srvDesc2, srvHandle2);
 }

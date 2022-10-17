@@ -1,11 +1,15 @@
 #pragma once
 #include <d3d12.h>
 #include "KDirectXCommon.h"
+#include <wrl.h>
+
+using namespace Microsoft::WRL;
+
 class KDepth
 {
 public:
 	KDepth(ID3D12Device* devint, int window_width, int window_height);
-	ID3D12DescriptorHeap* GetDevHeap() { return dsvHeap; }
+	ComPtr<ID3D12DescriptorHeap> GetDevHeap() { return dsvHeap; }
 
 private:
 	HRESULT result;
@@ -25,9 +29,9 @@ private:
 	// ê[ìxÉrÉÖÅ[çÏê¨
 	D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc{};
 
-	ID3D12Resource* depthBuff{};
+	ComPtr<ID3D12Resource> depthBuff{};
 
-	ID3D12DescriptorHeap* dsvHeap{};
+	ComPtr<ID3D12DescriptorHeap> dsvHeap{};
 
 	void SetResource(int window_width, int window_height);
 	void HeapDepth();

@@ -175,7 +175,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 #pragma region DirectX初期化
 	// KDirectCommon
 	KDirectXCommon* dx = nullptr;
-	dx = new KDirectXCommon(*win);
+	dx = new KDirectXCommon(win->window_width, win->window_height, win->hwnd);
 	// キーボード入力
 	KInput* input = nullptr;
 	input = new KInput();
@@ -410,7 +410,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 #pragma region 描画
 		// 描画開始
-		dx->PreDraw(depth->GetDevHeap(), win->window_width, win->window_height);
+		dx->PreDraw(depth->GetDevHeap().Get(), win->window_width, win->window_height);
 #pragma region パイプラインステート設定
 		// パイプラインステートとルートシグネチャの設定コマンド
 		dx->SetCmdlist()->SetPipelineState(object3dPipelineSet.pipelineState.Get());
@@ -426,24 +426,24 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		for (int i = 0; i < ObjectNum; i++) {
 			if (!input->IsPush(DIK_SPACE))
 			{
-				object3d[i]->Draw(dx->SetCmdlist());
+				object3d[i]->Draw(dx->SetCmdlist().Get());
 			}
 			else
 			{
-				object3d[i]->SecoundDraw(dx->SetCmdlist());
+				object3d[i]->SecoundDraw(dx->SetCmdlist().Get());
 			}
 		}
 		// スプライト描画
-		sprite->SpriteCommonBeginDraw(dx->SetCmdlist(), spriteCommon);
+		sprite->SpriteCommonBeginDraw(dx->SetCmdlist().Get(), spriteCommon);
 		for (int i = 0; i < _countof(sprites); i++)
 		{
-			sprite->SpriteDraw(sprites[i], dx->SetCmdlist(), spriteCommon, dx->SetDev().Get());
+			sprite->SpriteDraw(sprites[i], dx->SetCmdlist().Get(), spriteCommon, dx->SetDev().Get());
 		}
 
 		debugtext->Print(spriteCommon, "Hello,DirectX!!", { 200,100 });
 		debugtext->Print(spriteCommon, "Nihon Kogakuin", { 200,200 }, 2.0f);
 
-		debugtext->DrawAll(dx->SetDev().Get(), spriteCommon, dx->SetCmdlist());
+		debugtext->DrawAll(dx->SetDev().Get(), spriteCommon, dx->SetCmdlist().Get());
 		// 描画コマンドここまで
 #pragma endregion
 		// 描画終了

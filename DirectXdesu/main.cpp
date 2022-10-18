@@ -224,7 +224,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	KWorldTransform* object3d[ObjectNum];
 	for (int i = 0; i < ObjectNum; i++) {
 		object3d[i] = new KWorldTransform();
-		object3d[i]->Initialize(*dx->SetDev().Get());
+		object3d[i]->Initialize(dx->SetDev().Get());
 		if (i > 0) {
 			object3d[i]->material->colorR = object3d[i]->material->colorG = object3d[i]->material->colorB = 1.0f;
 		}

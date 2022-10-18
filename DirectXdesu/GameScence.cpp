@@ -16,10 +16,12 @@ void GameScence::Init(ID3D12Device& dev, int window_width, int window_height)
 	// スプライト
 	sprite = std::make_unique<Sprite>();
 	// 3Dオブジェクト
-	for (int i = 0; i < ObjectNum; i++) {
+	for (int i = 0; i < ObjectNum; i++) 
+	{
 		object3d[i] = new KWorldTransform();
-		object3d[i]->Initialize(*dx->SetDev().Get());
-		if (i > 0) {
+		object3d[i]->Initialize(dx->SetDev().Get());
+		if (i > 0) 
+		{
 			object3d[i]->material->colorR =
 				object3d[i]->material->colorG =
 				object3d[i]->material->colorB = 1.0f;

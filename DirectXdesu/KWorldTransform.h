@@ -33,10 +33,10 @@ class KWorldTransform
 {
 public:
 	KWorldTransform();
-	KWorldTransform(ID3D12Device& dev);
+	KWorldTransform(ID3D12Device* dev);
 	void SetTexture(KTexture* texture);
 	void SetModel(KModel* model);
-	void Initialize(ID3D12Device& dev);
+	void Initialize(ID3D12Device* dev);
 	void Update(XMMATRIX& matView, XMMATRIX& matProjection);
 	void Draw(ID3D12GraphicsCommandList* cmdList);
 	void SecoundDraw(ID3D12GraphicsCommandList* cmdList);

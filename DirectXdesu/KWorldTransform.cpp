@@ -2,7 +2,7 @@
 
 KWorldTransform::KWorldTransform() {}
 
-KWorldTransform::KWorldTransform(ID3D12Device& dev) {
+KWorldTransform::KWorldTransform(ID3D12Device* dev) {
 	Initialize(dev);
 }
 
@@ -14,7 +14,7 @@ void KWorldTransform::SetModel(KModel* model) {
 	this->model = model;
 }
 
-void KWorldTransform::Initialize(ID3D12Device& dev) {
+void KWorldTransform::Initialize(ID3D12Device* dev) {
 	// ヒープ設定
 	cbHeapProp.Type = D3D12_HEAP_TYPE_UPLOAD;
 	// リソース設定
@@ -26,7 +26,7 @@ void KWorldTransform::Initialize(ID3D12Device& dev) {
 	cbResourceDesc.SampleDesc.Count = 1;
 	cbResourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 	// 定数バッファの生成
-	result = dev.CreateCommittedResource(
+	result = dev->CreateCommittedResource(
 		&cbHeapProp,
 		D3D12_HEAP_FLAG_NONE,
 		&cbResourceDesc,
@@ -38,7 +38,7 @@ void KWorldTransform::Initialize(ID3D12Device& dev) {
 	result = transform.constBuffTransform->Map(0, nullptr, (void**)&transform.constMapTransform);
 	assert(SUCCEEDED(result));
 
-	material = new KMaterial(&dev);
+	material = new KMaterial(dev);
 }
 
 void KWorldTransform::Update(XMMATRIX& matView, XMMATRIX& matProjection) {

@@ -5,9 +5,13 @@ KInput::KInput() {
 	
 }
 
-void KInput::Init(HINSTANCE hInstance, HWND hwnd) {
+void KInput::Init(KWinApp* win) {
+	assert(win);
+
+	this->win = win;
+
 	// 入力初期化
-	result = DirectInput8Create(hInstance, DIRECTINPUT_VERSION, IID_IDirectInput8, 
+	result = DirectInput8Create(win->window.hInstance, DIRECTINPUT_VERSION, IID_IDirectInput8, 
 		(void**)&directInput, nullptr);
 	assert(SUCCEEDED(result));
 
@@ -20,7 +24,7 @@ void KInput::Init(HINSTANCE hInstance, HWND hwnd) {
 	assert(SUCCEEDED(result));
 
 	// 排他制御レベルのセット
-	result = keyboad->SetCooperativeLevel(hwnd, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE | DISCL_NOWINKEY);
+	result = keyboad->SetCooperativeLevel(win->hwnd, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE | DISCL_NOWINKEY);
 	assert(SUCCEEDED(result));
 }
 

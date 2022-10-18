@@ -1,9 +1,12 @@
 #pragma once
 #include "KVertex.h"
+#include <DirectXTex.h>
 #include <string>
 #include <wrl.h>
 
 using namespace Microsoft::WRL;
+
+using namespace DirectX;
 
 class KTexture
 {

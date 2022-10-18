@@ -1,6 +1,11 @@
 #include "KDepth.h"
 
-KDepth::KDepth(ID3D12Device* dev, int window_width, int window_height) {
+KDepth::KDepth() {
+	
+}
+
+void KDepth::Init(ID3D12Device* dev, int window_width, int window_height)
+{
 	SetResource(window_width, window_height);
 	HeapDepth();
 	SetClwarDepth();

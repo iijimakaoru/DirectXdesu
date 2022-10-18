@@ -1,27 +1,47 @@
 #pragma once
+#include <d3dx12.h>
 #include <d3d12.h>
 #include <dxgi1_6.h>
 #include <cassert>
 #include <wrl.h>
 #include <vector>
-#include <string>
-#include <DirectXTex.h>
 #include"KWinApp.h"
+#include "KWinApp.h"
+#include "KDepth.h"
 
 #pragma comment(lib, "d3d12.lib")
 #pragma comment(lib, "dxgi.lib")
-
-using namespace DirectX;
 
 using namespace Microsoft::WRL;
 
 class KDirectXCommon
 {
 public:
-	KDirectXCommon(int window_width, int window_height, HWND hwnd);
-	void PreDraw(ID3D12DescriptorHeap* dsvHeap, int window_width, int window_height);
+	KDirectXCommon();
+	~KDirectXCommon()
+	{
+		
+	}
+	void Init(KWinApp* win);
+
+	void InitDev();
+
+	void InitCommand();
+
+	void InitSwapChain();
+
+	void InitRenderTargetView();
+
+	void InitDepthBuffer();
+
+	void InitFence();
+
+	void PreDraw(ID3D12DescriptorHeap* dsvHeap);
+
 	void PostDraw();
+
 	void CmdFlash();
+
 	void CmdClear();
 
 	ComPtr<ID3D12Device> SetDev() { return dev; }
@@ -29,26 +49,29 @@ public:
 	ComPtr<IDXGISwapChain4> SetSChain() { return swapChain; }
 	ComPtr<ID3D12CommandAllocator> SetCmdAllocater() { return cmdAllocater; }
 	ComPtr<ID3D12DescriptorHeap> SetRtvHeap() { return rtvHeap; }
-	D3D12_DESCRIPTOR_HEAP_DESC SetRtvHeapDesc() { return rtvHeapDesc; }
+	//D3D12_DESCRIPTOR_HEAP_DESC SetRtvHeapDesc() { return rtvHeapDesc; }
 	std::vector<ComPtr<ID3D12Resource>> SetBackBuffers() { return backBuffers; }
 
 private:
 	HRESULT result;
-	ComPtr<ID3D12Device> dev;
-	ComPtr<IDXGIFactory6> dxgiFactory;
-	ComPtr<IDXGISwapChain4> swapChain;
+	// DirectX12デバイス
+	Microsoft::WRL::ComPtr<ID3D12Device> dev;
+	// DXGIファクトリー
+	Microsoft::WRL::ComPtr<IDXGIFactory6> dxgiFactory;
+	// バックバッファ
+	std::vector<Microsoft::WRL::ComPtr<ID3D12Resource>> backBuffers;
+	// スワップチェーン
+	Microsoft::WRL::ComPtr<IDXGISwapChain4> swapChain;
+	// デスクリプタヒープの設定
+	D3D12_DESCRIPTOR_HEAP_DESC rtvHeapDesc{};
+	//　深度ビュー用ヒープ作成
+	ComPtr<ID3D12DescriptorHeap> dsvHeap{};
+	ComPtr<ID3D12DescriptorHeap> tmpDsvHeap{};
+
 	ComPtr<ID3D12CommandAllocator> cmdAllocater;
 	ComPtr<ID3D12GraphicsCommandList> cmdList;
 	ComPtr<ID3D12CommandQueue> cmdQueue;
 	ComPtr<ID3D12DescriptorHeap> rtvHeap;
-
-	// 対応レベルの配列
-	D3D_FEATURE_LEVEL levels[4] = {
-		D3D_FEATURE_LEVEL_12_1,
-		D3D_FEATURE_LEVEL_12_0,
-		D3D_FEATURE_LEVEL_11_1,
-		D3D_FEATURE_LEVEL_11_0
-	};
 
 	D3D_FEATURE_LEVEL featureLevel;
 
@@ -57,12 +80,6 @@ private:
 
 	// スワップチェーンの設定
 	DXGI_SWAP_CHAIN_DESC1 swapChainDesc{};
-
-	// デスクリプタヒープの設定
-	D3D12_DESCRIPTOR_HEAP_DESC rtvHeapDesc{};
-
-	// バックバッファ
-	std::vector<ComPtr<ID3D12Resource>> backBuffers;
 
 	// フェンスの生成
 	ComPtr<ID3D12Fence> fence;
@@ -75,14 +92,8 @@ private:
 	float bGreen = 0.25f;
 	float bBule = 0.5f;
 
-	void DXGIFactory();
-	void Adapter();
-	void Device(IDXGIAdapter4* tmpAdapter);
-	void CommandList();
-	void CommandQueue();
-	void SwapChain(int window_width, int window_height, HWND hwnd);
-	void Descriptor();
-	void BackBuffer();
-	void Fence();
+	KWinApp* win = nullptr;
+
+	//KDepth* depth = nullptr;
 };
 

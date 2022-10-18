@@ -5,6 +5,7 @@
 #pragma comment(lib, "dxguid.lib")
 #include <wrl.h>
 #include <Windows.h>
+#include "KWinApp.h"
 
 using namespace Microsoft::WRL;
 
@@ -12,7 +13,7 @@ class KInput
 {
 public:
 	KInput();
-	void Init(HINSTANCE hInstance, HWND hwnd);
+	void Init(KWinApp* win);
 	void Update();
 	void KeyInit();
 
@@ -32,6 +33,8 @@ private:
 
 	// キーボードデバイスの生成
 	ComPtr<IDirectInputDevice8> keyboad = nullptr;
+
+	KWinApp* win = nullptr;
 
 	HRESULT result;
 };

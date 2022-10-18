@@ -8,7 +8,8 @@ using namespace Microsoft::WRL;
 class KDepth
 {
 public:
-	KDepth(ID3D12Device* devint, int window_width, int window_height);
+	KDepth();
+	void Init(ID3D12Device* dev, int window_width, int window_height);
 	ComPtr<ID3D12DescriptorHeap> GetDevHeap() { return dsvHeap; }
 
 private:

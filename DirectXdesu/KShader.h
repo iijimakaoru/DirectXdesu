@@ -1,6 +1,7 @@
 #pragma once
 #include "KDirectXCommon.h"
 #include <d3dcompiler.h>
+#include <string>
 
 class KShader
 {

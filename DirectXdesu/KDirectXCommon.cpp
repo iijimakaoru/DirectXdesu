@@ -1,28 +1,234 @@
 #include "KDirectXCommon.h"
 
-KDirectXCommon::KDirectXCommon(int window_width, int window_height, HWND hwnd) {
-	bRed = 0.1f;
-	bGreen = 0.25f;
-	bBule = 0.5f;
-
-	DXGIFactory();
-
-	Adapter();
-
-	CommandList();
-
-	CommandQueue();
-
-	SwapChain(window_width, window_height, hwnd);
-
-	Descriptor();
-
-	BackBuffer();
-
-	Fence();
+KDirectXCommon::KDirectXCommon() {
+	
 }
 
-void KDirectXCommon::PreDraw(ID3D12DescriptorHeap* dsvHeap, int window_width, int window_height)
+void KDirectXCommon::Init(KWinApp* win)
+{
+	// NULL検出
+	assert(win);
+
+	// メンバ変数に記憶
+	this->win = win;
+
+	// デバイス初期化
+	InitDev();
+
+	// コマンド初期化
+	InitCommand();
+
+	// スワップチェーン初期化
+	InitSwapChain();
+
+	// レンダーターゲットビュー初期化
+	InitRenderTargetView();
+
+	// 深度バッファ初期化
+	//InitDepthBuffer();
+	//depth->Init(dev.Get(), win->window_width, win->window_height);
+
+	// フェンス初期化
+	InitFence();
+}
+
+void KDirectXCommon::InitDev()
+{
+#ifdef _DEBUG
+	// デバッグレイヤーをオンに
+	ComPtr<ID3D12Debug1> debugController;
+	if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&debugController))))
+	{
+		debugController->EnableDebugLayer();
+		debugController->SetEnableGPUBasedValidation(true);
+	}
+#endif
+
+	// DXGIファクトリーの生成
+	result = CreateDXGIFactory(IID_PPV_ARGS(&dxgiFactory));
+	assert(SUCCEEDED(result));
+
+	// アダプターの列挙用
+	std::vector<IDXGIAdapter4*> adapters;
+
+	// ここに特定のアダプターオブジェクトが入る
+	IDXGIAdapter4* tmpAdapter = nullptr;
+
+	// パフォーマンスが高いものから順に、全てのアダプターを列挙する
+	for (UINT i = 0; dxgiFactory->EnumAdapterByGpuPreference(i,
+		DXGI_GPU_PREFERENCE_HIGH_PERFORMANCE,
+		IID_PPV_ARGS(&tmpAdapter)) != DXGI_ERROR_NOT_FOUND; i++) 
+	{
+		// 動的配列に追加
+		adapters.push_back(tmpAdapter);
+	}
+
+	// 妥当なアダプタを選別する
+	for (size_t i = 0; i < adapters.size(); i++) 
+	{
+		DXGI_ADAPTER_DESC3 adapterDesc;
+		// アダプターの情報を取得
+		adapters[i]->GetDesc3(&adapterDesc);
+
+		// ソフトウェアデバイスを回避
+		if (!(adapterDesc.Flags & DXGI_ADAPTER_FLAG3_SOFTWARE)) 
+		{
+			// デバイスを採用してループを抜ける
+			tmpAdapter = adapters[i];
+			break;
+		}
+	}
+
+	// 対応レベルの配列
+	D3D_FEATURE_LEVEL levels[4] = {
+		D3D_FEATURE_LEVEL_12_1,
+		D3D_FEATURE_LEVEL_12_0,
+		D3D_FEATURE_LEVEL_11_1,
+		D3D_FEATURE_LEVEL_11_0
+	};
+
+	// デバイス生成
+	for (size_t i = 0; i < _countof(levels); i++) {
+		result = D3D12CreateDevice(tmpAdapter, levels[i], IID_PPV_ARGS(&dev));
+		if (result == S_OK) {
+			// デバイスを生成できた時点でループを抜ける
+			featureLevel = levels[i];
+			break;
+		}
+	}
+
+	// エラー時のブレイク
+	tmpAdapter->Release();
+}
+
+void KDirectXCommon::InitCommand()
+{
+	// コマンドアロケーター生成
+	result = dev->CreateCommandAllocator(
+		D3D12_COMMAND_LIST_TYPE_DIRECT,
+		IID_PPV_ARGS(&cmdAllocater));
+	assert(SUCCEEDED(result));
+
+	// コマンドリスト生成
+	result = dev->CreateCommandList(0,
+		D3D12_COMMAND_LIST_TYPE_DIRECT,
+		cmdAllocater.Get(), nullptr,
+		IID_PPV_ARGS(&cmdList));
+	assert(SUCCEEDED(result));
+
+	// コマンドキューを生成
+	result = dev->CreateCommandQueue(&cmdQueueDesc, IID_PPV_ARGS(&cmdQueue));
+	assert(SUCCEEDED(result));
+}
+
+void KDirectXCommon::InitSwapChain()
+{
+	// スワップチェーンの設定
+	swapChainDesc.Width = win->window_width;
+	swapChainDesc.Height = win->window_height;
+	swapChainDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	swapChainDesc.SampleDesc.Count = 1;
+	swapChainDesc.BufferUsage = DXGI_USAGE_BACK_BUFFER;
+	swapChainDesc.BufferCount = 2;
+	swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
+	swapChainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
+
+	// スワップチェーンの生成
+	ComPtr<IDXGISwapChain1> swapchain1;
+	result = dxgiFactory->CreateSwapChainForHwnd(
+		cmdQueue.Get(), win->hwnd, &swapChainDesc, nullptr, nullptr,
+		&swapchain1);
+
+	// IDXGISwapChain1のオブジェクトをIDXGISwapChain4に変換
+	swapchain1.As(&swapChain);
+
+	assert(SUCCEEDED(result));
+}
+
+void KDirectXCommon::InitRenderTargetView()
+{
+	// RTV用デスクリプタヒープの生成
+	rtvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
+	rtvHeapDesc.NumDescriptors = swapChainDesc.BufferCount;
+	dev->CreateDescriptorHeap(&rtvHeapDesc, IID_PPV_ARGS(&rtvHeap));
+
+	backBuffers.resize(swapChainDesc.BufferCount);
+	// スワップチェーンの全てのバッファについて処理する
+	for (size_t i = 0; i < backBuffers.size(); i++)
+	{
+		// スワップチェーンからバッファを取得
+		swapChain->GetBuffer((UINT)i, IID_PPV_ARGS(&backBuffers[i]));
+		// デスクリプタヒープのハンドルを取得
+		D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = rtvHeap->GetCPUDescriptorHandleForHeapStart();
+		// 裏か表かでアドレスがずれる
+		rtvHandle.ptr += i * dev->GetDescriptorHandleIncrementSize(rtvHeapDesc.Type);
+		// レンダーターゲートビューの設定
+		D3D12_RENDER_TARGET_VIEW_DESC rtvDesc{};
+		// シェーダーの計算結果をSKGBに変換して書き込む
+		rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+		rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
+		// レンダーターゲートビューの生成
+		dev->CreateRenderTargetView(backBuffers[i].Get(), &rtvDesc, rtvHandle);
+	}
+}
+
+void KDirectXCommon::InitDepthBuffer()
+{
+	// リソース設定
+	D3D12_RESOURCE_DESC depthResourceDesc{};
+	depthResourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+	depthResourceDesc.Width = win->window_width; // レンダーターゲットに合わせる
+	depthResourceDesc.Height = win->window_height; // レンダーターゲットに合わせる
+	depthResourceDesc.DepthOrArraySize = 1;
+	depthResourceDesc.Format = DXGI_FORMAT_D32_FLOAT; // 深度値フォーマット
+	depthResourceDesc.SampleDesc.Count = 1;
+	depthResourceDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL; // デプスステンシル
+
+	// 深度値用ヒーププロパティ
+	D3D12_HEAP_PROPERTIES depthHeapProp{};
+	depthHeapProp.Type = D3D12_HEAP_TYPE_DEFAULT;
+
+	// 深度値のクリア設定
+	D3D12_CLEAR_VALUE depthClearValue{};
+	depthClearValue.DepthStencil.Depth = 1.0f;
+	depthClearValue.Format = DXGI_FORMAT_D32_FLOAT; // 深度値フォーマット
+
+	// 深度バッファ
+	ComPtr<ID3D12Resource> depthBuff{};
+	depthBuff = nullptr;
+	result = dev->CreateCommittedResource(
+		&depthHeapProp,
+		D3D12_HEAP_FLAG_NONE,
+		&depthResourceDesc,
+		D3D12_RESOURCE_STATE_DEPTH_WRITE,
+		&depthClearValue,
+		IID_PPV_ARGS(&depthBuff));
+
+	// 深度ビュー用デスクリプタヒープ作成
+	D3D12_DESCRIPTOR_HEAP_DESC dsvHeapDesc{};
+	dsvHeapDesc.NumDescriptors = 1; // 深度ビューは1つ
+	dsvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV; // デプスステンシルビュー
+
+	//　深度ビュー用ヒープ作成
+	dsvHeap = nullptr;
+	result = dev->CreateDescriptorHeap(&dsvHeapDesc, IID_PPV_ARGS(&dsvHeap));
+
+	// 深度ビュー作成
+	D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc{};
+	dsvDesc.Format = DXGI_FORMAT_D32_FLOAT; // 深度値フォーマット
+	dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
+	dev->CreateDepthStencilView( 
+		depthBuff.Get(),
+		&dsvDesc,
+		dsvHeap->GetCPUDescriptorHandleForHeapStart());
+}
+
+void KDirectXCommon::InitFence()
+{
+	result = dev->CreateFence(fenceVal, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence));
+}
+
+void KDirectXCommon::PreDraw(ID3D12DescriptorHeap* dsvHeap)
 {
 #pragma region リソースバリア
 	// バックバッファの番号を取得
@@ -46,7 +252,7 @@ void KDirectXCommon::PreDraw(ID3D12DescriptorHeap* dsvHeap, int window_width, in
 
 #pragma region 画面クリア
 	// 3. 画面クリア
-	FLOAT clearColor[] = { bRed,bGreen,bBule,0.0f };
+	FLOAT clearColor[] = { 0.1f,0.25f,0.5f,0.0f };
 	cmdList->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
 	cmdList->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 #pragma endregion
@@ -54,8 +260,8 @@ void KDirectXCommon::PreDraw(ID3D12DescriptorHeap* dsvHeap, int window_width, in
 #pragma region ビューポート設定コマンド
 	// ビューポート設定コマンド
 	D3D12_VIEWPORT viewport{};
-	viewport.Width = window_width;   // 横幅
-	viewport.Height = window_height; // 縦幅
+	viewport.Width = win->window_width;   // 横幅
+	viewport.Height = win->window_height; // 縦幅
 	viewport.TopLeftX = 0;                 // 左上x
 	viewport.TopLeftY = 0;				   // 左上y
 	viewport.MinDepth = 0.0f;			   // 最小深度
@@ -68,9 +274,9 @@ void KDirectXCommon::PreDraw(ID3D12DescriptorHeap* dsvHeap, int window_width, in
 	// シザー矩形
 	D3D12_RECT scissorRect{};
 	scissorRect.left = 0;									// 切り抜き座標左
-	scissorRect.right = scissorRect.left + window_width;	// 切り抜き座標右
+	scissorRect.right = scissorRect.left + win->window_width;	// 切り抜き座標右
 	scissorRect.top = 0;									// 切り抜き座標上
-	scissorRect.bottom = scissorRect.top + window_height;	// 切り抜き座標下
+	scissorRect.bottom = scissorRect.top + win->window_height;	// 切り抜き座標下
 	// シザー矩形設定コマンドをコマンドリストに積む
 	cmdList->RSSetScissorRects(1, &scissorRect);
 #pragma endregion
@@ -120,129 +326,4 @@ void KDirectXCommon::CmdClear()
 	// 再びコマンドを貯める準備
 	result = cmdList->Reset(cmdAllocater.Get(), nullptr);
 	assert(SUCCEEDED(result));
-}
-
-void KDirectXCommon::DXGIFactory() {
-	// DXGIファクトリーの生成
-	result = CreateDXGIFactory(IID_PPV_ARGS(&dxgiFactory));
-	assert(SUCCEEDED(result));
-}
-
-void KDirectXCommon::Adapter() {
-	// アダプターの列挙用
-	std::vector<IDXGIAdapter4*> adapters;
-
-	// ここに特定のアダプターオブジェクトが入る
-	IDXGIAdapter4* tmpAdapter = nullptr;
-
-	// パフォーマンスが高いものから順に、全てのアダプターを列挙する
-	for (UINT i = 0; dxgiFactory->EnumAdapterByGpuPreference(i,
-		DXGI_GPU_PREFERENCE_HIGH_PERFORMANCE,
-		IID_PPV_ARGS(&tmpAdapter)) != DXGI_ERROR_NOT_FOUND; i++) {
-		// 動的配列に追加
-		adapters.push_back(tmpAdapter);
-	}
-
-	// 妥当なアダプタを選別する
-	for (size_t i = 0; i < adapters.size(); i++) {
-		DXGI_ADAPTER_DESC3 adapterDesc;
-		// アダプターの情報を取得
-		adapters[i]->GetDesc3(&adapterDesc);
-
-		// ソフトウェアデバイスを回避
-		if (!(adapterDesc.Flags & DXGI_ADAPTER_FLAG3_SOFTWARE)) {
-			// デバイスを採用してループを抜ける
-			tmpAdapter = adapters[i];
-			break;
-		}
-	}
-
-	Device(tmpAdapter);
-
-	tmpAdapter->Release();
-}
-
-void KDirectXCommon::Device(IDXGIAdapter4* tmpAdapter) {
-	for (size_t i = 0; i < _countof(levels); i++) {
-		result = D3D12CreateDevice(tmpAdapter, levels[i], IID_PPV_ARGS(&dev));
-		if (result == S_OK) {
-			// デバイスを生成できた時点でループを抜ける
-			featureLevel = levels[i];
-			break;
-		}
-	}
-}
-
-void KDirectXCommon::CommandList() {
-	// コマンドアロケーター生成
-	result = dev->CreateCommandAllocator(
-		D3D12_COMMAND_LIST_TYPE_DIRECT,
-		IID_PPV_ARGS(&cmdAllocater));
-	assert(SUCCEEDED(result));
-
-	// コマンドリスト生成
-	result = dev->CreateCommandList(0,
-		D3D12_COMMAND_LIST_TYPE_DIRECT,
-		cmdAllocater.Get(), nullptr,
-		IID_PPV_ARGS(&cmdList));
-	assert(SUCCEEDED(result));
-}
-
-void KDirectXCommon::CommandQueue() {
-	// コマンドキューを生成
-	result = dev->CreateCommandQueue(&cmdQueueDesc, IID_PPV_ARGS(&cmdQueue));
-	assert(SUCCEEDED(result));
-}
-
-void KDirectXCommon::SwapChain(int window_width, int window_height, HWND hwnd) {
-	swapChainDesc.Width = window_width;
-	swapChainDesc.Height = window_height;
-	swapChainDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-	swapChainDesc.SampleDesc.Count = 1;
-	swapChainDesc.BufferUsage = DXGI_USAGE_BACK_BUFFER;
-	swapChainDesc.BufferCount = 2;
-	swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
-	swapChainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
-
-	ComPtr<IDXGISwapChain1> swapchain1;
-	// スワップチェーンの生成
-	result = dxgiFactory->CreateSwapChainForHwnd(
-		cmdQueue.Get(), hwnd, &swapChainDesc, nullptr, nullptr,
-		&swapchain1);
-
-	swapchain1.As(&swapChain);
-
-	assert(SUCCEEDED(result));
-}
-
-void KDirectXCommon::Descriptor() {
-	rtvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
-	rtvHeapDesc.NumDescriptors = swapChainDesc.BufferCount;
-	// デスクリプタヒープの生成
-	dev->CreateDescriptorHeap(&rtvHeapDesc, IID_PPV_ARGS(&rtvHeap));
-}
-
-void KDirectXCommon::BackBuffer() {
-	backBuffers.resize(swapChainDesc.BufferCount);
-	// スワップチェーンの全てのバッファについて処理する
-	for (size_t i = 0; i < backBuffers.size(); i++)
-	{
-		// スワップチェーンからバッファを取得
-		swapChain->GetBuffer((UINT)i, IID_PPV_ARGS(&backBuffers[i]));
-		// デスクリプタヒープのハンドルを取得
-		D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = rtvHeap->GetCPUDescriptorHandleForHeapStart();
-		// 裏か表かでアドレスがずれる
-		rtvHandle.ptr += i * dev->GetDescriptorHandleIncrementSize(rtvHeapDesc.Type);
-		// レンダーターゲートビューの設定
-		D3D12_RENDER_TARGET_VIEW_DESC rtvDesc{};
-		// シェーダーの計算結果をSKGBに変換して書き込む
-		rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
-		rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
-		// レンダーターゲートビューの生成
-		dev->CreateRenderTargetView(backBuffers[i].Get(), &rtvDesc, rtvHandle);
-	}
-}
-
-void KDirectXCommon::Fence() {
-	result = dev->CreateFence(fenceVal, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence));
 }

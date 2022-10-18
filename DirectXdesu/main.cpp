@@ -159,15 +159,6 @@ PipelineSet Create3DObjectGpipeline(ID3D12Device* dev)
 
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow)
 {
-#ifdef _DEBUG
-	// デバッグレイヤーをオンに
-	ID3D12Debug1* debugController;
-	if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&debugController))))
-	{
-		debugController->EnableDebugLayer();
-		debugController->SetEnableGPUBasedValidation(true);
-	}
-#endif
 	HRESULT result;
 
 #pragma region ウィンドウ
@@ -177,16 +168,18 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 #pragma region DirectX初期化
 	// KDirectCommon
 	KDirectXCommon* dxCommon = nullptr;
-	dxCommon = new KDirectXCommon(win->window_width, win->window_height, win->hwnd);
+	dxCommon = new KDirectXCommon();
+	dxCommon->Init(win);
 	// キーボード入力
 	KInput* input = nullptr;
 	input = new KInput();
-	input->Init(win->window.hInstance, win->hwnd);
+	input->Init(win);
 #pragma endregion
 #pragma region 描画初期化
 #pragma region 深度バッファ
 	KDepth* depth = nullptr;
-	depth = new KDepth(dxCommon->SetDev().Get(), win->window_width, win->window_height);
+	depth = new KDepth();
+	depth->Init(dxCommon->SetDev().Get(), win->window_width, win->window_height);
 #pragma endregion
 	// 速さ
 	float speed = 1.0f;
@@ -412,7 +405,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 #pragma region 描画
 		// 描画開始
-		dxCommon->PreDraw(depth->GetDevHeap().Get(), win->window_width, win->window_height);
+		dxCommon->PreDraw(depth->GetDevHeap().Get());
 #pragma region パイプラインステート設定
 		// パイプラインステートとルートシグネチャの設定コマンド
 		dxCommon->SetCmdlist()->SetPipelineState(object3dPipelineSet.pipelineState.Get());

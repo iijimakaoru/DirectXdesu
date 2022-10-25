@@ -18,7 +18,6 @@ public:
 	void KeyInit();
 
 	bool IsPush(int keyNum);
-	bool IsNPush(int keyNum);
 	bool IsPress(int keyNum);
 	bool IsTriger(int keyNum);
 	bool IsRelease(int keyNum);

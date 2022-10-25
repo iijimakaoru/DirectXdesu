@@ -25,8 +25,9 @@ void KDirectXCommon::Init(KWinApp* win)
 	InitRenderTargetView();
 
 	// 深度バッファ初期化
-	//InitDepthBuffer();
-	//depth->Init(dev.Get(), win->window_width, win->window_height);
+	InitDepthBuffer();
+	/*depth = new KDepth();
+	depth->Init(dev.Get(), win->window_width, win->window_height);*/
 
 	// フェンス初期化
 	InitFence();
@@ -147,10 +148,13 @@ void KDirectXCommon::InitSwapChain()
 
 void KDirectXCommon::InitRenderTargetView()
 {
+	HRESULT result;
 	// RTV用デスクリプタヒープの生成
 	rtvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
 	rtvHeapDesc.NumDescriptors = swapChainDesc.BufferCount;
-	dev->CreateDescriptorHeap(&rtvHeapDesc, IID_PPV_ARGS(&rtvHeap));
+	//dev->CreateDescriptorHeap(&rtvHeapDesc, IID_PPV_ARGS(&rtvHeap));
+	result = dev->CreateDescriptorHeap(&rtvHeapDesc, IID_PPV_ARGS(&rtvHeap));
+	assert(SUCCEEDED(result));
 
 	backBuffers.resize(swapChainDesc.BufferCount);
 	// スワップチェーンの全てのバッファについて処理する
@@ -194,7 +198,6 @@ void KDirectXCommon::InitDepthBuffer()
 	depthClearValue.Format = DXGI_FORMAT_D32_FLOAT; // 深度値フォーマット
 
 	// 深度バッファ
-	ComPtr<ID3D12Resource> depthBuff{};
 	depthBuff = nullptr;
 	result = dev->CreateCommittedResource(
 		&depthHeapProp,
@@ -212,6 +215,7 @@ void KDirectXCommon::InitDepthBuffer()
 	//　深度ビュー用ヒープ作成
 	dsvHeap = nullptr;
 	result = dev->CreateDescriptorHeap(&dsvHeapDesc, IID_PPV_ARGS(&dsvHeap));
+	assert(SUCCEEDED(result));
 
 	// 深度ビュー作成
 	D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc{};
@@ -228,7 +232,7 @@ void KDirectXCommon::InitFence()
 	result = dev->CreateFence(fenceVal, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence));
 }
 
-void KDirectXCommon::PreDraw(ID3D12DescriptorHeap* dsvHeap)
+void KDirectXCommon::PreDraw()
 {
 #pragma region リソースバリア
 	// バックバッファの番号を取得

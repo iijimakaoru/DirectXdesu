@@ -36,7 +36,7 @@ public:
 
 	void InitFence();
 
-	void PreDraw(ID3D12DescriptorHeap* dsvHeap);
+	void PreDraw();
 
 	void PostDraw();
 
@@ -64,6 +64,8 @@ private:
 	Microsoft::WRL::ComPtr<IDXGISwapChain4> swapChain;
 	// デスクリプタヒープの設定
 	D3D12_DESCRIPTOR_HEAP_DESC rtvHeapDesc{};
+	// 深度バッファ
+	ComPtr<ID3D12Resource> depthBuff{};
 	//　深度ビュー用ヒープ作成
 	ComPtr<ID3D12DescriptorHeap> dsvHeap{};
 	ComPtr<ID3D12DescriptorHeap> tmpDsvHeap{};

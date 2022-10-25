@@ -31,8 +31,9 @@ void KInput::Init(KWinApp* win) {
 void KInput::Update() {
 	// キーボードの情報取得
 	keyboad->Acquire();
-
+	// 一フレーム前の入力の保存
 	KeyInit();
+	// 全キー入力情報を取得
 	result = keyboad->GetDeviceState(sizeof(key), key);
 }
 
@@ -45,13 +46,6 @@ void KInput::KeyInit() {
 
 bool KInput::IsPush(int keyNum) {
 	if (key[keyNum]) {
-		return true;
-	}
-	return false;
-}
-
-bool KInput::IsNPush(int keyNum) {
-	if (!key[keyNum]) {
 		return true;
 	}
 	return false;

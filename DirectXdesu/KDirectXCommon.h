@@ -84,22 +84,21 @@ private:
 	//KDepth* depth = nullptr;
 
 	std::chrono::steady_clock::time_point reference_;
-
+	// デバイス初期化
 	void InitDev();
-
+	// コマンド初期化
 	void InitCommand();
-
+	// スワップチェーン初期化
 	void InitSwapChain();
-
+	// レンダーターゲットビュー初期化
 	void InitRenderTargetView();
-
+	// 深度バッファ初期化
 	void InitDepthBuffer();
-
+	// フェンス初期化
 	void InitFence();
-
-	// 
+	// FPS固定初期化
 	void InitFixFPS();
-	//
+	// FPS固定
 	void UpdateFixFPS();
 };
 

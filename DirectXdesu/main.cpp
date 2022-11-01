@@ -280,7 +280,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	while (true)
 	{
 #pragma region ウィンドウメッセージ
-		if (win->ProcessMessage() || input->IsPush(DIK_ESCAPE)) {
+		if (win->ProcessMessage() || input->IsPush(DIK_ESCAPE))
+		{
 			break;
 		}
 #pragma endregion
@@ -324,28 +325,36 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		}
 		// 図形縦回転
 		if (input->IsPush(DIK_C) ||
-			input->IsPush(DIK_V)) {
-			if (input->IsPush(DIK_C)) {
+			input->IsPush(DIK_V)) 
+		{
+			if (input->IsPush(DIK_C)) 
+			{
 				object3d[0]->transform.rot.z += 0.1f;
 			}
 
-			if (input->IsPush(DIK_V)) {
+			if (input->IsPush(DIK_V)) 
+			{
 				object3d[0]->transform.rot.z -= 0.1f;
 			}
 		}
 		////カメラ移動
 		if (input->IsPush(DIK_D) || input->IsPush(DIK_A) ||
-			input->IsPush(DIK_W) || input->IsPush(DIK_S)) {
-			if (input->IsPush(DIK_D)) {
+			input->IsPush(DIK_W) || input->IsPush(DIK_S)) 
+		{
+			if (input->IsPush(DIK_D)) 
+			{
 				viewProjection->angleX += XMConvertToRadians(1.0f);
 			}
-			else if (input->IsPush(DIK_A)) {
+			else if (input->IsPush(DIK_A)) 
+			{
 				viewProjection->angleX -= XMConvertToRadians(1.0f);
 			}
-			if (input->IsPush(DIK_W)) {
+			if (input->IsPush(DIK_W)) 
+			{
 				viewProjection->angleY -= XMConvertToRadians(1.0f);
 			}
-			else if (input->IsPush(DIK_S)) {
+			else if (input->IsPush(DIK_S)) 
+			{
 				viewProjection->angleY += XMConvertToRadians(1.0f);
 			}
 			// angleラジアンy軸回転
@@ -355,11 +364,14 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		}
 		// 横回転
 		if (input->IsPush(DIK_RIGHT) ||
-			input->IsPush(DIK_LEFT)) {
-			if (input->IsPush(DIK_RIGHT)) {
+			input->IsPush(DIK_LEFT)) 
+		{
+			if (input->IsPush(DIK_RIGHT)) 
+			{
 				object3d[0]->transform.rot.y -= 0.1f;
 			}
-			if (input->IsPush(DIK_LEFT)) {
+			if (input->IsPush(DIK_LEFT)) 
+			{
 				object3d[0]->transform.rot.y += 0.1f;
 			}
 		}
@@ -403,7 +415,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 #pragma region 描画コマンド
 		// 描画コマンド
-		for (int i = 0; i < ObjectNum; i++) {
+		for (int i = 0; i < ObjectNum; i++) 
+		{
 			if (!input->IsPush(DIK_SPACE))
 			{
 				object3d[i]->Draw(dxCommon->GetCmdlist().Get());

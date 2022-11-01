@@ -8,6 +8,7 @@
 #include"KWinApp.h"
 #include "KWinApp.h"
 #include "KDepth.h"
+#include <chrono>
 
 #pragma comment(lib, "d3d12.lib")
 #pragma comment(lib, "dxgi.lib")
@@ -23,18 +24,6 @@ public:
 		
 	}
 	void Init(KWinApp* win);
-
-	void InitDev();
-
-	void InitCommand();
-
-	void InitSwapChain();
-
-	void InitRenderTargetView();
-
-	void InitDepthBuffer();
-
-	void InitFence();
 
 	void PreDraw();
 
@@ -93,5 +82,24 @@ private:
 	KWinApp* win = nullptr;
 
 	//KDepth* depth = nullptr;
+
+	std::chrono::steady_clock::time_point reference_;
+
+	void InitDev();
+
+	void InitCommand();
+
+	void InitSwapChain();
+
+	void InitRenderTargetView();
+
+	void InitDepthBuffer();
+
+	void InitFence();
+
+	// 
+	void InitFixFPS();
+	//
+	void UpdateFixFPS();
 };
 

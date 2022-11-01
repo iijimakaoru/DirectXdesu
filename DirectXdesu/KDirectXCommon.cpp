@@ -1,4 +1,5 @@
 #include "KDirectXCommon.h"
+#include <thread>
 
 KDirectXCommon::KDirectXCommon() {
 	
@@ -11,6 +12,9 @@ void KDirectXCommon::Init(KWinApp* win)
 
 	// メンバ変数に記憶
 	this->win = win;
+
+	// FPS固定初期化
+	InitFixFPS();
 
 	// デバイス初期化
 	InitDev();
@@ -299,6 +303,8 @@ void KDirectXCommon::PostDraw()
 #pragma region コマンド完了待ち
 	CmdClear();
 #pragma endregion
+	// FPS固定
+	UpdateFixFPS();
 }
 
 void KDirectXCommon::CmdFlash()
@@ -330,4 +336,34 @@ void KDirectXCommon::CmdClear()
 	// 再びコマンドを貯める準備
 	result = cmdList->Reset(cmdAllocater.Get(), nullptr);
 	assert(SUCCEEDED(result));
+}
+
+void KDirectXCommon::InitFixFPS()
+{
+	// 現在時間の記録
+	reference_ = std::chrono::steady_clock::now();
+}
+
+void KDirectXCommon::UpdateFixFPS()
+{
+	// 1/60秒のぴったりの時間
+	const std::chrono::microseconds kMinTime(uint64_t(1000000.0f / 60.0f));
+	// 1/60秒よりわずかに短い時間 
+	const std::chrono::microseconds kMinCheckTime(uint64_t(1000000.0f / 65.0f));
+	// 現在時間を取得する
+	std::chrono::steady_clock::time_point now = std::chrono::steady_clock::now();
+	// 前回記録からの経過時間を取得する
+	std::chrono::microseconds elapsed = std::chrono::duration_cast<std::chrono::microseconds>(now - reference_);
+	// 1/60秒(よりわずかに短い時間)経ってない場合
+	if (elapsed < kMinTime)
+	{
+		// 1/60秒経過するまで微小なスリープを繰り返す
+		while (std::chrono::steady_clock::now() - reference_ < kMinTime)
+		{
+			// 1マイクロ秒スリープ
+			std::this_thread::sleep_for(std::chrono::microseconds(1));
+		}
+	}
+	// 現在の時間を記録する
+	reference_ = std::chrono::steady_clock::now();
 }

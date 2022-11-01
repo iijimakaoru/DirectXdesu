@@ -185,19 +185,19 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	float speed = 1.0f;
 #pragma region モデル
 	KModel triangle = Triangle();
-	triangle.CreateModel(dxCommon->SetDev().Get());
+	triangle.CreateModel(dxCommon->GetDev().Get());
 	KModel cube = Cube();
-	cube.CreateModel(dxCommon->SetDev().Get());
+	cube.CreateModel(dxCommon->GetDev().Get());
 	KModel line = Line();
-	line.CreateModel(dxCommon->SetDev().Get());
+	line.CreateModel(dxCommon->GetDev().Get());
 #pragma endregion
 #pragma region テクスチャ初期化
 	const wchar_t* msg = L"Resources/mario.jpg";
 	const wchar_t* msg2 = L"Resources/iijan.jpg";
 	const wchar_t* msg3 = L"Resources/haikei.jpg";
 	const wchar_t* msg4 = L"Resources/kitanai.jpg";
-	KTexture texture(dxCommon->SetDev().Get(), msg, msg3);
-	KTexture texture2(dxCommon->SetDev().Get(), msg2, msg4);
+	KTexture texture(dxCommon->GetDev().Get(), msg, msg3);
+	KTexture texture2(dxCommon->GetDev().Get(), msg2, msg4);
 #pragma endregion
 
 #pragma region スプライトクラス読み込み
@@ -207,9 +207,9 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 #pragma region グラフィックスパイプライン設定
 	// 3Dオブジェクト用パイプライン生成
-	PipelineSet object3dPipelineSet = Create3DObjectGpipeline(dxCommon->SetDev().Get());
+	PipelineSet object3dPipelineSet = Create3DObjectGpipeline(dxCommon->GetDev().Get());
 	// スプライト用パイプライン生成
-	PipelineSet spritePipelineSet = sprite->SpriteCreateGraphicsPipeline(dxCommon->SetDev().Get());
+	PipelineSet spritePipelineSet = sprite->SpriteCreateGraphicsPipeline(dxCommon->GetDev().Get());
 #pragma region 3Dオブジェクト初期化
 	const int ObjectNum = 2;
 	const int LineNum = 6;
@@ -217,7 +217,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	KWorldTransform* object3d[ObjectNum];
 	for (int i = 0; i < ObjectNum; i++) {
 		object3d[i] = new KWorldTransform();
-		object3d[i]->Initialize(dxCommon->SetDev().Get());
+		object3d[i]->Initialize(dxCommon->GetDev().Get());
 		if (i > 0) {
 			object3d[i]->material->colorR = object3d[i]->material->colorG = object3d[i]->material->colorB = 1.0f;
 		}
@@ -248,15 +248,15 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	SoundData soundData1 = sound->SoundLoadWave("Sound/fanfare.wav");
 #pragma region スプライト
 	SpriteCommon spriteCommon;
-	spriteCommon = sprite->SpriteCommonCreate(dxCommon->SetDev().Get(), win->window_width, win->window_height);
+	spriteCommon = sprite->SpriteCommonCreate(dxCommon->GetDev().Get(), win->window_width, win->window_height);
 
-	sprite->SpriteCommonLoadTexture(spriteCommon, 0, L"Resources/haikei.jpg", dxCommon->SetDev().Get());
-	sprite->SpriteCommonLoadTexture(spriteCommon, 1, L"Resources/mario.jpg", dxCommon->SetDev().Get());
+	sprite->SpriteCommonLoadTexture(spriteCommon, 0, L"Resources/haikei.jpg", dxCommon->GetDev().Get());
+	sprite->SpriteCommonLoadTexture(spriteCommon, 1, L"Resources/mario.jpg", dxCommon->GetDev().Get());
 
 	SpriteInfo sprites[2];
 	for (int i = 0; i < _countof(sprites); i++)
 	{
-		sprites[i] = sprite->SpriteCreate(dxCommon->SetDev().Get(), win->window_width, win->window_height,
+		sprites[i] = sprite->SpriteCreate(dxCommon->GetDev().Get(), win->window_width, win->window_height,
 			sprites[i].texNum, spriteCommon);
 		sprites[i].size.x = 100.0f;
 		sprites[i].size.y = 100.0f;
@@ -273,8 +273,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	debugtext = std::make_unique<DebugText>();
 
 	const int debugTextNumber = 2;
-	sprite->SpriteCommonLoadTexture(spriteCommon, debugTextNumber, L"Resources/tex1.png", dxCommon->SetDev().Get());
-	debugtext->Init(dxCommon->SetDev().Get(), win->window_width, win->window_height, debugTextNumber, spriteCommon);
+	sprite->SpriteCommonLoadTexture(spriteCommon, debugTextNumber, L"Resources/tex1.png", dxCommon->GetDev().Get());
+	debugtext->Init(dxCommon->GetDev().Get(), win->window_width, win->window_height, debugTextNumber, spriteCommon);
 #pragma endregion
 
 #pragma endregion
@@ -408,12 +408,12 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		dxCommon->PreDraw();
 #pragma region パイプラインステート設定
 		// パイプラインステートとルートシグネチャの設定コマンド
-		dxCommon->SetCmdlist()->SetPipelineState(object3dPipelineSet.pipelineState.Get());
-		dxCommon->SetCmdlist()->SetGraphicsRootSignature(object3dPipelineSet.rootSignature.Get());
+		dxCommon->GetCmdlist().Get()->SetPipelineState(object3dPipelineSet.pipelineState.Get());
+		dxCommon->GetCmdlist().Get()->SetGraphicsRootSignature(object3dPipelineSet.rootSignature.Get());
 #pragma endregion
 #pragma region プリミティブ形状
 		// プリミティブ形状の設定コマンド
-		dxCommon->SetCmdlist()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		dxCommon->GetCmdlist().Get()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 #pragma endregion
 
 #pragma region 描画コマンド
@@ -421,24 +421,25 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		for (int i = 0; i < ObjectNum; i++) {
 			if (!input->IsPush(DIK_SPACE))
 			{
-				object3d[i]->Draw(dxCommon->SetCmdlist().Get());
+				object3d[i]->Draw(dxCommon->GetCmdlist().Get());
 			}
 			else
 			{
-				object3d[i]->SecoundDraw(dxCommon->SetCmdlist().Get());
+				object3d[i]->SecoundDraw(dxCommon->GetCmdlist().Get());
 			}
 		}
 		// スプライト描画
-		sprite->SpriteCommonBeginDraw(dxCommon->SetCmdlist().Get(), spriteCommon);
+		sprite->SpriteCommonBeginDraw(dxCommon->GetCmdlist().Get(), spriteCommon);
 		for (int i = 0; i < _countof(sprites); i++)
 		{
-			sprite->SpriteDraw(sprites[i], dxCommon->SetCmdlist().Get(), spriteCommon, dxCommon->SetDev().Get());
+			sprite->SpriteDraw(sprites[i], dxCommon->GetCmdlist().Get(), spriteCommon, dxCommon->GetDev().Get());
 		}
 
 		debugtext->Print(spriteCommon, "Hello,DirectX!!", { 200,100 });
 		debugtext->Print(spriteCommon, "Nihon Kogakuin", { 200,200 }, 2.0f);
 
-		debugtext->DrawAll(dxCommon->SetDev().Get(), spriteCommon, dxCommon->SetCmdlist().Get());
+		debugtext->DrawAll(dxCommon->GetDev().Get(), spriteCommon, dxCommon->GetCmdlist().Get());
+
 		// 描画コマンドここまで
 #pragma endregion
 		// 描画終了

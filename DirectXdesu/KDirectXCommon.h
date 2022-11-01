@@ -44,13 +44,9 @@ public:
 
 	void CmdClear();
 
-	ComPtr<ID3D12Device> SetDev() { return dev; }
-	ComPtr<ID3D12GraphicsCommandList> SetCmdlist() { return cmdList; }
-	ComPtr<IDXGISwapChain4> SetSChain() { return swapChain; }
-	ComPtr<ID3D12CommandAllocator> SetCmdAllocater() { return cmdAllocater; }
-	ComPtr<ID3D12DescriptorHeap> SetRtvHeap() { return rtvHeap; }
-	//D3D12_DESCRIPTOR_HEAP_DESC SetRtvHeapDesc() { return rtvHeapDesc; }
-	std::vector<ComPtr<ID3D12Resource>> SetBackBuffers() { return backBuffers; }
+	// デバイス取得
+	Microsoft::WRL::ComPtr<ID3D12Device> GetDev() const { return dev; }
+	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> GetCmdlist() { return cmdList; }
 
 private:
 	HRESULT result;

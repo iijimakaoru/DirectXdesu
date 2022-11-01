@@ -3,23 +3,23 @@
 void GameScence::Init(ID3D12Device& dev, int window_width, int window_height)
 {
 	// モデル
-	triangle.CreateModel(dx->SetDev().Get());
-	cube.CreateModel(dx->SetDev().Get());
-	line.CreateModel(dx->SetDev().Get());
+	triangle.CreateModel(dx->GetDev().Get());
+	cube.CreateModel(dx->GetDev().Get());
+	line.CreateModel(dx->GetDev().Get());
 	// テクスチャ初期化
 	const wchar_t* msg = L"Resources/mario.jpg";
 	const wchar_t* msg2 = L"Resources/iijan.jpg";
 	const wchar_t* msg3 = L"Resources/haikei.jpg";
 	const wchar_t* msg4 = L"Resources/kitanai.jpg";
-	KTexture texture(dx->SetDev().Get(), msg, msg3);
-	KTexture texture2(dx->SetDev().Get(), msg2, msg4);
+	KTexture texture(dx->GetDev().Get(), msg, msg3);
+	KTexture texture2(dx->GetDev().Get(), msg2, msg4);
 	// スプライト
 	sprite = std::make_unique<Sprite>();
 	// 3Dオブジェクト
 	for (int i = 0; i < ObjectNum; i++) 
 	{
 		object3d[i] = new KWorldTransform();
-		object3d[i]->Initialize(dx->SetDev().Get());
+		object3d[i]->Initialize(dx->GetDev().Get());
 		if (i > 0) 
 		{
 			object3d[i]->material->colorR =
@@ -39,14 +39,14 @@ void GameScence::Init(ID3D12Device& dev, int window_width, int window_height)
 
 	SoundData soundData1 = sound->SoundLoadWave("Sound/fanfare.wav");
 	// スプライト
-	spriteCommon = sprite->SpriteCommonCreate(dx->SetDev().Get(), window_width, window_height);
+	spriteCommon = sprite->SpriteCommonCreate(dx->GetDev().Get(), window_width, window_height);
 
-	sprite->SpriteCommonLoadTexture(spriteCommon, 0, L"Resources/haikei.jpg", dx->SetDev().Get());
-	sprite->SpriteCommonLoadTexture(spriteCommon, 1, L"Resources/mario.jpg", dx->SetDev().Get());
+	sprite->SpriteCommonLoadTexture(spriteCommon, 0, L"Resources/haikei.jpg", dx->GetDev().Get());
+	sprite->SpriteCommonLoadTexture(spriteCommon, 1, L"Resources/mario.jpg", dx->GetDev().Get());
 
 	for (int i = 0; i < _countof(sprites); i++)
 	{
-		sprites[i] = sprite->SpriteCreate(dx->SetDev().Get(), window_width, window_height,
+		sprites[i] = sprite->SpriteCreate(dx->GetDev().Get(), window_width, window_height,
 			sprites[i].texNum, spriteCommon);
 		sprites[i].size.x = 100.0f;
 		sprites[i].size.y = 100.0f;
@@ -60,8 +60,8 @@ void GameScence::Init(ID3D12Device& dev, int window_width, int window_height)
 	debugtext = std::make_unique<DebugText>();
 
 	const int debugTextNumber = 2;
-	sprite->SpriteCommonLoadTexture(spriteCommon, debugTextNumber, L"Resources/tex1.png", dx->SetDev().Get());
-	debugtext->Init(dx->SetDev().Get(), window_width, window_height, debugTextNumber, spriteCommon);
+	sprite->SpriteCommonLoadTexture(spriteCommon, debugTextNumber, L"Resources/tex1.png", dx->GetDev().Get());
+	debugtext->Init(dx->GetDev().Get(), window_width, window_height, debugTextNumber, spriteCommon);
 }
 
 void GameScence::Update()

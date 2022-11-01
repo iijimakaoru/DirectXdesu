@@ -160,7 +160,7 @@ PipelineSet Create3DObjectGpipeline(ID3D12Device* dev)
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow)
 {
 	HRESULT result;
-
+#pragma region 基盤初期化
 #pragma region ウィンドウ
 	KWinApp* win = nullptr;
 	win = new KWinApp();
@@ -175,12 +175,9 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	input = new KInput();
 	input->Init(win);
 #pragma endregion
-#pragma region 描画初期化
-#pragma region 深度バッファ
-	/*KDepth* depth = nullptr;
-	depth = new KDepth();
-	depth->Init(dxCommon->SetDev().Get(), win->window_width, win->window_height);*/
 #pragma endregion
+
+#pragma region シーンの初期化
 	// 速さ
 	float speed = 1.0f;
 #pragma region モデル
@@ -230,7 +227,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 #pragma region ビュー
 	// ビュープロジェクション
 	ViewProjection* viewProjection;
-	viewProjection = new ViewProjection(win->window_width, win->window_height);
+	viewProjection = new ViewProjection(KWinApp::window_width, KWinApp::window_height);
 #pragma endregion
 
 #pragma endregion
@@ -248,7 +245,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	SoundData soundData1 = sound->SoundLoadWave("Sound/fanfare.wav");
 #pragma region スプライト
 	SpriteCommon spriteCommon;
-	spriteCommon = sprite->SpriteCommonCreate(dxCommon->GetDev().Get(), win->window_width, win->window_height);
+	spriteCommon = sprite->SpriteCommonCreate(dxCommon->GetDev().Get(), KWinApp::window_width, KWinApp::window_height);
 
 	sprite->SpriteCommonLoadTexture(spriteCommon, 0, L"Resources/haikei.jpg", dxCommon->GetDev().Get());
 	sprite->SpriteCommonLoadTexture(spriteCommon, 1, L"Resources/mario.jpg", dxCommon->GetDev().Get());
@@ -256,7 +253,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	SpriteInfo sprites[2];
 	for (int i = 0; i < _countof(sprites); i++)
 	{
-		sprites[i] = sprite->SpriteCreate(dxCommon->GetDev().Get(), win->window_width, win->window_height,
+		sprites[i] = sprite->SpriteCreate(dxCommon->GetDev().Get(), KWinApp::window_width, KWinApp::window_height,
 			sprites[i].texNum, spriteCommon);
 		sprites[i].size.x = 100.0f;
 		sprites[i].size.y = 100.0f;
@@ -274,9 +271,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 	const int debugTextNumber = 2;
 	sprite->SpriteCommonLoadTexture(spriteCommon, debugTextNumber, L"Resources/tex1.png", dxCommon->GetDev().Get());
-	debugtext->Init(dxCommon->GetDev().Get(), win->window_width, win->window_height, debugTextNumber, spriteCommon);
+	debugtext->Init(dxCommon->GetDev().Get(), KWinApp::window_width, KWinApp::window_height, debugTextNumber, spriteCommon);
 #pragma endregion
-
 #pragma endregion
 
 	// ウィンドウ表示
@@ -284,32 +280,26 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	while (true)
 	{
 #pragma region ウィンドウメッセージ
-		if (win->breakFlag || input->IsPush(DIK_ESCAPE)) {
-			sound->GetxAudio().Reset();
-			sound->SoundUnLoad(&soundData1);
-			delete input;
-			delete win;
-			delete dxCommon;
-			//delete depth;
+		if (win->GetBreak() || input->IsPush(DIK_ESCAPE)) {
 			break;
 		}
 #pragma endregion
-#pragma region 更新
+
 		// 更新
-#pragma region DirectX毎フレーム処理
+#pragma region 基盤の更新
+		// ウィンドウ更新
+		win->Update();
+
+		// input更新
+		input->Update();
+#pragma endregion
+
+#pragma region シーンの更新
 		for (int i = 0; i < _countof(sprites); i++)
 		{
 			sprite->SpriteUpdate(sprites[i], spriteCommon);
 		}
-#pragma region ウィンドウアップデート
-		win->Update();
-#pragma endregion
 
-#pragma region inputアップデート
-		input->Update();
-#pragma endregion
-
-#pragma region 
 		// 背景色変え
 		if (input->IsTriger(DIK_SPACE)) {
 			sound->SoundPlayWave(sound->GetxAudio().Get(), soundData1);
@@ -388,19 +378,15 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		object3d[1]->transform.pos.y = object3d[0]->transform.pos.y + 10;
 
 		object3d[1]->transform.rot = object3d[0]->transform.rot;
-#pragma endregion
 
-#pragma region ビューのアップデート
-		viewProjection->Update(win->window_width, win->window_height);
-#pragma endregion
+		// ビューのアップデート
+		viewProjection->Update(KWinApp::window_width, KWinApp::window_height);
 
-#pragma region 3Dオブジェクトのアップデート
+		// 3Dオブジェクトのアップデート
 		for (int i = 0; i < ObjectNum; i++) {
 			object3d[i]->Update(viewProjection->matView, viewProjection->matProjection);
 		}
-#pragma endregion
 
-#pragma endregion
 #pragma endregion
 
 #pragma region 描画
@@ -444,8 +430,17 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 #pragma endregion
 		// 描画終了
 		dxCommon->PostDraw();
-#pragma endregion
 	}
+#pragma region 基盤の終了
+	sound->GetxAudio().Reset();
+	sound->SoundUnLoad(&soundData1);
+	// 入力解放
+	delete input;
+	// 
+	delete win;
+	// 
+	delete dxCommon;
+#pragma endregion
 
 	return 0;
 }

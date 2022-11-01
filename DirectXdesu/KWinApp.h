@@ -8,12 +8,15 @@ public:
 	~KWinApp();
 	void Update();
 	static LRESULT WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
+	HWND GetHWND() { return hwnd; }
+	WNDCLASSEX GetWindow() { return window; }
+	bool GetBreak() { return breakFlag; }
 
 	// ウィンドウサイズ
-	const int window_width = 1280;
-	const int window_height = 720;
-	bool breakFlag = false;
+	static const int window_width = 1280;
+	static const int window_height = 720;
 
+private:
 	// ウィンドウクラスの設定
 	WNDCLASSEX window{};
 	// ウィンドウサイズ
@@ -22,5 +25,7 @@ public:
 	MSG msg{};
 
 	HWND hwnd;
+
+	bool breakFlag = false;
 };
 

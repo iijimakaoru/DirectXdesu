@@ -12,6 +12,7 @@
 
 #pragma comment(lib, "d3d12.lib")
 #pragma comment(lib, "dxgi.lib")
+#pragma comment(lib, "d3dcompiler.Lib")
 
 using namespace Microsoft::WRL;
 
@@ -24,6 +25,18 @@ public:
 		
 	}
 	void Init(KWinApp* win);
+	// デバイス初期化
+	void InitDev();
+	// コマンド初期化
+	void InitCommand();
+	// スワップチェーン初期化
+	void InitSwapChain();
+	// レンダーターゲットビュー初期化
+	void InitRenderTargetView();
+	// 深度バッファ初期化
+	void InitDepthBuffer();
+	// フェンス初期化
+	void InitFence();
 
 	void PreDraw();
 
@@ -87,18 +100,6 @@ private:
 
 	std::chrono::steady_clock::time_point reference_;
 	
-	// デバイス初期化
-	void InitDev();
-	// コマンド初期化
-	void InitCommand();
-	// スワップチェーン初期化
-	void InitSwapChain();
-	// レンダーターゲットビュー初期化
-	void InitRenderTargetView();
-	// 深度バッファ初期化
-	void InitDepthBuffer();
-	// フェンス初期化
-	void InitFence();
 	// FPS固定初期化
 	void InitFixFPS();
 	// FPS固定

@@ -1,7 +1,7 @@
 #include "DebugText.h"
 
 void DebugText::Init(ID3D12Device* dev, int window_width, int window_height,
-	UINT texnumber, const SpriteCommon& spriteCommon)
+	UINT texnumber, const SpriteCommond& spriteCommon)
 {
 	sprite = std::make_unique<Sprite>();
 
@@ -12,7 +12,7 @@ void DebugText::Init(ID3D12Device* dev, int window_width, int window_height,
 	}
 }
 
-void DebugText::Print(const SpriteCommon& spriteCommon, const std::string& text,
+void DebugText::Print(const SpriteCommond& spriteCommon, const std::string& text,
 	Vector2 pos, float scale)
 {
 	for (int i = 0; i < text.size(); i++)
@@ -46,7 +46,7 @@ void DebugText::Print(const SpriteCommon& spriteCommon, const std::string& text,
 	}
 }
 
-void DebugText::SpriteTransferVertexBuffer(const SpriteInfo& sprite, const SpriteCommon& spriteCommon)
+void DebugText::SpriteTransferVertexBuffer(const SpriteInfo& sprite, const SpriteCommond& spriteCommon)
 {
 	HRESULT result = S_FALSE;
 
@@ -104,7 +104,7 @@ void DebugText::SpriteTransferVertexBuffer(const SpriteInfo& sprite, const Sprit
 	sprite.vertBuff->Unmap(0, nullptr);
 }
 
-void DebugText::DrawAll(ID3D12Device* dev, const SpriteCommon& spriteCommon,
+void DebugText::DrawAll(ID3D12Device* dev, const SpriteCommond& spriteCommon,
 	ID3D12GraphicsCommandList* cmdList)
 {
 	for (int i = 0; i < spriteIndex; i++)

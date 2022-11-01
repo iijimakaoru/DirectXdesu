@@ -20,11 +20,11 @@ public:
 	static const int fontLineCount = 14;
 	// ÉÅÉìÉoä÷êîÇÃêÈåæ
 	void Init(ID3D12Device* dev, int window_width, int window_height,
-		UINT texnumber, const SpriteCommon& spriteCommon);
-	void Print(const SpriteCommon& spriteCommon, const std::string& text,
+		UINT texnumber, const SpriteCommond& spriteCommon);
+	void Print(const SpriteCommond& spriteCommon, const std::string& text,
 		Vector2 pos, float scale = 1.0f);
-	void SpriteTransferVertexBuffer(const SpriteInfo& sprite, const SpriteCommon& spriteCommon);
-	void DrawAll(ID3D12Device* dev, const SpriteCommon& spriteCommon,
+	void SpriteTransferVertexBuffer(const SpriteInfo& sprite, const SpriteCommond& spriteCommon);
+	void DrawAll(ID3D12Device* dev, const SpriteCommond& spriteCommon,
 		ID3D12GraphicsCommandList* cmdList);
 private:
 	std::unique_ptr<Sprite> sprite;

@@ -9,6 +9,7 @@
 #include "KShader.h"
 #include <memory>
 #include <d3dx12.h>
+#include "KSpriteCommon.h"
 
 const int spriteSRVCount = 512;
 
@@ -54,7 +55,7 @@ struct SpriteInfo
 	bool isInvisible = false;
 };
 
-struct SpriteCommon
+struct SpriteCommond
 {
 	// パイプラインセット
 	PipelineSet pipelineSet;
@@ -69,21 +70,24 @@ struct SpriteCommon
 class Sprite
 {
 public:
-	void Init(ID3D12Device* dev, int window_width, int window_height);
-	void SpriteTransferVertexBuffer(const SpriteInfo& sprite, const SpriteCommon& spriteCommon);
+	void Init(SpriteCommon* spriteCommon);
+	void Draw();
+	void SpriteTransferVertexBuffer(const SpriteInfo& sprite, const SpriteCommond& spriteCommon);
 	PipelineSet SpriteCreateGraphicsPipeline(ID3D12Device* dev);
 	SpriteInfo SpriteCreate(ID3D12Device* dev, int window_width, int window_height, UINT texNumber, 
-		const SpriteCommon& spriteCommon, Vector2 anchorpoint = { 0.5f,0.5f }, 
+		const SpriteCommond& spriteCommon, Vector2 anchorpoint = { 0.5f,0.5f }, 
 		bool isFlipX = false, bool isFlipY = false);
-	void SpriteCommonBeginDraw(ID3D12GraphicsCommandList* cmdList, const SpriteCommon& spriteCommon);
+	void SpriteCommonBeginDraw(ID3D12GraphicsCommandList* cmdList, const SpriteCommond& spriteCommon);
 	void SpriteDraw(const SpriteInfo& sprite, ID3D12GraphicsCommandList* cmdList,
-		const SpriteCommon& spriteCommon, ID3D12Device* dev);
-	SpriteCommon SpriteCommonCreate(ID3D12Device* dev, int window_width, int window_height);
-	void SpriteUpdate(SpriteInfo& sprite, const SpriteCommon& spriteCommon);
-	HRESULT SpriteCommonLoadTexture(SpriteCommon& spriteCommon,
+		const SpriteCommond& spriteCommon, ID3D12Device* dev);
+	SpriteCommond SpriteCommonCreate(ID3D12Device* dev, int window_width, int window_height);
+	void SpriteUpdate(SpriteInfo& sprite, const SpriteCommond& spriteCommon);
+	HRESULT SpriteCommonLoadTexture(SpriteCommond& spriteCommon,
 		UINT texnumber, const wchar_t* filename, ID3D12Device* dev);
 
 private:
-	
+	SpriteCommon* spriteCommon_ = nullptr;
+	// 
+	D3D12_VERTEX_BUFFER_VIEW vbView{};
 };
 

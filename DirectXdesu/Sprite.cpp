@@ -1,12 +1,25 @@
 #include "Sprite.h"
 #include "KShader.h"
 
-void Sprite::Init(ID3D12Device* dev, int window_width, int window_height)
+void Sprite::Init(SpriteCommon* spriteCommon)
 {
-	
+	assert(spriteCommon);
+	spriteCommon_ = spriteCommon;
+	vbView = spriteCommon_->GetVbView();
 }
 
-void Sprite::SpriteTransferVertexBuffer(const SpriteInfo& sprite, const SpriteCommon& spriteCommon)
+void Sprite::Draw()
+{
+	spriteCommon_->GetCmdList()->SetPipelineState(spriteCommon_->GetPipelineState().Get());
+	spriteCommon_->GetCmdList()->SetComputeRootSignature(spriteCommon_->GetRootSignature().Get());
+
+	spriteCommon_->GetCmdList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	spriteCommon_->GetCmdList()->IASetVertexBuffers(0, 1, &vbView);
+
+	spriteCommon_->GetCmdList()->DrawInstanced(spriteCommon_->GetVertices().size(), 1, 0, 0);
+}
+
+void Sprite::SpriteTransferVertexBuffer(const SpriteInfo& sprite, const SpriteCommond& spriteCommon)
 {
 	HRESULT result = S_FALSE;
 
@@ -204,7 +217,7 @@ PipelineSet Sprite::SpriteCreateGraphicsPipeline(ID3D12Device* dev)
 	return pipelineSet;
 }
 
-SpriteInfo Sprite::SpriteCreate(ID3D12Device* dev, int window_width, int window_height, UINT texNumber, const SpriteCommon& spriteCommon, Vector2 anchorpoint, bool isFlipX, bool isFlipY)
+SpriteInfo Sprite::SpriteCreate(ID3D12Device* dev, int window_width, int window_height, UINT texNumber, const SpriteCommond& spriteCommon, Vector2 anchorpoint, bool isFlipX, bool isFlipY)
 {
 	HRESULT result = S_FALSE;
 	// 新しいスプライトを作る
@@ -293,7 +306,7 @@ SpriteInfo Sprite::SpriteCreate(ID3D12Device* dev, int window_width, int window_
 	return sprite;
 }
 
-void Sprite::SpriteCommonBeginDraw(ID3D12GraphicsCommandList* cmdList, const SpriteCommon& spriteCommon)
+void Sprite::SpriteCommonBeginDraw(ID3D12GraphicsCommandList* cmdList, const SpriteCommond& spriteCommon)
 {
 	// パイプラインステートの設定
 	cmdList->SetPipelineState(spriteCommon.pipelineSet.pipelineState.Get());
@@ -307,7 +320,7 @@ void Sprite::SpriteCommonBeginDraw(ID3D12GraphicsCommandList* cmdList, const Spr
 }
 
 void Sprite::SpriteDraw(const SpriteInfo& sprite, ID3D12GraphicsCommandList* cmdList,
-	const SpriteCommon& spriteCommon, ID3D12Device* dev)
+	const SpriteCommond& spriteCommon, ID3D12Device* dev)
 {
 	// 非表示フラグ
 	if (sprite.isInvisible)
@@ -329,11 +342,11 @@ void Sprite::SpriteDraw(const SpriteInfo& sprite, ID3D12GraphicsCommandList* cmd
 	cmdList->DrawInstanced(4, 1, 0, 0);
 }
 
-SpriteCommon Sprite::SpriteCommonCreate(ID3D12Device* dev, int window_width, int window_height)
+SpriteCommond Sprite::SpriteCommonCreate(ID3D12Device* dev, int window_width, int window_height)
 {
 	HRESULT result = S_FALSE;
 
-	SpriteCommon spriteCommon{};
+	SpriteCommond spriteCommon{};
 
 	D3D12_DESCRIPTOR_HEAP_DESC descHeapDesc = {};
 	descHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
@@ -350,7 +363,7 @@ SpriteCommon Sprite::SpriteCommonCreate(ID3D12Device* dev, int window_width, int
 	return spriteCommon;
 }
 
-void Sprite::SpriteUpdate(SpriteInfo& sprite, const SpriteCommon& spriteCommon)
+void Sprite::SpriteUpdate(SpriteInfo& sprite, const SpriteCommond& spriteCommon)
 {
 	// ワールド行列
 	sprite.matWorld = XMMatrixIdentity();
@@ -366,7 +379,7 @@ void Sprite::SpriteUpdate(SpriteInfo& sprite, const SpriteCommon& spriteCommon)
 	sprite.constBuff->Unmap(0, nullptr);
 }
 
-HRESULT Sprite::SpriteCommonLoadTexture(SpriteCommon& spriteCommon, UINT texnumber, const wchar_t* filename, ID3D12Device* dev)
+HRESULT Sprite::SpriteCommonLoadTexture(SpriteCommond& spriteCommon, UINT texnumber, const wchar_t* filename, ID3D12Device* dev)
 {
 	assert(texnumber <= spriteSRVCount - 1);
 

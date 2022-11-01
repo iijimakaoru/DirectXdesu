@@ -52,7 +52,7 @@ private:
 
 	std::unique_ptr<Sound> sound;
 
-	SpriteCommon spriteCommon;
+	SpriteCommond spriteCommon;
 
 	SpriteInfo sprites[2];
 

@@ -364,6 +364,14 @@ void KDirectXCommon::UpdateFixFPS()
 			std::this_thread::sleep_for(std::chrono::microseconds(1));
 		}
 	}
+
+	float nowTime = std::chrono::duration_cast<std::chrono::microseconds>
+		(std::chrono::steady_clock::now() - reference_).count() / 1000000.0f;
+
+	if (nowTime > 0)
+	{
+		fps = (fps * 0.99f) + (0.01f / nowTime);
+	}
 	// Œ»İ‚ÌŠÔ‚ğ‹L˜^‚·‚é
 	reference_ = std::chrono::steady_clock::now();
 }

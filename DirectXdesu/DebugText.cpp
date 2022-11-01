@@ -12,7 +12,8 @@ void DebugText::Init(ID3D12Device* dev, int window_width, int window_height,
 	}
 }
 
-void DebugText::Print(const SpriteCommon& spriteCommon, const std::string& text, Vector2 pos, float scale)
+void DebugText::Print(const SpriteCommon& spriteCommon, const std::string& text,
+	Vector2 pos, float scale)
 {
 	for (int i = 0; i < text.size(); i++)
 	{

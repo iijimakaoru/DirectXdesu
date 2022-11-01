@@ -422,7 +422,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 		debugtext->Print(spriteCommon, "Hello,DirectX!!", { 200,100 });
 		debugtext->Print(spriteCommon, "Nihon Kogakuin", { 200,200 }, 2.0f);
-
+		debugtext->Print(spriteCommon, "FPS(w)" + std::to_string(dxCommon->fps), {200,300}, 2.0f);
 		debugtext->DrawAll(dxCommon->GetDev().Get(), spriteCommon, dxCommon->GetCmdlist().Get());
 
 		// •`‰æƒRƒ}ƒ“ƒh‚±‚±‚Ü‚Å

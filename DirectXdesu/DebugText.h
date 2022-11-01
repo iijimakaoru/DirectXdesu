@@ -21,7 +21,8 @@ public:
 	// ƒƒ“ƒoŠÖ”‚ÌéŒ¾
 	void Init(ID3D12Device* dev, int window_width, int window_height,
 		UINT texnumber, const SpriteCommon& spriteCommon);
-	void Print(const SpriteCommon& spriteCommon, const std::string& text, Vector2 pos, float scale = 1.0f);
+	void Print(const SpriteCommon& spriteCommon, const std::string& text,
+		Vector2 pos, float scale = 1.0f);
 	void SpriteTransferVertexBuffer(const SpriteInfo& sprite, const SpriteCommon& spriteCommon);
 	void DrawAll(ID3D12Device* dev, const SpriteCommon& spriteCommon,
 		ID3D12GraphicsCommandList* cmdList);

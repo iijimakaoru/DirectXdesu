@@ -37,6 +37,8 @@ public:
 	Microsoft::WRL::ComPtr<ID3D12Device> GetDev() const { return dev; }
 	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> GetCmdlist() { return cmdList; }
 
+	float fps = 0;
+
 private:
 	HRESULT result;
 	// DirectX12デバイス
@@ -84,6 +86,7 @@ private:
 	//KDepth* depth = nullptr;
 
 	std::chrono::steady_clock::time_point reference_;
+	
 	// デバイス初期化
 	void InitDev();
 	// コマンド初期化

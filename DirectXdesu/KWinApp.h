@@ -6,11 +6,11 @@ class KWinApp
 public:
 	KWinApp();
 	~KWinApp();
-	void Update();
+	bool ProcessMessage();
+	void Finalize();
 	static LRESULT WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
 	HWND GetHWND() { return hwnd; }
 	WNDCLASSEX GetWindow() { return window; }
-	bool GetBreak() { return breakFlag; }
 
 	// ウィンドウサイズ
 	static const int window_width = 1280;
@@ -21,11 +21,7 @@ private:
 	WNDCLASSEX window{};
 	// ウィンドウサイズ
 	RECT rect = { 0,0,window_width,window_height };
-	// メッセージ格納用構造体
-	MSG msg{};
-
+	
 	HWND hwnd;
-
-	bool breakFlag = false;
 };
 

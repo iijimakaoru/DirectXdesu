@@ -280,7 +280,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	while (true)
 	{
 #pragma region ウィンドウメッセージ
-		if (win->GetBreak() || input->IsPush(DIK_ESCAPE)) {
+		if (win->ProcessMessage() || input->IsPush(DIK_ESCAPE)) {
 			break;
 		}
 #pragma endregion
@@ -288,7 +288,6 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		// 更新
 #pragma region 基盤の更新
 		// ウィンドウ更新
-		win->Update();
 
 		// input更新
 		input->Update();
@@ -436,10 +435,13 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	sound->SoundUnLoad(&soundData1);
 	// 入力解放
 	delete input;
-	// 
-	delete win;
-	// 
+	// DirectXCommon解放
 	delete dxCommon;
+	// WindowsAPI終了処理
+	win->Finalize();
+	// WindowsAPI解放
+	delete win;
+	win = nullptr;
 #pragma endregion
 
 	return 0;

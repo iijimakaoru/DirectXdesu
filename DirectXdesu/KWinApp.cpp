@@ -14,7 +14,9 @@ LRESULT KWinApp::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 	return DefWindowProc(hwnd, msg, wparam, lparam);
 }
 
-void KWinApp::Update() {
+bool KWinApp::ProcessMessage() {
+	// メッセージ格納用構造体
+	MSG msg{};
 	if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
 	{
 		TranslateMessage(&msg);
@@ -23,8 +25,15 @@ void KWinApp::Update() {
 
 	if (msg.message == WM_QUIT)
 	{
-		breakFlag = true;
+		return true;
 	}
+
+	return false;
+}
+
+void KWinApp::Finalize()
+{
+	UnregisterClass(window.lpszClassName, window.hInstance);
 }
 
 KWinApp::KWinApp() {
@@ -60,5 +69,5 @@ KWinApp::KWinApp() {
 }
 
 KWinApp::~KWinApp() {
-	UnregisterClass(window.lpszClassName, window.hInstance);
+
 }

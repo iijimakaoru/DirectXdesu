@@ -1,5 +1,6 @@
 #include "KWinApp.h"
 #include <Windows.h>
+#pragma comment(lib, "winmm.lib")
 
 LRESULT KWinApp::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 	// メッセージに応じてゲーム固有の処理を行う 
@@ -37,6 +38,8 @@ void KWinApp::Finalize()
 }
 
 KWinApp::KWinApp() {
+	timeBeginPeriod(1);
+
 	window.cbSize = sizeof(WNDCLASSEX);
 	window.lpfnWndProc = (WNDPROC)WindowProc;
 	window.lpszClassName = L"DirectX12";

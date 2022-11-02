@@ -1,6 +1,7 @@
 #include "KSpriteCommon.h"
 #include <cassert>
 #include "KShader.h"
+#include "KMaterial.h"
 
 void SpriteCommon::Init(KDirectXCommon* dxCommon)
 {
@@ -75,30 +76,73 @@ void SpriteCommon::Init(KDirectXCommon* dxCommon)
 #pragma region パイプラインステート設定変数の宣言と各種項目の設定
 	// グラフィックスパイプライン設定
 	// シェーダーの設定
-	gpipeline.VS.pShaderBytecode = shader->vsBlob->GetBufferPointer();
-	gpipeline.VS.BytecodeLength = shader->vsBlob->GetBufferSize();
-	gpipeline.PS.pShaderBytecode = shader->psBlob->GetBufferPointer();
-	gpipeline.PS.BytecodeLength = shader->psBlob->GetBufferSize();
+	pipelineDesc.VS.pShaderBytecode = shader->vsBlob->GetBufferPointer();
+	pipelineDesc.VS.BytecodeLength = shader->vsBlob->GetBufferSize();
+	pipelineDesc.PS.pShaderBytecode = shader->psBlob->GetBufferPointer();
+	pipelineDesc.PS.BytecodeLength = shader->psBlob->GetBufferSize();
 	// サンプルマスクの設定
-	gpipeline.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
+	pipelineDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
 	// ラスタライザの設定
-	gpipeline.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
-	gpipeline.RasterizerState.CullMode = D3D12_CULL_MODE_NONE; // 背面をカリングしない
-	gpipeline.RasterizerState.FillMode = D3D12_FILL_MODE_SOLID;
-	gpipeline.RasterizerState.DepthClipEnable = true;
+	pipelineDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
+	pipelineDesc.RasterizerState.CullMode = D3D12_CULL_MODE_NONE; // 背面をカリングしない
+	pipelineDesc.RasterizerState.FillMode = D3D12_FILL_MODE_SOLID;
+	pipelineDesc.RasterizerState.DepthClipEnable = true;
 	// ブレンドステート
-	gpipeline.BlendState.RenderTarget[0].RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
+	D3D12_RENDER_TARGET_BLEND_DESC& blendDesc = pipelineDesc.BlendState.RenderTarget[0];
+	blendDesc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
+	blendDesc.BlendEnable = true;
+	blendDesc.BlendOpAlpha = D3D12_BLEND_OP_ADD;
+	blendDesc.SrcBlendAlpha = D3D12_BLEND_ONE;
+	blendDesc.DestBlendAlpha = D3D12_BLEND_ZERO;
+	// 半透明合成
+	blendDesc.BlendOp = D3D12_BLEND_OP_ADD;
+	blendDesc.SrcBlend = D3D12_BLEND_SRC_ALPHA;
+	blendDesc.DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
 	// 頂点レイアウトの設定
-	gpipeline.InputLayout.pInputElementDescs = inputLayout;
-	gpipeline.InputLayout.NumElements = _countof(inputLayout);
+	pipelineDesc.InputLayout.pInputElementDescs = inputLayout;
+	pipelineDesc.InputLayout.NumElements = _countof(inputLayout);
 	// 図形の形状設定
-	gpipeline.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+	pipelineDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 	// その他の設定
-	gpipeline.NumRenderTargets = 1;
-	gpipeline.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
-	gpipeline.SampleDesc.Count = 1;
+	pipelineDesc.NumRenderTargets = 1;
+	pipelineDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+	pipelineDesc.SampleDesc.Count = 1;
+	// 
+	D3D12_HEAP_PROPERTIES cbHeapProp{};
+	cbHeapProp.Type = D3D12_HEAP_TYPE_UPLOAD;
+	// 
+	D3D12_RESOURCE_DESC cbResourceDesc{};
+	cbResourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
+	cbResourceDesc.Width = (sizeof(ConstBufferDataMaterial) + 0xff) & ~0xff;
+	cbResourceDesc.Height = 1;
+	cbResourceDesc.DepthOrArraySize = 1;
+	cbResourceDesc.MipLevels = 1;
+	cbResourceDesc.SampleDesc.Count = 1;
+	cbResourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+	// 
+	result = dxCommon_->GetDev()->CreateCommittedResource(
+		&cbHeapProp,
+		D3D12_HEAP_FLAG_NONE,
+		&cbResourceDesc,
+		D3D12_RESOURCE_STATE_GENERIC_READ,
+		nullptr,
+		IID_PPV_ARGS(&constBuffMaterial));
+	assert(SUCCEEDED(result));
+	// 
+	ConstBufferDataMaterial* constMapMaterial = nullptr;
+	result = constBuffMaterial->Map(0, nullptr, (void**)&constMapMaterial);
+	assert(SUCCEEDED(result));
+	constMapMaterial->color = DirectX::XMFLOAT4(1, 0, 0, 0.5f);
+	// 
+	D3D12_ROOT_PARAMETER rootParam = {};
+	rootParam.ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+	rootParam.Descriptor.ShaderRegister = 0;
+	rootParam.Descriptor.RegisterSpace = 0;
+	rootParam.ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
 	// 
 	rootSignatureDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
+	rootSignatureDesc.pParameters = &rootParam;
+	rootSignatureDesc.NumParameters = 1;
 	// ルートシグネチャのシリアライズ
 	ComPtr<ID3DBlob> rootSigBlob;
 	result = D3D12SerializeRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1_0,
@@ -108,10 +152,10 @@ void SpriteCommon::Init(KDirectXCommon* dxCommon)
 		IID_PPV_ARGS(&rootSignature));
 	assert(SUCCEEDED(result));
 	// パイプラインにルートシグネチャをセット
-	gpipeline.pRootSignature = rootSignature.Get();
+	pipelineDesc.pRootSignature = rootSignature.Get();
 	// 
 	result = dxCommon->GetDev()->CreateGraphicsPipelineState(
-		&gpipeline,
+		&pipelineDesc,
 		IID_PPV_ARGS(&pipelineState));
 	assert(SUCCEEDED(result));
 #pragma endregion
@@ -124,6 +168,8 @@ void SpriteCommon::Draw()
 
 	dxCommon_->GetCmdlist()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	dxCommon_->GetCmdlist()->IASetVertexBuffers(0, 1, &vbView);
+
+	dxCommon_->GetCmdlist()->SetGraphicsRootConstantBufferView(0, constBuffMaterial->GetGPUVirtualAddress());
 
 	dxCommon_->GetCmdlist()->DrawInstanced(vertices.size(), 1, 0, 0);
 }

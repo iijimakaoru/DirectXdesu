@@ -28,12 +28,14 @@ private:
 	// 
 	D3D12_VERTEX_BUFFER_VIEW vbView{};
 	// グラフィックスパイプライン設定
-	D3D12_GRAPHICS_PIPELINE_STATE_DESC gpipeline{};
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC pipelineDesc{};
 	// 
 	Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature;
 	// 
 	D3D12_ROOT_SIGNATURE_DESC rootSignatureDesc{};
 	// 
 	Microsoft::WRL::ComPtr<ID3D12PipelineState> pipelineState = nullptr;
+	// 
+	Microsoft::WRL::ComPtr<ID3D12Resource> constBuffMaterial = nullptr;
 };
 

@@ -5,18 +5,19 @@ void Sprite::Init(SpriteCommon* spriteCommon)
 {
 	assert(spriteCommon);
 	spriteCommon_ = spriteCommon;
-	vbView = spriteCommon_->GetVbView();
+	//vbView = spriteCommon_->GetVbView();
 }
 
 void Sprite::Draw()
 {
-	spriteCommon_->GetCmdList()->SetPipelineState(spriteCommon_->GetPipelineState().Get());
-	spriteCommon_->GetCmdList()->SetComputeRootSignature(spriteCommon_->GetRootSignature().Get());
+	spriteCommon_->Draw();
+	/*spriteCommon_->GetCmdList()->SetPipelineState(spriteCommon_->GetPipelineState());
+	spriteCommon_->GetCmdList()->SetGraphicsRootSignature(spriteCommon_->GetRootSignature());
 
 	spriteCommon_->GetCmdList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	spriteCommon_->GetCmdList()->IASetVertexBuffers(0, 1, &vbView);
 
-	spriteCommon_->GetCmdList()->DrawInstanced(spriteCommon_->GetVertices().size(), 1, 0, 0);
+	spriteCommon_->GetCmdList()->DrawInstanced(spriteCommon_->GetVertices().size(), 1, 0, 0);*/
 }
 
 void Sprite::SpriteTransferVertexBuffer(const SpriteInfo& sprite, const SpriteCommond& spriteCommon)

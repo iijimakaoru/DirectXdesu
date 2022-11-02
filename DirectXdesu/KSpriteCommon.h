@@ -9,11 +9,11 @@ class SpriteCommon
 public:
 	void Init(KDirectXCommon* dxCommon);
 	void Draw();
-	Microsoft::WRL::ComPtr<ID3D12PipelineState> GetPipelineState() { return pipelineState; }
-	Microsoft::WRL::ComPtr<ID3D12RootSignature> GetRootSignature() { return rootSignature; }
+	ID3D12PipelineState* GetPipelineState() { return pipelineState.Get(); }
+	ID3D12RootSignature* GetRootSignature() { return rootSignature.Get(); }
 	D3D12_VERTEX_BUFFER_VIEW GetVbView() { return vbView; }
 	std::vector<DirectX::XMFLOAT3> GetVertices() { return vertices; }
-	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> GetCmdList() { return dxCommon_->GetCmdlist().Get(); }
+	ID3D12GraphicsCommandList* GetCmdList() { return dxCommon_->GetCmdlist().Get(); }
 
 private:
 	std::vector<DirectX::XMFLOAT3> vertices;

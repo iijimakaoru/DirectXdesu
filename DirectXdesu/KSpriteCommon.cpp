@@ -119,5 +119,11 @@ void SpriteCommon::Init(KDirectXCommon* dxCommon)
 
 void SpriteCommon::Draw()
 {
-	
+	dxCommon_->GetCmdlist()->SetPipelineState(pipelineState.Get());
+	dxCommon_->GetCmdlist()->SetGraphicsRootSignature(rootSignature.Get());
+
+	dxCommon_->GetCmdlist()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	dxCommon_->GetCmdlist()->IASetVertexBuffers(0, 1, &vbView);
+
+	dxCommon_->GetCmdlist()->DrawInstanced(vertices.size(), 1, 0, 0);
 }

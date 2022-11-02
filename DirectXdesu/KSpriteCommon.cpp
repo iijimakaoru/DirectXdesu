@@ -13,9 +13,18 @@ void SpriteCommon::Init(KDirectXCommon* dxCommon)
 	// 頂点データ
 	vertices =
 	{
-		{-0.5f, -0.5f,0.0f},
-		{-0.5f, +0.5f,0.0f},
-		{+0.5f, -0.5f,0.0f},
+		{{-0.5f, -0.5f,0.0f},{0.0f,1.0f}}, // 左下
+		{{-0.5f, +0.5f,0.0f},{0.0f,0.0f}}, // 左上
+		{{+0.5f, -0.5f,0.0f},{1.0f,1.0f}}, // 右下
+		{{+0.5f, -0.5f,0.0f},{1.0f,1.0f}}, // 右下
+		{{-0.5f, +0.5f,0.0f},{0.0f,0.0f}}, // 左上
+		{{+0.5f, +0.5f,0.0f},{1.0f,0.0f}}, // 右上
+	};
+	// 
+	indices =
+	{
+		0,1,2,
+		1,2,3
 	};
 	// 
 	UINT sizeVB = static_cast<UINT>(sizeof(vertices[0]) * vertices.size());
@@ -40,7 +49,7 @@ void SpriteCommon::Init(KDirectXCommon* dxCommon)
 	assert(SUCCEEDED(result));
 
 	// GPU上のバッファに対応した仮想メモリを取得
-	DirectX::XMFLOAT3* vertMap = nullptr;
+	Vertex* vertMap = nullptr;
 	result = vertBuff->Map(0, nullptr, (void**)&vertMap);
 	assert(SUCCEEDED(result));
 	// 全頂点に対して
@@ -55,22 +64,32 @@ void SpriteCommon::Init(KDirectXCommon* dxCommon)
 	// 
 	vbView.SizeInBytes = sizeVB;
 	// 
-	vbView.StrideInBytes = sizeof(DirectX::XMFLOAT3);
+	vbView.StrideInBytes = sizeof(vertices[0]);
 	// 
 	std::unique_ptr<KShader> shader = std::make_unique<KShader>();
 	shader->SpritePSLoadCompile();
 	shader->SpriteVSLoadCompile();
 #pragma region 頂点レイアウト配列の宣言と設定
-	static D3D12_INPUT_ELEMENT_DESC inputLayout[] = {
-	{// xyz座標
-		"POSITION",										// セマンティック名
-		0,												// 同じセマンティック名が複数あるときに使うインデックス
-		DXGI_FORMAT_R32G32B32_FLOAT,					// 要素数とビット数を表す
-		0,												// 入力スロットインデックス
-		D3D12_APPEND_ALIGNED_ELEMENT,					// データのオフセット
-		D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,		// 入力データ種別
-		0												// 一度に描画するインスタンス数
-	},
+	static D3D12_INPUT_ELEMENT_DESC inputLayout[] =
+	{
+		{// xyz座標
+			"POSITION",										// セマンティック名
+			0,												// 同じセマンティック名が複数あるときに使うインデックス
+			DXGI_FORMAT_R32G32B32_FLOAT,					// 要素数とビット数を表す
+			0,												// 入力スロットインデックス
+			D3D12_APPEND_ALIGNED_ELEMENT,					// データのオフセット
+			D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,		// 入力データ種別
+			0												// 一度に描画するインスタンス数
+		},
+		{// xyz座標
+			"TEXCOORD",										// セマンティック名
+			0,												// 同じセマンティック名が複数あるときに使うインデックス
+			DXGI_FORMAT_R32G32_FLOAT,					// 要素数とビット数を表す
+			0,												// 入力スロットインデックス
+			D3D12_APPEND_ALIGNED_ELEMENT,					// データのオフセット
+			D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,		// 入力データ種別
+			0												// 一度に描画するインスタンス数
+		},
 	};
 #pragma endregion
 #pragma region パイプラインステート設定変数の宣言と各種項目の設定

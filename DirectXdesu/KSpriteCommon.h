@@ -7,16 +7,22 @@
 class SpriteCommon
 {
 public:
+	struct Vertex
+	{
+		DirectX::XMFLOAT3 pos;
+		DirectX::XMFLOAT2 uv;
+	};
 	void Init(KDirectXCommon* dxCommon);
 	void Draw();
 	ID3D12PipelineState* GetPipelineState() { return pipelineState.Get(); }
 	ID3D12RootSignature* GetRootSignature() { return rootSignature.Get(); }
 	D3D12_VERTEX_BUFFER_VIEW GetVbView() { return vbView; }
-	std::vector<DirectX::XMFLOAT3> GetVertices() { return vertices; }
+	std::vector<Vertex> GetVertices() { return vertices; }
 	ID3D12GraphicsCommandList* GetCmdList() { return dxCommon_->GetCmdlist().Get(); }
 
 private:
-	std::vector<DirectX::XMFLOAT3> vertices;
+	std::vector<Vertex> vertices;
+	std::vector<short> indices;
 
 	KDirectXCommon* dxCommon_ = nullptr;
 	// 

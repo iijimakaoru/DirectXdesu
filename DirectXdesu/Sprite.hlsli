@@ -1,9 +1,3 @@
-//cbuffer cbuff0 : register(b0)
-//{
-//	float4 color;
-//	matrix mat;
-//};
-
 cbuffer cbuff0 : register(b0)
 {
 	float4 color;

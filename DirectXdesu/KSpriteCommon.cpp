@@ -171,7 +171,7 @@ void SpriteCommon::Init(KDirectXCommon* dxCommon)
 	ConstBufferDataMaterial* constMapMaterial = nullptr;
 	result = constBuffMaterial_->Map(0, nullptr, (void**)&constMapMaterial);
 	assert(SUCCEEDED(result));
-	constMapMaterial->color = DirectX::XMFLOAT4(1, 0, 0, 0.5f);
+	constMapMaterial->color = DirectX::XMFLOAT4(1, 0, 0, 1.0f);
 
 	// デスクリプタレンジの設定
 	D3D12_DESCRIPTOR_RANGE descriptorRange{};
@@ -232,16 +232,33 @@ void SpriteCommon::Init(KDirectXCommon* dxCommon)
 #pragma endregion
 
 	// 
-	DirectX::XMFLOAT4* imageData = new DirectX::XMFLOAT4[imageDataCount];
+	TexMetadata metadata{};
+	ScratchImage scratchImage{};
 
-	// 
-	for (size_t i = 0; i < imageDataCount; i++)
+	// WICテクスチャのロード
+	result = LoadFromWICFile(
+		L"Resources/haikei.jpg",
+		WIC_FLAGS_NONE,
+		&metadata,
+		scratchImage);
+
+	ScratchImage mipChain{};
+
+	// ミニマップ生成
+	result = GenerateMipMaps(scratchImage.GetImages(),
+		scratchImage.GetImageCount(),
+		scratchImage.GetMetadata(),
+		TEX_FILTER_DEFAULT,
+		0,
+		mipChain);
+	if (SUCCEEDED(result))
 	{
-		imageData[i].x = 0.5f;
-		imageData[i].y = 0.5f;
-		imageData[i].z = 0.0f;
-		imageData[i].w = 1.0f;
+		scratchImage = std::move(mipChain);
+		metadata = scratchImage.GetMetadata();
 	}
+
+	// 読み込んだディヒューズテクスチャをSRGBとして扱う
+	metadata.format = MakeSRGB(metadata.format);
 
 	// 
 	D3D12_HEAP_PROPERTIES textureHeapProp{};
@@ -252,11 +269,11 @@ void SpriteCommon::Init(KDirectXCommon* dxCommon)
 	// 
 	D3D12_RESOURCE_DESC textureResourceDesc{};
 	textureResourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
-	textureResourceDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
-	textureResourceDesc.Width = textureWidth;
-	textureResourceDesc.Height = textureHeight;
-	textureResourceDesc.DepthOrArraySize = 1;
-	textureResourceDesc.MipLevels = 1;
+	textureResourceDesc.Format = metadata.format;
+	textureResourceDesc.Width = metadata.width;
+	textureResourceDesc.Height = (UINT)metadata.height;
+	textureResourceDesc.DepthOrArraySize = (UINT16)metadata.arraySize;
+	textureResourceDesc.MipLevels = (UINT16)metadata.mipLevels;
 	textureResourceDesc.SampleDesc.Count = 1;
 
 	// 
@@ -269,15 +286,20 @@ void SpriteCommon::Init(KDirectXCommon* dxCommon)
 		IID_PPV_ARGS(&texBuff_));
 
 	// 
-	result = texBuff_->WriteToSubresource(
-		0,
-		nullptr,
-		imageData,
-		sizeof(DirectX::XMFLOAT4) * textureWidth,
-		sizeof(DirectX::XMFLOAT4) * textureHeight);
-
-	// 
-	delete[] imageData;
+	// 全ミニマップについて
+	for (size_t i = 0; i < metadata.mipLevels; i++) 
+	{
+		// ミニマップレベルを指定してイメージを取得
+		const Image* img = scratchImage.GetImage(i, 0, 0);
+		// テクスチャバッファにデータ転送
+		result = texBuff_->WriteToSubresource(
+			(UINT)i,
+			nullptr,
+			img->pixels,
+			(UINT)img->rowPitch,
+			(UINT)img->slicePitch);
+		assert(SUCCEEDED(result));
+	}
 
 	// 
 	D3D12_DESCRIPTOR_HEAP_DESC srvHeapDesc = {};
@@ -294,10 +316,10 @@ void SpriteCommon::Init(KDirectXCommon* dxCommon)
 
 	// 
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
-	srvDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	srvDesc.Format = textureResourceDesc.Format;
 	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-	srvDesc.Texture2D.MipLevels = 1;
+	srvDesc.Texture2D.MipLevels = textureResourceDesc.MipLevels;
 
 	// 
 	dxCommon_->GetDev()->CreateShaderResourceView(texBuff_.Get(), &srvDesc, srvHandle);
@@ -315,7 +337,7 @@ void SpriteCommon::Draw()
 	dxCommon_->GetCmdlist()->SetGraphicsRootConstantBufferView(0, constBuffMaterial_->GetGPUVirtualAddress());
 
 	// デスクリプタヒープ配列をセットするコマンド
-	ID3D12DescriptorHeap* ppHeaps[] = { srvHeap_.Get()};
+	ID3D12DescriptorHeap* ppHeaps[] = { srvHeap_.Get() };
 	dxCommon_->GetCmdlist()->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 
 	// SRVヒープの先頭ハンドルを所得

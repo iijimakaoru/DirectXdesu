@@ -14,34 +14,45 @@ public:
 	};
 	void Init(KDirectXCommon* dxCommon);
 	void Draw();
-	ID3D12PipelineState* GetPipelineState() { return pipelineState.Get(); }
-	ID3D12RootSignature* GetRootSignature() { return rootSignature.Get(); }
-	D3D12_VERTEX_BUFFER_VIEW GetVbView() { return vbView; }
-	std::vector<Vertex> GetVertices() { return vertices; }
+	ID3D12PipelineState* GetPipelineState() { return pipelineState_.Get(); }
+	ID3D12RootSignature* GetRootSignature() { return rootSignature_.Get(); }
+	D3D12_VERTEX_BUFFER_VIEW GetVbView() { return vbView_; }
+	std::vector<Vertex> GetVertices() { return vertices_; }
 	ID3D12GraphicsCommandList* GetCmdList() { return dxCommon_->GetCmdlist().Get(); }
 
 private:
-	std::vector<Vertex> vertices;
-	std::vector<short> indices;
+	const size_t textureWidth = 256;
+	const size_t textureHeight = 256;
+
+	const size_t imageDataCount = textureWidth * textureHeight;
+
+	const size_t kMaxSRVCount = 2056;
+
+	std::vector<Vertex> vertices_;
+	std::vector<short> indices_;
 
 	KDirectXCommon* dxCommon_ = nullptr;
 	// 
-	D3D12_HEAP_PROPERTIES heapProp{};
+	D3D12_HEAP_PROPERTIES heapProp_{};
 	// 
-	D3D12_RESOURCE_DESC resDesc{};
+	D3D12_RESOURCE_DESC resDesc_{};
 	// 
-	Microsoft::WRL::ComPtr<ID3D12Resource> vertBuff = nullptr;
+	Microsoft::WRL::ComPtr<ID3D12Resource> vertBuff_ = nullptr;
 	// 
-	D3D12_VERTEX_BUFFER_VIEW vbView{};
+	D3D12_VERTEX_BUFFER_VIEW vbView_{};
 	// グラフィックスパイプライン設定
-	D3D12_GRAPHICS_PIPELINE_STATE_DESC pipelineDesc{};
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC pipelineDesc_{};
 	// 
-	Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature;
+	Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature_;
 	// 
-	D3D12_ROOT_SIGNATURE_DESC rootSignatureDesc{};
+	D3D12_ROOT_SIGNATURE_DESC rootSignatureDesc_{};
 	// 
-	Microsoft::WRL::ComPtr<ID3D12PipelineState> pipelineState = nullptr;
+	Microsoft::WRL::ComPtr<ID3D12PipelineState> pipelineState_ = nullptr;
 	// 
-	Microsoft::WRL::ComPtr<ID3D12Resource> constBuffMaterial = nullptr;
+	Microsoft::WRL::ComPtr<ID3D12Resource> constBuffMaterial_ = nullptr;
+	// 
+	Microsoft::WRL::ComPtr<ID3D12Resource> texBuff_ = nullptr;
+	// 
+	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> srvHeap_;
 };
 

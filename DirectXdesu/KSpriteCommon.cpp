@@ -10,8 +10,9 @@ void SpriteCommon::Init(KDirectXCommon* dxCommon)
 	assert(dxCommon);
 
 	dxCommon_ = dxCommon;
+
 	// 頂点データ
-	vertices =
+	vertices_ =
 	{
 		{{-0.5f, -0.5f,0.0f},{0.0f,1.0f}}, // 左下
 		{{-0.5f, +0.5f,0.0f},{0.0f,0.0f}}, // 左上
@@ -20,51 +21,59 @@ void SpriteCommon::Init(KDirectXCommon* dxCommon)
 		{{-0.5f, +0.5f,0.0f},{0.0f,0.0f}}, // 左上
 		{{+0.5f, +0.5f,0.0f},{1.0f,0.0f}}, // 右上
 	};
+
 	// 
-	indices =
+	indices_ =
 	{
 		0,1,2,
 		1,2,3
 	};
+
 	// 
-	UINT sizeVB = static_cast<UINT>(sizeof(vertices[0]) * vertices.size());
+	UINT sizeVB = static_cast<UINT>(sizeof(vertices_[0]) * vertices_.size());
 
-	heapProp.Type = D3D12_HEAP_TYPE_UPLOAD;
+	heapProp_.Type = D3D12_HEAP_TYPE_UPLOAD;
 
-	resDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-	resDesc.Width = sizeVB;
-	resDesc.Height = 1;
-	resDesc.DepthOrArraySize = 1;
-	resDesc.MipLevels = 1;
-	resDesc.SampleDesc.Count = 1;
-	resDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+	resDesc_.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
+	resDesc_.Width = sizeVB;
+	resDesc_.Height = 1;
+	resDesc_.DepthOrArraySize = 1;
+	resDesc_.MipLevels = 1;
+	resDesc_.SampleDesc.Count = 1;
+	resDesc_.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 
 	result = dxCommon->GetDev()->CreateCommittedResource(
-		&heapProp,
+		&heapProp_,
 		D3D12_HEAP_FLAG_NONE,
-		&resDesc,
+		&resDesc_,
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
-		IID_PPV_ARGS(&vertBuff));
+		IID_PPV_ARGS(&vertBuff_));
 	assert(SUCCEEDED(result));
 
 	// GPU上のバッファに対応した仮想メモリを取得
 	Vertex* vertMap = nullptr;
-	result = vertBuff->Map(0, nullptr, (void**)&vertMap);
+	result = vertBuff_->Map(0, nullptr, (void**)&vertMap);
 	assert(SUCCEEDED(result));
+
 	// 全頂点に対して
-	for (int i = 0; i < vertices.size(); i++)
+	for (int i = 0; i < vertices_.size(); i++)
 	{
-		vertMap[i] = vertices[i];
+		vertMap[i] = vertices_[i];
 	}
+
 	// 繋がりを解除
-	vertBuff->Unmap(0, nullptr);
+	vertBuff_->Unmap(0, nullptr);
+
 	// 
-	vbView.BufferLocation = vertBuff->GetGPUVirtualAddress();
+	vbView_.BufferLocation = vertBuff_->GetGPUVirtualAddress();
+
 	// 
-	vbView.SizeInBytes = sizeVB;
+	vbView_.SizeInBytes = sizeVB;
+
 	// 
-	vbView.StrideInBytes = sizeof(vertices[0]);
+	vbView_.StrideInBytes = sizeof(vertices_[0]);
+
 	// 
 	std::unique_ptr<KShader> shader = std::make_unique<KShader>();
 	shader->SpritePSLoadCompile();
@@ -95,40 +104,49 @@ void SpriteCommon::Init(KDirectXCommon* dxCommon)
 #pragma region パイプラインステート設定変数の宣言と各種項目の設定
 	// グラフィックスパイプライン設定
 	// シェーダーの設定
-	pipelineDesc.VS.pShaderBytecode = shader->vsBlob->GetBufferPointer();
-	pipelineDesc.VS.BytecodeLength = shader->vsBlob->GetBufferSize();
-	pipelineDesc.PS.pShaderBytecode = shader->psBlob->GetBufferPointer();
-	pipelineDesc.PS.BytecodeLength = shader->psBlob->GetBufferSize();
+	pipelineDesc_.VS.pShaderBytecode = shader->vsBlob->GetBufferPointer();
+	pipelineDesc_.VS.BytecodeLength = shader->vsBlob->GetBufferSize();
+	pipelineDesc_.PS.pShaderBytecode = shader->psBlob->GetBufferPointer();
+	pipelineDesc_.PS.BytecodeLength = shader->psBlob->GetBufferSize();
+
 	// サンプルマスクの設定
-	pipelineDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
+	pipelineDesc_.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
+
 	// ラスタライザの設定
-	pipelineDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
-	pipelineDesc.RasterizerState.CullMode = D3D12_CULL_MODE_NONE; // 背面をカリングしない
-	pipelineDesc.RasterizerState.FillMode = D3D12_FILL_MODE_SOLID;
-	pipelineDesc.RasterizerState.DepthClipEnable = true;
+	pipelineDesc_.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
+	pipelineDesc_.RasterizerState.CullMode = D3D12_CULL_MODE_NONE; // 背面をカリングしない
+	pipelineDesc_.RasterizerState.FillMode = D3D12_FILL_MODE_SOLID;
+	pipelineDesc_.RasterizerState.DepthClipEnable = true;
+
 	// ブレンドステート
-	D3D12_RENDER_TARGET_BLEND_DESC& blendDesc = pipelineDesc.BlendState.RenderTarget[0];
+	D3D12_RENDER_TARGET_BLEND_DESC& blendDesc = pipelineDesc_.BlendState.RenderTarget[0];
 	blendDesc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
 	blendDesc.BlendEnable = true;
 	blendDesc.BlendOpAlpha = D3D12_BLEND_OP_ADD;
 	blendDesc.SrcBlendAlpha = D3D12_BLEND_ONE;
 	blendDesc.DestBlendAlpha = D3D12_BLEND_ZERO;
+
 	// 半透明合成
 	blendDesc.BlendOp = D3D12_BLEND_OP_ADD;
 	blendDesc.SrcBlend = D3D12_BLEND_SRC_ALPHA;
 	blendDesc.DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
+
 	// 頂点レイアウトの設定
-	pipelineDesc.InputLayout.pInputElementDescs = inputLayout;
-	pipelineDesc.InputLayout.NumElements = _countof(inputLayout);
+	pipelineDesc_.InputLayout.pInputElementDescs = inputLayout;
+	pipelineDesc_.InputLayout.NumElements = _countof(inputLayout);
+
 	// 図形の形状設定
-	pipelineDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+	pipelineDesc_.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+
 	// その他の設定
-	pipelineDesc.NumRenderTargets = 1;
-	pipelineDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
-	pipelineDesc.SampleDesc.Count = 1;
+	pipelineDesc_.NumRenderTargets = 1;
+	pipelineDesc_.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+	pipelineDesc_.SampleDesc.Count = 1;
+
 	// 
 	D3D12_HEAP_PROPERTIES cbHeapProp{};
 	cbHeapProp.Type = D3D12_HEAP_TYPE_UPLOAD;
+
 	// 
 	D3D12_RESOURCE_DESC cbResourceDesc{};
 	cbResourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
@@ -138,6 +156,7 @@ void SpriteCommon::Init(KDirectXCommon* dxCommon)
 	cbResourceDesc.MipLevels = 1;
 	cbResourceDesc.SampleDesc.Count = 1;
 	cbResourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+
 	// 
 	result = dxCommon_->GetDev()->CreateCommittedResource(
 		&cbHeapProp,
@@ -145,50 +164,165 @@ void SpriteCommon::Init(KDirectXCommon* dxCommon)
 		&cbResourceDesc,
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
-		IID_PPV_ARGS(&constBuffMaterial));
+		IID_PPV_ARGS(&constBuffMaterial_));
 	assert(SUCCEEDED(result));
+
 	// 
 	ConstBufferDataMaterial* constMapMaterial = nullptr;
-	result = constBuffMaterial->Map(0, nullptr, (void**)&constMapMaterial);
+	result = constBuffMaterial_->Map(0, nullptr, (void**)&constMapMaterial);
 	assert(SUCCEEDED(result));
 	constMapMaterial->color = DirectX::XMFLOAT4(1, 0, 0, 0.5f);
-	// 
-	D3D12_ROOT_PARAMETER rootParam = {};
-	rootParam.ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
-	rootParam.Descriptor.ShaderRegister = 0;
-	rootParam.Descriptor.RegisterSpace = 0;
-	rootParam.ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
-	// 
-	rootSignatureDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
-	rootSignatureDesc.pParameters = &rootParam;
-	rootSignatureDesc.NumParameters = 1;
+
+	// デスクリプタレンジの設定
+	D3D12_DESCRIPTOR_RANGE descriptorRange{};
+	descriptorRange.NumDescriptors = 1;
+	descriptorRange.RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
+	descriptorRange.BaseShaderRegister = 0;
+	descriptorRange.OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+
+	// ルートパラメータの設定
+	D3D12_ROOT_PARAMETER rootParams[2] = {};
+	// 定数バッファ0番
+	rootParams[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+	rootParams[0].Descriptor.ShaderRegister = 0;
+	rootParams[0].Descriptor.RegisterSpace = 0;
+	rootParams[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
+	// テクスチャレジスタ0番
+	rootParams[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+	rootParams[1].DescriptorTable.pDescriptorRanges = &descriptorRange;
+	rootParams[1].DescriptorTable.NumDescriptorRanges = 1;
+	rootParams[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
+
+	// テクスチャサンブラーの設定
+	D3D12_STATIC_SAMPLER_DESC samplerDesc{};
+	samplerDesc.AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+	samplerDesc.AddressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+	samplerDesc.AddressW = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+	samplerDesc.BorderColor = D3D12_STATIC_BORDER_COLOR_TRANSPARENT_BLACK;
+	samplerDesc.Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR;
+	samplerDesc.MaxLOD = D3D12_FLOAT32_MAX;
+	samplerDesc.MinLOD = 0.0f;
+	samplerDesc.ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER;
+	samplerDesc.ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+
+	// ルートシグネチャの設定
+	rootSignatureDesc_.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
+	rootSignatureDesc_.pParameters = rootParams;
+	rootSignatureDesc_.NumParameters = _countof(rootParams);
+	rootSignatureDesc_.pStaticSamplers = &samplerDesc;
+	rootSignatureDesc_.NumStaticSamplers = 1;
+
 	// ルートシグネチャのシリアライズ
 	ComPtr<ID3DBlob> rootSigBlob;
-	result = D3D12SerializeRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1_0,
+	result = D3D12SerializeRootSignature(&rootSignatureDesc_, D3D_ROOT_SIGNATURE_VERSION_1_0,
 		&rootSigBlob, &shader->errorBlob);
 	assert(SUCCEEDED(result));
 	result = dxCommon->GetDev()->CreateRootSignature(0, rootSigBlob->GetBufferPointer(), rootSigBlob->GetBufferSize(),
-		IID_PPV_ARGS(&rootSignature));
+		IID_PPV_ARGS(&rootSignature_));
 	assert(SUCCEEDED(result));
+
 	// パイプラインにルートシグネチャをセット
-	pipelineDesc.pRootSignature = rootSignature.Get();
+	pipelineDesc_.pRootSignature = rootSignature_.Get();
+
 	// 
 	result = dxCommon->GetDev()->CreateGraphicsPipelineState(
-		&pipelineDesc,
-		IID_PPV_ARGS(&pipelineState));
+		&pipelineDesc_,
+		IID_PPV_ARGS(&pipelineState_));
 	assert(SUCCEEDED(result));
 #pragma endregion
+
+	// 
+	DirectX::XMFLOAT4* imageData = new DirectX::XMFLOAT4[imageDataCount];
+
+	// 
+	for (size_t i = 0; i < imageDataCount; i++)
+	{
+		imageData[i].x = 0.5f;
+		imageData[i].y = 0.5f;
+		imageData[i].z = 0.0f;
+		imageData[i].w = 1.0f;
+	}
+
+	// 
+	D3D12_HEAP_PROPERTIES textureHeapProp{};
+	textureHeapProp.Type = D3D12_HEAP_TYPE_CUSTOM;
+	textureHeapProp.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_WRITE_BACK;
+	textureHeapProp.MemoryPoolPreference = D3D12_MEMORY_POOL_L0;
+
+	// 
+	D3D12_RESOURCE_DESC textureResourceDesc{};
+	textureResourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+	textureResourceDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	textureResourceDesc.Width = textureWidth;
+	textureResourceDesc.Height = textureHeight;
+	textureResourceDesc.DepthOrArraySize = 1;
+	textureResourceDesc.MipLevels = 1;
+	textureResourceDesc.SampleDesc.Count = 1;
+
+	// 
+	result = dxCommon_->GetDev()->CreateCommittedResource(
+		&textureHeapProp,
+		D3D12_HEAP_FLAG_NONE,
+		&textureResourceDesc,
+		D3D12_RESOURCE_STATE_GENERIC_READ,
+		nullptr,
+		IID_PPV_ARGS(&texBuff_));
+
+	// 
+	result = texBuff_->WriteToSubresource(
+		0,
+		nullptr,
+		imageData,
+		sizeof(DirectX::XMFLOAT4) * textureWidth,
+		sizeof(DirectX::XMFLOAT4) * textureHeight);
+
+	// 
+	delete[] imageData;
+
+	// 
+	D3D12_DESCRIPTOR_HEAP_DESC srvHeapDesc = {};
+	srvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+	srvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+	srvHeapDesc.NumDescriptors = kMaxSRVCount;
+
+	// 
+	result = dxCommon_->GetDev()->CreateDescriptorHeap(&srvHeapDesc, IID_PPV_ARGS(&srvHeap_));
+	assert(SUCCEEDED(result));
+
+	// 
+	D3D12_CPU_DESCRIPTOR_HANDLE srvHandle = srvHeap_->GetCPUDescriptorHandleForHeapStart();
+
+	// 
+	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
+	srvDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+	srvDesc.Texture2D.MipLevels = 1;
+
+	// 
+	dxCommon_->GetDev()->CreateShaderResourceView(texBuff_.Get(), &srvDesc, srvHandle);
 }
 
 void SpriteCommon::Draw()
 {
-	dxCommon_->GetCmdlist()->SetPipelineState(pipelineState.Get());
-	dxCommon_->GetCmdlist()->SetGraphicsRootSignature(rootSignature.Get());
+	dxCommon_->GetCmdlist()->SetPipelineState(pipelineState_.Get());
+	dxCommon_->GetCmdlist()->SetGraphicsRootSignature(rootSignature_.Get());
 
 	dxCommon_->GetCmdlist()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	dxCommon_->GetCmdlist()->IASetVertexBuffers(0, 1, &vbView);
+	dxCommon_->GetCmdlist()->IASetVertexBuffers(0, 1, &vbView_);
 
-	dxCommon_->GetCmdlist()->SetGraphicsRootConstantBufferView(0, constBuffMaterial->GetGPUVirtualAddress());
+	// 定数バッファビュー(CBV)の設定コマンド
+	dxCommon_->GetCmdlist()->SetGraphicsRootConstantBufferView(0, constBuffMaterial_->GetGPUVirtualAddress());
 
-	dxCommon_->GetCmdlist()->DrawInstanced(vertices.size(), 1, 0, 0);
+	// デスクリプタヒープ配列をセットするコマンド
+	ID3D12DescriptorHeap* ppHeaps[] = { srvHeap_.Get()};
+	dxCommon_->GetCmdlist()->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
+
+	// SRVヒープの先頭ハンドルを所得
+	D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle = srvHeap_->GetGPUDescriptorHandleForHeapStart();
+
+	// SRVヒープの先頭にあるSRVをルートパラメータ1番に設定
+	dxCommon_->GetCmdlist()->SetGraphicsRootDescriptorTable(1, srvGpuHandle);
+
+	dxCommon_->GetCmdlist()->DrawInstanced(vertices_.size(), 1, 0, 0);
 }

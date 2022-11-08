@@ -43,7 +43,7 @@ public:
 	
 	SpriteCommond SpriteCommonCreate();
 	
-	HRESULT SpriteCommonLoadTexture(SpriteCommond& spriteCommon, UINT texnumber, const wchar_t* filename);
+	HRESULT SpriteCommonLoadTexture(UINT texnumber, const wchar_t* filename);
 
 private:
 	KDirectXCommon* dxCommon_ = nullptr;

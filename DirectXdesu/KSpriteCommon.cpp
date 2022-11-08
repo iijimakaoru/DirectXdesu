@@ -190,7 +190,7 @@ SpriteCommond SpriteCommon::SpriteCommonCreate()
 	return spriteCommon;
 }
 
-HRESULT SpriteCommon::SpriteCommonLoadTexture(SpriteCommond& spriteCommon, UINT texnumber, const wchar_t* filename)
+HRESULT SpriteCommon::SpriteCommonLoadTexture(UINT texnumber, const wchar_t* filename)
 {
 	assert(texnumber <= spriteSRVCount - 1);
 
@@ -238,7 +238,7 @@ HRESULT SpriteCommon::SpriteCommonLoadTexture(SpriteCommond& spriteCommon, UINT 
 	textureHeapProp.MemoryPoolPreference = D3D12_MEMORY_POOL_L0;
 #pragma endregion
 #pragma region テクスチャバッファの生成
-	spriteCommon.texBuff[texnumber] = nullptr;
+	spriteCommond_.texBuff[texnumber] = nullptr;
 	// テクスチャバッファの生成
 	result = dxCommon_->GetDev()->CreateCommittedResource(
 		&textureHeapProp,
@@ -246,7 +246,7 @@ HRESULT SpriteCommon::SpriteCommonLoadTexture(SpriteCommond& spriteCommon, UINT 
 		&textureResourceDesc,
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
-		IID_PPV_ARGS(&spriteCommon.texBuff[texnumber]));
+		IID_PPV_ARGS(&spriteCommond_.texBuff[texnumber]));
 #pragma endregion
 #pragma region テクスチャバッファにデータ転送
 	// 全ミニマップについて
@@ -254,7 +254,7 @@ HRESULT SpriteCommon::SpriteCommonLoadTexture(SpriteCommond& spriteCommon, UINT 
 		// ミニマップレベルを指定してイメージを取得
 		const Image* img = scraychImg.GetImage(i, 0, 0);
 		// テクスチャバッファにデータ転送
-		result = spriteCommon.texBuff[texnumber]->WriteToSubresource(
+		result = spriteCommond_.texBuff[texnumber]->WriteToSubresource(
 			(UINT)i,
 			nullptr,
 			img->pixels,
@@ -285,8 +285,8 @@ HRESULT SpriteCommon::SpriteCommonLoadTexture(SpriteCommond& spriteCommon, UINT 
 	srvDesc.Texture2D.MipLevels = textureResourceDesc.MipLevels;
 
 	// ハンドルの示す先にシェーダーリソースビュー作成
-	dxCommon_->GetDev()->CreateShaderResourceView(spriteCommon.texBuff[texnumber].Get(), &srvDesc,
-		CD3DX12_CPU_DESCRIPTOR_HANDLE(spriteCommon.descHeap->GetCPUDescriptorHandleForHeapStart(), texnumber,
+	dxCommon_->GetDev()->CreateShaderResourceView(spriteCommond_.texBuff[texnumber].Get(), &srvDesc,
+		CD3DX12_CPU_DESCRIPTOR_HANDLE(spriteCommond_.descHeap->GetCPUDescriptorHandleForHeapStart(), texnumber,
 			dxCommon_->GetDev()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV)));
 
 	return S_OK;

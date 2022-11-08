@@ -53,7 +53,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		// •`‰æŠJŽn
 		dxCommon->PreDraw();
 
-		sprite->Draw();
+		
 		
 		// •`‰æI—¹
 		dxCommon->PostDraw();

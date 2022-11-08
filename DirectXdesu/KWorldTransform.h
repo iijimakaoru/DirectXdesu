@@ -6,13 +6,9 @@
 #include "KTexture.h"
 #include "KMaterial.h"
 //#include <memory>
+#include "ConstBuffer.h"
 
 using namespace DirectX;
-
-// 定数バッファ用データ構造体(3D変換行列)
-struct ConstBufferDataTransform {
-	XMMATRIX mat; // 3D変換行列
-};
 
 struct Object3d {
 	// 定数バッファ(行列)

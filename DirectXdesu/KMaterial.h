@@ -3,15 +3,11 @@
 #include <DirectXMath.h>
 #include <DirectXTex.h>
 #include <wrl.h>
+#include "ConstBuffer.h"
 
 using namespace Microsoft::WRL;
 
 using namespace DirectX;
-
-// 定数バッファ用データ構造体(マテリアル)
-struct ConstBufferDataMaterial {
-	XMFLOAT4 color; // 色
-};
 
 class KMaterial
 {

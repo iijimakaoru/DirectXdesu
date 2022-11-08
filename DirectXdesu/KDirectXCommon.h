@@ -5,16 +5,19 @@
 #include <cassert>
 #include <wrl.h>
 #include <vector>
-#include"KWinApp.h"
 #include "KWinApp.h"
 #include "KDepth.h"
 #include <chrono>
+#include <DirectXMath.h>
+#include <DirectXTex.h>
 
 #pragma comment(lib, "d3d12.lib")
 #pragma comment(lib, "dxgi.lib")
 #pragma comment(lib, "d3dcompiler.Lib")
 
 using namespace Microsoft::WRL;
+
+using namespace DirectX;
 
 class KDirectXCommon
 {
@@ -51,6 +54,8 @@ public:
 	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> GetCmdlist() { return cmdList; }
 
 	float fps = 0;
+
+
 
 private:
 	HRESULT result;

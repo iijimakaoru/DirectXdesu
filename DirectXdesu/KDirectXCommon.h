@@ -34,8 +34,8 @@ public:
 	void CmdClear();
 
 	// デバイス取得
-	Microsoft::WRL::ComPtr<ID3D12Device> GetDev() const { return dev; }
-	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> GetCmdlist() { return cmdList; }
+	ID3D12Device* GetDev() const { return dev.Get(); }
+	ID3D12GraphicsCommandList* GetCmdlist() { return cmdList.Get(); }
 
 	float fps = 0;
 

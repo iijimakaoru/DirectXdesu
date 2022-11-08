@@ -16,9 +16,9 @@ const int LineNum = 6;
 class GameScence
 {
 public:
-	GameScence();
-	~GameScence();
-	void Init(ID3D12Device& dev, int window_width, int window_height);
+	GameScence(){};
+	~GameScence(){};
+	void Init();
 	void Update();
 	void Draw(ID3D12Device& dev, ID3D12GraphicsCommandList* cmdList);
 

@@ -69,21 +69,21 @@ struct SpriteCommon
 class Sprite
 {
 public:
-	void Init(ID3D12Device* dev, int window_width, int window_height);
+	void Init(KDirectXCommon* dxCommon);
 	void SpriteTransferVertexBuffer(const SpriteInfo& sprite, const SpriteCommon& spriteCommon);
-	PipelineSet SpriteCreateGraphicsPipeline(ID3D12Device* dev);
-	SpriteInfo SpriteCreate(ID3D12Device* dev, int window_width, int window_height, UINT texNumber, 
+	PipelineSet SpriteCreateGraphicsPipeline();
+	SpriteInfo SpriteCreate(UINT texNumber, 
 		const SpriteCommon& spriteCommon, Vector2 anchorpoint = { 0.5f,0.5f }, 
 		bool isFlipX = false, bool isFlipY = false);
 	void SpriteCommonBeginDraw(ID3D12GraphicsCommandList* cmdList, const SpriteCommon& spriteCommon);
-	void SpriteDraw(const SpriteInfo& sprite, ID3D12GraphicsCommandList* cmdList,
-		const SpriteCommon& spriteCommon, ID3D12Device* dev);
-	SpriteCommon SpriteCommonCreate(ID3D12Device* dev, int window_width, int window_height);
+	void SpriteDraw(const SpriteInfo& sprite,
+		const SpriteCommon& spriteCommon);
+	SpriteCommon SpriteCommonCreate();
 	void SpriteUpdate(SpriteInfo& sprite, const SpriteCommon& spriteCommon);
 	HRESULT SpriteCommonLoadTexture(SpriteCommon& spriteCommon,
-		UINT texnumber, const wchar_t* filename, ID3D12Device* dev);
+		UINT texnumber, const wchar_t* filename);
 
 private:
-	
+	KDirectXCommon* dxCommon_ = nullptr;
 };
 

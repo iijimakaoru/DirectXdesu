@@ -19,15 +19,14 @@ public:
 	static const int fontHeight = 18;
 	static const int fontLineCount = 14;
 	// ÉÅÉìÉoä÷êîÇÃêÈåæ
-	void Init(ID3D12Device* dev, int window_width, int window_height,
-		UINT texnumber, const SpriteCommon& spriteCommon);
+	void Init(Sprite* sprite ,UINT texnumber, const SpriteCommon& spriteCommon);
 	void Print(const SpriteCommon& spriteCommon, const std::string& text,
 		Vector2 pos, float scale = 1.0f);
 	void SpriteTransferVertexBuffer(const SpriteInfo& sprite, const SpriteCommon& spriteCommon);
 	void DrawAll(ID3D12Device* dev, const SpriteCommon& spriteCommon,
 		ID3D12GraphicsCommandList* cmdList);
 private:
-	std::unique_ptr<Sprite> sprite;
+	Sprite* sprite_ = nullptr;
 	SpriteInfo sprites[maxCharCount];
 	int spriteIndex = 0;
 };

@@ -1,14 +1,12 @@
 #include "DebugText.h"
 
-void DebugText::Init(ID3D12Device* dev, int window_width, int window_height,
-	UINT texnumber, const SpriteCommon& spriteCommon)
+void DebugText::Init(Sprite* sprite ,UINT texnumber, const SpriteCommon& spriteCommon)
 {
-	sprite = std::make_unique<Sprite>();
+	sprite_ = sprite;
 
 	for (int i = 0; i < _countof(sprites); i++)
 	{
-		sprites[i] = sprite->SpriteCreate(dev, window_width, window_height,
-			texnumber, spriteCommon, { 0,0 });
+		sprites[i] = sprite_->SpriteCreate( texnumber, spriteCommon, { 0,0 });
 	}
 }
 
@@ -40,7 +38,7 @@ void DebugText::Print(const SpriteCommon& spriteCommon, const std::string& text,
 
 		SpriteTransferVertexBuffer(sprites[spriteIndex], spriteCommon);
 
-		sprite->SpriteUpdate(sprites[spriteIndex], spriteCommon);
+		sprite_->SpriteUpdate(sprites[spriteIndex], spriteCommon);
 
 		spriteIndex++;
 	}
@@ -109,7 +107,7 @@ void DebugText::DrawAll(ID3D12Device* dev, const SpriteCommon& spriteCommon,
 {
 	for (int i = 0; i < spriteIndex; i++)
 	{
-		sprite->SpriteDraw(sprites[i], cmdList, spriteCommon, dev);
+		sprite_->SpriteDraw(sprites[i], spriteCommon);
 	}
 
 	spriteIndex = 0;

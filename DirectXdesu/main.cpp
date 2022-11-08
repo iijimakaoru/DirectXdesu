@@ -26,11 +26,15 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 	spriteCommon = new SpriteCommon();
 	spriteCommon->Init(dxCommon);
+
+	spriteCommon->SpriteCommonLoadTexture(0, L"Resources/haikei.jpg");
 #pragma endregion
 
 #pragma region シーンの初期化
 	Sprite* sprite = new Sprite();
 	sprite->Init(spriteCommon);
+
+	
 #pragma endregion
 
 	// ウィンドウ表示

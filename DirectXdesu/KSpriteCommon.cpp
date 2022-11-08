@@ -11,12 +11,12 @@ void SpriteCommon::Init(KDirectXCommon* dxCommon)
 
 	dxCommon_ = dxCommon;
 
-
+	spriteCommond_ = SpriteCommonCreate();
 }
 
-void SpriteCommon::Draw()
+void SpriteCommon::BeginDraw()
 {
-	
+	SpriteCommonBeginDraw();
 }
 
 void SpriteCommon::SpriteTransferVertexBuffer(const SpriteInfo& sprite, const SpriteCommond& spriteCommon)
@@ -306,17 +306,17 @@ SpriteInfo SpriteCommon::SpriteCreate(UINT texNumber, const SpriteCommond& sprit
 	return sprite;
 }
 
-void SpriteCommon::SpriteCommonBeginDraw(ID3D12GraphicsCommandList* cmdList, const SpriteCommond& spriteCommon)
+void SpriteCommon::SpriteCommonBeginDraw()
 {
 	// パイプラインステートの設定
-	cmdList->SetPipelineState(spriteCommon.pipelineSet.pipelineState.Get());
+	dxCommon_->GetCmdlist()->SetPipelineState(spriteCommond_.pipelineSet.pipelineState.Get());
 	// ルートシグネチャの設定
-	cmdList->SetGraphicsRootSignature(spriteCommon.pipelineSet.rootSignature.Get());
+	dxCommon_->GetCmdlist()->SetGraphicsRootSignature(spriteCommond_.pipelineSet.rootSignature.Get());
 	// プリミティブ形状を設定
-	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+	dxCommon_->GetCmdlist()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 	// テクスチャ用デスクリプタヒープの設定
-	ID3D12DescriptorHeap* ppHeaps[] = { spriteCommon.descHeap.Get() };
-	cmdList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
+	ID3D12DescriptorHeap* ppHeaps[] = { spriteCommond_.descHeap.Get() };
+	dxCommon_->GetCmdlist()->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 }
 
 void SpriteCommon::SpriteDraw(const SpriteInfo& sprite, ID3D12GraphicsCommandList* cmdList,

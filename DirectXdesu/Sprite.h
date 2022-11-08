@@ -17,7 +17,5 @@ public:
 
 private:
 	SpriteCommon* spriteCommon_ = nullptr;
-	// 
-	D3D12_VERTEX_BUFFER_VIEW vbView{};
 };
 

@@ -67,7 +67,7 @@ class SpriteCommon
 {
 public:
 	void Init(KDirectXCommon* dxCommon);
-	void Draw();
+	void BeginDraw();
 
 	ID3D12GraphicsCommandList* GetCmdList() { return dxCommon_->GetCmdlist().Get(); }
 
@@ -76,7 +76,7 @@ public:
 	SpriteInfo SpriteCreate(UINT texNumber,
 		const SpriteCommond& spriteCommon, Vector2 anchorpoint = { 0.5f,0.5f },
 		bool isFlipX = false, bool isFlipY = false);
-	void SpriteCommonBeginDraw(ID3D12GraphicsCommandList* cmdList, const SpriteCommond& spriteCommon);
+	void SpriteCommonBeginDraw();
 	void SpriteDraw(const SpriteInfo& sprite, ID3D12GraphicsCommandList* cmdList, const SpriteCommond& spriteCommon);
 	SpriteCommond SpriteCommonCreate();
 	void SpriteUpdate(SpriteInfo& sprite, const SpriteCommond& spriteCommon);
@@ -85,5 +85,6 @@ public:
 private:
 	KDirectXCommon* dxCommon_ = nullptr;
 
+	SpriteCommond spriteCommond_;
 };
 

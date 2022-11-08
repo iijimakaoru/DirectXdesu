@@ -50,9 +50,7 @@ public:
 	void Init(SpriteCommon* spriteCommon);
 
 	void SpriteTransferVertexBuffer();
-	SpriteInfo SpriteCreate(UINT texNumber,
-		Vector2 anchorpoint = { 0.5f,0.5f },
-		bool isFlipX = false, bool isFlipY = false);
+	SpriteInfo SpriteCreate(Vector2 anchorpoint = { 0.5f,0.5f }, bool isFlipX = false, bool isFlipY = false);
 
 	void SpriteDraw();
 	void SpriteUpdate();

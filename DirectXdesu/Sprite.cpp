@@ -70,7 +70,7 @@ void Sprite::SpriteTransferVertexBuffer()
 	sprite_.vertBuff->Unmap(0, nullptr);
 }
 
-SpriteInfo Sprite::SpriteCreate(UINT texNumber,  Vector2 anchorpoint, bool isFlipX, bool isFlipY)
+SpriteInfo Sprite::SpriteCreate(Vector2 anchorpoint, bool isFlipX, bool isFlipY)
 {
 	HRESULT result = S_FALSE;
 	// 新しいスプライトを作る
@@ -107,7 +107,7 @@ SpriteInfo Sprite::SpriteCreate(UINT texNumber,  Vector2 anchorpoint, bool isFli
 	cbResourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 
 	// テクスチャ番号コピー
-	sprite.texNum = texNumber;
+	sprite.texNum = sprite_.texNum;
 
 	// 頂点バッファ生成
 	result = spriteCommon_->GetDev()->CreateCommittedResource(

@@ -197,16 +197,9 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	KTexture texture2(dxCommon->GetDev().Get(), msg2, msg4);
 #pragma endregion
 
-#pragma region スプライトクラス読み込み
-	std::unique_ptr<Sprite> sprite;
-	sprite = std::make_unique<Sprite>();
-#pragma endregion
-
 #pragma region グラフィックスパイプライン設定
 	// 3Dオブジェクト用パイプライン生成
 	PipelineSet object3dPipelineSet = Create3DObjectGpipeline(dxCommon->GetDev().Get());
-	// スプライト用パイプライン生成
-	PipelineSet spritePipelineSet = sprite->SpriteCreateGraphicsPipeline(dxCommon->GetDev().Get());
 #pragma region 3Dオブジェクト初期化
 	const int ObjectNum = 2;
 	const int LineNum = 6;
@@ -244,6 +237,9 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 	SoundData soundData1 = sound->SoundLoadWave("Sound/fanfare.wav");
 #pragma region スプライト
+	std::unique_ptr<Sprite> sprite;
+	sprite = std::make_unique<Sprite>();
+
 	SpriteCommon spriteCommon;
 	spriteCommon = sprite->SpriteCommonCreate(dxCommon->GetDev().Get(), KWinApp::window_width, KWinApp::window_height);
 

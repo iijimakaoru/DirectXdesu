@@ -134,7 +134,7 @@ SpriteInfo Sprite::SpriteCreate(Vector2 anchorpoint, bool isFlipX, bool isFlipY)
 	sprite.anchorpoint = anchorpoint;
 
 	// 頂点バッファデータ転送
-	SpriteTransferVertexBuffer();
+	//SpriteTransferVertexBuffer();
 
 	// 頂点バッファビューの作成
 	sprite.vbView.BufferLocation = sprite.vertBuff->GetGPUVirtualAddress();

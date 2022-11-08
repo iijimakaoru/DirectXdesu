@@ -34,7 +34,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	Sprite* sprite = new Sprite();
 	sprite->Init(spriteCommon);
 
-	
+	sprite->SpriteCreate();
+	//sprite->SpriteTransferVertexBuffer();
 #pragma endregion
 
 	// ウィンドウ表示
@@ -51,13 +52,15 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 		// input更新
 		input->Update();
+
+		//sprite->SpriteUpdate();
 #pragma endregion
 
 #pragma region 描画
 		// 描画開始
 		dxCommon->PreDraw();
 
-		
+		sprite->SpriteDraw();
 		
 		// 描画終了
 		dxCommon->PostDraw();

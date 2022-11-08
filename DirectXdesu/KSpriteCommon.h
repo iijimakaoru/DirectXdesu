@@ -71,15 +71,12 @@ public:
 
 	ID3D12GraphicsCommandList* GetCmdList() { return dxCommon_->GetCmdlist().Get(); }
 
-	void SpriteTransferVertexBuffer(const SpriteInfo& sprite, const SpriteCommond& spriteCommon);
 	PipelineSet SpriteCreateGraphicsPipeline();
-	SpriteInfo SpriteCreate(UINT texNumber,
-		const SpriteCommond& spriteCommon, Vector2 anchorpoint = { 0.5f,0.5f },
-		bool isFlipX = false, bool isFlipY = false);
+	
 	void SpriteCommonBeginDraw();
-	void SpriteDraw(const SpriteInfo& sprite, ID3D12GraphicsCommandList* cmdList, const SpriteCommond& spriteCommon);
+	
 	SpriteCommond SpriteCommonCreate();
-	void SpriteUpdate(SpriteInfo& sprite, const SpriteCommond& spriteCommon);
+	
 	HRESULT SpriteCommonLoadTexture(SpriteCommond& spriteCommon, UINT texnumber, const wchar_t* filename);
 
 private:

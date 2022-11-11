@@ -58,19 +58,9 @@ Cube::Cube() {
 }
 
 Triangle::Triangle() {
-	//vertices = {
-	//	{{-5.0f,-5.0f,-5.0f},{},{0.0f,1.0f}}, // ç∂â∫
-	//	{{-5.0f, 5.0f,-5.0f},{},{0.0f,0.0f}}, // ç∂è„
-	//	{{ 5.0f,-5.0f,-5.0f},{},{1.0f,1.0f}}  // âEâ∫
-	//};
-
-	//indices = {
-	//	 0, 1, 2, // éOäpå`1Ç¬ñ⁄
-	//};
-
 	ifstream file;
 
-	file.open("Resources/triangle.obj");
+	file.open("Resources/obj/triangle_tex.obj");
 	assert(!file.fail());
 
 	vector<XMFLOAT3> positions;
@@ -104,10 +94,27 @@ Triangle::Triangle() {
 			line_stream >> pos.z;
 
 			positions.emplace_back(pos);
+		}
 
-			VertexPosNormalUV vertex{};
-			vertex.pos = pos;
-			vertices.emplace_back(vertex);
+		if (key == "vt")
+		{
+			XMFLOAT2 texcoord{};
+			line_stream >> texcoord.x;
+			line_stream >> texcoord.y;
+
+			texcoord.y = 1.0f - texcoord.y;
+
+			texcoords.emplace_back(texcoord);
+		}
+
+		if (key == "vn")
+		{
+			XMFLOAT3 normal{};
+			line_stream >> normal.x;
+			line_stream >> normal.y;
+			line_stream >> normal.z;
+
+			normals.emplace_back(normal);
 		}
 
 		if (key == "f")
@@ -117,9 +124,19 @@ Triangle::Triangle() {
 			{
 				std::istringstream index_stream(index_string);
 
-				unsigned short indexPosition;
+				unsigned short indexPosition, indexNormal, indexTexcoord;
 
 				index_stream >> indexPosition;
+				index_stream.seekg(1, ios_base::cur);
+				index_stream >> indexTexcoord;
+				index_stream.seekg(1, ios_base::cur);
+				index_stream >> indexNormal;
+
+				VertexPosNormalUV vertex{};
+				vertex.pos = positions[indexPosition - 1];
+				vertex.normal = normals[indexNormal - 1];
+				vertex.uv = texcoords[indexTexcoord - 1];
+				vertices.emplace_back(vertex);
 
 				indices.emplace_back(indexPosition - 1);
 			}

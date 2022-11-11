@@ -189,10 +189,10 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	line.CreateModel(dxCommon->GetDev());
 #pragma endregion
 #pragma region テクスチャ初期化
-	const wchar_t* msg = L"Resources/mario.jpg";
-	const wchar_t* msg2 = L"Resources/iijan.jpg";
-	const wchar_t* msg3 = L"Resources/haikei.jpg";
-	const wchar_t* msg4 = L"Resources/kitanai.jpg";
+	const wchar_t* msg = L"Resources/texture/mario.jpg";
+	const wchar_t* msg2 = L"Resources/texture/iijan.jpg";
+	const wchar_t* msg3 = L"Resources/texture/haikei.jpg";
+	const wchar_t* msg4 = L"Resources/texture/kitanai.jpg";
 	KTexture texture(dxCommon->GetDev(), msg, msg3);
 	KTexture texture2(dxCommon->GetDev(), msg2, msg4);
 #pragma endregion
@@ -237,7 +237,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	sound = std::make_unique<Sound>();
 	sound->Init();
 
-	SoundData soundData1 = sound->SoundLoadWave("Sound/fanfare.wav");
+	SoundData soundData1 = sound->SoundLoadWave("Resources/Sound/fanfare.wav");
 #pragma region スプライト
 	Sprite* sprite = new Sprite();
 	sprite->Init(dxCommon);
@@ -245,8 +245,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	SpriteCommon spriteCommon;
 	spriteCommon = sprite->SpriteCommonCreate();
 
-	sprite->SpriteCommonLoadTexture(spriteCommon, 0, L"Resources/haikei.jpg");
-	sprite->SpriteCommonLoadTexture(spriteCommon, 1, L"Resources/mario.jpg");
+	sprite->SpriteCommonLoadTexture(spriteCommon, 0, L"Resources/texture/haikei.jpg");
+	sprite->SpriteCommonLoadTexture(spriteCommon, 1, L"Resources/texture/mario.jpg");
 
 	SpriteInfo sprites[2];
 	for (int i = 0; i < _countof(sprites); i++)
@@ -266,7 +266,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	DebugText* debugtext = new DebugText();
 
 	const int debugTextNumber = 2;
-	sprite->SpriteCommonLoadTexture(spriteCommon, debugTextNumber, L"Resources/tex1.png");
+	sprite->SpriteCommonLoadTexture(spriteCommon, debugTextNumber, L"Resources/texture/tex1.png");
 	debugtext->Init(sprite,debugTextNumber, spriteCommon);
 #pragma endregion
 #pragma endregion

@@ -8,6 +8,45 @@
 
 using namespace std;
 
+struct ObjMaterialInfo
+{
+	// マテリアル名
+	std::string name;
+	// アンビエント影響度
+	XMFLOAT3 ambient;
+	// ディヒューズ影響度
+	XMFLOAT3 diffuse;
+	// スペキュラー影響度
+	XMFLOAT3 specular;
+	// アルファ
+	float alpha;
+	// テクスチャファイル名
+	std::string textureFilename;
+	// コンストラクタ
+	ObjMaterialInfo()
+	{
+		ambient = { 0.3f,0.3f,0.3f };
+		diffuse = { 0.0f,0.0f,0.0f };
+		specular = { 0.0f,0.0f,0.0f };
+		alpha = 1.0f;
+	}
+};
+
+struct ConstBufferDataB0
+{
+	XMMATRIX mat;
+};
+
+struct ConstBufferDataB1
+{
+	XMFLOAT3 ambient;
+	float pad1;
+	XMFLOAT3 diffuse;
+	float pad2;
+	XMFLOAT3 specular;
+	float alpha;
+};
+
 class KModel {
 public:
 	// 頂点データ

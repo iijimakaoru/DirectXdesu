@@ -2,6 +2,11 @@
 #include <vector>
 #include "KVertex.h"
 #include <memory>
+#include <fstream>
+#include <sstream>
+#include <string>
+
+using namespace std;
 
 class KModel {
 public:

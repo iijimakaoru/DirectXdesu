@@ -58,15 +58,35 @@ Cube::Cube() {
 }
 
 Triangle::Triangle() {
-	vertices = {
-		{{-5.0f,-5.0f,-5.0f},{},{0.0f,1.0f}}, // 左下
-		{{-5.0f, 5.0f,-5.0f},{},{0.0f,0.0f}}, // 左上
-		{{ 5.0f,-5.0f,-5.0f},{},{1.0f,1.0f}}  // 右下
-	};
+	//vertices = {
+	//	{{-5.0f,-5.0f,-5.0f},{},{0.0f,1.0f}}, // 左下
+	//	{{-5.0f, 5.0f,-5.0f},{},{0.0f,0.0f}}, // 左上
+	//	{{ 5.0f,-5.0f,-5.0f},{},{1.0f,1.0f}}  // 右下
+	//};
 
-	indices = {
-		 0, 1, 2, // 三角形1つ目
-	};
+	//indices = {
+	//	 0, 1, 2, // 三角形1つ目
+	//};
+
+	ifstream file;
+
+	file.open("Resources/triangle.obj");
+	assert(!file.fail());
+
+	vector<XMFLOAT3> positions;
+	vector<XMFLOAT3> normals;
+	vector<XMFLOAT2> texcoords;
+
+	std::string line;
+	while (getline(file, line))
+	{
+
+		std::istringstream line_stream(line);
+
+		string key;
+		getline(line_stream, key, ' ');
+	}
+	file.close();
 }
 
 Line::Line() {

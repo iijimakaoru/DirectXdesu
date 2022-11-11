@@ -43,21 +43,23 @@ void Sprite::SpriteTransferVertexBuffer(const SpriteInfo& sprite, const SpriteCo
 
 	if (sprite.isKiridasi)
 	{
-		if (spriteCommon.texBuff[sprite.texNum])
-		{
-			// 
-			D3D12_RESOURCE_DESC resDesc = spriteCommon.texBuff[sprite.texNum]->GetDesc();
+		
+	}
 
-			float tex_left = sprite.texLeftTop.x / resDesc.Width;
-			float tex_right = (sprite.texLeftTop.x + sprite.texSize.x) / resDesc.Width;
-			float tex_top = sprite.texLeftTop.y / resDesc.Height;
-			float tex_bottom = (sprite.texLeftTop.y + sprite.texSize.y) / resDesc.Height;
+	if (spriteCommon.texBuff[sprite.texNum])
+	{
+		// 
+		D3D12_RESOURCE_DESC resDesc = spriteCommon.texBuff[sprite.texNum]->GetDesc();
 
-			vertices[LB].uv = { tex_left,tex_bottom };
-			vertices[LT].uv = { tex_left,tex_top };
-			vertices[RB].uv = { tex_right,tex_bottom };
-			vertices[RT].uv = { tex_right,tex_top };
-		}
+		float tex_left = sprite.texLeftTop.x / resDesc.Width;
+		float tex_right = (sprite.texLeftTop.x + sprite.texSize.x) / resDesc.Width;
+		float tex_top = sprite.texLeftTop.y / resDesc.Height;
+		float tex_bottom = (sprite.texLeftTop.y + sprite.texSize.y) / resDesc.Height;
+
+		vertices[LB].uv = { tex_left,tex_bottom };
+		vertices[LT].uv = { tex_left,tex_top };
+		vertices[RB].uv = { tex_right,tex_bottom };
+		vertices[RT].uv = { tex_right,tex_top };
 	}
 
 	// 頂点バッファへのデータ転送

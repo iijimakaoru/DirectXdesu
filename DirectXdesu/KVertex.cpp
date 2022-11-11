@@ -2,19 +2,17 @@
 
 KVertex::KVertex() {};
 
-KVertex::KVertex(ID3D12Device* dev, std::vector<Vertex>& vertices, std::vector<short>& indices) {
+KVertex::KVertex(ID3D12Device* dev, std::vector<VertexPosNormalUV>& vertices, std::vector<unsigned short>& indices) {
 	KVertexInit(dev, vertices, indices);
-	VertMap(vertices);
 	CreateVBView(vertices);
 }
 
-void KVertex::CreateKVertex(ID3D12Device* dev, std::vector<Vertex>& vertices, std::vector<short>& indices) {
+void KVertex::CreateKVertex(ID3D12Device* dev, std::vector<VertexPosNormalUV>& vertices, std::vector<unsigned short>& indices) {
 	KVertexInit(dev, vertices, indices);
-	VertMap(vertices);
 	CreateVBView(vertices);
 }
 
-void KVertex::KVertexInit(ID3D12Device* dev, std::vector<Vertex>& vertices, std::vector<short>& indices) {
+void KVertex::KVertexInit(ID3D12Device* dev, std::vector<VertexPosNormalUV>& vertices, std::vector<unsigned short>& indices) {
 #pragma region 頂点
 	// 頂点データ全体のサイズ = 頂点データ一つ分のサイズ * 頂点データの要素数
 	sizeVB = static_cast<UINT>(sizeof(vertices[0]) * vertices.size());
@@ -37,6 +35,15 @@ void KVertex::KVertexInit(ID3D12Device* dev, std::vector<Vertex>& vertices, std:
 		nullptr,
 		IID_PPV_ARGS(&vertBuff));
 	assert(SUCCEEDED(result));
+
+	result = vertBuff->Map(0, nullptr, (void**)&vertMap);
+	assert(SUCCEEDED(result));
+	// 全頂点に対して
+	for (int i = 0; i < vertices.size(); i++) {
+		vertMap[i] = vertices[i];
+	}
+	// 繋がりを解除
+	vertBuff->Unmap(0, nullptr);
 #pragma endregion
 
 #pragma region インデックス
@@ -96,10 +103,10 @@ void KVertex::KVertexInit(ID3D12Device* dev, std::vector<Vertex>& vertices, std:
 #pragma endregion
 }
 
-void KVertex::VertMap(std::vector<Vertex>& vertices) {
+void KVertex::VertMap(std::vector<VertexPosNormalUV>& vertices) {
 	HRESULT result;
 	// GPU上のバッファに対応した仮想メモリを取得
-	Vertex* vertMap = nullptr;
+	VertexPosNormalUV* vertMap = nullptr;
 	result = vertBuff->Map(0, nullptr, (void**)&vertMap);
 	assert(SUCCEEDED(result));
 	// 全頂点に対して
@@ -110,7 +117,7 @@ void KVertex::VertMap(std::vector<Vertex>& vertices) {
 	vertBuff->Unmap(0, nullptr);
 }
 
-void KVertex::CreateVBView(std::vector<Vertex>& vertices) {
+void KVertex::CreateVBView(std::vector<VertexPosNormalUV>& vertices) {
 	// GPU仮想アドレス
 	vbView.BufferLocation = vertBuff->GetGPUVirtualAddress();
 	// 頂点バッファのサイズ

@@ -13,7 +13,7 @@ using namespace DirectX;
 //std::vector<int>;
 
 // 頂点データ構造体
-struct Vertex {
+struct VertexPosNormalUV {
 	XMFLOAT3 pos;	 // xyz座標
 	XMFLOAT3 normal; // 法線ベクトル
 	XMFLOAT2 uv;	 // uv座標
@@ -23,11 +23,11 @@ class KVertex
 {
 public:
 	KVertex();
-	void CreateKVertex(ID3D12Device* dev, std::vector<Vertex>& vertices, std::vector<short>& indices);
-	KVertex(ID3D12Device* dev, std::vector<Vertex>& vertices, std::vector<short>& indices);
-	void KVertexInit(ID3D12Device* dev, std::vector<Vertex>& vertices, std::vector<short>& indices);
-	void VertMap(std::vector<Vertex>& vertices);
-	void CreateVBView(std::vector<Vertex>& vertices);
+	void CreateKVertex(ID3D12Device* dev, std::vector<VertexPosNormalUV>& vertices, std::vector<unsigned short>& indices);
+	KVertex(ID3D12Device* dev, std::vector<VertexPosNormalUV>& vertices, std::vector<unsigned short>& indices);
+	void KVertexInit(ID3D12Device* dev, std::vector<VertexPosNormalUV>& vertices, std::vector<unsigned short>& indices);
+	void VertMap(std::vector<VertexPosNormalUV>& vertices);
+	void CreateVBView(std::vector<VertexPosNormalUV>& vertices);
 
 	// 頂点データ全体のサイズ = 頂点データ一つ分のサイズ * 頂点データの要素数
 	UINT sizeVB;
@@ -37,6 +37,8 @@ public:
 	D3D12_RESOURCE_DESC resDesc{};
 	// 頂点バッファの生成
 	ComPtr<ID3D12Resource> vertBuff;
+
+	VertexPosNormalUV* vertMap = nullptr;
 	// インデックスデータ全体のサイズ
 	UINT sizeIB;
 	// インデックスバッファの生成

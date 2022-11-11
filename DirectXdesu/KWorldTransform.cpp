@@ -73,8 +73,8 @@ void KWorldTransform::Draw(ID3D12GraphicsCommandList* cmdList) {
 	// SRVヒープの先頭にあるSRVをルートパラメータ1番の設定
 	cmdList->SetGraphicsRootDescriptorTable(1, srvGpuHandle);
 
-	cmdList->IASetVertexBuffers(0, 1, &model->vertex->vbView);
-	cmdList->IASetIndexBuffer(&model->vertex->ibView);
+	cmdList->IASetVertexBuffers(0, 1, &model->vertexs->vbView);
+	cmdList->IASetIndexBuffer(&model->vertexs->ibView);
 	cmdList->SetGraphicsRootConstantBufferView(2, transform.constBuffTransform->GetGPUVirtualAddress());
 	cmdList->DrawIndexedInstanced(model->indices.size(), 1, 0, 0, 0);
 }
@@ -91,8 +91,8 @@ void KWorldTransform::SecoundDraw(ID3D12GraphicsCommandList* cmdList)
 	// SRVヒープの先頭にあるSRVをルートパラメータ1番の設定
 	cmdList->SetGraphicsRootDescriptorTable(1, srvGpuHandle);
 
-	cmdList->IASetVertexBuffers(0, 1, &model->vertex->vbView);
-	cmdList->IASetIndexBuffer(&model->vertex->ibView);
+	cmdList->IASetVertexBuffers(0, 1, &model->vertexs->vbView);
+	cmdList->IASetIndexBuffer(&model->vertexs->ibView);
 	cmdList->SetGraphicsRootConstantBufferView(2, transform.constBuffTransform->GetGPUVirtualAddress());
 	cmdList->DrawIndexedInstanced(model->indices.size(), 1, 0, 0, 0);
 }

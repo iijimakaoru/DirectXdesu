@@ -182,7 +182,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	float speed = 1.0f;
 #pragma region ƒ‚ƒfƒ‹
 	KModel triangle = Triangle();
-	//triangle.CreateModel(dxCommon->GetDev());
+	triangle.CreateModel(dxCommon->GetDev());
 	KModel cube = Cube();
 	cube.CreateModel(dxCommon->GetDev());
 	KModel line = Line();
@@ -213,7 +213,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 			object3d[i]->material->colorR = object3d[i]->material->colorG = object3d[i]->material->colorB = 1.0f;
 		}
 	}
-	object3d[0]->SetModel(&cube);
+	object3d[0]->transform.scale = { 10,10,10 };
+	object3d[0]->SetModel(&triangle);
 	object3d[0]->SetTexture(&texture);
 	object3d[1]->SetModel(&cube);
 	object3d[1]->SetTexture(&texture2);

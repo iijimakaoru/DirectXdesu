@@ -11,11 +11,11 @@ using namespace std;
 class KModel {
 public:
 	// 頂点データ
-	std::vector<Vertex> vertices;
+	std::vector<VertexPosNormalUV> vertices;
 	// インデックスデータ
-	std::vector<short> indices;
+	std::vector<unsigned short> indices;
 
-	std::unique_ptr<KVertex> vertex;
+	std::unique_ptr<KVertex> vertexs = make_unique<KVertex>();
 
 	// modelusakusei
 	void CreateModel(ID3D12Device* dev);

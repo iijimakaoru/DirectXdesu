@@ -72,16 +72,12 @@ public:
 	void Init(KDirectXCommon* dxCommon);
 	void SpriteTransferVertexBuffer(const SpriteInfo& sprite, const SpriteCommon& spriteCommon);
 	PipelineSet SpriteCreateGraphicsPipeline();
-	SpriteInfo SpriteCreate(UINT texNumber, 
-		const SpriteCommon& spriteCommon, Vector2 anchorpoint = { 0.5f,0.5f }, 
-		bool isFlipX = false, bool isFlipY = false);
-	void SpriteCommonBeginDraw(ID3D12GraphicsCommandList* cmdList, const SpriteCommon& spriteCommon);
-	void SpriteDraw(const SpriteInfo& sprite,
-		const SpriteCommon& spriteCommon);
+	SpriteInfo SpriteCreate(UINT texNumber, const SpriteCommon& spriteCommon, Vector2 anchorpoint = { 0.5f,0.5f }, bool isFlipX = false, bool isFlipY = false);
+	void SpriteCommonBeginDraw(const SpriteCommon& spriteCommon);
+	void SpriteDraw(const SpriteInfo& sprite, const SpriteCommon& spriteCommon);
 	SpriteCommon SpriteCommonCreate();
 	void SpriteUpdate(SpriteInfo& sprite, const SpriteCommon& spriteCommon);
-	HRESULT SpriteCommonLoadTexture(SpriteCommon& spriteCommon,
-		UINT texnumber, const wchar_t* filename);
+	HRESULT SpriteCommonLoadTexture(SpriteCommon& spriteCommon, UINT texnumber, const wchar_t* filename);
 
 private:
 	KDirectXCommon* dxCommon_ = nullptr;

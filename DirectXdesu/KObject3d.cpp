@@ -1,20 +1,20 @@
-#include "KWorldTransform.h"
+#include "KObject3d.h"
 
-KWorldTransform::KWorldTransform() {}
+KObject3d::KObject3d() {}
 
-KWorldTransform::KWorldTransform(ID3D12Device* dev) {
+KObject3d::KObject3d(ID3D12Device* dev) {
 	Initialize(dev);
 }
 
-void KWorldTransform::SetTexture(KTexture* texture) {
+void KObject3d::SetTexture(KTexture* texture) {
 	this->texture = texture;
 }
 
-void KWorldTransform::SetModel(KModel* model) {
+void KObject3d::SetModel(KModel* model) {
 	this->model = model;
 }
 
-void KWorldTransform::Initialize(ID3D12Device* dev) {
+void KObject3d::Initialize(ID3D12Device* dev) {
 	// ヒープ設定
 	cbHeapProp.Type = D3D12_HEAP_TYPE_UPLOAD;
 	// リソース設定
@@ -41,7 +41,7 @@ void KWorldTransform::Initialize(ID3D12Device* dev) {
 	material = new KMaterial(dev);
 }
 
-void KWorldTransform::Update(XMMATRIX& matView, XMMATRIX& matProjection) {
+void KObject3d::Update(XMMATRIX& matView, XMMATRIX& matProjection) {
 	// マトリックス
 	XMMATRIX matScale, matRot, matTrans;
 
@@ -63,7 +63,7 @@ void KWorldTransform::Update(XMMATRIX& matView, XMMATRIX& matProjection) {
 	material->Update();
 }
 
-void KWorldTransform::Draw(ID3D12GraphicsCommandList* cmdList) {
+void KObject3d::Draw(ID3D12GraphicsCommandList* cmdList) {
 	// CBV
 	cmdList->SetGraphicsRootConstantBufferView(0, material->constBufferMaterial->GetGPUVirtualAddress());
 	// SRV
@@ -79,7 +79,7 @@ void KWorldTransform::Draw(ID3D12GraphicsCommandList* cmdList) {
 	cmdList->DrawIndexedInstanced(model->indices.size(), 1, 0, 0, 0);
 }
 
-void KWorldTransform::SecoundDraw(ID3D12GraphicsCommandList* cmdList)
+void KObject3d::SecoundDraw(ID3D12GraphicsCommandList* cmdList)
 {
 	// CBV
 	cmdList->SetGraphicsRootConstantBufferView(0, material->constBufferMaterial->GetGPUVirtualAddress());

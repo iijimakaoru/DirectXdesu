@@ -5,7 +5,7 @@
 #include "KInput.h"
 #include "KDepth.h"
 #include "KTexture.h"
-#include "KWorldTransform.h"
+#include "KObject3d.h"
 #include "ViewProjection.h"
 #include "KModel.h"
 #include "KShader.h"
@@ -204,9 +204,9 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	const int ObjectNum = 2;
 	const int LineNum = 6;
 	// 3Dオブジェクト
-	KWorldTransform* object3d[ObjectNum];
+	KObject3d* object3d[ObjectNum];
 	for (int i = 0; i < ObjectNum; i++) {
-		object3d[i] = new KWorldTransform();
+		object3d[i] = new KObject3d();
 		object3d[i]->Initialize(dxCommon->GetDev());
 		object3d[i]->transform.scale = { 1.0f,1,1 };
 		if (i > 0) {
@@ -423,7 +423,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 			}
 		}
 		// スプライト描画
-		sprite->SpriteCommonBeginDraw(dxCommon->GetCmdlist(), spriteCommon);
+		sprite->SpriteCommonBeginDraw(spriteCommon);
 		for (int i = 0; i < _countof(sprites); i++)
 		{
 			sprite->SpriteDraw(sprites[i], spriteCommon);

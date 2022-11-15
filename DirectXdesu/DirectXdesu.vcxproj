@@ -156,7 +156,7 @@
     <ClCompile Include="KVertex.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="KWinApp.cpp" />
-    <ClCompile Include="KWorldTransform.cpp" />
+    <ClCompile Include="KObject3d.cpp" />
     <ClCompile Include="KTexture.cpp" />
     <ClCompile Include="Matrix4.cpp" />
     <ClCompile Include="Player.cpp" />
@@ -182,7 +182,7 @@
     <ClInclude Include="KShader.h" />
     <ClInclude Include="KVertex.h" />
     <ClInclude Include="KWinApp.h" />
-    <ClInclude Include="KWorldTransform.h" />
+    <ClInclude Include="KObject3d.h" />
     <ClInclude Include="KTexture.h" />
     <ClInclude Include="Matrix4.h" />
     <ClInclude Include="PipelineSet.h" />

@@ -1,7 +1,7 @@
 #pragma once
 #include "KDirectXCommon.h"
 #include "KInput.h"
-#include "KWorldTransform.h"
+#include "KObject3d.h"
 #include "ViewProjection.h"
 #include "KModel.h"
 #include "PipelineSet.h"
@@ -35,7 +35,7 @@ private:
 	KModel line = Line();
 
 	// 3Dオブジェクト
-	KWorldTransform* object3d[ObjectNum];
+	KObject3d* object3d[ObjectNum];
 
 	// スプライト
 	std::unique_ptr<Sprite> sprite;

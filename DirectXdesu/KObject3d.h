@@ -14,7 +14,7 @@ struct ConstBufferDataTransform {
 	XMMATRIX mat; // 3D変換行列
 };
 
-struct Object3d {
+struct WorldTransfom {
 	// 定数バッファ(行列)
 	ID3D12Resource* constBuffTransform = {};
 	// 定数バッファマップ(行列)
@@ -26,14 +26,14 @@ struct Object3d {
 	// ワールド変換行列
 	XMMATRIX matWorld = {};
 	// 親オブジェクトへのポインタ
-	Object3d* parent = nullptr;
+	WorldTransfom* parent = nullptr;
 };
 
-class KWorldTransform
+class KObject3d
 {
 public:
-	KWorldTransform();
-	KWorldTransform(ID3D12Device* dev);
+	KObject3d();
+	KObject3d(ID3D12Device* dev);
 	void SetTexture(KTexture* texture);
 	void SetModel(KModel* model);
 	void Initialize(ID3D12Device* dev);
@@ -47,7 +47,7 @@ public:
 	// リソース設定
 	D3D12_RESOURCE_DESC cbResourceDesc{};
 	// 3Dオブジェクトの配列
-	Object3d transform;
+	WorldTransfom transform;
 
 	HRESULT result;
 

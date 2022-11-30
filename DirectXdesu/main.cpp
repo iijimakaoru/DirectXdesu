@@ -167,9 +167,10 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 #pragma endregion
 #pragma region DirectX初期化
 	// KDirectCommon
-	KDirectXCommon* dxCommon = nullptr;
+	/*KDirectXCommon* dxCommon = nullptr;
 	dxCommon = new KDirectXCommon();
-	dxCommon->Init(win);
+	dxCommon->Init(win);*/
+	KDirectXCommon::Init(win);
 	// キーボード入力
 	KInput* input = nullptr;
 	input = new KInput();
@@ -182,24 +183,24 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	float speed = 1.0f;
 #pragma region モデル
 	KModel triangle = Triangle();
-	triangle.CreateModel(dxCommon->GetDev());
+	triangle.CreateModel(KDirectXCommon::GetInstance()->GetDev());
 	KModel cube = Cube();
-	cube.CreateModel(dxCommon->GetDev());
+	cube.CreateModel(KDirectXCommon::GetInstance()->GetDev());
 	KModel line = Line();
-	line.CreateModel(dxCommon->GetDev());
+	line.CreateModel(KDirectXCommon::GetInstance()->GetDev());
 #pragma endregion
 #pragma region テクスチャ初期化
 	const wchar_t* msg = L"Resources/texture/mario.jpg";
 	const wchar_t* msg2 = L"Resources/texture/iijan.jpg";
 	const wchar_t* msg3 = L"Resources/texture/haikei.jpg";
 	const wchar_t* msg4 = L"Resources/texture/kitanai.jpg";
-	KTexture texture(dxCommon->GetDev(), msg, msg3);
-	KTexture texture2(dxCommon->GetDev(), msg2, msg4);
+	KTexture texture(KDirectXCommon::GetInstance()->GetDev(), msg, msg3);
+	KTexture texture2(KDirectXCommon::GetInstance()->GetDev(), msg2, msg4);
 #pragma endregion
 
 #pragma region グラフィックスパイプライン設定
 	// 3Dオブジェクト用パイプライン生成
-	PipelineSet object3dPipelineSet = Create3DObjectGpipeline(dxCommon->GetDev());
+	PipelineSet object3dPipelineSet = Create3DObjectGpipeline(KDirectXCommon::GetInstance()->GetDev());
 #pragma region 3Dオブジェクト初期化
 	const int ObjectNum = 2;
 	const int LineNum = 6;
@@ -207,7 +208,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	KObject3d* object3d[ObjectNum];
 	for (int i = 0; i < ObjectNum; i++) {
 		object3d[i] = new KObject3d();
-		object3d[i]->Initialize(dxCommon->GetDev());
+		object3d[i]->Initialize(KDirectXCommon::GetInstance()->GetDev());
 		object3d[i]->transform.scale = { 1.0f,1,1 };
 		if (i > 0) {
 			object3d[i]->material->colorR = object3d[i]->material->colorG = object3d[i]->material->colorB = 1.0f;
@@ -240,7 +241,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	SoundData soundData1 = sound->SoundLoadWave("Resources/Sound/fanfare.wav");
 #pragma region スプライト
 	Sprite* sprite = new Sprite();
-	sprite->Init(dxCommon);
+	sprite->Init(KDirectXCommon::GetInstance());
 
 	SpriteCommon spriteCommon;
 	spriteCommon = sprite->SpriteCommonCreate();
@@ -398,15 +399,15 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 #pragma region 描画
 		// 描画開始
-		dxCommon->PreDraw();
+		KDirectXCommon::PreDraw();
 #pragma region パイプラインステート設定
 		// パイプラインステートとルートシグネチャの設定コマンド
-		dxCommon->GetCmdlist()->SetPipelineState(object3dPipelineSet.pipelineState.Get());
-		dxCommon->GetCmdlist()->SetGraphicsRootSignature(object3dPipelineSet.rootSignature.Get());
+		KDirectXCommon::GetInstance()->GetCmdlist()->SetPipelineState(object3dPipelineSet.pipelineState.Get());
+		KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootSignature(object3dPipelineSet.rootSignature.Get());
 #pragma endregion
 #pragma region プリミティブ形状
 		// プリミティブ形状の設定コマンド
-		dxCommon->GetCmdlist()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		KDirectXCommon::GetInstance()->GetCmdlist()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 #pragma endregion
 
 #pragma region 描画コマンド
@@ -415,11 +416,11 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		{
 			if (!input->IsPush(DIK_SPACE))
 			{
-				object3d[i]->Draw(dxCommon->GetCmdlist());
+				object3d[i]->Draw(KDirectXCommon::GetInstance()->GetCmdlist());
 			}
 			else
 			{
-				object3d[i]->SecoundDraw(dxCommon->GetCmdlist());
+				object3d[i]->SecoundDraw(KDirectXCommon::GetInstance()->GetCmdlist());
 			}
 		}
 		// スプライト描画
@@ -431,13 +432,13 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 		debugtext->Print(spriteCommon, "Hello,DirectX!!", { 200,100 });
 		debugtext->Print(spriteCommon, "Nihon Kogakuin", { 200,200 }, 2.0f);
-		debugtext->Print(spriteCommon, "FPS(w)" + std::to_string(dxCommon->fps), {200,300}, 2.0f);
-		debugtext->DrawAll(dxCommon->GetDev(), spriteCommon, dxCommon->GetCmdlist());
+		debugtext->Print(spriteCommon, "FPS(w)" + std::to_string(KDirectXCommon::GetInstance()->fps), {200,300}, 2.0f);
+		debugtext->DrawAll(KDirectXCommon::GetInstance()->GetDev(), spriteCommon, KDirectXCommon::GetInstance()->GetCmdlist());
 
 		// 描画コマンドここまで
 #pragma endregion
 		// 描画終了
-		dxCommon->PostDraw();
+		KDirectXCommon::PostDraw();
 	}
 
 	delete sprite;
@@ -448,7 +449,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	// 入力解放
 	delete input;
 	// DirectXCommon解放
-	delete dxCommon;
+	//delete dxCommon;
 	// WindowsAPI終了処理
 	win->Finalize();
 	// WindowsAPI解放

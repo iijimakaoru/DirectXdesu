@@ -18,16 +18,11 @@ using namespace Microsoft::WRL;
 class KDirectXCommon
 {
 public:
-	KDirectXCommon();
-	~KDirectXCommon()
-	{
-		
-	}
-	void Init(KWinApp* win);
+	static void Init(KWinApp* win);
 
-	void PreDraw();
+	static void PreDraw();
 
-	void PostDraw();
+	static void PostDraw();
 
 	void CmdFlash();
 
@@ -103,5 +98,14 @@ private:
 	void InitFixFPS();
 	// FPSŒÅ’è
 	void UpdateFixFPS();
+
+public:
+	static KDirectXCommon* GetInstance();
+
+private:
+	KDirectXCommon() = default;
+	~KDirectXCommon() = default;
+	KDirectXCommon(const KDirectXCommon&) = default;
+	const KDirectXCommon& operator=(const KDirectXCommon&) = delete;
 };
 

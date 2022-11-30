@@ -20,6 +20,13 @@ public:
 	void SpritePSNormal();
 	void SpritePSError();
 	void SpritePSLoadCompile();
+	// Objシェーダー
+	void ObjVSNormal();
+	void ObjVSError();
+	void ObjVSLoadCompile();
+	void ObjPSNormal();
+	void ObjPSError();
+	void ObjPSLoadCompile();
 
 	ID3D10Blob* vsBlob = nullptr; // 頂点シェーダーオブジェクト
 	ID3D10Blob* psBlob = nullptr;

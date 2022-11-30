@@ -108,6 +108,78 @@ void KShader::SpritePSLoadCompile()
 	SpritePSError();
 }
 
+void KShader::ObjVSNormal()
+{
+	result = D3DCompileFromFile(
+		L"ObjVS.hlsl",
+		nullptr,
+		D3D_COMPILE_STANDARD_FILE_INCLUDE,
+		"main", "vs_5_0",
+		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,
+		0,
+		&vsBlob, &errorBlob);
+}
+
+void KShader::ObjVSError()
+{
+	// エラーがでたら
+	if (FAILED(result)) {
+		// erroeBlobからエラー内容をstring型にコピー
+		std::string error;
+		error.resize(errorBlob->GetBufferSize());
+
+		std::copy_n((char*)errorBlob->GetBufferPointer(),
+			errorBlob->GetBufferSize(),
+			error.begin());
+		error += "\n";
+		// エラー内容を出力ウィンドウに表示
+		OutputDebugStringA(error.c_str());
+		assert(0);
+	}
+}
+
+void KShader::ObjVSLoadCompile()
+{
+	ObjVSNormal();
+	ObjVSError();
+}
+
+void KShader::ObjPSNormal()
+{
+	result = D3DCompileFromFile(
+		L"ObjPS.hlsl",
+		nullptr,
+		D3D_COMPILE_STANDARD_FILE_INCLUDE,
+		"main", "ps_5_0",
+		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,
+		0,
+		&psBlob, &errorBlob);
+}
+
+void KShader::ObjPSError()
+{
+	// エラーがでたら
+	if (FAILED(result)) {
+		// erroeBlobからエラー内容をstring型にコピー
+		std::string error;
+		error.resize(errorBlob->GetBufferSize());
+
+		std::copy_n((char*)errorBlob->GetBufferPointer(),
+			errorBlob->GetBufferSize(),
+			error.begin());
+		error += "\n";
+		// エラー内容を出力ウィンドウに表示
+		OutputDebugStringA(error.c_str());
+		assert(0);
+	}
+}
+
+void KShader::ObjPSLoadCompile()
+{
+	ObjPSNormal();
+	ObjPSError();
+}
+
 void KShader::SpriteVSNormal()
 {
 	// 頂点シェーダーの読み込みとコンパイル

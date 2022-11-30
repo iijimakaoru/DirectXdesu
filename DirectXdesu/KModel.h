@@ -32,21 +32,6 @@ struct ObjMaterialInfo
 	}
 };
 
-struct ConstBufferDataB0
-{
-	XMMATRIX mat;
-};
-
-struct ConstBufferDataB1
-{
-	XMFLOAT3 ambient;
-	float pad1;
-	XMFLOAT3 diffuse;
-	float pad2;
-	XMFLOAT3 specular;
-	float alpha;
-};
-
 class KModel {
 public:
 	// 頂点データ

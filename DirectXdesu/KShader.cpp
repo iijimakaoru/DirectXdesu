@@ -12,7 +12,7 @@ void KShader::BasicPSNormal() {
 		&psBlob, &errorBlob);
 }
 
-void KShader::BasicPSError() {
+void KShader::Error() {
 	// エラーがでたら
 	if (FAILED(result)) {
 		// erroeBlobからエラー内容をstring型にコピー
@@ -32,7 +32,7 @@ void KShader::BasicPSError() {
 void KShader::BasicPSLoadCompile()
 {
 	BasicPSNormal();
-	BasicPSError();
+	Error();
 }
 
 void KShader::BasicVSNormal() {
@@ -47,28 +47,10 @@ void KShader::BasicVSNormal() {
 		&vsBlob, &errorBlob);
 }
 
-void KShader::BasicVSError() {
-	// エラーがでたら
-	if (FAILED(result))
-	{
-		// erroeBlobからエラー内容をstring型にコピー
-		std::string error;
-		error.resize(errorBlob->GetBufferSize());
-
-		std::copy_n((char*)errorBlob->GetBufferPointer(),
-			errorBlob->GetBufferSize(),
-			error.begin());
-		error += "\n";
-		// エラー内容を出力ウィンドウに表示
-		OutputDebugStringA(error.c_str());
-		assert(0);
-	}
-}
-
 void KShader::BasicVSLoadCompile()
 {
 	BasicVSNormal();
-	BasicVSError();
+	Error();
 }
 
 void KShader::SpritePSNormal()
@@ -84,28 +66,10 @@ void KShader::SpritePSNormal()
 		&psBlob, &errorBlob);
 }
 
-void KShader::SpritePSError()
-{
-	// エラーがでたら
-	if (FAILED(result)) {
-		// erroeBlobからエラー内容をstring型にコピー
-		std::string error;
-		error.resize(errorBlob->GetBufferSize());
-
-		std::copy_n((char*)errorBlob->GetBufferPointer(),
-			errorBlob->GetBufferSize(),
-			error.begin());
-		error += "\n";
-		// エラー内容を出力ウィンドウに表示
-		OutputDebugStringA(error.c_str());
-		assert(0);
-	}
-}
-
 void KShader::SpritePSLoadCompile()
 {
 	SpritePSNormal();
-	SpritePSError();
+	Error();
 }
 
 void KShader::ObjVSNormal()
@@ -120,28 +84,10 @@ void KShader::ObjVSNormal()
 		&vsBlob, &errorBlob);
 }
 
-void KShader::ObjVSError()
-{
-	// エラーがでたら
-	if (FAILED(result)) {
-		// erroeBlobからエラー内容をstring型にコピー
-		std::string error;
-		error.resize(errorBlob->GetBufferSize());
-
-		std::copy_n((char*)errorBlob->GetBufferPointer(),
-			errorBlob->GetBufferSize(),
-			error.begin());
-		error += "\n";
-		// エラー内容を出力ウィンドウに表示
-		OutputDebugStringA(error.c_str());
-		assert(0);
-	}
-}
-
 void KShader::ObjVSLoadCompile()
 {
 	ObjVSNormal();
-	ObjVSError();
+	Error();
 }
 
 void KShader::ObjPSNormal()
@@ -156,28 +102,10 @@ void KShader::ObjPSNormal()
 		&psBlob, &errorBlob);
 }
 
-void KShader::ObjPSError()
-{
-	// エラーがでたら
-	if (FAILED(result)) {
-		// erroeBlobからエラー内容をstring型にコピー
-		std::string error;
-		error.resize(errorBlob->GetBufferSize());
-
-		std::copy_n((char*)errorBlob->GetBufferPointer(),
-			errorBlob->GetBufferSize(),
-			error.begin());
-		error += "\n";
-		// エラー内容を出力ウィンドウに表示
-		OutputDebugStringA(error.c_str());
-		assert(0);
-	}
-}
-
 void KShader::ObjPSLoadCompile()
 {
 	ObjPSNormal();
-	ObjPSError();
+	Error();
 }
 
 void KShader::SpriteVSNormal()
@@ -193,26 +121,8 @@ void KShader::SpriteVSNormal()
 		&vsBlob, &errorBlob);
 }
 
-void KShader::SpriteVSError()
-{
-	// エラーがでたら
-	if (FAILED(result)) {
-		// erroeBlobからエラー内容をstring型にコピー
-		std::string error;
-		error.resize(errorBlob->GetBufferSize());
-
-		std::copy_n((char*)errorBlob->GetBufferPointer(),
-			errorBlob->GetBufferSize(),
-			error.begin());
-		error += "\n";
-		// エラー内容を出力ウィンドウに表示
-		OutputDebugStringA(error.c_str());
-		assert(0);
-	}
-}
-
 void KShader::SpriteVSLoadCompile()
 {
 	SpriteVSNormal();
-	SpriteVSError();
+	Error();
 }

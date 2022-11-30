@@ -8,25 +8,21 @@ class KShader
 public:
 	// Basicシェーダー
 	void BasicVSNormal();
-	void BasicVSError();
 	void BasicVSLoadCompile();
 	void BasicPSNormal();
-	void BasicPSError();
 	void BasicPSLoadCompile();
 	// Spriteシェーダー
 	void SpriteVSNormal();
-	void SpriteVSError();
 	void SpriteVSLoadCompile();
 	void SpritePSNormal();
-	void SpritePSError();
 	void SpritePSLoadCompile();
 	// Objシェーダー
 	void ObjVSNormal();
-	void ObjVSError();
 	void ObjVSLoadCompile();
 	void ObjPSNormal();
-	void ObjPSError();
 	void ObjPSLoadCompile();
+	// エラー
+	void Error();
 
 	ID3D10Blob* vsBlob = nullptr; // 頂点シェーダーオブジェクト
 	ID3D10Blob* psBlob = nullptr;

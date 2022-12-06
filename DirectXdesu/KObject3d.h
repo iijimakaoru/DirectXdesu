@@ -38,8 +38,8 @@ public:
 	void SetModel(KModel* model);
 	void Initialize(ID3D12Device* dev);
 	void Update(XMMATRIX& matView, XMMATRIX& matProjection);
-	void Draw(ID3D12GraphicsCommandList* cmdList);
-	void SecoundDraw(ID3D12GraphicsCommandList* cmdList);
+	void Draw();
+	void SecoundDraw();
 
 	Vector3 rotResult;
 	// ÉqÅ[Évê›íË

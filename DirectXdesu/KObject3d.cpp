@@ -1,4 +1,5 @@
 #include "KObject3d.h"
+#include "KDirectXCommon.h"
 
 KObject3d::KObject3d() {}
 
@@ -26,7 +27,7 @@ void KObject3d::Initialize(ID3D12Device* dev) {
 	cbResourceDesc.SampleDesc.Count = 1;
 	cbResourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 	// 定数バッファの生成
-	result = dev->CreateCommittedResource(
+	result = KDirectXCommon::GetInstance()->GetDev()->CreateCommittedResource(
 		&cbHeapProp,
 		D3D12_HEAP_FLAG_NONE,
 		&cbResourceDesc,
@@ -63,36 +64,36 @@ void KObject3d::Update(XMMATRIX& matView, XMMATRIX& matProjection) {
 	material->Update();
 }
 
-void KObject3d::Draw(ID3D12GraphicsCommandList* cmdList) {
+void KObject3d::Draw() {
 	// CBV
-	cmdList->SetGraphicsRootConstantBufferView(0, material->constBufferMaterial->GetGPUVirtualAddress());
+	KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootConstantBufferView(0, material->constBufferMaterial->GetGPUVirtualAddress());
 	// SRV
-	cmdList->SetDescriptorHeaps(1, &texture->srvHeap);
+	KDirectXCommon::GetInstance()->GetCmdlist()->SetDescriptorHeaps(1, &texture->srvHeap);
 	// 先頭ハンドルを取得
 	D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle = texture->srvHeap->GetGPUDescriptorHandleForHeapStart();
 	// SRVヒープの先頭にあるSRVをルートパラメータ1番の設定
-	cmdList->SetGraphicsRootDescriptorTable(1, srvGpuHandle);
+	KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootDescriptorTable(1, srvGpuHandle);
 
-	cmdList->IASetVertexBuffers(0, 1, &model->vertexs->vbView);
-	cmdList->IASetIndexBuffer(&model->vertexs->ibView);
-	cmdList->SetGraphicsRootConstantBufferView(2, transform.constBuffTransform->GetGPUVirtualAddress());
-	cmdList->DrawIndexedInstanced(model->indices.size(), 1, 0, 0, 0);
+	KDirectXCommon::GetInstance()->GetCmdlist()->IASetVertexBuffers(0, 1, &model->vertexs->vbView);
+	KDirectXCommon::GetInstance()->GetCmdlist()->IASetIndexBuffer(&model->vertexs->ibView);
+	KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootConstantBufferView(2, transform.constBuffTransform->GetGPUVirtualAddress());
+	KDirectXCommon::GetInstance()->GetCmdlist()->DrawIndexedInstanced(model->indices.size(), 1, 0, 0, 0);
 }
 
-void KObject3d::SecoundDraw(ID3D12GraphicsCommandList* cmdList)
+void KObject3d::SecoundDraw()
 {
 	// CBV
-	cmdList->SetGraphicsRootConstantBufferView(0, material->constBufferMaterial->GetGPUVirtualAddress());
+	KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootConstantBufferView(0, material->constBufferMaterial->GetGPUVirtualAddress());
 	// SRV
-	cmdList->SetDescriptorHeaps(1, &texture->srvHeap);
+	KDirectXCommon::GetInstance()->GetCmdlist()->SetDescriptorHeaps(1, &texture->srvHeap);
 	// 先頭ハンドルを取得
 	D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle = texture->srvHeap->GetGPUDescriptorHandleForHeapStart();
 	srvGpuHandle.ptr += texture->incrementSize * 1;
 	// SRVヒープの先頭にあるSRVをルートパラメータ1番の設定
-	cmdList->SetGraphicsRootDescriptorTable(1, srvGpuHandle);
-
-	cmdList->IASetVertexBuffers(0, 1, &model->vertexs->vbView);
-	cmdList->IASetIndexBuffer(&model->vertexs->ibView);
-	cmdList->SetGraphicsRootConstantBufferView(2, transform.constBuffTransform->GetGPUVirtualAddress());
-	cmdList->DrawIndexedInstanced(model->indices.size(), 1, 0, 0, 0);
+	KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootDescriptorTable(1, srvGpuHandle);
+	
+	KDirectXCommon::GetInstance()->GetCmdlist()->IASetVertexBuffers(0, 1, &model->vertexs->vbView);
+	KDirectXCommon::GetInstance()->GetCmdlist()->IASetIndexBuffer(&model->vertexs->ibView);
+	KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootConstantBufferView(2, transform.constBuffTransform->GetGPUVirtualAddress());
+	KDirectXCommon::GetInstance()->GetCmdlist()->DrawIndexedInstanced(model->indices.size(), 1, 0, 0, 0);
 }

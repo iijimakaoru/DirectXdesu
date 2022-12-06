@@ -416,11 +416,11 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		{
 			if (!input->IsPush(DIK_SPACE))
 			{
-				object3d[i]->Draw(KDirectXCommon::GetInstance()->GetCmdlist());
+				object3d[i]->Draw();
 			}
 			else
 			{
-				object3d[i]->SecoundDraw(KDirectXCommon::GetInstance()->GetCmdlist());
+				object3d[i]->SecoundDraw();
 			}
 		}
 		// スプライト描画

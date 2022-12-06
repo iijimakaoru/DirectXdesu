@@ -33,13 +33,10 @@ class KObject3d
 {
 public:
 	KObject3d();
-	KObject3d(ID3D12Device* dev);
-	void SetTexture(KTexture* texture);
-	void SetModel(KModel* model);
-	void Initialize(ID3D12Device* dev);
+	void Initialize();
 	void Update(XMMATRIX& matView, XMMATRIX& matProjection);
-	void Draw();
-	void SecoundDraw();
+	void Draw(KTexture* texture, KModel* model);
+	void SecoundDraw(KTexture* texture, KModel* model);
 
 	Vector3 rotResult;
 	// ÉqÅ[Évê›íË

@@ -208,17 +208,13 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	KObject3d* object3d[ObjectNum];
 	for (int i = 0; i < ObjectNum; i++) {
 		object3d[i] = new KObject3d();
-		object3d[i]->Initialize(KDirectXCommon::GetInstance()->GetDev());
+		object3d[i]->Initialize();
 		object3d[i]->transform.scale = { 1.0f,1,1 };
 		if (i > 0) {
 			object3d[i]->material->colorR = object3d[i]->material->colorG = object3d[i]->material->colorB = 1.0f;
 		}
 	}
 	object3d[0]->transform.scale = { 10,10,10 };
-	object3d[0]->SetModel(&triangle);
-	object3d[0]->SetTexture(&texture);
-	object3d[1]->SetModel(&cube);
-	object3d[1]->SetTexture(&texture2);
 #pragma endregion
 #pragma region ビュー
 	// ビュープロジェクション
@@ -268,7 +264,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 	const int debugTextNumber = 2;
 	sprite->SpriteCommonLoadTexture(spriteCommon, debugTextNumber, L"Resources/texture/tex1.png");
-	debugtext->Init(sprite,debugTextNumber, spriteCommon);
+	debugtext->Init(sprite, debugTextNumber, spriteCommon);
 #pragma endregion
 #pragma endregion
 
@@ -322,35 +318,35 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		}
 		// 図形縦回転
 		if (input->IsPush(DIK_C) ||
-			input->IsPush(DIK_V)) 
+			input->IsPush(DIK_V))
 		{
-			if (input->IsPush(DIK_C)) 
+			if (input->IsPush(DIK_C))
 			{
 				object3d[0]->transform.rot.z += 0.1f;
 			}
 
-			if (input->IsPush(DIK_V)) 
+			if (input->IsPush(DIK_V))
 			{
 				object3d[0]->transform.rot.z -= 0.1f;
 			}
 		}
 		////カメラ移動
 		if (input->IsPush(DIK_D) || input->IsPush(DIK_A) ||
-			input->IsPush(DIK_W) || input->IsPush(DIK_S)) 
+			input->IsPush(DIK_W) || input->IsPush(DIK_S))
 		{
-			if (input->IsPush(DIK_D)) 
+			if (input->IsPush(DIK_D))
 			{
 				viewProjection->angleX += XMConvertToRadians(1.0f);
 			}
-			else if (input->IsPush(DIK_A)) 
+			else if (input->IsPush(DIK_A))
 			{
 				viewProjection->angleX -= XMConvertToRadians(1.0f);
 			}
-			if (input->IsPush(DIK_W)) 
+			if (input->IsPush(DIK_W))
 			{
 				viewProjection->angleY -= XMConvertToRadians(1.0f);
 			}
-			else if (input->IsPush(DIK_S)) 
+			else if (input->IsPush(DIK_S))
 			{
 				viewProjection->angleY += XMConvertToRadians(1.0f);
 			}
@@ -361,13 +357,13 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		}
 		// 横回転
 		if (input->IsPush(DIK_RIGHT) ||
-			input->IsPush(DIK_LEFT)) 
+			input->IsPush(DIK_LEFT))
 		{
-			if (input->IsPush(DIK_RIGHT)) 
+			if (input->IsPush(DIK_RIGHT))
 			{
 				object3d[0]->transform.rot.y -= 0.1f;
 			}
-			if (input->IsPush(DIK_LEFT)) 
+			if (input->IsPush(DIK_LEFT))
 			{
 				object3d[0]->transform.rot.y += 0.1f;
 			}
@@ -412,16 +408,9 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 #pragma region 描画コマンド
 		// 描画コマンド
-		for (int i = 0; i < ObjectNum; i++) 
+		for (int i = 0; i < ObjectNum; i++)
 		{
-			if (!input->IsPush(DIK_SPACE))
-			{
-				object3d[i]->Draw();
-			}
-			else
-			{
-				object3d[i]->SecoundDraw();
-			}
+			object3d[i]->Draw(&texture, &triangle);
 		}
 		// スプライト描画
 		sprite->SpriteCommonBeginDraw(spriteCommon);
@@ -432,7 +421,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 		debugtext->Print(spriteCommon, "Hello,DirectX!!", { 200,100 });
 		debugtext->Print(spriteCommon, "Nihon Kogakuin", { 200,200 }, 2.0f);
-		debugtext->Print(spriteCommon, "FPS(w)" + std::to_string(KDirectXCommon::GetInstance()->fps), {200,300}, 2.0f);
+		debugtext->Print(spriteCommon, "FPS(w)" + std::to_string(KDirectXCommon::GetInstance()->fps), { 200,300 }, 2.0f);
 		debugtext->DrawAll(KDirectXCommon::GetInstance()->GetDev(), spriteCommon, KDirectXCommon::GetInstance()->GetCmdlist());
 
 		// 描画コマンドここまで

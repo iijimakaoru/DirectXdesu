@@ -1,21 +1,11 @@
 #include "KObject3d.h"
 #include "KDirectXCommon.h"
 
-KObject3d::KObject3d() {}
-
-KObject3d::KObject3d(ID3D12Device* dev) {
-	Initialize(dev);
+KObject3d::KObject3d() {
+	Initialize();
 }
 
-void KObject3d::SetTexture(KTexture* texture) {
-	this->texture = texture;
-}
-
-void KObject3d::SetModel(KModel* model) {
-	this->model = model;
-}
-
-void KObject3d::Initialize(ID3D12Device* dev) {
+void KObject3d::Initialize() {
 	// ヒープ設定
 	cbHeapProp.Type = D3D12_HEAP_TYPE_UPLOAD;
 	// リソース設定
@@ -39,7 +29,7 @@ void KObject3d::Initialize(ID3D12Device* dev) {
 	result = transform.constBuffTransform->Map(0, nullptr, (void**)&transform.constMapTransform);
 	assert(SUCCEEDED(result));
 
-	material = new KMaterial(dev);
+	material = new KMaterial();
 }
 
 void KObject3d::Update(XMMATRIX& matView, XMMATRIX& matProjection) {
@@ -64,7 +54,11 @@ void KObject3d::Update(XMMATRIX& matView, XMMATRIX& matProjection) {
 	material->Update();
 }
 
-void KObject3d::Draw() {
+void KObject3d::Draw(KTexture* texture, KModel* model) {
+	// テクスチャの読み込み
+	this->texture = texture;
+	// モデルの読み込み
+	this->model = model;
 	// CBV
 	KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootConstantBufferView(0, material->constBufferMaterial->GetGPUVirtualAddress());
 	// SRV
@@ -80,8 +74,12 @@ void KObject3d::Draw() {
 	KDirectXCommon::GetInstance()->GetCmdlist()->DrawIndexedInstanced(model->indices.size(), 1, 0, 0, 0);
 }
 
-void KObject3d::SecoundDraw()
+void KObject3d::SecoundDraw(KTexture* texture, KModel* model)
 {
+	// テクスチャの読み込み
+	this->texture = texture;
+	// モデルの読み込み
+	this->model = model;
 	// CBV
 	KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootConstantBufferView(0, material->constBufferMaterial->GetGPUVirtualAddress());
 	// SRV

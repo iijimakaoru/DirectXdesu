@@ -1,14 +1,11 @@
 #include "KMaterial.h"
-
-KMaterial::KMaterial(ID3D12Device* dev) {
-	Initialize(dev);
-}
+#include "KDirectXCommon.h"
 
 KMaterial::KMaterial() {
-
+	Initialize();
 }
 
-void KMaterial::Initialize(ID3D12Device* dev) {
+void KMaterial::Initialize() {
 	// 画像の色
 	colorR = 0.5f;
 	colorG = 0.5f;
@@ -25,7 +22,7 @@ void KMaterial::Initialize(ID3D12Device* dev) {
 	cbResourceDesc.SampleDesc.Count = 1;
 	cbResourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 	// 定数バッファの生成
-	result = dev->CreateCommittedResource(
+	result = KDirectXCommon::GetInstance()->GetDev()->CreateCommittedResource(
 		&cbHeapProp,
 		D3D12_HEAP_FLAG_NONE,
 		&cbResourceDesc,

@@ -17,8 +17,7 @@ class KMaterial
 {
 public:
 	KMaterial();
-	KMaterial(ID3D12Device* dev);
-	void Initialize(ID3D12Device* dev);
+	void Initialize();
 	void Update();
 
 	// ‰æ‘œ‚ÌF

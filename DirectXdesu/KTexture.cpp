@@ -1,16 +1,17 @@
 #include "KTexture.h"
+#include "KDirectXCommon.h"
 
-KTexture::KTexture(ID3D12Device* dev, const wchar_t* msg, const wchar_t* msg2) {
+KTexture::KTexture(const wchar_t* msg, const wchar_t* msg2) {
 	LoadTexture(msg, msg2);
 	GeneMipMap();
 	SetTextureBuff();
-	GeneTextureBuff(dev);
+	GeneTextureBuff();
 	SendData();
 	SetDescHeap();
-	GeneDescHeap(dev);
-	GetSrvHandle(dev);
+	GeneDescHeap();
+	GetSrvHandle();
 	SetSRV();
-	CreateSRV(dev);
+	CreateSRV();
 }
 
 void KTexture::LoadTexture(const wchar_t* msg, const wchar_t* msg2) {
@@ -82,8 +83,8 @@ void KTexture::SetTextureBuff() {
 	textureResourceDesc2.SampleDesc.Count = 1;
 }
 
-void KTexture::GeneTextureBuff(ID3D12Device* dev) {
-	result = dev->CreateCommittedResource(
+void KTexture::GeneTextureBuff() {
+	result = KDirectXCommon::GetInstance()->GetDev()->CreateCommittedResource(
 		&textureHeapProp,
 		D3D12_HEAP_FLAG_NONE,
 		&textureResourceDesc,
@@ -91,7 +92,7 @@ void KTexture::GeneTextureBuff(ID3D12Device* dev) {
 		nullptr,
 		IID_PPV_ARGS(&texBuff));
 
-	result = dev->CreateCommittedResource(
+	result = KDirectXCommon::GetInstance()->GetDev()->CreateCommittedResource(
 		&textureHeapProp,
 		D3D12_HEAP_FLAG_NONE,
 		&textureResourceDesc2,
@@ -136,17 +137,17 @@ void KTexture::SetDescHeap() {
 	srvHeapDesc.NumDescriptors = kMaxSRVCount;
 }
 
-void KTexture::GeneDescHeap(ID3D12Device* dev) {
-	result = dev->CreateDescriptorHeap(
+void KTexture::GeneDescHeap() {
+	result = KDirectXCommon::GetInstance()->GetDev()->CreateDescriptorHeap(
 		&srvHeapDesc,
 		IID_PPV_ARGS(&srvHeap));
 	assert(SUCCEEDED(result));
 }
 
-void KTexture::GetSrvHandle(ID3D12Device* dev) {
+void KTexture::GetSrvHandle() {
 	srvHandle = srvHeap->GetCPUDescriptorHandleForHeapStart();
 	srvHandle2 = srvHandle;
-	incrementSize = dev->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+	incrementSize = KDirectXCommon::GetInstance()->GetDev()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 	srvHandle2.ptr += incrementSize;
 }
 
@@ -162,8 +163,8 @@ void KTexture::SetSRV() {
 	srvDesc2.Texture2D.MipLevels = texBuff2->GetDesc().MipLevels;
 }
 
-void KTexture::CreateSRV(ID3D12Device* dev) {
+void KTexture::CreateSRV() {
 	// ハンドルの指す位置にシェーダーリソースビュー作成
-	dev->CreateShaderResourceView(texBuff.Get(), &srvDesc, srvHandle);
-	dev->CreateShaderResourceView(texBuff2.Get(), &srvDesc2, srvHandle2);
+	KDirectXCommon::GetInstance()->GetDev()->CreateShaderResourceView(texBuff.Get(), &srvDesc, srvHandle);
+	KDirectXCommon::GetInstance()->GetDev()->CreateShaderResourceView(texBuff2.Get(), &srvDesc2, srvHandle2);
 }

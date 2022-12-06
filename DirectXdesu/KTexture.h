@@ -11,17 +11,17 @@ using namespace DirectX;
 class KTexture
 {
 public:
-	KTexture(ID3D12Device* dev, const wchar_t* msg,const wchar_t* msg2);
+	KTexture(const wchar_t* msg,const wchar_t* msg2);
 	void LoadTexture(const wchar_t* msg, const wchar_t* msg2);
 	void GeneMipMap();
 	void SetTextureBuff();
-	void GeneTextureBuff(ID3D12Device* dev);
+	void GeneTextureBuff();
 	void SendData();
 	void SetDescHeap();
-	void GeneDescHeap(ID3D12Device* dev);
-	void GetSrvHandle(ID3D12Device* dev);
+	void GeneDescHeap();
+	void GetSrvHandle();
 	void SetSRV();
-	void CreateSRV(ID3D12Device* dev);
+	void CreateSRV();
 
 	TexMetadata metadata{};
 	ScratchImage scraychImg{};

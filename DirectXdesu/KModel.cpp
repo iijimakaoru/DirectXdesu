@@ -1,4 +1,5 @@
 #include "KModel.h"
+#include "KDirectXCommon.h"
 
 Cube::Cube() {
 	vertices = {
@@ -201,7 +202,7 @@ Line::Line() {
 	};
 }
 
-void KModel::CreateModel(ID3D12Device* dev)
+void KModel::CreateModel()
 {
-	vertexs.reset(new KVertex(dev, vertices, indices));
+	vertexs.reset(new KVertex(KDirectXCommon::GetInstance()->GetDev(), vertices, indices));
 }

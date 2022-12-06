@@ -23,8 +23,7 @@ public:
 	void Print(const SpriteCommon& spriteCommon, const std::string& text,
 		Vector2 pos, float scale = 1.0f);
 	void SpriteTransferVertexBuffer(const SpriteInfo& sprite, const SpriteCommon& spriteCommon);
-	void DrawAll(ID3D12Device* dev, const SpriteCommon& spriteCommon,
-		ID3D12GraphicsCommandList* cmdList);
+	void DrawAll(const SpriteCommon& spriteCommon);
 private:
 	Sprite* sprite_ = nullptr;
 	SpriteInfo sprites[maxCharCount];

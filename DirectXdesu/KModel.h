@@ -42,7 +42,7 @@ public:
 	std::unique_ptr<KVertex> vertexs = make_unique<KVertex>();
 
 	// modelusakusei
-	void CreateModel(ID3D12Device* dev);
+	void CreateModel();
 };
 
 class Cube : public KModel {

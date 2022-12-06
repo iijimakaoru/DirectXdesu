@@ -102,8 +102,7 @@ void DebugText::SpriteTransferVertexBuffer(const SpriteInfo& sprite, const Sprit
 	sprite.vertBuff->Unmap(0, nullptr);
 }
 
-void DebugText::DrawAll(ID3D12Device* dev, const SpriteCommon& spriteCommon,
-	ID3D12GraphicsCommandList* cmdList)
+void DebugText::DrawAll(const SpriteCommon& spriteCommon)
 {
 	for (int i = 0; i < spriteIndex; i++)
 	{

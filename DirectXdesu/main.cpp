@@ -23,7 +23,7 @@
 
 #include"Player.h"
 
-PipelineSet Create3DObjectGpipeline(ID3D12Device* dev)
+PipelineSet Create3DObjectGpipeline()
 {
 	HRESULT result;
 #pragma region シェーダー読み込みとコンパイル
@@ -137,7 +137,7 @@ PipelineSet Create3DObjectGpipeline(ID3D12Device* dev)
 	result = D3D12SerializeRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1_0,
 		&rootSigBlob, &shader->errorBlob);
 	assert(SUCCEEDED(result));
-	result = dev->CreateRootSignature(0, rootSigBlob->GetBufferPointer(), rootSigBlob->GetBufferSize(),
+	result = KDirectXCommon::GetInstance()->GetDev()->CreateRootSignature(0, rootSigBlob->GetBufferPointer(), rootSigBlob->GetBufferSize(),
 		IID_PPV_ARGS(&pipelineSet.rootSignature));
 	assert(SUCCEEDED(result));
 	// パイプラインにルートシグネチャをセット
@@ -150,7 +150,7 @@ PipelineSet Create3DObjectGpipeline(ID3D12Device* dev)
 	gpipeline.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_LESS; // 小さければ合格
 	gpipeline.DSVFormat = DXGI_FORMAT_D32_FLOAT; // 深度値フォーマット
 
-	result = dev->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&pipelineSet.pipelineState));
+	result = KDirectXCommon::GetInstance()->GetDev()->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&pipelineSet.pipelineState));
 	assert(SUCCEEDED(result));
 #pragma endregion
 
@@ -183,24 +183,24 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	float speed = 1.0f;
 #pragma region モデル
 	KModel triangle = Triangle();
-	triangle.CreateModel(KDirectXCommon::GetInstance()->GetDev());
+	triangle.CreateModel();
 	KModel cube = Cube();
-	cube.CreateModel(KDirectXCommon::GetInstance()->GetDev());
+	cube.CreateModel();
 	KModel line = Line();
-	line.CreateModel(KDirectXCommon::GetInstance()->GetDev());
+	line.CreateModel();
 #pragma endregion
 #pragma region テクスチャ初期化
 	const wchar_t* msg = L"Resources/texture/mario.jpg";
 	const wchar_t* msg2 = L"Resources/texture/iijan.jpg";
 	const wchar_t* msg3 = L"Resources/texture/haikei.jpg";
 	const wchar_t* msg4 = L"Resources/texture/kitanai.jpg";
-	KTexture texture(KDirectXCommon::GetInstance()->GetDev(), msg, msg3);
-	KTexture texture2(KDirectXCommon::GetInstance()->GetDev(), msg2, msg4);
+	KTexture texture(msg, msg3);
+	KTexture texture2(msg2, msg4);
 #pragma endregion
 
 #pragma region グラフィックスパイプライン設定
 	// 3Dオブジェクト用パイプライン生成
-	PipelineSet object3dPipelineSet = Create3DObjectGpipeline(KDirectXCommon::GetInstance()->GetDev());
+	PipelineSet object3dPipelineSet = Create3DObjectGpipeline();
 #pragma region 3Dオブジェクト初期化
 	const int ObjectNum = 2;
 	const int LineNum = 6;
@@ -422,7 +422,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		debugtext->Print(spriteCommon, "Hello,DirectX!!", { 200,100 });
 		debugtext->Print(spriteCommon, "Nihon Kogakuin", { 200,200 }, 2.0f);
 		debugtext->Print(spriteCommon, "FPS(w)" + std::to_string(KDirectXCommon::GetInstance()->fps), { 200,300 }, 2.0f);
-		debugtext->DrawAll(KDirectXCommon::GetInstance()->GetDev(), spriteCommon, KDirectXCommon::GetInstance()->GetCmdlist());
+		debugtext->DrawAll(spriteCommon);
 
 		// 描画コマンドここまで
 #pragma endregion

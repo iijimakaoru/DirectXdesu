@@ -29,8 +29,8 @@ PipelineSet Create3DObjectGpipeline()
 #pragma region シェーダー読み込みとコンパイル
 	std::unique_ptr<KShader> shader;
 	shader = std::make_unique<KShader>();
-	shader->BasicPSLoadCompile();
-	shader->BasicVSLoadCompile();
+	shader->ObjVSLoadCompile();
+	shader->ObjPSLoadCompile();
 #pragma endregion
 #pragma region 頂点レイアウト配列の宣言と設定
 	static D3D12_INPUT_ELEMENT_DESC inputLayout[3] = {
@@ -93,6 +93,7 @@ PipelineSet Create3DObjectGpipeline()
 	descriptorRange.RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
 	descriptorRange.BaseShaderRegister = 0;
 	descriptorRange.OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+
 	// ルートパラメータの設定
 	D3D12_ROOT_PARAMETER rootParam[3] = {};
 	// 定数バッファ0番
@@ -110,6 +111,12 @@ PipelineSet Create3DObjectGpipeline()
 	rootParam[2].Descriptor.ShaderRegister = 1;
 	rootParam[2].Descriptor.RegisterSpace = 0;
 	rootParam[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
+
+	/*CD3DX12_ROOT_PARAMETER rootParams[3];
+	rootParams[0].InitAsConstantBufferView(0, 0, D3D12_SHADER_VISIBILITY_ALL);
+	rootParams[1].InitAsConstantBufferView(1, 0, D3D12_SHADER_VISIBILITY_ALL);
+	rootParams[2].InitAsDescriptorTable(1, &descriptorRange, D3D12_SHADER_VISIBILITY_ALL);*/
+
 	// テクスチャサンブラーの設定
 	D3D12_STATIC_SAMPLER_DESC samplerDesc{};
 	samplerDesc.AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
@@ -188,14 +195,18 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	cube.CreateModel();
 	KModel line = Line();
 	line.CreateModel();
+	KModel obj = MtlObj();
+	obj.CreateModel();
 #pragma endregion
 #pragma region テクスチャ初期化
 	const wchar_t* msg = L"Resources/texture/mario.jpg";
 	const wchar_t* msg2 = L"Resources/texture/iijan.jpg";
 	const wchar_t* msg3 = L"Resources/texture/haikei.jpg";
 	const wchar_t* msg4 = L"Resources/texture/kitanai.jpg";
-	KTexture texture(msg, msg3);
-	KTexture texture2(msg2, msg4);
+	KTexture texture;
+	texture.CreateTexture("Resources/texture/", "mario.jpg");
+	KTexture texture2;
+	texture2.CreateTexture("Resources/texture/", "kitanai.jpg");
 #pragma endregion
 
 #pragma region グラフィックスパイプライン設定
@@ -410,7 +421,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		// 描画コマンド
 		for (int i = 0; i < ObjectNum; i++)
 		{
-			object3d[i]->Draw(&texture, &triangle);
+			object3d[i]->Draw(&texture2, &obj);
 		}
 		// スプライト描画
 		sprite->SpriteCommonBeginDraw(spriteCommon);

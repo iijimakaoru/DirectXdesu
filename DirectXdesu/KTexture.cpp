@@ -1,8 +1,10 @@
 #include "KTexture.h"
 #include "KDirectXCommon.h"
+#include <string>
 
-KTexture::KTexture(const wchar_t* msg, const wchar_t* msg2) {
-	LoadTexture(msg, msg2);
+void KTexture::CreateTexture(const std::string& directoryPath, const std::string& filename)
+{
+	LoadTexture(directoryPath, filename);
 	GeneMipMap();
 	SetTextureBuff();
 	GeneTextureBuff();
@@ -14,19 +16,23 @@ KTexture::KTexture(const wchar_t* msg, const wchar_t* msg2) {
 	CreateSRV();
 }
 
-void KTexture::LoadTexture(const wchar_t* msg, const wchar_t* msg2) {
+void KTexture::LoadTexture(const std::string& directoryPath, const std::string& filename)
+{
+	string filePath = directoryPath + filename;
+
+	// ユニコード文字列に変換する
+	wchar_t wFilePath[128];
+	int iBufferSize = MultiByteToWideChar(CP_ACP, 0, filePath.c_str(), -1, wFilePath, _countof(wFilePath));
+
 	result = LoadFromWICFile(
-		msg,
+		wFilePath,
 		WIC_FLAGS_NONE,
 		&metadata, scraychImg);
-
-	result = LoadFromWICFile(
-		msg2,
-		WIC_FLAGS_NONE,
-		&metadata2, scraychImg2);
+	assert(SUCCEEDED(result));
 }
 
-void KTexture::GeneMipMap() {
+void KTexture::GeneMipMap() 
+{
 	// ミニマップ作成
 	result = GenerateMipMaps(
 		scraychImg.GetImages(),
@@ -42,22 +48,6 @@ void KTexture::GeneMipMap() {
 
 	// 読み込んだディフューズテクスチャをSRGBとして扱う
 	metadata.format = MakeSRGB(metadata.format);
-
-	// ミニマップ作成
-	result = GenerateMipMaps(
-		scraychImg2.GetImages(),
-		scraychImg2.GetImageCount(),
-		scraychImg2.GetMetadata(),
-		TEX_FILTER_DEFAULT,
-		0, mipChain2);
-
-	if (SUCCEEDED(result)) {
-		scraychImg2 = std::move(mipChain2);
-		metadata2 = scraychImg2.GetMetadata();
-	}
-
-	// 読み込んだディフューズテクスチャをSRGBとして扱う
-	metadata2.format = MakeSRGB(metadata2.format);
 }
 
 void KTexture::SetTextureBuff() {
@@ -73,14 +63,6 @@ void KTexture::SetTextureBuff() {
 	textureResourceDesc.DepthOrArraySize = (UINT16)metadata.arraySize;
 	textureResourceDesc.MipLevels = (UINT16)metadata.mipLevels;
 	textureResourceDesc.SampleDesc.Count = 1;
-
-	textureResourceDesc2.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
-	textureResourceDesc2.Format = metadata2.format;
-	textureResourceDesc2.Width = metadata2.width;
-	textureResourceDesc2.Height = (UINT)metadata2.height;
-	textureResourceDesc2.DepthOrArraySize = (UINT16)metadata2.arraySize;
-	textureResourceDesc2.MipLevels = (UINT16)metadata2.mipLevels;
-	textureResourceDesc2.SampleDesc.Count = 1;
 }
 
 void KTexture::GeneTextureBuff() {
@@ -91,14 +73,6 @@ void KTexture::GeneTextureBuff() {
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
 		IID_PPV_ARGS(&texBuff));
-
-	result = KDirectXCommon::GetInstance()->GetDev()->CreateCommittedResource(
-		&textureHeapProp,
-		D3D12_HEAP_FLAG_NONE,
-		&textureResourceDesc2,
-		D3D12_RESOURCE_STATE_GENERIC_READ,
-		nullptr,
-		IID_PPV_ARGS(&texBuff2));
 }
 
 void KTexture::SendData() {
@@ -108,20 +82,6 @@ void KTexture::SendData() {
 		const Image* img = scraychImg.GetImage(i, 0, 0);
 		// テクスチャバッファにデータ転送
 		result = texBuff->WriteToSubresource(
-			(UINT)i,
-			nullptr,
-			img->pixels,
-			(UINT)img->rowPitch,
-			(UINT)img->slicePitch);
-		assert(SUCCEEDED(result));
-	}
-
-	// 全ミニマップについて
-	for (size_t i = 0; i < metadata2.mipLevels; i++) {
-		// ミニマップレベルを指定してイメージを取得
-		const Image* img = scraychImg2.GetImage(i, 0, 0);
-		// テクスチャバッファにデータ転送
-		result = texBuff2->WriteToSubresource(
 			(UINT)i,
 			nullptr,
 			img->pixels,
@@ -146,9 +106,7 @@ void KTexture::GeneDescHeap() {
 
 void KTexture::GetSrvHandle() {
 	srvHandle = srvHeap->GetCPUDescriptorHandleForHeapStart();
-	srvHandle2 = srvHandle;
 	incrementSize = KDirectXCommon::GetInstance()->GetDev()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-	srvHandle2.ptr += incrementSize;
 }
 
 void KTexture::SetSRV() {
@@ -156,15 +114,9 @@ void KTexture::SetSRV() {
 	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
 	srvDesc.Texture2D.MipLevels = textureResourceDesc.MipLevels;
-
-	srvDesc2.Format = texBuff2->GetDesc().Format;
-	srvDesc2.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-	srvDesc2.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-	srvDesc2.Texture2D.MipLevels = texBuff2->GetDesc().MipLevels;
 }
 
 void KTexture::CreateSRV() {
 	// ハンドルの指す位置にシェーダーリソースビュー作成
 	KDirectXCommon::GetInstance()->GetDev()->CreateShaderResourceView(texBuff.Get(), &srvDesc, srvHandle);
-	KDirectXCommon::GetInstance()->GetDev()->CreateShaderResourceView(texBuff2.Get(), &srvDesc2, srvHandle2);
 }

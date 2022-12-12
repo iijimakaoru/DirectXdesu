@@ -8,11 +8,14 @@ using namespace Microsoft::WRL;
 
 using namespace DirectX;
 
+using namespace std;
+
 class KTexture
 {
 public:
-	KTexture(const wchar_t* msg,const wchar_t* msg2);
-	void LoadTexture(const wchar_t* msg, const wchar_t* msg2);
+	KTexture() {};
+	void CreateTexture(const std::string& directoryPath, const std::string& filename);
+	void LoadTexture(const std::string& directoryPath, const std::string& filename);
 	void GeneMipMap();
 	void SetTextureBuff();
 	void GeneTextureBuff();

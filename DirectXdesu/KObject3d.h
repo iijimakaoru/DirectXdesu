@@ -40,9 +40,13 @@ public:
 
 	Vector3 rotResult;
 	// ヒープ設定
-	D3D12_HEAP_PROPERTIES cbHeapProp{};
+	//D3D12_HEAP_PROPERTIES cbHeapProp{};
 	// リソース設定
-	D3D12_RESOURCE_DESC cbResourceDesc{};
+	//D3D12_RESOURCE_DESC cbResourceDesc{};
+
+	ComPtr<ID3D12Resource> constBuffB0;
+	ComPtr<ID3D12Resource> constBuffB1;
+
 	// 3Dオブジェクトの配列
 	WorldTransfom transform;
 

@@ -100,6 +100,11 @@ void KObject3d::Update(XMMATRIX& matView, XMMATRIX& matProjection) {
 	assert(SUCCEEDED(result));
 }
 
+void KObject3d::Draw(KModel* model)
+{
+
+}
+
 void KObject3d::Draw(KTexture* texture, KModel* model) 
 {
 	// テクスチャの読み込み
@@ -118,10 +123,10 @@ void KObject3d::Draw(KTexture* texture, KModel* model)
 	//KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootConstantBufferView(0, material->constBufferMaterial->GetGPUVirtualAddress());
 	
 	// 頂点バッファビューの設定
-	KDirectXCommon::GetInstance()->GetCmdlist()->IASetVertexBuffers(0, 1, &this->model->vertexs->vbView);
+	KDirectXCommon::GetInstance()->GetCmdlist()->IASetVertexBuffers(0, 1, &model->vertexs->vbView);
 
 	// インデックスバッファビューの設定
-	KDirectXCommon::GetInstance()->GetCmdlist()->IASetIndexBuffer(&this->model->vertexs->ibView);
+	KDirectXCommon::GetInstance()->GetCmdlist()->IASetIndexBuffer(&model->vertexs->ibView);
 
 	//KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootConstantBufferView(2, transform.constBuffTransform->GetGPUVirtualAddress());
 
@@ -134,7 +139,7 @@ void KObject3d::Draw(KTexture* texture, KModel* model)
 	KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootDescriptorTable(1, srvGpuHandle);
 
 	// 描画
-	KDirectXCommon::GetInstance()->GetCmdlist()->DrawIndexedInstanced(this->model->indices.size(), 1, 0, 0, 0);
+	KDirectXCommon::GetInstance()->GetCmdlist()->DrawIndexedInstanced(model->indices.size(), 1, 0, 0, 0);
 }
 
 void KObject3d::SecoundDraw(KTexture* texture, KModel* model)

@@ -28,20 +28,15 @@ public:
 
 	TexMetadata metadata{};
 	ScratchImage scraychImg{};
-	TexMetadata metadata2{};
-	ScratchImage scraychImg2{};
 
 	ScratchImage mipChain{};
-	ScratchImage mipChain2{};
 
 	// ヒープ設定
 	D3D12_HEAP_PROPERTIES textureHeapProp{};
 	// リソース設定
 	D3D12_RESOURCE_DESC textureResourceDesc{};
-	D3D12_RESOURCE_DESC textureResourceDesc2{};
 	// テクスチャバッファの生成
 	ComPtr<ID3D12Resource> texBuff;
-	ComPtr<ID3D12Resource> texBuff2;
 	// SRVの最大個数
 	const size_t kMaxSRVCount = 2056;
 	// デスクリプタヒープの設定

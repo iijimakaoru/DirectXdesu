@@ -35,6 +35,7 @@ public:
 	KObject3d();
 	void Initialize();
 	void Update(XMMATRIX& matView, XMMATRIX& matProjection);
+	void Draw(KModel* model);
 	void Draw(KTexture* texture, KModel* model);
 	void SecoundDraw(KTexture* texture, KModel* model);
 

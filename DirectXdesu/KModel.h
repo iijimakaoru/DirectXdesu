@@ -44,8 +44,6 @@ public:
 
 	std::unique_ptr<KVertex> vertexs = make_unique<KVertex>();
 
-	
-
 	static ObjMaterialInfo objMtl;
 
 	static void LoadMaterial(const std::string& directoryPath, const std::string& filename);

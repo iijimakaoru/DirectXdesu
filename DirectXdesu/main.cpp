@@ -203,10 +203,12 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	const wchar_t* msg2 = L"Resources/texture/iijan.jpg";
 	const wchar_t* msg3 = L"Resources/texture/haikei.jpg";
 	const wchar_t* msg4 = L"Resources/texture/kitanai.jpg";
-	KTexture texture;
-	texture.CreateTexture("Resources/texture/", "mario.jpg");
-	KTexture texture2;
-	texture2.CreateTexture("Resources/texture/", "kitanai.jpg");
+	KTexture mario;
+	mario.CreateTexture("Resources/texture/", "mario.jpg");
+	KTexture kitanai;
+	kitanai.CreateTexture("Resources/texture/", "kitanai.jpg");
+	KTexture haikei;
+	haikei.CreateTexture("Resources/texture/", "haikei.jpg");
 #pragma endregion
 
 #pragma region グラフィックスパイプライン設定
@@ -421,7 +423,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		// 描画コマンド
 		for (int i = 0; i < ObjectNum; i++)
 		{
-			object3d[i]->Draw(&texture2, &obj);
+			object3d[i]->Draw(&haikei, &obj);
 		}
 		// スプライト描画
 		sprite->SpriteCommonBeginDraw(spriteCommon);

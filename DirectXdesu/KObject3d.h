@@ -34,8 +34,10 @@ class KObject3d
 public:
 	KObject3d();
 	void Initialize();
-	void Update(XMMATRIX& matView, XMMATRIX& matProjection, KModel* model);
-	void Draw(KModel* model);
+	void LoadModel(KModel* model);
+	void Update(XMMATRIX& matView, XMMATRIX& matProjection);
+	void Draw();
+	void Draw(KTexture* texture);
 
 	static void StaticInitialize();
 	static KObject3d Create();
@@ -54,9 +56,9 @@ public:
 
 	HRESULT result;
 
-	//KModel* model = nullptr;
+	KModel* model_ = nullptr;
 
-	//KTexture* texture = nullptr;
+	KTexture* texture_ = nullptr;
 
 	// ƒ}ƒeƒŠƒAƒ‹
 	KMaterial* material = nullptr;

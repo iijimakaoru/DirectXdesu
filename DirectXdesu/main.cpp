@@ -228,6 +228,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		}
 	}
 	object3d[0]->transform.scale = { 10,10,10 };
+	object3d[0]->LoadModel(&obj);
+	object3d[1]->LoadModel(&cube);
 #pragma endregion
 #pragma region ビュー
 	// ビュープロジェクション
@@ -401,7 +403,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 		// 3Dオブジェクトのアップデート
 		for (int i = 0; i < ObjectNum; i++) {
-			object3d[i]->Update(viewProjection->matView, viewProjection->matProjection, &obj);
+			object3d[i]->Update(viewProjection->matView, viewProjection->matProjection);
 		}
 
 #pragma endregion
@@ -421,10 +423,12 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 #pragma region 描画コマンド
 		// 描画コマンド
-		for (int i = 0; i < ObjectNum; i++)
+		/*for (int i = 0; i < ObjectNum; i++)
 		{
-			object3d[i]->Draw(&obj);
-		}
+			object3d[i]->Draw();
+		}*/
+		object3d[0]->Draw();
+		object3d[1]->Draw(&haikei);
 		// スプライト描画
 		sprite->SpriteCommonBeginDraw(spriteCommon);
 		for (int i = 0; i < _countof(sprites); i++)

@@ -44,9 +44,11 @@ public:
 
 	std::unique_ptr<KVertex> vertexs = make_unique<KVertex>();
 
-	static ObjMaterialInfo objMtl;
+	KTexture texture;
 
-	static void LoadMaterial(const std::string& directoryPath, const std::string& filename);
+	ObjMaterialInfo objMtl;
+
+	void LoadMaterial(const std::string& directoryPath, const std::string& filename);
 
 	// modelusakusei
 	void CreateModel();

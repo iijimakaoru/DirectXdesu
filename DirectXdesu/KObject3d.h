@@ -34,10 +34,11 @@ class KObject3d
 public:
 	KObject3d();
 	void Initialize();
-	void Update(XMMATRIX& matView, XMMATRIX& matProjection);
+	void Update(XMMATRIX& matView, XMMATRIX& matProjection, KModel* model);
 	void Draw(KModel* model);
-	void Draw(KTexture* texture, KModel* model);
-	void SecoundDraw(KTexture* texture, KModel* model);
+
+	static void StaticInitialize();
+	static KObject3d Create();
 
 	Vector3 rotResult;
 	// ヒープ設定
@@ -53,9 +54,9 @@ public:
 
 	HRESULT result;
 
-	KModel* model = nullptr;
+	//KModel* model = nullptr;
 
-	KTexture* texture = nullptr;
+	//KTexture* texture = nullptr;
 
 	// マテリアル
 	KMaterial* material = nullptr;

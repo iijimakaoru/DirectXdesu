@@ -63,7 +63,7 @@ void KObject3d::Initialize() {
 	material = new KMaterial();
 }
 
-void KObject3d::Update(XMMATRIX& matView, XMMATRIX& matProjection) {
+void KObject3d::Update(XMMATRIX& matView, XMMATRIX& matProjection,KModel* model) {
 	// マトリックス
 	XMMATRIX matScale, matRot, matTrans;
 
@@ -100,24 +100,21 @@ void KObject3d::Update(XMMATRIX& matView, XMMATRIX& matProjection) {
 	assert(SUCCEEDED(result));
 }
 
-void KObject3d::Draw(KModel* model)
+void KObject3d::Draw(KModel* model) 
 {
-
-}
-
-void KObject3d::Draw(KTexture* texture, KModel* model) 
-{
-	// テクスチャの読み込み
-	this->texture = texture;
-
-	// モデルの読み込み
-	this->model = model;
-
+	// 定数バッファビューをセット
+	KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootConstantBufferView(0, constBuffB0->GetGPUVirtualAddress());
+	KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootConstantBufferView(2, constBuffB1->GetGPUVirtualAddress());
+	
 	// SRV
-	KDirectXCommon::GetInstance()->GetCmdlist()->SetDescriptorHeaps(1, &texture->srvHeap);
+	KDirectXCommon::GetInstance()->GetCmdlist()->SetDescriptorHeaps(1, &model->texture.srvHeap);
 
 	// 先頭ハンドルを取得
-	D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle = texture->srvHeap->GetGPUDescriptorHandleForHeapStart();
+	D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle = model->texture.srvHeap->GetGPUDescriptorHandleForHeapStart();
+
+	// シェーダーリソースビューをセット
+	//KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootDescriptorTable(1, srvGpuHandle);
+	KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootDescriptorTable(1, srvGpuHandle);
 
 	// CBV
 	//KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootConstantBufferView(0, material->constBufferMaterial->GetGPUVirtualAddress());
@@ -130,36 +127,16 @@ void KObject3d::Draw(KTexture* texture, KModel* model)
 
 	//KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootConstantBufferView(2, transform.constBuffTransform->GetGPUVirtualAddress());
 
-	// 定数バッファビューをセット
-	KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootConstantBufferView(0, constBuffB0->GetGPUVirtualAddress());
-	KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootConstantBufferView(2, constBuffB1->GetGPUVirtualAddress());
-
-	// シェーダーリソースビューをセット
-	//KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootDescriptorTable(1, srvGpuHandle);
-	KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootDescriptorTable(1, srvGpuHandle);
-
 	// 描画
 	KDirectXCommon::GetInstance()->GetCmdlist()->DrawIndexedInstanced(model->indices.size(), 1, 0, 0, 0);
 }
 
-void KObject3d::SecoundDraw(KTexture* texture, KModel* model)
+void KObject3d::StaticInitialize()
 {
-	// テクスチャの読み込み
-	this->texture = texture;
-	// モデルの読み込み
-	this->model = model;
-	// CBV
-	KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootConstantBufferView(0, material->constBufferMaterial->GetGPUVirtualAddress());
-	// SRV
-	KDirectXCommon::GetInstance()->GetCmdlist()->SetDescriptorHeaps(1, &texture->srvHeap);
-	// 先頭ハンドルを取得
-	D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle = texture->srvHeap->GetGPUDescriptorHandleForHeapStart();
-	srvGpuHandle.ptr += texture->incrementSize * 1;
-	// SRVヒープの先頭にあるSRVをルートパラメータ1番の設定
-	KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootDescriptorTable(1, srvGpuHandle);
-	
-	KDirectXCommon::GetInstance()->GetCmdlist()->IASetVertexBuffers(0, 1, &model->vertexs->vbView);
-	KDirectXCommon::GetInstance()->GetCmdlist()->IASetIndexBuffer(&model->vertexs->ibView);
-	KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootConstantBufferView(2, transform.constBuffTransform->GetGPUVirtualAddress());
-	KDirectXCommon::GetInstance()->GetCmdlist()->DrawIndexedInstanced(model->indices.size(), 1, 0, 0, 0);
+
+}
+
+KObject3d KObject3d::Create()
+{
+	return KObject3d();
 }

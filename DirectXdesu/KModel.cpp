@@ -1,8 +1,6 @@
 #include "KModel.h"
 #include "KDirectXCommon.h"
 
-KModel::ObjMaterialInfo KModel::objMtl;
-
 Cube::Cube() {
 	vertices = {
 		//  x	  y	    z	 n    u	   v
@@ -207,7 +205,6 @@ Line::Line() {
 
 void KModel::LoadMaterial(const std::string& directoryPath, const std::string& filename)
 {
-	KTexture texture;
 	// ファイルストリーム
 	std::ifstream file;
 	// マテリアルファイルを開く
@@ -264,7 +261,7 @@ void KModel::LoadMaterial(const std::string& directoryPath, const std::string& f
 			// テクスチャのファイル名読み込み
 			line_stream >> objMtl.textureFilename;
 			// テクスチャ読み込み
-			texture.LoadTexture(directoryPath, objMtl.textureFilename);
+			texture.CreateTexture(directoryPath, objMtl.textureFilename);
 		}
 	}
 	// ファイルを閉じる

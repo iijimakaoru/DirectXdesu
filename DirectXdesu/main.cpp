@@ -401,7 +401,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 		// 3Dオブジェクトのアップデート
 		for (int i = 0; i < ObjectNum; i++) {
-			object3d[i]->Update(viewProjection->matView, viewProjection->matProjection);
+			object3d[i]->Update(viewProjection->matView, viewProjection->matProjection, &obj);
 		}
 
 #pragma endregion
@@ -423,7 +423,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		// 描画コマンド
 		for (int i = 0; i < ObjectNum; i++)
 		{
-			object3d[i]->Draw(&haikei, &obj);
+			object3d[i]->Draw(&obj);
 		}
 		// スプライト描画
 		sprite->SpriteCommonBeginDraw(spriteCommon);

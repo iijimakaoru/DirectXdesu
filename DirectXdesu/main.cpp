@@ -65,17 +65,22 @@ PipelineSet Create3DObjectGpipeline()
 	gpipeline.RasterizerState.CullMode = D3D12_CULL_MODE_BACK; // 背面をカリング
 	gpipeline.RasterizerState.FillMode = D3D12_FILL_MODE_SOLID;
 	gpipeline.RasterizerState.DepthClipEnable = true;
+
 	// ブレンドステート
 	gpipeline.BlendState.RenderTarget[0].RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
+
 	// 頂点レイアウトの設定
 	gpipeline.InputLayout.pInputElementDescs = inputLayout;
 	gpipeline.InputLayout.NumElements = _countof(inputLayout);
+
 	// 図形の形状設定
 	gpipeline.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+
 	// その他の設定
 	gpipeline.NumRenderTargets = 1;
 	gpipeline.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
 	gpipeline.SampleDesc.Count = 1;
+
 	// レンダーターゲットのブレンド設定
 	D3D12_RENDER_TARGET_BLEND_DESC& blenddesc = gpipeline.BlendState.RenderTarget[0];
 	blenddesc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
@@ -83,10 +88,12 @@ PipelineSet Create3DObjectGpipeline()
 	blenddesc.BlendOpAlpha = D3D12_BLEND_OP_ADD;
 	blenddesc.SrcBlendAlpha = D3D12_BLEND_ONE;
 	blenddesc.DestBlendAlpha = D3D12_BLEND_ZERO;
+
 	// 半透明合成
 	blenddesc.BlendOp = D3D12_BLEND_OP_ADD;
 	blenddesc.SrcBlend = D3D12_BLEND_SRC_ALPHA;
 	blenddesc.DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
+
 	// デスクリプタレンジの設定
 	D3D12_DESCRIPTOR_RANGE descriptorRange{};
 	descriptorRange.NumDescriptors = 1;
@@ -111,11 +118,6 @@ PipelineSet Create3DObjectGpipeline()
 	rootParam[2].Descriptor.ShaderRegister = 1;
 	rootParam[2].Descriptor.RegisterSpace = 0;
 	rootParam[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
-
-	/*CD3DX12_ROOT_PARAMETER rootParams[3];
-	rootParams[0].InitAsConstantBufferView(0, 0, D3D12_SHADER_VISIBILITY_ALL);
-	rootParams[1].InitAsConstantBufferView(1, 0, D3D12_SHADER_VISIBILITY_ALL);
-	rootParams[2].InitAsDescriptorTable(1, &descriptorRange, D3D12_SHADER_VISIBILITY_ALL);*/
 
 	// テクスチャサンブラーの設定
 	D3D12_STATIC_SAMPLER_DESC samplerDesc{};
@@ -173,10 +175,6 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	win = new KWinApp();
 #pragma endregion
 #pragma region DirectX初期化
-	// KDirectCommon
-	/*KDirectXCommon* dxCommon = nullptr;
-	dxCommon = new KDirectXCommon();
-	dxCommon->Init(win);*/
 	KDirectXCommon::Init(win);
 	// キーボード入力
 	KInput* input = nullptr;
@@ -195,8 +193,12 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	cube.CreateModel();
 	KModel line = Line();
 	line.CreateModel();
-	KModel obj = MtlObj();
-	obj.CreateModel();
+	KModel objTriangle = MtlObj("triangle_mat");
+	objTriangle.CreateModel();
+	KModel piramid = MtlObj("pramid");
+	piramid.CreateModel();
+	KModel tekitou = MtlObj("tekitou");
+	tekitou.CreateModel();
 #pragma endregion
 #pragma region テクスチャ初期化
 	const wchar_t* msg = L"Resources/texture/mario.jpg";
@@ -226,10 +228,10 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		if (i > 0) {
 			object3d[i]->material->colorR = object3d[i]->material->colorG = object3d[i]->material->colorB = 1.0f;
 		}
+		object3d[i]->transform.scale = { 10,10,10 };
 	}
-	object3d[0]->transform.scale = { 10,10,10 };
-	object3d[0]->LoadModel(&obj);
-	object3d[1]->LoadModel(&cube);
+	object3d[0]->LoadModel(&piramid);
+	object3d[1]->LoadModel(&tekitou);
 #pragma endregion
 #pragma region ビュー
 	// ビュープロジェクション
@@ -283,6 +285,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 #pragma endregion
 #pragma endregion
 
+	bool isTexture = false;
+
 	// ウィンドウ表示
 	// ゲームループ
 	while (true)
@@ -309,28 +313,43 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		}
 
 		// 背景色変え
-		if (input->IsTriger(DIK_SPACE)) {
-			sound->SoundPlayWave(sound->GetxAudio().Get(), soundData1);
+		if (input->IsTriger(DIK_SPACE)) 
+		{
+			if (!isTexture)
+			{
+				isTexture = true;
+			}
+			else
+			{
+				isTexture = false;
+			}
 		}
+
 		// 画像色変え
-		if (object3d[0]->material->colorR <= 0 || object3d[0]->material->colorR >= 1) {
+		if (object3d[0]->material->colorR <= 0 || object3d[0]->material->colorR >= 1) 
+		{
 			rSpeed *= -1;
 		}
-		if (object3d[0]->material->colorG <= 0 || object3d[0]->material->colorG >= 1) {
+		if (object3d[0]->material->colorG <= 0 || object3d[0]->material->colorG >= 1) 
+		{
 			gSpeed *= -1;
 		}
-		if (object3d[0]->material->colorB <= 0 || object3d[0]->material->colorB >= 1) {
+		if (object3d[0]->material->colorB <= 0 || object3d[0]->material->colorB >= 1) 
+		{
 			bSpeed *= -1;
 		}
-		if (object3d[0]->material->colorA <= 0 || object3d[0]->material->colorA >= 1) {
+		if (object3d[0]->material->colorA <= 0 || object3d[0]->material->colorA >= 1) 
+		{
 			aSpeed *= -1;
 		}
 		object3d[0]->material->colorR += rSpeed;
 		object3d[0]->material->colorG += gSpeed;
 		object3d[0]->material->colorB += bSpeed;
-		if (input->IsPush(DIK_X)) {
+		if (input->IsPush(DIK_X)) 
+		{
 			object3d[0]->material->colorA += aSpeed;
 		}
+
 		// 図形縦回転
 		if (input->IsPush(DIK_C) ||
 			input->IsPush(DIK_V))
@@ -345,7 +364,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 				object3d[0]->transform.rot.z -= 0.1f;
 			}
 		}
-		////カメラ移動
+
+		//カメラ移動
 		if (input->IsPush(DIK_D) || input->IsPush(DIK_A) ||
 			input->IsPush(DIK_W) || input->IsPush(DIK_S))
 		{
@@ -370,6 +390,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 			viewProjection->eye.y = viewProjection->lenZ * sinf(viewProjection->angleY);
 			viewProjection->eye.z = viewProjection->lenZ * cosf(viewProjection->angleX) * cosf(viewProjection->angleY);
 		}
+
 		// 横回転
 		if (input->IsPush(DIK_RIGHT) ||
 			input->IsPush(DIK_LEFT))
@@ -383,16 +404,18 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 				object3d[0]->transform.rot.y += 0.1f;
 			}
 		}
+
 		// 前ベクトル
 		object3d[0]->rotResult.x = sin(object3d[0]->transform.rot.y) * center.z;
 		object3d[0]->rotResult.z = cos(object3d[0]->transform.rot.y) * center.z;
+
 		// 移動
 		/*object3d[0]->transform.pos.x += (speed)*object3d[0]->rotResult.x;
 		object3d[0]->transform.pos.z += (speed)*object3d[0]->rotResult.z;*/
 		object3d[0]->transform.pos.x += (input->IsPush(DIK_RIGHT) - input->IsPush(DIK_LEFT)) * speed;
 		object3d[0]->transform.pos.z += (input->IsPush(DIK_UP) - input->IsPush(DIK_DOWN)) * speed;
 
-		object3d[1]->transform.pos.x = object3d[0]->transform.pos.x + 15;
+		object3d[1]->transform.pos.x = object3d[0]->transform.pos.x + 20;
 		object3d[1]->transform.pos.z = object3d[0]->transform.pos.z;
 		object3d[1]->transform.pos.y = object3d[0]->transform.pos.y + 10;
 
@@ -427,18 +450,33 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		{
 			object3d[i]->Draw();
 		}*/
-		object3d[0]->Draw();
-		object3d[1]->Draw(&haikei);
+		if (!isTexture)
+		{
+			object3d[0]->Draw();
+		}
+		else
+		{
+			object3d[0]->Draw(&mario);
+		}
+		object3d[1]->Draw();
+
 		// スプライト描画
 		sprite->SpriteCommonBeginDraw(spriteCommon);
-		for (int i = 0; i < _countof(sprites); i++)
+		/*for (int i = 0; i < _countof(sprites); i++)
 		{
 			sprite->SpriteDraw(sprites[i], spriteCommon);
-		}
+		}*/
 
-		debugtext->Print(spriteCommon, "Hello,DirectX!!", { 200,100 });
-		debugtext->Print(spriteCommon, "Nihon Kogakuin", { 200,200 }, 2.0f);
-		debugtext->Print(spriteCommon, "FPS(w)" + std::to_string(KDirectXCommon::GetInstance()->fps), { 200,300 }, 2.0f);
+		if (!isTexture)
+		{
+			debugtext->Print(spriteCommon, "Textrue:mtl", { 10,10 }, 2.0f);
+		}
+		else
+		{
+			debugtext->Print(spriteCommon, "Textrue:tex", { 10,10 }, 2.0f);
+		}
+		//debugtext->Print(spriteCommon, "Nihon Kogakuin", { 200,200 }, 2.0f);
+		debugtext->Print(spriteCommon, "FPS(w)" + std::to_string(KDirectXCommon::GetInstance()->fps), { 10,50 }, 2.0f);
 		debugtext->DrawAll(spriteCommon);
 
 		// 描画コマンドここまで

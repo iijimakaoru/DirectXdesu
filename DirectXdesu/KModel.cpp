@@ -58,7 +58,8 @@ Cube::Cube() {
 	};
 }
 
-Triangle::Triangle() {
+Triangle::Triangle() 
+{
 	ifstream file;
 
 	file.open("Resources/obj/triangle_tex.obj");
@@ -273,12 +274,11 @@ void KModel::CreateModel()
 	vertexs.reset(new KVertex(KDirectXCommon::GetInstance()->GetDev(), vertices, indices));
 }
 
-MtlObj::MtlObj()
+MtlObj::MtlObj(const string modelname)
 {
 	ifstream file;
 
 	//file.open("Resources/obj/triangle_tex.obj");
-	const string modelname = "triangle_mat";
 	const string filename = modelname + ".obj";
 	const string directoryPath = "Resources/obj/";
 	file.open(directoryPath + filename);
@@ -369,7 +369,8 @@ MtlObj::MtlObj()
 				vertex.uv = texcoords[indexTexcoord - 1];
 				vertices.emplace_back(vertex);
 
-				indices.emplace_back(indexPosition - 1);
+				//indices.emplace_back(indexPosition - 1);
+				indices.emplace_back((unsigned short)indices.size());
 			}
 		}
 	}

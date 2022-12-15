@@ -17,14 +17,18 @@ struct ConstBufferDataTransform {
 struct WorldTransfom {
 	// 定数バッファ(行列)
 	ID3D12Resource* constBuffTransform = {};
+
 	// 定数バッファマップ(行列)
 	ConstBufferDataTransform* constMapTransform = {};
+
 	// アフィン変換
 	Vector3 scale = { 1,1,1 };
 	Vector3 rot = { 0,0,0 };
 	Vector3 pos = { 0,0,0 };
+
 	// ワールド変換行列
 	XMMATRIX matWorld = {};
+
 	// 親オブジェクトへのポインタ
 	WorldTransfom* parent = nullptr;
 };
@@ -43,10 +47,6 @@ public:
 	static KObject3d Create();
 
 	Vector3 rotResult;
-	// ヒープ設定
-	//D3D12_HEAP_PROPERTIES cbHeapProp{};
-	// リソース設定
-	//D3D12_RESOURCE_DESC cbResourceDesc{};
 
 	ComPtr<ID3D12Resource> constBuffB0;
 	ComPtr<ID3D12Resource> constBuffB1;

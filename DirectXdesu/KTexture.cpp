@@ -55,6 +55,7 @@ void KTexture::SetTextureBuff() {
 	textureHeapProp.Type = D3D12_HEAP_TYPE_CUSTOM;
 	textureHeapProp.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_WRITE_BACK;
 	textureHeapProp.MemoryPoolPreference = D3D12_MEMORY_POOL_L0;
+
 	// リソース設定
 	textureResourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
 	textureResourceDesc.Format = metadata.format;
@@ -80,6 +81,7 @@ void KTexture::SendData() {
 	for (size_t i = 0; i < metadata.mipLevels; i++) {
 		// ミニマップレベルを指定してイメージを取得
 		const Image* img = scraychImg.GetImage(i, 0, 0);
+
 		// テクスチャバッファにデータ転送
 		result = texBuff->WriteToSubresource(
 			(UINT)i,

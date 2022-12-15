@@ -7,20 +7,10 @@ KObject3d::KObject3d() {
 }
 
 void KObject3d::Initialize() {
-	//// ヒープ設定
-	//cbHeapProp.Type = D3D12_HEAP_TYPE_UPLOAD;
-	//// リソース設定
-	//cbResourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-	//cbResourceDesc.Width = (sizeof(ConstBufferDataTransform) + 0xff) & ~0xff;
-	//cbResourceDesc.Height = 1;
-	//cbResourceDesc.DepthOrArraySize = 1;
-	//cbResourceDesc.MipLevels = 1;
-	//cbResourceDesc.SampleDesc.Count = 1;
-	//cbResourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
-	
 	// ヒープ設定
 	D3D12_HEAP_PROPERTIES heapProp{};
 	heapProp.Type = D3D12_HEAP_TYPE_UPLOAD;
+
 	// 定数バッファB1
 	// リソース設定
 	D3D12_RESOURCE_DESC b1ResourceDesc{};
@@ -31,6 +21,7 @@ void KObject3d::Initialize() {
 	b1ResourceDesc.MipLevels = 1;
 	b1ResourceDesc.SampleDesc.Count = 1;
 	b1ResourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+
 	// 定数バッファの生成
 	result = KDirectXCommon::GetInstance()->GetDev()->CreateCommittedResource(
 		&heapProp,
@@ -40,6 +31,7 @@ void KObject3d::Initialize() {
 		nullptr,
 		IID_PPV_ARGS(&constBuffB1));
 	assert(SUCCEEDED(result));
+
 	// 定数バッファB0
 	// リソース設定
 	D3D12_RESOURCE_DESC b0ResourceDesc{};
@@ -50,6 +42,7 @@ void KObject3d::Initialize() {
 	b0ResourceDesc.MipLevels = 1;
 	b0ResourceDesc.SampleDesc.Count = 1;
 	b0ResourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+
 	// 定数バッファの生成
 	result = KDirectXCommon::GetInstance()->GetDev()->CreateCommittedResource(
 		&heapProp,

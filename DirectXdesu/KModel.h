@@ -75,6 +75,6 @@ public:
 class MtlObj : public KModel
 {
 public:
-	MtlObj();
+	MtlObj(const string modelname);
 	~MtlObj() {};
 };

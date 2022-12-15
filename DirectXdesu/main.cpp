@@ -371,24 +371,32 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		{
 			if (input->IsPush(DIK_D))
 			{
-				viewProjection->angleX += XMConvertToRadians(1.0f);
+				//viewProjection->angleX += XMConvertToRadians(1.0f);
+				viewProjection->eye.x += 0.5f;
+				viewProjection->target.x += 0.5f;
 			}
 			else if (input->IsPush(DIK_A))
 			{
-				viewProjection->angleX -= XMConvertToRadians(1.0f);
+				//viewProjection->angleX -= XMConvertToRadians(1.0f);
+				viewProjection->eye.x -= 0.5f;
+				viewProjection->target.x -= 0.5f;
 			}
 			if (input->IsPush(DIK_W))
 			{
-				viewProjection->angleY -= XMConvertToRadians(1.0f);
+				//viewProjection->angleY -= XMConvertToRadians(1.0f);
+				viewProjection->eye.y += 0.5f;
+				viewProjection->target.y += 0.5f;
 			}
 			else if (input->IsPush(DIK_S))
 			{
-				viewProjection->angleY += XMConvertToRadians(1.0f);
+				//viewProjection->angleY += XMConvertToRadians(1.0f);
+				viewProjection->eye.y -= 0.5f;
+				viewProjection->target.y -= 0.5f;
 			}
 			// angleƒ‰ƒWƒAƒ“yŽ²‰ñ“]
-			viewProjection->eye.x = viewProjection->lenZ * sinf(viewProjection->angleX);
+			/*viewProjection->eye.x = viewProjection->lenZ * sinf(viewProjection->angleX);
 			viewProjection->eye.y = viewProjection->lenZ * sinf(viewProjection->angleY);
-			viewProjection->eye.z = viewProjection->lenZ * cosf(viewProjection->angleX) * cosf(viewProjection->angleY);
+			viewProjection->eye.z = viewProjection->lenZ * cosf(viewProjection->angleX) * cosf(viewProjection->angleY);*/
 		}
 
 		// ‰¡‰ñ“]

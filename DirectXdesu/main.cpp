@@ -199,6 +199,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	piramid.CreateModel();
 	KModel tekitou = MtlObj("tekitou");
 	tekitou.CreateModel();
+	KModel sqhere = MtlObj("sqheredesu");
+	sqhere.CreateModel();
 #pragma endregion
 #pragma region テクスチャ初期化
 	const wchar_t* msg = L"Resources/texture/mario.jpg";
@@ -231,7 +233,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		object3d[i]->transform.scale = { 10,10,10 };
 	}
 	object3d[0]->LoadModel(&piramid);
-	object3d[1]->LoadModel(&tekitou);
+	object3d[1]->LoadModel(&sqhere);
 #pragma endregion
 #pragma region ビュー
 	// ビュープロジェクション

@@ -199,6 +199,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	piramid.CreateModel();
 	KModel tekitou = MtlObj("tekitou");
 	tekitou.CreateModel();
+	KModel boxSky = MtlObj("boxSky");
+	boxSky.CreateModel();
 #pragma endregion
 #pragma region テクスチャ初期化
 	const wchar_t* msg = L"Resources/texture/mario.jpg";
@@ -233,6 +235,14 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	object3d[0]->LoadModel(&piramid);
 	object3d[1]->LoadModel(&tekitou);
 #pragma endregion
+
+	// 天球
+	KObject3d boxSkydorm;
+	boxSkydorm.Initialize();
+	boxSkydorm.LoadModel(&boxSky);
+
+	boxSkydorm.transform.scale = { 320,320,320 };
+
 #pragma region ビュー
 	// ビュープロジェクション
 	ViewProjection* viewProjection;
@@ -300,13 +310,12 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 		// 更新
 #pragma region 基盤の更新
-		// ウィンドウ更新
-
 		// input更新
 		input->Update();
 #pragma endregion
 
 #pragma region シーンの更新
+		// スプライトのアップデート
 		for (int i = 0; i < _countof(sprites); i++)
 		{
 			sprite->SpriteUpdate(sprites[i], spriteCommon);
@@ -429,6 +438,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 			object3d[i]->Update(viewProjection->matView, viewProjection->matProjection);
 		}
 
+		
+		boxSkydorm.Update(viewProjection->matView, viewProjection->matProjection);
 #pragma endregion
 
 #pragma region 描画
@@ -460,12 +471,14 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		}
 		object3d[1]->Draw();
 
+		boxSkydorm.Draw();
+
 		// スプライト描画
 		sprite->SpriteCommonBeginDraw(spriteCommon);
-		/*for (int i = 0; i < _countof(sprites); i++)
+		for (int i = 0; i < _countof(sprites); i++)
 		{
 			sprite->SpriteDraw(sprites[i], spriteCommon);
-		}*/
+		}
 
 		if (!isTexture)
 		{

@@ -15,5 +15,11 @@ private:
 	KModel* model_;
 
 	float speed;
+
+	bool isJump;
+
+	float jumpPower;
+
+	const int jumpPowerMax = 5;
 };
 

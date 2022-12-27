@@ -319,30 +319,35 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 			}
 		}
 
-		//カメラ移動
+		//カメラ操作
 		if (KInput::GetInstance()->IsPush(DIK_D) || KInput::GetInstance()->IsPush(DIK_A) ||
 			KInput::GetInstance()->IsPush(DIK_W) || KInput::GetInstance()->IsPush(DIK_S))
 		{
 			if (KInput::GetInstance()->IsPush(DIK_D))
 			{
-				viewProjection.angleX += XMConvertToRadians(1.0f);
+				viewProjection.eye.x += 0.5f;
+				viewProjection.target.x += 0.5f;
 			}
 			else if (KInput::GetInstance()->IsPush(DIK_A))
 			{
-				viewProjection.angleX -= XMConvertToRadians(1.0f);
+				viewProjection.eye.x -= 0.5f;
+				viewProjection.target.x -= 0.5f;
 			}
 			if (KInput::GetInstance()->IsPush(DIK_W))
 			{
-				viewProjection.angleY -= XMConvertToRadians(1.0f);
+				viewProjection.eye.z += 0.5f;
+				viewProjection.target.z += 0.5f;
 			}
 			else if (KInput::GetInstance()->IsPush(DIK_S))
 			{
-				viewProjection.angleY += XMConvertToRadians(1.0f);
+				viewProjection.eye.z -= 0.5f;
+				viewProjection.target.z -= 0.5f;
 			}
+
 			// angleラジアンy軸回転
-			viewProjection.eye.x = viewProjection.lenZ * sinf(viewProjection.angleX);
+			/*viewProjection.eye.x = viewProjection.lenZ * sinf(viewProjection.angleX);
 			viewProjection.eye.y = viewProjection.lenZ * sinf(viewProjection.angleY);
-			viewProjection.eye.z = viewProjection.lenZ * cosf(viewProjection.angleX) * cosf(viewProjection.angleY);
+			viewProjection.eye.z = viewProjection.lenZ * cosf(viewProjection.angleX) * cosf(viewProjection.angleY);*/
 		}
 
 		player.Update(viewProjection.matView, viewProjection.matProjection);

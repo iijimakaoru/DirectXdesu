@@ -1,6 +1,7 @@
 #pragma once
 #include "KObject3d.h"
 #include "KModel.h"
+#include "Vector2.h"
 
 class Player
 {
@@ -21,5 +22,7 @@ private:
 	float jumpPower;
 
 	const int jumpPowerMax = 5;
+
+	Vector2 stick;
 };
 

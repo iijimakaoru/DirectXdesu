@@ -12,9 +12,9 @@ public:
 
 	// メンバ関数
 	float Length()const;
-	Vector3& normalize();
-	float dot(const Vector3& v)const;
-	Vector3 cross(const Vector3& v)const;
+	Vector3& Normalize();
+	float Dot(const Vector3& v)const;
+	Vector3 Cross(const Vector3& v)const;
 
 	// 単項演算子オーバーロード
 	Vector3 operator+()const;

@@ -19,13 +19,39 @@ void Player::Init(KModel* model)
 
 void Player::Update(XMMATRIX& matView, XMMATRIX& matProjection)
 {
-	object.transform.pos.x += (KInput::GetInstance()->IsPush(DIK_RIGHT) - KInput::GetInstance()->IsPush(DIK_LEFT)) * speed;
-	object.transform.pos.z += (KInput::GetInstance()->IsPush(DIK_UP) - KInput::GetInstance()->IsPush(DIK_DOWN)) * speed;
+	XMFLOAT3 moveVec = { 0,0,0 };
 
-	if (KInput::GetInstance()->IsTriger(DIK_SPACE))
+	stick = KInput::GetInstance()->GetPadLStick();
+	if (KInput::GetInstance()->GetPadConnect())
 	{
-		isJump = true;
-		jumpPower = jumpPowerMax;
+		if (KInput::GetInstance()->GetPadLStick().x > 0.5)
+		{
+			object.transform.pos.x += speed;
+		}
+		else if (KInput::GetInstance()->GetPadLStick().x < -0.5)
+		{
+			object.transform.pos.x -= speed;
+		}
+
+		if (KInput::GetInstance()->GetPadLStick().y > 0.5)
+		{
+			object.transform.pos.z += speed;
+		}
+		else if (KInput::GetInstance()->GetPadLStick().y < -0.5)
+		{
+			object.transform.pos.z -= speed;
+		}
+	}
+	else
+	{
+		object.transform.pos.x += (KInput::GetInstance()->IsPush(DIK_RIGHT) - KInput::GetInstance()->IsPush(DIK_LEFT)) * speed;
+		object.transform.pos.z += (KInput::GetInstance()->IsPush(DIK_UP) - KInput::GetInstance()->IsPush(DIK_DOWN)) * speed;
+
+		if (KInput::GetInstance()->IsTriger(DIK_SPACE))
+		{
+			isJump = true;
+			jumpPower = jumpPowerMax;
+		}
 	}
 
 	if (isJump)

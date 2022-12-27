@@ -1,42 +1,93 @@
 #include "KInput.h"
 #include <cassert>
 
-void KInput::Init(KWinApp* win) {
+KInput* KInput::GetInstance()
+{
+	static KInput instance;
+	return &instance;
+}
+
+void KInput::Init(KWinApp* win) 
+{
+	GetInstance()->InitInternal(win);
+}
+
+void KInput::InitInternal(KWinApp* win)
+{
 	assert(win);
 
-	KInput::GetInstance()->win = win;
+	this->win = win;
 
 	// 入力初期化
-	KInput::GetInstance()->result = DirectInput8Create(win->GetWindow().hInstance, DIRECTINPUT_VERSION, IID_IDirectInput8,
-		(void**)&KInput::GetInstance()->directInput, nullptr);
-	assert(SUCCEEDED(KInput::GetInstance()->result));
+	result = DirectInput8Create(this->win->GetWindow().hInstance, DIRECTINPUT_VERSION, IID_IDirectInput8,
+		(void**)&directInput, nullptr);
+	assert(SUCCEEDED(result));
 
 	// キーボードデバイスの生成
-	KInput::GetInstance()->result = KInput::GetInstance()->directInput->CreateDevice(GUID_SysKeyboard, &KInput::GetInstance()->keyboad, NULL);
-	assert(SUCCEEDED(KInput::GetInstance()->result));
+	result = directInput->CreateDevice(GUID_SysKeyboard, &keyboard, NULL);
+	assert(SUCCEEDED(result));
 
 	// 入力データ形式のセット
-	KInput::GetInstance()->result = KInput::GetInstance()->keyboad->SetDataFormat(&c_dfDIKeyboard);
-	assert(SUCCEEDED(KInput::GetInstance()->result));
+	result = keyboard->SetDataFormat(&c_dfDIKeyboard);
+	assert(SUCCEEDED(result));
 
 	// 排他制御レベルのセット
-	KInput::GetInstance()->result = KInput::GetInstance()->keyboad->SetCooperativeLevel(win->GetHWND(), DISCL_FOREGROUND | DISCL_NONEXCLUSIVE | DISCL_NOWINKEY);
-	assert(SUCCEEDED(KInput::GetInstance()->result));
+	result = keyboard->SetCooperativeLevel(this->win->GetHWND(), DISCL_FOREGROUND | DISCL_NONEXCLUSIVE | DISCL_NOWINKEY);
+	assert(SUCCEEDED(result));
+
+	ZeroMemory(&xInputState, sizeof(XINPUT_STATE));
+	DWORD dresult;
+	dresult = XInputGetState(0, &xInputState);
+
+	if (result == ERROR_SUCCESS)
+	{
+		isConnectPad = true;
+	}
+	else
+	{
+		isConnectPad = false;
+	}
 }
 
-void KInput::Update() {
+void KInput::Update() 
+{
+	KInput* instance = GetInstance();
+
 	// キーボードの情報取得
-	KInput::GetInstance()->keyboad->Acquire();
-	// 一フレーム前の入力の保存
-	KeyInit();
-	// 全キー入力情報を取得
-	KInput::GetInstance()->result = KInput::GetInstance()->keyboad->GetDeviceState(sizeof(KInput::GetInstance()->key), KInput::GetInstance()->key);
-}
+	instance->keyboard->Acquire();
 
-void KInput::KeyInit() {
+	// 全キー入力情報を取得
 	for (int i = 0; i < 256; i++)
 	{
-		KInput::GetInstance()->oldkey[i] = KInput::GetInstance()->key[i];
+		instance->oldkey[i] = instance->key[i];
+	}
+	instance->keyboard->GetDeviceState(sizeof(key), instance->key);
+
+	instance->oldXInputState = instance->xInputState;
+	DWORD dresult = XInputGetState(0, &instance->xInputState);
+	if (dresult == ERROR_SUCCESS) {
+		instance->isConnectPad = true;
+	}
+	else {
+		instance->isConnectPad = false;
+	}
+
+	if ((instance->xInputState.Gamepad.sThumbLX <  XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE &&
+		instance->xInputState.Gamepad.sThumbLX > -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE) &&
+		(instance->xInputState.Gamepad.sThumbLY <  XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE &&
+			instance->xInputState.Gamepad.sThumbLY > -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE))
+	{
+		instance->xInputState.Gamepad.sThumbLX = 0;
+		instance->xInputState.Gamepad.sThumbLY = 0;
+	}
+
+	if ((instance->xInputState.Gamepad.sThumbRX <  XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE &&
+		instance->xInputState.Gamepad.sThumbRX > -XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE) &&
+		(instance->xInputState.Gamepad.sThumbRY <  XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE &&
+			instance->xInputState.Gamepad.sThumbRY > -XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE))
+	{
+		instance->xInputState.Gamepad.sThumbRX = 0;
+		instance->xInputState.Gamepad.sThumbRY = 0;
 	}
 }
 
@@ -68,8 +119,76 @@ bool KInput::IsRelease(int keyNum) {
 	return false;
 }
 
-KInput* KInput::GetInstance()
+bool KInput::GetPadConnect()
 {
-	static KInput instance;
-	return &instance;
+	return isConnectPad;
+}
+
+bool KInput::GetPadButton(UINT button)
+{
+	return xInputState.Gamepad.wButtons == button;
+}
+
+bool KInput::GetPadButtonUp(UINT button)
+{
+	return xInputState.Gamepad.wButtons != button && oldXInputState.Gamepad.wButtons == button;
+}
+
+bool KInput::GetPadButtonDown(UINT button)
+{
+	return xInputState.Gamepad.wButtons == button && oldXInputState.Gamepad.wButtons != button;
+}
+
+Vector2 KInput::GetPadLStick()
+{
+	SHORT x = xInputState.Gamepad.sThumbLX;
+	SHORT y = xInputState.Gamepad.sThumbLY;
+
+	return Vector2(static_cast<float>(x) / 32767.0f, static_cast<float>(y) / 32767.0f);
+}
+
+Vector2 KInput::GetPadRStick()
+{
+	SHORT x = xInputState.Gamepad.sThumbRX;
+	SHORT y = xInputState.Gamepad.sThumbRY;
+
+	return Vector2(static_cast<float>(x) / 32767.0f, static_cast<float>(y) / 32767.0f);
+}
+
+bool KInput::GetLTriggerDown()
+{
+	if (oldXInputState.Gamepad.bLeftTrigger < 128 && xInputState.Gamepad.bLeftTrigger >= 128)
+	{
+		return true;
+	}
+	return false;
+}
+
+bool KInput::GetRTriggerDown()
+{
+	if (oldXInputState.Gamepad.bRightTrigger < 128 && xInputState.Gamepad.bRightTrigger >= 128)
+	{
+		return true;
+	}
+	return false;
+}
+
+bool KInput::GetLStickUp()
+{
+	if (oldXInputState.Gamepad.sThumbLY < XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE &&
+		xInputState.Gamepad.sThumbLY >= XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)
+	{
+		return true;
+	}
+	return false;
+}
+
+bool KInput::GetLStickDown()
+{
+	if (oldXInputState.Gamepad.sThumbLY > -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE &&
+		xInputState.Gamepad.sThumbLY <= -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)
+	{
+		return true;
+	}
+	return false;
 }

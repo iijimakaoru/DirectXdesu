@@ -9,7 +9,7 @@ float Vector3::Length()const {
 	return std::sqrt((x * x) + (y * y) + (z * z));
 }
 
-Vector3& Vector3::normalize() {
+Vector3& Vector3::Normalize() {
 	float len = Length();
 	if (len != 0) {
 		return *this /= len;
@@ -17,11 +17,11 @@ Vector3& Vector3::normalize() {
 	return *this;
 }
 
-float Vector3::dot(const Vector3& v)const {
+float Vector3::Dot(const Vector3& v)const {
 	return (x * v.x) + (y * v.y) + (z * v.z);
 }
 
-Vector3 Vector3::cross(const Vector3& v)const {
+Vector3 Vector3::Cross(const Vector3& v)const {
 	Vector3 vec3;
 	vec3.x = y * v.z - v.y * z;
 	vec3.y = z * v.x - x * v.z;

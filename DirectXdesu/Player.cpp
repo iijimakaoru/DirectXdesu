@@ -5,6 +5,7 @@ void Player::Init(KModel* model)
 {
 	// オブジェクトの初期化
 	object.Initialize();
+	object.transform.pos.y = -10;
 	object.transform.scale = { 10,10,10 };
 	// モデルの読み込み
 	model_ = model;
@@ -41,13 +42,19 @@ void Player::Update(XMMATRIX& matView, XMMATRIX& matProjection)
 		{
 			object.transform.pos.z -= speed;
 		}
+
+		if (KInput::GetInstance()->GetPadButtonDown(XINPUT_GAMEPAD_A) && !isJump)
+		{
+			isJump = true;
+			jumpPower = jumpPowerMax;
+		}
 	}
 	else
 	{
 		object.transform.pos.x += (KInput::GetInstance()->IsPush(DIK_RIGHT) - KInput::GetInstance()->IsPush(DIK_LEFT)) * speed;
 		object.transform.pos.z += (KInput::GetInstance()->IsPush(DIK_UP) - KInput::GetInstance()->IsPush(DIK_DOWN)) * speed;
 
-		if (KInput::GetInstance()->IsTriger(DIK_SPACE))
+		if (KInput::GetInstance()->IsTriger(DIK_SPACE) && !isJump)
 		{
 			isJump = true;
 			jumpPower = jumpPowerMax;
@@ -64,6 +71,12 @@ void Player::Update(XMMATRIX& matView, XMMATRIX& matProjection)
 			jumpPower = 0;
 		}
 	}
+
+	float limit = 190;
+	object.transform.pos.x = max(object.transform.pos.x, -limit);
+	object.transform.pos.x = min(object.transform.pos.x, limit);
+	object.transform.pos.z = max(object.transform.pos.z, -limit);
+	object.transform.pos.z = min(object.transform.pos.z, limit);
 
 	object.Update(matView, matProjection);
 }

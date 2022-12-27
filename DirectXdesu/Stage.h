@@ -3,25 +3,15 @@
 #include "KModel.h"
 #include "Vector2.h"
 
-class Player
+class Stage
 {
 public:
 	void Init(KModel* model);
 	void Update(XMMATRIX& matView, XMMATRIX& matProjection);
-	void Draw();
+	void Draw(KTexture* texture);
 
 	KObject3d object;
 
 	KModel* model_;
-
-	float speed;
-
-	bool isJump;
-
-	float jumpPower;
-
-	const int jumpPowerMax = 5;
-
-	Vector2 stick;
 };
 

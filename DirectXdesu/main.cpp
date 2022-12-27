@@ -22,6 +22,7 @@
 #include "DebugText.h"
 
 #include"Player.h"
+#include"Stage.h"
 
 PipelineSet Create3DObjectGpipeline()
 {
@@ -221,6 +222,10 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	Player player;
 	player.Init(&piramid);
 
+	// ステージ
+	Stage stage;
+	stage.Init(&cube);
+
 	// 天球
 	KObject3d boxSkydorm;
 	boxSkydorm.Initialize();
@@ -349,7 +354,11 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 			viewProjection.eye.z = viewProjection.lenZ * cosf(viewProjection.angleX) * cosf(viewProjection.angleY);*/
 		}
 
+
+
 		player.Update(viewProjection.matView, viewProjection.matProjection);
+
+		stage.Update(viewProjection.matView, viewProjection.matProjection);
 
 		// ビューのアップデート
 		viewProjection.Update(KWinApp::window_width, KWinApp::window_height);
@@ -374,6 +383,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		// 描画コマンド
 		player.Draw();
 
+		stage.Draw(&mario);
+
 		boxSkydorm.Draw();
 
 		// スプライト描画
@@ -391,8 +402,6 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 #pragma region 基盤の終了
 	sound->GetxAudio().Reset();
 	sound->SoundUnLoad(&soundData1);
-	// DirectXCommon解放
-	//delete dxCommon;
 	// WindowsAPI終了処理
 	win->Finalize();
 	// WindowsAPI解放

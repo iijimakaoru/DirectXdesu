@@ -177,9 +177,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 #pragma region DirectX初期化
 	KDirectXCommon::Init(win);
 	// キーボード入力
-	KInput* input = nullptr;
-	input = new KInput();
-	input->Init(win);
+	KInput::Init(win);
 #pragma endregion
 #pragma endregion
 
@@ -218,23 +216,10 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 #pragma region グラフィックスパイプライン設定
 	// 3Dオブジェクト用パイプライン生成
 	PipelineSet object3dPipelineSet = Create3DObjectGpipeline();
-#pragma region 3Dオブジェクト初期化
-	const int ObjectNum = 2;
-	const int LineNum = 6;
-	// 3Dオブジェクト
-	KObject3d* object3d[ObjectNum];
-	for (int i = 0; i < ObjectNum; i++) {
-		object3d[i] = new KObject3d();
-		object3d[i]->Initialize();
-		object3d[i]->transform.scale = { 1.0f,1,1 };
-		if (i > 0) {
-			object3d[i]->material->colorR = object3d[i]->material->colorG = object3d[i]->material->colorB = 1.0f;
-		}
-		object3d[i]->transform.scale = { 10,10,10 };
-	}
-	object3d[0]->LoadModel(&piramid);
-	object3d[1]->LoadModel(&tekitou);
-#pragma endregion
+
+	// プレイヤー
+	Player player;
+	player.Init(&piramid);
 
 	// 天球
 	KObject3d boxSkydorm;
@@ -245,8 +230,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 #pragma region ビュー
 	// ビュープロジェクション
-	ViewProjection* viewProjection;
-	viewProjection = new ViewProjection(KWinApp::window_width, KWinApp::window_height);
+	ViewProjection viewProjection;
+	viewProjection.Initialize(KWinApp::window_width, KWinApp::window_height);
 #pragma endregion
 
 #pragma endregion
@@ -263,22 +248,22 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 	SoundData soundData1 = sound->SoundLoadWave("Resources/Sound/fanfare.wav");
 #pragma region スプライト
-	Sprite* sprite = new Sprite();
-	sprite->Init(KDirectXCommon::GetInstance());
+	Sprite sprite;
+	sprite.Init(KDirectXCommon::GetInstance());
 
 	SpriteCommon spriteCommon;
-	spriteCommon = sprite->SpriteCommonCreate();
+	spriteCommon = sprite.SpriteCommonCreate();
 
-	sprite->SpriteCommonLoadTexture(spriteCommon, 0, L"Resources/texture/haikei.jpg");
-	sprite->SpriteCommonLoadTexture(spriteCommon, 1, L"Resources/texture/mario.jpg");
+	sprite.SpriteCommonLoadTexture(spriteCommon, 0, L"Resources/texture/haikei.jpg");
+	sprite.SpriteCommonLoadTexture(spriteCommon, 1, L"Resources/texture/mario.jpg");
 
 	SpriteInfo sprites[2];
 	for (int i = 0; i < _countof(sprites); i++)
 	{
-		sprites[i] = sprite->SpriteCreate(sprites[i].texNum, spriteCommon);
+		sprites[i] = sprite.SpriteCreate(sprites[i].texNum, spriteCommon);
 		sprites[i].size.x = 100.0f;
 		sprites[i].size.y = 100.0f;
-		sprite->SpriteTransferVertexBuffer(sprites[i], spriteCommon);
+		sprite.SpriteTransferVertexBuffer(sprites[i], spriteCommon);
 	}
 	sprites[0].texNum = 0;
 	sprites[1].texNum = 1;
@@ -290,8 +275,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	DebugText* debugtext = new DebugText();
 
 	const int debugTextNumber = 2;
-	sprite->SpriteCommonLoadTexture(spriteCommon, debugTextNumber, L"Resources/texture/tex1.png");
-	debugtext->Init(sprite, debugTextNumber, spriteCommon);
+	sprite.SpriteCommonLoadTexture(spriteCommon, debugTextNumber, L"Resources/texture/tex1.png");
+	debugtext->Init(&sprite, debugTextNumber, spriteCommon);
 #pragma endregion
 #pragma endregion
 
@@ -302,7 +287,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	while (true)
 	{
 #pragma region ウィンドウメッセージ
-		if (win->ProcessMessage() || input->IsPush(DIK_ESCAPE))
+		if (win->ProcessMessage() || KInput::GetInstance()->IsPush(DIK_ESCAPE))
 		{
 			break;
 		}
@@ -311,18 +296,18 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		// 更新
 #pragma region 基盤の更新
 		// input更新
-		input->Update();
+		KInput::Update();
 #pragma endregion
 
 #pragma region シーンの更新
 		// スプライトのアップデート
 		for (int i = 0; i < _countof(sprites); i++)
 		{
-			sprite->SpriteUpdate(sprites[i], spriteCommon);
+			sprite.SpriteUpdate(sprites[i], spriteCommon);
 		}
 
 		// 背景色変え
-		if (input->IsTriger(DIK_SPACE)) 
+		if (KInput::GetInstance()->IsTriger(DIK_SPACE))
 		{
 			if (!isTexture)
 			{
@@ -334,112 +319,38 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 			}
 		}
 
-		// 画像色変え
-		if (object3d[0]->material->colorR <= 0 || object3d[0]->material->colorR >= 1) 
-		{
-			rSpeed *= -1;
-		}
-		if (object3d[0]->material->colorG <= 0 || object3d[0]->material->colorG >= 1) 
-		{
-			gSpeed *= -1;
-		}
-		if (object3d[0]->material->colorB <= 0 || object3d[0]->material->colorB >= 1) 
-		{
-			bSpeed *= -1;
-		}
-		if (object3d[0]->material->colorA <= 0 || object3d[0]->material->colorA >= 1) 
-		{
-			aSpeed *= -1;
-		}
-		object3d[0]->material->colorR += rSpeed;
-		object3d[0]->material->colorG += gSpeed;
-		object3d[0]->material->colorB += bSpeed;
-		if (input->IsPush(DIK_X)) 
-		{
-			object3d[0]->material->colorA += aSpeed;
-		}
-
-		// 図形縦回転
-		if (input->IsPush(DIK_C) ||
-			input->IsPush(DIK_V))
-		{
-			if (input->IsPush(DIK_C))
-			{
-				object3d[0]->transform.rot.z += 0.1f;
-			}
-
-			if (input->IsPush(DIK_V))
-			{
-				object3d[0]->transform.rot.z -= 0.1f;
-			}
-		}
-
 		//カメラ移動
-		if (input->IsPush(DIK_D) || input->IsPush(DIK_A) ||
-			input->IsPush(DIK_W) || input->IsPush(DIK_S))
+		if (KInput::GetInstance()->IsPush(DIK_D) || KInput::GetInstance()->IsPush(DIK_A) ||
+			KInput::GetInstance()->IsPush(DIK_W) || KInput::GetInstance()->IsPush(DIK_S))
 		{
-			if (input->IsPush(DIK_D))
+			if (KInput::GetInstance()->IsPush(DIK_D))
 			{
-				viewProjection->angleX += XMConvertToRadians(1.0f);
+				viewProjection.angleX += XMConvertToRadians(1.0f);
 			}
-			else if (input->IsPush(DIK_A))
+			else if (KInput::GetInstance()->IsPush(DIK_A))
 			{
-				viewProjection->angleX -= XMConvertToRadians(1.0f);
+				viewProjection.angleX -= XMConvertToRadians(1.0f);
 			}
-			if (input->IsPush(DIK_W))
+			if (KInput::GetInstance()->IsPush(DIK_W))
 			{
-				viewProjection->angleY -= XMConvertToRadians(1.0f);
+				viewProjection.angleY -= XMConvertToRadians(1.0f);
 			}
-			else if (input->IsPush(DIK_S))
+			else if (KInput::GetInstance()->IsPush(DIK_S))
 			{
-				viewProjection->angleY += XMConvertToRadians(1.0f);
+				viewProjection.angleY += XMConvertToRadians(1.0f);
 			}
 			// angleラジアンy軸回転
-			viewProjection->eye.x = viewProjection->lenZ * sinf(viewProjection->angleX);
-			viewProjection->eye.y = viewProjection->lenZ * sinf(viewProjection->angleY);
-			viewProjection->eye.z = viewProjection->lenZ * cosf(viewProjection->angleX) * cosf(viewProjection->angleY);
+			viewProjection.eye.x = viewProjection.lenZ * sinf(viewProjection.angleX);
+			viewProjection.eye.y = viewProjection.lenZ * sinf(viewProjection.angleY);
+			viewProjection.eye.z = viewProjection.lenZ * cosf(viewProjection.angleX) * cosf(viewProjection.angleY);
 		}
 
-		// 横回転
-		if (input->IsPush(DIK_RIGHT) ||
-			input->IsPush(DIK_LEFT))
-		{
-			if (input->IsPush(DIK_RIGHT))
-			{
-				object3d[0]->transform.rot.y -= 0.1f;
-			}
-			if (input->IsPush(DIK_LEFT))
-			{
-				object3d[0]->transform.rot.y += 0.1f;
-			}
-		}
-
-		// 前ベクトル
-		object3d[0]->rotResult.x = sin(object3d[0]->transform.rot.y) * center.z;
-		object3d[0]->rotResult.z = cos(object3d[0]->transform.rot.y) * center.z;
-
-		// 移動
-		/*object3d[0]->transform.pos.x += (speed)*object3d[0]->rotResult.x;
-		object3d[0]->transform.pos.z += (speed)*object3d[0]->rotResult.z;*/
-		object3d[0]->transform.pos.x += (input->IsPush(DIK_RIGHT) - input->IsPush(DIK_LEFT)) * speed;
-		object3d[0]->transform.pos.z += (input->IsPush(DIK_UP) - input->IsPush(DIK_DOWN)) * speed;
-
-		object3d[1]->transform.pos.x = object3d[0]->transform.pos.x + 20;
-		object3d[1]->transform.pos.z = object3d[0]->transform.pos.z;
-		object3d[1]->transform.pos.y = object3d[0]->transform.pos.y + 10;
-
-		object3d[1]->transform.rot = object3d[0]->transform.rot;
+		player.Update(viewProjection.matView, viewProjection.matProjection);
 
 		// ビューのアップデート
-		viewProjection->Update(KWinApp::window_width, KWinApp::window_height);
-
-		// 3Dオブジェクトのアップデート
-		for (int i = 0; i < ObjectNum; i++) {
-			object3d[i]->Update(viewProjection->matView, viewProjection->matProjection);
-		}
-
+		viewProjection.Update(KWinApp::window_width, KWinApp::window_height);
 		
-		boxSkydorm.Update(viewProjection->matView, viewProjection->matProjection);
+		boxSkydorm.Update(viewProjection.matView, viewProjection.matProjection);
 #pragma endregion
 
 #pragma region 描画
@@ -457,38 +368,13 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 #pragma region 描画コマンド
 		// 描画コマンド
-		/*for (int i = 0; i < ObjectNum; i++)
-		{
-			object3d[i]->Draw();
-		}*/
-		if (!isTexture)
-		{
-			object3d[0]->Draw();
-		}
-		else
-		{
-			object3d[0]->Draw(&mario);
-		}
-		object3d[1]->Draw();
+		player.Draw();
 
 		boxSkydorm.Draw();
 
 		// スプライト描画
-		sprite->SpriteCommonBeginDraw(spriteCommon);
-		for (int i = 0; i < _countof(sprites); i++)
-		{
-			sprite->SpriteDraw(sprites[i], spriteCommon);
-		}
-
-		if (!isTexture)
-		{
-			debugtext->Print(spriteCommon, "Textrue:mtl", { 10,10 }, 2.0f);
-		}
-		else
-		{
-			debugtext->Print(spriteCommon, "Textrue:tex", { 10,10 }, 2.0f);
-		}
-		//debugtext->Print(spriteCommon, "Nihon Kogakuin", { 200,200 }, 2.0f);
+		sprite.SpriteCommonBeginDraw(spriteCommon);
+		
 		debugtext->Print(spriteCommon, "FPS(w)" + std::to_string(KDirectXCommon::GetInstance()->fps), { 10,50 }, 2.0f);
 		debugtext->DrawAll(spriteCommon);
 
@@ -498,13 +384,9 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		KDirectXCommon::PostDraw();
 	}
 
-	delete sprite;
-
 #pragma region 基盤の終了
 	sound->GetxAudio().Reset();
 	sound->SoundUnLoad(&soundData1);
-	// 入力解放
-	delete input;
 	// DirectXCommon解放
 	//delete dxCommon;
 	// WindowsAPI終了処理

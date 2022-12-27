@@ -1,46 +1,42 @@
 #include "KInput.h"
 #include <cassert>
 
-KInput::KInput() {
-	
-}
-
 void KInput::Init(KWinApp* win) {
 	assert(win);
 
-	this->win = win;
+	KInput::GetInstance()->win = win;
 
 	// 入力初期化
-	result = DirectInput8Create(win->GetWindow().hInstance, DIRECTINPUT_VERSION, IID_IDirectInput8,
-		(void**)&directInput, nullptr);
-	assert(SUCCEEDED(result));
+	KInput::GetInstance()->result = DirectInput8Create(win->GetWindow().hInstance, DIRECTINPUT_VERSION, IID_IDirectInput8,
+		(void**)&KInput::GetInstance()->directInput, nullptr);
+	assert(SUCCEEDED(KInput::GetInstance()->result));
 
 	// キーボードデバイスの生成
-	result = directInput->CreateDevice(GUID_SysKeyboard, &keyboad, NULL);
-	assert(SUCCEEDED(result));
+	KInput::GetInstance()->result = KInput::GetInstance()->directInput->CreateDevice(GUID_SysKeyboard, &KInput::GetInstance()->keyboad, NULL);
+	assert(SUCCEEDED(KInput::GetInstance()->result));
 
 	// 入力データ形式のセット
-	result = keyboad->SetDataFormat(&c_dfDIKeyboard);
-	assert(SUCCEEDED(result));
+	KInput::GetInstance()->result = KInput::GetInstance()->keyboad->SetDataFormat(&c_dfDIKeyboard);
+	assert(SUCCEEDED(KInput::GetInstance()->result));
 
 	// 排他制御レベルのセット
-	result = keyboad->SetCooperativeLevel(win->GetHWND(), DISCL_FOREGROUND | DISCL_NONEXCLUSIVE | DISCL_NOWINKEY);
-	assert(SUCCEEDED(result));
+	KInput::GetInstance()->result = KInput::GetInstance()->keyboad->SetCooperativeLevel(win->GetHWND(), DISCL_FOREGROUND | DISCL_NONEXCLUSIVE | DISCL_NOWINKEY);
+	assert(SUCCEEDED(KInput::GetInstance()->result));
 }
 
 void KInput::Update() {
 	// キーボードの情報取得
-	keyboad->Acquire();
+	KInput::GetInstance()->keyboad->Acquire();
 	// 一フレーム前の入力の保存
 	KeyInit();
 	// 全キー入力情報を取得
-	result = keyboad->GetDeviceState(sizeof(key), key);
+	KInput::GetInstance()->result = KInput::GetInstance()->keyboad->GetDeviceState(sizeof(KInput::GetInstance()->key), KInput::GetInstance()->key);
 }
 
 void KInput::KeyInit() {
 	for (int i = 0; i < 256; i++)
 	{
-		oldkey[i] = key[i];
+		KInput::GetInstance()->oldkey[i] = KInput::GetInstance()->key[i];
 	}
 }
 
@@ -70,4 +66,10 @@ bool KInput::IsRelease(int keyNum) {
 		return true;
 	}
 	return false;
+}
+
+KInput* KInput::GetInstance()
+{
+	static KInput instance;
+	return &instance;
 }

@@ -12,10 +12,9 @@ using namespace Microsoft::WRL;
 class KInput
 {
 public:
-	KInput();
-	void Init(KWinApp* win);
-	void Update();
-	void KeyInit();
+	static void Init(KWinApp* win);
+	static void Update();
+	static void KeyInit();
 
 	bool IsPush(int keyNum);
 	bool IsPress(int keyNum);
@@ -36,5 +35,14 @@ private:
 	KWinApp* win = nullptr;
 
 	HRESULT result;
+
+public:
+	static KInput* GetInstance();
+
+private:
+	KInput() = default;
+	~KInput() = default;
+	KInput(const KInput&) = default;
+	const KInput& operator=(const KInput&) = delete;
 };
 

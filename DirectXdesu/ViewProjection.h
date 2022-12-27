@@ -9,7 +9,6 @@ class ViewProjection
 {
 public:
 	ViewProjection();
-	ViewProjection(int width, int height);
 	void Initialize(int width, int height);
 	void Update(int width, int height);
 

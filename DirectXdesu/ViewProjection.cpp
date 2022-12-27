@@ -3,10 +3,6 @@
 
 ViewProjection::ViewProjection(){}
 
-ViewProjection::ViewProjection(int width, int height) {
-	Initialize(width, height);
-}
-
 void ViewProjection::Initialize(int width, int height) {
 	lenZ = -100;
 	angleX = 0.0f;

@@ -12,21 +12,26 @@ public:
 	void Update(ViewProjection& viewProjection);
 	void Draw();
 
+	// オブジェクト
 	KObject3d object;
 
+	// モデル
 	KModel* model_;
 
+	// 速度
 	float speed;
 
+	// 
 	bool isJump;
-
 	float jumpPower;
-
 	const int jumpPowerMax = 5;
 
 	Vector2 stick;
 
+	// テクスチャ
 	KTexture texture_;
+
+	ViewProjection view;
 
 	static Player* nowPlayer;
 };

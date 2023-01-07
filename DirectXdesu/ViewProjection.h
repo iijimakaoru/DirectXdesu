@@ -4,6 +4,8 @@
 #include "Vector3.h"
 #include "KWinApp.h"
 
+#define PI 3.1415927f
+
 using namespace DirectX;
 
 class ViewProjection

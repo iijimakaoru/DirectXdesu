@@ -5,7 +5,7 @@ ViewProjection::ViewProjection(){}
 
 void ViewProjection::Initialize() {
 	lenZ = -100;
-	angleX = 0.0f;
+	angleX = XMConvertToRadians(90.0f);
 	angleY = 0.0f;
 	eye = { angleX, angleY, lenZ };
 	target = { 0, 0, 0 };

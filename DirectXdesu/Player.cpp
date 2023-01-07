@@ -19,11 +19,41 @@ void Player::Init(KModel* model)
 	jumpPower = 0;
 	// テクスチャ
 	texture_.CreateTexture("Resources/texture/", "playerColor.png");
+	// カメラ
+	view.Initialize();
+	view.aspect = (float)KWinApp::GetWindowSizeW() / KWinApp::GetWindowSizeH();
+
+	view.lenZ = -150;
 }
 
 void Player::Update(ViewProjection& viewProjection)
 {
 	XMFLOAT3 moveVec = { 0,0,0 };
+
+	if (KInput::GetInstance()->IsPush(DIK_D))
+	{
+		view.angleX += XMConvertToRadians(1.0f);
+	}
+	else if (KInput::GetInstance()->IsPush(DIK_A))
+	{
+		view.angleX -= XMConvertToRadians(1.0f);
+	}
+	if (KInput::GetInstance()->IsPush(DIK_W))
+	{
+		view.angleY += XMConvertToRadians(1.0f);
+	}
+	else if (KInput::GetInstance()->IsPush(DIK_S))
+	{
+		view.angleY -= XMConvertToRadians(1.0f);
+	}
+	// angleラジアンy軸回転
+	view.eye.x = view.lenZ * cosf(view.angleX) * cosf(view.angleY) + Player::nowPlayer->object.transform.pos.x;
+	view.eye.y = (view.lenZ * sinf(view.angleY) + Player::nowPlayer->object.transform.pos.y) + 5;
+	view.eye.z = view.lenZ * sinf(view.angleX) * cosf(view.angleY) + Player::nowPlayer->object.transform.pos.z;
+
+	view.target.x = Player::nowPlayer->object.transform.pos.x;
+	view.target.y = Player::nowPlayer->object.transform.pos.y + 10;
+	view.target.z = Player::nowPlayer->object.transform.pos.z;
 
 	stick = KInput::GetInstance()->GetPadLStick();
 	if (KInput::GetInstance()->GetPadConnect())
@@ -81,7 +111,9 @@ void Player::Update(ViewProjection& viewProjection)
 	object.transform.pos.z = max(object.transform.pos.z, -limit);
 	object.transform.pos.z = min(object.transform.pos.z, limit);
 
-	object.Update(viewProjection);
+	object.Update(view);
+
+	view.Update();
 }
 
 void Player::Draw()

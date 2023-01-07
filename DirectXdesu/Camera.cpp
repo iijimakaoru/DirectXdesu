@@ -1,5 +1,5 @@
 #include "Camera.h"
 
-using namespace std;
-
-Camera* Camera::nowCamera = nullptr;
+//using namespace std;
+//
+//Camera* Camera::nowCamera = nullptr;

@@ -337,34 +337,34 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		}
 
 		//カメラ操作
-		if (KInput::GetInstance()->IsPush(DIK_D) || KInput::GetInstance()->IsPush(DIK_A) ||
-			KInput::GetInstance()->IsPush(DIK_W) || KInput::GetInstance()->IsPush(DIK_S))
+		if (KInput::GetInstance()->IsPush(DIK_D))
 		{
-			if (KInput::GetInstance()->IsPush(DIK_D))
-			{
-				viewProjection.eye.x += 0.5f;
-				viewProjection.target.x += 0.5f;
-			}
-			else if (KInput::GetInstance()->IsPush(DIK_A))
-			{
-				viewProjection.eye.x -= 0.5f;
-				viewProjection.target.x -= 0.5f;
-			}
-			if (KInput::GetInstance()->IsPush(DIK_W))
-			{
-				viewProjection.eye.z += 0.5f;
-				viewProjection.target.z += 0.5f;
-			}
-			else if (KInput::GetInstance()->IsPush(DIK_S))
-			{
-				viewProjection.eye.z -= 0.5f;
-				viewProjection.target.z -= 0.5f;
-			}
-			// angleラジアンy軸回転
-			viewProjection.eye.x = viewProjection.lenZ * sinf(viewProjection.angleX);
-			viewProjection.eye.y = viewProjection.lenZ * sinf(viewProjection.angleY);
-			viewProjection.eye.z = viewProjection.lenZ * cosf(viewProjection.angleX) * cosf(viewProjection.angleY);
+			viewProjection.angleX += XMConvertToRadians(1.0f);
 		}
+		else if (KInput::GetInstance()->IsPush(DIK_A))
+		{
+			viewProjection.angleX -= XMConvertToRadians(1.0f);
+		}
+		if (KInput::GetInstance()->IsPush(DIK_W))
+		{
+			viewProjection.angleY -= XMConvertToRadians(1.0f);
+		}
+		else if (KInput::GetInstance()->IsPush(DIK_S))
+		{
+			viewProjection.angleY += XMConvertToRadians(1.0f);
+		}
+		// angleラジアンy軸回転
+		viewProjection.eye.x = viewProjection.lenZ * sinf(viewProjection.angleX) + Player::nowPlayer->object.transform.pos.x;
+		viewProjection.eye.y = viewProjection.lenZ * sinf(viewProjection.angleY) + Player::nowPlayer->object.transform.pos.y;
+		viewProjection.eye.z = viewProjection.lenZ * cosf(viewProjection.angleX) * cosf(viewProjection.angleY) + Player::nowPlayer->object.transform.pos.z;
+
+		viewProjection.target.x = Player::nowPlayer->object.transform.pos.x;
+		viewProjection.target.y = Player::nowPlayer->object.transform.pos.y + 1;
+		viewProjection.target.z = Player::nowPlayer->object.transform.pos.z;
+
+		/*viewProjection.target.x = viewProjection.eye.x - 100 * cosf(PI / 180 * viewProjection.angleX) * cosf(PI / 180 * viewProjection.angleY);
+		viewProjection.target.y = viewProjection.eye.y + 100 * sinf(PI / 180 * viewProjection.angleY);
+		viewProjection.target.z = viewProjection.eye.z + 100 * sinf(PI / 180 * viewProjection.angleX) * cosf(PI / 180 * viewProjection.angleY);*/
 
 		if (gameScene == Scene::Title)
 		{
@@ -378,7 +378,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		{
 			player.Update(viewProjection);
 
-			boss.Update(viewProjection);
+			boss.Update(Player::nowPlayer->view);
 		}
 		if (gameScene == Scene::Clear)
 		{
@@ -389,12 +389,12 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 		}
 
-		stage.Update(viewProjection);
+		stage.Update(Player::nowPlayer->view);
 
 		// ビューのアップデート
 		viewProjection.Update();
 
-		boxSkydorm.Update(viewProjection);
+		boxSkydorm.Update(Player::nowPlayer->view);
 #pragma endregion
 
 #pragma region 描画

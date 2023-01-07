@@ -3,24 +3,35 @@
 
 class KWinApp
 {
+private:
+	KWinApp() {};
+	~KWinApp() = default;
+	KWinApp(const KWinApp& win) {};
+	KWinApp& operator=(const KWinApp&) = default;
+	static LRESULT WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
+
+	void InitInternal();
+
 public:
-	KWinApp();
-	~KWinApp();
+	static void Init();
+	static KWinApp* GetInstance();
+
+	static int GetWindowSizeW();
+	static int GetWindowSizeH();
+	
 	bool ProcessMessage();
 	void Finalize();
-	static LRESULT WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
-	HWND GetHWND() { return hwnd; }
-	WNDCLASSEX GetWindow() { return window; }
-
-	// ウィンドウサイズ
-	static const int window_width = 1280;
-	static const int window_height = 720;
+	
+	static HWND GetHWND();
+	static WNDCLASSEX GetWindow();
 
 private:
+	// ウィンドウサイズ
+	int window_width = 1280;
+	int window_height = 720;
+
 	// ウィンドウクラスの設定
 	WNDCLASSEX window{};
-	// ウィンドウサイズ
-	RECT rect = { 0,0,window_width,window_height };
 	
 	HWND hwnd;
 };

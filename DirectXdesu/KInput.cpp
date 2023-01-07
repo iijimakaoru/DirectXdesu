@@ -1,5 +1,6 @@
 #include "KInput.h"
 #include <cassert>
+#include"KWinApp.h"
 
 KInput* KInput::GetInstance()
 {
@@ -7,19 +8,15 @@ KInput* KInput::GetInstance()
 	return &instance;
 }
 
-void KInput::Init(KWinApp* win) 
+void KInput::Init() 
 {
-	GetInstance()->InitInternal(win);
+	GetInstance()->InitInternal();
 }
 
-void KInput::InitInternal(KWinApp* win)
+void KInput::InitInternal()
 {
-	assert(win);
-
-	this->win = win;
-
 	// 入力初期化
-	result = DirectInput8Create(this->win->GetWindow().hInstance, DIRECTINPUT_VERSION, IID_IDirectInput8,
+	result = DirectInput8Create(KWinApp::GetWindow().hInstance, DIRECTINPUT_VERSION, IID_IDirectInput8,
 		(void**)&directInput, nullptr);
 	assert(SUCCEEDED(result));
 
@@ -32,7 +29,7 @@ void KInput::InitInternal(KWinApp* win)
 	assert(SUCCEEDED(result));
 
 	// 排他制御レベルのセット
-	result = keyboard->SetCooperativeLevel(this->win->GetHWND(), DISCL_FOREGROUND | DISCL_NONEXCLUSIVE | DISCL_NOWINKEY);
+	result = keyboard->SetCooperativeLevel(KWinApp::GetHWND(), DISCL_FOREGROUND | DISCL_NONEXCLUSIVE | DISCL_NOWINKEY);
 	assert(SUCCEEDED(result));
 
 	ZeroMemory(&xInputState, sizeof(XINPUT_STATE));

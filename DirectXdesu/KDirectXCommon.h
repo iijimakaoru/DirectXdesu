@@ -18,7 +18,7 @@ using namespace Microsoft::WRL;
 class KDirectXCommon
 {
 public:
-	static void Init(KWinApp* win);
+	static void Init();
 
 	static void PreDraw();
 
@@ -75,8 +75,6 @@ private:
 	float bRed = 0.1f;
 	float bGreen = 0.25f;
 	float bBule = 0.5f;
-
-	KWinApp* win = nullptr;
 
 	//KDepth* depth = nullptr;
 

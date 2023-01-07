@@ -16,7 +16,7 @@ using namespace Microsoft::WRL;
 class KInput
 {
 public:
-	static void Init(KWinApp* win);
+	static void Init();
 	static void Update();
 
 	bool IsPush(int keyNum);
@@ -76,8 +76,6 @@ private:
 	XINPUT_STATE oldXInputState;
 	bool isConnectPad = false;
 
-	KWinApp* win = nullptr;
-
 	HRESULT result;
 
 public:
@@ -89,6 +87,6 @@ private:
 	KInput(const KInput&) = default;
 	const KInput& operator=(const KInput&) = delete;
 
-	void InitInternal(KWinApp* win);
+	void InitInternal();
 };
 

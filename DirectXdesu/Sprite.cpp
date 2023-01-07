@@ -295,7 +295,7 @@ SpriteInfo Sprite::SpriteCreate(UINT texNumber, const SpriteCommon& spriteCommon
 	constMap->color = XMFLOAT4(1, 1, 1, 1); // 色指定
 
 	// 平行投影行列
-	constMap->mat = XMMatrixOrthographicOffCenterLH(0.0f, KWinApp::window_width, KWinApp::window_height , 0.0f, 0.0f, 1.0f);
+	constMap->mat = XMMatrixOrthographicOffCenterLH(0.0f, KWinApp::GetWindowSizeW(), KWinApp::GetWindowSizeH(), 0.0f, 0.0f, 1.0f);
 	sprite.constBuff->Unmap(0, nullptr);
 
 	return sprite;
@@ -353,7 +353,7 @@ SpriteCommon Sprite::SpriteCommonCreate()
 	spriteCommon.pipelineSet = SpriteCreateGraphicsPipeline();
 
 	spriteCommon.matProjection = XMMatrixOrthographicOffCenterLH(
-		0.0f, (float)KWinApp::window_width, (float)KWinApp::window_height, 0.0f, 0.0f, 1.0f);
+		0.0f, (float)KWinApp::GetWindowSizeW(), (float)KWinApp::GetWindowSizeH(), 0.0f, 0.0f, 1.0f);
 
 	return spriteCommon;
 }

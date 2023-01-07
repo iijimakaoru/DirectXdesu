@@ -1,14 +1,8 @@
 #include "KDirectXCommon.h"
 #include <thread>
 
-void KDirectXCommon::Init(KWinApp* win)
+void KDirectXCommon::Init()
 {
-	// NULL検出
-	assert(win);
-
-	// メンバ変数に記憶
-	GetInstance()->win = win;
-
 	// FPS固定初期化
 	GetInstance()->InitFixFPS();
 
@@ -125,8 +119,8 @@ void KDirectXCommon::InitCommand()
 void KDirectXCommon::InitSwapChain()
 {
 	// スワップチェーンの設定
-	swapChainDesc.Width = KWinApp::window_width;
-	swapChainDesc.Height = KWinApp::window_height;
+	swapChainDesc.Width = KWinApp::GetWindowSizeW();
+	swapChainDesc.Height = KWinApp::GetWindowSizeH();
 	swapChainDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 	swapChainDesc.SampleDesc.Count = 1;
 	swapChainDesc.BufferUsage = DXGI_USAGE_BACK_BUFFER;
@@ -137,7 +131,7 @@ void KDirectXCommon::InitSwapChain()
 	// スワップチェーンの生成
 	ComPtr<IDXGISwapChain1> swapchain1;
 	result = dxgiFactory->CreateSwapChainForHwnd(
-		cmdQueue.Get(), win->GetHWND(), &swapChainDesc, nullptr, nullptr,
+		cmdQueue.Get(), KWinApp::GetHWND(), &swapChainDesc, nullptr, nullptr,
 		&swapchain1);
 
 	// IDXGISwapChain1のオブジェクトをIDXGISwapChain4に変換
@@ -186,8 +180,8 @@ void KDirectXCommon::InitDepthBuffer()
 	// リソース設定
 	D3D12_RESOURCE_DESC depthResourceDesc{};
 	depthResourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
-	depthResourceDesc.Width = KWinApp::window_width; // レンダーターゲットに合わせる
-	depthResourceDesc.Height = KWinApp::window_height; // レンダーターゲットに合わせる
+	depthResourceDesc.Width = KWinApp::GetWindowSizeW(); // レンダーターゲットに合わせる
+	depthResourceDesc.Height = KWinApp::GetWindowSizeH(); // レンダーターゲットに合わせる
 	depthResourceDesc.DepthOrArraySize = 1;
 	depthResourceDesc.Format = DXGI_FORMAT_D32_FLOAT; // 深度値フォーマット
 	depthResourceDesc.SampleDesc.Count = 1;
@@ -269,8 +263,8 @@ void KDirectXCommon::PreDraw()
 #pragma region ビューポート設定コマンド
 	// ビューポート設定コマンド
 	D3D12_VIEWPORT viewport{};
-	viewport.Width = KWinApp::window_width;   // 横幅
-	viewport.Height = KWinApp::window_height; // 縦幅
+	viewport.Width = KWinApp::GetWindowSizeW();   // 横幅
+	viewport.Height = KWinApp::GetWindowSizeH(); // 縦幅
 	viewport.TopLeftX = 0;                 // 左上x
 	viewport.TopLeftY = 0;				   // 左上y
 	viewport.MinDepth = 0.0f;			   // 最小深度
@@ -283,9 +277,9 @@ void KDirectXCommon::PreDraw()
 	// シザー矩形
 	D3D12_RECT scissorRect{};
 	scissorRect.left = 0;									// 切り抜き座標左
-	scissorRect.right = scissorRect.left + KWinApp::window_width;	// 切り抜き座標右
+	scissorRect.right = scissorRect.left + KWinApp::GetWindowSizeW();	// 切り抜き座標右
 	scissorRect.top = 0;									// 切り抜き座標上
-	scissorRect.bottom = scissorRect.top + KWinApp::window_height;	// 切り抜き座標下
+	scissorRect.bottom = scissorRect.top + KWinApp::GetWindowSizeH();	// 切り抜き座標下
 	// シザー矩形設定コマンドをコマンドリストに積む
 	GetInstance()->cmdList->RSSetScissorRects(1, &scissorRect);
 #pragma endregion

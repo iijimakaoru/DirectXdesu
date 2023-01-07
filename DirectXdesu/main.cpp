@@ -172,13 +172,12 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	HRESULT result;
 #pragma region 基盤初期化
 #pragma region ウィンドウ
-	KWinApp* win = nullptr;
-	win = new KWinApp();
+	KWinApp::Init();
 #pragma endregion
 #pragma region DirectX初期化
-	KDirectXCommon::Init(win);
+	KDirectXCommon::Init();
 	// キーボード入力
-	KInput::Init(win);
+	KInput::Init();
 #pragma endregion
 #pragma endregion
 
@@ -222,6 +221,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	Player player;
 	player.Init(&piramid);
 
+	Player::nowPlayer = &player;
+
 	// ステージ
 	Stage stage;
 	stage.Init(&cube);
@@ -236,7 +237,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 #pragma region ビュー
 	// ビュープロジェクション
 	ViewProjection viewProjection;
-	viewProjection.Initialize(KWinApp::window_width, KWinApp::window_height);
+	viewProjection.Initialize(KWinApp::GetWindowSizeW(), KWinApp::GetWindowSizeH());
 #pragma endregion
 
 #pragma endregion
@@ -292,7 +293,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	while (true)
 	{
 #pragma region ウィンドウメッセージ
-		if (win->ProcessMessage() || KInput::GetInstance()->IsPush(DIK_ESCAPE))
+		if (KWinApp::GetInstance()->ProcessMessage() || KInput::GetInstance()->IsPush(DIK_ESCAPE))
 		{
 			break;
 		}
@@ -361,7 +362,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		stage.Update(viewProjection.matView, viewProjection.matProjection);
 
 		// ビューのアップデート
-		viewProjection.Update(KWinApp::window_width, KWinApp::window_height);
+		viewProjection.Update(KWinApp::GetWindowSizeW(), KWinApp::GetWindowSizeH());
 		
 		boxSkydorm.Update(viewProjection.matView, viewProjection.matProjection);
 #pragma endregion
@@ -402,11 +403,6 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 #pragma region 基盤の終了
 	sound->GetxAudio().Reset();
 	sound->SoundUnLoad(&soundData1);
-	// WindowsAPI終了処理
-	win->Finalize();
-	// WindowsAPI解放
-	delete win;
-	win = nullptr;
 #pragma endregion
 
 	return 0;

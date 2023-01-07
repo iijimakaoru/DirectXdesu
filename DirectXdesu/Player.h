@@ -23,5 +23,7 @@ public:
 	const int jumpPowerMax = 5;
 
 	Vector2 stick;
+
+	static Player* nowPlayer;
 };
 

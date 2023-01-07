@@ -15,6 +15,64 @@ LRESULT KWinApp::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 	return DefWindowProc(hwnd, msg, wparam, lparam);
 }
 
+void KWinApp::InitInternal()
+{
+	timeBeginPeriod(1);
+
+	window.cbSize = sizeof(WNDCLASSEX);
+	window.lpfnWndProc = (WNDPROC)WindowProc;
+	window.lpszClassName = L"DirectX12";
+	window.lpszMenuName = L"DirectX12";
+	window.hInstance = GetModuleHandle(nullptr);
+	window.hCursor = LoadCursor(NULL, IDC_ARROW);
+
+	// ウィンドウクラスをOSに登録する
+	RegisterClassEx(&window);
+
+	// 自分でサイズを調整する
+	// ウィンドウサイズ
+	RECT rect = { 0,0,window_width,window_height };
+	AdjustWindowRect(&rect, WS_OVERLAPPEDWINDOW, false);
+
+	// ウィンドウ作成
+	hwnd = CreateWindow(
+		window.lpszClassName,
+		window.lpszMenuName,
+		WS_OVERLAPPEDWINDOW,
+		CW_USEDEFAULT,
+		CW_USEDEFAULT,
+		(rect.right - rect.left),
+		(rect.bottom - rect.top),
+		nullptr,
+		nullptr,
+		window.hInstance,
+		nullptr);
+
+	// ウィンドウを表示状態にする
+	ShowWindow(hwnd, SW_SHOW);
+}
+
+void KWinApp::Init()
+{
+	GetInstance()->InitInternal();
+}
+
+KWinApp* KWinApp::GetInstance()
+{
+	static KWinApp instance;
+	return &instance;
+}
+
+int KWinApp::GetWindowSizeW()
+{
+	return GetInstance()->window_width;
+}
+
+int KWinApp::GetWindowSizeH()
+{
+	return GetInstance()->window_height;
+}
+
 bool KWinApp::ProcessMessage() {
 	// メッセージ格納用構造体
 	MSG msg{};
@@ -37,40 +95,12 @@ void KWinApp::Finalize()
 	UnregisterClass(window.lpszClassName, window.hInstance);
 }
 
-KWinApp::KWinApp() {
-	timeBeginPeriod(1);
-
-	window.cbSize = sizeof(WNDCLASSEX);
-	window.lpfnWndProc = (WNDPROC)WindowProc;
-	window.lpszClassName = L"DirectX12";
-	window.lpszMenuName = L"DirectX12";
-	window.hInstance = GetModuleHandle(nullptr);
-	window.hCursor = LoadCursor(NULL, IDC_ARROW);
-
-	// ウィンドウクラスをOSに登録する
-	RegisterClassEx(&window);
-
-	// 自分でサイズを調整する
-	AdjustWindowRect(&rect, WS_OVERLAPPEDWINDOW, false);
-
-	// ウィンドウ作成
-	hwnd = CreateWindow(
-		window.lpszClassName,
-		window.lpszMenuName,
-		WS_OVERLAPPEDWINDOW,
-		CW_USEDEFAULT,
-		CW_USEDEFAULT,
-		(rect.right - rect.left),
-		(rect.bottom - rect.top),
-		nullptr,
-		nullptr,
-		window.hInstance,
-		nullptr);
-
-	// ウィンドウを表示状態にする
-	ShowWindow(hwnd, SW_SHOW);
+HWND KWinApp::GetHWND()
+{
+	return GetInstance()->hwnd;
 }
 
-KWinApp::~KWinApp() {
-
+WNDCLASSEX KWinApp::GetWindow()
+{
+	return GetInstance()->window;
 }

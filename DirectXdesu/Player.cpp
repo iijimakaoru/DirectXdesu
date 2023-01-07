@@ -1,6 +1,8 @@
 #include "Player.h"
 #include "KInput.h"
 
+Player* Player::nowPlayer = nullptr;
+
 void Player::Init(KModel* model)
 {
 	// オブジェクトの初期化

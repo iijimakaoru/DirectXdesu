@@ -11,11 +11,11 @@ void Stage::Init(KModel* model)
 	object.LoadModel(model_);
 }
 
-void Stage::Update(XMMATRIX& matView, XMMATRIX& matProjection)
+void Stage::Update(ViewProjection& viewProjection)
 {
 	object.transform.pos.y = -15;
 
-	object.Update(matView, matProjection);
+	object.Update(viewProjection);
 }
 
 void Stage::Draw(KTexture* texture)

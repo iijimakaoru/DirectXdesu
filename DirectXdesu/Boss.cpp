@@ -17,7 +17,7 @@ void Boss::Init(KModel* model)
 	texture_.CreateTexture("Resources/texture/", "bossColor.png");
 }
 
-void Boss::Update(XMMATRIX& matView, XMMATRIX& matProjection)
+void Boss::Update(ViewProjection& viewProjection)
 {
 	if (startFlag && actState == nullptr)
 	{
@@ -26,7 +26,7 @@ void Boss::Update(XMMATRIX& matView, XMMATRIX& matProjection)
 
 	actState->Update();
 
-	object.Update(matView, matProjection);
+	object.Update(viewProjection);
 }
 
 void Boss::Draw()

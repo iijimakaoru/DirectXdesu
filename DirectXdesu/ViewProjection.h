@@ -2,6 +2,7 @@
 #include <DirectXMath.h>
 #include <DirectXTex.h>
 #include "Vector3.h"
+#include "KWinApp.h"
 
 using namespace DirectX;
 
@@ -9,8 +10,8 @@ class ViewProjection
 {
 public:
 	ViewProjection();
-	void Initialize(int width, int height);
-	void Update(int width, int height);
+	void Initialize();
+	void Update();
 
 	// カメラの距離
 	float lenZ = 0;
@@ -23,5 +24,7 @@ public:
 	XMFLOAT3 up{};
 	// 射影変換行列の計算
 	XMMATRIX matProjection{};
+
+	float aspect = (float)KWinApp::GetWindowSizeW() / KWinApp::GetWindowSizeH(); // アスペクト比
 };
 

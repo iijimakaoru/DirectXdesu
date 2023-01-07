@@ -6,6 +6,7 @@
 #include "KTexture.h"
 #include "KMaterial.h"
 //#include <memory>
+#include "ViewProjection.h"
 
 using namespace DirectX;
 
@@ -39,7 +40,7 @@ public:
 	KObject3d();
 	void Initialize();
 	void LoadModel(KModel* model);
-	void Update(XMMATRIX& matView, XMMATRIX& matProjection);
+	void Update(ViewProjection& viewProjection);
 	void Draw();
 	void Draw(KTexture* texture);
 

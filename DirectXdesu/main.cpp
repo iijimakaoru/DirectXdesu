@@ -24,6 +24,8 @@
 #include"Player.h"
 #include"Stage.h"
 #include"Boss.h"
+//#include "DebugCamera.h"
+//#include "Camera.h"
 
 PipelineSet Create3DObjectGpipeline()
 {
@@ -240,7 +242,10 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 #pragma region ビュー
 	// ビュープロジェクション
 	ViewProjection viewProjection;
-	viewProjection.Initialize(KWinApp::GetWindowSizeW(), KWinApp::GetWindowSizeH());
+	viewProjection.Initialize();
+	viewProjection.aspect = (float)KWinApp::GetWindowSizeW() / KWinApp::GetWindowSizeH();
+
+	//DebugCamera debugCamera({ 0,0,-10 });
 #pragma endregion
 
 #pragma endregion
@@ -365,9 +370,9 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		}
 		if (gameScene == Scene::Play)
 		{
-			player.Update(viewProjection.matView, viewProjection.matProjection);
+			player.Update(viewProjection);
 
-			boss.Update(viewProjection.matView, viewProjection.matProjection);
+			boss.Update(viewProjection);
 		}
 		if (gameScene == Scene::Clear)
 		{
@@ -378,12 +383,12 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 		}
 
-		stage.Update(viewProjection.matView, viewProjection.matProjection);
+		stage.Update(viewProjection);
 
 		// ビューのアップデート
-		viewProjection.Update(KWinApp::GetWindowSizeW(), KWinApp::GetWindowSizeH());
-		
-		boxSkydorm.Update(viewProjection.matView, viewProjection.matProjection);
+		viewProjection.Update();
+
+		boxSkydorm.Update(viewProjection);
 #pragma endregion
 
 #pragma region 描画
@@ -411,7 +416,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 		// スプライト描画
 		sprite.SpriteCommonBeginDraw(spriteCommon);
-		
+
 		debugtext->Print(spriteCommon, "FPS(w)" + std::to_string(KDirectXCommon::GetInstance()->fps), { 10,50 }, 2.0f);
 		debugtext->DrawAll(spriteCommon);
 

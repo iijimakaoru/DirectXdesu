@@ -6,6 +6,7 @@
 #include "BossActState.h"
 #include <memory>
 #include <list>
+#include "ViewProjection.h"
 
 class Boss
 {
@@ -23,7 +24,7 @@ public:
 	bool startFlag = false;
 
 	void Init(KModel* model);
-	void Update(XMMATRIX& matView, XMMATRIX& matProjection);
+	void Update(ViewProjection& viewProjection);
 	void Draw();
 };
 

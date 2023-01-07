@@ -21,7 +21,7 @@ void Player::Init(KModel* model)
 	texture_.CreateTexture("Resources/texture/", "playerColor.png");
 }
 
-void Player::Update(XMMATRIX& matView, XMMATRIX& matProjection)
+void Player::Update(ViewProjection& viewProjection)
 {
 	XMFLOAT3 moveVec = { 0,0,0 };
 
@@ -81,7 +81,7 @@ void Player::Update(XMMATRIX& matView, XMMATRIX& matProjection)
 	object.transform.pos.z = max(object.transform.pos.z, -limit);
 	object.transform.pos.z = min(object.transform.pos.z, limit);
 
-	object.Update(matView, matProjection);
+	object.Update(viewProjection);
 }
 
 void Player::Draw()

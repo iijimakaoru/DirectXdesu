@@ -3,12 +3,13 @@
 #include "KModel.h"
 #include "Vector2.h"
 #include "KTexture.h"
+#include "ViewProjection.h"
 
 class Player
 {
 public:
 	void Init(KModel* model);
-	void Update(XMMATRIX& matView, XMMATRIX& matProjection);
+	void Update(ViewProjection& viewProjection);
 	void Draw();
 
 	KObject3d object;

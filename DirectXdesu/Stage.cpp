@@ -5,7 +5,7 @@ void Stage::Init(KModel* model)
 {
 	// オブジェクトの初期化
 	object.Initialize();
-	object.transform.scale = { 40,1,40 };
+	object.transform.scale = { 200,1,200 };
 	// モデルの読み込み
 	model_ = model;
 	object.LoadModel(model_);

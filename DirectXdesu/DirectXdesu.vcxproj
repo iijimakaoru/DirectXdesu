@@ -144,6 +144,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Blend.cpp" />
+    <ClCompile Include="Boss.cpp" />
     <ClCompile Include="DebugText.cpp" />
     <ClCompile Include="GameScence.cpp" />
     <ClCompile Include="KGPlin.cpp" />
@@ -171,6 +172,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Blend.h" />
+    <ClInclude Include="Boss.h" />
     <ClInclude Include="ConstBuffer.h" />
     <ClInclude Include="DebugText.h" />
     <ClInclude Include="GameScence.h" />

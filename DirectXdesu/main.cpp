@@ -23,6 +23,7 @@
 
 #include"Player.h"
 #include"Stage.h"
+#include"Boss.h"
 
 PipelineSet Create3DObjectGpipeline()
 {
@@ -201,10 +202,6 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	boxSky.CreateModel();
 #pragma endregion
 #pragma region テクスチャ初期化
-	const wchar_t* msg = L"Resources/texture/mario.jpg";
-	const wchar_t* msg2 = L"Resources/texture/iijan.jpg";
-	const wchar_t* msg3 = L"Resources/texture/haikei.jpg";
-	const wchar_t* msg4 = L"Resources/texture/kitanai.jpg";
 	KTexture mario;
 	mario.CreateTexture("Resources/texture/", "mario.jpg");
 	KTexture kitanai;
@@ -219,9 +216,15 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 	// プレイヤー
 	Player player;
-	player.Init(&piramid);
+	player.Init(&cube);
 
 	Player::nowPlayer = &player;
+
+	// ボス
+	Boss boss;
+	boss.Init(&cube);
+
+	Boss::nowBoss = &boss;
 
 	// ステージ
 	Stage stage;
@@ -359,6 +362,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 		player.Update(viewProjection.matView, viewProjection.matProjection);
 
+		boss.Update(viewProjection.matView, viewProjection.matProjection);
+
 		stage.Update(viewProjection.matView, viewProjection.matProjection);
 
 		// ビューのアップデート
@@ -383,6 +388,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 #pragma region 描画コマンド
 		// 描画コマンド
 		player.Draw();
+
+		boss.Draw();
 
 		stage.Draw(&mario);
 

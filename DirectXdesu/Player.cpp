@@ -7,17 +7,18 @@ void Player::Init(KModel* model)
 {
 	// オブジェクトの初期化
 	object.Initialize();
-	object.transform.pos.y = -10;
+	object.transform.pos.y = -4;
 	object.transform.scale = { 10,10,10 };
 	// モデルの読み込み
 	model_ = model;
 	object.LoadModel(model_);
 	// 速度
 	speed = 1;
-
+	// ジャンプ
 	isJump = false;
-
 	jumpPower = 0;
+	// テクスチャ
+	texture_.CreateTexture("Resources/texture/", "playerColor.png");
 }
 
 void Player::Update(XMMATRIX& matView, XMMATRIX& matProjection)
@@ -85,5 +86,5 @@ void Player::Update(XMMATRIX& matView, XMMATRIX& matProjection)
 
 void Player::Draw()
 {
-	object.Draw();
+	object.Draw(&texture_);
 }

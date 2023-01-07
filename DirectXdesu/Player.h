@@ -2,6 +2,7 @@
 #include "KObject3d.h"
 #include "KModel.h"
 #include "Vector2.h"
+#include "KTexture.h"
 
 class Player
 {
@@ -23,6 +24,8 @@ public:
 	const int jumpPowerMax = 5;
 
 	Vector2 stick;
+
+	KTexture texture_;
 
 	static Player* nowPlayer;
 };

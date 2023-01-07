@@ -289,6 +289,16 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 #pragma endregion
 #pragma endregion
 
+	enum class Scene
+	{
+		Title,
+		Play,
+		Clear,
+		Over,
+	};
+
+	Scene gameScene = Scene::Title;
+
 	bool isTexture = false;
 
 	// ウィンドウ表示
@@ -313,19 +323,6 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		for (int i = 0; i < _countof(sprites); i++)
 		{
 			sprite.SpriteUpdate(sprites[i], spriteCommon);
-		}
-
-		// 背景色変え
-		if (KInput::GetInstance()->IsTriger(DIK_SPACE))
-		{
-			if (!isTexture)
-			{
-				isTexture = true;
-			}
-			else
-			{
-				isTexture = false;
-			}
 		}
 
 		//カメラ操作
@@ -358,11 +355,28 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 			viewProjection.eye.z = viewProjection.lenZ * cosf(viewProjection.angleX) * cosf(viewProjection.angleY);*/
 		}
 
+		if (gameScene == Scene::Title)
+		{
+			if (KInput::GetInstance()->IsTriger(DIK_SPACE))
+			{
+				gameScene = Scene::Play;
+				boss.startFlag = true;
+			}
+		}
+		if (gameScene == Scene::Play)
+		{
+			player.Update(viewProjection.matView, viewProjection.matProjection);
 
+			boss.Update(viewProjection.matView, viewProjection.matProjection);
+		}
+		if (gameScene == Scene::Clear)
+		{
 
-		player.Update(viewProjection.matView, viewProjection.matProjection);
+		}
+		if (gameScene == Scene::Over)
+		{
 
-		boss.Update(viewProjection.matView, viewProjection.matProjection);
+		}
 
 		stage.Update(viewProjection.matView, viewProjection.matProjection);
 

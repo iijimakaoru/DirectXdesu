@@ -3,6 +3,9 @@
 #include "KModel.h"
 #include "Vector2.h"
 #include "KTexture.h"
+#include "BossActState.h"
+#include <memory>
+#include <list>
 
 class Boss
 {
@@ -14,6 +17,10 @@ public:
 	KModel* model_;
 
 	KTexture texture_;
+
+	std::unique_ptr<BossActState> actState = nullptr;
+
+	bool startFlag = false;
 
 	void Init(KModel* model);
 	void Update(XMMATRIX& matView, XMMATRIX& matProjection);

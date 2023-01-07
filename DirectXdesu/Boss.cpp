@@ -1,4 +1,5 @@
 #include "Boss.h"
+#include "BossActStand.h"
 
 Boss* Boss::nowBoss = nullptr;
 
@@ -18,6 +19,13 @@ void Boss::Init(KModel* model)
 
 void Boss::Update(XMMATRIX& matView, XMMATRIX& matProjection)
 {
+	if (startFlag && actState == nullptr)
+	{
+		actState = std::make_unique<BossActStand>();
+	}
+
+	actState->Update();
+
 	object.Update(matView, matProjection);
 }
 

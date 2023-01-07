@@ -23,7 +23,7 @@ void Player::Init(KModel* model)
 	view.Initialize();
 	view.aspect = (float)KWinApp::GetWindowSizeW() / KWinApp::GetWindowSizeH();
 
-	view.lenZ = -150;
+	view.lenZ = -200;
 }
 
 void Player::Update(ViewProjection& viewProjection)
@@ -40,16 +40,28 @@ void Player::Update(ViewProjection& viewProjection)
 	}
 	if (KInput::GetInstance()->IsPush(DIK_W))
 	{
-		view.angleY += XMConvertToRadians(1.0f);
+		if (view.angleY < XMConvertToRadians(45.0f))
+		{
+			view.angleY += XMConvertToRadians(1.0f);
+		}
 	}
 	else if (KInput::GetInstance()->IsPush(DIK_S))
 	{
-		view.angleY -= XMConvertToRadians(1.0f);
+		if (view.angleY > XMConvertToRadians(-45.0f))
+		{
+			view.angleY -= XMConvertToRadians(1.0f);
+		}
 	}
+
 	// angleƒ‰ƒWƒAƒ“yŽ²‰ñ“]
 	view.eye.x = view.lenZ * cosf(view.angleX) * cosf(view.angleY) + Player::nowPlayer->object.transform.pos.x;
-	view.eye.y = (view.lenZ * sinf(view.angleY) + Player::nowPlayer->object.transform.pos.y) + 5;
+	view.eye.y = (view.lenZ * sinf(view.angleY) + Player::nowPlayer->object.transform.pos.y) + 10;
 	view.eye.z = view.lenZ * sinf(view.angleX) * cosf(view.angleY) + Player::nowPlayer->object.transform.pos.z;
+
+	if (view.eye.y < -14)
+	{
+		view.eye.y = -10;
+	}
 
 	view.target.x = Player::nowPlayer->object.transform.pos.x;
 	view.target.y = Player::nowPlayer->object.transform.pos.y + 10;

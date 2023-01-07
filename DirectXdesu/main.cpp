@@ -24,8 +24,8 @@
 #include"Player.h"
 #include"Stage.h"
 #include"Boss.h"
-//#include "DebugCamera.h"
-//#include "Camera.h"
+#include "DebugCamera.h"
+#include "Camera.h"
 
 PipelineSet Create3DObjectGpipeline()
 {
@@ -245,7 +245,13 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	viewProjection.Initialize();
 	viewProjection.aspect = (float)KWinApp::GetWindowSizeW() / KWinApp::GetWindowSizeH();
 
+	//// カメラ
+	//Camera camera;
+
+	//// デバッグカメラ
 	//DebugCamera debugCamera({ 0,0,-10 });
+
+	//Camera::nowCamera = &debugCamera;
 #pragma endregion
 
 #pragma endregion
@@ -355,9 +361,9 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 				viewProjection.target.z -= 0.5f;
 			}
 			// angleラジアンy軸回転
-			/*viewProjection.eye.x = viewProjection.lenZ * sinf(viewProjection.angleX);
+			viewProjection.eye.x = viewProjection.lenZ * sinf(viewProjection.angleX);
 			viewProjection.eye.y = viewProjection.lenZ * sinf(viewProjection.angleY);
-			viewProjection.eye.z = viewProjection.lenZ * cosf(viewProjection.angleX) * cosf(viewProjection.angleY);*/
+			viewProjection.eye.z = viewProjection.lenZ * cosf(viewProjection.angleX) * cosf(viewProjection.angleY);
 		}
 
 		if (gameScene == Scene::Title)

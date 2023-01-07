@@ -13,7 +13,6 @@ public:
 	Camera()
 	{
 		viewProjection.aspect = (float)KWinApp::GetWindowSizeW() / KWinApp::GetWindowSizeH();
-		viewProjection.Update();
 	}
 	virtual ~Camera(){}
 

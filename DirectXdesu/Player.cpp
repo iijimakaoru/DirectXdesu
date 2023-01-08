@@ -28,7 +28,7 @@ void Player::Init(KModel* model)
 
 void Player::Update(ViewProjection& viewProjection)
 {
-	XMFLOAT3 moveVec = { 0,0,0 };
+	Vector3 moveVec = { 0,0,0 };
 
 	if (KInput::GetInstance()->IsPush(DIK_D))
 	{
@@ -67,10 +67,40 @@ void Player::Update(ViewProjection& viewProjection)
 	view.target.y = Player::nowPlayer->object.transform.pos.y + 10;
 	view.target.z = Player::nowPlayer->object.transform.pos.z;
 
-	stick = KInput::GetInstance()->GetPadLStick();
 	if (KInput::GetInstance()->GetPadConnect())
 	{
-		if (KInput::GetInstance()->GetPadLStick().x > 0.5)
+		stick = KInput::GetInstance()->GetPadLStick();
+		if (stick.x != 0 || stick.y != 0)
+		{
+			/*float stickRad = atan2f(stick.x, stick.y);
+
+			moveVec = { 0,0,1 };
+
+			moveVec.x *= XMMatrixRotationY(stickRad);
+			moveVec.y *= XMMatrixRotationY(stickRad);
+			moveVec.z *= XMMatrixRotationY(stickRad);
+
+			moveVec.Normalize();
+
+			moveVec *= stick.length();*/
+
+			Vector3 cameraVec = 
+			{ 
+				view.target.x - view.eye.x,
+				view.target.y - view.eye.y,
+				view.target.z - view.eye.z
+			};
+
+			moveVec.x = stick.x * cameraVec.x;
+			moveVec.z = stick.y * cameraVec.z;
+
+			moveVec.Normalize();
+		}
+
+		object.transform.pos.x += moveVec.x * speed;
+		object.transform.pos.z += moveVec.z * speed;
+
+		/*if (KInput::GetInstance()->GetPadLStick().x > 0.5)
 		{
 			object.transform.pos.x += speed;
 		}
@@ -86,7 +116,7 @@ void Player::Update(ViewProjection& viewProjection)
 		else if (KInput::GetInstance()->GetPadLStick().y < -0.5)
 		{
 			object.transform.pos.z -= speed;
-		}
+		}*/
 
 		if (KInput::GetInstance()->GetPadButtonDown(XINPUT_GAMEPAD_A) && !isJump)
 		{

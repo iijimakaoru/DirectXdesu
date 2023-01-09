@@ -65,6 +65,28 @@ void BossBulletManager::WaveBullet(const Vector3& pos, const Vector3& scale, con
 	}
 }
 
+void BossBulletManager::AimBullet(const Vector3& pos, const Vector3& scale, const Vector3& rotation, const Vector3& velocity, const float speed, const float lifeTime)
+{
+	for (std::unique_ptr<BossBullet>& bossBullet : bossBullets)
+	{
+		if (bossBullet->IsDead())
+		{
+			Vector3 moveVec =
+			{
+				velocity.x * speed,
+				velocity.y * speed,
+				velocity.z * speed,
+			};
+
+			bossBullet->SetInfo(pos, moveVec, scale, rotation, lifeTime);
+
+			bossBullet->Revive();
+
+			return;
+		}
+	}
+}
+
 BossBulletManager* BossBulletManager::GetInstance()
 {
 	static BossBulletManager instance;

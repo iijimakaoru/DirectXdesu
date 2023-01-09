@@ -11,9 +11,19 @@ void BossActGap::Update()
 {
 	Boss* boss = Boss::nowBoss;
 
-	if (--timer < 0)
+	boss->object.transform.pos.y -= 5;
+
+	if (boss->object.transform.pos.y <= 0)
 	{
-		boss->actState = std::make_unique<BossActStand>();
+		boss->object.transform.pos.y = 0;
+	}
+
+	if (boss->object.transform.pos.y == 0)
+	{
+		if (--timer < 0)
+		{
+			boss->actState = std::make_unique<BossActStand>();
+		}
 	}
 }
 

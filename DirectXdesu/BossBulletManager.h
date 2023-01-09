@@ -21,6 +21,12 @@ public:
 		const float speed, 
 		float angleY, 
 		const float lifeTime);
+	void AimBullet(const Vector3& pos,
+		const Vector3& scale,
+		const Vector3& rotation,
+		const Vector3& velocity,
+		const float speed,
+		const float lifeTime);
 
 private:
 	std::list<std::unique_ptr<BossBullet>> bossBullets;

@@ -145,6 +145,7 @@
   <ItemGroup>
     <ClCompile Include="Blend.cpp" />
     <ClCompile Include="Boss.cpp" />
+    <ClCompile Include="BossActAimShot.cpp" />
     <ClCompile Include="BossActGap.cpp" />
     <ClCompile Include="BossActStamp.cpp" />
     <ClCompile Include="BossActStand.cpp" />
@@ -181,6 +182,7 @@
   <ItemGroup>
     <ClInclude Include="Blend.h" />
     <ClInclude Include="Boss.h" />
+    <ClInclude Include="BossActAimShot.h" />
     <ClInclude Include="BossActGap.h" />
     <ClInclude Include="BossActStamp.h" />
     <ClInclude Include="BossActStand.h" />

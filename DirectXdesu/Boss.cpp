@@ -1,6 +1,7 @@
 #include "Boss.h"
 #include "BossActStand.h"
 #include "BossActStamp.h"
+#include "BossActAimShot.h"
 #include "KInput.h"
 
 Boss* Boss::nowBoss = nullptr;
@@ -34,6 +35,11 @@ void Boss::Update(ViewProjection& viewProjection)
 	if (KInput::GetInstance()->IsTriger(DIK_1))
 	{
 		actState = std::make_unique<BossActStamp>();
+	}
+
+	if (KInput::GetInstance()->IsTriger(DIK_2))
+	{
+		actState = std::make_unique<BossActAimShot>();
 	}
 
 	actState->Update();

@@ -150,10 +150,13 @@
     <ClCompile Include="BossBulletManager.cpp">
       <Filter>ソース ファイル\Boss</Filter>
     </ClCompile>
-    <ClCompile Include="BossActStamp.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="BossActGap.cpp">
+      <Filter>ソース ファイル\Boss</Filter>
+    </ClCompile>
+    <ClCompile Include="BossActStamp.cpp">
+      <Filter>ソース ファイル\Boss</Filter>
+    </ClCompile>
+    <ClCompile Include="BossActAimShot.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -260,10 +263,13 @@
     <ClInclude Include="BossBulletManager.h">
       <Filter>ヘッダー ファイル\Boss</Filter>
     </ClInclude>
-    <ClInclude Include="BossActStamp.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="BossActGap.h">
+      <Filter>ヘッダー ファイル\Boss</Filter>
+    </ClInclude>
+    <ClInclude Include="BossActStamp.h">
+      <Filter>ヘッダー ファイル\Boss</Filter>
+    </ClInclude>
+    <ClInclude Include="BossActAimShot.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

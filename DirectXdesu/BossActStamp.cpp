@@ -5,6 +5,7 @@
 #include "BossBulletManager.h"
 
 #include "BossActStand.h"
+#include "BossActGap.h"
 
 BossActStamp::BossActStamp()
 {
@@ -100,18 +101,8 @@ void BossActStamp::Update()
 					}
 					inpact = true;
 				}
-
-				phase++;
-				timer = 120;
+				boss->nowBoss->actState = std::make_unique<BossActGap>();
 			}
-		}
-	}
-
-	if (phase == 5)
-	{
-		if (--timer < 0)
-		{
-			boss->nowBoss->actState = std::make_unique<BossActStand>();
 		}
 	}
 }

@@ -91,8 +91,8 @@ void Player::Update(ViewProjection& viewProjection)
 				view.target.z - view.eye.z
 			};
 
-			moveVec.x = stick.x * sinf(view.angleY);
-			moveVec.z = stick.y * cosf(view.angleY);
+			moveVec.x = stick.x;
+			moveVec.z = stick.y;
 
 			moveVec.Normalize();
 		}

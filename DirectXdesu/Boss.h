@@ -23,6 +23,10 @@ public:
 
 	bool startFlag = false;
 
+	int hp = 0;
+
+	constexpr static int maxHP = 20;
+
 	void Init(KModel* model);
 	void Update(ViewProjection& viewProjection);
 	void Draw();

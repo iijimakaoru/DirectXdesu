@@ -11,6 +11,7 @@ public:
 	void Init(KModel* model);
 	void Update(ViewProjection& viewProjection);
 	void Draw();
+	void Damage();
 
 	// オブジェクト
 	KObject3d object;
@@ -32,6 +33,10 @@ public:
 	KTexture texture_;
 
 	ViewProjection view;
+
+	int hp = 0;
+
+	constexpr static int maxHP = 20;
 
 	static Player* nowPlayer;
 };

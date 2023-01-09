@@ -18,6 +18,8 @@ void Boss::Init(KModel* model)
 	object.LoadModel(model_);
 	// テクスチャ
 	texture_.CreateTexture("Resources/texture/", "bossColor.png");
+	// HP
+	hp = maxHP;
 }
 
 void Boss::Update(ViewProjection& viewProjection)

@@ -17,9 +17,16 @@ float Vector3::LengthSq() const
 }
 
 Vector3& Vector3::Normalize() {
-	float len = Length();
-	if (len != 0) {
-		return *this /= len;
+	float length = this->Length();
+	if (length != 0) {
+		this->x = this->x / length;
+		this->y = this->y / length;
+		this->z = this->z / length;
+	}
+	else {
+		this->x = 0;
+		this->y = 0;
+		this->z = 0;
 	}
 	return *this;
 }

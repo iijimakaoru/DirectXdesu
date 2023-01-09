@@ -1,5 +1,6 @@
 #include "Player.h"
 #include "KInput.h"
+#include "Boss.h"
 
 Player* Player::nowPlayer = nullptr;
 
@@ -22,6 +23,8 @@ void Player::Init(KModel* model)
 	// ƒJƒƒ‰
 	view.Initialize();
 	view.aspect = (float)KWinApp::GetWindowSizeW() / KWinApp::GetWindowSizeH();
+
+	hp = maxHP;
 
 	view.lenZ = -200;
 }
@@ -84,21 +87,23 @@ void Player::Update(ViewProjection& viewProjection)
 
 			moveVec *= stick.length();*/
 
-			Vector3 cameraVec = 
-			{ 
-				view.target.x - view.eye.x,
-				view.target.y - view.eye.y,
-				view.target.z - view.eye.z
-			};
-
 			moveVec.x = stick.x;
 			moveVec.z = stick.y;
 
 			moveVec.Normalize();
 		}
 
-		object.transform.pos.x += moveVec.x * speed;
-		object.transform.pos.z += moveVec.z * speed;
+		Vector3 cameraVec =
+		{
+			view.target.x - view.eye.x,
+			view.target.y - view.eye.y,
+			view.target.z - view.eye.z
+		};
+
+		cameraVec.Normalize();
+
+		object.transform.pos.x += moveVec.x * cameraVec.x * speed;
+		object.transform.pos.z += moveVec.z * cameraVec.z * speed;
 
 		/*if (KInput::GetInstance()->GetPadLStick().x > 0.5)
 		{
@@ -128,6 +133,46 @@ void Player::Update(ViewProjection& viewProjection)
 	{
 		object.transform.pos.x += (KInput::GetInstance()->IsPush(DIK_RIGHT) - KInput::GetInstance()->IsPush(DIK_LEFT)) * speed;
 		object.transform.pos.z += (KInput::GetInstance()->IsPush(DIK_UP) - KInput::GetInstance()->IsPush(DIK_DOWN)) * speed;
+
+		Vector3 cameraVec =
+		{
+			view.target.x - view.eye.x,
+			view.target.y - view.eye.y,
+			view.target.z - view.eye.z
+		};
+
+		cameraVec.Normalize();
+
+		if (KInput::GetInstance()->IsPush(DIK_RIGHT))
+		{
+			moveVec.x = 1;
+		}
+		else if (KInput::GetInstance()->IsPush(DIK_LEFT))
+		{
+			moveVec.x = -1;
+		}
+		else
+		{
+			moveVec.x = 0;
+		}
+
+		if (KInput::GetInstance()->IsPush(DIK_UP))
+		{
+			moveVec.z = 1;
+		}
+		else if (KInput::GetInstance()->IsPush(DIK_DOWN))
+		{
+			moveVec.z = -1;
+		}
+		else
+		{
+			moveVec.z = 0;
+		}
+
+		moveVec.Normalize();
+
+		object.transform.pos.x += moveVec.x * cameraVec.x * speed;
+		object.transform.pos.z += moveVec.z * cameraVec.z * speed;
 
 		if (KInput::GetInstance()->IsTriger(DIK_SPACE) && !isJump)
 		{
@@ -161,4 +206,13 @@ void Player::Update(ViewProjection& viewProjection)
 void Player::Draw()
 {
 	object.Draw(&texture_);
+}
+
+void Player::Damage()
+{
+	Boss* boss = Boss::nowBoss;
+
+	Vector3 smashVec = boss->object.transform.pos - object.transform.pos;
+
+	object.transform.pos.x += -smashVec.x * 6;
 }

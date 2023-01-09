@@ -1,6 +1,7 @@
 #include "Player.h"
 #include "KInput.h"
 #include "Boss.h"
+#include "Matrix4.h"
 
 Player* Player::nowPlayer = nullptr;
 
@@ -31,97 +32,75 @@ void Player::Init(KModel* model)
 
 void Player::Update(ViewProjection& viewProjection)
 {
-	Vector3 moveVec = { 0,0,0 };
-
-	if (KInput::GetInstance()->IsPush(DIK_D))
-	{
-		view.angleX += XMConvertToRadians(1.0f);
-	}
-	else if (KInput::GetInstance()->IsPush(DIK_A))
-	{
-		view.angleX -= XMConvertToRadians(1.0f);
-	}
-	if (KInput::GetInstance()->IsPush(DIK_W))
-	{
-		if (view.angleY < XMConvertToRadians(45.0f))
-		{
-			view.angleY += XMConvertToRadians(1.0f);
-		}
-	}
-	else if (KInput::GetInstance()->IsPush(DIK_S))
-	{
-		if (view.angleY > XMConvertToRadians(-45.0f))
-		{
-			view.angleY -= XMConvertToRadians(1.0f);
-		}
-	}
-
-	// angleラジアンy軸回転
-	view.eye.x = view.lenZ * cosf(view.angleX) * cosf(view.angleY) + Player::nowPlayer->object.transform.pos.x;
-	view.eye.y = (view.lenZ * sinf(view.angleY) + Player::nowPlayer->object.transform.pos.y) + 10;
-	view.eye.z = view.lenZ * sinf(view.angleX) * cosf(view.angleY) + Player::nowPlayer->object.transform.pos.z;
-
-	if (view.eye.y < -14)
-	{
-		view.eye.y = -10;
-	}
-
-	view.target.x = Player::nowPlayer->object.transform.pos.x;
-	view.target.y = Player::nowPlayer->object.transform.pos.y + 10;
-	view.target.z = Player::nowPlayer->object.transform.pos.z;
-
 	if (KInput::GetInstance()->GetPadConnect())
 	{
-		stick = KInput::GetInstance()->GetPadLStick();
-		if (stick.x != 0 || stick.y != 0)
+		// カメラ操作
+		rStick = KInput::GetInstance()->GetPadRStick();
+		if (rStick.x != 0 || rStick.y != 0)
 		{
-			/*float stickRad = atan2f(stick.x, stick.y);
+			if (rStick.x > 0)
+			{
+				view.angleX -= XMConvertToRadians(rStick.x);
+			}
 
-			moveVec = { 0,0,1 };
+			if (rStick.x < 0)
+			{
+				view.angleX += XMConvertToRadians(-rStick.x);
+			}
 
-			moveVec.x *= XMMatrixRotationY(stickRad);
-			moveVec.y *= XMMatrixRotationY(stickRad);
-			moveVec.z *= XMMatrixRotationY(stickRad);
+			if (rStick.y > 0)
+			{
+				if (view.angleY < XMConvertToRadians(5.0f))
+				{
+					view.angleY += XMConvertToRadians(rStick.y);
+				}
+			}
 
-			moveVec.Normalize();
-
-			moveVec *= stick.length();*/
-
-			moveVec.x = stick.x;
-			moveVec.z = stick.y;
-
-			moveVec.Normalize();
+			if (rStick.y < 0)
+			{
+				if (view.angleY > XMConvertToRadians(-45.0f))
+				{
+					view.angleY -= XMConvertToRadians(-rStick.y);
+				}
+			}
 		}
 
-		Vector3 cameraVec =
-		{
-			view.target.x - view.eye.x,
-			view.target.y - view.eye.y,
-			view.target.z - view.eye.z
-		};
+		// angleラジアンy軸回転
+		view.eye.x = view.lenZ * cosf(view.angleX) * cosf(view.angleY) + Player::nowPlayer->object.transform.pos.x;
+		view.eye.y = (view.lenZ * sinf(view.angleY) + Player::nowPlayer->object.transform.pos.y) + 10;
+		view.eye.z = view.lenZ * sinf(view.angleX) * cosf(view.angleY) + Player::nowPlayer->object.transform.pos.z;
 
-		cameraVec.Normalize();
-
-		object.transform.pos.x += moveVec.x * cameraVec.x * speed;
-		object.transform.pos.z += moveVec.z * cameraVec.z * speed;
-
-		/*if (KInput::GetInstance()->GetPadLStick().x > 0.5)
+		if (view.eye.y < -14)
 		{
-			object.transform.pos.x += speed;
-		}
-		else if (KInput::GetInstance()->GetPadLStick().x < -0.5)
-		{
-			object.transform.pos.x -= speed;
+			view.eye.y = -10;
 		}
 
-		if (KInput::GetInstance()->GetPadLStick().y > 0.5)
+		// 注視点
+		view.target.x = Player::nowPlayer->object.transform.pos.x;
+		view.target.y = Player::nowPlayer->object.transform.pos.y + 10;
+		view.target.z = Player::nowPlayer->object.transform.pos.z;
+
+		// プレイヤーの操作
+		lStick = KInput::GetInstance()->GetPadLStick();
+		if (lStick.x != 0 || lStick.y != 0)
 		{
-			object.transform.pos.z += speed;
+			Vector3 cameraVec =
+			{
+				view.target.x - view.eye.x,
+				view.target.y - view.eye.y,
+				view.target.z - view.eye.z
+			};
+
+			float cameraRad = atan2f(cameraVec.x, cameraVec.z);
+			float stickRad = atan2f(lStick.x, lStick.y);
+
+			Vector3 moveVec = { 0,0,1 };
+			moveVec *= Matrix4::RotationY(cameraRad + stickRad);
+			moveVec *= lStick.Length();
+
+			object.transform.pos.x += moveVec.x * speed;
+			object.transform.pos.z += moveVec.z * speed;
 		}
-		else if (KInput::GetInstance()->GetPadLStick().y < -0.5)
-		{
-			object.transform.pos.z -= speed;
-		}*/
 
 		if (KInput::GetInstance()->GetPadButtonDown(XINPUT_GAMEPAD_A) && !isJump)
 		{
@@ -131,50 +110,106 @@ void Player::Update(ViewProjection& viewProjection)
 	}
 	else
 	{
-		object.transform.pos.x += (KInput::GetInstance()->IsPush(DIK_RIGHT) - KInput::GetInstance()->IsPush(DIK_LEFT)) * speed;
-		object.transform.pos.z += (KInput::GetInstance()->IsPush(DIK_UP) - KInput::GetInstance()->IsPush(DIK_DOWN)) * speed;
-
-		Vector3 cameraVec =
+		// カメラ操作
+		if (KInput::GetInstance()->IsPush(DIK_D) ||
+			KInput::GetInstance()->IsPush(DIK_A) ||
+			KInput::GetInstance()->IsPush(DIK_W) ||
+			KInput::GetInstance()->IsPush(DIK_S))
 		{
-			view.target.x - view.eye.x,
-			view.target.y - view.eye.y,
-			view.target.z - view.eye.z
-		};
-
-		cameraVec.Normalize();
-
-		if (KInput::GetInstance()->IsPush(DIK_RIGHT))
-		{
-			moveVec.x = 1;
-		}
-		else if (KInput::GetInstance()->IsPush(DIK_LEFT))
-		{
-			moveVec.x = -1;
-		}
-		else
-		{
-			moveVec.x = 0;
-		}
-
-		if (KInput::GetInstance()->IsPush(DIK_UP))
-		{
-			moveVec.z = 1;
-		}
-		else if (KInput::GetInstance()->IsPush(DIK_DOWN))
-		{
-			moveVec.z = -1;
-		}
-		else
-		{
-			moveVec.z = 0;
+			if (KInput::GetInstance()->IsPush(DIK_D))
+			{
+				view.angleX += XMConvertToRadians(1.0f);
+			}
+			else if (KInput::GetInstance()->IsPush(DIK_A))
+			{
+				view.angleX -= XMConvertToRadians(1.0f);
+			}
+			if (KInput::GetInstance()->IsPush(DIK_W))
+			{
+				if (view.angleY < XMConvertToRadians(5.0f))
+				{
+					view.angleY += XMConvertToRadians(1.0f);
+				}
+			}
+			else if (KInput::GetInstance()->IsPush(DIK_S))
+			{
+				if (view.angleY > XMConvertToRadians(-45.0f))
+				{
+					view.angleY -= XMConvertToRadians(1.0f);
+				}
+			}
 		}
 
-		moveVec.Normalize();
+		// angleラジアンy軸回転
+		view.eye.x = view.lenZ * cosf(view.angleX) * cosf(view.angleY) + Player::nowPlayer->object.transform.pos.x;
+		view.eye.y = (view.lenZ * sinf(view.angleY) + Player::nowPlayer->object.transform.pos.y) + 10;
+		view.eye.z = view.lenZ * sinf(view.angleX) * cosf(view.angleY) + Player::nowPlayer->object.transform.pos.z;
 
-		object.transform.pos.x += moveVec.x * cameraVec.x * speed;
-		object.transform.pos.z += moveVec.z * cameraVec.z * speed;
+		if (view.eye.y < -14)
+		{
+			view.eye.y = -10;
+		}
 
-		if (KInput::GetInstance()->IsTriger(DIK_SPACE) && !isJump)
+		// 注視点
+		view.target.x = Player::nowPlayer->object.transform.pos.x;
+		view.target.y = Player::nowPlayer->object.transform.pos.y + 10;
+		view.target.z = Player::nowPlayer->object.transform.pos.z;
+
+		// プレイヤーの移動
+		if (KInput::GetInstance()->IsPush(DIK_RIGHT) ||
+			KInput::GetInstance()->IsPush(DIK_LEFT) ||
+			KInput::GetInstance()->IsPush(DIK_UP) ||
+			KInput::GetInstance()->IsPush(DIK_DOWN))
+		{
+			Vector3 cameraVec =
+			{
+				view.target.x - view.eye.x,
+				view.target.y - view.eye.y,
+				view.target.z - view.eye.z
+			};
+
+			cameraVec.Normalize();
+
+			Vector2 keyVec = {};
+			if (KInput::GetInstance()->IsPush(DIK_RIGHT))
+			{
+				keyVec.x = 1.0f;
+			}
+			else if (KInput::GetInstance()->IsPush(DIK_LEFT))
+			{
+				keyVec.x = -1.0f;
+			}
+			else
+			{
+				keyVec.x = 0.0f;
+			}
+
+			if (KInput::GetInstance()->IsPush(DIK_UP))
+			{
+				keyVec.y = 1.0f;
+			}
+			else if (KInput::GetInstance()->IsPush(DIK_DOWN))
+			{
+				keyVec.y = -1.0f;
+			}
+			else
+			{
+				keyVec.y = 0.0f;
+			}
+
+			float cameraRad = atan2f(cameraVec.x, cameraVec.z);
+			float keyRad = atan2f(keyVec.x, keyVec.y);
+
+			Vector3 moveVec = { 0,0,1 };
+			moveVec *= Matrix4::RotationY(cameraRad + keyRad);
+			moveVec.Normalize();
+
+			object.transform.pos.x += moveVec.x * speed;
+			object.transform.pos.z += moveVec.z * speed;
+		}
+
+		if (KInput::GetInstance()->IsTriger(DIK_SPACE) &&
+			!isJump)
 		{
 			isJump = true;
 			jumpPower = jumpPowerMax;

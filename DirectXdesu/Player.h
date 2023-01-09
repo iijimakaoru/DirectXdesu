@@ -27,7 +27,9 @@ public:
 	float jumpPower;
 	const int jumpPowerMax = 5;
 
-	Vector2 stick;
+	Vector2 rStick;
+
+	Vector2 lStick;
 
 	// テクスチャ
 	KTexture texture_;

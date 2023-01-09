@@ -11,7 +11,8 @@ public:
 	~Vector2();
 
 	// ƒƒ“ƒoŠÖ”
-	float length()const;
+	float Length()const;
+	float LengthSq()const;
 	Vector2& normalize();
 	float dot(const Vector2& v)const;
 	float cross(const Vector2& v)const;

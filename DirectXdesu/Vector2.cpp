@@ -1,5 +1,6 @@
 #include "Vector2.h"
 #include <cmath>
+#include <math.h>
 
 Vector2::Vector2() :x(0), y(0) {}
 
@@ -7,14 +8,24 @@ Vector2::Vector2(float x, float y) : x(x), y(y) {}
 
 Vector2::~Vector2() {}
 
-float Vector2::length()const {
-	return std::sqrt((x * x) + (y * y));
+float Vector2::Length()const {
+	return sqrtf(LengthSq());
+}
+
+float Vector2::LengthSq() const
+{
+	return this->x * this->x + this->y * this->y;
 }
 
 Vector2& Vector2::normalize() {
-	float len = length();
-	if (len != 0) {
-		return *this /= len;
+	float length = this->Length();
+	if (length != 0) {
+		this->x = this->x / length;
+		this->y = this->y / length;
+	}
+	else {
+		this->x = 0;
+		this->y = 0;
 	}
 	return *this;
 }

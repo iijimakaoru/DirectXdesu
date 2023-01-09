@@ -24,6 +24,7 @@
 #include"Player.h"
 #include"Stage.h"
 #include"Boss.h"
+#include "BossBulletManager.h"
 #include "DebugCamera.h"
 #include "Camera.h"
 
@@ -172,7 +173,6 @@ PipelineSet Create3DObjectGpipeline()
 
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow)
 {
-	HRESULT result;
 #pragma region 基盤初期化
 #pragma region ウィンドウ
 	KWinApp::Init();
@@ -227,6 +227,11 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	boss.Init(&cube);
 
 	Boss::nowBoss = &boss;
+
+	if (!BossBulletManager::GetInstance()->IsPoolCreated())
+	{
+		BossBulletManager::GetInstance()->CreatePool(&cube);
+	}
 
 	// ステージ
 	Stage stage;
@@ -379,6 +384,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 			player.Update(viewProjection);
 
 			boss.Update(Player::nowPlayer->view);
+
+			BossBulletManager::GetInstance()->Update(Player::nowPlayer->view);
 		}
 		if (gameScene == Scene::Clear)
 		{
@@ -415,6 +422,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		player.Draw();
 
 		boss.Draw();
+
+		BossBulletManager::GetInstance()->Draw();
 
 		stage.Draw(&mario);
 

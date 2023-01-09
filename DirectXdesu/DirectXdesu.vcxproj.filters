@@ -132,17 +132,23 @@
     <ClCompile Include="Boss.cpp">
       <Filter>ソース ファイル\Boss</Filter>
     </ClCompile>
-    <ClCompile Include="BossActState.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="BossActStand.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Camera.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="DebugCamera.cpp">
       <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="BossActStand.cpp">
+      <Filter>ソース ファイル\Boss</Filter>
+    </ClCompile>
+    <ClCompile Include="BossActState.cpp">
+      <Filter>ソース ファイル\Boss</Filter>
+    </ClCompile>
+    <ClCompile Include="BossBullet.cpp">
+      <Filter>ソース ファイル\Boss</Filter>
+    </ClCompile>
+    <ClCompile Include="BossBulletManager.cpp">
+      <Filter>ソース ファイル\Boss</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -230,17 +236,23 @@
     <ClInclude Include="Boss.h">
       <Filter>ヘッダー ファイル\Boss</Filter>
     </ClInclude>
-    <ClInclude Include="BossActState.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="BossActStand.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Camera.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="DebugCamera.h">
       <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="BossActStand.h">
+      <Filter>ヘッダー ファイル\Boss</Filter>
+    </ClInclude>
+    <ClInclude Include="BossActState.h">
+      <Filter>ヘッダー ファイル\Boss</Filter>
+    </ClInclude>
+    <ClInclude Include="BossBullet.h">
+      <Filter>ヘッダー ファイル\Boss</Filter>
+    </ClInclude>
+    <ClInclude Include="BossBulletManager.h">
+      <Filter>ヘッダー ファイル\Boss</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

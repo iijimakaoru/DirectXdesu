@@ -147,6 +147,8 @@
     <ClCompile Include="Boss.cpp" />
     <ClCompile Include="BossActStand.cpp" />
     <ClCompile Include="BossActState.cpp" />
+    <ClCompile Include="BossBullet.cpp" />
+    <ClCompile Include="BossBulletManager.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="DebugCamera.cpp" />
     <ClCompile Include="DebugText.cpp" />
@@ -179,6 +181,8 @@
     <ClInclude Include="Boss.h" />
     <ClInclude Include="BossActStand.h" />
     <ClInclude Include="BossActState.h" />
+    <ClInclude Include="BossBullet.h" />
+    <ClInclude Include="BossBulletManager.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="ConstBuffer.h" />
     <ClInclude Include="DebugCamera.h" />

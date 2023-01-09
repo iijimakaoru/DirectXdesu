@@ -1,5 +1,6 @@
 #include "BossActStand.h"
 #include "Boss.h"
+#include "BossBulletManager.h"
 
 BossActStand::BossActStand()
 {
@@ -23,6 +24,8 @@ void BossActStand::Update()
 	}
 
 	boss->object.transform.rot.y += 0.1f;
+
+	BossBulletManager::GetInstance()->WaveBullet(boss->object.transform.pos, { 2,2,2 }, { 2,2,2 }, 10, 0, 20);
 }
 
 void BossActStand::Draw()

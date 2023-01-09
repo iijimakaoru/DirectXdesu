@@ -150,6 +150,9 @@
     <ClCompile Include="BossBulletManager.cpp">
       <Filter>ソース ファイル\Boss</Filter>
     </ClCompile>
+    <ClCompile Include="BossActStamp.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="KInput.h">
@@ -253,6 +256,9 @@
     </ClInclude>
     <ClInclude Include="BossBulletManager.h">
       <Filter>ヘッダー ファイル\Boss</Filter>
+    </ClInclude>
+    <ClInclude Include="BossActStamp.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

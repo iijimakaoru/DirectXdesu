@@ -12,6 +12,7 @@ public:
 
 	// ƒƒ“ƒoŠÖ”
 	float Length()const;
+	float LengthSq()const;
 	Vector3& Normalize();
 	float Dot(const Vector3& v)const;
 	Vector3 Cross(const Vector3& v)const;

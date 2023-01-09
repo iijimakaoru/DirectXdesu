@@ -367,9 +367,9 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		viewProjection.target.y = Player::nowPlayer->object.transform.pos.y + 1;
 		viewProjection.target.z = Player::nowPlayer->object.transform.pos.z;
 
-		/*viewProjection.target.x = viewProjection.eye.x - 100 * cosf(PI / 180 * viewProjection.angleX) * cosf(PI / 180 * viewProjection.angleY);
+		viewProjection.target.x = viewProjection.eye.x - 100 * cosf(PI / 180 * viewProjection.angleX) * cosf(PI / 180 * viewProjection.angleY);
 		viewProjection.target.y = viewProjection.eye.y + 100 * sinf(PI / 180 * viewProjection.angleY);
-		viewProjection.target.z = viewProjection.eye.z + 100 * sinf(PI / 180 * viewProjection.angleX) * cosf(PI / 180 * viewProjection.angleY);*/
+		viewProjection.target.z = viewProjection.eye.z + 100 * sinf(PI / 180 * viewProjection.angleX) * cosf(PI / 180 * viewProjection.angleY);
 
 		if (gameScene == Scene::Title)
 		{

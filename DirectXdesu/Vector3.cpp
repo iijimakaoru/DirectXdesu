@@ -1,12 +1,19 @@
 #include "Vector3.h"
 #include <cmath>
+#include <math.h>
 
 Vector3::Vector3() : x(0), y(0), z(0) {}
 
 Vector3::Vector3(float x, float y, float z) : x(x), y(y), z(z) {}
 
-float Vector3::Length()const {
-	return std::sqrt((x * x) + (y * y) + (z * z));
+float Vector3::Length()const 
+{
+	return sqrtf(LengthSq());
+}
+
+float Vector3::LengthSq() const
+{
+	return this->x * this->x + this->y * this->y + this->z * this->z;
 }
 
 Vector3& Vector3::Normalize() {

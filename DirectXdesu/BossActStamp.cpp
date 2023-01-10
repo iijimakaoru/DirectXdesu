@@ -1,11 +1,11 @@
 #include "BossActStamp.h"
 #include "Boss.h"
-#include "ViewProjection.h"
 #include "Player.h"
 #include "BossBulletManager.h"
 
 #include "BossActStand.h"
 #include "BossActGap.h"
+#include "MyMath.h"
 
 BossActStamp::BossActStamp()
 {

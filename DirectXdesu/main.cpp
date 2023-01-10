@@ -27,6 +27,8 @@
 #include "BossBulletManager.h"
 #include "DebugCamera.h"
 #include "Camera.h"
+#include "MyMath.h"
+#include "ParticleManager.h"
 
 PipelineSet Create3DObjectGpipeline()
 {
@@ -233,6 +235,11 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		BossBulletManager::GetInstance()->CreatePool(&cube);
 	}
 
+	if (!ParticleManager::GetInstance()->IsPoolCreated())
+	{
+		ParticleManager::GetInstance()->CreatePool(&cube);
+	}
+
 	// ステージ
 	Stage stage;
 	stage.Init(&cube);
@@ -385,7 +392,17 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 			boss.Update(Player::nowPlayer->view);
 
+			if (KInput::GetInstance()->IsTriger(DIK_Z))
+			{
+				for (int i = 0; i < 50; i++)
+				{
+					ParticleManager::GetInstance()->Explosion(Player::nowPlayer->object.transform.pos, { 4,4,4 }, { 1,1,1 }, 60, 10);
+				}
+			}
+
 			BossBulletManager::GetInstance()->Update(Player::nowPlayer->view);
+
+			ParticleManager::GetInstance()->Update(Player::nowPlayer->view);
 		}
 		if (gameScene == Scene::Clear)
 		{
@@ -424,6 +441,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		boss.Draw();
 
 		BossBulletManager::GetInstance()->Draw();
+
+		ParticleManager::GetInstance()->Draw();
 
 		stage.Draw(&mario);
 

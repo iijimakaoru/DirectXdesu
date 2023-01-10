@@ -36,9 +36,19 @@ public:
 
 	ViewProjection view;
 
+	Vector3 moveVec;
+
 	int hp = 0;
 
 	constexpr static int maxHP = 20;
+
+	bool isDash = false;
+
+	float dashTimer = 0;
+
+	constexpr static float maxDashTimer = 10;
+
+	Vector3 dashVec;
 
 	static Player* nowPlayer;
 };

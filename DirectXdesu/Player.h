@@ -8,7 +8,8 @@
 class Player
 {
 public:
-	void Init(KModel* model);
+	Player(KModel* model);
+	void Init();
 	void Update(ViewProjection& viewProjection);
 	void Draw();
 	void Damage();
@@ -41,7 +42,7 @@ public:
 
 	int hp = 0;
 
-	constexpr static int maxHP = 20;
+	constexpr static int maxHP = 3;
 
 	bool isDash = false;
 
@@ -54,6 +55,8 @@ public:
 	float particleCoolTime = 0;
 
 	bool isHit = false;
+
+	float hitTimer = 0;
 
 	bool isDamage = false;
 

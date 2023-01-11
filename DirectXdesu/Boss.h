@@ -27,8 +27,10 @@ public:
 
 	constexpr static int maxHP = 20;
 
-	void Init(KModel* model);
+	Boss(KModel* model);
+	void Init();
 	void Update(ViewProjection& viewProjection);
 	void Draw();
+	void Damage();
 };
 

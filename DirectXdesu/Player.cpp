@@ -6,29 +6,49 @@
 
 Player* Player::nowPlayer = nullptr;
 
-void Player::Init(KModel* model)
+Player::Player(KModel* model)
 {
 	// オブジェクトの初期化
 	object.Initialize();
-	object.transform.pos.y = -4;
-	object.transform.scale = { 10,10,10 };
 	// モデルの読み込み
 	model_ = model;
 	object.LoadModel(model_);
-	// 速度
-	speed = 1;
-	// ジャンプ
-	isJump = false;
-	jumpPower = 0;
 	// テクスチャ
 	normal.CreateTexture("Resources/texture/", "playerColor.png");
 	// カメラ
 	view.Initialize();
 	view.aspect = (float)KWinApp::GetWindowSizeW() / KWinApp::GetWindowSizeH();
 
-	hp = maxHP;
-
 	view.lenZ = -200;
+}
+
+void Player::Init()
+{
+	object.transform.pos = { 0,-4,0 };
+	object.transform.rot = { 0,0,0 };
+	object.transform.scale = { 10,10,10 };
+
+	view.Initialize();
+
+	// 速度
+	speed = 1;
+	// ジャンプ
+	isJump = false;
+	jumpPower = 0;
+
+	particleCoolTime = 0;
+
+	isHit = false;
+
+	hitTimer = 0;
+
+	isDamage = false;
+
+	damageTimer = 0;
+
+	isDash = false;
+
+	hp = maxHP;
 }
 
 void Player::Update(ViewProjection& viewProjection)
@@ -292,6 +312,16 @@ void Player::Update(ViewProjection& viewProjection)
 		object.transform.pos.y = -4;
 	}
 
+	if (isDamage)
+	{
+		Damage();
+	}
+
+	if (isHit)
+	{
+		AttackHit();
+	}
+
 	view.Update();
 
 	object.Update(view);
@@ -310,8 +340,16 @@ void Player::Damage()
 
 	smashVec.Normalize();
 
-	object.transform.pos.x += -smashVec.x * 50;
-	object.transform.pos.z += -smashVec.z * 50;
+	if (--damageTimer > 0)
+	{
+		object.transform.pos.x += -smashVec.x * 10;
+		object.transform.pos.z += -smashVec.z * 10;
+	}
+	else
+	{
+		hp--;
+		isDamage = false;
+	}
 }
 
 void Player::AttackHit()
@@ -322,7 +360,14 @@ void Player::AttackHit()
 
 	smashVec.Normalize();
 
-	object.transform.pos.x += -smashVec.x * 12;
-	object.transform.pos.y += smashVec.y * 12;
-	object.transform.pos.z += -smashVec.z * 12;
+	if (--hitTimer > 0)
+	{
+		object.transform.pos.x += -smashVec.x * 10;
+		object.transform.pos.y += smashVec.y * 10;
+		object.transform.pos.z += -smashVec.z * 10;
+	}
+	else
+	{
+		isHit = false;
+	}
 }

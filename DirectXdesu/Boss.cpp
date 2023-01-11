@@ -6,20 +6,29 @@
 
 Boss* Boss::nowBoss = nullptr;
 
-void Boss::Init(KModel* model)
+Boss::Boss(KModel* model)
 {
 	// オブジェクトの初期化
 	object.Initialize();
-	object.transform.pos.y = 20;
-	object.transform.pos.z = 100;
-	object.transform.scale = { 20,20,20 };
 	// モデルの読み込み
 	model_ = model;
 	object.LoadModel(model_);
 	// テクスチャ
 	texture_.CreateTexture("Resources/texture/", "bossColor.png");
+}
+
+void Boss::Init()
+{
+	// 初期位置
+	object.transform.pos = { 0,20,100 };
+	object.transform.rot = { 0,0,0 };
+	object.transform.scale = { 20,20,20 };
 	// HP
 	hp = maxHP;
+
+	startFlag = false;
+
+	actState = nullptr;
 }
 
 void Boss::Update(ViewProjection& viewProjection)
@@ -52,4 +61,9 @@ void Boss::Update(ViewProjection& viewProjection)
 void Boss::Draw()
 {
 	object.Draw(&texture_);
+}
+
+void Boss::Damage()
+{
+	hp--;
 }

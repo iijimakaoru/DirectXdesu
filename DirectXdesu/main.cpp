@@ -21,6 +21,8 @@
 #include "Sprite.h"
 #include "DebugText.h"
 
+#include <array>
+
 #include"Player.h"
 #include"Stage.h"
 #include"Boss.h"
@@ -223,14 +225,12 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	PipelineSet object3dPipelineSet = Create3DObjectGpipeline();
 
 	// プレイヤー
-	Player player;
-	player.Init(&cube);
+	Player player(&cube);
 
 	Player::nowPlayer = &player;
 
 	// ボス
-	Boss boss;
-	boss.Init(&cube);
+	Boss boss(&cube);
 
 	Boss::nowBoss = &boss;
 
@@ -290,21 +290,43 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	SpriteCommon spriteCommon;
 	spriteCommon = sprite.SpriteCommonCreate();
 
-	sprite.SpriteCommonLoadTexture(spriteCommon, 0, L"Resources/texture/haikei.jpg");
-	sprite.SpriteCommonLoadTexture(spriteCommon, 1, L"Resources/texture/mario.jpg");
+	sprite.SpriteCommonLoadTexture(spriteCommon, 0, L"Resources/texture/playerColor.png");
+	sprite.SpriteCommonLoadTexture(spriteCommon, 1, L"Resources/texture/bossColor.png");
 
-	SpriteInfo sprites[2];
-	for (int i = 0; i < _countof(sprites); i++)
+	// プレイヤーHPのUI
+	static const int pMaxHP = 3;
+	std::array<SpriteInfo,pMaxHP> playersHP;
+	for (int i = 0; i < pMaxHP; i++)
 	{
-		sprites[i] = sprite.SpriteCreate(sprites[i].texNum, spriteCommon);
-		sprites[i].size.x = 100.0f;
-		sprites[i].size.y = 100.0f;
-		sprite.SpriteTransferVertexBuffer(sprites[i], spriteCommon);
+		playersHP[i] = sprite.SpriteCreate(playersHP[i].texNum, spriteCommon);
+		playersHP[i].size.x = 100.0f;
+		playersHP[i].size.y = 100.0f;
+		sprite.SpriteTransferVertexBuffer(playersHP[i], spriteCommon);
+		playersHP[i].texNum = 0;
 	}
-	sprites[0].texNum = 0;
-	sprites[1].texNum = 1;
-	sprites[1].rotation = 0;
-	sprites[1].position.y = 720 / 2, 0;
+	playersHP[0].position = { 60, 650, 0 };
+	playersHP[1].position = { 180, 650, 0 };
+	playersHP[2].position = { 300, 650, 0 };
+
+	// ボスHPのUI
+	static const int bMaxHP = 20;
+	std::array<SpriteInfo, bMaxHP> bosssHP;
+	for (int i = 0; i < bMaxHP; i++)
+	{
+		bosssHP[i] = sprite.SpriteCreate(bosssHP[i].texNum, spriteCommon);
+		bosssHP[i].size.x = 25.0f;
+		bosssHP[i].size.y = 50.0f;
+		sprite.SpriteTransferVertexBuffer(bosssHP[i], spriteCommon);
+		bosssHP[i].texNum = 1;
+		bosssHP[0].position = { 400,50,0 };
+		if (i > 0)
+		{
+			bosssHP[i].position = bosssHP[i - 1].position;
+			bosssHP[i].position.x += 25;
+		}
+	}
+	
+	
 #pragma endregion
 
 #pragma region デバッグテキスト
@@ -346,44 +368,30 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 #pragma endregion
 
 #pragma region シーンの更新
-		// スプライトのアップデート
-		for (int i = 0; i < _countof(sprites); i++)
+		for (int i = 0; i < pMaxHP; i++)
 		{
-			sprite.SpriteUpdate(sprites[i], spriteCommon);
+			sprite.SpriteUpdate(playersHP[i], spriteCommon);
 		}
 
-		//カメラ操作
-		if (KInput::GetInstance()->IsPush(DIK_D))
+		for (int i = 0; i < bMaxHP; i++)
 		{
-			viewProjection.angleX += XMConvertToRadians(1.0f);
+			sprite.SpriteUpdate(bosssHP[i], spriteCommon);
 		}
-		else if (KInput::GetInstance()->IsPush(DIK_A))
-		{
-			viewProjection.angleX -= XMConvertToRadians(1.0f);
-		}
-		if (KInput::GetInstance()->IsPush(DIK_W))
-		{
-			viewProjection.angleY -= XMConvertToRadians(1.0f);
-		}
-		else if (KInput::GetInstance()->IsPush(DIK_S))
-		{
-			viewProjection.angleY += XMConvertToRadians(1.0f);
-		}
-		// angleラジアンy軸回転
-		viewProjection.eye.x = viewProjection.lenZ * sinf(viewProjection.angleX) + Player::nowPlayer->object.transform.pos.x;
-		viewProjection.eye.y = viewProjection.lenZ * sinf(viewProjection.angleY) + Player::nowPlayer->object.transform.pos.y;
-		viewProjection.eye.z = viewProjection.lenZ * cosf(viewProjection.angleX) * cosf(viewProjection.angleY) + Player::nowPlayer->object.transform.pos.z;
-
-		viewProjection.target.x = Player::nowPlayer->object.transform.pos.x;
-		viewProjection.target.y = Player::nowPlayer->object.transform.pos.y + 1;
-		viewProjection.target.z = Player::nowPlayer->object.transform.pos.z;
-
-		viewProjection.target.x = viewProjection.eye.x - 100 * cosf(PI / 180 * viewProjection.angleX) * cosf(PI / 180 * viewProjection.angleY);
-		viewProjection.target.y = viewProjection.eye.y + 100 * sinf(PI / 180 * viewProjection.angleY);
-		viewProjection.target.z = viewProjection.eye.z + 100 * sinf(PI / 180 * viewProjection.angleX) * cosf(PI / 180 * viewProjection.angleY);
 
 		if (gameScene == Scene::Title)
 		{
+			// プレイヤー初期化
+			player.Init();
+
+			// ボス初期化
+			boss.Init();
+
+			// 出てる弾を全て消す
+			BossBulletManager::GetInstance()->AllDelete();
+
+			// 出てるパーティクルを全て消す
+			ParticleManager::GetInstance()->AllDelete();
+
 			if (KInput::GetInstance()->IsTriger(DIK_SPACE))
 			{
 				gameScene = Scene::Play;
@@ -406,17 +414,33 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 				}
 			}
 
+			if (Player::nowPlayer->hp <= 0)
+			{
+				gameScene = Scene::Over;
+			}
+
+			if (Boss::nowBoss->hp <= 0)
+			{
+				gameScene = Scene::Over;
+			}
+
 			BossBulletManager::GetInstance()->Update(Player::nowPlayer->view);
 
 			ParticleManager::GetInstance()->Update(Player::nowPlayer->view);
 		}
 		if (gameScene == Scene::Clear)
 		{
-
+			if (KInput::GetInstance()->IsTriger(DIK_SPACE))
+			{
+				gameScene = Scene::Title;
+			}
 		}
 		if (gameScene == Scene::Over)
 		{
-
+			if (KInput::GetInstance()->IsTriger(DIK_SPACE))
+			{
+				gameScene = Scene::Title;
+			}
 		}
 
 		stage.Update(Player::nowPlayer->view);
@@ -442,20 +466,140 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 #pragma region 描画コマンド
 		// 描画コマンド
-		player.Draw();
+		if (gameScene == Scene::Title)
+		{
 
-		boss.Draw();
+		}
 
-		BossBulletManager::GetInstance()->Draw();
+		if (gameScene == Scene::Play)
+		{
+			player.Draw();
 
-		ParticleManager::GetInstance()->Draw();
+			boss.Draw();
 
-		stage.Draw(&mario);
+			BossBulletManager::GetInstance()->Draw();
+
+			ParticleManager::GetInstance()->Draw();
+
+			stage.Draw(&mario);
+		}
+
+		if (gameScene == Scene::Clear)
+		{
+
+		}
+
+		if (gameScene == Scene::Over)
+		{
+
+		}
 
 		boxSkydorm.Draw();
 
 		// スプライト描画
 		sprite.SpriteCommonBeginDraw(spriteCommon);
+		if (gameScene == Scene::Play)
+		{
+#pragma region プレイヤーのHP
+			if (Player::nowPlayer->hp >= 1)
+			{
+				sprite.SpriteDraw(playersHP[0], spriteCommon);
+			}
+
+			if (Player::nowPlayer->hp >= 2)
+			{
+				sprite.SpriteDraw(playersHP[1], spriteCommon);
+			}
+
+			if (Player::nowPlayer->hp >= 3)
+			{
+				sprite.SpriteDraw(playersHP[2], spriteCommon);
+			}
+#pragma endregion
+
+#pragma region ボスのHP
+			if (Boss::nowBoss->hp >= 1)
+			{
+				sprite.SpriteDraw(bosssHP[0], spriteCommon);
+			}
+			if (Boss::nowBoss->hp >= 2)
+			{
+				sprite.SpriteDraw(bosssHP[1], spriteCommon);
+			}
+			if (Boss::nowBoss->hp >= 3)
+			{
+				sprite.SpriteDraw(bosssHP[2], spriteCommon);
+			}
+			if (Boss::nowBoss->hp >= 4)
+			{
+				sprite.SpriteDraw(bosssHP[3], spriteCommon);
+			}
+			if (Boss::nowBoss->hp >= 5)
+			{
+				sprite.SpriteDraw(bosssHP[4], spriteCommon);
+			}
+			if (Boss::nowBoss->hp >= 6)
+			{
+				sprite.SpriteDraw(bosssHP[5], spriteCommon);
+			}
+			if (Boss::nowBoss->hp >= 7)
+			{
+				sprite.SpriteDraw(bosssHP[6], spriteCommon);
+			}
+			if (Boss::nowBoss->hp >= 8)
+			{
+				sprite.SpriteDraw(bosssHP[7], spriteCommon);
+			}
+			if (Boss::nowBoss->hp >= 9)
+			{
+				sprite.SpriteDraw(bosssHP[8], spriteCommon);
+			}
+			if (Boss::nowBoss->hp >= 10)
+			{
+				sprite.SpriteDraw(bosssHP[9], spriteCommon);
+			}
+			if (Boss::nowBoss->hp >= 11)
+			{
+				sprite.SpriteDraw(bosssHP[10], spriteCommon);
+			}
+			if (Boss::nowBoss->hp >= 12)
+			{
+				sprite.SpriteDraw(bosssHP[11], spriteCommon);
+			}
+			if (Boss::nowBoss->hp >= 13)
+			{
+				sprite.SpriteDraw(bosssHP[12], spriteCommon);
+			}
+			if (Boss::nowBoss->hp >= 14)
+			{
+				sprite.SpriteDraw(bosssHP[13], spriteCommon);
+			}
+			if (Boss::nowBoss->hp >= 15)
+			{
+				sprite.SpriteDraw(bosssHP[14], spriteCommon);
+			}
+			if (Boss::nowBoss->hp >= 16)
+			{
+				sprite.SpriteDraw(bosssHP[15], spriteCommon);
+			}
+			if (Boss::nowBoss->hp >= 17)
+			{
+				sprite.SpriteDraw(bosssHP[16], spriteCommon);
+			}
+			if (Boss::nowBoss->hp >= 18)
+			{
+				sprite.SpriteDraw(bosssHP[17], spriteCommon);
+			}
+			if (Boss::nowBoss->hp >= 19)
+			{
+				sprite.SpriteDraw(bosssHP[18], spriteCommon);
+			}
+			if (Boss::nowBoss->hp >= 20)
+			{
+				sprite.SpriteDraw(bosssHP[19], spriteCommon);
+			}
+#pragma endregion
+		}
 
 		debugtext->Print(spriteCommon, "FPS(w)" + std::to_string(KDirectXCommon::GetInstance()->fps), { 10,50 }, 2.0f);
 		debugtext->DrawAll(spriteCommon);
@@ -498,10 +642,16 @@ void AllCollision()
 		transform = bullet->object.transform;
 		if (BoxCollision(Player::nowPlayer->object.transform, transform) && !bullet->IsDead())
 		{
-			Player::nowPlayer->Damage();
+			Player::nowPlayer->damageTimer = 60;
+			Player::nowPlayer->isDamage = true;
 			bullet->isDead = true;
 		}
 	}
 
-
+	if (BoxCollision(Player::nowPlayer->object.transform, Boss::nowBoss->object.transform) && Player::nowPlayer->isDash)
+	{
+		Player::nowPlayer->hitTimer = 20;
+		Player::nowPlayer->isHit = true;
+		Boss::nowBoss->Damage();
+	}
 }

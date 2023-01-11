@@ -173,6 +173,10 @@ PipelineSet Create3DObjectGpipeline()
 	return pipelineSet;
 }
 
+bool BoxCollision(WorldTransfom& transformA, WorldTransfom& transformB);
+
+void AllCollision();
+
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow)
 {
 #pragma region 基盤初期化
@@ -392,6 +396,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 			boss.Update(Player::nowPlayer->view);
 
+			AllCollision();
+
 			if (KInput::GetInstance()->IsTriger(DIK_Z))
 			{
 				for (int i = 0; i < 50; i++)
@@ -466,4 +472,36 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 #pragma endregion
 
 	return 0;
+}
+
+bool BoxCollision(WorldTransfom& transformA, WorldTransfom& transformB)
+{
+	if (transformA.pos.x - transformA.scale.x <= transformB.pos.x + transformB.scale.x && // posA左とposB右の判定
+		transformA.pos.x + transformA.scale.x >= transformB.pos.x - transformB.scale.x && // posA右とposB左の判定
+		transformA.pos.y - transformA.scale.y <= transformB.pos.y + transformB.scale.y && // posA下とposB上の判定
+		transformA.pos.y + transformA.scale.y >= transformB.pos.y - transformB.scale.y && // posA上とposB下の判定
+		transformA.pos.z - transformA.scale.z <= transformB.pos.z + transformB.scale.z && // posA前とposB奥の判定
+		transformA.pos.z + transformA.scale.z >= transformB.pos.z - transformB.scale.z)   // posA奥とposB前の判定
+	{
+		return true;
+	}
+
+	return false;
+}
+
+void AllCollision()
+{
+	WorldTransfom transform;
+
+	for (std::unique_ptr<BossBullet>& bullet : BossBulletManager::GetInstance()->bossBullets)
+	{
+		transform = bullet->object.transform;
+		if (BoxCollision(Player::nowPlayer->object.transform, transform) && !bullet->IsDead())
+		{
+			Player::nowPlayer->Damage();
+			bullet->isDead = true;
+		}
+	}
+
+
 }

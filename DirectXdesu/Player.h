@@ -12,6 +12,7 @@ public:
 	void Update(ViewProjection& viewProjection);
 	void Draw();
 	void Damage();
+	void AttackHit();
 
 	// オブジェクト
 	KObject3d object;
@@ -32,7 +33,7 @@ public:
 	Vector2 lStick;
 
 	// テクスチャ
-	KTexture texture_;
+	KTexture normal;
 
 	ViewProjection view;
 
@@ -49,6 +50,14 @@ public:
 	constexpr static float maxDashTimer = 10;
 
 	Vector3 dashVec;
+
+	float particleCoolTime = 0;
+
+	bool isHit = false;
+
+	bool isDamage = false;
+
+	float damageTimer = 0;
 
 	static Player* nowPlayer;
 };

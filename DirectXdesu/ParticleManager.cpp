@@ -65,6 +65,56 @@ void ParticleManager::Explosion(const Vector3& pos, const Vector3& scale, const 
 	}
 }
 
+void ParticleManager::Dash(const Vector3& pos, const Vector3& scale, const Vector3& rotation, const float lifeTimer, const float speed, const Vector3& moveVec)
+{
+	for (std::unique_ptr<Particle>& particle : particles)
+	{
+		if (particle->IsDead())
+		{
+			Vector3 velocity =
+			{
+				MyMath::GetInstance()->GetRand(-speed, speed),
+				MyMath::GetInstance()->GetRand(-speed, speed),
+				-speed,
+			};
+
+			particle->SetInfo(pos, velocity * moveVec, scale, rotation, lifeTimer);
+
+			particle->Revive();
+
+			return;
+		}
+	}
+}
+
+void ParticleManager::DashWave(const Vector3& pos,
+	const Vector3& scale,
+	const Vector3& rotation,
+	const float speed,
+	const Vector3& playerVec,
+	float angleZ,
+	const float lifeTime)
+{
+	for (std::unique_ptr<Particle>& particle : particles)
+	{
+		if (particle->IsDead())
+		{
+			Vector3 velocity =
+			{
+				speed * cosf(angleZ),
+				speed * sinf(angleZ),
+				0,
+			};
+
+			particle->SetInfo(pos, velocity * playerVec, scale, rotation, lifeTime);
+
+			particle->Revive();
+
+			return;
+		}
+	}
+}
+
 ParticleManager* ParticleManager::GetInstance()
 {
 	static ParticleManager instance;

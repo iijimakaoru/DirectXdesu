@@ -28,7 +28,7 @@ public:
 		const float speed,
 		const float lifeTime);
 
-private:
+public:
 	std::list<std::unique_ptr<BossBullet>> bossBullets;
 	int shotNum = 0;
 	float angle = 0;

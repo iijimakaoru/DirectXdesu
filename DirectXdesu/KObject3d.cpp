@@ -111,19 +111,13 @@ void KObject3d::Draw()
 	D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle = model_->texture.srvHeap->GetGPUDescriptorHandleForHeapStart();
 
 	// シェーダーリソースビューをセット
-	//KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootDescriptorTable(1, srvGpuHandle);
 	KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootDescriptorTable(1, srvGpuHandle);
-
-	// CBV
-	//KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootConstantBufferView(0, material->constBufferMaterial->GetGPUVirtualAddress());
 	
 	// 頂点バッファビューの設定
 	KDirectXCommon::GetInstance()->GetCmdlist()->IASetVertexBuffers(0, 1, &model_->vertexs->vbView);
 
 	// インデックスバッファビューの設定
 	KDirectXCommon::GetInstance()->GetCmdlist()->IASetIndexBuffer(&model_->vertexs->ibView);
-
-	//KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootConstantBufferView(2, transform.constBuffTransform->GetGPUVirtualAddress());
 
 	// 描画
 	KDirectXCommon::GetInstance()->GetCmdlist()->DrawIndexedInstanced(model_->indices.size(), 1, 0, 0, 0);
@@ -142,19 +136,13 @@ void KObject3d::Draw(KTexture* texture)
 	D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle = texture->srvHeap->GetGPUDescriptorHandleForHeapStart();
 
 	// シェーダーリソースビューをセット
-	//KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootDescriptorTable(1, srvGpuHandle);
 	KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootDescriptorTable(1, srvGpuHandle);
-
-	// CBV
-	//KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootConstantBufferView(0, material->constBufferMaterial->GetGPUVirtualAddress());
 
 	// 頂点バッファビューの設定
 	KDirectXCommon::GetInstance()->GetCmdlist()->IASetVertexBuffers(0, 1, &model_->vertexs->vbView);
 
 	// インデックスバッファビューの設定
 	KDirectXCommon::GetInstance()->GetCmdlist()->IASetIndexBuffer(&model_->vertexs->ibView);
-
-	//KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootConstantBufferView(2, transform.constBuffTransform->GetGPUVirtualAddress());
 
 	// 描画
 	KDirectXCommon::GetInstance()->GetCmdlist()->DrawIndexedInstanced(model_->indices.size(), 1, 0, 0, 0);

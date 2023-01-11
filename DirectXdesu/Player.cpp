@@ -2,6 +2,7 @@
 #include "KInput.h"
 #include "Boss.h"
 #include "Matrix4.h"
+#include "ParticleManager.h"
 
 Player* Player::nowPlayer = nullptr;
 
@@ -20,7 +21,7 @@ void Player::Init(KModel* model)
 	isJump = false;
 	jumpPower = 0;
 	// テクスチャ
-	texture_.CreateTexture("Resources/texture/", "playerColor.png");
+	normal.CreateTexture("Resources/texture/", "playerColor.png");
 	// カメラ
 	view.Initialize();
 	view.aspect = (float)KWinApp::GetWindowSizeW() / KWinApp::GetWindowSizeH();
@@ -33,6 +34,14 @@ void Player::Init(KModel* model)
 void Player::Update(ViewProjection& viewProjection)
 {
 	moveVec = { 0,0,0 };
+
+	Vector3 cameraVec =
+	{
+		view.target.x - view.eye.x,
+		view.target.y - view.eye.y,
+		view.target.z - view.eye.z
+	};
+
 	if (!isDash)
 	{
 		if (KInput::GetInstance()->GetPadConnect())
@@ -74,13 +83,6 @@ void Player::Update(ViewProjection& viewProjection)
 			lStick = KInput::GetInstance()->GetPadLStick();
 			if (lStick.x != 0 || lStick.y != 0)
 			{
-				Vector3 cameraVec =
-				{
-					view.target.x - view.eye.x,
-					view.target.y - view.eye.y,
-					view.target.z - view.eye.z
-				};
-
 				float cameraRad = atan2f(cameraVec.x, cameraVec.z);
 				float stickRad = atan2f(lStick.x, lStick.y);
 
@@ -170,13 +172,6 @@ void Player::Update(ViewProjection& viewProjection)
 				KInput::GetInstance()->IsPush(DIK_UP) ||
 				KInput::GetInstance()->IsPush(DIK_DOWN))
 			{
-				Vector3 cameraVec =
-				{
-					view.target.x - view.eye.x,
-					view.target.y - view.eye.y,
-					view.target.z - view.eye.z
-				};
-
 				cameraVec.Normalize();
 
 				Vector2 keyVec = {};
@@ -237,9 +232,17 @@ void Player::Update(ViewProjection& viewProjection)
 		view.target.y = Player::nowPlayer->object.transform.pos.y + 10;
 		view.target.z = Player::nowPlayer->object.transform.pos.z;
 
-		if (dashTimer >= maxDashTimer)
+		if (dashTimer > 0)
 		{
-
+			particleCoolTime--;
+			if (particleCoolTime <= 0)
+			{
+				for (int i = 0; i < 2; i++)
+				{
+					ParticleManager::GetInstance()->Dash(object.transform.pos, { 5,5,5 }, { 1,1,1 }, 60, 5, moveVec);
+				}
+				particleCoolTime = 2;
+			}
 		}
 
 		object.transform.pos += dashVec * (speed * 6);
@@ -278,25 +281,25 @@ void Player::Update(ViewProjection& viewProjection)
 		object.transform.pos.y -= 1;
 	}
 
-	if (KInput::GetInstance()->GetPadButtonDown(XINPUT_GAMEPAD_B))
-	{
-		Damage();
-	}
-
 	float limit = 190;
 	object.transform.pos.x = max(object.transform.pos.x, -limit);
 	object.transform.pos.x = min(object.transform.pos.x, limit);
 	object.transform.pos.z = max(object.transform.pos.z, -limit);
 	object.transform.pos.z = min(object.transform.pos.z, limit);
 
-	object.Update(view);
+	if (object.transform.pos.y <= -4)
+	{
+		object.transform.pos.y = -4;
+	}
 
 	view.Update();
+
+	object.Update(view);
 }
 
 void Player::Draw()
 {
-	object.Draw(&texture_);
+	object.Draw(&normal);
 }
 
 void Player::Damage()
@@ -307,7 +310,19 @@ void Player::Damage()
 
 	smashVec.Normalize();
 
-	object.transform.pos.x += -smashVec.x * 10;
-	object.transform.pos.y += smashVec.y * 10;
-	object.transform.pos.z += -smashVec.z * 10;
+	object.transform.pos.x += -smashVec.x * 50;
+	object.transform.pos.z += -smashVec.z * 50;
+}
+
+void Player::AttackHit()
+{
+	Boss* boss = Boss::nowBoss;
+
+	Vector3 smashVec = boss->object.transform.pos - object.transform.pos;
+
+	smashVec.Normalize();
+
+	object.transform.pos.x += -smashVec.x * 12;
+	object.transform.pos.y += smashVec.y * 12;
+	object.transform.pos.z += -smashVec.z * 12;
 }

@@ -218,6 +218,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	kitanai.CreateTexture("Resources/texture/", "kitanai.jpg");
 	KTexture haikei;
 	haikei.CreateTexture("Resources/texture/", "haikei.jpg");
+	KTexture stageR;
+	stageR.CreateTexture("Resources/texture/", "stageHoge.png");
 #pragma endregion
 
 #pragma region グラフィックスパイプライン設定
@@ -290,8 +292,18 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	SpriteCommon spriteCommon;
 	spriteCommon = sprite.SpriteCommonCreate();
 
-	sprite.SpriteCommonLoadTexture(spriteCommon, 0, L"Resources/texture/playerColor.png");
-	sprite.SpriteCommonLoadTexture(spriteCommon, 1, L"Resources/texture/bossColor.png");
+	sprite.SpriteCommonLoadTexture(spriteCommon, 0, L"Resources/texture/hogeTitle.png");
+	sprite.SpriteCommonLoadTexture(spriteCommon, 1, L"Resources/texture/playerColor.png");
+	sprite.SpriteCommonLoadTexture(spriteCommon, 2, L"Resources/texture/bossColor.png");
+
+	SpriteInfo title;
+	title = sprite.SpriteCreate(title.texNum, spriteCommon);
+	title.size.x = 1000;
+	title.size.y = 500;
+	sprite.SpriteTransferVertexBuffer(title, spriteCommon);
+	title.texNum = 0;
+
+	title.position = { (float)KWinApp::GetWindowSizeW() / 2, (float)KWinApp::GetWindowSizeH() / 2 ,0 };
 
 	// プレイヤーHPのUI
 	static const int pMaxHP = 3;
@@ -302,7 +314,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		playersHP[i].size.x = 100.0f;
 		playersHP[i].size.y = 100.0f;
 		sprite.SpriteTransferVertexBuffer(playersHP[i], spriteCommon);
-		playersHP[i].texNum = 0;
+		playersHP[i].texNum = 1;
 	}
 	playersHP[0].position = { 60, 650, 0 };
 	playersHP[1].position = { 180, 650, 0 };
@@ -317,7 +329,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		bosssHP[i].size.x = 25.0f;
 		bosssHP[i].size.y = 50.0f;
 		sprite.SpriteTransferVertexBuffer(bosssHP[i], spriteCommon);
-		bosssHP[i].texNum = 1;
+		bosssHP[i].texNum = 2;
 		bosssHP[0].position = { 400,50,0 };
 		if (i > 0)
 		{
@@ -332,7 +344,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 #pragma region デバッグテキスト
 	DebugText* debugtext = new DebugText();
 
-	const int debugTextNumber = 2;
+	const int debugTextNumber = 3;
 	sprite.SpriteCommonLoadTexture(spriteCommon, debugTextNumber, L"Resources/texture/tex1.png");
 	debugtext->Init(&sprite, debugTextNumber, spriteCommon);
 #pragma endregion
@@ -349,6 +361,10 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	Scene gameScene = Scene::Title;
 
 	bool isTexture = false;
+
+	int phase = 1;
+
+	float phaseTimer = 0;
 
 	// ウィンドウ表示
 	// ゲームループ
@@ -368,6 +384,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 #pragma endregion
 
 #pragma region シーンの更新
+		sprite.SpriteUpdate(title, spriteCommon);
+
 		for (int i = 0; i < pMaxHP; i++)
 		{
 			sprite.SpriteUpdate(playersHP[i], spriteCommon);
@@ -392,10 +410,17 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 			// 出てるパーティクルを全て消す
 			ParticleManager::GetInstance()->AllDelete();
 
-			if (KInput::GetInstance()->IsTriger(DIK_SPACE))
+			phase = 1;
+
+			phaseTimer = 0;
+
+			if (KInput::GetInstance()->GetPadConnect())
 			{
-				gameScene = Scene::Play;
-				boss.startFlag = true;
+				if (KInput::GetInstance()->GetPadButtonDown(XINPUT_GAMEPAD_A))
+				{
+					gameScene = Scene::Play;
+					boss.startFlag = true;
+				}
 			}
 		}
 		if (gameScene == Scene::Play)
@@ -406,42 +431,97 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 			AllCollision();
 
-			if (KInput::GetInstance()->IsTriger(DIK_Z))
-			{
-				for (int i = 0; i < 50; i++)
-				{
-					ParticleManager::GetInstance()->Explosion(Player::nowPlayer->object.transform.pos, { 4,4,4 }, { 1,1,1 }, 60, 10);
-				}
-			}
-
 			if (Player::nowPlayer->hp <= 0)
 			{
 				gameScene = Scene::Over;
+				phaseTimer = 60;
 			}
 
 			if (Boss::nowBoss->hp <= 0)
 			{
-				gameScene = Scene::Over;
+				gameScene = Scene::Clear;
 			}
 
 			BossBulletManager::GetInstance()->Update(Player::nowPlayer->view);
-
-			ParticleManager::GetInstance()->Update(Player::nowPlayer->view);
 		}
+
 		if (gameScene == Scene::Clear)
 		{
-			if (KInput::GetInstance()->IsTriger(DIK_SPACE))
+			if (phase == 1)
 			{
-				gameScene = Scene::Title;
+				phaseTimer--;
+				if (phaseTimer <= 0)
+				{
+					phase++;
+					phaseTimer = 120;
+				}
+			}
+
+			if (phase == 2)
+			{
+				Boss::nowBoss->isAlive = false;
+				for (int i = 0; i < 100; i++)
+				{
+					ParticleManager::GetInstance()->Explosion(Boss::nowBoss->object.transform.pos, { 8,8,8 }, { 1,1,1 }, phaseTimer, 10);
+				}
+				phaseTimer--;
+				if (phaseTimer < 0)
+				{
+					phase++;
+				}
+			}
+
+			if (phase == 3)
+			{
+				if (KInput::GetInstance()->GetPadConnect())
+				{
+					if (KInput::GetInstance()->GetPadButtonDown(XINPUT_GAMEPAD_A))
+					{
+						gameScene = Scene::Title;
+					}
+				}
 			}
 		}
+
 		if (gameScene == Scene::Over)
 		{
-			if (KInput::GetInstance()->IsTriger(DIK_SPACE))
+			if (phase == 1)
 			{
-				gameScene = Scene::Title;
+				phaseTimer--;
+				if (phaseTimer <= 0)
+				{
+					phase++;
+					phaseTimer = 120;
+				}
+			}
+
+			if (phase == 2)
+			{
+				Player::nowPlayer->isAlive = false;
+				for (int i = 0; i < 100; i++)
+				{
+					ParticleManager::GetInstance()->Explosion(Player::nowPlayer->object.transform.pos, { 4,4,4 }, { 1,1,1 }, phaseTimer, 10);
+				}
+				phaseTimer--;
+				if (phaseTimer < 0)
+				{
+					phase++;
+				}
+			}
+
+			if (phase == 3)
+			{
+				if (KInput::GetInstance()->GetPadConnect())
+				{
+					if (KInput::GetInstance()->GetPadButtonDown(XINPUT_GAMEPAD_A))
+					{
+						gameScene = Scene::Title;
+					}
+				}
 			}
 		}
+
+		ParticleManager::GetInstance()->Update(Player::nowPlayer->view);
 
 		stage.Update(Player::nowPlayer->view);
 
@@ -471,7 +551,9 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 		}
 
-		if (gameScene == Scene::Play)
+		if (gameScene == Scene::Play ||
+			gameScene == Scene::Clear ||
+			gameScene == Scene::Over)
 		{
 			player.Draw();
 
@@ -479,25 +561,21 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 			BossBulletManager::GetInstance()->Draw();
 
-			ParticleManager::GetInstance()->Draw();
-
-			stage.Draw(&mario);
+			stage.Draw(&stageR);
 		}
 
-		if (gameScene == Scene::Clear)
-		{
-
-		}
-
-		if (gameScene == Scene::Over)
-		{
-
-		}
+		ParticleManager::GetInstance()->Draw();
 
 		boxSkydorm.Draw();
 
 		// スプライト描画
 		sprite.SpriteCommonBeginDraw(spriteCommon);
+
+		if (gameScene == Scene::Title)
+		{
+			sprite.SpriteDraw(title, spriteCommon);
+		}
+
 		if (gameScene == Scene::Play)
 		{
 #pragma region プレイヤーのHP
@@ -601,7 +679,39 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 #pragma endregion
 		}
 
-		debugtext->Print(spriteCommon, "FPS(w)" + std::to_string(KDirectXCommon::GetInstance()->fps), { 10,50 }, 2.0f);
+		if (gameScene == Scene::Clear)
+		{
+			debugtext->Print(spriteCommon, "Game Clear!!", { 280,80 }, 8.0f);
+			if (phase == 3)
+			{
+				if (KInput::GetInstance()->GetPadConnect())
+				{
+					debugtext->Print(spriteCommon, "Push A", { 500,360 }, 4.0f);
+				}
+				else
+				{
+					debugtext->Print(spriteCommon, "Push SPACE", { 500,360 }, 4.0f);
+				}
+			}
+		}
+
+		if (gameScene == Scene::Over)
+		{
+			debugtext->Print(spriteCommon, "Game Over!!", { 280,80 }, 8.0f);
+			if (phase == 3)
+			{
+				if (KInput::GetInstance()->GetPadConnect())
+				{
+					debugtext->Print(spriteCommon, "Push A", { 500,360 }, 4.0f);
+				}
+				else
+				{
+					debugtext->Print(spriteCommon, "Push SPACE", { 500,360 }, 4.0f);
+				}
+			}
+		}
+
+		//debugtext->Print(spriteCommon, "FPS(w)" + std::to_string(KDirectXCommon::GetInstance()->fps), { 10,50 }, 2.0f);
 		debugtext->DrawAll(spriteCommon);
 
 		// 描画コマンドここまで
@@ -642,7 +752,7 @@ void AllCollision()
 		transform = bullet->object.transform;
 		if (BoxCollision(Player::nowPlayer->object.transform, transform) && !bullet->IsDead())
 		{
-			Player::nowPlayer->damageTimer = 60;
+			Player::nowPlayer->damageTimer = 30;
 			Player::nowPlayer->isDamage = true;
 			bullet->isDead = true;
 		}
@@ -650,7 +760,7 @@ void AllCollision()
 
 	if (BoxCollision(Player::nowPlayer->object.transform, Boss::nowBoss->object.transform) && Player::nowPlayer->isDash)
 	{
-		Player::nowPlayer->hitTimer = 20;
+		Player::nowPlayer->hitTimer = 10;
 		Player::nowPlayer->isHit = true;
 		Boss::nowBoss->Damage();
 	}

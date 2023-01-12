@@ -48,6 +48,8 @@ void Player::Init()
 
 	isDash = false;
 
+	isAlive = true;
+
 	hp = maxHP;
 }
 
@@ -62,43 +64,61 @@ void Player::Update(ViewProjection& viewProjection)
 		view.target.z - view.eye.z
 	};
 
+	// カメラ操作
+	if (KInput::GetInstance()->GetPadConnect())
+	{
+		rStick = KInput::GetInstance()->GetPadRStick();
+		if (rStick.x != 0 || rStick.y != 0)
+		{
+			if (rStick.x > 0)
+			{
+				view.angleX -= XMConvertToRadians(rStick.x);
+				object.transform.rot.y += XMConvertToRadians(rStick.x);
+			}
+
+			if (rStick.x < 0)
+			{
+				view.angleX += XMConvertToRadians(-rStick.x);
+				object.transform.rot.y -= XMConvertToRadians(-rStick.x);
+			}
+
+			if (rStick.y > 0)
+			{
+				if (view.angleY < XMConvertToRadians(5.0f))
+				{
+					view.angleY += XMConvertToRadians(rStick.y);
+				}
+			}
+
+			if (rStick.y < 0)
+			{
+				if (view.angleY > XMConvertToRadians(-45.0f))
+				{
+					view.angleY -= XMConvertToRadians(-rStick.y);
+				}
+			}
+		}
+	}
+
+	// angleラジアンy軸回転
+	view.eye.x = view.lenZ * cosf(view.angleX) * cosf(view.angleY) + Player::nowPlayer->object.transform.pos.x;
+	view.eye.y = (view.lenZ * sinf(view.angleY) + Player::nowPlayer->object.transform.pos.y) + 10;
+	view.eye.z = view.lenZ * sinf(view.angleX) * cosf(view.angleY) + Player::nowPlayer->object.transform.pos.z;
+
+	if (view.eye.y < -14)
+	{
+		view.eye.y = -10;
+	}
+
+	// 注視点
+	view.target.x = Player::nowPlayer->object.transform.pos.x;
+	view.target.y = Player::nowPlayer->object.transform.pos.y + 10;
+	view.target.z = Player::nowPlayer->object.transform.pos.z;
+
 	if (!isDash)
 	{
 		if (KInput::GetInstance()->GetPadConnect())
 		{
-			// カメラ操作
-			rStick = KInput::GetInstance()->GetPadRStick();
-			if (rStick.x != 0 || rStick.y != 0)
-			{
-				if (rStick.x > 0)
-				{
-					view.angleX -= XMConvertToRadians(rStick.x);
-					object.transform.rot.y += XMConvertToRadians(rStick.x);
-				}
-
-				if (rStick.x < 0)
-				{
-					view.angleX += XMConvertToRadians(-rStick.x);
-					object.transform.rot.y -= XMConvertToRadians(-rStick.x);
-				}
-
-				if (rStick.y > 0)
-				{
-					if (view.angleY < XMConvertToRadians(5.0f))
-					{
-						view.angleY += XMConvertToRadians(rStick.y);
-					}
-				}
-
-				if (rStick.y < 0)
-				{
-					if (view.angleY > XMConvertToRadians(-45.0f))
-					{
-						view.angleY -= XMConvertToRadians(-rStick.y);
-					}
-				}
-			}
-
 			// プレイヤーの操作
 			lStick = KInput::GetInstance()->GetPadLStick();
 			if (lStick.x != 0 || lStick.y != 0)
@@ -115,125 +135,7 @@ void Player::Update(ViewProjection& viewProjection)
 				object.transform.pos.z += moveVec.z * speed;
 			}
 
-			// angleラジアンy軸回転
-			view.eye.x = view.lenZ * cosf(view.angleX) * cosf(view.angleY) + Player::nowPlayer->object.transform.pos.x;
-			view.eye.y = (view.lenZ * sinf(view.angleY) + Player::nowPlayer->object.transform.pos.y) + 10;
-			view.eye.z = view.lenZ * sinf(view.angleX) * cosf(view.angleY) + Player::nowPlayer->object.transform.pos.z;
-
-			if (view.eye.y < -14)
-			{
-				view.eye.y = -10;
-			}
-
-			// 注視点
-			view.target.x = Player::nowPlayer->object.transform.pos.x;
-			view.target.y = Player::nowPlayer->object.transform.pos.y + 10;
-			view.target.z = Player::nowPlayer->object.transform.pos.z;
-
-
 			if (KInput::GetInstance()->GetPadButtonDown(XINPUT_GAMEPAD_A) && !isJump)
-			{
-				isJump = true;
-				jumpPower = jumpPowerMax;
-			}
-		}
-		else
-		{
-			// カメラ操作
-			if (KInput::GetInstance()->IsPush(DIK_D) ||
-				KInput::GetInstance()->IsPush(DIK_A) ||
-				KInput::GetInstance()->IsPush(DIK_W) ||
-				KInput::GetInstance()->IsPush(DIK_S))
-			{
-				if (KInput::GetInstance()->IsPush(DIK_D))
-				{
-					view.angleX += XMConvertToRadians(1.0f);
-					object.transform.rot.y -= XMConvertToRadians(1.0f);
-				}
-				else if (KInput::GetInstance()->IsPush(DIK_A))
-				{
-					view.angleX -= XMConvertToRadians(1.0f);
-					object.transform.rot.y += XMConvertToRadians(1.0f);
-				}
-				if (KInput::GetInstance()->IsPush(DIK_W))
-				{
-					if (view.angleY < XMConvertToRadians(5.0f))
-					{
-						view.angleY += XMConvertToRadians(1.0f);
-					}
-				}
-				else if (KInput::GetInstance()->IsPush(DIK_S))
-				{
-					if (view.angleY > XMConvertToRadians(-45.0f))
-					{
-						view.angleY -= XMConvertToRadians(1.0f);
-					}
-				}
-			}
-
-			// angleラジアンy軸回転
-			view.eye.x = view.lenZ * cosf(view.angleX) * cosf(view.angleY) + Player::nowPlayer->object.transform.pos.x;
-			view.eye.y = (view.lenZ * sinf(view.angleY) + Player::nowPlayer->object.transform.pos.y) + 10;
-			view.eye.z = view.lenZ * sinf(view.angleX) * cosf(view.angleY) + Player::nowPlayer->object.transform.pos.z;
-
-			if (view.eye.y < -14)
-			{
-				view.eye.y = -10;
-			}
-
-			// 注視点
-			view.target.x = Player::nowPlayer->object.transform.pos.x;
-			view.target.y = Player::nowPlayer->object.transform.pos.y + 10;
-			view.target.z = Player::nowPlayer->object.transform.pos.z;
-
-			// プレイヤーの移動
-			if (KInput::GetInstance()->IsPush(DIK_RIGHT) ||
-				KInput::GetInstance()->IsPush(DIK_LEFT) ||
-				KInput::GetInstance()->IsPush(DIK_UP) ||
-				KInput::GetInstance()->IsPush(DIK_DOWN))
-			{
-				cameraVec.Normalize();
-
-				Vector2 keyVec = {};
-				if (KInput::GetInstance()->IsPush(DIK_RIGHT))
-				{
-					keyVec.x = 1.0f;
-				}
-				else if (KInput::GetInstance()->IsPush(DIK_LEFT))
-				{
-					keyVec.x = -1.0f;
-				}
-				else
-				{
-					keyVec.x = 0.0f;
-				}
-
-				if (KInput::GetInstance()->IsPush(DIK_UP))
-				{
-					keyVec.y = 1.0f;
-				}
-				else if (KInput::GetInstance()->IsPush(DIK_DOWN))
-				{
-					keyVec.y = -1.0f;
-				}
-				else
-				{
-					keyVec.y = 0.0f;
-				}
-
-				float cameraRad = atan2f(cameraVec.x, cameraVec.z);
-				float keyRad = atan2f(keyVec.x, keyVec.y);
-
-				moveVec = { 0,0,1 };
-				moveVec *= Matrix4::RotationY(cameraRad + keyRad);
-				moveVec.Normalize();
-
-				object.transform.pos.x += moveVec.x * speed;
-				object.transform.pos.z += moveVec.z * speed;
-			}
-
-			if (KInput::GetInstance()->IsTriger(DIK_SPACE) &&
-				!isJump)
 			{
 				isJump = true;
 				jumpPower = jumpPowerMax;
@@ -242,16 +144,6 @@ void Player::Update(ViewProjection& viewProjection)
 	}
 	else
 	{
-		// angleラジアンy軸回転
-		view.eye.x = view.lenZ * cosf(view.angleX) * cosf(view.angleY) + Player::nowPlayer->object.transform.pos.x;
-		view.eye.y = (view.lenZ * sinf(view.angleY) + Player::nowPlayer->object.transform.pos.y) + 10;
-		view.eye.z = view.lenZ * sinf(view.angleX) * cosf(view.angleY) + Player::nowPlayer->object.transform.pos.z;
-
-		// 注視点
-		view.target.x = Player::nowPlayer->object.transform.pos.x;
-		view.target.y = Player::nowPlayer->object.transform.pos.y + 10;
-		view.target.z = Player::nowPlayer->object.transform.pos.z;
-
 		if (dashTimer > 0)
 		{
 			particleCoolTime--;
@@ -276,12 +168,15 @@ void Player::Update(ViewProjection& viewProjection)
 	}
 
 	// 攻撃and移動
-	if ((KInput::GetInstance()->GetPadButtonDown(XINPUT_GAMEPAD_LEFT_SHOULDER) ||
-		KInput::GetInstance()->GetLTriggerDown()) && !isDash)
+	if (KInput::GetInstance()->GetPadConnect())
 	{
-		isDash = true;
-		dashTimer = maxDashTimer;
-		dashVec = moveVec;
+		if ((KInput::GetInstance()->GetPadButtonDown(XINPUT_GAMEPAD_LEFT_SHOULDER) ||
+			KInput::GetInstance()->GetLTriggerDown()) && !isDash)
+		{
+			isDash = true;
+			dashTimer = maxDashTimer;
+			dashVec = moveVec;
+		}
 	}
 
 	// ジャンプ
@@ -329,7 +224,10 @@ void Player::Update(ViewProjection& viewProjection)
 
 void Player::Draw()
 {
-	object.Draw(&normal);
+	if (isAlive)
+	{
+		object.Draw(&normal);
+	}
 }
 
 void Player::Damage()

@@ -62,6 +62,8 @@ public:
 
 	float damageTimer = 0;
 
+	bool isAlive = false;
+
 	static Player* nowPlayer;
 };
 

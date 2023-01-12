@@ -27,6 +27,8 @@ public:
 
 	constexpr static int maxHP = 20;
 
+	bool isAlive = false;
+
 	Boss(KModel* model);
 	void Init();
 	void Update(ViewProjection& viewProjection);

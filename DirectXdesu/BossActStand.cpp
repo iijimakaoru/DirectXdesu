@@ -1,10 +1,13 @@
 #include "BossActStand.h"
+#include "BossActAimShot.h"
+#include "BossActStamp.h"
 #include "Boss.h"
 #include "BossBulletManager.h"
+#include "MyMath.h"
 
 BossActStand::BossActStand()
 {
-	
+	timer = 60;
 }
 
 void BossActStand::Update()
@@ -26,7 +29,19 @@ void BossActStand::Update()
 
 	boss->object.transform.rot.y += 0.1f;
 
-	BossBulletManager::GetInstance()->WaveBullet(boss->object.transform.pos, { 2,2,2 }, { 2,2,2 }, 10, 0, 20);
+	if (--timer < 0)
+	{
+		int mode = MyMath::GetInstance()->GetRand(0, 2);
+
+		if (mode == 1)
+		{
+			boss->actState = std::make_unique<BossActAimShot>();
+		}
+		else
+		{
+			boss->actState = std::make_unique<BossActStamp>();
+		}
+	}
 }
 
 void BossActStand::Draw()

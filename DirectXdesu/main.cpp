@@ -182,9 +182,11 @@ void AllCollision();
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow)
 {
 #pragma region 基盤初期化
+
 #pragma region ウィンドウ
 	KWinApp::Init();
 #pragma endregion
+
 #pragma region DirectX初期化
 	KDirectXCommon::Init();
 	// キーボード入力
@@ -195,6 +197,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 #pragma region シーンの初期化
 	// 速さ
 	float speed = 1.0f;
+
 #pragma region モデル
 	KModel triangle = Triangle();
 	triangle.CreateModel();
@@ -211,6 +214,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	KModel boxSky = MtlObj("boxSky");
 	boxSky.CreateModel();
 #pragma endregion
+
 #pragma region テクスチャ初期化
 	KTexture mario;
 	mario.CreateTexture("Resources/texture/", "mario.jpg");
@@ -262,14 +266,6 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	ViewProjection viewProjection;
 	viewProjection.Initialize();
 	viewProjection.aspect = (float)KWinApp::GetWindowSizeW() / KWinApp::GetWindowSizeH();
-
-	//// カメラ
-	//Camera camera;
-
-	//// デバッグカメラ
-	//DebugCamera debugCamera({ 0,0,-10 });
-
-	//Camera::nowCamera = &debugCamera;
 #pragma endregion
 
 #pragma endregion

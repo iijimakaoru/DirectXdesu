@@ -295,6 +295,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	sprite.SpriteCommonLoadTexture(spriteCommon, 0, L"Resources/texture/hogeTitle.png");
 	sprite.SpriteCommonLoadTexture(spriteCommon, 1, L"Resources/texture/playerColor.png");
 	sprite.SpriteCommonLoadTexture(spriteCommon, 2, L"Resources/texture/bossColor.png");
+	sprite.SpriteCommonLoadTexture(spriteCommon, 3, L"Resources/texture/setumei.png");
 
 	SpriteInfo title;
 	title = sprite.SpriteCreate(title.texNum, spriteCommon);
@@ -338,13 +339,21 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		}
 	}
 	
+	// 説明UI
+	SpriteInfo setumei;
+	setumei = sprite.SpriteCreate(setumei.texNum, spriteCommon);
+	setumei.size.x = 200;
+	setumei.size.y = 200;
+	sprite.SpriteTransferVertexBuffer(setumei, spriteCommon);
+	setumei.texNum = 3;
 	
+	setumei.position = { 100, (float)KWinApp::GetWindowSizeH() * 1 / 3 ,0 };
 #pragma endregion
 
 #pragma region デバッグテキスト
 	DebugText* debugtext = new DebugText();
 
-	const int debugTextNumber = 3;
+	const int debugTextNumber = 4;
 	sprite.SpriteCommonLoadTexture(spriteCommon, debugTextNumber, L"Resources/texture/tex1.png");
 	debugtext->Init(&sprite, debugTextNumber, spriteCommon);
 #pragma endregion
@@ -395,6 +404,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		{
 			sprite.SpriteUpdate(bosssHP[i], spriteCommon);
 		}
+
+		sprite.SpriteUpdate(setumei, spriteCommon);
 
 		if (gameScene == Scene::Title)
 		{
@@ -578,6 +589,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 		if (gameScene == Scene::Play)
 		{
+			// 説明UI
+			sprite.SpriteDraw(setumei, spriteCommon);
 #pragma region プレイヤーのHP
 			if (Player::nowPlayer->hp >= 1)
 			{

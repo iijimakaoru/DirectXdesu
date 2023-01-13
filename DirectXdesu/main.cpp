@@ -23,7 +23,6 @@
 
 #include <array>
 
-#include"Player.h"
 #include"Stage.h"
 #include"Boss.h"
 #include "BossBulletManager.h"
@@ -175,10 +174,6 @@ PipelineSet Create3DObjectGpipeline()
 	return pipelineSet;
 }
 
-bool BoxCollision(WorldTransfom& transformA, WorldTransfom& transformB);
-
-void AllCollision();
-
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow)
 {
 #pragma region 基盤初期化
@@ -188,7 +183,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 #pragma endregion
 
 #pragma region DirectX初期化
-	KDirectXCommon::Init();
+	KDirectXCommon::GetInstance()->Init();
 	// キーボード入力
 	KInput::Init();
 #pragma endregion
@@ -230,37 +225,6 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	// 3Dオブジェクト用パイプライン生成
 	PipelineSet object3dPipelineSet = Create3DObjectGpipeline();
 
-	// プレイヤー
-	Player player(&cube);
-
-	Player::nowPlayer = &player;
-
-	// ボス
-	Boss boss(&cube);
-
-	Boss::nowBoss = &boss;
-
-	if (!BossBulletManager::GetInstance()->IsPoolCreated())
-	{
-		BossBulletManager::GetInstance()->CreatePool(&cube);
-	}
-
-	if (!ParticleManager::GetInstance()->IsPoolCreated())
-	{
-		ParticleManager::GetInstance()->CreatePool(&cube);
-	}
-
-	// ステージ
-	Stage stage;
-	stage.Init(&cube);
-
-	// 天球
-	KObject3d boxSkydorm;
-	boxSkydorm.Initialize();
-	boxSkydorm.LoadModel(&boxSky);
-
-	boxSkydorm.transform.scale = { 320,320,320 };
-
 #pragma region ビュー
 	// ビュープロジェクション
 	ViewProjection viewProjection;
@@ -269,13 +233,6 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 #pragma endregion
 
 #pragma endregion
-	Vector3 center = { 0,0,1 };
-
-	float rSpeed = -0.02f;
-	float gSpeed = 0.02f;
-	float bSpeed = -0.02f;
-	float aSpeed = -0.02f;
-
 	std::unique_ptr<Sound> sound;
 	sound = std::make_unique<Sound>();
 	sound->Init();
@@ -292,58 +249,6 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	sprite.SpriteCommonLoadTexture(spriteCommon, 1, L"Resources/texture/playerColor.png");
 	sprite.SpriteCommonLoadTexture(spriteCommon, 2, L"Resources/texture/bossColor.png");
 	sprite.SpriteCommonLoadTexture(spriteCommon, 3, L"Resources/texture/setumei.png");
-
-	SpriteInfo title;
-	title = sprite.SpriteCreate(title.texNum, spriteCommon);
-	title.size.x = 1000;
-	title.size.y = 500;
-	sprite.SpriteTransferVertexBuffer(title, spriteCommon);
-	title.texNum = 0;
-
-	title.position = { (float)KWinApp::GetWindowSizeW() / 2, (float)KWinApp::GetWindowSizeH() / 2 ,0 };
-
-	// プレイヤーHPのUI
-	static const int pMaxHP = 3;
-	std::array<SpriteInfo,pMaxHP> playersHP;
-	for (int i = 0; i < pMaxHP; i++)
-	{
-		playersHP[i] = sprite.SpriteCreate(playersHP[i].texNum, spriteCommon);
-		playersHP[i].size.x = 100.0f;
-		playersHP[i].size.y = 100.0f;
-		sprite.SpriteTransferVertexBuffer(playersHP[i], spriteCommon);
-		playersHP[i].texNum = 1;
-	}
-	playersHP[0].position = { 60, 650, 0 };
-	playersHP[1].position = { 180, 650, 0 };
-	playersHP[2].position = { 300, 650, 0 };
-
-	// ボスHPのUI
-	static const int bMaxHP = 20;
-	std::array<SpriteInfo, bMaxHP> bosssHP;
-	for (int i = 0; i < bMaxHP; i++)
-	{
-		bosssHP[i] = sprite.SpriteCreate(bosssHP[i].texNum, spriteCommon);
-		bosssHP[i].size.x = 25.0f;
-		bosssHP[i].size.y = 50.0f;
-		sprite.SpriteTransferVertexBuffer(bosssHP[i], spriteCommon);
-		bosssHP[i].texNum = 2;
-		bosssHP[0].position = { 400,50,0 };
-		if (i > 0)
-		{
-			bosssHP[i].position = bosssHP[i - 1].position;
-			bosssHP[i].position.x += 25;
-		}
-	}
-	
-	// 説明UI
-	SpriteInfo setumei;
-	setumei = sprite.SpriteCreate(setumei.texNum, spriteCommon);
-	setumei.size.x = 200;
-	setumei.size.y = 200;
-	sprite.SpriteTransferVertexBuffer(setumei, spriteCommon);
-	setumei.texNum = 3;
-	
-	setumei.position = { 100, (float)KWinApp::GetWindowSizeH() * 1 / 3 ,0 };
 #pragma endregion
 
 #pragma region デバッグテキスト
@@ -354,22 +259,6 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	debugtext->Init(&sprite, debugTextNumber, spriteCommon);
 #pragma endregion
 #pragma endregion
-
-	enum class Scene
-	{
-		Title,
-		Play,
-		Clear,
-		Over,
-	};
-
-	Scene gameScene = Scene::Title;
-
-	bool isTexture = false;
-
-	int phase = 1;
-
-	float phaseTimer = 0;
 
 	// ウィンドウ表示
 	// ゲームループ
@@ -389,158 +278,11 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 #pragma endregion
 
 #pragma region シーンの更新
-		sprite.SpriteUpdate(title, spriteCommon);
-
-		for (int i = 0; i < pMaxHP; i++)
-		{
-			sprite.SpriteUpdate(playersHP[i], spriteCommon);
-		}
-
-		for (int i = 0; i < bMaxHP; i++)
-		{
-			sprite.SpriteUpdate(bosssHP[i], spriteCommon);
-		}
-
-		sprite.SpriteUpdate(setumei, spriteCommon);
-
-		if (gameScene == Scene::Title)
-		{
-			// プレイヤー初期化
-			player.Init();
-
-			// ボス初期化
-			boss.Init();
-
-			// 出てる弾を全て消す
-			BossBulletManager::GetInstance()->AllDelete();
-
-			// 出てるパーティクルを全て消す
-			ParticleManager::GetInstance()->AllDelete();
-
-			phase = 1;
-
-			phaseTimer = 0;
-
-			if (KInput::GetInstance()->GetPadConnect())
-			{
-				if (KInput::GetInstance()->GetPadButtonDown(XINPUT_GAMEPAD_A))
-				{
-					gameScene = Scene::Play;
-					boss.startFlag = true;
-				}
-			}
-		}
-		if (gameScene == Scene::Play)
-		{
-			player.Update(viewProjection);
-
-			boss.Update(Player::nowPlayer->view);
-
-			AllCollision();
-
-			if (Player::nowPlayer->hp <= 0)
-			{
-				gameScene = Scene::Over;
-				phaseTimer = 60;
-			}
-
-			if (Boss::nowBoss->hp <= 0)
-			{
-				gameScene = Scene::Clear;
-			}
-
-			BossBulletManager::GetInstance()->Update(Player::nowPlayer->view);
-		}
-
-		if (gameScene == Scene::Clear)
-		{
-			if (phase == 1)
-			{
-				phaseTimer--;
-				if (phaseTimer <= 0)
-				{
-					phase++;
-					phaseTimer = 120;
-				}
-			}
-
-			if (phase == 2)
-			{
-				Boss::nowBoss->isAlive = false;
-				for (int i = 0; i < 100; i++)
-				{
-					ParticleManager::GetInstance()->Explosion(Boss::nowBoss->object.transform.pos, { 8,8,8 }, { 1,1,1 }, phaseTimer, 10);
-				}
-				phaseTimer--;
-				if (phaseTimer < 0)
-				{
-					phase++;
-				}
-			}
-
-			if (phase == 3)
-			{
-				if (KInput::GetInstance()->GetPadConnect())
-				{
-					if (KInput::GetInstance()->GetPadButtonDown(XINPUT_GAMEPAD_A))
-					{
-						gameScene = Scene::Title;
-					}
-				}
-			}
-		}
-
-		if (gameScene == Scene::Over)
-		{
-			if (phase == 1)
-			{
-				phaseTimer--;
-				if (phaseTimer <= 0)
-				{
-					phase++;
-					phaseTimer = 120;
-				}
-			}
-
-			if (phase == 2)
-			{
-				Player::nowPlayer->isAlive = false;
-				for (int i = 0; i < 100; i++)
-				{
-					ParticleManager::GetInstance()->Explosion(Player::nowPlayer->object.transform.pos, { 4,4,4 }, { 1,1,1 }, phaseTimer, 10);
-				}
-				phaseTimer--;
-				if (phaseTimer < 0)
-				{
-					phase++;
-				}
-			}
-
-			if (phase == 3)
-			{
-				if (KInput::GetInstance()->GetPadConnect())
-				{
-					if (KInput::GetInstance()->GetPadButtonDown(XINPUT_GAMEPAD_A))
-					{
-						gameScene = Scene::Title;
-					}
-				}
-			}
-		}
-
-		ParticleManager::GetInstance()->Update(Player::nowPlayer->view);
-
-		stage.Update(Player::nowPlayer->view);
-
-		// ビューのアップデート
-		viewProjection.Update();
-
-		boxSkydorm.Update(Player::nowPlayer->view);
 #pragma endregion
 
 #pragma region 描画
 		// 描画開始
-		KDirectXCommon::PreDraw();
+		KDirectXCommon::GetInstance()->PreDraw();
 #pragma region パイプラインステート設定
 		// パイプラインステートとルートシグネチャの設定コマンド
 		KDirectXCommon::GetInstance()->GetCmdlist()->SetPipelineState(object3dPipelineSet.pipelineState.Get());
@@ -552,181 +294,19 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 #pragma endregion
 
 #pragma region 描画コマンド
-		// 描画コマンド
-		if (gameScene == Scene::Title)
-		{
-
-		}
-
-		if (gameScene == Scene::Play ||
-			gameScene == Scene::Clear ||
-			gameScene == Scene::Over)
-		{
-			player.Draw();
-
-			boss.Draw();
-
-			BossBulletManager::GetInstance()->Draw();
-
-			stage.Draw(&stageR);
-		}
 
 		ParticleManager::GetInstance()->Draw();
-
-		boxSkydorm.Draw();
 
 		// スプライト描画
 		sprite.SpriteCommonBeginDraw(spriteCommon);
 
-		if (gameScene == Scene::Title)
-		{
-			sprite.SpriteDraw(title, spriteCommon);
-		}
-
-		if (gameScene == Scene::Play)
-		{
-			// 説明UI
-			sprite.SpriteDraw(setumei, spriteCommon);
-#pragma region プレイヤーのHP
-			if (Player::nowPlayer->hp >= 1)
-			{
-				sprite.SpriteDraw(playersHP[0], spriteCommon);
-			}
-
-			if (Player::nowPlayer->hp >= 2)
-			{
-				sprite.SpriteDraw(playersHP[1], spriteCommon);
-			}
-
-			if (Player::nowPlayer->hp >= 3)
-			{
-				sprite.SpriteDraw(playersHP[2], spriteCommon);
-			}
-#pragma endregion
-
-#pragma region ボスのHP
-			if (Boss::nowBoss->hp >= 1)
-			{
-				sprite.SpriteDraw(bosssHP[0], spriteCommon);
-			}
-			if (Boss::nowBoss->hp >= 2)
-			{
-				sprite.SpriteDraw(bosssHP[1], spriteCommon);
-			}
-			if (Boss::nowBoss->hp >= 3)
-			{
-				sprite.SpriteDraw(bosssHP[2], spriteCommon);
-			}
-			if (Boss::nowBoss->hp >= 4)
-			{
-				sprite.SpriteDraw(bosssHP[3], spriteCommon);
-			}
-			if (Boss::nowBoss->hp >= 5)
-			{
-				sprite.SpriteDraw(bosssHP[4], spriteCommon);
-			}
-			if (Boss::nowBoss->hp >= 6)
-			{
-				sprite.SpriteDraw(bosssHP[5], spriteCommon);
-			}
-			if (Boss::nowBoss->hp >= 7)
-			{
-				sprite.SpriteDraw(bosssHP[6], spriteCommon);
-			}
-			if (Boss::nowBoss->hp >= 8)
-			{
-				sprite.SpriteDraw(bosssHP[7], spriteCommon);
-			}
-			if (Boss::nowBoss->hp >= 9)
-			{
-				sprite.SpriteDraw(bosssHP[8], spriteCommon);
-			}
-			if (Boss::nowBoss->hp >= 10)
-			{
-				sprite.SpriteDraw(bosssHP[9], spriteCommon);
-			}
-			if (Boss::nowBoss->hp >= 11)
-			{
-				sprite.SpriteDraw(bosssHP[10], spriteCommon);
-			}
-			if (Boss::nowBoss->hp >= 12)
-			{
-				sprite.SpriteDraw(bosssHP[11], spriteCommon);
-			}
-			if (Boss::nowBoss->hp >= 13)
-			{
-				sprite.SpriteDraw(bosssHP[12], spriteCommon);
-			}
-			if (Boss::nowBoss->hp >= 14)
-			{
-				sprite.SpriteDraw(bosssHP[13], spriteCommon);
-			}
-			if (Boss::nowBoss->hp >= 15)
-			{
-				sprite.SpriteDraw(bosssHP[14], spriteCommon);
-			}
-			if (Boss::nowBoss->hp >= 16)
-			{
-				sprite.SpriteDraw(bosssHP[15], spriteCommon);
-			}
-			if (Boss::nowBoss->hp >= 17)
-			{
-				sprite.SpriteDraw(bosssHP[16], spriteCommon);
-			}
-			if (Boss::nowBoss->hp >= 18)
-			{
-				sprite.SpriteDraw(bosssHP[17], spriteCommon);
-			}
-			if (Boss::nowBoss->hp >= 19)
-			{
-				sprite.SpriteDraw(bosssHP[18], spriteCommon);
-			}
-			if (Boss::nowBoss->hp >= 20)
-			{
-				sprite.SpriteDraw(bosssHP[19], spriteCommon);
-			}
-#pragma endregion
-		}
-
-		if (gameScene == Scene::Clear)
-		{
-			debugtext->Print(spriteCommon, "Game Clear!!", { 280,80 }, 8.0f);
-			if (phase == 3)
-			{
-				if (KInput::GetInstance()->GetPadConnect())
-				{
-					debugtext->Print(spriteCommon, "Push A", { 500,360 }, 4.0f);
-				}
-				else
-				{
-					debugtext->Print(spriteCommon, "Push SPACE", { 500,360 }, 4.0f);
-				}
-			}
-		}
-
-		if (gameScene == Scene::Over)
-		{
-			debugtext->Print(spriteCommon, "Game Over!!", { 280,80 }, 8.0f);
-			if (phase == 3)
-			{
-				if (KInput::GetInstance()->GetPadConnect())
-				{
-					debugtext->Print(spriteCommon, "Push A", { 500,360 }, 4.0f);
-				}
-				else
-				{
-					debugtext->Print(spriteCommon, "Push SPACE", { 500,360 }, 4.0f);
-				}
-			}
-		}
-
-		//debugtext->Print(spriteCommon, "FPS(w)" + std::to_string(KDirectXCommon::GetInstance()->fps), { 10,50 }, 2.0f);
+		debugtext->Print(spriteCommon, "FPS(w)" + std::to_string(KDirectXCommon::GetInstance()->fps), { 10,50 }, 2.0f);
 		debugtext->DrawAll(spriteCommon);
 
 		// 描画コマンドここまで
 #pragma endregion
 		// 描画終了
-		KDirectXCommon::PostDraw();
+		KDirectXCommon::GetInstance()->PostDraw();
 	}
 
 #pragma region 基盤の終了
@@ -735,42 +315,4 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 #pragma endregion
 
 	return 0;
-}
-
-bool BoxCollision(WorldTransfom& transformA, WorldTransfom& transformB)
-{
-	if (transformA.pos.x - transformA.scale.x <= transformB.pos.x + transformB.scale.x && // posA左とposB右の判定
-		transformA.pos.x + transformA.scale.x >= transformB.pos.x - transformB.scale.x && // posA右とposB左の判定
-		transformA.pos.y - transformA.scale.y <= transformB.pos.y + transformB.scale.y && // posA下とposB上の判定
-		transformA.pos.y + transformA.scale.y >= transformB.pos.y - transformB.scale.y && // posA上とposB下の判定
-		transformA.pos.z - transformA.scale.z <= transformB.pos.z + transformB.scale.z && // posA前とposB奥の判定
-		transformA.pos.z + transformA.scale.z >= transformB.pos.z - transformB.scale.z)   // posA奥とposB前の判定
-	{
-		return true;
-	}
-
-	return false;
-}
-
-void AllCollision()
-{
-	WorldTransfom transform;
-
-	for (std::unique_ptr<BossBullet>& bullet : BossBulletManager::GetInstance()->bossBullets)
-	{
-		transform = bullet->object.transform;
-		if (BoxCollision(Player::nowPlayer->object.transform, transform) && !bullet->IsDead())
-		{
-			Player::nowPlayer->damageTimer = 30;
-			Player::nowPlayer->isDamage = true;
-			bullet->isDead = true;
-		}
-	}
-
-	if (BoxCollision(Player::nowPlayer->object.transform, Boss::nowBoss->object.transform) && Player::nowPlayer->isDash)
-	{
-		Player::nowPlayer->hitTimer = 10;
-		Player::nowPlayer->isHit = true;
-		Boss::nowBoss->Damage();
-	}
 }

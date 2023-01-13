@@ -18,11 +18,11 @@ using namespace Microsoft::WRL;
 class KDirectXCommon
 {
 public:
-	static void Init();
+	void Init();
 
-	static void PreDraw();
+	void PreDraw();
 
-	static void PostDraw();
+	void PostDraw();
 
 	void CmdFlash();
 
@@ -38,8 +38,6 @@ private:
 	HRESULT result;
 	// DirectX12デバイス
 	Microsoft::WRL::ComPtr<ID3D12Device> dev;
-	// DXGIファクトリー
-	Microsoft::WRL::ComPtr<IDXGIFactory6> dxgiFactory;
 	// バックバッファ
 	std::vector<Microsoft::WRL::ComPtr<ID3D12Resource>> backBuffers;
 	// スワップチェーン
@@ -52,18 +50,15 @@ private:
 	ComPtr<ID3D12DescriptorHeap> dsvHeap{};
 	ComPtr<ID3D12DescriptorHeap> tmpDsvHeap{};
 
+	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle;
+
 	ComPtr<ID3D12CommandAllocator> cmdAllocater;
 	ComPtr<ID3D12GraphicsCommandList> cmdList;
 	ComPtr<ID3D12CommandQueue> cmdQueue;
 	ComPtr<ID3D12DescriptorHeap> rtvHeap;
 
-	D3D_FEATURE_LEVEL featureLevel;
-
 	// コマンドキューの設定
 	D3D12_COMMAND_QUEUE_DESC cmdQueueDesc{};
-
-	// スワップチェーンの設定
-	DXGI_SWAP_CHAIN_DESC1 swapChainDesc{};
 
 	// フェンスの生成
 	ComPtr<ID3D12Fence> fence;
@@ -79,19 +74,7 @@ private:
 	//KDepth* depth = nullptr;
 
 	std::chrono::steady_clock::time_point reference_;
-	
-	// デバイス初期化
-	void InitDev();
-	// コマンド初期化
-	void InitCommand();
-	// スワップチェーン初期化
-	void InitSwapChain();
-	// レンダーターゲットビュー初期化
-	void InitRenderTargetView();
-	// 深度バッファ初期化
-	void InitDepthBuffer();
-	// フェンス初期化
-	void InitFence();
+
 	// FPS固定初期化
 	void InitFixFPS();
 	// FPS固定

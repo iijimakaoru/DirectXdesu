@@ -46,12 +46,6 @@
     <Filter Include="シェーダー">
       <UniqueIdentifier>{8d46f641-b509-490f-b94c-6d3bb85c48ee}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\Boss">
-      <UniqueIdentifier>{f6ea5bcb-11ad-402b-ad8a-bbe93ca54eff}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Boss">
-      <UniqueIdentifier>{4a99b731-db43-4c21-971b-453fb4f8a6b1}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -123,41 +117,14 @@
     <ClCompile Include="Sound.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Player.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Stage.cpp">
       <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Boss.cpp">
-      <Filter>ソース ファイル\Boss</Filter>
     </ClCompile>
     <ClCompile Include="Camera.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="DebugCamera.cpp">
       <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="BossActStand.cpp">
-      <Filter>ソース ファイル\Boss</Filter>
-    </ClCompile>
-    <ClCompile Include="BossActState.cpp">
-      <Filter>ソース ファイル\Boss</Filter>
-    </ClCompile>
-    <ClCompile Include="BossBullet.cpp">
-      <Filter>ソース ファイル\Boss</Filter>
-    </ClCompile>
-    <ClCompile Include="BossBulletManager.cpp">
-      <Filter>ソース ファイル\Boss</Filter>
-    </ClCompile>
-    <ClCompile Include="BossActGap.cpp">
-      <Filter>ソース ファイル\Boss</Filter>
-    </ClCompile>
-    <ClCompile Include="BossActStamp.cpp">
-      <Filter>ソース ファイル\Boss</Filter>
-    </ClCompile>
-    <ClCompile Include="BossActAimShot.cpp">
-      <Filter>ソース ファイル\Boss</Filter>
     </ClCompile>
     <ClCompile Include="Particle.cpp">
       <Filter>ソース ファイル</Filter>
@@ -248,41 +215,14 @@
     <ClInclude Include="PipelineSet.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Player.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Stage.h">
       <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Boss.h">
-      <Filter>ヘッダー ファイル\Boss</Filter>
     </ClInclude>
     <ClInclude Include="Camera.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="DebugCamera.h">
       <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="BossActStand.h">
-      <Filter>ヘッダー ファイル\Boss</Filter>
-    </ClInclude>
-    <ClInclude Include="BossActState.h">
-      <Filter>ヘッダー ファイル\Boss</Filter>
-    </ClInclude>
-    <ClInclude Include="BossBullet.h">
-      <Filter>ヘッダー ファイル\Boss</Filter>
-    </ClInclude>
-    <ClInclude Include="BossBulletManager.h">
-      <Filter>ヘッダー ファイル\Boss</Filter>
-    </ClInclude>
-    <ClInclude Include="BossActGap.h">
-      <Filter>ヘッダー ファイル\Boss</Filter>
-    </ClInclude>
-    <ClInclude Include="BossActStamp.h">
-      <Filter>ヘッダー ファイル\Boss</Filter>
-    </ClInclude>
-    <ClInclude Include="BossActAimShot.h">
-      <Filter>ヘッダー ファイル\Boss</Filter>
     </ClInclude>
     <ClInclude Include="Particle.h">
       <Filter>ヘッダー ファイル</Filter>

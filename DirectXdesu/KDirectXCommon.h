@@ -24,10 +24,6 @@ public:
 
 	void PostDraw();
 
-	void CmdFlash();
-
-	void CmdClear();
-
 	// デバイス取得
 	ID3D12Device* GetDev() const { return dev.Get(); }
 	ID3D12GraphicsCommandList* GetCmdlist() { return cmdList.Get(); }
@@ -56,6 +52,8 @@ private:
 	ComPtr<ID3D12GraphicsCommandList> cmdList;
 	ComPtr<ID3D12CommandQueue> cmdQueue;
 	ComPtr<ID3D12DescriptorHeap> rtvHeap;
+
+	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle;
 
 	// コマンドキューの設定
 	D3D12_COMMAND_QUEUE_DESC cmdQueueDesc{};

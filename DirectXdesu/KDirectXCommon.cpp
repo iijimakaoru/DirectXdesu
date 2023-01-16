@@ -191,29 +191,29 @@ void KDirectXCommon::PreDraw()
 {
 #pragma region リソースバリア
 	// バックバッファの番号を取得
-	UINT bbIndex = GetInstance()->swapChain->GetCurrentBackBufferIndex();
+	UINT bbIndex = swapChain->GetCurrentBackBufferIndex();
 	// 1.リソースバリアで書き込み可能に変更
-	GetInstance()->barrierDesc.Transition.pResource = GetInstance()->backBuffers[bbIndex].Get();
-	GetInstance()->barrierDesc.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
-	GetInstance()->barrierDesc.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
-	GetInstance()->cmdList->ResourceBarrier(1, &GetInstance()->barrierDesc);
+	barrierDesc.Transition.pResource = backBuffers[bbIndex].Get();
+	barrierDesc.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
+	barrierDesc.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
+	cmdList->ResourceBarrier(1, &GetInstance()->barrierDesc);
 #pragma endregion
 
 #pragma region 描画先
 	// 2. 描画先の変更
 	// レンダーターゲートビューのハンドルを取得
-	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = GetInstance()->rtvHeap->GetCPUDescriptorHandleForHeapStart();
-	rtvHandle.ptr += bbIndex * GetInstance()->dev->GetDescriptorHandleIncrementSize(GetInstance()->rtvHeapDesc.Type);
+	rtvHandle = rtvHeap->GetCPUDescriptorHandleForHeapStart();
+	rtvHandle.ptr += bbIndex * dev->GetDescriptorHandleIncrementSize(rtvHeapDesc.Type);
 	// 深度ステンシルビュー用デスクリプタヒープのハンドルを取得
-	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = GetInstance()->dsvHeap->GetCPUDescriptorHandleForHeapStart();
-	GetInstance()->cmdList->OMSetRenderTargets(1, &rtvHandle, false, &dsvHandle);
+	dsvHandle = dsvHeap->GetCPUDescriptorHandleForHeapStart();
+	cmdList->OMSetRenderTargets(1, &rtvHandle, false, &dsvHandle);
 #pragma endregion
 
 #pragma region 画面クリア
 	// 3. 画面クリア
 	FLOAT clearColor[] = { 0.1f,0.25f,0.5f,0.0f };
-	GetInstance()->cmdList->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
-	GetInstance()->cmdList->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+	cmdList->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
+	cmdList->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 #pragma endregion
 
 #pragma region ビューポート設定コマンド
@@ -226,7 +226,7 @@ void KDirectXCommon::PreDraw()
 	viewport.MinDepth = 0.0f;			   // 最小深度
 	viewport.MaxDepth = 1.0f;			   // 最大深度
 	// ビューポート設定コマンドをコマンドリストに積む
-	GetInstance()->cmdList->RSSetViewports(1, &viewport);
+	cmdList->RSSetViewports(1, &viewport);
 #pragma endregion
 
 #pragma region シザー矩形設定
@@ -237,29 +237,19 @@ void KDirectXCommon::PreDraw()
 	scissorRect.top = 0;									// 切り抜き座標上
 	scissorRect.bottom = scissorRect.top + KWinApp::GetWindowSizeH();	// 切り抜き座標下
 	// シザー矩形設定コマンドをコマンドリストに積む
-	GetInstance()->cmdList->RSSetScissorRects(1, &scissorRect);
+	cmdList->RSSetScissorRects(1, &scissorRect);
 #pragma endregion
 }
 
 void KDirectXCommon::PostDraw()
 {
 #pragma region リソースバリアを戻す
-	GetInstance()->barrierDesc.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
-	GetInstance()->barrierDesc.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
-	GetInstance()->cmdList->ResourceBarrier(1, &GetInstance()->barrierDesc);
+	barrierDesc.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
+	barrierDesc.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
+	cmdList->ResourceBarrier(1, &barrierDesc);
 #pragma endregion
-#pragma region コマンドのフラッシュ
-	GetInstance()->CmdFlash();
-#pragma endregion
-#pragma region コマンド完了待ち
-	GetInstance()->CmdClear();
-#pragma endregion
-	// FPS固定
-	GetInstance()->UpdateFixFPS();
-}
 
-void KDirectXCommon::CmdFlash()
-{
+#pragma region コマンドのフラッシュ
 	// 命令のクローズ
 	result = cmdList->Close();
 	assert(SUCCEEDED(result));
@@ -269,17 +259,20 @@ void KDirectXCommon::CmdFlash()
 	// 画面に表示するバッファをフリップ(裏表の入れ替え)
 	result = swapChain->Present(1, 0);
 	assert(SUCCEEDED(result));
-}
+#pragma endregion
 
-void KDirectXCommon::CmdClear()
-{
+#pragma region コマンド完了待ち
 	// コマンドの完了を待つ
 	cmdQueue->Signal(fence.Get(), ++fenceVal);
-	if (fence->GetCompletedValue() != fenceVal) {
+	if (fence->GetCompletedValue() != fenceVal) 
+	{
 		HANDLE event = CreateEvent(nullptr, false, false, nullptr);
 		fence->SetEventOnCompletion(fenceVal, event);
-		WaitForSingleObject(event, INFINITE);
-		CloseHandle(event);
+		if (event != 0)
+		{
+			WaitForSingleObject(event, INFINITE);
+			CloseHandle(event);
+		}
 	}
 	// キューをクリア
 	result = cmdAllocater->Reset();
@@ -287,6 +280,9 @@ void KDirectXCommon::CmdClear()
 	// 再びコマンドを貯める準備
 	result = cmdList->Reset(cmdAllocater.Get(), nullptr);
 	assert(SUCCEEDED(result));
+#pragma endregion
+	// FPS固定
+	UpdateFixFPS();
 }
 
 void KDirectXCommon::InitFixFPS()

@@ -9,6 +9,6 @@ void GameScence::Update()
 {
 }
 
-void GameScence::Draw(ID3D12Device& dev, ID3D12GraphicsCommandList* cmdList)
+void GameScence::Draw()
 {
 }

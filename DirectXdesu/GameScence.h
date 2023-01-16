@@ -20,42 +20,10 @@ public:
 	~GameScence(){};
 	void Init();
 	void Update();
-	void Draw(ID3D12Device& dev, ID3D12GraphicsCommandList* cmdList);
+	void Draw();
 
 private:
-	// KDirectCommon
-	KDirectXCommon* dx = nullptr;
-	// キーボード入力
-	KInput* input = nullptr;
 
-	KModel triangle = Triangle();
 
-	KModel cube = Cube();
-
-	KModel line = Line();
-
-	// 3Dオブジェクト
-	KObject3d* object3d[ObjectNum];
-
-	// スプライト
-	std::unique_ptr<Sprite> sprite;
-
-	// ビュープロジェクション
-	ViewProjection* viewProjection;
-
-	Vector3 center = { 0,0,1 };
-
-	float rSpeed = -0.02f;
-	float gSpeed = 0.02f;
-	float bSpeed = -0.02f;
-	float aSpeed = -0.02f;
-
-	std::unique_ptr<Sound> sound;
-
-	SpriteCommon spriteCommon;
-
-	SpriteInfo sprites[2];
-
-	std::unique_ptr<DebugText> debugtext;
 };
 

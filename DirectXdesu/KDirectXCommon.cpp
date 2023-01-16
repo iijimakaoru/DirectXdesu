@@ -268,7 +268,7 @@ void KDirectXCommon::PostDraw()
 	{
 		HANDLE event = CreateEvent(nullptr, false, false, nullptr);
 		fence->SetEventOnCompletion(fenceVal, event);
-		if (event != 0)
+		if (event != nullptr)
 		{
 			WaitForSingleObject(event, INFINITE);
 			CloseHandle(event);

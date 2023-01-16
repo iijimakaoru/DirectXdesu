@@ -8,6 +8,8 @@
 #include <DirectXTex.h>
 #include "KTexture.h"
 
+#include <unordered_map>
+
 using namespace DirectX;
 using namespace std;
 
@@ -42,6 +44,10 @@ public:
 	// インデックスデータ
 	std::vector<unsigned short> indices;
 
+	std::unordered_map<unsigned short, std::vector<unsigned short>> smoothData;
+
+	bool isSmooth = true;
+
 	std::unique_ptr<KVertex> vertexs = make_unique<KVertex>();
 
 	KTexture texture;
@@ -75,6 +81,6 @@ public:
 class MtlObj : public KModel
 {
 public:
-	MtlObj(const string modelname);
+	MtlObj(const string modelname, bool isSmooth = false);
 	~MtlObj() {};
 };

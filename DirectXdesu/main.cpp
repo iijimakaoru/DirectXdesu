@@ -199,8 +199,10 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	piramid.CreateModel();
 	KModel tekitou = MtlObj("tekitou");
 	tekitou.CreateModel();
-	KModel sqhere = MtlObj("sqheredesu");
+	KModel sqhere = MtlObj("hoge");
 	sqhere.CreateModel();
+	KModel sqhere1 = MtlObj("hoge", true);
+	sqhere1.CreateModel();
 #pragma endregion
 #pragma region テクスチャ初期化
 	const wchar_t* msg = L"Resources/texture/mario.jpg";
@@ -232,7 +234,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		}
 		object3d[i]->transform.scale = { 10,10,10 };
 	}
-	object3d[0]->LoadModel(&piramid);
+	object3d[0]->LoadModel(&sqhere1);
 	object3d[1]->LoadModel(&sqhere);
 #pragma endregion
 #pragma region ビュー
@@ -414,8 +416,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		// 移動
 		/*object3d[0]->transform.pos.x += (speed)*object3d[0]->rotResult.x;
 		object3d[0]->transform.pos.z += (speed)*object3d[0]->rotResult.z;*/
-		object3d[0]->transform.pos.x += (input->IsPush(DIK_RIGHT) - input->IsPush(DIK_LEFT)) * speed;
-		object3d[0]->transform.pos.z += (input->IsPush(DIK_UP) - input->IsPush(DIK_DOWN)) * speed;
+		/*object3d[0]->transform.pos.x += (input->IsPush(DIK_RIGHT) - input->IsPush(DIK_LEFT)) * speed;
+		object3d[0]->transform.pos.z += (input->IsPush(DIK_UP) - input->IsPush(DIK_DOWN)) * speed;*/
 
 		object3d[1]->transform.pos.x = object3d[0]->transform.pos.x + 20;
 		object3d[1]->transform.pos.z = object3d[0]->transform.pos.z;

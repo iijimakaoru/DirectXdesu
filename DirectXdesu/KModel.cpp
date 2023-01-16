@@ -274,7 +274,7 @@ void KModel::CreateModel()
 	vertexs.reset(new KVertex(KDirectXCommon::GetInstance()->GetDev(), vertices, indices));
 }
 
-MtlObj::MtlObj(const string modelname)
+MtlObj::MtlObj(const string modelname, bool isSmooth)
 {
 	ifstream file;
 
@@ -369,10 +369,35 @@ MtlObj::MtlObj(const string modelname)
 				vertex.uv = texcoords[indexTexcoord - 1];
 				vertices.emplace_back(vertex);
 
-				//indices.emplace_back(indexPosition - 1);
+				// 頂点インデックスに追加
 				indices.emplace_back((unsigned short)indices.size());
+
+				// ここでデータを保持
+				smoothData[indexPosition].emplace_back(vertices.size() - 1);
 			}
 		}
 	}
 	file.close();
+
+	if (isSmooth)
+	{
+		auto itr = smoothData.begin();
+		for (; itr != smoothData.end(); ++itr)
+		{
+			// 
+			std::vector<unsigned short>& v = itr->second;
+			// 
+			XMVECTOR normal = {};
+			for (unsigned short index : v)
+			{
+				normal += XMVectorSet(vertices[index].normal.x, vertices[index].normal.y, vertices[index].normal.z, 0);
+			}
+			normal = XMVector3Normalize(normal / (float)v.size());
+			// 
+			for (unsigned short index : v)
+			{
+				vertices[index].normal = { normal.m128_f32[0],normal.m128_f32[1],normal.m128_f32[2] };
+			}
+		}
+	}
 }

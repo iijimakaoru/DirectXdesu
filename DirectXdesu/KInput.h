@@ -15,8 +15,8 @@ using namespace Microsoft::WRL;
 class KInput
 {
 public:
-	static void Init();
-	static void Update();
+	void Init();
+	void Update();
 
 	bool IsPush(int keyNum);
 	bool IsPress(int keyNum);

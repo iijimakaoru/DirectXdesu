@@ -19,6 +19,7 @@ public:
 	GameScence(){};
 	~GameScence(){};
 	void Init();
+	void Finalize();
 	void Update();
 	void Draw();
 

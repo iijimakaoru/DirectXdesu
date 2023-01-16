@@ -10,7 +10,7 @@ KInput* KInput::GetInstance()
 
 void KInput::Init() 
 {
-	GetInstance()->InitInternal();
+	InitInternal();
 }
 
 void KInput::InitInternal()
@@ -48,43 +48,41 @@ void KInput::InitInternal()
 
 void KInput::Update() 
 {
-	KInput* instance = GetInstance();
-
 	// キーボードの情報取得
-	instance->keyboard->Acquire();
+	keyboard->Acquire();
 
 	// 全キー入力情報を取得
 	for (int i = 0; i < 256; i++)
 	{
-		instance->oldkey[i] = instance->key[i];
+		oldkey[i] = key[i];
 	}
-	instance->keyboard->GetDeviceState(sizeof(key), instance->key);
+	keyboard->GetDeviceState(sizeof(key), key);
 
-	instance->oldXInputState = instance->xInputState;
-	DWORD dresult = XInputGetState(0, &instance->xInputState);
+	oldXInputState = xInputState;
+	DWORD dresult = XInputGetState(0, &xInputState);
 	if (dresult == ERROR_SUCCESS) {
-		instance->isConnectPad = true;
+		isConnectPad = true;
 	}
 	else {
-		instance->isConnectPad = false;
+		isConnectPad = false;
 	}
 
-	if ((instance->xInputState.Gamepad.sThumbLX <  XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE &&
-		instance->xInputState.Gamepad.sThumbLX > -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE) &&
-		(instance->xInputState.Gamepad.sThumbLY <  XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE &&
-			instance->xInputState.Gamepad.sThumbLY > -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE))
+	if ((xInputState.Gamepad.sThumbLX <  XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE &&
+		xInputState.Gamepad.sThumbLX > -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE) &&
+		(xInputState.Gamepad.sThumbLY <  XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE &&
+			xInputState.Gamepad.sThumbLY > -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE))
 	{
-		instance->xInputState.Gamepad.sThumbLX = 0;
-		instance->xInputState.Gamepad.sThumbLY = 0;
+		xInputState.Gamepad.sThumbLX = 0;
+		xInputState.Gamepad.sThumbLY = 0;
 	}
 
-	if ((instance->xInputState.Gamepad.sThumbRX <  XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE &&
-		instance->xInputState.Gamepad.sThumbRX > -XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE) &&
-		(instance->xInputState.Gamepad.sThumbRY <  XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE &&
-			instance->xInputState.Gamepad.sThumbRY > -XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE))
+	if ((xInputState.Gamepad.sThumbRX <  XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE &&
+		xInputState.Gamepad.sThumbRX > -XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE) &&
+		(xInputState.Gamepad.sThumbRY <  XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE &&
+			xInputState.Gamepad.sThumbRY > -XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE))
 	{
-		instance->xInputState.Gamepad.sThumbRX = 0;
-		instance->xInputState.Gamepad.sThumbRY = 0;
+		xInputState.Gamepad.sThumbRX = 0;
+		xInputState.Gamepad.sThumbRY = 0;
 	}
 }
 

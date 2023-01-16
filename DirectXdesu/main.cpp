@@ -179,13 +179,16 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 #pragma region 基盤初期化
 
 #pragma region ウィンドウ
-	KWinApp::Init();
+	KWinApp* win = KWinApp::GetInstance();
+	win->Init();
 #pragma endregion
 
 #pragma region DirectX初期化
-	KDirectXCommon::GetInstance()->Init();
+	KDirectXCommon* dx = KDirectXCommon::GetInstance();
+	dx->Init();
 	// キーボード入力
-	KInput::Init();
+	KInput* input = KInput::GetInstance();
+	input->Init();
 #pragma endregion
 #pragma endregion
 
@@ -240,7 +243,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	SoundData soundData1 = sound->SoundLoadWave("Resources/Sound/fanfare.wav");
 #pragma region スプライト
 	Sprite sprite;
-	sprite.Init(KDirectXCommon::GetInstance());
+	sprite.Init(dx);
 
 	SpriteCommon spriteCommon;
 	spriteCommon = sprite.SpriteCommonCreate();
@@ -265,7 +268,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	while (true)
 	{
 #pragma region ウィンドウメッセージ
-		if (KWinApp::GetInstance()->ProcessMessage() || KInput::GetInstance()->IsPush(DIK_ESCAPE))
+		if (win->ProcessMessage() || input->IsPush(DIK_ESCAPE))
 		{
 			break;
 		}
@@ -274,7 +277,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		// 更新
 #pragma region 基盤の更新
 		// input更新
-		KInput::Update();
+		input->Update();
 #pragma endregion
 
 #pragma region シーンの更新
@@ -282,20 +285,18 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 #pragma region 描画
 		// 描画開始
-		KDirectXCommon::GetInstance()->PreDraw();
+		dx->PreDraw();
 #pragma region パイプラインステート設定
 		// パイプラインステートとルートシグネチャの設定コマンド
-		KDirectXCommon::GetInstance()->GetCmdlist()->SetPipelineState(object3dPipelineSet.pipelineState.Get());
-		KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootSignature(object3dPipelineSet.rootSignature.Get());
+		dx->GetCmdlist()->SetPipelineState(object3dPipelineSet.pipelineState.Get());
+		dx->GetCmdlist()->SetGraphicsRootSignature(object3dPipelineSet.rootSignature.Get());
 #pragma endregion
 #pragma region プリミティブ形状
 		// プリミティブ形状の設定コマンド
-		KDirectXCommon::GetInstance()->GetCmdlist()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		dx->GetCmdlist()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 #pragma endregion
 
 #pragma region 描画コマンド
-
-		ParticleManager::GetInstance()->Draw();
 
 		// スプライト描画
 		sprite.SpriteCommonBeginDraw(spriteCommon);
@@ -306,7 +307,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		// 描画コマンドここまで
 #pragma endregion
 		// 描画終了
-		KDirectXCommon::GetInstance()->PostDraw();
+		dx->PostDraw();
 	}
 
 #pragma region 基盤の終了

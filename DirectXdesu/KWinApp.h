@@ -13,7 +13,7 @@ private:
 	void InitInternal();
 
 public:
-	static void Init();
+	void Init();
 	static KWinApp* GetInstance();
 
 	static int GetWindowSizeW();

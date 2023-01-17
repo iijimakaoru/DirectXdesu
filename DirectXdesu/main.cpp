@@ -224,15 +224,16 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	stageR.CreateTexture("Resources/texture/", "stageHoge.png");
 #pragma endregion
 
+#pragma region グラフィックスパイプライン設定
+	// 3Dオブジェクト用パイプライン生成
+	PipelineSet object3dPipelineSet = Create3DObjectGpipeline();
+#pragma endregion
+
 	KObject3d hoge;
 	hoge.Initialize();
 	hoge.transform.scale = { 10,10,10 };
 
 	hoge.LoadModel(&tekitou);
-
-#pragma region グラフィックスパイプライン設定
-	// 3Dオブジェクト用パイプライン生成
-	PipelineSet object3dPipelineSet = Create3DObjectGpipeline();
 
 #pragma region ビュー
 	// ビュープロジェクション
@@ -241,7 +242,6 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	viewProjection.aspect = (float)KWinApp::GetWindowSizeW() / KWinApp::GetWindowSizeH();
 #pragma endregion
 
-#pragma endregion
 	std::unique_ptr<Sound> sound;
 	sound = std::make_unique<Sound>();
 	sound->Init();
@@ -289,6 +289,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 #pragma region シーンの更新
 		hoge.Update(viewProjection);
 #pragma endregion
+
+		viewProjection.Update();
 
 #pragma region 描画
 		// 描画開始

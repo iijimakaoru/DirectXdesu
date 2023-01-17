@@ -18,11 +18,11 @@ using namespace Microsoft::WRL;
 class KDirectXCommon
 {
 public:
-	static void Init();
+	void Init();
 
-	static void PreDraw();
+	void PreDraw();
 
-	static void PostDraw();
+	void PostDraw();
 
 	void CmdFlash();
 
@@ -56,6 +56,10 @@ private:
 	ComPtr<ID3D12GraphicsCommandList> cmdList;
 	ComPtr<ID3D12CommandQueue> cmdQueue;
 	ComPtr<ID3D12DescriptorHeap> rtvHeap;
+
+	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle;
+
+	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle;
 
 	D3D_FEATURE_LEVEL featureLevel;
 

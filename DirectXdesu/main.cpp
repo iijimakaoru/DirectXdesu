@@ -188,7 +188,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 #pragma endregion
 
 #pragma region DirectX初期化
-	KDirectXCommon::Init();
+	KDirectXCommon::GetInstance()->Init();
 	// キーボード入力
 	KInput::Init();
 #pragma endregion
@@ -540,7 +540,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 #pragma region 描画
 		// 描画開始
-		KDirectXCommon::PreDraw();
+		KDirectXCommon::GetInstance()->PreDraw();
 #pragma region パイプラインステート設定
 		// パイプラインステートとルートシグネチャの設定コマンド
 		KDirectXCommon::GetInstance()->GetCmdlist()->SetPipelineState(object3dPipelineSet.pipelineState.Get());
@@ -726,7 +726,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		// 描画コマンドここまで
 #pragma endregion
 		// 描画終了
-		KDirectXCommon::PostDraw();
+		KDirectXCommon::GetInstance()->PostDraw();
 	}
 
 #pragma region 基盤の終了

@@ -225,7 +225,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 #pragma endregion
 
 	KObject3d hoge;
-	
+	hoge.Initialize();
+	hoge.transform.scale = { 10,10,10 };
 
 	hoge.LoadModel(&tekitou);
 

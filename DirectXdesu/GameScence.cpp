@@ -5,6 +5,10 @@ void GameScence::Init()
 	
 }
 
+void GameScence::Finalize()
+{
+}
+
 void GameScence::Update()
 {
 }

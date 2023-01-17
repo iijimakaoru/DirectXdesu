@@ -224,6 +224,11 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	stageR.CreateTexture("Resources/texture/", "stageHoge.png");
 #pragma endregion
 
+	KObject3d hoge;
+	
+
+	hoge.LoadModel(&tekitou);
+
 #pragma region グラフィックスパイプライン設定
 	// 3Dオブジェクト用パイプライン生成
 	PipelineSet object3dPipelineSet = Create3DObjectGpipeline();
@@ -281,6 +286,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 #pragma endregion
 
 #pragma region シーンの更新
+		hoge.Update(viewProjection);
 #pragma endregion
 
 #pragma region 描画
@@ -297,6 +303,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 #pragma endregion
 
 #pragma region 描画コマンド
+		hoge.Draw();
 
 		// スプライト描画
 		sprite.SpriteCommonBeginDraw(spriteCommon);

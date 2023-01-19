@@ -10,6 +10,12 @@ void ParticleManager::CreatePool(KModel* model)
 		newParticle->SetInfo({ 0,0,0 }, { 0,0,0 }, { 0,0,0 }, { 0,0,0 }, 0);
 
 		particles.push_back(std::move(newParticle));
+
+		std::unique_ptr<Particle2> newParticle2 = std::make_unique<Particle2>();
+		newParticle2->Init(model);
+		newParticle2->SetInfo({ 0,0,0 }, { 0,0,0 }, { 0,0,0 }, { 0,0,0 }, 0);
+
+		particles2.push_back(std::move(newParticle2));
 	}
 	pooled = true;
 }
@@ -19,6 +25,11 @@ void ParticleManager::AllDelete()
 	for (std::unique_ptr<Particle>& particle : particles)
 	{
 		particle->isDead = true;
+	}
+
+	for (std::unique_ptr<Particle2>& particle2 : particles2)
+	{
+		particle2->isDead = true;
 	}
 }
 
@@ -31,6 +42,14 @@ void ParticleManager::Update(ViewProjection& viewProjection)
 			particle->Update(viewProjection);
 		}
 	}
+
+	for (std::unique_ptr<Particle2>& particle2 : particles2)
+	{
+		if (!particle2->IsDead())
+		{
+			particle2->Update(viewProjection);
+		}
+	}
 }
 
 void ParticleManager::Draw()
@@ -40,6 +59,14 @@ void ParticleManager::Draw()
 		if (!particle->IsDead())
 		{
 			particle->Draw();
+		}
+	}
+
+	for (std::unique_ptr<Particle2>& particle2 : particles2)
+	{
+		if (!particle2->IsDead())
+		{
+			particle2->Draw();
 		}
 	}
 }
@@ -193,13 +220,35 @@ void ParticleManager::TestSplash(const Vector3& pos, const Vector3& scale, const
 			Vector3 velocity =
 			{
 				speed * cosf(angleY),
-				speed * (3-1),
+				speed * 2,
 				speed * sinf(angleY),
 			};
 
 			particle->SetInfo(pos, velocity, scale, rotation, lifeTime);
 
 			particle->Revive();
+
+			return;
+		}
+	}
+}
+
+void ParticleManager::Taihun(const Vector3& pos, const Vector3& scale, const Vector3& rotation, const float speed, float angleY, const float lifeTime)
+{
+	for (std::unique_ptr<Particle2>& particle2 : particles2)
+	{
+		if (particle2->IsDead())
+		{
+			Vector3 velocity =
+			{
+				speed * cosf(angleY),
+				speed * sinf(angleY),
+				speed * 4,
+			};
+
+			particle2->SetInfo(pos, velocity, scale, rotation, lifeTime);
+
+			particle2->Revive();
 
 			return;
 		}

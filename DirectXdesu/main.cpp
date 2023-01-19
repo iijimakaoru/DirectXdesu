@@ -375,6 +375,14 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 	Vector3 vec = { 1,1,1 };
 
+	float angle = 0;
+
+	float hogeAngle = 0;
+
+	float hogeRot = 0;
+
+	float hogeCooltime = 0;
+
 	// ウィンドウ表示
 	// ゲームループ
 	while (true)
@@ -393,7 +401,6 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 #pragma endregion
 
 #pragma region シーンの更新
-		float angle = 0;
 		float piAngle = PI * 2;
 
 		sprite.SpriteUpdate(title, spriteCommon);
@@ -416,9 +423,11 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 			{
 				while (angle < XMConvertToRadians(360))
 				{
-					ParticleManager::GetInstance()->TestSplash({ 2 * cosf(piAngle + angle),0,2 * sinf(piAngle + angle) }, { 1,1,1 }, { 1,1,1 }, 5 - 2, piAngle + angle, 30);
+					ParticleManager::GetInstance()->TestSplash({ 2 * cosf(piAngle + angle),0,2 * sinf(piAngle + angle) },
+						{ 1,1,1 }, { 1,1,1 }, 5 - 2, piAngle + angle, 30);
 					angle += XMConvertToRadians(5);
 				}
+				angle = 0;
 				vec.Normalize();
 				for (int i = 0; i < 100; i++)
 				{
@@ -437,7 +446,26 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 			if (KInput::GetInstance()->IsPress(DIK_2))
 			{
-
+				hogeAngle = PI * 2 + hogeRot;
+				hogeRot += XMConvertToRadians(10.0f);
+				hogeCooltime--;
+				if (hogeCooltime <= 0)
+				{
+					ParticleManager::GetInstance()->Taihun({ 8 * cosf(hogeAngle),8 * sinf(hogeAngle),0 },
+						{ 1,1,1 }, { 1,1,1 }, 0.2f, hogeAngle, 40);
+					ParticleManager::GetInstance()->Taihun({ 8 * cosf(hogeAngle + XMConvertToRadians(90)),8 * sinf(hogeAngle + XMConvertToRadians(90)),0 },
+						{ 1,1,1 }, { 1,1,1 }, 0.2f, hogeAngle + XMConvertToRadians(90), 40);
+					ParticleManager::GetInstance()->Taihun({ 8 * cosf(hogeAngle + XMConvertToRadians(180)),8 * sinf(hogeAngle + XMConvertToRadians(180)),0 },
+						{ 1,1,1 }, { 1,1,1 }, 0.2f, hogeAngle + XMConvertToRadians(180), 40);
+					ParticleManager::GetInstance()->Taihun({ 8 * cosf(hogeAngle + XMConvertToRadians(270)),8 * sinf(hogeAngle + XMConvertToRadians(270)),0 },
+						{ 1,1,1 }, { 1,1,1 }, 0.2f, hogeAngle + XMConvertToRadians(270), 40);
+					hogeCooltime = 0;
+				}
+			}
+			else
+			{
+				hogeRot = 0;
+				hogeCooltime = 0;
 			}
 
 			if (KInput::GetInstance()->IsPress(DIK_W))

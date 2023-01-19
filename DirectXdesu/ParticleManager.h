@@ -26,9 +26,11 @@ public:
 	void LeftWave(const Vector3& pos, const Vector3& scale, const Vector3& rotation, const float lifeTimer, const float speed);
 	void Splash(const Vector3& pos, const Vector3& scale, const Vector3& rotation, const float lifeTimer, const float speed,const Vector3& vec);
 	void TestSplash(const Vector3& pos, const Vector3& scale, const Vector3& rotation, const float speed, float angleY, const float lifeTime);
+	void Taihun(const Vector3& pos, const Vector3& scale, const Vector3& rotation, const float speed, float angleY, const float lifeTime);
 
 private:
 	std::list<std::unique_ptr<Particle>> particles;
+	std::list<std::unique_ptr<Particle2>> particles2;
 	bool pooled = false;
 
 public:

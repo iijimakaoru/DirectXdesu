@@ -55,6 +55,8 @@ void Particle::Update(ViewProjection& view)
 	// ˆÚ“®
 	object.transform.pos += velocity;
 
+	velocity.y -= 0.5f;
+
 	// ‰ñ“]
 	object.transform.rot += rotation;
 

@@ -20,7 +20,7 @@ public:
 	~GameScence(){};
 	void Init();
 	void Update();
-	void Draw(ID3D12Device& dev, ID3D12GraphicsCommandList* cmdList);
+	void Draw();
 
 private:
 	// KDirectCommon

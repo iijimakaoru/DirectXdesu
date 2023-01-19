@@ -213,6 +213,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	tekitou.CreateModel();
 	KModel boxSky = MtlObj("boxSky");
 	boxSky.CreateModel();
+	KModel sphere = MtlObj("sphere");
+	sphere.CreateModel();
 #pragma endregion
 
 #pragma region テクスチャ初期化
@@ -304,7 +306,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 	// プレイヤーHPのUI
 	static const int pMaxHP = 3;
-	std::array<SpriteInfo,pMaxHP> playersHP;
+	std::array<SpriteInfo, pMaxHP> playersHP;
 	for (int i = 0; i < pMaxHP; i++)
 	{
 		playersHP[i] = sprite.SpriteCreate(playersHP[i].texNum, spriteCommon);
@@ -334,7 +336,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 			bosssHP[i].position.x += 25;
 		}
 	}
-	
+
 	// 説明UI
 	SpriteInfo setumei;
 	setumei = sprite.SpriteCreate(setumei.texNum, spriteCommon);
@@ -342,7 +344,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	setumei.size.y = 200;
 	sprite.SpriteTransferVertexBuffer(setumei, spriteCommon);
 	setumei.texNum = 3;
-	
+
 	setumei.position = { 100, (float)KWinApp::GetWindowSizeH() * 1 / 3 ,0 };
 #pragma endregion
 
@@ -371,6 +373,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 	float phaseTimer = 0;
 
+	Vector3 vec = { 1,1,1 };
+
 	// ウィンドウ表示
 	// ゲームループ
 	while (true)
@@ -389,6 +393,9 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 #pragma endregion
 
 #pragma region シーンの更新
+		float angle = 0;
+		float piAngle = PI * 2;
+
 		sprite.SpriteUpdate(title, spriteCommon);
 
 		for (int i = 0; i < pMaxHP; i++)
@@ -405,6 +412,55 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 		if (gameScene == Scene::Title)
 		{
+			if (KInput::GetInstance()->IsTriger(DIK_SPACE))
+			{
+				while (angle < XMConvertToRadians(360))
+				{
+					ParticleManager::GetInstance()->TestSplash({ 2 * cosf(piAngle + angle),0,2 * sinf(piAngle + angle) }, { 1,1,1 }, { 1,1,1 }, 5 - 2, piAngle + angle, 30);
+					angle += XMConvertToRadians(5);
+				}
+				vec.Normalize();
+				for (int i = 0; i < 100; i++)
+				{
+					ParticleManager::GetInstance()->Splash({ 0,0,0 }, { 1,1,1 }, { 1,1,1 }, 40, 5, vec);
+				}
+			}
+
+			if (KInput::GetInstance()->IsPress(DIK_1))
+			{
+				for (int i = 0; i < 5; i++)
+				{
+					ParticleManager::GetInstance()->RightWave({ 0,MyMath::GetInstance()->GetRand(-3.0f,3.0f),0 }, { 1,1,1 }, { 1,1,1 }, 20, 5);
+					ParticleManager::GetInstance()->LeftWave({ 0,MyMath::GetInstance()->GetRand(-3.0f,3.0f),0 }, { 1,1,1 }, { 1,1,1 }, 20, 5);
+				}
+			}
+
+			if (KInput::GetInstance()->IsPress(DIK_2))
+			{
+
+			}
+
+			if (KInput::GetInstance()->IsPress(DIK_W))
+			{
+				viewProjection.angleY -= XMConvertToRadians(1.0f);
+			}
+			if (KInput::GetInstance()->IsPress(DIK_S))
+			{
+				viewProjection.angleY += XMConvertToRadians(1.0f);
+			}
+			if (KInput::GetInstance()->IsPress(DIK_A))
+			{
+				viewProjection.angleX -= XMConvertToRadians(1.0f);
+			}
+			if (KInput::GetInstance()->IsPress(DIK_D))
+			{
+				viewProjection.angleX += XMConvertToRadians(1.0f);
+			}
+
+			viewProjection.eye.x = viewProjection.lenZ * cosf(viewProjection.angleX) * cosf(viewProjection.angleY);
+			viewProjection.eye.y = (viewProjection.lenZ * sinf(viewProjection.angleY)) + 50;
+			viewProjection.eye.z = viewProjection.lenZ * sinf(viewProjection.angleX) * cosf(viewProjection.angleY) - 50;
+
 			// プレイヤー初期化
 			player.Init();
 
@@ -415,7 +471,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 			BossBulletManager::GetInstance()->AllDelete();
 
 			// 出てるパーティクルを全て消す
-			ParticleManager::GetInstance()->AllDelete();
+			//ParticleManager::GetInstance()->AllDelete();
 
 			phase = 1;
 
@@ -528,14 +584,14 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 			}
 		}
 
-		ParticleManager::GetInstance()->Update(Player::nowPlayer->view);
+		ParticleManager::GetInstance()->Update(viewProjection);
 
 		stage.Update(Player::nowPlayer->view);
 
+		boxSkydorm.Update(Player::nowPlayer->view);
+
 		// ビューのアップデート
 		viewProjection.Update();
-
-		boxSkydorm.Update(Player::nowPlayer->view);
 #pragma endregion
 
 #pragma region 描画
@@ -573,14 +629,14 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 		ParticleManager::GetInstance()->Draw();
 
-		boxSkydorm.Draw();
+		//boxSkydorm.Draw();
 
 		// スプライト描画
 		sprite.SpriteCommonBeginDraw(spriteCommon);
 
 		if (gameScene == Scene::Title)
 		{
-			sprite.SpriteDraw(title, spriteCommon);
+			//sprite.SpriteDraw(title, spriteCommon);
 		}
 
 		if (gameScene == Scene::Play)

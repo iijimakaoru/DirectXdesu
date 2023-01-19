@@ -3,7 +3,7 @@
 
 void ParticleManager::CreatePool(KModel* model)
 {
-	for (int i = 0; i < 100; i++)
+	for (int i = 0; i < 200; i++)
 	{
 		std::unique_ptr<Particle> newParticle = std::make_unique<Particle>();
 		newParticle->Init(model);
@@ -107,6 +107,97 @@ void ParticleManager::DashWave(const Vector3& pos,
 			};
 
 			particle->SetInfo(pos, velocity * playerVec, scale, rotation, lifeTime);
+
+			particle->Revive();
+
+			return;
+		}
+	}
+}
+
+void ParticleManager::RightWave(const Vector3& pos, const Vector3& scale, const Vector3& rotation, const float lifeTimer, const float speed)
+{
+	for (std::unique_ptr<Particle>& particle : particles)
+	{
+		if (particle->IsDead())
+		{
+			Vector3 velocity =
+			{
+				MyMath::GetInstance()->GetRand(speed / 2, speed),
+				speed,
+				-speed,
+			};
+
+			particle->SetInfo(pos, velocity, scale, rotation, lifeTimer);
+
+			particle->Revive();
+
+			return;
+		}
+
+	}
+}
+
+void ParticleManager::LeftWave(const Vector3& pos, const Vector3& scale, const Vector3& rotation, const float lifeTimer, const float speed)
+{
+	for (std::unique_ptr<Particle>& particle : particles)
+	{
+		if (particle->IsDead())
+		{
+			Vector3 velocity =
+			{
+				-MyMath::GetInstance()->GetRand(speed / 2 ,speed),
+				speed,
+				-speed,
+			};
+
+			particle->SetInfo(pos, velocity, scale, rotation, lifeTimer);
+
+			particle->Revive();
+
+			return;
+		}
+
+	}
+}
+
+void ParticleManager::Splash(const Vector3& pos, const Vector3& scale, const Vector3& rotation, const float lifeTimer, const float speed, const Vector3& vec)
+{
+	for (std::unique_ptr<Particle>& particle : particles)
+	{
+		if (particle->IsDead())
+		{
+			Vector3 velocity =
+			{
+				MyMath::GetInstance()->GetRand(-speed,speed) * vec.x,
+				(MyMath::GetInstance()->GetRand(speed / 2, speed) * 4) * vec.y,
+				MyMath::GetInstance()->GetRand(-speed,speed) * vec.z,
+			};
+
+			particle->SetInfo(pos, velocity, scale, rotation, lifeTimer);
+
+			particle->Revive();
+
+			return;
+		}
+
+	}
+}
+
+void ParticleManager::TestSplash(const Vector3& pos, const Vector3& scale, const Vector3& rotation, const float speed, float angleY, const float lifeTime)
+{
+	for (std::unique_ptr<Particle>& particle : particles)
+	{
+		if (particle->IsDead())
+		{
+			Vector3 velocity =
+			{
+				speed * cosf(angleY),
+				speed * (3-1),
+				speed * sinf(angleY),
+			};
+
+			particle->SetInfo(pos, velocity, scale, rotation, lifeTime);
 
 			particle->Revive();
 

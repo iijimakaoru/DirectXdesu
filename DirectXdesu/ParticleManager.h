@@ -22,6 +22,10 @@ public:
 		const Vector3& playerVec,
 		float angleZ,
 		const float lifeTime);
+	void RightWave(const Vector3& pos, const Vector3& scale, const Vector3& rotation, const float lifeTimer, const float speed);
+	void LeftWave(const Vector3& pos, const Vector3& scale, const Vector3& rotation, const float lifeTimer, const float speed);
+	void Splash(const Vector3& pos, const Vector3& scale, const Vector3& rotation, const float lifeTimer, const float speed,const Vector3& vec);
+	void TestSplash(const Vector3& pos, const Vector3& scale, const Vector3& rotation, const float speed, float angleY, const float lifeTime);
 
 private:
 	std::list<std::unique_ptr<Particle>> particles;

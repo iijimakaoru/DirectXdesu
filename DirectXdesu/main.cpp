@@ -377,6 +377,12 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 	float angle = 0;
 
+	float hogeSpeed = 0;
+
+	float speedLevel = 1;
+
+	float hogeLifeTime = 0;
+
 	float hogeAngle = 0;
 
 	float hogeRot = 0;
@@ -425,7 +431,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 				{
 					ParticleManager::GetInstance()->TestSplash({ 2 * cosf(piAngle + angle),0,2 * sinf(piAngle + angle) },
 						{ 1,1,1 }, { 1,1,1 }, 5 - 2, piAngle + angle, 30);
-					angle += XMConvertToRadians(5);
+					angle += XMConvertToRadians(20);
 				}
 				angle = 0;
 				vec.Normalize();
@@ -435,12 +441,49 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 				}
 			}
 
+			if (KInput::GetInstance()->IsTriger(DIK_K))
+			{
+				if (speedLevel > 1)
+				{
+					speedLevel--;
+				}
+			}
+
+			if (KInput::GetInstance()->IsTriger(DIK_L))
+			{
+				if (speedLevel < 3)
+				{
+					speedLevel++;
+				}
+			}
+
+			if (speedLevel == 1)
+			{
+				speed = 1;
+				hogeLifeTime = 5;
+			}
+			else if (speedLevel == 2)
+			{
+				speed = 3;
+				hogeLifeTime = 10;
+			}
+			else if (speedLevel == 3)
+			{
+				speed = 5;
+				hogeLifeTime = 20;
+			}
+			else
+			{
+				speed = 0;
+				hogeLifeTime = 0;
+			}
+
 			if (KInput::GetInstance()->IsPress(DIK_1))
 			{
 				for (int i = 0; i < 5; i++)
 				{
-					ParticleManager::GetInstance()->RightWave({ 0,MyMath::GetInstance()->GetRand(-3.0f,3.0f),0 }, { 1,1,1 }, { 1,1,1 }, 20, 5);
-					ParticleManager::GetInstance()->LeftWave({ 0,MyMath::GetInstance()->GetRand(-3.0f,3.0f),0 }, { 1,1,1 }, { 1,1,1 }, 20, 5);
+					ParticleManager::GetInstance()->RightWave({ 0,MyMath::GetInstance()->GetRand(-3.0f,3.0f),0 }, { 1,1,1 }, { 1,1,1 }, 20, speed);
+					ParticleManager::GetInstance()->LeftWave({ 0,MyMath::GetInstance()->GetRand(-3.0f,3.0f),0 }, { 1,1,1 }, { 1,1,1 }, 20, speed);
 				}
 			}
 

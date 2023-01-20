@@ -37,6 +37,8 @@ private:
 	Line m[4] = {};
 
 public:
+	float m1[4][4];
+
 	//’PˆÊs—ñ
 	Matrix4();
 

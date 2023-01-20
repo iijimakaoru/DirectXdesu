@@ -81,21 +81,21 @@ void Quaternion::Normalize()
     }
 }
 
-Matrix4 Quaternion::GetRotMatrix()
+Matrix Quaternion::GetRotMatrix()
 {
-    Matrix4 mat;
+    Matrix mat;
     //mat.m[0][0] = w * w + x * x - y * y - z * z;
-    mat.m1[0][0] = 1 - (2 * y * y) - (2 * z * z);
-    mat.m1[0][1] = (2 * x * y) + (2 * w * z);
-    mat.m1[0][2] = (2 * x * z) - (2 * w * y);
+    mat.m[0][0] = 1 - (2 * y * y) - (2 * z * z);
+    mat.m[0][1] = (2 * x * y) + (2 * w * z);
+    mat.m[0][2] = (2 * x * z) - (2 * w * y);
         
-    mat.m1[1][0] = (2 * x * y) - (2 * w * z);
-    mat.m1[1][1] = 1 - (2 * x * x) - (2 * z * z);
-    mat.m1[1][2] = (2 * y * z) + (2 * w * x);
+    mat.m[1][0] = (2 * x * y) - (2 * w * z);
+    mat.m[1][1] = 1 - (2 * x * x) - (2 * z * z);
+    mat.m[1][2] = (2 * y * z) + (2 * w * x);
         
-    mat.m1[2][0] = (2 * x * z) + (2 * w * y);
-    mat.m1[2][1] = (2 * y * z) - (2 * w * x);
-    mat.m1[2][2] = 1 - (2 * x * x) - (2 * y * y);
+    mat.m[2][0] = (2 * x * z) + (2 * w * y);
+    mat.m[2][1] = (2 * y * z) - (2 * w * x);
+    mat.m[2][2] = 1 - (2 * x * x) - (2 * y * y);
     //mat.m[2][2] = w * w - x * x - y * y + z * z;
 
     return mat;
@@ -197,22 +197,22 @@ Vector3 RotateVector(const Vector3& vec, const Quaternion& q)
     return vecQ.GetVec();
 }
 
-Matrix4 MakeRotateMatrix(const Quaternion& q)
+Matrix MakeRotateMatrix(const Quaternion& q)
 {
-    Matrix4 mat;
-    mat.m1[0][0] = (q.w * q.w) + (q.x * q.x) - (q.y * q.y) - (q.z * q.z);
-    mat.m1[0][0] = 1 - (2 * q.y * q.y) - (2 * q.z * q.z);
-    mat.m1[0][1] = (2 * q.x * q.y) + (2 * q.w * q.z);
-    mat.m1[0][2] = (2 * q.x * q.z) - (2 * q.w * q.y);
+    Matrix mat;
+    mat.m[0][0] = (q.w * q.w) + (q.x * q.x) - (q.y * q.y) - (q.z * q.z);
+    mat.m[0][0] = 1 - (2 * q.y * q.y) - (2 * q.z * q.z);
+    mat.m[0][1] = (2 * q.x * q.y) + (2 * q.w * q.z);
+    mat.m[0][2] = (2 * q.x * q.z) - (2 * q.w * q.y);
          
-    mat.m1[1][0] = (2 * q.x * q.y) - (2 * q.w * q.z);
-    mat.m1[1][1] = 1 - (2 * q.x * q.x) - (2 * q.z * q.z);
-    mat.m1[1][2] = (2 * q.y * q.z) + (2 * q.w * q.x);
+    mat.m[1][0] = (2 * q.x * q.y) - (2 * q.w * q.z);
+    mat.m[1][1] = 1 - (2 * q.x * q.x) - (2 * q.z * q.z);
+    mat.m[1][2] = (2 * q.y * q.z) + (2 * q.w * q.x);
          
-    mat.m1[2][0] = (2 * q.x * q.z) + (2 * q.w * q.y);
-    mat.m1[2][1] = (2 * q.y * q.z) - (2 * q.w * q.x);
-    mat.m1[2][2] = 1 - (2 * q.x * q.x) - (2 * q.y * q.y);
-    mat.m1[2][2] = (q.w * q.w) - (q.x * q.x) - (q.y * q.y) + (q.z * q.z);
+    mat.m[2][0] = (2 * q.x * q.z) + (2 * q.w * q.y);
+    mat.m[2][1] = (2 * q.y * q.z) - (2 * q.w * q.x);
+    mat.m[2][2] = 1 - (2 * q.x * q.x) - (2 * q.y * q.y);
+    mat.m[2][2] = (q.w * q.w) - (q.x * q.x) - (q.y * q.y) + (q.z * q.z);
 
     return mat;
 }

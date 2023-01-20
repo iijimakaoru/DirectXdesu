@@ -145,13 +145,7 @@
   <ItemGroup>
     <ClCompile Include="Blend.cpp" />
     <ClCompile Include="Boss.cpp" />
-    <ClCompile Include="BossActAimShot.cpp" />
-    <ClCompile Include="BossActGap.cpp" />
-    <ClCompile Include="BossActStamp.cpp" />
-    <ClCompile Include="BossActStand.cpp" />
     <ClCompile Include="BossActState.cpp" />
-    <ClCompile Include="BossBullet.cpp" />
-    <ClCompile Include="BossBulletManager.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="DebugCamera.cpp" />
     <ClCompile Include="DebugText.cpp" />
@@ -187,13 +181,7 @@
   <ItemGroup>
     <ClInclude Include="Blend.h" />
     <ClInclude Include="Boss.h" />
-    <ClInclude Include="BossActAimShot.h" />
-    <ClInclude Include="BossActGap.h" />
-    <ClInclude Include="BossActStamp.h" />
-    <ClInclude Include="BossActStand.h" />
     <ClInclude Include="BossActState.h" />
-    <ClInclude Include="BossBullet.h" />
-    <ClInclude Include="BossBulletManager.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="ConstBuffer.h" />
     <ClInclude Include="DebugCamera.h" />

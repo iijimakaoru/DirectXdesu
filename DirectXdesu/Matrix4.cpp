@@ -2,491 +2,100 @@
 #include <cmath>
 #include <stdexcept>
 
-AhoMatrix4 identity()
-{
-	static const AhoMatrix4 result
-	{
-		1.0f,0.0f,0.0f,0.0f,
-		0.0f,1.0f,0.0f,0.0f,
-		0.0f,0.0f,1.0f,0.0f,
-		0.0f,0.0f,0.0f,1.0f
-	};
-
-	return result;
-}
-
-AhoMatrix4 scale(const Vector3& s)
-{
-	AhoMatrix4 result
-	{
-		 s.x,0.0f,0.0f,0.0f,
-		0.0f, s.y,0.0f,0.0f,
-		0.0f,0.0f, s.z,0.0f,
-		0.0f,0.0f,0.0f,1.0f
-	};
-
-	return result;
-}
-
-AhoMatrix4 rotateX(float angle)
-{
-	float sin = std::sin(angle);
-	float cos = std::cos(angle);
-
-	AhoMatrix4 result
-	{
-		1.0f,0.0f,0.0f,0.0f,
-		0.0f, cos, sin,0.0f,
-		0.0f,-sin, cos,0.0f,
-		0.0f,0.0f,0.0f,1.0f
-	};
-
-	return result;
-}
-
-AhoMatrix4 rotateY(float angle)
-{
-	float sin = std::sin(angle);
-	float cos = std::cos(angle);
-
-	AhoMatrix4 result
-	{
-		 cos,0.0f,-sin,0.0f,
-		0.0f,1.0f,0.0f,0.0f,
-		 sin,0.0f, cos,0.0f,
-		0.0f,0.0f,0.0f,1.0f
-	};
-
-	return result;
-}
-
-AhoMatrix4 rotateZ(float angle)
-{
-	float sin = std::sin(angle);
-	float cos = std::cos(angle);
-
-	AhoMatrix4 result
-	{
-		 cos, sin,0.0f,0.0f,
-		-sin, cos,0.0f,0.0f,
-		0.0f,0.0f,1.0f,0.0f,
-		0.0f,0.0f,0.0f,1.0f
-	};
-
-	return result;
-}
-
-AhoMatrix4 translate(const Vector3& t)
-{
-	AhoMatrix4 result
-	{
-		1.0f,0.0f,0.0f,0.0f,
-		0.0f,1.0f,0.0f,0.0f,
-		0.0f,0.0f,1.0f,0.0f,
-		 t.x, t.y, t.z,1.0f
-	};
-
-	return result;
-}
-
-Vector3 transform(const Vector3& v, const AhoMatrix4& m)
-{
-	float w = v.x * m.m[0][3] + v.y * m.m[1][3] + v.z * m.m[2][3] + m.m[3][3];
-
-	Vector3 result
-	{
-		(v.x * m.m[0][0] + v.y * m.m[1][0] + v.z * m.m[2][0] + m.m[3][0]) / w,
-		(v.x * m.m[0][1] + v.y * m.m[1][1] + v.z * m.m[2][1] + m.m[3][1]) / w,
-		(v.x * m.m[0][2] + v.y * m.m[1][2] + v.z * m.m[2][2] + m.m[3][2]) / w
-	};
-
-	return result;
-}
-
-AhoMatrix4& operator*=(AhoMatrix4& m1, const AhoMatrix4& m2)
-{
-	AhoMatrix4 result{ 0 };
-
-	for (int i = 0; i < 4; i++) {
-		for (int j = 0; j < 4; j++) {
-			for (int k = 0; k < 4; k++) {
-				result.m[i][j] += m1.m[i][k] * m2.m[k][j];
-			}
-		}
-	}
-	m1 = result;
-
-	return m1;
-}
-
-const AhoMatrix4 operator*(const AhoMatrix4& m1, const AhoMatrix4& m2)
-{
-	AhoMatrix4 result = m1;
-
-	return result *= m2;
-}
-
-const Vector3 operator*(const Vector3& v, const AhoMatrix4& m)
-{
-	return transform(v, m);
-}
-
 const float EPSILON = 0.000001f;
 
-float Matrix4::Line::operator[](const size_t i) const
+Matrix::Matrix()
 {
-	if (i >= 4) {
-		throw std::out_of_range("4óÒÇ»ÇÃÇ…5óÒñ⁄à»ç~ÇêGÇÈÇ»");
-	}
-	return m[i];
+	Identity();
 }
 
-float& Matrix4::Line::operator[](const size_t i)
+void Matrix::Identity()
 {
-	if (i >= 4) {
-		throw std::out_of_range("4óÒÇ»ÇÃÇ…5óÒñ⁄à»ç~ÇêGÇÈÇ»");
-	}
-	return m[i];
-}
-
-Matrix4::Matrix4()
-{
-	m[0][0] = 1;
-	m[1][1] = 1;
-	m[2][2] = 1;
-	m[3][3] = 1;
-}
-
-Matrix4::Matrix4(DirectX::XMMATRIX matrix)
-{
-	for (int i = 0; i < 4; i++) {
-		for (int j = 0; j < 4; j++) {
-			m[i][j] = matrix.r[i].m128_f32[j];
-		}
-	}
-}
-
-Matrix4::Line Matrix4::operator[](const size_t i) const
-{
-	if (i >= 4) {
-		throw std::out_of_range("4çs4óÒÇ»ÇÃÇ…5çsñ⁄à»ç~ÇêGÇÈÇ»");
-	}
-	return m[i];
-}
-
-Matrix4::Line& Matrix4::operator[](const size_t i)
-{
-	if (i >= 4) {
-		throw std::out_of_range("4çs4óÒÇ»ÇÃÇ…5çsñ⁄à»ç~ÇêGÇÈÇ»");
-	}
-	return m[i];
-}
-
-Matrix4 Matrix4::operator-() const
-{
-	Matrix4 temp;
-	float mat[4][8] = { 0 };
-
-	for (int i = 0; i < 4; i++) {
-		for (int j = 0; j < 4; j++) {
-			mat[i][j] = m[i][j];
-		}
-	}
-
-	mat[0][4] = 1;
-	mat[1][5] = 1;
-	mat[2][6] = 1;
-	mat[3][7] = 1;
-
-	for (int n = 0; n < 4; n++) {
-		//ç≈ëÂÇÃê‚ëŒílÇíTçıÇ∑ÇÈ(Ç∆ÇËÇ†Ç¶Ç∏ëŒè€ê¨ï™Çç≈ëÂÇ∆âºíËÇµÇƒÇ®Ç≠)
-		float max = abs(mat[n][n]);
-		int maxIndex = n;
-
-		for (int i = n + 1; i < 4; i++) {
-			if (abs(mat[i][n]) > max) {
-				max = abs(mat[i][n]);
-				maxIndex = i;
+	for (size_t y = 0; y < 4; y++)
+	{
+		for (size_t x = 0; x < 4; x++)
+		{
+			if (x == y)
+			{
+				m[y][x] = 1.0f;
 			}
-		}
-
-		//ç≈ëÂÇÃê‚ëŒílÇ™0ÇæÇ¡ÇΩÇÁãtçsóÒÇÕãÅÇﬂÇÁÇÍÇ»Ç¢
-		if (abs(mat[maxIndex][n]) <= EPSILON) {
-			return temp; //Ç∆ÇËÇ†Ç¶Ç∏íPà çsóÒï‘ÇµÇøÇ·Ç§
-		}
-
-		//ì¸ÇÍë÷Ç¶
-		if (n != maxIndex) {
-			for (int i = 0; i < 8; i++) {
-				float f = mat[maxIndex][i];
-				mat[maxIndex][i] = mat[n][i];
-				mat[n][i] = f;
-			}
-		}
-
-		//ä|ÇØÇΩÇÁ1Ç…Ç»ÇÈílÇéZèo
-		float mul = 1 / mat[n][n];
-
-		//ä|ÇØÇÈ
-		for (int i = 0; i < 8; i++) {
-			mat[n][i] *= mul;
-		}
-
-		//ëºëSïî0Ç…Ç∑ÇÈ
-		for (int i = 0; i < 4; i++) {
-			if (n == i) {
-				continue;
-			}
-
-			float mul = -mat[i][n];
-
-			for (int j = 0; j < 8; j++) {
-				mat[i][j] += mat[n][j] * mul;
+			else
+			{
+				m[y][x] = 0.0f;
 			}
 		}
 	}
-
-	for (int i = 0; i < 4; i++) {
-		for (int j = 0; j < 4; j++) {
-			temp[i][j] = mat[i][j + 4];
-		}
-	}
-
-	return temp;
 }
 
-bool Matrix4::operator==(const Matrix4& a) const
+Matrix& Matrix::operator*=(const Matrix& mat)
 {
-	bool ok = true;
-	for (int i = 0; i < 4; i++) {
-		for (int j = 0; j < 4; j++) {
-			if (m[i][j] != a[i][j]) {
-				ok = false;
-			}
-		}
-	}
-	return ok;
-}
+	Matrix tmp(*this);
 
-bool Matrix4::operator!=(const Matrix4& a) const
-{
-	return !(*this == a);
-}
-
-Matrix4 Matrix4::operator+(const Matrix4& a) const
-{
-	Matrix4 temp(*this);
-	temp += a;
-	return temp;
-}
-
-Matrix4 Matrix4::operator-(const Matrix4& a) const
-{
-	Matrix4 temp(*this);
-	temp -= a;
-	return temp;
-}
-
-Matrix4 Matrix4::operator*(const Matrix4& a) const
-{
-	Matrix4 temp(*this);
-	temp *= a;
-	return temp;
-}
-
-Matrix4& Matrix4::operator+=(const Matrix4& a)
-{
-	for (int i = 0; i < 4; i++) {
-		for (int j = 0; j < 4; j++) {
-			m[i][j] += a[i][j];
-		}
-	}
-	return *this;
-}
-
-Matrix4& Matrix4::operator-=(const Matrix4& a)
-{
-	for (int i = 0; i < 4; i++) {
-		for (int j = 0; j < 4; j++) {
-			m[i][j] -= a[i][j];
-		}
-	}
-	return *this;
-}
-
-Matrix4& Matrix4::operator*=(const Matrix4& a)
-{
-	Matrix4 temp(*this);
-	for (int i = 0; i < 4; i++) {
-		for (int j = 0; j < 4; j++) {
-			float f = 0;
-			for (int k = 0; k < 4; k++) {
-				f += temp.m[i][k] * a[k][j];
-			}
-			m[i][j] = f;
-		}
-	}
-	return *this;
-}
-
-Matrix4& Matrix4::Transpose()
-{
-	for (int i = 0; i < 4; i++) {
-		for (int j = i; j < 4; j++) {
-			float f = m[i][j];
-			m[i][j] = m[j][i];
-			m[j][i] = f;
+	for (size_t y = 0; y < 4; y++)
+	{
+		for (size_t x = 0; x < 4; x++)
+		{
+			this->m[y][x] =
+				(tmp.m[y][0] * mat.m[0][x]) +
+				(tmp.m[y][1] * mat.m[1][x]) +
+				(tmp.m[y][2] * mat.m[2][x]) +
+				(tmp.m[y][3] * mat.m[3][x]);
 		}
 	}
 
 	return *this;
 }
 
-Matrix4 Matrix4::GetTranspose() const
+Matrix Matrix::RotationX(float radian)
 {
-	Matrix4 temp(*this);
-	temp.Transpose();
-	return temp;
-}
-
-Matrix4 Matrix4::Translation(float x, float y, float z)
-{
-	Matrix4 mat;
-	mat[3][0] = x;
-	mat[3][1] = y;
-	mat[3][2] = z;
+	Matrix mat;
+	mat.m[1][1] = cosf(radian);
+	mat.m[1][2] = sinf(radian);
+	mat.m[2][1] = -sinf(radian);
+	mat.m[2][2] = cosf(radian);
 	return mat;
 }
 
-Matrix4 Matrix4::Scaling(float x, float y, float z)
+Matrix Matrix::RotationY(float radian)
 {
-	Matrix4 mat;
-	mat[0][0] = x;
-	mat[1][1] = y;
-	mat[2][2] = z;
+	Matrix mat;
+	mat.m[0][0] = cosf(radian);
+	mat.m[0][2] = -sinf(radian);
+	mat.m[2][0] = sinf(radian);
+	mat.m[2][2] = cosf(radian);
 	return mat;
 }
 
-Matrix4 Matrix4::RotationX(float radian)
+Matrix Matrix::RotationZ(float radian)
 {
-	Matrix4 mat;
-	mat[1][1] = cosf(radian);
-	mat[1][2] = sinf(radian);
-	mat[2][1] = -sinf(radian);
-	mat[2][2] = cosf(radian);
+	Matrix mat;
+	mat.m[0][0] = cosf(radian);
+	mat.m[0][1] = sinf(radian);
+	mat.m[1][0] = -sinf(radian);
+	mat.m[1][1] = cosf(radian);
 	return mat;
 }
 
-Matrix4 Matrix4::RotationY(float radian)
+Matrix Matrix::RotationAll(float radian)
 {
-	Matrix4 mat;
-	mat[0][0] = cosf(radian);
-	mat[0][2] = -sinf(radian);
-	mat[2][0] = sinf(radian);
-	mat[2][2] = cosf(radian);
-	return mat;
-}
-
-Matrix4 Matrix4::RotationZ(float radian)
-{
-	Matrix4 mat;
-	mat[0][0] = cosf(radian);
-	mat[0][1] = sinf(radian);
-	mat[1][0] = -sinf(radian);
-	mat[1][1] = cosf(radian);
-	return mat;
-}
-
-Matrix4 Matrix4::RotationZXY(float radianX, float radianY, float radianZ)
-{
-	Matrix4 mat;
-	mat *= RotationZ(radianZ);
-	mat *= RotationX(radianX);
-	mat *= RotationY(radianY);
-	return mat;
-}
-
-Matrix4 Matrix4::View(Vector3 eye, Vector3 target, Vector3 up)
-{
-	Matrix4 mat;
-
-	Vector3 direction = target - eye;
-	direction.Normalize();
-
-	Vector3 xVec = up.Cross(direction);
-	xVec.Normalize();
-	Vector3 yVec = direction.Cross(xVec);
-	yVec.Normalize();
-
-	mat[0][0] = xVec.x;
-	mat[0][1] = xVec.y;
-	mat[0][2] = xVec.z;
-	mat[1][0] = yVec.x;
-	mat[1][1] = yVec.y;
-	mat[1][2] = yVec.z;
-	mat[2][0] = direction.x;
-	mat[2][1] = direction.y;
-	mat[2][2] = direction.z;
-	mat[3][0] = eye.x;
-	mat[3][1] = eye.y;
-	mat[3][2] = eye.z;
-
-	mat = -mat;
-	return mat;
-}
-
-Matrix4 Matrix4::OrthoGraphicProjection(float left, float right, float top, float bottom, float nearZ, float farZ)
-{
-	Matrix4 mat;
-
-	float width = 1.0f / (right - left);
-	float height = 1.0f / (top - bottom);
-	float range = 1.0f / (farZ - nearZ);
-
-	mat[0][0] = width * 2;
-	mat[1][1] = height * 2;
-	mat[2][2] = range;
-
-	mat[3][0] = -(left + right) * width;
-	mat[3][1] = -(top + bottom) * height;
-	mat[3][2] = -range * nearZ;
-	mat[3][3] = 1.0f;
+	Matrix mat;
+	mat *= RotationZ(radian);
+	mat *= RotationX(radian);
+	mat *= RotationY(radian);
 
 	return mat;
 }
 
-Matrix4 Matrix4::PerspectiveProjection(float fov, float aspect, float nearZ, float farZ)
-{
-	Matrix4 mat;
-
-	Matrix4 _a; //ÉAÉXÉyÉNÉgî‰Ç1:1Ç…
-	_a[0][0] = 1 / aspect;
-
-	Matrix4 _b; //íºï˚ëÃÇ…
-	_b[0][0] = 1 / tanf(fov / 2);
-	_b[1][1] = 1 / tanf(fov / 2);
-
-	Matrix4 _c; //å¥ì_Ç…Ç≠Ç¡Ç¬ÇØÇƒèkÇﬂÇÈ
-	_c[2][2] = farZ * (1 / (farZ - nearZ));
-	_c[3][2] = farZ * (-nearZ / (farZ - nearZ));
-
-	mat = _a * _b * _c;
-	mat[2][3] = 1;
-	mat[3][3] = 0;
-
-	return mat;
-}
-
-Vector3 operator*(const Vector3 vec, const Matrix4 mat)
+Vector3 operator*(const Vector3 vec, const Matrix mat)
 {
 	Vector3 temp = vec;
-	temp.x = vec.x * mat[0][0] + vec.y * mat[1][0] + vec.z * mat[2][0];
-	temp.y = vec.x * mat[0][1] + vec.y * mat[1][1] + vec.z * mat[2][1];
-	temp.z = vec.x * mat[0][2] + vec.y * mat[1][2] + vec.z * mat[2][2];
+	temp.x = vec.x * mat.m[0][0] + vec.y * mat.m[1][0] + vec.z * mat.m[2][0];
+	temp.y = vec.x * mat.m[0][1] + vec.y * mat.m[1][1] + vec.z * mat.m[2][1];
+	temp.z = vec.x * mat.m[0][2] + vec.y * mat.m[1][2] + vec.z * mat.m[2][2];
 	return temp;
 }
 
-Vector3& operator*=(Vector3& vec, const Matrix4 mat)
+Vector3& operator*=(Vector3& vec, const Matrix mat)
 {
 	Vector3 temp = vec * mat;
 	vec = temp;

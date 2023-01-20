@@ -13,21 +13,7 @@ class Boss
 public:
 	static Boss* nowBoss;
 
-	KObject3d object;
-
-	KModel* model_;
-
-	KTexture texture_;
-
 	std::unique_ptr<BossActState> actState = nullptr;
-
-	bool startFlag = false;
-
-	int hp = 0;
-
-	constexpr static int maxHP = 20;
-
-	bool isAlive = false;
 
 	Boss(KModel* model);
 	void Init();

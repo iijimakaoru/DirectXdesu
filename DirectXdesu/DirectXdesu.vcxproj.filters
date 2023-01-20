@@ -138,25 +138,7 @@
     <ClCompile Include="DebugCamera.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="BossActStand.cpp">
-      <Filter>ソース ファイル\Boss</Filter>
-    </ClCompile>
     <ClCompile Include="BossActState.cpp">
-      <Filter>ソース ファイル\Boss</Filter>
-    </ClCompile>
-    <ClCompile Include="BossBullet.cpp">
-      <Filter>ソース ファイル\Boss</Filter>
-    </ClCompile>
-    <ClCompile Include="BossBulletManager.cpp">
-      <Filter>ソース ファイル\Boss</Filter>
-    </ClCompile>
-    <ClCompile Include="BossActGap.cpp">
-      <Filter>ソース ファイル\Boss</Filter>
-    </ClCompile>
-    <ClCompile Include="BossActStamp.cpp">
-      <Filter>ソース ファイル\Boss</Filter>
-    </ClCompile>
-    <ClCompile Include="BossActAimShot.cpp">
       <Filter>ソース ファイル\Boss</Filter>
     </ClCompile>
     <ClCompile Include="Particle.cpp">
@@ -266,25 +248,7 @@
     <ClInclude Include="DebugCamera.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="BossActStand.h">
-      <Filter>ヘッダー ファイル\Boss</Filter>
-    </ClInclude>
     <ClInclude Include="BossActState.h">
-      <Filter>ヘッダー ファイル\Boss</Filter>
-    </ClInclude>
-    <ClInclude Include="BossBullet.h">
-      <Filter>ヘッダー ファイル\Boss</Filter>
-    </ClInclude>
-    <ClInclude Include="BossBulletManager.h">
-      <Filter>ヘッダー ファイル\Boss</Filter>
-    </ClInclude>
-    <ClInclude Include="BossActGap.h">
-      <Filter>ヘッダー ファイル\Boss</Filter>
-    </ClInclude>
-    <ClInclude Include="BossActStamp.h">
-      <Filter>ヘッダー ファイル\Boss</Filter>
-    </ClInclude>
-    <ClInclude Include="BossActAimShot.h">
       <Filter>ヘッダー ファイル\Boss</Filter>
     </ClInclude>
     <ClInclude Include="Particle.h">

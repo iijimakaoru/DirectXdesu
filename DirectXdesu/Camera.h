@@ -5,19 +5,15 @@
 
 class Camera
 {
-//public:
-//	ViewProjection viewProjection;
-//
-//	float PI = 3.1415927f;
-//
-//	Camera()
-//	{
-//		viewProjection.aspect = (float)KWinApp::GetWindowSizeW() / KWinApp::GetWindowSizeH();
-//	}
-//	virtual ~Camera(){}
-//
-//	virtual void Update(){}
-//
-//	static Camera* nowCamera;
+public:
+	ViewProjection viewProjection;
+
+	Camera(){}
+
+	virtual ~Camera(){}
+
+	virtual void Update(){}
+
+	static Camera* nowCamera;
 };
 

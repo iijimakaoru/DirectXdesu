@@ -147,6 +147,7 @@
     <ClCompile Include="Boss.cpp" />
     <ClCompile Include="BossActState.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="ConstBuffer.cpp" />
     <ClCompile Include="DebugCamera.cpp" />
     <ClCompile Include="DebugText.cpp" />
     <ClCompile Include="Ease.cpp" />

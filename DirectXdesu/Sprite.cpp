@@ -98,10 +98,10 @@ PipelineSet Sprite::SpriteCreateGraphicsPipeline()
 	// グラフィックスパイプライン設定
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC gpipeline{};
 	// シェーダーの設定
-	gpipeline.VS.pShaderBytecode = shader->vsBlob->GetBufferPointer();
-	gpipeline.VS.BytecodeLength = shader->vsBlob->GetBufferSize();
-	gpipeline.PS.pShaderBytecode = shader->psBlob->GetBufferPointer();
-	gpipeline.PS.BytecodeLength = shader->psBlob->GetBufferSize();
+	gpipeline.VS.pShaderBytecode = shader->GetVSBlob()->GetBufferPointer();
+	gpipeline.VS.BytecodeLength = shader->GetVSBlob()->GetBufferSize();
+	gpipeline.PS.pShaderBytecode = shader->GetPSBlob()->GetBufferPointer();
+	gpipeline.PS.BytecodeLength = shader->GetPSBlob()->GetBufferSize();
 	// サンプルマスクの設定
 	gpipeline.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
 	// ラスタライザの設定
@@ -183,8 +183,9 @@ PipelineSet Sprite::SpriteCreateGraphicsPipeline()
 	rootSignatureDesc.NumStaticSamplers = 1;
 	// ルートシグネチャのシリアライズ
 	ComPtr<ID3DBlob> rootSigBlob;
+	ComPtr<ID3DBlob> errorBlob;
 	result = D3D12SerializeRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1_0,
-		&rootSigBlob, &shader->errorBlob);
+		rootSigBlob.ReleaseAndGetAddressOf(), errorBlob.ReleaseAndGetAddressOf());
 	assert(SUCCEEDED(result));
 	result = dxCommon_->GetDev()->CreateRootSignature(0, rootSigBlob->GetBufferPointer(), rootSigBlob->GetBufferSize(),
 		IID_PPV_ARGS(&pipelineSet.rootSignature));

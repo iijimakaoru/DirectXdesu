@@ -31,6 +31,8 @@
 #include "MyMath.h"
 #include "ParticleManager.h"
 
+#include "KGPlin.h"
+
 PipelineSet Create3DObjectGpipeline()
 {
 	HRESULT result;
@@ -63,10 +65,10 @@ PipelineSet Create3DObjectGpipeline()
 	// グラフィックスパイプライン設定
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC gpipeline{};
 	// シェーダーの設定
-	gpipeline.VS.pShaderBytecode = shader->vsBlob->GetBufferPointer();
-	gpipeline.VS.BytecodeLength = shader->vsBlob->GetBufferSize();
-	gpipeline.PS.pShaderBytecode = shader->psBlob->GetBufferPointer();
-	gpipeline.PS.BytecodeLength = shader->psBlob->GetBufferSize();
+	gpipeline.VS.pShaderBytecode = shader->GetVSBlob()->GetBufferPointer();
+	gpipeline.VS.BytecodeLength = shader->GetVSBlob()->GetBufferSize();
+	gpipeline.PS.pShaderBytecode = shader->GetPSBlob()->GetBufferPointer();
+	gpipeline.PS.BytecodeLength = shader->GetPSBlob()->GetBufferSize();
 	// サンプルマスクの設定
 	gpipeline.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
 	// ラスタライザの設定
@@ -151,8 +153,9 @@ PipelineSet Create3DObjectGpipeline()
 	rootSignatureDesc.NumStaticSamplers = 1;
 	// ルートシグネチャのシリアライズ
 	ComPtr<ID3DBlob> rootSigBlob;
+	ComPtr<ID3D10Blob> errBlob;
 	result = D3D12SerializeRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1_0,
-		&rootSigBlob, &shader->errorBlob);
+		&rootSigBlob, errBlob.ReleaseAndGetAddressOf());
 	assert(SUCCEEDED(result));
 	result = KDirectXCommon::GetInstance()->GetDev()->CreateRootSignature(0, rootSigBlob->GetBufferPointer(), rootSigBlob->GetBufferSize(),
 		IID_PPV_ARGS(&pipelineSet.rootSignature));
@@ -226,6 +229,11 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 #pragma region グラフィックスパイプライン設定
 	// 3Dオブジェクト用パイプライン生成
 	PipelineSet object3dPipelineSet = Create3DObjectGpipeline();
+	KShader shader;
+	shader.Init(L"ObjVS.hlsl", L"ObjPS.hlsl");
+
+	std::unique_ptr<KGPlin> pipeline;
+	pipeline = std::make_unique<KGPlin>(shader);
 
 	// プレイヤー
 	Player player(cube.get());

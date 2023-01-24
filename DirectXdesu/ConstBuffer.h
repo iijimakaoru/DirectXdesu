@@ -2,6 +2,10 @@
 #include <d3d12.h>
 #include <DirectXMath.h>
 #include <DirectXTex.h>
+#include "Vector4.h"
+#include <wrl.h>
+
+#pragma comment(lib, "d3d12.lib")
 
 using namespace DirectX;
 
@@ -24,4 +28,38 @@ struct ConstBufferDataB1
 	float pad2;
 	XMFLOAT3 specular;
 	float alpha;
+};
+
+class ConstBuff
+{
+private:
+	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
+
+public:
+	HRESULT result;
+	D3D12_HEAP_PROPERTIES heapProp{};
+	D3D12_RESOURCE_DESC resourceDesc{};
+
+	struct ConstBufferDataMaterial
+	{
+		Vector4 color;
+	};
+
+	struct ConstBufferTimeMaterial
+	{
+		float time;
+	};
+
+	ComPtr<ID3D12Resource> material;
+	ConstBufferDataMaterial* mapMaterial = nullptr;
+	ComPtr<ID3D12Resource> timeMaterial;
+	ConstBufferTimeMaterial* timeMapMaterial = nullptr;
+	float timer = 100000;
+public:
+	ConstBuff();
+	~ConstBuff();
+	void ChangeColor(const Vector4& color);
+	void TimeUpdate();
+	void Update();
+	void SetBufferView();
 };

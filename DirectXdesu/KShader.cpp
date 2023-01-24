@@ -1,4 +1,6 @@
 #include "KShader.h"
+#include <string>
+#include <assert.h>
 
 void KShader::BasicPSNormal() {
 	// ピクセルシェーダの読み込みとコンパイル
@@ -105,6 +107,46 @@ void KShader::ObjPSNormal()
 void KShader::ObjPSLoadCompile()
 {
 	ObjPSNormal();
+	Error();
+}
+
+KShader::KShader(LPCWSTR VSFileName, LPCWSTR PSFileName, LPCSTR pEntryPoint)
+{
+	Init(VSFileName, PSFileName, pEntryPoint);
+}
+
+void KShader::Init(LPCWSTR VSFileName, LPCWSTR PSFileName, LPCSTR pEntryPoint)
+{
+	// 頂点シェーダー
+	result = D3DCompileFromFile(
+		VSFileName,
+		nullptr,
+		D3D_COMPILE_STANDARD_FILE_INCLUDE,
+		pEntryPoint,
+		"vs_5_0",
+		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,
+		0,
+		&vsBlob,
+		&errorBlob
+	);
+
+	// エラー
+	Error();
+
+	// ピクセルシェーダー
+	result = D3DCompileFromFile(
+		PSFileName,
+		nullptr,
+		D3D_COMPILE_STANDARD_FILE_INCLUDE,
+		pEntryPoint,
+		"ps_5_0",
+		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,
+		0,
+		&psBlob,
+		&errorBlob
+	);
+
+	// エラー
 	Error();
 }
 

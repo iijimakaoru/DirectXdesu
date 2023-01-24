@@ -1,23 +1,88 @@
 #include "KGPlin.h"
+#include "KDirectXCommon.h"
 
 void KGPlin::SetShader(KShader shader)
 {
 	// Vertex
-	
+	piplineDesc.VS.pShaderBytecode = shader.GetVSBlob()->GetBufferPointer();
+	piplineDesc.VS.BytecodeLength = shader.GetVSBlob()->GetBufferSize();
 
-	// 
+	// Pixcel
+	piplineDesc.PS.pShaderBytecode = shader.GetPSBlob()->GetBufferPointer();
+	piplineDesc.PS.BytecodeLength = shader.GetPSBlob()->GetBufferSize();
 }
 
 void KGPlin::SetRootParam(D3D12_ROOT_PARAMETER& rootParam, D3D12_ROOT_PARAMETER_TYPE type, UINT shaderRegister, UINT registerSpace, D3D12_SHADER_VISIBILITY shaderVisibility)
 {
+	rootParam.ParameterType = type;
+	rootParam.Descriptor.ShaderRegister = shaderRegister;
+	rootParam.Descriptor.RegisterSpace = registerSpace;
+	rootParam.ShaderVisibility = shaderVisibility;
 }
 
 void KGPlin::SetRootParam(D3D12_ROOT_PARAMETER& rootParam, D3D12_ROOT_PARAMETER_TYPE type, D3D12_DESCRIPTOR_RANGE pDescripterRange, UINT numDescripterRanges, D3D12_SHADER_VISIBILITY shaderVisibility)
 {
+	rootParam.ParameterType = type;
+	rootParam.DescriptorTable.pDescriptorRanges = &pDescripterRange;
+	rootParam.DescriptorTable.NumDescriptorRanges = numDescripterRanges;
+	rootParam.ShaderVisibility = shaderVisibility;
 }
 
 void KGPlin::SetRootSignature(UINT rootParamNum)
 {
+	HRESULT result;
+
+	// デスクリプタレンジの設定
+	D3D12_DESCRIPTOR_RANGE descripterRange{};
+	descripterRange.NumDescriptors = 1;
+	descripterRange.RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
+	descripterRange.BaseShaderRegister = 0;
+	descripterRange.OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+
+	//// ルートパラメータ
+	// 設定
+	std::vector<D3D12_ROOT_PARAMETER> rootParams = {};
+	rootParams.resize(rootParamNum);
+	SetRootParam(rootParams[0], D3D12_ROOT_PARAMETER_TYPE_CBV, 0, 0);
+	SetRootParam(rootParams[1], D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE, descripterRange, 1);
+	SetRootParam(rootParams[2], D3D12_ROOT_PARAMETER_TYPE_CBV, 1, 0);
+	SetRootParam(rootParams[3], D3D12_ROOT_PARAMETER_TYPE_CBV, 2, 0);
+
+	//// サンプラー
+	// テクスチャサンプラーの設定
+	D3D12_STATIC_SAMPLER_DESC samplerDesc{};
+	samplerDesc.AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+	samplerDesc.AddressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+	samplerDesc.AddressW = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+	samplerDesc.BorderColor = D3D12_STATIC_BORDER_COLOR_TRANSPARENT_BLACK;
+	samplerDesc.Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR;
+	samplerDesc.MaxLOD = D3D12_FLOAT32_MAX;
+	samplerDesc.MinLOD = 0.0f;
+	samplerDesc.ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER;
+	samplerDesc.ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+
+	//// ルートシグネチャ
+	// 設定
+	D3D12_ROOT_SIGNATURE_DESC rootSignatureDesc{};
+	rootSignatureDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
+	rootSignatureDesc.pParameters = &rootParams.front();
+	rootSignatureDesc.NumParameters = rootParams.size();
+	rootSignatureDesc.pStaticSamplers = &samplerDesc;
+	rootSignatureDesc.NumStaticSamplers = 1;
+
+	// シリアライズ
+	ComPtr<ID3DBlob> rootSigBlob;
+	ComPtr<ID3DBlob> errorBlob;
+	result = D3D12SerializeRootSignature(&rootSignatureDesc,
+		D3D_ROOT_SIGNATURE_VERSION_1_0,
+		rootSigBlob.ReleaseAndGetAddressOf(),
+		errorBlob.ReleaseAndGetAddressOf());
+	assert(SUCCEEDED(result));
+	result = KDirectXCommon::GetInstance()->GetDev()->CreateRootSignature(0,
+		rootSigBlob->GetBufferPointer(),
+		rootSigBlob->GetBufferSize(),
+		IID_PPV_ARGS(piplineSet.rootSignature.ReleaseAndGetAddressOf()));
+	assert(SUCCEEDED(result));
 }
 
 void KGPlin::SetScreenRootSignature()
@@ -26,6 +91,43 @@ void KGPlin::SetScreenRootSignature()
 
 void KGPlin::Blending(D3D12_RENDER_TARGET_BLEND_DESC& blendDesc, const int mord)
 {
+	//	共通設定
+	if (mord != NONE) {
+		piplineDesc.BlendState.AlphaToCoverageEnable = true;
+		blendDesc.BlendEnable = true;
+		blendDesc.BlendOpAlpha = D3D12_BLEND_OP_ADD;
+		blendDesc.SrcBlendAlpha = D3D12_BLEND_ONE;
+		blendDesc.DestBlendAlpha = D3D12_BLEND_ZERO;
+	}
+	else {
+		piplineDesc.BlendState.AlphaToCoverageEnable = false;
+	}
+
+	switch (mord)
+	{
+	case ADD:
+		blendDesc.BlendOp = D3D12_BLEND_OP_ADD;
+		blendDesc.SrcBlend = D3D12_BLEND_ONE;
+		blendDesc.DestBlend = D3D12_BLEND_ONE;
+		break;
+	case SUB:
+		blendDesc.BlendOp = D3D12_BLEND_OP_REV_SUBTRACT;
+		blendDesc.SrcBlend = D3D12_BLEND_ONE;
+		blendDesc.DestBlend = D3D12_BLEND_ONE;
+		break;
+	case INV:
+		blendDesc.BlendOp = D3D12_BLEND_OP_ADD;
+		blendDesc.SrcBlend = D3D12_BLEND_INV_DEST_COLOR;
+		blendDesc.DestBlend = D3D12_BLEND_ZERO;
+		break;
+	case ALPHA:
+		blendDesc.BlendOp = D3D12_BLEND_OP_ADD;
+		blendDesc.SrcBlend = D3D12_BLEND_SRC_ALPHA;
+		blendDesc.DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
+		break;
+	default:
+		break;
+	}
 }
 
 KGPlin::KGPlin()
@@ -250,4 +352,14 @@ void KGPlin::Update(D3D12_PRIMITIVE_TOPOLOGY primitive)
 void KGPlin::Setting()
 {
 	KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootSignature(piplineSet.rootSignature.Get());
+}
+
+void KGPlin::SetBlending(int mord)
+{
+	HRESULT result;
+	D3D12_RENDER_TARGET_BLEND_DESC& blenddesc = piplineDesc.BlendState.RenderTarget[0];
+	blenddesc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
+	Blending(blenddesc, mord);
+	result = KDirectXCommon::GetInstance()->GetDev()->CreateGraphicsPipelineState(&piplineDesc, IID_PPV_ARGS(&piplineSet.pipelineState));
+	assert(SUCCEEDED(result));
 }

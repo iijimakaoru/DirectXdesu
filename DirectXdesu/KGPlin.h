@@ -2,7 +2,6 @@
 #include <d3d12.h>
 #include "KShader.h"
 #include "KVertex.h"
-#include "KDirectXCommon.h"
 #include "PipelineSet.h"
 
 class KGPlin
@@ -53,5 +52,6 @@ public:
 		bool isDeep = true);
 	void Update(D3D12_PRIMITIVE_TOPOLOGY primitive = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	void Setting();
+	void SetBlending(int mord);
 };
 

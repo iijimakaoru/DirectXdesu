@@ -16,7 +16,7 @@ struct ConstBufferDataTransform {
 
 struct WorldTransfom {
 	// 定数バッファ(行列)
-	ID3D12Resource* constBuffTransform = {};
+	ComPtr<ID3D12Resource> constBuffTransform = {};
 
 	// 定数バッファマップ(行列)
 	ConstBufferDataTransform* constMapTransform = {};

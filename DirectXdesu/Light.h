@@ -3,6 +3,7 @@
 #include <memory>
 #include <d3d12.h>
 #include <wrl.h>
+#include <DirectXMath.h>
 
 #pragma comment(lib, "d3d12.lib")
 
@@ -19,13 +20,9 @@ public:
 		XMFLOAT3 lightcolor;
 	};
 
-	static void Staticlnitialize(ID3D12Device* device);
-
 	void Initialize();
 
 private:
-	static ID3D12Device* device;
-
 	ComPtr<ID3D12Resource> constBuff;
 
 	XMVECTOR lightdir = { 1,0,0,0 };

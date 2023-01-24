@@ -71,9 +71,6 @@ void KDirectXCommon::Init()
 		}
 	}
 
-	// エラー時のブレイク
-	tmpAdapter->Release();
-
 	// コマンドアロケーター生成
 	result = dev->CreateCommandAllocator(
 		D3D12_COMMAND_LIST_TYPE_DIRECT,

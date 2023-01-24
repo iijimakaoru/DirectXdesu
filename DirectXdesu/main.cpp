@@ -194,10 +194,10 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	float speed = 1.0f;
 
 #pragma region モデル
-	KModel triangle = Triangle();
-	triangle.CreateModel();
-	KModel cube = Cube();
-	cube.CreateModel();
+	std::unique_ptr<KModel> triangle = std::make_unique<Triangle>();
+	triangle->CreateModel();
+	std::unique_ptr<KModel> cube = std::make_unique<Cube>();
+	cube->CreateModel();
 	KModel line = Line();
 	line.CreateModel();
 	KModel objTriangle = MtlObj("triangle_mat");
@@ -228,13 +228,13 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	PipelineSet object3dPipelineSet = Create3DObjectGpipeline();
 
 	// プレイヤー
-	Player player(&cube);
+	Player player(cube.get());
 
 	Player::nowPlayer = &player;
 
 	if (!ParticleManager::GetInstance()->IsPoolCreated())
 	{
-		ParticleManager::GetInstance()->CreatePool(&cube);
+		ParticleManager::GetInstance()->CreatePool(cube.get());
 	}
 
 #pragma region ビュー

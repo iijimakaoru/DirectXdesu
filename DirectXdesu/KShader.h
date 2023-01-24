@@ -6,6 +6,8 @@
 class KShader
 {
 public:
+	template<class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
+
 	// Basicシェーダー
 	void BasicVSNormal();
 	void BasicVSLoadCompile();
@@ -24,9 +26,9 @@ public:
 	// エラー
 	void Error();
 
-	ID3D10Blob* vsBlob = nullptr; // 頂点シェーダーオブジェクト
-	ID3D10Blob* psBlob = nullptr;
-	ID3D10Blob* errorBlob = nullptr; // エラーオブジェクト
+	ComPtr<ID3D10Blob> vsBlob = nullptr; // 頂点シェーダーオブジェクト
+	ComPtr<ID3D10Blob> psBlob = nullptr;
+	ComPtr<ID3D10Blob> errorBlob = nullptr; // エラーオブジェクト
 
 	HRESULT result;
 };

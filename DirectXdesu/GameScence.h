@@ -10,38 +10,34 @@
 #include "KTexture.h"
 #include "Sound.h"
 
-const int ObjectNum = 2;
-const int LineNum = 6;
-
 class GameScence
 {
 public:
 	GameScence(){};
 	~GameScence(){};
+	void LoadResouce();
 	void Init();
 	void Update();
 	void Draw();
 
 private:
-	// KDirectCommon
-	KDirectXCommon* dx = nullptr;
-	// キーボード入力
-	KInput* input = nullptr;
+	// モデル
+	std::unique_ptr<KModel> triangle;
+	std::unique_ptr<KModel> cube;
 
-	KModel triangle = Triangle();
+	// テクスチャ
+	std::unique_ptr<KTexture> mario;
+	std::unique_ptr<KTexture> haikei;
 
-	KModel cube = Cube();
-
-	KModel line = Line();
+	// ビュープロジェクション
+	ViewProjection viewProjection;
 
 	// 3Dオブジェクト
-	KObject3d* object3d[ObjectNum];
+	std::unique_ptr<KObject3d> obj;
 
 	// スプライト
 	std::unique_ptr<Sprite> sprite;
-
-	// ビュープロジェクション
-	ViewProjection* viewProjection;
+	SpriteCommon spriteCommon;
 
 	Vector3 center = { 0,0,1 };
 
@@ -52,10 +48,24 @@ private:
 
 	std::unique_ptr<Sound> sound;
 
-	SpriteCommon spriteCommon;
-
 	SpriteInfo sprites[2];
 
 	std::unique_ptr<DebugText> debugtext;
+
+	Vector3 vec = { 1,1,1 };
+
+	float angle = 0;
+
+	float hogeSpeed = 0;
+
+	float speedLevel = 1;
+
+	float hogeLifeTime = 0;
+
+	float hogeAngle = 0;
+
+	float hogeRot = 0;
+
+	float hogeCooltime = 0;
 };
 

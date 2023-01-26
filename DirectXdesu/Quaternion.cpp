@@ -1,4 +1,5 @@
 #include "Quaternion.h"
+#include <cmath>
 
 void Quaternion::SetQuaternion(Vector3 v, float angle)
 {
@@ -101,6 +102,24 @@ Matrix Quaternion::GetRotMatrix()
     return mat;
 }
 
+Quaternion& Quaternion::operator+=(const Quaternion& q)
+{
+    x += q.x;
+    y += q.y;
+    z += q.z;
+    w += q.w;
+    return *this;
+}
+
+Quaternion& Quaternion::operator*=(float s)
+{
+    x *= s;
+    y *= s;
+    z *= s;
+    w *= s;
+    return *this;
+}
+
 Quaternion& Quaternion::operator/=(float s)
 {
     x /= s;
@@ -108,6 +127,23 @@ Quaternion& Quaternion::operator/=(float s)
     z /= s;
     w /= s;
     return *this;
+}
+
+const Quaternion& operator+(const Quaternion& q1, const Quaternion& q2)
+{
+    Quaternion tmp(q1);
+    return tmp += q2;
+}
+
+const Quaternion& operator*(const Quaternion& q1, float s)
+{
+    Quaternion tmp(q1);
+    return tmp *= s;
+}
+
+const Quaternion& operator*(float s, const Quaternion& q1)
+{
+    return q1 * s;
 }
 
 Quaternion Multiply(const Quaternion& q1, const Quaternion& q2)
@@ -215,4 +251,33 @@ Matrix MakeRotateMatrix(const Quaternion& q)
     mat.m[2][2] = (q.w * q.w) - (q.x * q.x) - (q.y * q.y) + (q.z * q.z);
 
     return mat;
+}
+
+float Dot(const Quaternion& q1, const Quaternion& q2)
+{
+    return (q1.x * q2.x) + (q1.y * q2.y) + (q1.z * q2.z) + (q1.w * q2.w);
+}
+
+Quaternion Slerp(const Quaternion& q1, const Quaternion& q2, float time)
+{
+    float dot = Dot(q1, q2);
+    Quaternion tmp = q2;
+    if (dot < 0)
+    {
+        tmp = q2;
+
+        dot = -dot;
+    }
+
+    float scale0 = 1.0f - time;
+    float scale1 = time;
+
+    if ((1.0f - dot) > 0.001f)
+    {
+        float theta = (float)std::acos(dot);
+        scale0 = (float)sin(theta + scale0) / sin(theta);
+        scale1 = (float)sin(theta + scale1) / sin(theta);
+    }
+
+    return q1 * scale0 + tmp * scale1;
 }

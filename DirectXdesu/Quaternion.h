@@ -25,8 +25,14 @@ public:
 
 	Matrix GetRotMatrix();
 
+	Quaternion& operator+=(const Quaternion& q);
+	Quaternion& operator*=(float s);
 	Quaternion& operator/=(float s);
 };
+
+const Quaternion& operator+(const Quaternion& q1, const Quaternion& q2);
+const Quaternion& operator*(const Quaternion& q1, float s);
+const Quaternion& operator*(float s, const Quaternion& q1);
 
 // êœ
 Quaternion Multiply(const Quaternion& q1, const Quaternion& q2);
@@ -54,3 +60,7 @@ Vector3 RotateVector(const Vector3& vec, const Quaternion& q);
 
 // âÒì]çsóÒ
 Matrix MakeRotateMatrix(const Quaternion& q);
+
+float Dot(const Quaternion& q1, const Quaternion& q2);
+
+Quaternion Slerp(const Quaternion& q1, const Quaternion& q2, float time);

@@ -233,7 +233,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	shader.Init(L"ObjVS.hlsl", L"ObjPS.hlsl");
 
 	std::unique_ptr<KGPlin> pipeline;
-	pipeline = std::make_unique<KGPlin>(shader);
+	//pipeline = std::make_unique<KGPlin>(shader);
 
 	// ÉvÉåÉCÉÑÅ[
 	Player player(cube.get());

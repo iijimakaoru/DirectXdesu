@@ -1,6 +1,8 @@
 #include "Quaternion.h"
 #include <cmath>
 
+const float EPSILON = 0.000001f;
+
 void Quaternion::SetQuaternion(Vector3 v, float angle)
 {
     v.Normalize();
@@ -272,12 +274,19 @@ Quaternion Slerp(const Quaternion& q1, const Quaternion& q2, float time)
     float scale0 = 1.0f - time;
     float scale1 = time;
 
-    if ((1.0f - dot) > 0.001f)
+    if (dot >= 1.0f - EPSILON)
     {
-        float theta = (float)std::acos(dot);
-        scale0 = (float)sin(theta + scale0) / sin(theta);
-        scale1 = (float)sin(theta + scale1) / sin(theta);
+        return (1.0f - time) * q1 + time * tmp;
     }
+    else
+    {
+        if ((1.0f - dot) > 0.001f)
+        {
+            float theta = (float)std::acos(dot);
+            scale0 = (float)sin(theta + scale0) / sin(theta);
+            scale1 = (float)sin(theta + scale1) / sin(theta);
+        }
 
-    return q1 * scale0 + tmp * scale1;
+        return q1 * scale0 + tmp * scale1;
+    }
 }

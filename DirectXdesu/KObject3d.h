@@ -7,6 +7,7 @@
 #include "KMaterial.h"
 //#include <memory>
 #include "ViewProjection.h"
+#include "KGPlin.h"
 
 using namespace DirectX;
 
@@ -40,6 +41,7 @@ public:
 	KObject3d();
 	void Initialize();
 	void LoadModel(KModel* model);
+	void SetPipeline(KGPlin* pipeline_);
 	void Update(ViewProjection& viewProjection);
 	void Draw();
 	void Draw(KTexture* texture);
@@ -47,6 +49,10 @@ public:
 	static void StaticInitialize();
 	static KObject3d Create();
 
+private:
+	static KGPlin* pipeline;
+
+public:
 	Vector3 rotResult;
 
 	ComPtr<ID3D12Resource> constBuffB0;

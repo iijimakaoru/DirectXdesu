@@ -228,21 +228,21 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 #pragma region グラフィックスパイプライン設定
 	// 3Dオブジェクト用パイプライン生成
-	PipelineSet object3dPipelineSet = Create3DObjectGpipeline();
+	//PipelineSet object3dPipelineSet = Create3DObjectGpipeline();
 	KShader objShader;
 	objShader.Init(L"ObjVS.hlsl", L"ObjPS.hlsl");
 
 	std::unique_ptr<KGPlin> pipeline;
 	pipeline = std::make_unique<KGPlin>(objShader);
 
-	// プレイヤー
-	Player player(cube.get());
+	//// プレイヤー
+	//Player player(cube.get());
 
-	Player::nowPlayer = &player;
+	//Player::nowPlayer = &player;
 
 	if (!ParticleManager::GetInstance()->IsPoolCreated())
 	{
-		ParticleManager::GetInstance()->CreatePool(cube.get());
+		ParticleManager::GetInstance()->CreatePool(cube.get(), pipeline.get());
 	}
 
 #pragma region ビュー
@@ -425,7 +425,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		viewProjection.eye.z = viewProjection.lenZ * sinf(viewProjection.angleX) * cosf(viewProjection.angleY);
 
 		// プレイヤー初期化
-		player.Init();
+		//player.Init();
 
 		ParticleManager::GetInstance()->Update(viewProjection);
 
@@ -436,16 +436,6 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 #pragma region 描画
 		// 描画開始
 		KDirectXCommon::GetInstance()->PreDraw();
-#pragma region パイプラインステート設定
-		// パイプラインステートとルートシグネチャの設定コマンド
-		KDirectXCommon::GetInstance()->GetCmdlist()->SetPipelineState(object3dPipelineSet.pipelineState.Get());
-		KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootSignature(object3dPipelineSet.rootSignature.Get());
-#pragma endregion
-#pragma region プリミティブ形状
-		// プリミティブ形状の設定コマンド
-		KDirectXCommon::GetInstance()->GetCmdlist()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-#pragma endregion
-
 #pragma region 描画コマンド
 
 		ParticleManager::GetInstance()->Draw();

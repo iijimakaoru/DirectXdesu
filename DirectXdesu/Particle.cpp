@@ -1,7 +1,7 @@
 #include "Particle.h"
 #include "Ease.h"
 
-void Particle::Init(KModel* model)
+void Particle::Init(KModel* model, KGPlin* pipeline)
 {
 	// オブジェクトの初期化
 	object.Initialize();
@@ -10,6 +10,8 @@ void Particle::Init(KModel* model)
 	object.LoadModel(model_);
 	// テクスチャ
 	texture.CreateTexture("Resources/texture/", "damageColor.png");
+	// パイプライン
+	object.SetPipeline(pipeline);
 }
 
 void Particle::SetInfo(const Vector3& pos,
@@ -79,7 +81,7 @@ void Particle::Draw()
 	object.Draw(&texture);
 }
 
-void Particle2::Init(KModel* model)
+void Particle2::Init(KModel* model, KGPlin* pipeline)
 {
 	// オブジェクトの初期化
 	object.Initialize();
@@ -88,6 +90,8 @@ void Particle2::Init(KModel* model)
 	object.LoadModel(model_);
 	// テクスチャ
 	texture.CreateTexture("Resources/texture/", "damageColor.png");
+	// パイプライン
+	object.SetPipeline(pipeline);
 }
 
 void Particle2::SetInfo(const Vector3& pos,

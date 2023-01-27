@@ -1,18 +1,18 @@
 #include "ParticleManager.h"
 #include "MyMath.h"
 
-void ParticleManager::CreatePool(KModel* model)
+void ParticleManager::CreatePool(KModel* model, KGPlin* pipeline)
 {
 	for (int i = 0; i < 200; i++)
 	{
 		std::unique_ptr<Particle> newParticle = std::make_unique<Particle>();
-		newParticle->Init(model);
+		newParticle->Init(model,pipeline);
 		newParticle->SetInfo({ 0,0,0 }, { 0,0,0 }, { 0,0,0 }, { 0,0,0 }, 0);
 
 		particles.push_back(std::move(newParticle));
 
 		std::unique_ptr<Particle2> newParticle2 = std::make_unique<Particle2>();
-		newParticle2->Init(model);
+		newParticle2->Init(model, pipeline);
 		newParticle2->SetInfo({ 0,0,0 }, { 0,0,0 }, { 0,0,0 }, { 0,0,0 }, 0);
 
 		particles2.push_back(std::move(newParticle2));

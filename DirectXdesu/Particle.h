@@ -4,11 +4,12 @@
 #include "Vector3.h"
 #include "KTexture.h"
 #include "ViewProjection.h"
+#include "KGPlin.h"
 
 class Particle
 {
 public:
-	void Init(KModel* model);
+	void Init(KModel* model, KGPlin* pipeline);
 	void SetInfo(const Vector3& pos,
 		const Vector3& velocity,
 		const Vector3& scale,
@@ -43,7 +44,7 @@ public:
 class Particle2
 {
 public:
-	void Init(KModel* model);
+	void Init(KModel* model, KGPlin* pipeline);
 	void SetInfo(const Vector3& pos,
 		const Vector3& velocity,
 		const Vector3& scale,

@@ -1,8 +1,10 @@
 #pragma once
+#include <wrl.h>
+
 struct PipelineSet
 {
 	// パイプラインステート
-	ComPtr<ID3D12PipelineState> pipelineState;
+	Microsoft::WRL::ComPtr<ID3D12PipelineState> pipelineState;
 	// ルートシグネチャ
-	ComPtr<ID3D12RootSignature> rootSignature;
+	Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature;
 };

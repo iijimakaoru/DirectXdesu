@@ -2,6 +2,7 @@
 #include "Particle.h"
 #include <list>
 #include <memory>
+#include "KGPlin.h"
 
 class ParticleManager
 {
@@ -9,7 +10,7 @@ public:
 	bool IsPoolCreated() {
 		return pooled;
 	}
-	void CreatePool(KModel* model);
+	void CreatePool(KModel* model, KGPlin* pipeline);
 	void AllDelete();
 	void Update(ViewProjection& viewProjection);
 	void Draw();
@@ -24,7 +25,7 @@ public:
 		const float lifeTime);
 	void RightWave(const Vector3& pos, const Vector3& scale, const Vector3& rotation, const float lifeTimer, const float speed);
 	void LeftWave(const Vector3& pos, const Vector3& scale, const Vector3& rotation, const float lifeTimer, const float speed);
-	void Splash(const Vector3& pos, const Vector3& scale, const Vector3& rotation, const float lifeTimer, const float speed,const Vector3& vec);
+	void Splash(const Vector3& pos, const Vector3& scale, const Vector3& rotation, const float lifeTimer, const float speed, const Vector3& vec);
 	void TestSplash(const Vector3& pos, const Vector3& scale, const Vector3& rotation, const float speed, float angleY, const float lifeTime);
 	void Taihun(const Vector3& pos, const Vector3& scale, const Vector3& rotation, const float speed, float angleY, const float lifeTime);
 

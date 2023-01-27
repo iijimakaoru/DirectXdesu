@@ -2,6 +2,8 @@
 #include "KDirectXCommon.h"
 #include "ConstBuffer.h"
 
+KGPlin* KObject3d::pipeline = nullptr;
+
 KObject3d::KObject3d() {
 	Initialize();
 }
@@ -61,6 +63,11 @@ void KObject3d::LoadModel(KModel* model)
 	model_ = model;
 }
 
+void KObject3d::SetPipeline(KGPlin* pipeline_)
+{
+	KObject3d::pipeline = pipeline_;
+}
+
 void KObject3d::Update(ViewProjection& viewProjection) {
 	// マトリックス
 	XMMATRIX matScale, matRot, matTrans;
@@ -100,6 +107,9 @@ void KObject3d::Update(ViewProjection& viewProjection) {
 
 void KObject3d::Draw() 
 {
+	pipeline->Setting();
+	pipeline->Update(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
 	// 定数バッファビューをセット
 	KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootConstantBufferView(0, constBuffB0->GetGPUVirtualAddress());
 	KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootConstantBufferView(2, constBuffB1->GetGPUVirtualAddress());
@@ -125,6 +135,9 @@ void KObject3d::Draw()
 
 void KObject3d::Draw(KTexture* texture)
 {
+	pipeline->Setting();
+	pipeline->Update(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
 	// 定数バッファビューをセット
 	KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootConstantBufferView(0, constBuffB0->GetGPUVirtualAddress());
 	KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootConstantBufferView(2, constBuffB1->GetGPUVirtualAddress());

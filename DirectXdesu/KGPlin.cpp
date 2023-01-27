@@ -81,7 +81,7 @@ void KGPlin::SetRootSignature(UINT rootParamNum)
 	result = KDirectXCommon::GetInstance()->GetDev()->CreateRootSignature(0,
 		rootSigBlob->GetBufferPointer(),
 		rootSigBlob->GetBufferSize(),
-		IID_PPV_ARGS(piplineSet.rootSignature.ReleaseAndGetAddressOf()));
+		IID_PPV_ARGS(rootSignature.ReleaseAndGetAddressOf()));
 	assert(SUCCEEDED(result));
 }
 
@@ -221,7 +221,7 @@ KGPlin::KGPlin(D3D12_INPUT_ELEMENT_DESC* inputLayout, UINT inputLayoutSize, KSha
 		0,
 		rsBlob->GetBufferPointer(),
 		rsBlob->GetBufferSize(),
-		IID_PPV_ARGS(piplineSet.rootSignature.ReleaseAndGetAddressOf())
+		IID_PPV_ARGS(rootSignature.ReleaseAndGetAddressOf())
 	);
 
 	SetShader(shader);
@@ -273,10 +273,10 @@ KGPlin::KGPlin(D3D12_INPUT_ELEMENT_DESC* inputLayout, UINT inputLayoutSize, KSha
 	piplineDesc.SampleDesc.Quality = 0;
 	piplineDesc.Flags = D3D12_PIPELINE_STATE_FLAG_NONE;
 
-	piplineDesc.pRootSignature = piplineSet.rootSignature.Get();
+	piplineDesc.pRootSignature = rootSignature.Get();
 	result = KDirectXCommon::GetInstance()->GetDev()->CreateGraphicsPipelineState(
 		&piplineDesc,
-		IID_PPV_ARGS(piplineSet.pipelineState.ReleaseAndGetAddressOf())
+		IID_PPV_ARGS(pipelineState.ReleaseAndGetAddressOf())
 	);
 }
 
@@ -335,23 +335,23 @@ void KGPlin::Init(KShader shader, D3D12_INPUT_ELEMENT_DESC* inputLayout, UINT in
 	SetRootSignature(4);
 
 	// パイプラインにルートシグネチャをセット
-	piplineDesc.pRootSignature = piplineSet.rootSignature.Get();
+	piplineDesc.pRootSignature = rootSignature.Get();
 
 	// パイプラインステートの生成
-	result = KDirectXCommon::GetInstance()->GetDev()->CreateGraphicsPipelineState(&piplineDesc, IID_PPV_ARGS(&piplineSet.pipelineState));
+	result = KDirectXCommon::GetInstance()->GetDev()->CreateGraphicsPipelineState(&piplineDesc, IID_PPV_ARGS(&pipelineState));
 	assert(SUCCEEDED(result));
 }
 
 void KGPlin::Update(D3D12_PRIMITIVE_TOPOLOGY primitive)
 {
 	// パイプラインステートとルートシグネチャの設定コマンド
-	KDirectXCommon::GetInstance()->GetCmdlist()->SetPipelineState(piplineSet.pipelineState.Get());
+	KDirectXCommon::GetInstance()->GetCmdlist()->SetPipelineState(pipelineState.Get());
 	KDirectXCommon::GetInstance()->GetCmdlist()->IASetPrimitiveTopology(primitive);
 }
 
 void KGPlin::Setting()
 {
-	KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootSignature(piplineSet.rootSignature.Get());
+	KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootSignature(rootSignature.Get());
 }
 
 void KGPlin::SetBlending(int mord)
@@ -360,6 +360,6 @@ void KGPlin::SetBlending(int mord)
 	D3D12_RENDER_TARGET_BLEND_DESC& blenddesc = piplineDesc.BlendState.RenderTarget[0];
 	blenddesc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
 	Blending(blenddesc, mord);
-	result = KDirectXCommon::GetInstance()->GetDev()->CreateGraphicsPipelineState(&piplineDesc, IID_PPV_ARGS(&piplineSet.pipelineState));
+	result = KDirectXCommon::GetInstance()->GetDev()->CreateGraphicsPipelineState(&piplineDesc, IID_PPV_ARGS(&pipelineState));
 	assert(SUCCEEDED(result));
 }

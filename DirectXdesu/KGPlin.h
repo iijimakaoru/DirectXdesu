@@ -2,7 +2,6 @@
 #include <d3d12.h>
 #include "KShader.h"
 #include "KVertex.h"
-#include "PipelineSet.h"
 
 class KGPlin
 {
@@ -15,9 +14,18 @@ public:
 		INV,
 		ALPHA,
 	};
+
+private:
+	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
+
 private:
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC piplineDesc;
-	PipelineSet piplineSet;
+
+	// パイプラインステート
+	ComPtr<ID3D12PipelineState> pipelineState;
+
+	// ルートシグネチャ
+	ComPtr<ID3D12RootSignature> rootSignature;
 
 	void SetShader(KShader shader);
 	void SetRootParam(D3D12_ROOT_PARAMETER& rootParam,
@@ -32,7 +40,7 @@ private:
 		D3D12_SHADER_VISIBILITY shaderVisibility = D3D12_SHADER_VISIBILITY_ALL);
 	void SetRootSignature(UINT rootParamNum = 1);
 	void SetScreenRootSignature();
-	void Blending(D3D12_RENDER_TARGET_BLEND_DESC& blendDesc, const int mord = NONE);
+	void Blending(D3D12_RENDER_TARGET_BLEND_DESC& blendDesc, const int mord = ALPHA);
 
 public:
 	KGPlin();

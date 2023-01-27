@@ -153,7 +153,7 @@ PipelineSet Create3DObjectGpipeline()
 	rootSignatureDesc.NumStaticSamplers = 1;
 	// ルートシグネチャのシリアライズ
 	ComPtr<ID3DBlob> rootSigBlob;
-	ComPtr<ID3D10Blob> errBlob;
+	ComPtr<ID3DBlob> errBlob;
 	result = D3D12SerializeRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1_0,
 		&rootSigBlob, errBlob.ReleaseAndGetAddressOf());
 	assert(SUCCEEDED(result));
@@ -229,11 +229,11 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 #pragma region グラフィックスパイプライン設定
 	// 3Dオブジェクト用パイプライン生成
 	PipelineSet object3dPipelineSet = Create3DObjectGpipeline();
-	KShader shader;
-	shader.Init(L"ObjVS.hlsl", L"ObjPS.hlsl");
+	KShader objShader;
+	objShader.Init(L"ObjVS.hlsl", L"ObjPS.hlsl");
 
 	std::unique_ptr<KGPlin> pipeline;
-	//pipeline = std::make_unique<KGPlin>(shader);
+	pipeline = std::make_unique<KGPlin>(objShader);
 
 	// プレイヤー
 	Player player(cube.get());

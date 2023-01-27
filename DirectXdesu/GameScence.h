@@ -1,6 +1,5 @@
 #pragma once
 #include "KDirectXCommon.h"
-#include "KInput.h"
 #include "KObject3d.h"
 #include "ViewProjection.h"
 #include "KModel.h"
@@ -9,25 +8,41 @@
 #include "DebugText.h"
 #include "KTexture.h"
 #include "Sound.h"
+#include "KGPlin.h"
+#include "KShader.h"
 
 class GameScence
 {
 public:
-	GameScence(){};
-	~GameScence(){};
-	void LoadResouce();
+	GameScence()
+	{
+		LoadResources();
+		Init();
+	};
+	~GameScence()
+	{
+		sound->GetxAudio().Reset();
+		sound->SoundUnLoad(&soundData1);
+	};
+	void LoadResources();
 	void Init();
 	void Update();
 	void Draw();
 
 private:
+	// パイプライン
+	std::unique_ptr<KGPlin> objPipeline;
+
+	// シェーダー
+	KShader objShader;
+
 	// モデル
 	std::unique_ptr<KModel> triangle;
 	std::unique_ptr<KModel> cube;
 
 	// テクスチャ
-	std::unique_ptr<KTexture> mario;
-	std::unique_ptr<KTexture> haikei;
+	KTexture mario;
+	KTexture haikei;
 
 	// ビュープロジェクション
 	ViewProjection viewProjection;
@@ -48,6 +63,8 @@ private:
 
 	std::unique_ptr<Sound> sound;
 
+	SoundData soundData1;
+
 	SpriteInfo sprites[2];
 
 	std::unique_ptr<DebugText> debugtext;
@@ -59,6 +76,8 @@ private:
 	float hogeSpeed = 0;
 
 	float speedLevel = 1;
+
+	float speed = 0;
 
 	float hogeLifeTime = 0;
 

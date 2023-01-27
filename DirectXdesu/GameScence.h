@@ -52,7 +52,7 @@ private:
 
 	// スプライト
 	std::unique_ptr<Sprite> sprite;
-	SpriteCommon spriteCommon;
+	HogeSpriteCommon spriteCommon;
 
 	Vector3 center = { 0,0,1 };
 

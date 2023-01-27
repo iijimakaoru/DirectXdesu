@@ -54,7 +54,7 @@ struct SpriteInfo
 	bool isInvisible = false;
 };
 
-struct SpriteCommon
+struct HogeSpriteCommon
 {
 	// パイプラインセット
 	PipelineSet pipelineSet;
@@ -70,14 +70,14 @@ class Sprite
 {
 public:
 	void Init(KDirectXCommon* dxCommon);
-	void SpriteTransferVertexBuffer(const SpriteInfo& sprite, const SpriteCommon& spriteCommon);
+	void SpriteTransferVertexBuffer(const SpriteInfo& sprite, const HogeSpriteCommon& spriteCommon);
 	PipelineSet SpriteCreateGraphicsPipeline();
-	SpriteInfo SpriteCreate(UINT texNumber, const SpriteCommon& spriteCommon, Vector2 anchorpoint = { 0.5f,0.5f }, bool isFlipX = false, bool isFlipY = false);
-	void SpriteCommonBeginDraw(const SpriteCommon& spriteCommon);
-	void SpriteDraw(const SpriteInfo& sprite, const SpriteCommon& spriteCommon);
-	SpriteCommon SpriteCommonCreate();
-	void SpriteUpdate(SpriteInfo& sprite, const SpriteCommon& spriteCommon);
-	HRESULT SpriteCommonLoadTexture(SpriteCommon& spriteCommon, UINT texnumber, const wchar_t* filename);
+	SpriteInfo SpriteCreate(UINT texNumber, const HogeSpriteCommon& spriteCommon, Vector2 anchorpoint = { 0.5f,0.5f }, bool isFlipX = false, bool isFlipY = false);
+	void SpriteCommonBeginDraw(const HogeSpriteCommon& spriteCommon);
+	void SpriteDraw(const SpriteInfo& sprite, const HogeSpriteCommon& spriteCommon);
+	HogeSpriteCommon SpriteCommonCreate();
+	void SpriteUpdate(SpriteInfo& sprite, const HogeSpriteCommon& spriteCommon);
+	HRESULT SpriteCommonLoadTexture(HogeSpriteCommon& spriteCommon, UINT texnumber, const wchar_t* filename);
 
 private:
 	KDirectXCommon* dxCommon_ = nullptr;

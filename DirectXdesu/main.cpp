@@ -67,10 +67,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		KDirectXCommon::GetInstance()->PostDraw();
 	}
 
-#pragma region Šî”Õ‚ÌI—¹
-	/*sound->GetxAudio().Reset();
-	sound->SoundUnLoad(&soundData1);*/
-#pragma endregion
+	gameScene.release();
 
 	return 0;
 }

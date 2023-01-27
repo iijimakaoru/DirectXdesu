@@ -6,7 +6,7 @@ void Sprite::Init(KDirectXCommon* dxCommon)
 	dxCommon_ = dxCommon;
 }
 
-void Sprite::SpriteTransferVertexBuffer(const SpriteInfo& sprite, const SpriteCommon& spriteCommon)
+void Sprite::SpriteTransferVertexBuffer(const SpriteInfo& sprite, const HogeSpriteCommon& spriteCommon)
 {
 	HRESULT result = S_FALSE;
 
@@ -207,7 +207,7 @@ PipelineSet Sprite::SpriteCreateGraphicsPipeline()
 	return pipelineSet;
 }
 
-SpriteInfo Sprite::SpriteCreate(UINT texNumber, const SpriteCommon& spriteCommon, Vector2 anchorpoint, bool isFlipX, bool isFlipY)
+SpriteInfo Sprite::SpriteCreate(UINT texNumber, const HogeSpriteCommon& spriteCommon, Vector2 anchorpoint, bool isFlipX, bool isFlipY)
 {
 	HRESULT result = S_FALSE;
 
@@ -302,7 +302,7 @@ SpriteInfo Sprite::SpriteCreate(UINT texNumber, const SpriteCommon& spriteCommon
 	return sprite;
 }
 
-void Sprite::SpriteCommonBeginDraw(const SpriteCommon& spriteCommon)
+void Sprite::SpriteCommonBeginDraw(const HogeSpriteCommon& spriteCommon)
 {
 	// パイプラインステートの設定
 	dxCommon_->GetCmdlist()->SetPipelineState(spriteCommon.pipelineSet.pipelineState.Get());
@@ -316,7 +316,7 @@ void Sprite::SpriteCommonBeginDraw(const SpriteCommon& spriteCommon)
 }
 
 void Sprite::SpriteDraw(const SpriteInfo& sprite,
-	const SpriteCommon& spriteCommon)
+	const HogeSpriteCommon& spriteCommon)
 {
 	// 非表示フラグ
 	if (sprite.isInvisible)
@@ -338,11 +338,11 @@ void Sprite::SpriteDraw(const SpriteInfo& sprite,
 	dxCommon_->GetCmdlist()->DrawInstanced(4, 1, 0, 0);
 }
 
-SpriteCommon Sprite::SpriteCommonCreate()
+HogeSpriteCommon Sprite::SpriteCommonCreate()
 {
 	HRESULT result = S_FALSE;
 
-	SpriteCommon spriteCommon{};
+	HogeSpriteCommon spriteCommon{};
 
 	D3D12_DESCRIPTOR_HEAP_DESC descHeapDesc = {};
 	descHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
@@ -359,7 +359,7 @@ SpriteCommon Sprite::SpriteCommonCreate()
 	return spriteCommon;
 }
 
-void Sprite::SpriteUpdate(SpriteInfo& sprite, const SpriteCommon& spriteCommon)
+void Sprite::SpriteUpdate(SpriteInfo& sprite, const HogeSpriteCommon& spriteCommon)
 {
 	// ワールド行列
 	sprite.matWorld = XMMatrixIdentity();
@@ -375,7 +375,7 @@ void Sprite::SpriteUpdate(SpriteInfo& sprite, const SpriteCommon& spriteCommon)
 	sprite.constBuff->Unmap(0, nullptr);
 }
 
-HRESULT Sprite::SpriteCommonLoadTexture(SpriteCommon& spriteCommon, UINT texnumber, const wchar_t* filename)
+HRESULT Sprite::SpriteCommonLoadTexture(HogeSpriteCommon& spriteCommon, UINT texnumber, const wchar_t* filename)
 {
 	assert(texnumber <= spriteSRVCount - 1);
 

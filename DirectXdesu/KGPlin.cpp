@@ -276,8 +276,7 @@ KGPlin::KGPlin(D3D12_INPUT_ELEMENT_DESC* inputLayout, UINT inputLayoutSize, KSha
 	piplineDesc.pRootSignature = rootSignature.Get();
 	result = KDirectXCommon::GetInstance()->GetDev()->CreateGraphicsPipelineState(
 		&piplineDesc,
-		IID_PPV_ARGS(pipelineState.ReleaseAndGetAddressOf())
-	);
+		IID_PPV_ARGS(pipelineState.ReleaseAndGetAddressOf()));
 }
 
 KGPlin::KGPlin(KShader shader, D3D12_INPUT_ELEMENT_DESC* inputLayout, UINT inputLayoutSize, D3D12_PRIMITIVE_TOPOLOGY_TYPE topologyType, D3D12_FILL_MODE fillmord)

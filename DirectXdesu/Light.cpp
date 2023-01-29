@@ -27,6 +27,57 @@ void Light::Initialize()
 		&cbResourceDesc, // 
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
-		IID_PPV_ARGS(&constBuff)
-	);
+		IID_PPV_ARGS(&constBuff));
+
+	// 定数バッファへデータ転送
+	TransferConstBuffer();
+}
+
+void Light::TransferConstBuffer()
+{
+	HRESULT result;
+	// 定数バッファデータ転送
+	ConstBufferData* constMap = nullptr;
+	result = constBuff->Map(0, nullptr, (void**)&constMap);
+	if (SUCCEEDED(result))
+	{
+		constMap->lightv = -lightdir;
+		constMap->lightcolor = lightcolor;
+		constBuff->Unmap(0, nullptr);
+	}
+}
+
+void Light::SetLightDir(const XMVECTOR& lightDir)
+{
+	// 正規化してセット
+	lightdir = XMVector3Normalize(lightDir);
+	dirty = true;
+}
+
+void Light::SetLightColor(const XMFLOAT3& lightColor)
+{
+	lightcolor = lightColor;
+	dirty = true;
+}
+
+void Light::Update()
+{
+	if (dirty)
+	{
+		TransferConstBuffer();
+		dirty = false;
+	}
+}
+
+void Light::Draw(UINT rootParameterIndex)
+{
+	// 定数バッファビューをセット
+	KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootConstantBufferView(rootParameterIndex, constBuff->GetGPUVirtualAddress());
+}
+
+Light* Light::Create()
+{
+	Light* instance = new Light();
+	instance->Initialize();
+	return instance;
 }

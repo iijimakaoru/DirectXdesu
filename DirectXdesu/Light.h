@@ -21,6 +21,12 @@ public:
 	};
 
 	void Initialize();
+	void TransferConstBuffer();
+	void SetLightDir(const XMVECTOR& lightDir);
+	void SetLightColor(const XMFLOAT3& lightColor);
+	void Update();
+	void Draw(UINT rootParameterIndex);
+	static Light* Create();
 
 private:
 	ComPtr<ID3D12Resource> constBuff;

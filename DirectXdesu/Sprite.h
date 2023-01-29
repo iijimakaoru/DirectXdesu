@@ -9,6 +9,7 @@
 #include "KShader.h"
 #include <memory>
 #include <d3dx12.h>
+#include "SpriteCommon.h"
 
 const int spriteSRVCount = 512;
 
@@ -66,7 +67,7 @@ struct HogeSpriteCommon
 	ComPtr<ID3D12Resource> texBuff[spriteSRVCount];
 };
 
-class Sprite
+class hogeSprite
 {
 public:
 	void Init(KDirectXCommon* dxCommon);
@@ -83,3 +84,43 @@ private:
 	KDirectXCommon* dxCommon_ = nullptr;
 };
 
+class Sprite
+{
+private:
+	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
+
+	SpriteCommon* common = nullptr;
+
+	Matrix matWorld;
+	Matrix matRot;
+	Matrix matTrans;
+
+	Vector2 trans;
+	Vector4 color;
+	Vector2 size = { 100.0f,100.0f };
+	Vector2 anchorpoint;
+
+	Vector2 texLeftTop;
+	Vector2 texSize;
+
+	bool isFlipX = false;
+	bool isFlipY = false;
+	bool isInvisible = false;
+
+	VertexPosUV vertices[4];
+	UINT vertexSize;
+
+	enum VertexNumber
+	{
+		LB,
+		LT,
+		RB,
+		RT,
+	};
+	struct  ConstBufferDataTransform
+	{
+		Matrix mat;
+	};
+	ComPtr<ID3D12Resource> transform;
+	ConstBufferDataTransform* constMapTransform = nullptr;
+};

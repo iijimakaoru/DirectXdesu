@@ -59,7 +59,7 @@ void GameScence::Init()
 	hogeCooltime = 0;
 
 #pragma region スプライト
-	sprite = std::make_unique<Sprite>();
+	sprite = std::make_unique<hogeSprite>();
 	sprite->Init(KDirectXCommon::GetInstance());
 
 	spriteCommon = sprite->SpriteCommonCreate();

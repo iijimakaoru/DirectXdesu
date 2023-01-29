@@ -1,12 +1,12 @@
 #include "Sprite.h"
 #include "KShader.h"
 
-void Sprite::Init(KDirectXCommon* dxCommon)
+void hogeSprite::Init(KDirectXCommon* dxCommon)
 {
 	dxCommon_ = dxCommon;
 }
 
-void Sprite::SpriteTransferVertexBuffer(const SpriteInfo& sprite, const HogeSpriteCommon& spriteCommon)
+void hogeSprite::SpriteTransferVertexBuffer(const SpriteInfo& sprite, const HogeSpriteCommon& spriteCommon)
 {
 	HRESULT result = S_FALSE;
 
@@ -69,7 +69,7 @@ void Sprite::SpriteTransferVertexBuffer(const SpriteInfo& sprite, const HogeSpri
 	sprite.vertBuff->Unmap(0, nullptr);
 }
 
-PipelineSet Sprite::SpriteCreateGraphicsPipeline()
+PipelineSet hogeSprite::SpriteCreateGraphicsPipeline()
 {
 	HRESULT result;
 #pragma region シェーダー読み込みとコンパイル
@@ -207,7 +207,7 @@ PipelineSet Sprite::SpriteCreateGraphicsPipeline()
 	return pipelineSet;
 }
 
-SpriteInfo Sprite::SpriteCreate(UINT texNumber, const HogeSpriteCommon& spriteCommon, Vector2 anchorpoint, bool isFlipX, bool isFlipY)
+SpriteInfo hogeSprite::SpriteCreate(UINT texNumber, const HogeSpriteCommon& spriteCommon, Vector2 anchorpoint, bool isFlipX, bool isFlipY)
 {
 	HRESULT result = S_FALSE;
 
@@ -302,7 +302,7 @@ SpriteInfo Sprite::SpriteCreate(UINT texNumber, const HogeSpriteCommon& spriteCo
 	return sprite;
 }
 
-void Sprite::SpriteCommonBeginDraw(const HogeSpriteCommon& spriteCommon)
+void hogeSprite::SpriteCommonBeginDraw(const HogeSpriteCommon& spriteCommon)
 {
 	// パイプラインステートの設定
 	dxCommon_->GetCmdlist()->SetPipelineState(spriteCommon.pipelineSet.pipelineState.Get());
@@ -315,7 +315,7 @@ void Sprite::SpriteCommonBeginDraw(const HogeSpriteCommon& spriteCommon)
 	dxCommon_->GetCmdlist()->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 }
 
-void Sprite::SpriteDraw(const SpriteInfo& sprite,
+void hogeSprite::SpriteDraw(const SpriteInfo& sprite,
 	const HogeSpriteCommon& spriteCommon)
 {
 	// 非表示フラグ
@@ -338,7 +338,7 @@ void Sprite::SpriteDraw(const SpriteInfo& sprite,
 	dxCommon_->GetCmdlist()->DrawInstanced(4, 1, 0, 0);
 }
 
-HogeSpriteCommon Sprite::SpriteCommonCreate()
+HogeSpriteCommon hogeSprite::SpriteCommonCreate()
 {
 	HRESULT result = S_FALSE;
 
@@ -359,7 +359,7 @@ HogeSpriteCommon Sprite::SpriteCommonCreate()
 	return spriteCommon;
 }
 
-void Sprite::SpriteUpdate(SpriteInfo& sprite, const HogeSpriteCommon& spriteCommon)
+void hogeSprite::SpriteUpdate(SpriteInfo& sprite, const HogeSpriteCommon& spriteCommon)
 {
 	// ワールド行列
 	sprite.matWorld = XMMatrixIdentity();
@@ -375,7 +375,7 @@ void Sprite::SpriteUpdate(SpriteInfo& sprite, const HogeSpriteCommon& spriteComm
 	sprite.constBuff->Unmap(0, nullptr);
 }
 
-HRESULT Sprite::SpriteCommonLoadTexture(HogeSpriteCommon& spriteCommon, UINT texnumber, const wchar_t* filename)
+HRESULT hogeSprite::SpriteCommonLoadTexture(HogeSpriteCommon& spriteCommon, UINT texnumber, const wchar_t* filename)
 {
 	assert(texnumber <= spriteSRVCount - 1);
 

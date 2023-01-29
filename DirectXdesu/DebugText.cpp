@@ -1,6 +1,6 @@
 #include "DebugText.h"
 
-void DebugText::Init(Sprite* sprite ,UINT texnumber, const HogeSpriteCommon& spriteCommon)
+void DebugText::Init(hogeSprite* sprite ,UINT texnumber, const HogeSpriteCommon& spriteCommon)
 {
 	sprite_ = sprite;
 

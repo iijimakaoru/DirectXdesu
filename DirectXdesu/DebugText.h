@@ -19,13 +19,13 @@ public:
 	static const int fontHeight = 18;
 	static const int fontLineCount = 14;
 	// ÉÅÉìÉoä÷êîÇÃêÈåæ
-	void Init(Sprite* sprite ,UINT texnumber, const HogeSpriteCommon& spriteCommon);
+	void Init(hogeSprite* sprite ,UINT texnumber, const HogeSpriteCommon& spriteCommon);
 	void Print(const HogeSpriteCommon& spriteCommon, const std::string& text,
 		Vector2 pos, float scale = 1.0f);
 	void SpriteTransferVertexBuffer(const SpriteInfo& sprite, const HogeSpriteCommon& spriteCommon);
 	void DrawAll(const HogeSpriteCommon& spriteCommon);
 private:
-	Sprite* sprite_ = nullptr;
+	hogeSprite* sprite_ = nullptr;
 	SpriteInfo sprites[maxCharCount];
 	int spriteIndex = 0;
 };

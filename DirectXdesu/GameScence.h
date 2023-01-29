@@ -51,7 +51,7 @@ private:
 	std::unique_ptr<KObject3d> obj;
 
 	// スプライト
-	std::unique_ptr<Sprite> sprite;
+	std::unique_ptr<hogeSprite> sprite;
 	HogeSpriteCommon spriteCommon;
 
 	Vector3 center = { 0,0,1 };

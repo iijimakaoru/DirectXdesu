@@ -172,6 +172,7 @@
     <ClCompile Include="Quaternion.cpp" />
     <ClCompile Include="Sound.cpp" />
     <ClCompile Include="Sprite.cpp" />
+    <ClCompile Include="SpriteCommon.cpp" />
     <ClCompile Include="Stage.cpp" />
     <ClCompile Include="Vector2.cpp" />
     <ClCompile Include="Vector3.cpp" />
@@ -209,6 +210,7 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="Sound.h" />
     <ClInclude Include="Sprite.h" />
+    <ClInclude Include="SpriteCommon.h" />
     <ClInclude Include="Stage.h" />
     <ClInclude Include="Vector2.h" />
     <ClInclude Include="Vector3.h" />

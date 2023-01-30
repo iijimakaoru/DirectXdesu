@@ -76,7 +76,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)DirectXTex;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <IncludePath>$(SolutionDir)example_win32_directx12;$(SolutionDir)DirectXTex;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -84,7 +84,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)DirectXTex;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <IncludePath>$(SolutionDir)example_win32_directx12;$(SolutionDir)DirectXTex;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -146,6 +146,7 @@
     <ClCompile Include="Blend.cpp" />
     <ClCompile Include="DebugText.cpp" />
     <ClCompile Include="GameScence.cpp" />
+    <ClCompile Include="ImGuiManager.cpp" />
     <ClCompile Include="KGPlin.cpp" />
     <ClCompile Include="KDepth.cpp" />
     <ClCompile Include="KDirectXCommon.cpp" />
@@ -175,6 +176,7 @@
     <ClInclude Include="ConstBuffer.h" />
     <ClInclude Include="DebugText.h" />
     <ClInclude Include="GameScence.h" />
+    <ClInclude Include="ImGuiManager.h" />
     <ClInclude Include="KGPlin.h" />
     <ClInclude Include="KDepth.h" />
     <ClInclude Include="KDirectXCommon.h" />

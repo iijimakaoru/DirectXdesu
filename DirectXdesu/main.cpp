@@ -326,6 +326,17 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	lightGroup = LightGroup::Create();
 	KObject3d::SetLightGroup(lightGroup);
 
+	// imgui
+	float ambientColor0[3] = { 1,1,1 };
+	float lightDir0[3] = { 0,0,1 };
+	float lightColor0[3] = { 1,0,0 };
+
+	float lightDir1[3] = { 0,1,0 };
+	float lightColor1[3] = { 0,1,0 };
+
+	float lightDir2[3] = { 1,0,0 };
+	float lightColor[3] = { 0,0,1 };
+
 	// ウィンドウ表示
 	// ゲームループ
 	while (true)

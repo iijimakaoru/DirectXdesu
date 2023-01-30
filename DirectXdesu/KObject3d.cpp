@@ -2,7 +2,8 @@
 #include "KDirectXCommon.h"
 #include "ConstBuffer.h"
 
-DirectionLight* KObject3d::light = nullptr;
+//DirectionLight* KObject3d::light = nullptr;
+LightGroup* KObject3d::lightGroup = nullptr;
 
 KObject3d::KObject3d() {
 	Initialize();
@@ -111,8 +112,11 @@ void KObject3d::Draw()
 	KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootConstantBufferView(0, constBuffB0->GetGPUVirtualAddress());
 	KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootConstantBufferView(2, constBuffB1->GetGPUVirtualAddress());
 
-	// ライトの描画
-	light->Draw(3);
+	//// ライトの描画
+	//light->Draw(3);
+
+	// ライトグループの描画
+	lightGroup->Draw(3);
 	
 	// SRV
 	KDirectXCommon::GetInstance()->GetCmdlist()->SetDescriptorHeaps(1, &model_->texture.srvHeap);
@@ -146,7 +150,10 @@ void KObject3d::Draw(KTexture* texture)
 	KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootConstantBufferView(2, constBuffB1->GetGPUVirtualAddress());
 
 	// ライトの描画
-	light->Draw(3);
+	//light->Draw(3);
+
+	// ライトグループの描画
+	lightGroup->Draw(3);
 
 	// SRV
 	KDirectXCommon::GetInstance()->GetCmdlist()->SetDescriptorHeaps(1, &texture->srvHeap);

@@ -8,6 +8,7 @@
 //#include <memory>
 #include "DirectionLight.h"
 #include "ViewProjection.h"
+#include "LightGroup.h"
 
 using namespace DirectX;
 
@@ -45,9 +46,14 @@ public:
 	void Draw();
 	void Draw(KTexture* texture);
 
-	static void SetLight(DirectionLight* light)
+	/*static void SetLight(DirectionLight* light)
 	{
 		KObject3d::light = light;
+	}*/
+
+	static void SetLightGroup(LightGroup* lightGroup)
+	{
+		KObject3d::lightGroup = lightGroup;
 	}
 
 	static void StaticInitialize();
@@ -70,6 +76,7 @@ public:
 	// ƒ}ƒeƒŠƒAƒ‹
 	KMaterial* material = nullptr;
 
-	static DirectionLight* light;
+	//static DirectionLight* light;
+	static LightGroup* lightGroup;
 };
 

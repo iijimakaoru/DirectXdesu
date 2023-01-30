@@ -23,7 +23,8 @@
 
 #include"Player.h"
 
-#include "DirectionLight.h"
+//#include "DirectionLight.h"
+#include "LightGroup.h"
 #include <sstream>
 #include <iomanip>
 
@@ -317,10 +318,13 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	bool isTexture = false;
 
 	// ライト
-	DirectionLight* light = nullptr;
+	/*DirectionLight* light = nullptr;
 	light = DirectionLight::Create();
-	light->SetLightColor({ 1,1,1 });
-	KObject3d::SetLight(light);
+	light->SetLightColor({ 1,1,1 });*/
+	//KObject3d::SetLight(light);
+	LightGroup* lightGroup = nullptr;
+	lightGroup = LightGroup::Create();
+	KObject3d::SetLightGroup(lightGroup);
 
 	// ウィンドウ表示
 	// ゲームループ
@@ -475,7 +479,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 			lightDir.m128_f32[0] -= 1.0f;
 		}
 
-		light->SetLightDir(lightDir);
+		//light->SetLightDir(lightDir);
 
 		std::ostringstream debugstr;
 		debugstr << "lightDirFactor("
@@ -487,7 +491,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		debugstr.str("");
 		debugstr.clear();
 
-		light->Update();
+		//light->Update();
+		lightGroup->Update();
 
 		// ビューのアップデート
 		viewProjection.Update(KWinApp::window_width, KWinApp::window_height);
@@ -554,7 +559,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	}
 
 	delete sprite;
-	delete light;
+	//delete light;
+	delete lightGroup;
 
 #pragma region 基盤の終了
 	sound->GetxAudio().Reset();

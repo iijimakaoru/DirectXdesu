@@ -154,7 +154,8 @@
     <ClCompile Include="KModel.cpp" />
     <ClCompile Include="KShader.cpp" />
     <ClCompile Include="KVertex.cpp" />
-    <ClCompile Include="Light.cpp" />
+    <ClCompile Include="DirectionLight.cpp" />
+    <ClCompile Include="LightGroup.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="KWinApp.cpp" />
     <ClCompile Include="KObject3d.cpp" />
@@ -185,7 +186,8 @@
     <ClInclude Include="KWinApp.h" />
     <ClInclude Include="KObject3d.h" />
     <ClInclude Include="KTexture.h" />
-    <ClInclude Include="Light.h" />
+    <ClInclude Include="DirectionLight.h" />
+    <ClInclude Include="LightGroup.h" />
     <ClInclude Include="Matrix4.h" />
     <ClInclude Include="PipelineSet.h" />
     <ClInclude Include="Player.h" />

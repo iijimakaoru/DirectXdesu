@@ -6,7 +6,7 @@
 #include "KTexture.h"
 #include "KMaterial.h"
 //#include <memory>
-#include "Light.h"
+#include "DirectionLight.h"
 #include "ViewProjection.h"
 
 using namespace DirectX;
@@ -45,7 +45,7 @@ public:
 	void Draw();
 	void Draw(KTexture* texture);
 
-	static void SetLight(Light* light)
+	static void SetLight(DirectionLight* light)
 	{
 		KObject3d::light = light;
 	}
@@ -70,6 +70,6 @@ public:
 	// ƒ}ƒeƒŠƒAƒ‹
 	KMaterial* material = nullptr;
 
-	static Light* light;
+	static DirectionLight* light;
 };
 

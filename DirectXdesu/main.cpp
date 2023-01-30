@@ -23,7 +23,7 @@
 
 #include"Player.h"
 
-#include "Light.h"
+#include "DirectionLight.h"
 #include <sstream>
 #include <iomanip>
 
@@ -317,8 +317,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	bool isTexture = false;
 
 	// ƒ‰ƒCƒg
-	Light* light = nullptr;
-	light = Light::Create();
+	DirectionLight* light = nullptr;
+	light = DirectionLight::Create();
 	light->SetLightColor({ 1,1,1 });
 	KObject3d::SetLight(light);
 

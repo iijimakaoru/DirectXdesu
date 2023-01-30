@@ -2,7 +2,7 @@
 #include "KDirectXCommon.h"
 #include "ConstBuffer.h"
 
-Light* KObject3d::light = nullptr;
+DirectionLight* KObject3d::light = nullptr;
 
 KObject3d::KObject3d() {
 	Initialize();

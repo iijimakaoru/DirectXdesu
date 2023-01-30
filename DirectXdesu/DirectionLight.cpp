@@ -1,7 +1,7 @@
-#include "Light.h"
+#include "DirectionLight.h"
 #include "KDirectXCommon.h"
 
-void Light::Initialize()
+void DirectionLight::Initialize()
 {
 	HRESULT result;
 
@@ -33,7 +33,7 @@ void Light::Initialize()
 	TransferConstBuffer();
 }
 
-void Light::TransferConstBuffer()
+void DirectionLight::TransferConstBuffer()
 {
 	HRESULT result;
 	// 定数バッファデータ転送
@@ -47,20 +47,20 @@ void Light::TransferConstBuffer()
 	}
 }
 
-void Light::SetLightDir(const XMVECTOR& lightDir)
+void DirectionLight::SetLightDir(const XMVECTOR& lightDir)
 {
 	// 正規化してセット
 	lightdir = XMVector3Normalize(lightDir);
 	dirty = true;
 }
 
-void Light::SetLightColor(const XMFLOAT3& lightColor)
+void DirectionLight::SetLightColor(const XMFLOAT3& lightColor)
 {
 	lightcolor = lightColor;
 	dirty = true;
 }
 
-void Light::Update()
+void DirectionLight::Update()
 {
 	if (dirty)
 	{
@@ -69,15 +69,15 @@ void Light::Update()
 	}
 }
 
-void Light::Draw(UINT rootParameterIndex)
+void DirectionLight::Draw(UINT rootParameterIndex)
 {
 	// 定数バッファビューをセット
 	KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootConstantBufferView(rootParameterIndex, constBuff->GetGPUVirtualAddress());
 }
 
-Light* Light::Create()
+DirectionLight* DirectionLight::Create()
 {
-	Light* instance = new Light();
+	DirectionLight* instance = new DirectionLight();
 	instance->Initialize();
 	return instance;
 }

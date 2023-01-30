@@ -77,6 +77,15 @@ void GameScence::Init()
 
 void GameScence::Update()
 {
+	char buf[255] = "unti";
+	ImGui::Text("Hello, world %d", 123);
+	if (ImGui::Button("Save"))
+	{
+
+	}
+	ImGui::InputText("string", buf, IM_ARRAYSIZE(buf));
+	ImGui::SliderFloat("float", &hogehoge, 5.0f, 20.0f);
+
 	float piAngle = PI * 2;
 
 	if (KInput::GetInstance()->IsTriger(DIK_SPACE))

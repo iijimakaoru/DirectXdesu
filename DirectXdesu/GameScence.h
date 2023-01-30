@@ -10,6 +10,7 @@
 #include "Sound.h"
 #include "KGPlin.h"
 #include "KShader.h"
+#include <imgui.h>
 
 class GameScence
 {
@@ -86,5 +87,7 @@ private:
 	float hogeRot = 0;
 
 	float hogeCooltime = 0;
+
+	float hogehoge = 0;
 };
 

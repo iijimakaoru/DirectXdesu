@@ -31,6 +31,7 @@ public:
 	// デバイス取得
 	ID3D12Device* GetDev() const { return dev.Get(); }
 	ID3D12GraphicsCommandList* GetCmdlist() { return cmdList.Get(); }
+	int GetBackBufferSize() { return backBuffers.size(); }
 
 	float fps = 0;
 

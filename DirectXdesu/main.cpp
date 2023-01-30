@@ -10,6 +10,7 @@
 #include "Sound.h"
 #include <d3dx12.h>
 #include "GameScence.h"
+#include "ImguiManager.h"
 
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow)
 {
@@ -22,6 +23,9 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 	std::unique_ptr<GameScence> gameScene = std::make_unique<GameScence>();
 
+	ImguiManager imguiMane;
+	imguiMane.Init();
+
 	// ウィンドウ表示
 	// ゲームループ
 	while (true)
@@ -32,14 +36,20 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		}
 
 		// 更新
+		imguiMane.Begin();
+
 		KInput::Update();
 
 		gameScene->Update();
+
+		imguiMane.End();
 
 		// 描画開始
 		KDirectXCommon::GetInstance()->PreDraw();
 
 		gameScene->Draw();
+
+		imguiMane.Draw();
 
 		KDirectXCommon::GetInstance()->PostDraw();
 	}

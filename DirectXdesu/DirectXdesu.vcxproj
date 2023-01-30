@@ -154,6 +154,7 @@
     <ClCompile Include="DebugText.cpp" />
     <ClCompile Include="Ease.cpp" />
     <ClCompile Include="GameScence.cpp" />
+    <ClCompile Include="ImguiManager.cpp" />
     <ClCompile Include="KGPlin.cpp" />
     <ClCompile Include="KDepth.cpp" />
     <ClCompile Include="KDirectXCommon.cpp" />
@@ -191,6 +192,7 @@
     <ClInclude Include="DebugText.h" />
     <ClInclude Include="Ease.h" />
     <ClInclude Include="GameScence.h" />
+    <ClInclude Include="ImguiManager.h" />
     <ClInclude Include="KGPlin.h" />
     <ClInclude Include="KDepth.h" />
     <ClInclude Include="KDirectXCommon.h" />

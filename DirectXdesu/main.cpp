@@ -328,6 +328,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 	// imgui
 	float ambientColor0[3] = { 1,1,1 };
+
 	float lightDir0[3] = { 0,0,1 };
 	float lightColor0[3] = { 1,0,0 };
 
@@ -335,7 +336,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	float lightColor1[3] = { 0,1,0 };
 
 	float lightDir2[3] = { 1,0,0 };
-	float lightColor[3] = { 0,0,1 };
+	float lightColor2[3] = { 0,0,1 };
 
 	// ウィンドウ表示
 	// ゲームループ
@@ -503,6 +504,77 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		debugstr.clear();
 
 		//light->Update();
+
+
+		if (input->IsPush(DIK_Z))
+		{
+			lightDir0[0] += 0.1f;
+			lightDir0[1] += 0.1f;
+			lightDir0[2] += 0.1f;
+
+			lightDir1[0] += 0.1f;
+			lightDir1[1] += 0.1f;
+			lightDir1[2] += 0.1f;
+
+			lightDir2[0] += 0.1f;
+			lightDir2[1] += 0.1f;
+			lightDir2[2] += 0.1f;
+		}
+		if (input->IsPush(DIK_X))
+		{
+			lightDir0[0] -= 0.1f;
+			lightDir0[1] -= 0.1f;
+			lightDir0[2] -= 0.1f;
+
+			lightDir1[0] -= 0.1f;
+			lightDir1[1] -= 0.1f;
+			lightDir1[2] -= 0.1f;
+
+			lightDir2[0] -= 0.1f;
+			lightDir2[1] -= 0.1f;
+			lightDir2[2] -= 0.1f;
+		}
+
+		if (input->IsPush(DIK_M))
+		{
+			lightColor0[0] += 0.1f;
+			lightColor0[1] += 0.1f;
+			lightColor0[2] += 0.1f;
+
+			lightColor1[0] += 0.1f;
+			lightColor1[1] += 0.1f;
+			lightColor1[2] += 0.1f;
+
+			lightColor2[0] += 0.1f;
+			lightColor2[1] += 0.1f;
+			lightColor2[2] += 0.1f;
+		}
+		if (input->IsPush(DIK_N))
+		{
+			lightColor0[0] -= 0.1f;
+			lightColor0[1] -= 0.1f;
+			lightColor0[2] -= 0.1f;
+
+			lightColor1[0] -= 0.1f;
+			lightColor1[1] -= 0.1f;
+			lightColor1[2] -= 0.1f;
+
+			lightColor2[0] -= 0.1f;
+			lightColor2[1] -= 0.1f;
+			lightColor2[2] -= 0.1f;
+		}
+
+		lightGroup->SetAmbientColor(XMFLOAT3(ambientColor0));
+
+		lightGroup->SetDirLightDir(0, XMVECTOR({ lightDir0[0],lightDir0[1],lightDir0[2], 0 }));
+		lightGroup->SetDirLightColor(0, XMFLOAT3(lightColor0));
+
+		lightGroup->SetDirLightDir(1, XMVECTOR({ lightDir1[0],lightDir1[1],lightDir1[2], 0 }));
+		lightGroup->SetDirLightColor(1, XMFLOAT3(lightColor1));
+
+		lightGroup->SetDirLightDir(2, XMVECTOR({ lightDir2[0],lightDir2[1],lightDir2[2], 0 }));
+		lightGroup->SetDirLightColor(2, XMFLOAT3(lightColor2));
+
 		lightGroup->Update();
 
 		// ビューのアップデート

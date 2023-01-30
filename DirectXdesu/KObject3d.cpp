@@ -2,6 +2,8 @@
 #include "KDirectXCommon.h"
 #include "ConstBuffer.h"
 
+Light* KObject3d::light = nullptr;
+
 KObject3d::KObject3d() {
 	Initialize();
 }
@@ -61,7 +63,7 @@ void KObject3d::LoadModel(KModel* model)
 	model_ = model;
 }
 
-void KObject3d::Update(XMMATRIX& matView, XMMATRIX& matProjection) {
+void KObject3d::Update(ViewProjection& viewProjection) {
 	// マトリックス
 	XMMATRIX matScale, matRot, matTrans;
 
@@ -80,6 +82,8 @@ void KObject3d::Update(XMMATRIX& matView, XMMATRIX& matProjection) {
 
 	material->Update();
 
+	const XMFLOAT3& cameraPos = viewProjection.eye;
+
 	// 定数バッファのマッピング
 	// B1
 	ConstBufferDataB1* constMap1 = nullptr;
@@ -93,7 +97,10 @@ void KObject3d::Update(XMMATRIX& matView, XMMATRIX& matProjection) {
 	// B0
 	ConstBufferDataB0* constMap0 = nullptr;
 	result = constBuffB0->Map(0, nullptr, (void**)&constMap0);
-	constMap0->mat = transform.matWorld * matView * matProjection;
+	//constMap0->mat = transform.matWorld * matView * matProjection;
+	constMap0->viewproj = viewProjection.matView * viewProjection.matProjection;
+	constMap0->world = transform.matWorld;
+	constMap0->cameraPos = cameraPos;
 	constBuffB0->Unmap(0, nullptr);
 	assert(SUCCEEDED(result));
 }
@@ -103,6 +110,9 @@ void KObject3d::Draw()
 	// 定数バッファビューをセット
 	KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootConstantBufferView(0, constBuffB0->GetGPUVirtualAddress());
 	KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootConstantBufferView(2, constBuffB1->GetGPUVirtualAddress());
+
+	// ライトの描画
+	light->Draw(3);
 	
 	// SRV
 	KDirectXCommon::GetInstance()->GetCmdlist()->SetDescriptorHeaps(1, &model_->texture.srvHeap);
@@ -134,6 +144,9 @@ void KObject3d::Draw(KTexture* texture)
 	// 定数バッファビューをセット
 	KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootConstantBufferView(0, constBuffB0->GetGPUVirtualAddress());
 	KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootConstantBufferView(2, constBuffB1->GetGPUVirtualAddress());
+
+	// ライトの描画
+	light->Draw(3);
 
 	// SRV
 	KDirectXCommon::GetInstance()->GetCmdlist()->SetDescriptorHeaps(1, &texture->srvHeap);

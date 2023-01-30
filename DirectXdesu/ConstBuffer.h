@@ -13,7 +13,10 @@ struct ConstBufferData
 
 struct ConstBufferDataB0
 {
-	XMMATRIX mat;
+	//XMMATRIX mat;
+	XMMATRIX viewproj;
+	XMMATRIX world;
+	XMFLOAT3 cameraPos;
 };
 
 struct ConstBufferDataB1

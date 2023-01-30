@@ -6,6 +6,8 @@
 #include "KTexture.h"
 #include "KMaterial.h"
 //#include <memory>
+#include "Light.h"
+#include "ViewProjection.h"
 
 using namespace DirectX;
 
@@ -39,9 +41,14 @@ public:
 	KObject3d();
 	void Initialize();
 	void LoadModel(KModel* model);
-	void Update(XMMATRIX& matView, XMMATRIX& matProjection);
+	void Update(ViewProjection& viewProjection);
 	void Draw();
 	void Draw(KTexture* texture);
+
+	static void SetLight(Light* light)
+	{
+		KObject3d::light = light;
+	}
 
 	static void StaticInitialize();
 	static KObject3d Create();
@@ -62,5 +69,7 @@ public:
 
 	// ƒ}ƒeƒŠƒAƒ‹
 	KMaterial* material = nullptr;
+
+	static Light* light;
 };
 

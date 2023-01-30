@@ -23,6 +23,10 @@
 
 #include"Player.h"
 
+#include "Light.h"
+#include <sstream>
+#include <iomanip>
+
 PipelineSet Create3DObjectGpipeline()
 {
 	HRESULT result;
@@ -102,7 +106,23 @@ PipelineSet Create3DObjectGpipeline()
 	descriptorRange.OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
 
 	// ルートパラメータの設定
-	D3D12_ROOT_PARAMETER rootParam[3] = {};
+	//D3D12_ROOT_PARAMETER rootParam[3] = {};
+	//// 定数バッファ0番
+	//rootParam[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+	//rootParam[0].Descriptor.ShaderRegister = 0;
+	//rootParam[0].Descriptor.RegisterSpace = 0;
+	//rootParam[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
+	//// テクスチャレジスタ0番
+	//rootParam[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+	//rootParam[1].DescriptorTable.pDescriptorRanges = &descriptorRange;
+	//rootParam[1].DescriptorTable.NumDescriptorRanges = 1;
+	//rootParam[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
+	//// 定数バッファ1番
+	//rootParam[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+	//rootParam[2].Descriptor.ShaderRegister = 1;
+	//rootParam[2].Descriptor.RegisterSpace = 0;
+	//rootParam[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
+	D3D12_ROOT_PARAMETER rootParam[4] = {};
 	// 定数バッファ0番
 	rootParam[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 	rootParam[0].Descriptor.ShaderRegister = 0;
@@ -118,6 +138,11 @@ PipelineSet Create3DObjectGpipeline()
 	rootParam[2].Descriptor.ShaderRegister = 1;
 	rootParam[2].Descriptor.RegisterSpace = 0;
 	rootParam[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
+
+	rootParam[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+	rootParam[3].Descriptor.ShaderRegister = 2;
+	rootParam[3].Descriptor.RegisterSpace = 0;
+	rootParam[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
 
 	// テクスチャサンブラーの設定
 	D3D12_STATIC_SAMPLER_DESC samplerDesc{};
@@ -239,8 +264,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 #pragma endregion
 #pragma region ビュー
 	// ビュープロジェクション
-	ViewProjection* viewProjection;
-	viewProjection = new ViewProjection(KWinApp::window_width, KWinApp::window_height);
+	ViewProjection viewProjection;
+	viewProjection.Initialize(KWinApp::window_width, KWinApp::window_height);
 #pragma endregion
 
 #pragma endregion
@@ -290,6 +315,12 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 #pragma endregion
 
 	bool isTexture = false;
+
+	// ライト
+	Light* light = nullptr;
+	light = Light::Create();
+	light->SetLightColor({ 1,1,1 });
+	KObject3d::SetLight(light);
 
 	// ウィンドウ表示
 	// ゲームループ
@@ -375,24 +406,24 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		{
 			if (input->IsPush(DIK_D))
 			{
-				viewProjection->angleX += XMConvertToRadians(1.0f);
+				viewProjection.angleX += XMConvertToRadians(1.0f);
 			}
 			else if (input->IsPush(DIK_A))
 			{
-				viewProjection->angleX -= XMConvertToRadians(1.0f);
+				viewProjection.angleX -= XMConvertToRadians(1.0f);
 			}
 			if (input->IsPush(DIK_W))
 			{
-				viewProjection->angleY -= XMConvertToRadians(1.0f);
+				viewProjection.angleY -= XMConvertToRadians(1.0f);
 			}
 			else if (input->IsPush(DIK_S))
 			{
-				viewProjection->angleY += XMConvertToRadians(1.0f);
+				viewProjection.angleY += XMConvertToRadians(1.0f);
 			}
 			// angleラジアンy軸回転
-			viewProjection->eye.x = viewProjection->lenZ * sinf(viewProjection->angleX);
-			viewProjection->eye.y = viewProjection->lenZ * sinf(viewProjection->angleY);
-			viewProjection->eye.z = viewProjection->lenZ * cosf(viewProjection->angleX) * cosf(viewProjection->angleY);
+			viewProjection.eye.x = viewProjection.lenZ * sinf(viewProjection.angleX);
+			viewProjection.eye.y = viewProjection.lenZ * sinf(viewProjection.angleY);
+			viewProjection.eye.z = viewProjection.lenZ * cosf(viewProjection.angleX) * cosf(viewProjection.angleY);
 		}
 
 		// 横回転
@@ -425,12 +456,45 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 		object3d[1]->transform.rot = object3d[0]->transform.rot;
 
+		static XMVECTOR lightDir = { 0,1,5,0 };
+
+		if (input->IsPush(DIK_I))
+		{
+			lightDir.m128_f32[1] += 1.0f;
+		}
+		else if (input->IsPush(DIK_K))
+		{
+			lightDir.m128_f32[1] -= 1.0f;
+		}
+		if (input->IsPush(DIK_L))
+		{
+			lightDir.m128_f32[0] += 1.0f;
+		}
+		else if (input->IsPush(DIK_J))
+		{
+			lightDir.m128_f32[0] -= 1.0f;
+		}
+
+		light->SetLightDir(lightDir);
+
+		std::ostringstream debugstr;
+		debugstr << "lightDirFactor("
+			<< std::fixed << std::setprecision(2)
+			<< lightDir.m128_f32[0] << ","
+			<< lightDir.m128_f32[1] << ","
+			<< lightDir.m128_f32[2] << ")";
+		debugtext->Print(spriteCommon, debugstr.str(), { 50, 50 }, 1.0f);
+		debugstr.str("");
+		debugstr.clear();
+
+		light->Update();
+
 		// ビューのアップデート
-		viewProjection->Update(KWinApp::window_width, KWinApp::window_height);
+		viewProjection.Update(KWinApp::window_width, KWinApp::window_height);
 
 		// 3Dオブジェクトのアップデート
 		for (int i = 0; i < ObjectNum; i++) {
-			object3d[i]->Update(viewProjection->matView, viewProjection->matProjection);
+			object3d[i]->Update(viewProjection);
 		}
 
 #pragma endregion
@@ -490,6 +554,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	}
 
 	delete sprite;
+	delete light;
 
 #pragma region 基盤の終了
 	sound->GetxAudio().Reset();

@@ -16,6 +16,8 @@
 
 #include "Player.h"
 
+#include <array>
+
 class GameScence
 {
 public:
@@ -94,6 +96,9 @@ private:
 	float hogehoge = 0;
 
 	bool isDebug = true;
+
+	static const int MaxHoge = 3;
+	std::array<SpriteInfo, MaxHoge> spriteHoge;
 
 	Camera* camera = nullptr;
 };

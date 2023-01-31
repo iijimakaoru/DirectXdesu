@@ -79,6 +79,18 @@ void GameScence::Init()
 
 	sprite->SpriteCommonLoadTexture(spriteCommon, 0, L"Resources/texture/playerColor.png");
 	sprite->SpriteCommonLoadTexture(spriteCommon, 1, L"Resources/texture/bossColor.png");
+
+	for (int i = 0; i < MaxHoge; i++)
+	{
+		spriteHoge[i] = sprite->SpriteCreate(spriteHoge[i].texNum, spriteCommon);
+		spriteHoge[i].size.x = 100.0f;
+		spriteHoge[i].size.y = 100.0f;
+		sprite->SpriteTransferVertexBuffer(spriteHoge[i], spriteCommon);
+		spriteHoge[i].texNum = 1;
+	}
+	spriteHoge[0].position = { 60, 650, 0 };
+	spriteHoge[1].position = { 180, 650, 0 };
+	spriteHoge[2].position = { 300, 650, 0 };
 #pragma endregion
 
 #pragma region デバッグテキスト
@@ -214,6 +226,11 @@ void GameScence::Update()
 		hogeCooltime = 0;
 	}
 
+	for (int i = 0; i < MaxHoge; i++)
+	{
+		sprite->SpriteUpdate(spriteHoge[i], spriteCommon);
+	}
+
 	camera->Update();
 
 	// プレイヤー初期化
@@ -234,6 +251,11 @@ void GameScence::Draw()
 
 	// スプライト描画
 	sprite->SpriteCommonBeginDraw(spriteCommon);
+
+	for (int i = 0; i < MaxHoge; i++)
+	{
+		sprite->SpriteDraw(spriteHoge[i], spriteCommon);
+	}
 
 	debugtext->Print(spriteCommon, "FPS(w)" + std::to_string(KDirectXCommon::GetInstance()->fps), { 10,50 }, 2.0f);
 	debugtext->DrawAll(spriteCommon);

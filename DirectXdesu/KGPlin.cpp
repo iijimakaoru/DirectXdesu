@@ -173,8 +173,7 @@ KGPlin::KGPlin(KShader shader, float constBuffNum)
 
 KGPlin::~KGPlin()
 {
-	pipelineState->Release();
-	rootSignature->Release();
+	
 }
 
 KGPlin::KGPlin(D3D12_INPUT_ELEMENT_DESC* inputLayout, UINT inputLayoutSize,

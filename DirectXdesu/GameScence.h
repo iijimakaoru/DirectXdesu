@@ -14,6 +14,8 @@
 
 #include "Camera.h"
 
+#include "Player.h"
+
 class GameScence
 {
 public:
@@ -48,6 +50,9 @@ private:
 	// 3Dオブジェクト
 	std::unique_ptr<KObject3d> obj;
 	std::unique_ptr<KObject3d> skydorm;
+
+	// プレイヤー
+	Player player;
 
 	// スプライト
 	std::unique_ptr<hogeSprite> sprite;

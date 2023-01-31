@@ -5,6 +5,7 @@
 #include "MyMath.h"
 
 #include "DebugCamera.h"
+#include "GameCamera.h"
 
 GameScence::~GameScence()
 {
@@ -45,17 +46,13 @@ void GameScence::Init()
 		ParticleManager::GetInstance()->CreatePool(hoge.get(), objPipeline.get());
 	}
 
-	obj = std::make_unique<KObject3d>();
-	obj->Initialize();
-	obj->LoadModel(hoge.get());
-	obj->SetPipeline(objPipeline.get());
-	obj->transform.scale = { 10,10,10 };
-
 	skydorm = std::make_unique<KObject3d>();
 	skydorm->Initialize();
 	skydorm->LoadModel(SkyBox.get());
 	skydorm->SetPipeline(objPipeline.get());
 	skydorm->transform.scale = { 500,500,500 };
+
+	player.Init(hoge.get(), objPipeline.get());
 
 	angle = 0;
 
@@ -89,7 +86,7 @@ void GameScence::Init()
 #pragma endregion
 #pragma endregion
 
-	camera = new DebugCamera();
+	camera = new GameCamera();
 }
 
 void GameScence::Update()
@@ -199,9 +196,7 @@ void GameScence::Update()
 	camera->Update();
 
 	// ƒvƒŒƒCƒ„[‰Šú‰»
-	//player.Init();
-
-	obj->Update(camera->viewProjection);
+	player.Update(camera->viewProjection);
 
 	skydorm->Update(camera->viewProjection);
 
@@ -210,7 +205,7 @@ void GameScence::Update()
 
 void GameScence::Draw()
 {
-	obj->Draw();
+	player.Draw();
 
 	skydorm->Draw();
 

@@ -22,12 +22,9 @@ struct VertexPosNormalUV {
 class KVertex
 {
 public:
-	KVertex();
-	void CreateKVertex(ID3D12Device* dev, std::vector<VertexPosNormalUV>& vertices, std::vector<unsigned short>& indices);
+	KVertex() {}
 	KVertex(ID3D12Device* dev, std::vector<VertexPosNormalUV>& vertices, std::vector<unsigned short>& indices);
 	void KVertexInit(ID3D12Device* dev, std::vector<VertexPosNormalUV>& vertices, std::vector<unsigned short>& indices);
-	void VertMap(std::vector<VertexPosNormalUV>& vertices);
-	void CreateVBView(std::vector<VertexPosNormalUV>& vertices);
 
 	// 頂点データ全体のサイズ = 頂点データ一つ分のサイズ * 頂点データの要素数
 	UINT sizeVB;

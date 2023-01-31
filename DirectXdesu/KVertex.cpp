@@ -1,15 +1,7 @@
 #include "KVertex.h"
 
-KVertex::KVertex() {};
-
 KVertex::KVertex(ID3D12Device* dev, std::vector<VertexPosNormalUV>& vertices, std::vector<unsigned short>& indices) {
 	KVertexInit(dev, vertices, indices);
-	CreateVBView(vertices);
-}
-
-void KVertex::CreateKVertex(ID3D12Device* dev, std::vector<VertexPosNormalUV>& vertices, std::vector<unsigned short>& indices) {
-	KVertexInit(dev, vertices, indices);
-	CreateVBView(vertices);
 }
 
 void KVertex::KVertexInit(ID3D12Device* dev, std::vector<VertexPosNormalUV>& vertices, std::vector<unsigned short>& indices) {
@@ -36,6 +28,7 @@ void KVertex::KVertexInit(ID3D12Device* dev, std::vector<VertexPosNormalUV>& ver
 		IID_PPV_ARGS(&vertBuff));
 	assert(SUCCEEDED(result));
 
+	// GPU上のバッファに対応した仮想メモリを取得
 	result = vertBuff->Map(0, nullptr, (void**)&vertMap);
 	assert(SUCCEEDED(result));
 	// 全頂点に対して
@@ -101,23 +94,7 @@ void KVertex::KVertexInit(ID3D12Device* dev, std::vector<VertexPosNormalUV>& ver
 		XMStoreFloat3(&vertices[indices2].normal, normal);
 	}
 #pragma endregion
-}
 
-void KVertex::VertMap(std::vector<VertexPosNormalUV>& vertices) {
-	HRESULT result;
-	// GPU上のバッファに対応した仮想メモリを取得
-	VertexPosNormalUV* vertMap = nullptr;
-	result = vertBuff->Map(0, nullptr, (void**)&vertMap);
-	assert(SUCCEEDED(result));
-	// 全頂点に対して
-	for (int i = 0; i < vertices.size(); i++) {
-		vertMap[i] = vertices[i];
-	}
-	// 繋がりを解除
-	vertBuff->Unmap(0, nullptr);
-}
-
-void KVertex::CreateVBView(std::vector<VertexPosNormalUV>& vertices) {
 	// GPU仮想アドレス
 	vbView.BufferLocation = vertBuff->GetGPUVirtualAddress();
 	// 頂点バッファのサイズ

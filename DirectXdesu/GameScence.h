@@ -70,6 +70,8 @@ private:
 	std::unique_ptr<Sound> sound;
 
 	SoundData soundData1;
+	SoundData soundData2;
+	SoundData soundData3;
 
 	SpriteInfo sprites[2];
 
@@ -103,5 +105,8 @@ private:
 	std::array<SpriteInfo, MaxHoge> spriteHoge;
 
 	Camera* camera = nullptr;
+
+	bool isWave = false;
+	bool isTaihun = false;
 };
 

@@ -34,6 +34,8 @@ void GameScence::LoadResources()
 	sound = std::make_unique<Sound>();
 	sound->Init();
 	soundData1 = sound->SoundLoadWave("Resources/Sound/Alarm01.wav");
+	soundData2 = sound->SoundLoadWave("Resources/Sound/Alarm02.wav");
+	soundData3 = sound->SoundLoadWave("Resources/Sound/Alarm03.wav");
 }
 
 void GameScence::Init()
@@ -54,6 +56,8 @@ void GameScence::Init()
 	skydorm->transform.scale = { 500,500,500 };
 
 	player.Init(hoge.get(), objPipeline.get());
+
+	Player::nowPlayer = &player;
 
 	angle = 0;
 
@@ -150,18 +154,30 @@ void GameScence::Update()
 		}
 	}
 
-	if (KInput::GetInstance()->IsTrigger(DIK_0))
+	ImGui::Text("Sound");
+	if (ImGui::Button("Play1"))
 	{
 		sound->SoundPlayWave(soundData1);
+	}
+	if (ImGui::Button("Play2"))
+	{
+		sound->SoundPlayWave(soundData2);
+	}
+	if (ImGui::Button("Play3"))
+	{
+		sound->SoundPlayWave(soundData3);
 	}
 
 	float piAngle = PI * 2;
 
-	if (KInput::GetInstance()->IsTrigger(DIK_SPACE))
+	ImGui::Text("Particle");
+	if (ImGui::Button("Splash"))
 	{
 		while (angle < XMConvertToRadians(360))
 		{
-			ParticleManager::GetInstance()->TestSplash({ 2 * cosf(piAngle + angle),0,2 * sinf(piAngle + angle) },
+			ParticleManager::GetInstance()->TestSplash({ Player::nowPlayer->GetPos().x + (2 * cosf(piAngle + angle)),
+				0,
+				Player::nowPlayer->GetPos().z + 2 * sinf(piAngle + angle) },
 				{ 1,1,1 }, { 1,1,1 }, 3, piAngle + angle, 30);
 			angle += XMConvertToRadians(20);
 		}
@@ -169,7 +185,29 @@ void GameScence::Update()
 		vec.Normalize();
 		for (int i = 0; i < 100; i++)
 		{
-			ParticleManager::GetInstance()->Splash({ 0,0,0 }, { 1,1,1 }, { 1,1,1 }, 40, 5, vec);
+			ParticleManager::GetInstance()->Splash(Player::nowPlayer->GetPos(), {1,1,1}, {1,1,1}, 40, 5, vec);
+		}
+	}
+	if (ImGui::Button("Wave"))
+	{
+		if (isWave)
+		{
+			isWave = false;
+		}
+		else
+		{
+			isWave = true;
+		}
+	}
+	if (ImGui::Button("Taihun"))
+	{
+		if (isTaihun)
+		{
+			isTaihun = false;
+		}
+		else
+		{
+			isTaihun = true;
 		}
 	}
 
@@ -210,16 +248,20 @@ void GameScence::Update()
 		hogeLifeTime = 0;
 	}
 
-	if (KInput::GetInstance()->IsPress(DIK_1))
+	if (isWave)
 	{
 		for (int i = 0; i < 5; i++)
 		{
-			ParticleManager::GetInstance()->RightWave({ 0,MyMath::GetInstance()->GetRand(-3.0f,3.0f),0 }, { 1,1,1 }, { 1,1,1 }, 20, speed);
-			ParticleManager::GetInstance()->LeftWave({ 0,MyMath::GetInstance()->GetRand(-3.0f,3.0f),0 }, { 1,1,1 }, { 1,1,1 }, 20, speed);
+			ParticleManager::GetInstance()->RightWave({ Player::nowPlayer->GetPos().x,
+				Player::nowPlayer->GetPos().y + MyMath::GetInstance()->GetRand(-3.0f,3.0f),
+				Player::nowPlayer->GetPos().z }, { 1,1,1 }, { 1,1,1 }, 20, speed);
+			ParticleManager::GetInstance()->LeftWave({ Player::nowPlayer->GetPos().x,
+				Player::nowPlayer->GetPos().y + MyMath::GetInstance()->GetRand(-3.0f,3.0f),
+				Player::nowPlayer->GetPos().z }, { 1,1,1 }, { 1,1,1 }, 20, speed);
 		}
 	}
 
-	if (KInput::GetInstance()->IsPress(DIK_2))
+	if (isTaihun)
 	{
 		hogeAngle = PI * 2 + hogeRot;
 		hogeRot += XMConvertToRadians(10.0f);

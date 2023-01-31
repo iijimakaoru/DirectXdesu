@@ -40,7 +40,7 @@ void GameScence::LoadResources()
 
 void GameScence::Init()
 {
-	objShader.Init(L"ObjVS.hlsl", L"ObjPS.hlsl");
+	objShader.Init(L"Resources/Shader/ObjVS.hlsl", L"Resources/Shader/ObjPS.hlsl");
 
 	objPipeline = std::make_unique<KGPlin>(objShader, 5);
 

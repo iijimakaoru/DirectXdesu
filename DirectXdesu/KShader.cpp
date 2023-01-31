@@ -59,7 +59,7 @@ void KShader::SpritePSNormal()
 {
 	// ピクセルシェーダの読み込みとコンパイル
 	result = D3DCompileFromFile(
-		L"SpritePS.hlsl",
+		L"Resources/Shader/SpritePS.hlsl",
 		nullptr,
 		D3D_COMPILE_STANDARD_FILE_INCLUDE,
 		"main", "ps_5_0",
@@ -154,7 +154,7 @@ void KShader::SpriteVSNormal()
 {
 	// 頂点シェーダーの読み込みとコンパイル
 	result = D3DCompileFromFile(
-		L"SpriteVS.hlsl",
+		L"Resources/Shader/SpriteVS.hlsl",
 		nullptr,
 		D3D_COMPILE_STANDARD_FILE_INCLUDE,
 		"main", "vs_5_0",

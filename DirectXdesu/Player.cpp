@@ -26,7 +26,7 @@ void Player::Update(ViewProjection& viewProjection)
 {
 	char bufK[255] = "KeyBord";
 	char bufG[255] = "GamePad";
-	ImGui::Text("ControllerMode");
+	ImGui::Text("PlayerControllerMode");
 	if (ImGui::Button("ChangeController"))
 	{
 		if (mode == ControllerMode::KeyBord)

@@ -44,11 +44,11 @@ void Player::Update(ViewProjection& viewProjection)
 	}
 	if (mode == ControllerMode::KeyBord)
 	{
-		ImGui::InputText("string", bufK, IM_ARRAYSIZE(bufK));
+		ImGui::InputText("mode", bufK, IM_ARRAYSIZE(bufK));
 	}
 	else if (mode == ControllerMode::GamePad)
 	{
-		ImGui::InputText("string", bufG, IM_ARRAYSIZE(bufG));
+		ImGui::InputText("mode", bufG, IM_ARRAYSIZE(bufG));
 	}
 	else
 	{

@@ -13,21 +13,11 @@ class KShader
 public:
 	template<class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
 
-	// Basicシェーダー
-	void BasicVSNormal();
-	void BasicVSLoadCompile();
-	void BasicPSNormal();
-	void BasicPSLoadCompile();
 	// Spriteシェーダー
 	void SpriteVSNormal();
 	void SpriteVSLoadCompile();
 	void SpritePSNormal();
 	void SpritePSLoadCompile();
-	// Objシェーダー
-	void ObjVSNormal();
-	void ObjVSLoadCompile();
-	void ObjPSNormal();
-	void ObjPSLoadCompile();
 
 	// シェーダー
 	KShader() {};

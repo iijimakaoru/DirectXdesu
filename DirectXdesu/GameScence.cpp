@@ -119,11 +119,11 @@ void GameScence::Update()
 	}
 	if (isDebug)
 	{
-		ImGui::InputText("string", bufD, IM_ARRAYSIZE(bufD));
+		ImGui::InputText("mode", bufD, IM_ARRAYSIZE(bufD));
 	}
 	else
 	{
-		ImGui::InputText("string", bufG, IM_ARRAYSIZE(bufG));
+		ImGui::InputText("mode", bufG, IM_ARRAYSIZE(bufG));
 	}
 
 	if (isChange)

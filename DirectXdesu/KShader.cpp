@@ -2,18 +2,6 @@
 #include <string>
 #include <assert.h>
 
-void KShader::BasicPSNormal() {
-	// ピクセルシェーダの読み込みとコンパイル
-	result = D3DCompileFromFile(
-		L"BasicPS.hlsl",
-		nullptr,
-		D3D_COMPILE_STANDARD_FILE_INCLUDE,
-		"main", "ps_5_0",
-		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,
-		0,
-		&psBlob, &errorBlob);
-}
-
 void KShader::Error() {
 	// エラーがでたら
 	if (FAILED(result)) {
@@ -31,30 +19,6 @@ void KShader::Error() {
 	}
 }
 
-void KShader::BasicPSLoadCompile()
-{
-	BasicPSNormal();
-	Error();
-}
-
-void KShader::BasicVSNormal() {
-	// 頂点シェーダーの読み込みとコンパイル
-	result = D3DCompileFromFile(
-		L"BasicVS.hlsl",
-		nullptr,
-		D3D_COMPILE_STANDARD_FILE_INCLUDE,
-		"main", "vs_5_0",
-		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,
-		0,
-		&vsBlob, &errorBlob);
-}
-
-void KShader::BasicVSLoadCompile()
-{
-	BasicVSNormal();
-	Error();
-}
-
 void KShader::SpritePSNormal()
 {
 	// ピクセルシェーダの読み込みとコンパイル
@@ -68,16 +32,11 @@ void KShader::SpritePSNormal()
 		&psBlob, &errorBlob);
 }
 
-void KShader::SpritePSLoadCompile()
+void KShader::SpriteVSNormal()
 {
-	SpritePSNormal();
-	Error();
-}
-
-void KShader::ObjVSNormal()
-{
+	// 頂点シェーダーの読み込みとコンパイル
 	result = D3DCompileFromFile(
-		L"ObjVS.hlsl",
+		L"Resources/Shader/SpriteVS.hlsl",
 		nullptr,
 		D3D_COMPILE_STANDARD_FILE_INCLUDE,
 		"main", "vs_5_0",
@@ -86,27 +45,15 @@ void KShader::ObjVSNormal()
 		&vsBlob, &errorBlob);
 }
 
-void KShader::ObjVSLoadCompile()
+void KShader::SpriteVSLoadCompile()
 {
-	ObjVSNormal();
+	SpriteVSNormal();
 	Error();
 }
 
-void KShader::ObjPSNormal()
+void KShader::SpritePSLoadCompile()
 {
-	result = D3DCompileFromFile(
-		L"ObjPS.hlsl",
-		nullptr,
-		D3D_COMPILE_STANDARD_FILE_INCLUDE,
-		"main", "ps_5_0",
-		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,
-		0,
-		&psBlob, &errorBlob);
-}
-
-void KShader::ObjPSLoadCompile()
-{
-	ObjPSNormal();
+	SpritePSNormal();
 	Error();
 }
 
@@ -147,24 +94,5 @@ void KShader::Init(LPCWSTR VSFileName, LPCWSTR PSFileName, LPCSTR pEntryPoint)
 	);
 
 	// エラー
-	Error();
-}
-
-void KShader::SpriteVSNormal()
-{
-	// 頂点シェーダーの読み込みとコンパイル
-	result = D3DCompileFromFile(
-		L"Resources/Shader/SpriteVS.hlsl",
-		nullptr,
-		D3D_COMPILE_STANDARD_FILE_INCLUDE,
-		"main", "vs_5_0",
-		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,
-		0,
-		&vsBlob, &errorBlob);
-}
-
-void KShader::SpriteVSLoadCompile()
-{
-	SpriteVSNormal();
 	Error();
 }

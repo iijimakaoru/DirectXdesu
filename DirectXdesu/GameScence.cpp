@@ -76,6 +76,9 @@ void GameScence::Init()
 	sprite->Init(KDirectXCommon::GetInstance());
 
 	spriteCommon = sprite->SpriteCommonCreate();
+
+	sprite->SpriteCommonLoadTexture(spriteCommon, 0, L"Resources/texture/playerColor.png");
+	sprite->SpriteCommonLoadTexture(spriteCommon, 1, L"Resources/texture/bossColor.png");
 #pragma endregion
 
 #pragma region デバッグテキスト

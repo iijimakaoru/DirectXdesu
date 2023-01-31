@@ -170,6 +170,12 @@ KGPlin::KGPlin(KShader shader)
 	Init(shader, inputLayout, _countof(inputLayout));
 }
 
+KGPlin::~KGPlin()
+{
+	pipelineState->Release();
+	rootSignature->Release();
+}
+
 KGPlin::KGPlin(D3D12_INPUT_ELEMENT_DESC* inputLayout, UINT inputLayoutSize, KShader shader)
 {
 	HRESULT result;

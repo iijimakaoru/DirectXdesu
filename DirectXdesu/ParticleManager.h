@@ -36,6 +36,7 @@ private:
 
 public:
 	static ParticleManager* GetInstance();
+	static void DeleteInstance();
 
 private:
 	ParticleManager() = default;

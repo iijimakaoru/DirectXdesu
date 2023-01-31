@@ -79,6 +79,7 @@ private:
 
 public:
 	static KInput* GetInstance();
+	static void DeleteInstance();
 
 private:
 	KInput() {};

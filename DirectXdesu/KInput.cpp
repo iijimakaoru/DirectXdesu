@@ -8,6 +8,11 @@ KInput* KInput::GetInstance()
 	return &instance;
 }
 
+void KInput::DeleteInstance()
+{
+	delete KInput::GetInstance();
+}
+
 void KInput::Init() 
 {
 	GetInstance()->InitInternal();

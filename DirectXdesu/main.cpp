@@ -11,15 +11,19 @@
 #include <d3dx12.h>
 #include "GameScence.h"
 #include "ImguiManager.h"
+#include "ParticleManager.h"
 
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow)
 {
-	KWinApp::Init();
+	KWinApp* win = KWinApp::GetInstance();
+	win->Init();
 
-	KDirectXCommon::GetInstance()->Init();
+	KDirectXCommon* dx = KDirectXCommon::GetInstance();
+	dx->Init();
 
 	// キーボード入力
-	KInput::Init();
+	KInput* input = KInput::GetInstance();
+	input->Init();
 
 	std::unique_ptr<GameScence> gameScene = std::make_unique<GameScence>();
 
@@ -32,13 +36,19 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	{
 		if (KWinApp::GetInstance()->ProcessMessage() || KInput::GetInstance()->IsPush(DIK_ESCAPE))
 		{
+			// 変数名はサンプルコードに合わせた。
+			ComPtr<ID3D12DebugDevice> pDebugDevice = NULL;
+			KDirectXCommon::GetInstance()->GetDev()->QueryInterface(pDebugDevice.GetAddressOf());
+			KDirectXCommon::GetInstance()->GetDev()->Release();
+			pDebugDevice->ReportLiveDeviceObjects(D3D12_RLDO_DETAIL);
+			pDebugDevice->Release();
 			break;
 		}
 
 		// 更新
 		imguiMane.Begin();
 
-		KInput::Update();
+		input->Update();
 
 		gameScene->Update();
 

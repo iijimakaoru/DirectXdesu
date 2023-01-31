@@ -46,6 +46,8 @@ public:
 	void Draw();
 	void Draw(KTexture* texture);
 
+	void Finalize();
+
 	static void StaticInitialize();
 	static KObject3d Create();
 

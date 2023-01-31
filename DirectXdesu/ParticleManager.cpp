@@ -260,3 +260,8 @@ ParticleManager* ParticleManager::GetInstance()
 	static ParticleManager instance;
 	return &instance;
 }
+
+void ParticleManager::DeleteInstance()
+{
+	delete ParticleManager::GetInstance();
+}

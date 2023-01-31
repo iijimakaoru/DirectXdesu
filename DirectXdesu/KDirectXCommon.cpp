@@ -325,3 +325,8 @@ KDirectXCommon* KDirectXCommon::GetInstance()
 	static KDirectXCommon instance;
 	return &instance;
 }
+
+void KDirectXCommon::DeleteInstance()
+{
+	//delete KDirectXCommon::GetInstance();
+}

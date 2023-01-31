@@ -44,6 +44,7 @@ private:
 
 public:
 	KGPlin();
+	~KGPlin();
 	KGPlin(KShader shader);
 	KGPlin(D3D12_INPUT_ELEMENT_DESC* inputLayout, UINT inputLayoutSize, KShader shader);
 	KGPlin(KShader shader,

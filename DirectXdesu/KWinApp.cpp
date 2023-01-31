@@ -69,6 +69,11 @@ KWinApp* KWinApp::GetInstance()
 	return &instance;
 }
 
+void KWinApp::DeleteInstance()
+{
+	delete KWinApp::GetInstance();
+}
+
 int KWinApp::GetWindowSizeW()
 {
 	return GetInstance()->window_width;

@@ -161,6 +161,12 @@ void KObject3d::Draw(KTexture* texture)
 	KDirectXCommon::GetInstance()->GetCmdlist()->DrawIndexedInstanced(model_->indices.size(), 1, 0, 0, 0);
 }
 
+void KObject3d::Finalize()
+{
+	constBuffB0->Release();
+	constBuffB1->Release();
+}
+
 void KObject3d::StaticInitialize()
 {
 

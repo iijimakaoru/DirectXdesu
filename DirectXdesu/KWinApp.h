@@ -15,6 +15,7 @@ private:
 public:
 	static void Init();
 	static KWinApp* GetInstance();
+	static void DeleteInstance();
 
 	static int GetWindowSizeW();
 	static int GetWindowSizeH();

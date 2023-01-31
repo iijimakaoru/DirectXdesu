@@ -20,11 +20,7 @@ public:
 		LoadResources();
 		Init();
 	};
-	~GameScence()
-	{
-		sound->GetxAudio().Reset();
-		sound->SoundUnLoad(&soundData1);
-	};
+	~GameScence();
 	void LoadResources();
 	void Init();
 	void Update();

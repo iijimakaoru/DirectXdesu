@@ -13,10 +13,11 @@
 #pragma comment(lib, "d3d12.lib")
 #pragma comment(lib, "dxgi.lib")
 
-using namespace Microsoft::WRL;
-
 class KDirectXCommon
 {
+private:
+	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
+
 public:
 	void Init();
 
@@ -37,22 +38,27 @@ public:
 
 private:
 	HRESULT result;
+
 	// DirectX12デバイス
-	Microsoft::WRL::ComPtr<ID3D12Device> dev;
-	// DXGIファクトリー
-	Microsoft::WRL::ComPtr<IDXGIFactory6> dxgiFactory;
+	ComPtr<ID3D12Device> dev;
+
 	// バックバッファ
-	std::vector<Microsoft::WRL::ComPtr<ID3D12Resource>> backBuffers;
+	std::vector<ComPtr<ID3D12Resource>> backBuffers;
+
 	// スワップチェーン
-	Microsoft::WRL::ComPtr<IDXGISwapChain4> swapChain;
+	ComPtr<IDXGISwapChain4> swapChain;
+
 	// デスクリプタヒープの設定
 	D3D12_DESCRIPTOR_HEAP_DESC rtvHeapDesc{};
+
 	// 深度バッファ
 	ComPtr<ID3D12Resource> depthBuff{};
+
 	//　深度ビュー用ヒープ作成
 	ComPtr<ID3D12DescriptorHeap> dsvHeap{};
 	ComPtr<ID3D12DescriptorHeap> tmpDsvHeap{};
 
+	// コマンド
 	ComPtr<ID3D12CommandAllocator> cmdAllocater;
 	ComPtr<ID3D12GraphicsCommandList> cmdList;
 	ComPtr<ID3D12CommandQueue> cmdQueue;
@@ -81,8 +87,6 @@ private:
 	float bGreen = 0.25f;
 	float bBule = 0.5f;
 
-	//KDepth* depth = nullptr;
-
 	std::chrono::steady_clock::time_point reference_;
 	
 	// デバイス初期化
@@ -104,6 +108,7 @@ private:
 
 public:
 	static KDirectXCommon* GetInstance();
+	static void DeleteInstance();
 
 private:
 	KDirectXCommon() = default;

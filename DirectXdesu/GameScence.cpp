@@ -4,6 +4,12 @@
 #include "ParticleManager.h"
 #include "MyMath.h"
 
+GameScence::~GameScence()
+{
+	sound->GetxAudio().Reset();
+	sound->SoundUnLoad(&soundData1);
+};
+
 void GameScence::LoadResources()
 {
 	// ƒ‚ƒfƒ‹

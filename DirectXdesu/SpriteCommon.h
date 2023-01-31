@@ -4,19 +4,19 @@
 #include "KShader.h"
 #include "Matrix4.h"
 
-class SpriteCommon
+class AhoSpriteCommon
 {
 public:
 	KGPlin pipeline;
 	KShader shader;
 
-	SpriteCommon();
-	~SpriteCommon() {};
+	AhoSpriteCommon();
+	~AhoSpriteCommon() {};
 public:
-	static SpriteCommon* GetInstance();
+	static AhoSpriteCommon* GetInstance();
 
-	SpriteCommon(const SpriteCommon& s) = delete;
-	SpriteCommon& operator=(const SpriteCommon& s) = delete;
+	AhoSpriteCommon(const AhoSpriteCommon& s) = delete;
+	AhoSpriteCommon& operator=(const AhoSpriteCommon& s) = delete;
 
 	void Init();
 	void Draw();

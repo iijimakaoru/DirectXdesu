@@ -57,8 +57,8 @@ private:
 	Player player;
 
 	// スプライト
-	std::unique_ptr<hogeSprite> sprite;
-	HogeSpriteCommon spriteCommon;
+	std::unique_ptr<Sprite> sprite;
+	SpriteCommon spriteCommon;
 
 	Vector3 center = { 0,0,1 };
 

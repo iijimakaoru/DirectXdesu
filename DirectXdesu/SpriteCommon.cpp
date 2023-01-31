@@ -1,18 +1,18 @@
 #include "SpriteCommon.h"
 #include "KDirectXCommon.h"
 
-SpriteCommon::SpriteCommon()
+AhoSpriteCommon::AhoSpriteCommon()
 {
 	Init();
 }
 
-SpriteCommon* SpriteCommon::GetInstance()
+AhoSpriteCommon* AhoSpriteCommon::GetInstance()
 {
-	static SpriteCommon instance;
+	static AhoSpriteCommon instance;
 	return &instance;
 }
 
-void SpriteCommon::Init()
+void AhoSpriteCommon::Init()
 {
 	HRESULT result;
 
@@ -36,7 +36,7 @@ void SpriteCommon::Init()
 	pipeline.SetBlending(KGPlin::ALPHA);
 }
 
-void SpriteCommon::Draw()
+void AhoSpriteCommon::Draw()
 {
 	pipeline.Setting();
 	pipeline.Update(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);

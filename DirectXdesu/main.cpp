@@ -26,7 +26,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	KInput* input = KInput::GetInstance();
 	input->Init();
 
-	SpriteCommon* spriteCommon = SpriteCommon::GetInstance();
+	AhoSpriteCommon* spriteCommon = AhoSpriteCommon::GetInstance();
 
 	std::unique_ptr<GameScence> gameScene = std::make_unique<GameScence>();
 

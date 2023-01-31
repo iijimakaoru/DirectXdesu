@@ -1,6 +1,6 @@
 #include "DebugText.h"
 
-void DebugText::Init(hogeSprite* sprite ,UINT texnumber, const HogeSpriteCommon& spriteCommon)
+void DebugText::Init(Sprite* sprite ,UINT texnumber, const SpriteCommon& spriteCommon)
 {
 	sprite_ = sprite;
 
@@ -10,7 +10,7 @@ void DebugText::Init(hogeSprite* sprite ,UINT texnumber, const HogeSpriteCommon&
 	}
 }
 
-void DebugText::Print(const HogeSpriteCommon& spriteCommon, const std::string& text,
+void DebugText::Print(const SpriteCommon& spriteCommon, const std::string& text,
 	Vector2 pos, float scale)
 {
 	for (int i = 0; i < text.size(); i++)
@@ -44,7 +44,7 @@ void DebugText::Print(const HogeSpriteCommon& spriteCommon, const std::string& t
 	}
 }
 
-void DebugText::SpriteTransferVertexBuffer(const SpriteInfo& sprite, const HogeSpriteCommon& spriteCommon)
+void DebugText::SpriteTransferVertexBuffer(const SpriteInfo& sprite, const SpriteCommon& spriteCommon)
 {
 	HRESULT result = S_FALSE;
 
@@ -102,7 +102,7 @@ void DebugText::SpriteTransferVertexBuffer(const SpriteInfo& sprite, const HogeS
 	sprite.vertBuff->Unmap(0, nullptr);
 }
 
-void DebugText::DrawAll(const HogeSpriteCommon& spriteCommon)
+void DebugText::DrawAll(const SpriteCommon& spriteCommon)
 {
 	for (int i = 0; i < spriteIndex; i++)
 	{

@@ -42,11 +42,12 @@ void KGPlin::SetRootSignature(UINT rootParamNum)
 	//// ルートパラメータ
 	// 設定
 	std::vector<D3D12_ROOT_PARAMETER> rootParams = {};
-	rootParams.resize(rootParamNum);
-	SetRootParam(rootParams[0], D3D12_ROOT_PARAMETER_TYPE_CBV, 0, 0);
-	SetRootParam(rootParams[1], D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE, descripterRange, 1);
-	SetRootParam(rootParams[2], D3D12_ROOT_PARAMETER_TYPE_CBV, 1, 0);
-	SetRootParam(rootParams[3], D3D12_ROOT_PARAMETER_TYPE_CBV, 2, 0);
+	rootParams.resize(rootParamNum + 1);
+	SetRootParam(rootParams[0], D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE, descripterRange, 1);
+	for (size_t i = 0; i < rootParamNum; i++)
+	{
+		SetRootParam(rootParams[i + 1], D3D12_ROOT_PARAMETER_TYPE_CBV, i, 0);
+	}
 
 	//// サンプラー
 	// テクスチャサンプラーの設定
@@ -134,7 +135,7 @@ KGPlin::KGPlin()
 {
 }
 
-KGPlin::KGPlin(KShader shader)
+KGPlin::KGPlin(KShader shader, float constBuffNum)
 {
 	D3D12_INPUT_ELEMENT_DESC inputLayout[] =
 	{
@@ -167,7 +168,7 @@ KGPlin::KGPlin(KShader shader)
 		},
 	};
 
-	Init(shader, inputLayout, _countof(inputLayout));
+	Init(shader, inputLayout, _countof(inputLayout), constBuffNum);
 }
 
 KGPlin::~KGPlin()
@@ -176,7 +177,8 @@ KGPlin::~KGPlin()
 	rootSignature->Release();
 }
 
-KGPlin::KGPlin(D3D12_INPUT_ELEMENT_DESC* inputLayout, UINT inputLayoutSize, KShader shader)
+KGPlin::KGPlin(D3D12_INPUT_ELEMENT_DESC* inputLayout, UINT inputLayoutSize,
+	KShader shader)
 {
 	HRESULT result;
 
@@ -285,12 +287,20 @@ KGPlin::KGPlin(D3D12_INPUT_ELEMENT_DESC* inputLayout, UINT inputLayoutSize, KSha
 		IID_PPV_ARGS(pipelineState.ReleaseAndGetAddressOf()));
 }
 
-KGPlin::KGPlin(KShader shader, D3D12_INPUT_ELEMENT_DESC* inputLayout, UINT inputLayoutSize, D3D12_PRIMITIVE_TOPOLOGY_TYPE topologyType, D3D12_FILL_MODE fillmord)
+KGPlin::KGPlin(KShader shader, D3D12_INPUT_ELEMENT_DESC* inputLayout, UINT inputLayoutSize, float constBuffNum,
+	 D3D12_PRIMITIVE_TOPOLOGY_TYPE topologyType, D3D12_FILL_MODE fillmord)
 {
-	Init(shader, inputLayout, inputLayoutSize, topologyType, fillmord);
+	Init(shader, inputLayout, inputLayoutSize,constBuffNum, topologyType, fillmord);
 }
 
-void KGPlin::Init(KShader shader, D3D12_INPUT_ELEMENT_DESC* inputLayout, UINT inputLayoutSize, D3D12_PRIMITIVE_TOPOLOGY_TYPE topologyType, D3D12_FILL_MODE fillmord, D3D12_CULL_MODE cullmord, bool isDeep)
+void KGPlin::Init(KShader shader,
+	D3D12_INPUT_ELEMENT_DESC* inputLayout,
+	UINT inputLayoutSize,
+	float constBuffNum,
+	D3D12_PRIMITIVE_TOPOLOGY_TYPE topologyType,
+	D3D12_FILL_MODE fillmord,
+	D3D12_CULL_MODE cullmord,
+	bool isDeep)
 {
 	HRESULT result;
 
@@ -337,7 +347,7 @@ void KGPlin::Init(KShader shader, D3D12_INPUT_ELEMENT_DESC* inputLayout, UINT in
 	piplineDesc.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
 	piplineDesc.DSVFormat = DXGI_FORMAT_D32_FLOAT;
 
-	SetRootSignature(4);
+	SetRootSignature(constBuffNum);
 
 	// パイプラインにルートシグネチャをセット
 	piplineDesc.pRootSignature = rootSignature.Get();

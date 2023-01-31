@@ -12,6 +12,7 @@
 #include "GameScence.h"
 #include "ImguiManager.h"
 #include "ParticleManager.h"
+#include "SpriteCommon.h"
 
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow)
 {
@@ -24,6 +25,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	// キーボード入力
 	KInput* input = KInput::GetInstance();
 	input->Init();
+
+	SpriteCommon* spriteCommon = SpriteCommon::GetInstance();
 
 	std::unique_ptr<GameScence> gameScene = std::make_unique<GameScence>();
 

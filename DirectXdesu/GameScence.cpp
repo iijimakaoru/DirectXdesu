@@ -40,7 +40,7 @@ void GameScence::Init()
 {
 	objShader.Init(L"ObjVS.hlsl", L"ObjPS.hlsl");
 
-	objPipeline = std::make_unique<KGPlin>(objShader);
+	objPipeline = std::make_unique<KGPlin>(objShader, 5);
 
 	if (!ParticleManager::GetInstance()->IsPoolCreated())
 	{
@@ -116,7 +116,7 @@ void GameScence::Update()
 
 	}
 	ImGui::InputText("string", buf, IM_ARRAYSIZE(buf));
-	ImGui::SliderFloat("float", &hogehoge, 5.0f, 20.0f);
+	ImGui::SliderFloat("hooogeee", &hogehoge, 5.0f, 20.0f);
 
 	if (KInput::GetInstance()->IsTrigger(DIK_0))
 	{

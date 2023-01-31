@@ -1,5 +1,6 @@
 #include "Sprite.h"
 #include "KShader.h"
+#include "KDirectXCommon.h"
 
 void hogeSprite::Init(KDirectXCommon* dxCommon)
 {
@@ -475,4 +476,61 @@ HRESULT hogeSprite::SpriteCommonLoadTexture(HogeSpriteCommon& spriteCommon, UINT
 			dxCommon_->GetDev()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV)));
 
 	return S_OK;
+}
+
+void Sprite::Init()
+{
+	common = SpriteCommon::GetInstance();
+
+	HRESULT result;
+
+	// 頂点データ全体のサイズ = 頂点データ一つ分のサイズ * 頂点データの要素数
+	UINT sizeVB = static_cast<UINT>(sizeof(Vector3) * _countof(vertices));
+
+	// 頂点バッファの設定
+	D3D12_HEAP_PROPERTIES heapProp{};
+	heapProp.Type = D3D12_HEAP_TYPE_UPLOAD;
+
+	// リソース設定
+	D3D12_RESOURCE_DESC resDesc{};
+	resDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
+	resDesc.Width = sizeVB;
+	resDesc.Height = 1;
+	resDesc.DepthOrArraySize = 1;
+	resDesc.MipLevels = 1;
+	resDesc.SampleDesc.Count = 1;
+	resDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+
+	result = KDirectXCommon::GetInstance()->GetDev()->CreateCommittedResource(
+		&heapProp,
+		D3D12_HEAP_FLAG_NONE,
+		&resDesc,
+		D3D12_RESOURCE_STATE_GENERIC_READ,
+		nullptr,
+		IID_PPV_ARGS(&vertBuff));
+	assert(SUCCEEDED(result));
+
+	Vector3* vertMap = nullptr;
+	result = vertBuff->Map(0, nullptr, (void**)&vertMap);
+	assert(SUCCEEDED(result));
+
+	for (int i = 0; i < _countof(vertices); i++)
+	{
+		vertMap[i] = vertices[i];
+	}
+
+	vertBuff->Unmap(0, nullptr);
+
+	vbView.BufferLocation = vertBuff->GetGPUVirtualAddress();
+	vbView.SizeInBytes = sizeVB;
+	vbView.StrideInBytes = sizeof(Vector3);
+}
+
+void Sprite::Draw()
+{
+	common->Draw();
+
+	KDirectXCommon::GetInstance()->GetCmdlist()->IASetVertexBuffers(0, 1, &vbView);
+
+	KDirectXCommon::GetInstance()->GetCmdlist()->DrawInstanced(_countof(vertices), 1, 0, 0);
 }

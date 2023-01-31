@@ -45,20 +45,27 @@ private:
 public:
 	KGPlin();
 	~KGPlin();
-	KGPlin(KShader shader);
+
+	KGPlin(KShader shader, float constBuffNum);
+
 	KGPlin(D3D12_INPUT_ELEMENT_DESC* inputLayout, UINT inputLayoutSize, KShader shader);
+
 	KGPlin(KShader shader,
 		D3D12_INPUT_ELEMENT_DESC* inputLayout,
 		UINT inputLayoutSize,
+		float constBuffNum,
 		D3D12_PRIMITIVE_TOPOLOGY_TYPE topologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE,
 		D3D12_FILL_MODE fillmord = D3D12_FILL_MODE_SOLID);
+
 	void Init(KShader shader,
 		D3D12_INPUT_ELEMENT_DESC* inputLayout,
 		UINT inputLayoutSize,
+		float constBuffNum,
 		D3D12_PRIMITIVE_TOPOLOGY_TYPE topologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE,
 		D3D12_FILL_MODE fillmord = D3D12_FILL_MODE_SOLID,
 		D3D12_CULL_MODE cullmord = D3D12_CULL_MODE_BACK,
 		bool isDeep = true);
+
 	void Update(D3D12_PRIMITIVE_TOPOLOGY primitive = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	void Setting();
 	void SetBlending(int mord);

@@ -7,10 +7,14 @@ KVertex::KVertex(ID3D12Device* dev, std::vector<VertexPosNormalUV>& vertices, st
 void KVertex::KVertexInit(ID3D12Device* dev, std::vector<VertexPosNormalUV>& vertices, std::vector<unsigned short>& indices) {
 #pragma region 頂点
 	// 頂点データ全体のサイズ = 頂点データ一つ分のサイズ * 頂点データの要素数
-	sizeVB = static_cast<UINT>(sizeof(vertices[0]) * vertices.size());
+	UINT sizeVB = static_cast<UINT>(sizeof(vertices[0]) * vertices.size());
 
+	// 頂点バッファの設定
+	D3D12_HEAP_PROPERTIES heapProp{};
 	heapProp.Type = D3D12_HEAP_TYPE_UPLOAD;
 
+	// リソース設定
+	D3D12_RESOURCE_DESC resDesc{};
 	resDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
 	resDesc.Width = sizeVB;
 	resDesc.Height = 1;
@@ -40,7 +44,8 @@ void KVertex::KVertexInit(ID3D12Device* dev, std::vector<VertexPosNormalUV>& ver
 #pragma endregion
 
 #pragma region インデックス
-	sizeIB = static_cast<UINT>(sizeof(uint16_t) * indices.size());
+	// インデックスデータ全体のサイズ
+	UINT sizeIB = static_cast<UINT>(sizeof(uint16_t) * indices.size());
 
 	resDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
 	resDesc.Width = sizeIB;

@@ -111,7 +111,7 @@ void KObject3d::Draw()
 	pipeline->Update(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	// 定数バッファビューをセット
-	KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootConstantBufferView(0, constBuffB0->GetGPUVirtualAddress());
+	KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootConstantBufferView(1, constBuffB0->GetGPUVirtualAddress());
 	KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootConstantBufferView(2, constBuffB1->GetGPUVirtualAddress());
 	
 	// SRV
@@ -121,7 +121,7 @@ void KObject3d::Draw()
 	D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle = model_->texture.srvHeap->GetGPUDescriptorHandleForHeapStart();
 
 	// シェーダーリソースビューをセット
-	KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootDescriptorTable(1, srvGpuHandle);
+	KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootDescriptorTable(0, srvGpuHandle);
 	
 	// 頂点バッファビューの設定
 	KDirectXCommon::GetInstance()->GetCmdlist()->IASetVertexBuffers(0, 1, &model_->vertexs->vbView);
@@ -139,7 +139,7 @@ void KObject3d::Draw(KTexture* texture)
 	pipeline->Update(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	// 定数バッファビューをセット
-	KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootConstantBufferView(0, constBuffB0->GetGPUVirtualAddress());
+	KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootConstantBufferView(1, constBuffB0->GetGPUVirtualAddress());
 	KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootConstantBufferView(2, constBuffB1->GetGPUVirtualAddress());
 
 	// SRV
@@ -149,7 +149,7 @@ void KObject3d::Draw(KTexture* texture)
 	D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle = texture->srvHeap->GetGPUDescriptorHandleForHeapStart();
 
 	// シェーダーリソースビューをセット
-	KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootDescriptorTable(1, srvGpuHandle);
+	KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootDescriptorTable(0, srvGpuHandle);
 
 	// 頂点バッファビューの設定
 	KDirectXCommon::GetInstance()->GetCmdlist()->IASetVertexBuffers(0, 1, &model_->vertexs->vbView);

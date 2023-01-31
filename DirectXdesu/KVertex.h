@@ -25,19 +25,12 @@ public:
 	KVertex() {}
 	KVertex(ID3D12Device* dev, std::vector<VertexPosNormalUV>& vertices, std::vector<unsigned short>& indices);
 	void KVertexInit(ID3D12Device* dev, std::vector<VertexPosNormalUV>& vertices, std::vector<unsigned short>& indices);
-
-	// 頂点データ全体のサイズ = 頂点データ一つ分のサイズ * 頂点データの要素数
-	UINT sizeVB;
-	// 頂点バッファの設定
-	D3D12_HEAP_PROPERTIES heapProp{};
-	// リソース設定
-	D3D12_RESOURCE_DESC resDesc{};
+	
 	// 頂点バッファの生成
 	ComPtr<ID3D12Resource> vertBuff;
 
 	VertexPosNormalUV* vertMap = nullptr;
-	// インデックスデータ全体のサイズ
-	UINT sizeIB;
+	
 	// インデックスバッファの生成
 	ComPtr<ID3D12Resource> indexBuff;
 	// インデックスバッファをマッピング

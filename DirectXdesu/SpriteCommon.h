@@ -1,14 +1,14 @@
 #pragma once
+#include <d3d12.h>
 #include "KGPlin.h"
 #include "KShader.h"
 #include "Matrix4.h"
 
 class SpriteCommon
 {
+public:
 	KGPlin pipeline;
 	KShader shader;
-
-	Matrix mat2D;
 
 	SpriteCommon();
 	~SpriteCommon() {};
@@ -20,6 +20,4 @@ public:
 
 	void Init();
 	void Draw();
-
-	const Matrix& GetMat2D() const { return mat2D; }
 };

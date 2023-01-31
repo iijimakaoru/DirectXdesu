@@ -97,7 +97,9 @@ private:
 
 	bool isDebug = true;
 
-	static const int MaxHoge = 3;
+	bool isChange = false;
+
+	static const int MaxHoge = 1;
 	std::array<SpriteInfo, MaxHoge> spriteHoge;
 
 	Camera* camera = nullptr;

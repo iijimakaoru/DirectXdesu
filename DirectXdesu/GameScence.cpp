@@ -83,14 +83,12 @@ void GameScence::Init()
 	for (int i = 0; i < MaxHoge; i++)
 	{
 		spriteHoge[i] = sprite->SpriteCreate(spriteHoge[i].texNum, spriteCommon);
-		spriteHoge[i].size.x = 100.0f;
-		spriteHoge[i].size.y = 100.0f;
+		spriteHoge[i].size.x = 1;
+		spriteHoge[i].size.y = (float)KWinApp::GetWindowSizeH();
 		sprite->SpriteTransferVertexBuffer(spriteHoge[i], spriteCommon);
 		spriteHoge[i].texNum = 1;
 	}
-	spriteHoge[0].position = { 60, 650, 0 };
-	spriteHoge[1].position = { 180, 650, 0 };
-	spriteHoge[2].position = { 300, 650, 0 };
+	spriteHoge[0].position = { (float)KWinApp::GetWindowSizeW() / 2, (float)KWinApp::GetWindowSizeH() / 2, 0};
 #pragma endregion
 
 #pragma region デバッグテキスト
@@ -108,30 +106,49 @@ void GameScence::Init()
 
 void GameScence::Update()
 {
-	if (KInput::GetInstance()->IsTrigger(DIK_9))
+	char bufD[255] = "DebugCamera";
+	char bufG[255] = "GameCamera";
+	ImGui::Text("CameraMode");
+	if (ImGui::Button("ChangeCamera"))
 	{
-		if (isDebug)
-		{
-			isDebug = false;
-			delete camera;
-			camera = new GameCamera();
-		}
-		else
-		{
-			isDebug = true;
-			delete camera;
-			camera = new DebugCamera();
-		}
+		isChange = true;
+	}
+	if (isDebug)
+	{
+		ImGui::InputText("string", bufD, IM_ARRAYSIZE(bufD));
+	}
+	else
+	{
+		ImGui::InputText("string", bufG, IM_ARRAYSIZE(bufG));
 	}
 
-	char buf[255] = "unti";
-	ImGui::Text("Hello, world %d", 123);
-	if (ImGui::Button("Save"))
+	if (isChange)
 	{
-
+		spriteHoge[0].size.x += 20;
+		if (spriteHoge[0].size.x >= KWinApp::GetWindowSizeW())
+		{
+			if (isDebug)
+			{
+				isDebug = false;
+				delete camera;
+				camera = new GameCamera();
+			}
+			else
+			{
+				isDebug = true;
+				delete camera;
+				camera = new DebugCamera();
+			}
+			isChange = false;
+		}
 	}
-	ImGui::InputText("string", buf, IM_ARRAYSIZE(buf));
-	ImGui::SliderFloat("hooogeee", &hogehoge, 5.0f, 20.0f);
+	else
+	{
+		if (spriteHoge[0].size.x > 0)
+		{
+			spriteHoge[0].size.x -= 20;
+		}
+	}
 
 	if (KInput::GetInstance()->IsTrigger(DIK_0))
 	{
@@ -145,7 +162,7 @@ void GameScence::Update()
 		while (angle < XMConvertToRadians(360))
 		{
 			ParticleManager::GetInstance()->TestSplash({ 2 * cosf(piAngle + angle),0,2 * sinf(piAngle + angle) },
-				{ 1,1,1 }, { 1,1,1 }, 5 - 2, piAngle + angle, 30);
+				{ 1,1,1 }, { 1,1,1 }, 3, piAngle + angle, 30);
 			angle += XMConvertToRadians(20);
 		}
 		angle = 0;
@@ -252,9 +269,12 @@ void GameScence::Draw()
 	// スプライト描画
 	sprite->SpriteCommonBeginDraw(spriteCommon);
 
-	for (int i = 0; i < MaxHoge; i++)
+	if (spriteHoge[0].size.x > 1)
 	{
-		sprite->SpriteDraw(spriteHoge[i], spriteCommon);
+		for (int i = 0; i < MaxHoge; i++)
+		{
+			sprite->SpriteDraw(spriteHoge[i], spriteCommon);
+		}
 	}
 
 	debugtext->Print(spriteCommon, "FPS(w)" + std::to_string(KDirectXCommon::GetInstance()->fps), { 10,50 }, 2.0f);

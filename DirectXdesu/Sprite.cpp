@@ -366,6 +366,8 @@ void Sprite::SpriteUpdate(SpriteInfo& sprite, const SpriteCommon& spriteCommon)
 	sprite.matWorld = XMMatrixIdentity();
 	// Z軸回転
 	sprite.matWorld *= XMMatrixRotationZ(XMConvertToRadians(sprite.rotation));
+	// 
+	sprite.matWorld *= XMMatrixScaling(sprite.size.x, sprite.size.y, 0);
 	// 平行移動
 	sprite.matWorld *= XMMatrixTranslation(sprite.position.x, sprite.position.y, sprite.position.z);
 	// 定数バッファの転送

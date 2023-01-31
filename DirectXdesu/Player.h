@@ -10,6 +10,12 @@
 class Player
 {
 public:
+	enum class ControllerMode
+	{
+		KeyBord,
+		GamePad,
+	};
+
 	Player();
 	void Init(KModel* model, KGPlin* pipeline);
 	void Update(ViewProjection& viewProjection);
@@ -22,6 +28,8 @@ public:
 private:
 	std::unique_ptr<KObject3d> object;
 	std::unique_ptr<KModel> model;
+
+	ControllerMode mode = ControllerMode::KeyBord;
 
 public:
 	static Player* nowPlayer;

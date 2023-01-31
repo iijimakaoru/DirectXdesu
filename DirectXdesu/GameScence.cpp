@@ -9,6 +9,7 @@
 
 GameScence::~GameScence()
 {
+	delete camera;
 	sound->GetxAudio().Reset();
 	sound->SoundUnLoad(&soundData1);
 };
@@ -86,11 +87,28 @@ void GameScence::Init()
 #pragma endregion
 #pragma endregion
 
-	camera = new GameCamera();
+	isDebug = true;
+	camera = new DebugCamera();
 }
 
 void GameScence::Update()
 {
+	if (KInput::GetInstance()->IsTrigger(DIK_9))
+	{
+		if (isDebug)
+		{
+			isDebug = false;
+			delete camera;
+			camera = new GameCamera();
+		}
+		else
+		{
+			isDebug = true;
+			delete camera;
+			camera = new DebugCamera();
+		}
+	}
+
 	char buf[255] = "unti";
 	ImGui::Text("Hello, world %d", 123);
 	if (ImGui::Button("Save"))

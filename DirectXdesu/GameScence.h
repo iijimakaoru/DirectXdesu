@@ -93,6 +93,8 @@ private:
 
 	float hogehoge = 0;
 
+	bool isDebug = true;
+
 	Camera* camera = nullptr;
 };
 

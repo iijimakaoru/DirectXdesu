@@ -319,6 +319,6 @@ void GameScence::Draw()
 		}
 	}
 
-	debugtext->Print(spriteCommon, "FPS(w)" + std::to_string(KDirectXCommon::GetInstance()->fps), { 10,50 }, 2.0f);
-	debugtext->DrawAll(spriteCommon);
+	/*debugtext->Print(spriteCommon, "FPS(w)" + std::to_string(KDirectXCommon::GetInstance()->fps), { 10,50 }, 0.5f);
+	debugtext->DrawAll(spriteCommon);*/
 }

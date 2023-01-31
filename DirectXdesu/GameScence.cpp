@@ -4,6 +4,8 @@
 #include "ParticleManager.h"
 #include "MyMath.h"
 
+#include "DebugCamera.h"
+
 GameScence::~GameScence()
 {
 	sound->GetxAudio().Reset();
@@ -19,6 +21,8 @@ void GameScence::LoadResources()
 	cube->CreateModel();
 	hoge = std::make_unique<MtlObj>("hoge");
 	hoge->CreateModel();
+	SkyBox = std::make_unique<MtlObj>("boxSky");
+	SkyBox->CreateModel();
 
 	// テクスチャ
 	mario.CreateTexture("Resources/texture/", "mario.jpg");
@@ -47,9 +51,11 @@ void GameScence::Init()
 	obj->SetPipeline(objPipeline.get());
 	obj->transform.scale = { 10,10,10 };
 
-	// ビュープロジェクション
-	viewProjection.Initialize();
-	viewProjection.aspect = (float)KWinApp::GetWindowSizeW() / KWinApp::GetWindowSizeH();
+	skydorm = std::make_unique<KObject3d>();
+	skydorm->Initialize();
+	skydorm->LoadModel(SkyBox.get());
+	skydorm->SetPipeline(objPipeline.get());
+	skydorm->transform.scale = { 500,500,500 };
 
 	angle = 0;
 
@@ -82,6 +88,8 @@ void GameScence::Init()
 	debugtext->Init(sprite.get(), debugTextNumber, spriteCommon);
 #pragma endregion
 #pragma endregion
+
+	camera = new DebugCamera();
 }
 
 void GameScence::Update()
@@ -188,41 +196,23 @@ void GameScence::Update()
 		hogeCooltime = 0;
 	}
 
-	if (KInput::GetInstance()->IsPress(DIK_W))
-	{
-		viewProjection.angleY -= XMConvertToRadians(1.0f);
-	}
-	if (KInput::GetInstance()->IsPress(DIK_S))
-	{
-		viewProjection.angleY += XMConvertToRadians(1.0f);
-	}
-	if (KInput::GetInstance()->IsPress(DIK_A))
-	{
-		viewProjection.angleX -= XMConvertToRadians(1.0f);
-	}
-	if (KInput::GetInstance()->IsPress(DIK_D))
-	{
-		viewProjection.angleX += XMConvertToRadians(1.0f);
-	}
-
-	viewProjection.eye.x = viewProjection.lenZ * cosf(viewProjection.angleX) * cosf(viewProjection.angleY);
-	viewProjection.eye.y = (viewProjection.lenZ * sinf(viewProjection.angleY));
-	viewProjection.eye.z = viewProjection.lenZ * sinf(viewProjection.angleX) * cosf(viewProjection.angleY);
+	camera->Update();
 
 	// プレイヤー初期化
 	//player.Init();
 
-	obj->Update(viewProjection);
+	obj->Update(camera->viewProjection);
 
-	ParticleManager::GetInstance()->Update(viewProjection);
+	skydorm->Update(camera->viewProjection);
 
-	// ビューのアップデート
-	viewProjection.Update();
+	ParticleManager::GetInstance()->Update(camera->viewProjection);
 }
 
 void GameScence::Draw()
 {
 	obj->Draw();
+
+	skydorm->Draw();
 
 	ParticleManager::GetInstance()->Draw();
 

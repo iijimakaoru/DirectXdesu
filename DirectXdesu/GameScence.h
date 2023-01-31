@@ -12,6 +12,8 @@
 #include "KShader.h"
 #include <imgui.h>
 
+#include "Camera.h"
+
 class GameScence
 {
 public:
@@ -37,16 +39,15 @@ private:
 	std::unique_ptr<KModel> triangle;
 	std::unique_ptr<KModel> cube;
 	std::unique_ptr<KModel> hoge;
+	std::unique_ptr<KModel> SkyBox;
 
 	// テクスチャ
 	KTexture mario;
 	KTexture haikei;
 
-	// ビュープロジェクション
-	ViewProjection viewProjection;
-
 	// 3Dオブジェクト
 	std::unique_ptr<KObject3d> obj;
+	std::unique_ptr<KObject3d> skydorm;
 
 	// スプライト
 	std::unique_ptr<hogeSprite> sprite;
@@ -86,5 +87,7 @@ private:
 	float hogeCooltime = 0;
 
 	float hogehoge = 0;
+
+	Camera* camera = nullptr;
 };
 

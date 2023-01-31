@@ -36,7 +36,7 @@ public:
 	void Init();
 	SoundData SoundLoadWave(const char* filename);
 	void SoundUnLoad(SoundData* soundData);
-	void SoundPlayWave(IXAudio2* xAudio2, const SoundData& soundData);
+	void SoundPlayWave(const SoundData& soundData);
 	ComPtr<IXAudio2> GetxAudio() { return xAudio2; }
 
 private:

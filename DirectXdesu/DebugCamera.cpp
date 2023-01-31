@@ -1,58 +1,69 @@
 #include "DebugCamera.h"
 #include "KInput.h"
 
+DebugCamera::DebugCamera()
+{
+}
+
+DebugCamera::~DebugCamera()
+{
+}
+
+void DebugCamera::Init(Vector3 eye, Vector3 target, Vector3 up)
+{
+	this->eye = eye;
+	this->target = target;
+	this->up = up;
+
+	MatUpdate();
+
+	frontVec = target - eye;
+	disEyeTarget = frontVec.Length();
+}
+
 void DebugCamera::Update()
 {
-	if (KInput::GetInstance()->IsPush(DIK_D))
-	{
-		viewProjection.eye.x += moveSpeed;
-	}
+	moveCursor = KInput::GetMousePos() - KInput::GetOldMousePos();
+	float cursorDisPrev = moveCursor.Length();
+	moveCursor.normalize();
 
-	if (KInput::GetInstance()->IsPush(DIK_A))
+	if (input->GetMouseClick(KInput::Left))
 	{
-		viewProjection.eye.x += -moveSpeed;
+		moveCursor /= 1000;
+		moveCursor *= cursorDisPrev;
+		if (up.y < 0) {
+			moveCursor.x = -moveCursor.x;
+		}
+		cursorSpeed += moveCursor;
 	}
+	disEyeTarget += -KInput::GetMouseWheel() * (disEyeTarget * 0.001f);
+	if (disEyeTarget < 10)
+	{
+		disEyeTarget = 10;
+	}
+	target += rightVec * (KInput::GetInstance()->IsPush(DIK_A) - KInput::GetInstance()->IsPush(DIK_D));
+	target += downVec * (KInput::GetInstance()->IsPush(DIK_S) - KInput::GetInstance()->IsPush(DIK_W));
+	target += -frontVec * (KInput::GetInstance()->IsPush(DIK_Z) - KInput::GetInstance()->IsPush(DIK_X));
 
-	if (KInput::GetInstance()->IsPush(DIK_W))
-	{
-		viewProjection.eye.z += moveSpeed;
-	}
+	frontVec = target - eye;
+	frontVec.Normalize();
+	rightVec = Vector3(0, 1, 0).Cross(frontVec);
+	downVec = rightVec.Cross(frontVec);
 
-	if (KInput::GetInstance()->IsPush(DIK_S))
-	{
-		viewProjection.eye.z += -moveSpeed;
-	}
-	// デバッグカメラ高さ調整
-	if (KInput::GetInstance()->IsPush(DIK_Q))
-	{
-		viewProjection.eye.y += moveSpeed;
-	}
-	if (KInput::GetInstance()->IsPush(DIK_E))
-	{
-		viewProjection.eye.y -= moveSpeed;
-	}
+	if (rotAngle.x >= PI) rotAngle.x -= PI;
+	if (rotAngle.x < 0) rotAngle.x += PI;
+	if (rotAngle.y >= PI) rotAngle.y -= PI;
+	if (rotAngle.y < 0) rotAngle.y += PI;
 
-	if (angle.x >= 360)
-	{
-		angle.x -= 360;
-	}
-	if (angle.x < 0)
-	{
-		angle.x += 360;
-	}
+	Vector2 angle = rotAngle;
+	angle += cursorSpeed;
 
-	if (angle.y >= 90)
-	{
-		angle.y = 89.9f;
-	}
-	if (angle.y <= -90)
-	{		  
-		angle.y = -89.9f;
-	}
+	rightVec.Normalize();
+	downVec.Normalize();
 
-	viewProjection.target.x = viewProjection.eye.x - 100 * cosf(PI / 180 * angle.x) * cosf(PI / 180 * angle.y);
-	viewProjection.target.y = viewProjection.eye.y + 100 * sinf(PI / 180 * angle.y);
-	viewProjection.target.z = viewProjection.eye.z + 100 * sinf(PI / 180 * angle.x) * cosf(PI / 180 * angle.y);
-
-	viewProjection.Update();
+	up.y = cosf(angle.y);
+	eye.x = target.x - disEyeTarget * cosf(angle.y) * sinf(angle.x);
+	eye.y = target.y + disEyeTarget * sinf(angle.y);
+	eye.z = target.z - disEyeTarget * cosf(angle.y) * cosf(angle.x);
+	MatUpdate();
 }

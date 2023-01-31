@@ -36,6 +36,7 @@ private:
 	// モデル
 	std::unique_ptr<KModel> triangle;
 	std::unique_ptr<KModel> cube;
+	std::unique_ptr<KModel> hoge;
 
 	// テクスチャ
 	KTexture mario;

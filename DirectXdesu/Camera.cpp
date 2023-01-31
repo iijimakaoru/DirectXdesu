@@ -1,5 +1,6 @@
 #include "Camera.h"
 
-//using namespace std;
-//
-//Camera* Camera::nowCamera = nullptr;
+void Camera::MatUpdate()
+{
+	matView = MyMath::GetInstance()->LockAt(eye, target, up);
+}

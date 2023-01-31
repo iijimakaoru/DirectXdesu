@@ -29,6 +29,8 @@ void KInput::InitInternal()
 	result = directInput->CreateDevice(GUID_SysKeyboard, &keyboard, NULL);
 	assert(SUCCEEDED(result));
 
+
+
 	// 入力データ形式のセット
 	result = keyboard->SetDataFormat(&c_dfDIKeyboard);
 	assert(SUCCEEDED(result));
@@ -107,7 +109,7 @@ bool KInput::IsPress(int keyNum) {
 	return false;
 }
 
-bool KInput::IsTriger(int keyNum) {
+bool KInput::IsTrigger(int keyNum) {
 	if (key[keyNum] && !oldkey[keyNum]) {
 		return true;
 	}
@@ -119,6 +121,43 @@ bool KInput::IsRelease(int keyNum) {
 		return true;
 	}
 	return false;
+}
+
+bool KInput::GetMouseClick(int bottonNum)
+{
+	return (GetInstance()->mouseState.rgbButtons[bottonNum] & 0x80) != 0;
+}
+
+bool KInput::GetMouseClickRelease(int bottonNum)
+{
+	return (GetInstance()->mouseState.rgbButtons[bottonNum] & 0x80) == 0 &&
+		(GetInstance()->oldMouseState.rgbButtons[bottonNum] & 0x80) != 0;
+}
+
+bool KInput::GetMouseClickTrigger(int bottonNum)
+{
+	return (GetInstance()->mouseState.rgbButtons[bottonNum] & 0x80) != 0 &&
+		(GetInstance()->oldMouseState.rgbButtons[bottonNum] & 0x80) == 0;
+}
+
+LONG KInput::GetMouseWheel()
+{
+	return GetInstance()->mouseState.lZ;
+}
+
+Vector2 KInput::GetMousePos()
+{
+	return GetInstance()->mousePos;
+}
+
+Vector2 KInput::GetOldMousePos()
+{
+	return GetInstance()->oldMousePos;
+}
+
+Vector3 KInput::GetMouseMove()
+{
+	return Vector3((float)GetInstance()->mouseState.lX, (float)GetInstance()->mouseState.lY, (float)GetInstance()->mouseState.lZ);
 }
 
 bool KInput::GetPadConnect()

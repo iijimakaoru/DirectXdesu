@@ -212,9 +212,6 @@
     <ClInclude Include="GameScence.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="resource.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="KModel.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>

@@ -1,22 +1,24 @@
 #pragma once
 #include "Camera.h"
-#include <DirectXMath.h>
-#include "Vector2.h"
-#include "MyMath.h"
+#include "KInput.h"
 
 class DebugCamera : public Camera
 {
 private:
-	DirectX::XMFLOAT2 angle = { 90,0 };
+	KInput* input = KInput::GetInstance();
+
+	Vector2 moveCursor;
+	Vector2 cursorSpeed;
+
+	Vector2 rotAngle;
+	Vector2 prevRotAngle;
+	Vector2 endRotAngle;
+
 public:
-	float moveSpeed = 0.2f;
+	DebugCamera();
+	~DebugCamera() override;
 
-	DebugCamera(DirectX::XMFLOAT3 pos, float moveSpeed = 0.2f) : moveSpeed(moveSpeed)
-	{
-		viewProjection.eye = pos;
-		viewProjection.aspect = (float)KWinApp::GetWindowSizeW() / KWinApp::GetWindowSizeH();
-	}
-
+	void Init(Vector3 eye, Vector3 target, Vector3 up) override;
 	void Update() override;
 };
 

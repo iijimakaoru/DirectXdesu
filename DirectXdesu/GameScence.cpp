@@ -17,10 +17,17 @@ void GameScence::LoadResources()
 	triangle->CreateModel();
 	cube = std::make_unique<Cube>();
 	cube->CreateModel();
+	hoge = std::make_unique<MtlObj>("hoge");
+	hoge->CreateModel();
 
 	// テクスチャ
 	mario.CreateTexture("Resources/texture/", "mario.jpg");
 	haikei.CreateTexture("Resources/texture/", "haikei.jpg");
+
+	// サウンド
+	sound = std::make_unique<Sound>();
+	sound->Init();
+	soundData1 = sound->SoundLoadWave("Resources/Sound/Alarm01.wav");
 }
 
 void GameScence::Init()
@@ -31,22 +38,18 @@ void GameScence::Init()
 
 	if (!ParticleManager::GetInstance()->IsPoolCreated())
 	{
-		ParticleManager::GetInstance()->CreatePool(cube.get(), objPipeline.get());
+		ParticleManager::GetInstance()->CreatePool(hoge.get(), objPipeline.get());
 	}
 
 	obj = std::make_unique<KObject3d>();
 	obj->Initialize();
-	obj->LoadModel(cube.get());
+	obj->LoadModel(hoge.get());
 	obj->SetPipeline(objPipeline.get());
+	obj->transform.scale = { 10,10,10 };
 
 	// ビュープロジェクション
 	viewProjection.Initialize();
 	viewProjection.aspect = (float)KWinApp::GetWindowSizeW() / KWinApp::GetWindowSizeH();
-
-	sound = std::make_unique<Sound>();
-	sound->Init();
-
-	soundData1 = sound->SoundLoadWave("Resources/Sound/fanfare.wav");
 
 	angle = 0;
 
@@ -92,9 +95,14 @@ void GameScence::Update()
 	ImGui::InputText("string", buf, IM_ARRAYSIZE(buf));
 	ImGui::SliderFloat("float", &hogehoge, 5.0f, 20.0f);
 
+	if (KInput::GetInstance()->IsTrigger(DIK_0))
+	{
+		sound->SoundPlayWave(soundData1);
+	}
+
 	float piAngle = PI * 2;
 
-	if (KInput::GetInstance()->IsTriger(DIK_SPACE))
+	if (KInput::GetInstance()->IsTrigger(DIK_SPACE))
 	{
 		while (angle < XMConvertToRadians(360))
 		{
@@ -110,7 +118,7 @@ void GameScence::Update()
 		}
 	}
 
-	if (KInput::GetInstance()->IsTriger(DIK_K))
+	if (KInput::GetInstance()->IsTrigger(DIK_K))
 	{
 		if (speedLevel > 1)
 		{
@@ -118,7 +126,7 @@ void GameScence::Update()
 		}
 	}
 
-	if (KInput::GetInstance()->IsTriger(DIK_L))
+	if (KInput::GetInstance()->IsTrigger(DIK_L))
 	{
 		if (speedLevel < 3)
 		{
@@ -214,7 +222,7 @@ void GameScence::Update()
 
 void GameScence::Draw()
 {
-	obj->Draw(&mario);
+	obj->Draw();
 
 	ParticleManager::GetInstance()->Draw();
 

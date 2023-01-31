@@ -89,7 +89,7 @@ void Sound::SoundUnLoad(SoundData* soundData)
 	soundData->wfex = {};
 }
 
-void Sound::SoundPlayWave(IXAudio2* xAudio2, const SoundData& soundData)
+void Sound::SoundPlayWave(const SoundData& soundData)
 {
 	HRESULT result;
 	// 波形フォーマットを元にSourceVoiceの生成

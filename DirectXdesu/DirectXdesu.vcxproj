@@ -211,7 +211,6 @@
     <ClInclude Include="PipelineSet.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Quaternion.h" />
-    <ClInclude Include="resource.h" />
     <ClInclude Include="Sound.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="SpriteCommon.h" />

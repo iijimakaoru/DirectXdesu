@@ -16,6 +16,8 @@
 
 #include "Player.h"
 
+#include "CollisionPrimitive.h"
+
 #include <array>
 
 class GameScence
@@ -108,5 +110,11 @@ private:
 
 	bool isWave = false;
 	bool isTaihun = false;
+
+	/// “–‚½‚è”»’è
+	// ‹…
+	Sphere sphere;
+	// •½–Ê
+	Plane plane;
 };
 

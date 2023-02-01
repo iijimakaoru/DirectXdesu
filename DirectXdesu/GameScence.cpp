@@ -7,6 +7,10 @@
 #include "DebugCamera.h"
 #include "GameCamera.h"
 
+#include "Collision.h"
+#include <sstream>
+#include <iomanip>
+
 GameScence::~GameScence()
 {
 	delete camera;
@@ -106,6 +110,14 @@ void GameScence::Init()
 
 	isDebug = true;
 	camera = new DebugCamera();
+
+	// 球の初期値を設定
+	sphere.center = XMVectorSet(0, 2, 0, 1); // 中心点座標
+	sphere.radius = 1.0f; // 半径
+
+	// 平面の初期値を設定
+	plane.normal = XMVectorSet(0, 1, 0, 0); // 法線ベクトル
+	plane.distance = 0.0f; // 原点(0,0,0)からの距離
 }
 
 void GameScence::Update()
@@ -298,6 +310,38 @@ void GameScence::Update()
 	skydorm->Update(camera->viewProjection);
 
 	ParticleManager::GetInstance()->Update(camera->viewProjection);
+
+	// 球移動
+	{
+		XMVECTOR moveY = XMVectorSet(0, 0.01f, 0, 0);
+		if (KInput::GetInstance()->IsPush(DIK_T))
+		{
+			sphere.center += moveY;
+		}
+		else if (KInput::GetInstance()->IsPush(DIK_G))
+		{
+			sphere.center -= moveY;
+		}
+
+		XMVECTOR moveX = XMVectorSet(0.01f, 0, 0, 0);
+		if (KInput::GetInstance()->IsPush(DIK_H))
+		{
+			sphere.center += moveX;
+		}
+		else if (KInput::GetInstance()->IsPush(DIK_F))
+		{
+			sphere.center -= moveX;
+		}
+
+		std::ostringstream spherestr;
+		spherestr << "Sphere:("
+			<< std::fixed << std::setprecision(2) // 小数点以下2桁まで
+			<< sphere.center.m128_f32[0] << ","  // x
+			<< sphere.center.m128_f32[1] << ","  // y
+			<< sphere.center.m128_f32[2] << ")"; // z
+
+		debugtext->Print(spriteCommon, spherestr.str(), { 50,180 }, 0.5f);
+	}
 }
 
 void GameScence::Draw()
@@ -319,6 +363,6 @@ void GameScence::Draw()
 		}
 	}
 
-	/*debugtext->Print(spriteCommon, "FPS(w)" + std::to_string(KDirectXCommon::GetInstance()->fps), { 10,50 }, 0.5f);
-	debugtext->DrawAll(spriteCommon);*/
+	//debugtext->Print(spriteCommon, "FPS(w)" + std::to_string(KDirectXCommon::GetInstance()->fps), { 10,50 }, 0.5f);
+	debugtext->DrawAll(spriteCommon);
 }

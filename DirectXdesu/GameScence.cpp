@@ -310,38 +310,6 @@ void GameScence::Update()
 	skydorm->Update(camera->viewProjection);
 
 	ParticleManager::GetInstance()->Update(camera->viewProjection);
-
-	// ‹…ˆÚ“®
-	{
-		XMVECTOR moveY = XMVectorSet(0, 0.01f, 0, 0);
-		if (KInput::GetInstance()->IsPush(DIK_T))
-		{
-			sphere.center += moveY;
-		}
-		else if (KInput::GetInstance()->IsPush(DIK_G))
-		{
-			sphere.center -= moveY;
-		}
-
-		XMVECTOR moveX = XMVectorSet(0.01f, 0, 0, 0);
-		if (KInput::GetInstance()->IsPush(DIK_H))
-		{
-			sphere.center += moveX;
-		}
-		else if (KInput::GetInstance()->IsPush(DIK_F))
-		{
-			sphere.center -= moveX;
-		}
-
-		std::ostringstream spherestr;
-		spherestr << "Sphere:("
-			<< std::fixed << std::setprecision(2) // ¬”“_ˆÈ‰º2Œ…‚Ü‚Å
-			<< sphere.center.m128_f32[0] << ","  // x
-			<< sphere.center.m128_f32[1] << ","  // y
-			<< sphere.center.m128_f32[2] << ")"; // z
-
-		debugtext->Print(spriteCommon, spherestr.str(), { 50,180 }, 0.5f);
-	}
 }
 
 void GameScence::Draw()
@@ -363,6 +331,6 @@ void GameScence::Draw()
 		}
 	}
 
-	//debugtext->Print(spriteCommon, "FPS(w)" + std::to_string(KDirectXCommon::GetInstance()->fps), { 10,50 }, 0.5f);
+	debugtext->Print(spriteCommon, "FPS(w)" + std::to_string(KDirectXCommon::GetInstance()->fps), { 10,50 }, 0.5f);
 	debugtext->DrawAll(spriteCommon);
 }

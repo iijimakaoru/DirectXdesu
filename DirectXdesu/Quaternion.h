@@ -64,3 +64,5 @@ Matrix MakeRotateMatrix(const Quaternion& q);
 float Dot(const Quaternion& q1, const Quaternion& q2);
 
 Quaternion Slerp(const Quaternion& q1, const Quaternion& q2, float time);
+
+Quaternion DirectionToDirection(const Vector3& v1, const Vector3& v2);

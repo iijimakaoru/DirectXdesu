@@ -206,3 +206,39 @@ bool Collision::CheckRay2Triangle(const Ray& ray, const Triangle& triangle, floa
 
 	return true;
 }
+
+bool Collision::CheckRay2Sphere(const Ray& ray, const Sphere& sphere, float* distance, DirectX::XMVECTOR* inter)
+{
+	XMVECTOR m = ray.start - sphere.center;
+	float b = XMVector3Dot(m, ray.dir).m128_f32[0];
+	float c = XMVector3Dot(m, m).m128_f32[0] - sphere.radius * sphere.radius;
+	// レイの始点が球の外側かつ、レイが球の外側に向いてたら当たってない
+	if (c > 0 && b > 0)
+	{
+		return false;
+	}
+	float discr = b * b - c;
+	// 負の判別は当たってない
+	if (discr < 0)
+	{
+		return false;
+	}
+	// レイは球と交差してる
+	// 交差の最小値を算出
+	float t = -b - sqrtf(discr);
+	// tが負の場合、レイは球の内側から開始してるのでtを0にクランプ
+	if (t < 0)
+	{
+		t = 0;
+	}
+	if (distance)
+	{
+		*distance = t;
+	}
+	if (inter)
+	{
+		*inter = ray.start + t * ray.dir;
+	}
+
+	return true;
+}

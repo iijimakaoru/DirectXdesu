@@ -156,3 +156,53 @@ bool Collision::CheckRay2Plane(const Ray& ray, const Plane& plane, float* distan
 
 	return true;
 }
+
+bool Collision::CheckRay2Triangle(const Ray& ray, const Triangle& triangle, float* distance, DirectX::XMVECTOR* inter)
+{
+	// 三角形が乗ってる平面を算出
+	Plane plane;
+	XMVECTOR interPlane;
+	plane.normal = triangle.normal;
+	plane.distance = XMVector3Dot(triangle.normal, triangle.p0).m128_f32[0];
+	// レイと平面が当たってなければ当たってない
+	if (!CheckRay2Plane(ray, plane, distance, &interPlane))
+	{
+		return false;
+	}
+	//// レイと平面が当たっていたから距離と交点が書き込まれる
+	/// レイと平面の交点が三角形の中にあるか判定
+	// 誤差吸収用の微小な値
+	const float epsilon = 1.0e-5f;
+	XMVECTOR m;
+	// 辺p0_p1
+	XMVECTOR pt_p0 = triangle.p0 - interPlane;
+	XMVECTOR p0_p1 = triangle.p1 - triangle.p0;
+	// 辺の外側であれば当たってないので処理を終わらせる
+	if (XMVector3Dot(m, triangle.normal).m128_f32[0] < -epsilon)
+	{
+		return false;
+	}
+	// 辺p1_p2
+	XMVECTOR pt_p1 = triangle.p1 - interPlane;
+	XMVECTOR p1_p2 = triangle.p2 - triangle.p1;
+	// 辺の外側であれば当たってないので処理を終わらせる
+	if (XMVector3Dot(m, triangle.normal).m128_f32[0] < -epsilon)
+	{
+		return false;
+	}
+	// 辺p2_p0
+	XMVECTOR pt_p2 = triangle.p2 - interPlane;
+	XMVECTOR p2_p0 = triangle.p0 - triangle.p2;
+	// 辺の外側であれば当たってないので処理を終わらせる
+	if (XMVector3Dot(m, triangle.normal).m128_f32[0] < -epsilon)
+	{
+		return false;
+	}
+	// 全部内側なので当たってる
+	if (inter)
+	{
+		*inter = interPlane;
+	}
+
+	return true;
+}

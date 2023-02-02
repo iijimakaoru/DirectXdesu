@@ -26,6 +26,8 @@ public:
 	DirectX::XMVECTOR p2;
 	// 法線ベクトル
 	DirectX::XMVECTOR normal;
+
+	void ConputeNormal();
 };
 
 struct Ray

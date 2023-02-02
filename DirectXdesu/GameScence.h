@@ -23,6 +23,12 @@
 class GameScence
 {
 public:
+	enum class CollisionMode
+	{
+		Sphere_Plane,
+		Sphere_Triangle,
+	};
+
 	GameScence()
 	{
 		LoadResources();
@@ -55,6 +61,7 @@ private:
 	std::unique_ptr<KObject3d> obj;
 	std::unique_ptr<KObject3d> skydorm;
 	std::unique_ptr<KObject3d> stage;
+	std::unique_ptr<KObject3d> testTriangle;
 
 	// プレイヤー
 	Player player;
@@ -112,6 +119,8 @@ private:
 	bool isWave = false;
 	bool isTaihun = false;
 
+	CollisionMode colMode = CollisionMode::Sphere_Plane;
+
 	/// 当たり判定
 	// 球
 	Sphere sphere;
@@ -119,6 +128,8 @@ private:
 	Plane plane;
 	// レイ
 	Ray ray;
+	// 三角形
+	ColTriangle colTriangle;
 
 	bool isHit = false;
 };

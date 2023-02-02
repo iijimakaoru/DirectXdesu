@@ -59,6 +59,14 @@ void GameScence::Init()
 	skydorm->SetPipeline(objPipeline.get());
 	skydorm->transform.scale = { 500,500,500 };
 
+	testTriangle = std::make_unique<KObject3d>();
+	testTriangle->Initialize();
+	testTriangle->LoadModel(triangle.get());
+	testTriangle->SetPipeline(objPipeline.get());
+	testTriangle->transform.scale = { 100,100,1 };
+	testTriangle->transform.pos.y = -10;
+	testTriangle->transform.rot.x = XMConvertToRadians(90);
+
 	player.Init(hoge.get(), objPipeline.get());
 
 	Player::nowPlayer = &player;
@@ -96,7 +104,7 @@ void GameScence::Init()
 		sprite->SpriteTransferVertexBuffer(spriteHoge[i], spriteCommon);
 		spriteHoge[i].texNum = 1;
 	}
-	spriteHoge[0].position = { (float)KWinApp::GetWindowSizeW() / 2, (float)KWinApp::GetWindowSizeH() / 2, 0};
+	spriteHoge[0].position = { (float)KWinApp::GetWindowSizeW() / 2, (float)KWinApp::GetWindowSizeH() / 2, 0 };
 #pragma endregion
 
 #pragma region デバッグテキスト
@@ -111,6 +119,9 @@ void GameScence::Init()
 	isDebug = true;
 	camera = new DebugCamera();
 
+	// コライダーモード
+	colMode = CollisionMode::Sphere_Plane;
+
 	stage = std::make_unique<KObject3d>();
 	stage->transform.scale = { 80,0.1f,80 };
 	stage->transform.pos.y = -10;
@@ -118,12 +129,22 @@ void GameScence::Init()
 	stage->SetPipeline(objPipeline.get());
 
 	// 球の初期値を設定
-	sphere.center = XMVectorSet(player.GetPos().x, player.GetPos().y, player.GetPos().z, 0); // 中心点座標
+	sphere.center = XMVectorSet(player.GetPos().x, player.GetPos().y, player.GetPos().z, 1); // 中心点座標
 	sphere.radius = 100.0f; // 半径
 
 	// 平面の初期値を設定
 	plane.normal = XMVectorSet(0, 1, 0, 0); // 法線ベクトル
 	plane.distance = 0.0f; // 原点(0,0,0)からの距離
+
+	// 三角形の初期値設定
+	colTriangle.p0 = XMVectorSet(-50.0f, 0, -50.0f, 1);
+	colTriangle.p1 = XMVectorSet(0.0f, 0, +50.0f, 1);
+	colTriangle.p2 = XMVectorSet(+50.0f, 0, -50.0f, 1);
+	colTriangle.normal = XMVectorSet(0, 1, 0, 0);
+
+	// レイの初期値設定
+	ray.start = XMVectorSet(0, 1, 0, 1); // 原点やや上
+	ray.dir = XMVectorSet(0, -1, 0, 0); // 下向き
 }
 
 void GameScence::Update()
@@ -203,7 +224,7 @@ void GameScence::Update()
 		vec.Normalize();
 		for (int i = 0; i < 100; i++)
 		{
-			ParticleManager::GetInstance()->Splash(Player::nowPlayer->GetPos(), {1,1,1}, {1,1,1}, 40, 5, vec);
+			ParticleManager::GetInstance()->Splash(Player::nowPlayer->GetPos(), { 1,1,1 }, { 1,1,1 }, 40, 5, vec);
 		}
 	}
 	if (ImGui::Button("Wave"))
@@ -303,10 +324,21 @@ void GameScence::Update()
 		hogeCooltime = 0;
 	}
 
+	if (ImGui::Button("Sphere_Plane"))
+	{
+		colMode = CollisionMode::Sphere_Plane;
+	}
+	if (ImGui::Button("Sphere_Triangle"))
+	{
+		colMode = CollisionMode::Sphere_Triangle;
+	}
+
 	stage->Update(camera->viewProjection);
 	plane.normal.m128_f32[0] = stage->transform.pos.x;
 	plane.normal.m128_f32[1] = stage->transform.pos.y;
 	plane.normal.m128_f32[2] = stage->transform.pos.z;
+
+	testTriangle->Update(camera->viewProjection);
 
 	for (int i = 0; i < MaxHoge; i++)
 	{
@@ -317,11 +349,30 @@ void GameScence::Update()
 
 	// プレイヤー初期化
 	player.Update(camera->viewProjection);
+	// 球判定
 	sphere.center.m128_f32[0] = player.GetPos().x;
 	sphere.center.m128_f32[1] = player.GetPos().y + 10;
 	sphere.center.m128_f32[2] = player.GetPos().z;
+	// レイ判定
+	ray.start.m128_f32[0] = player.GetPos().x;
+	ray.start.m128_f32[1] = player.GetPos().y;
+	ray.start.m128_f32[2] = player.GetPos().z;
 
-	isHit = Collision::CheckSphere2Plane(sphere, plane);
+	if (colMode == CollisionMode::Sphere_Plane)
+	{
+		sphere.radius = 100;
+		isHit = Collision::CheckSphere2Plane(sphere, plane);
+	}
+	else if (colMode == CollisionMode::Sphere_Triangle)
+	{
+		sphere.radius = 10;
+		isHit = Collision::CheckSphere2Triangle(sphere, colTriangle);
+	}
+
+	// レイと平面の当たり判定
+	XMVECTOR inter;
+	float distance;
+	//isHit = Collision::CheckRay2Plane(ray, plane, &distance, &inter);
 
 	skydorm->Update(camera->viewProjection);
 
@@ -334,12 +385,27 @@ void GameScence::Draw()
 
 	if (isHit)
 	{
-		stage->Draw(&haikei);
+		if (colMode == CollisionMode::Sphere_Plane)
+		{
+			stage->Draw(&haikei);
+		}
+		else if (colMode == CollisionMode::Sphere_Triangle)
+		{
+			testTriangle->Draw(&haikei);
+		}
 	}
 	else
 	{
-		stage->Draw(&mario);
+		if (colMode == CollisionMode::Sphere_Plane)
+		{
+			stage->Draw(&mario);
+		}
+		else if (colMode == CollisionMode::Sphere_Triangle)
+		{
+			testTriangle->Draw(&mario);
+		}
 	}
+	
 
 	skydorm->Draw();
 

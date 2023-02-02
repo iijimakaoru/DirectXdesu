@@ -76,6 +76,16 @@ void Player::Update(ViewProjection& viewProjection)
 		{
 			object->transform.pos.z -= 1.0f;
 		}
+
+		if (input->IsPush(DIK_LSHIFT))
+		{
+			object->transform.pos.y -= 1.0f;
+		}
+
+		if (input->IsPush(DIK_RSHIFT))
+		{
+			object->transform.pos.y += 1.0f;
+		}
 	}
 	else if (mode == ControllerMode::GamePad)
 	{

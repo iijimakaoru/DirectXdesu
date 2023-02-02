@@ -2,7 +2,7 @@
 
 using namespace DirectX;
 
-void Triangle::ConputeNormal()
+void ColTriangle::ConputeNormal()
 {
 	XMVECTOR p0_p1 = p1 - p0; // p0からp1までのベクトル
 	XMVECTOR p0_p2 = p2 - p0; // p0からp2までのベクトル

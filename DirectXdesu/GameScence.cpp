@@ -111,9 +111,15 @@ void GameScence::Init()
 	isDebug = true;
 	camera = new DebugCamera();
 
+	stage = std::make_unique<KObject3d>();
+	stage->transform.scale = { 80,0.1f,80 };
+	stage->transform.pos.y = -10;
+	stage->LoadModel(cube.get());
+	stage->SetPipeline(objPipeline.get());
+
 	// 球の初期値を設定
-	sphere.center = XMVectorSet(0, 2, 0, 1); // 中心点座標
-	sphere.radius = 1.0f; // 半径
+	sphere.center = XMVectorSet(player.GetPos().x, player.GetPos().y, player.GetPos().z, 0); // 中心点座標
+	sphere.radius = 100.0f; // 半径
 
 	// 平面の初期値を設定
 	plane.normal = XMVectorSet(0, 1, 0, 0); // 法線ベクトル
@@ -297,6 +303,11 @@ void GameScence::Update()
 		hogeCooltime = 0;
 	}
 
+	stage->Update(camera->viewProjection);
+	plane.normal.m128_f32[0] = stage->transform.pos.x;
+	plane.normal.m128_f32[1] = stage->transform.pos.y;
+	plane.normal.m128_f32[2] = stage->transform.pos.z;
+
 	for (int i = 0; i < MaxHoge; i++)
 	{
 		sprite->SpriteUpdate(spriteHoge[i], spriteCommon);
@@ -306,6 +317,11 @@ void GameScence::Update()
 
 	// プレイヤー初期化
 	player.Update(camera->viewProjection);
+	sphere.center.m128_f32[0] = player.GetPos().x;
+	sphere.center.m128_f32[1] = player.GetPos().y + 10;
+	sphere.center.m128_f32[2] = player.GetPos().z;
+
+	isHit = Collision::CheckSphere2Plane(sphere, plane);
 
 	skydorm->Update(camera->viewProjection);
 
@@ -315,6 +331,15 @@ void GameScence::Update()
 void GameScence::Draw()
 {
 	player.Draw();
+
+	if (isHit)
+	{
+		stage->Draw(&haikei);
+	}
+	else
+	{
+		stage->Draw(&mario);
+	}
 
 	skydorm->Draw();
 

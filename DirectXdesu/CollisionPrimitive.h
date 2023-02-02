@@ -17,7 +17,7 @@ struct Plane
 	float distance = 0.0f;
 };
 
-class Triangle
+class ColTriangle
 {
 public:
 	// ’¸“_À•W3‚Â

@@ -54,6 +54,7 @@ private:
 	// 3Dオブジェクト
 	std::unique_ptr<KObject3d> obj;
 	std::unique_ptr<KObject3d> skydorm;
+	std::unique_ptr<KObject3d> stage;
 
 	// プレイヤー
 	Player player;
@@ -116,5 +117,9 @@ private:
 	Sphere sphere;
 	// 平面
 	Plane plane;
+	// レイ
+	Ray ray;
+
+	bool isHit = false;
 };
 

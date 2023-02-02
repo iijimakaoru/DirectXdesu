@@ -22,7 +22,7 @@ bool Collision::CheckSphere2Plane(const Sphere& sphere, const Plane& plane, Dire
 	return true;
 }
 
-void Collision::ClosestPtPoint2Triangle(const DirectX::XMVECTOR& point, const Triangle& triangle, DirectX::XMVECTOR* closest)
+void Collision::ClosestPtPoint2Triangle(const DirectX::XMVECTOR& point, const ColTriangle& triangle, DirectX::XMVECTOR* closest)
 {
 	// pointがp0の外側の頂点領域の中にあるかどうかチェック
 	XMVECTOR p0_p1 = triangle.p1 - triangle.p0;
@@ -96,7 +96,7 @@ void Collision::ClosestPtPoint2Triangle(const DirectX::XMVECTOR& point, const Tr
 	*closest = triangle.p0 + p0_p1 * v + p0_p2 * w;
 }
 
-bool Collision::CheckSphere2Triangle(const Sphere& sphere, const Triangle& triangle, DirectX::XMVECTOR* inter)
+bool Collision::CheckSphere2Triangle(const Sphere& sphere, const ColTriangle& triangle, DirectX::XMVECTOR* inter)
 {
 	XMVECTOR p;
 	// 球の中心に対する最近接点である三角形上にある点pを見つける
@@ -157,7 +157,7 @@ bool Collision::CheckRay2Plane(const Ray& ray, const Plane& plane, float* distan
 	return true;
 }
 
-bool Collision::CheckRay2Triangle(const Ray& ray, const Triangle& triangle, float* distance, DirectX::XMVECTOR* inter)
+bool Collision::CheckRay2Triangle(const Ray& ray, const ColTriangle& triangle, float* distance, DirectX::XMVECTOR* inter)
 {
 	// 三角形が乗ってる平面を算出
 	Plane plane;
@@ -177,6 +177,7 @@ bool Collision::CheckRay2Triangle(const Ray& ray, const Triangle& triangle, floa
 	// 辺p0_p1
 	XMVECTOR pt_p0 = triangle.p0 - interPlane;
 	XMVECTOR p0_p1 = triangle.p1 - triangle.p0;
+	m = XMVector3Cross(pt_p0, p0_p1);
 	// 辺の外側であれば当たってないので処理を終わらせる
 	if (XMVector3Dot(m, triangle.normal).m128_f32[0] < -epsilon)
 	{
@@ -185,6 +186,7 @@ bool Collision::CheckRay2Triangle(const Ray& ray, const Triangle& triangle, floa
 	// 辺p1_p2
 	XMVECTOR pt_p1 = triangle.p1 - interPlane;
 	XMVECTOR p1_p2 = triangle.p2 - triangle.p1;
+	m = XMVector3Cross(pt_p1, p1_p2);
 	// 辺の外側であれば当たってないので処理を終わらせる
 	if (XMVector3Dot(m, triangle.normal).m128_f32[0] < -epsilon)
 	{
@@ -193,6 +195,7 @@ bool Collision::CheckRay2Triangle(const Ray& ray, const Triangle& triangle, floa
 	// 辺p2_p0
 	XMVECTOR pt_p2 = triangle.p2 - interPlane;
 	XMVECTOR p2_p0 = triangle.p0 - triangle.p2;
+	m = XMVector3Cross(pt_p2, p2_p0);
 	// 辺の外側であれば当たってないので処理を終わらせる
 	if (XMVector3Dot(m, triangle.normal).m128_f32[0] < -epsilon)
 	{

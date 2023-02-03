@@ -382,7 +382,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	Vector3 p1(20, 10, 0);
 	Vector3 end(0, 20, 0);
 
-	float maxTime = 20;
+	float maxTime = 60;
 	float nowTime = 0;
 
 	// ウィンドウ表示
@@ -419,6 +419,16 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 		if (gameScene == Scene::Title)
 		{
+			if (nowTime < maxTime)
+			{
+				nowTime++;
+			}
+
+			Vector3 a = lerp3D(start, p1, nowTime / maxTime);
+			Vector3 b = lerp3D(p1, end, nowTime / maxTime);
+
+			obj->transform.pos = lerp3D(a, b, nowTime / maxTime);
+
 			obj->Update(Player::nowPlayer->view);
 
 			// プレイヤー初期化

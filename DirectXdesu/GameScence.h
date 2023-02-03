@@ -27,6 +27,8 @@ public:
 	{
 		Sphere_Plane,
 		Sphere_Triangle,
+		Ray_Plane,
+		Ray_Triangle,
 	};
 
 	GameScence()

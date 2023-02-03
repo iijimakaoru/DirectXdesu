@@ -332,6 +332,15 @@ void GameScence::Update()
 	{
 		colMode = CollisionMode::Sphere_Triangle;
 	}
+	if (ImGui::Button("Ray_Plane"))
+	{
+		ray.dir.m128_f32[1] = 1;
+		colMode = CollisionMode::Ray_Plane;
+	}
+	if (ImGui::Button("Ray_Triangle"))
+	{
+		colMode = CollisionMode::Ray_Triangle;
+	}
 
 	stage->Update(camera->viewProjection);
 	plane.normal.m128_f32[0] = stage->transform.pos.x;
@@ -368,11 +377,18 @@ void GameScence::Update()
 		sphere.radius = 10;
 		isHit = Collision::CheckSphere2Triangle(sphere, colTriangle);
 	}
-
-	// ƒŒƒC‚Æ•½–Ê‚Ì“–‚½‚è”»’è
-	XMVECTOR inter;
-	float distance;
-	//isHit = Collision::CheckRay2Plane(ray, plane, &distance, &inter);
+	else if (colMode == CollisionMode::Ray_Plane)
+	{
+		XMVECTOR inter;
+		float distance;
+		isHit = Collision::CheckRay2Plane(ray, plane, &distance, &inter);
+	}
+	else if (colMode == CollisionMode::Ray_Triangle)
+	{
+		XMVECTOR inter;
+		float distance;
+		isHit = Collision::CheckRay2Triangle(ray, colTriangle, &distance, &inter);
+	}
 
 	skydorm->Update(camera->viewProjection);
 
@@ -393,6 +409,14 @@ void GameScence::Draw()
 		{
 			testTriangle->Draw(&haikei);
 		}
+		else if (colMode == CollisionMode::Ray_Plane)
+		{
+			stage->Draw(&haikei);
+		}
+		else if (colMode == CollisionMode::Ray_Triangle)
+		{
+			testTriangle->Draw(&haikei);
+		}
 	}
 	else
 	{
@@ -401,6 +425,14 @@ void GameScence::Draw()
 			stage->Draw(&mario);
 		}
 		else if (colMode == CollisionMode::Sphere_Triangle)
+		{
+			testTriangle->Draw(&mario);
+		}
+		else if (colMode == CollisionMode::Ray_Plane)
+		{
+			stage->Draw(&mario);
+		}
+		else if (colMode == CollisionMode::Ray_Triangle)
 		{
 			testTriangle->Draw(&mario);
 		}

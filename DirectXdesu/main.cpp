@@ -32,6 +32,8 @@
 #include "MyMath.h"
 #include "ParticleManager.h"
 
+#include "Ease.h"
+
 PipelineSet Create3DObjectGpipeline()
 {
 	HRESULT result;
@@ -371,6 +373,18 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 	float phaseTimer = 0;
 
+	std::unique_ptr<KObject3d> obj;
+	obj = std::make_unique<KObject3d>();
+	obj->Initialize();
+	obj->LoadModel(&cube);
+
+	Vector3 start(0, 0, 0);
+	Vector3 p1(20, 10, 0);
+	Vector3 end(0, 20, 0);
+
+	float maxTime = 20;
+	float nowTime = 0;
+
 	// ウィンドウ表示
 	// ゲームループ
 	while (true)
@@ -405,6 +419,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 		if (gameScene == Scene::Title)
 		{
+			obj->Update(Player::nowPlayer->view);
+
 			// プレイヤー初期化
 			player.Init();
 
@@ -555,7 +571,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		// 描画コマンド
 		if (gameScene == Scene::Title)
 		{
-
+			obj->Draw(&stageR);
 		}
 
 		if (gameScene == Scene::Play ||

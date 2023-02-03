@@ -24,3 +24,8 @@ float EaseOut(const float start, const float end, const float time, const float 
 {
 	return Lerp(start, end, 1 - powf(1 - time, power));
 }
+
+const Vector3 lerp3D(const Vector3& start, const Vector3& end, const float t)
+{
+	return start * (1.0f - t) + end * t;
+}

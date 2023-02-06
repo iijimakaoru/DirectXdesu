@@ -460,7 +460,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		{
 			player.Update(viewProjection);
 
-			boss.Update(Player::nowPlayer->view);
+			//boss.Update(Player::nowPlayer->view);
 
 			AllCollision();
 
@@ -590,7 +590,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		{
 			player.Draw();
 
-			boss.Draw();
+			//boss.Draw();
 
 			BossBulletManager::GetInstance()->Draw();
 

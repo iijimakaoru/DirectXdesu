@@ -3,6 +3,7 @@
 #include "Boss.h"
 #include "Matrix4.h"
 #include "ParticleManager.h"
+#include "Ease.h"
 
 Player* Player::nowPlayer = nullptr;
 
@@ -20,6 +21,19 @@ Player::Player(KModel* model)
 	view.aspect = (float)KWinApp::GetWindowSizeW() / KWinApp::GetWindowSizeH();
 
 	view.lenZ = -200;
+
+	// ’e
+	bulletObj1 = std::make_unique<KObject3d>();
+	bulletObj1->Initialize();
+	bulletObj1->LoadModel(model_);
+
+	bulletObj2 = std::make_unique<KObject3d>();
+	bulletObj2->Initialize();
+	bulletObj2->LoadModel(model_);
+
+	bulletObj3 = std::make_unique<KObject3d>();
+	bulletObj3->Initialize();
+	bulletObj3->LoadModel(model_);
 }
 
 void Player::Init()
@@ -27,6 +41,10 @@ void Player::Init()
 	object.transform.pos = { 0,-4,0 };
 	object.transform.rot = { 0,0,0 };
 	object.transform.scale = { 10,10,10 };
+
+	bulletObj1->transform.scale = { 5,5,5 };
+	bulletObj2->transform.scale = { 5,5,5 };
+	bulletObj3->transform.scale = { 5,5,5 };
 
 	view.Initialize();
 
@@ -51,10 +69,61 @@ void Player::Init()
 	isAlive = true;
 
 	hp = maxHP;
+
+	start = object.transform.pos;
+	p1 = { object.transform.pos.x + 10,object.transform.pos.y - 10, object.transform.pos.z - 10 };
+	p2 = { object.transform.pos.x,object.transform.pos.y - 10, object.transform.pos.z - 10 };
+	p3 = { object.transform.pos.x + 10,object.transform.pos.y - 10, object.transform.pos.z - 10 };
+	end = { object.transform.pos.x, object.transform.pos.y, object.transform.pos.z + 20 };
+
+	nowTime = 0;
 }
 
 void Player::Update(ViewProjection& viewProjection)
 {
+	start = object.transform.pos;
+	p1 = { object.transform.pos.x + 50,object.transform.pos.y + 30, object.transform.pos.z - 100 };
+	p2 = { object.transform.pos.x,object.transform.pos.y + 50, object.transform.pos.z - 100 };
+	p3 = { object.transform.pos.x - 50,object.transform.pos.y + 30, object.transform.pos.z - 100 };
+	end = { object.transform.pos.x, object.transform.pos.y + 10, object.transform.pos.z + 120 };
+
+	if (KInput::GetInstance()->GetPadConnect())
+	{
+		if (KInput::GetInstance()->GetPadButtonDown(XINPUT_GAMEPAD_B) && !isDrawBullet)
+		{
+			nowTime = 0;
+			isDrawBullet = true;
+		}
+	}
+	if (isDrawBullet)
+	{
+		if (nowTime < maxTime)
+		{
+			nowTime++;
+		}
+		else if (nowTime >= maxTime)
+		{
+			isDrawBullet = false;
+		}
+
+		Vector3 a = lerp3D(start, p1, nowTime / maxTime);
+		Vector3 b = lerp3D(p1, end, nowTime / maxTime);
+
+		Vector3 c = lerp3D(start, p2, nowTime / maxTime);
+		Vector3 d = lerp3D(p2, end, nowTime / maxTime);
+
+		Vector3 e = lerp3D(start, p3, nowTime / maxTime);
+		Vector3 f = lerp3D(p3, end, nowTime / maxTime);
+
+		bulletObj1->transform.pos = lerp3D(a, b, nowTime / maxTime);
+		bulletObj2->transform.pos = lerp3D(c, d, nowTime / maxTime);
+		bulletObj3->transform.pos = lerp3D(e, f, nowTime / maxTime);
+		
+		bulletObj1->Update(view);
+		bulletObj2->Update(view);
+		bulletObj3->Update(view);
+	}
+
 	moveVec = { 0,0,0 };
 
 	Vector3 cameraVec =
@@ -224,6 +293,13 @@ void Player::Update(ViewProjection& viewProjection)
 
 void Player::Draw()
 {
+	if (isDrawBullet)
+	{
+		bulletObj1->Draw(&normal);
+		bulletObj2->Draw(&normal);
+		bulletObj3->Draw(&normal);
+	}
+
 	if (isAlive)
 	{
 		object.Draw(&normal);

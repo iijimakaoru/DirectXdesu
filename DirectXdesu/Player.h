@@ -4,6 +4,7 @@
 #include "Vector2.h"
 #include "KTexture.h"
 #include "ViewProjection.h"
+#include "Vector3.h"
 
 class Player
 {
@@ -17,6 +18,21 @@ public:
 
 	// オブジェクト
 	KObject3d object;
+
+	// 弾
+	std::unique_ptr<KObject3d> bulletObj1;
+	std::unique_ptr<KObject3d> bulletObj2;
+	std::unique_ptr<KObject3d> bulletObj3;
+	bool isDrawBullet = false;
+
+	Vector3 start;
+	Vector3 p1;
+	Vector3 p2;
+	Vector3 p3;
+	Vector3 end;
+
+	float maxTime = 30;
+	float nowTime = 0;
 
 	// モデル
 	KModel* model_;

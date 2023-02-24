@@ -1,6 +1,7 @@
 #include "Sprite.h"
 #include "KShader.h"
 #include "KDirectXCommon.h"
+#include "KWinApp.h"
 
 void Sprite::Init(KDirectXCommon* dxCommon)
 {

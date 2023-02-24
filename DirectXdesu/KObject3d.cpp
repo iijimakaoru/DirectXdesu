@@ -85,8 +85,6 @@ void KObject3d::Update(ViewProjection& viewProjection) {
 	transform.matWorld *= matRot;
 	transform.matWorld *= matTrans;
 
-	material->Update();
-
 	// 定数バッファのマッピング
 	// B1
 	ConstBufferDataB1* constMap1 = nullptr;

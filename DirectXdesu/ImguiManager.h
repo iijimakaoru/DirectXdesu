@@ -23,7 +23,5 @@ public:
 private:
 	KWinApp* win = KWinApp::GetInstance();
 	KDirectXCommon* dx = KDirectXCommon::GetInstance();
-
-	ComPtr<ID3D12DescriptorHeap> descRipterHeap = nullptr;
 };
 

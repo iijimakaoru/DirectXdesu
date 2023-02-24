@@ -52,6 +52,12 @@
     <Filter Include="ヘッダー ファイル\Boss">
       <UniqueIdentifier>{4a99b731-db43-4c21-971b-453fb4f8a6b1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\AddNewSouce">
+      <UniqueIdentifier>{b4f9b7af-adfd-415c-9d89-0199eeabc968}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\AddNewHedder">
+      <UniqueIdentifier>{c7a91cae-6468-4518-8361-5a6764a7d1b9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -174,6 +180,39 @@
     <ClCompile Include="Bullet.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="KComputePipelineState.cpp">
+      <Filter>ソース ファイル\AddNewSouce</Filter>
+    </ClCompile>
+    <ClCompile Include="KIndexBuff.cpp">
+      <Filter>ソース ファイル\AddNewSouce</Filter>
+    </ClCompile>
+    <ClCompile Include="KRootSignature.cpp">
+      <Filter>ソース ファイル\AddNewSouce</Filter>
+    </ClCompile>
+    <ClCompile Include="KUtility.cpp">
+      <Filter>ソース ファイル\AddNewSouce</Filter>
+    </ClCompile>
+    <ClCompile Include="KVertexBuff.cpp">
+      <Filter>ソース ファイル\AddNewSouce</Filter>
+    </ClCompile>
+    <ClCompile Include="KRenderTargetBuffer.cpp">
+      <Filter>ソース ファイル\AddNewSouce</Filter>
+    </ClCompile>
+    <ClCompile Include="KRtvDescriptorHeap.cpp">
+      <Filter>ソース ファイル\AddNewSouce</Filter>
+    </ClCompile>
+    <ClCompile Include="KDepthStencilBuffer.cpp">
+      <Filter>ソース ファイル\AddNewSouce</Filter>
+    </ClCompile>
+    <ClCompile Include="KDescriptorHeap.cpp">
+      <Filter>ソース ファイル\AddNewSouce</Filter>
+    </ClCompile>
+    <ClCompile Include="KDsvDescriptorHeap.cpp">
+      <Filter>ソース ファイル\AddNewSouce</Filter>
+    </ClCompile>
+    <ClCompile Include="KPipelineState.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="KInput.h">
@@ -294,6 +333,39 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Bullet.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="KComputePipelineState.h">
+      <Filter>ヘッダー ファイル\AddNewHedder</Filter>
+    </ClInclude>
+    <ClInclude Include="KIndexBuff.h">
+      <Filter>ヘッダー ファイル\AddNewHedder</Filter>
+    </ClInclude>
+    <ClInclude Include="KRootSignature.h">
+      <Filter>ヘッダー ファイル\AddNewHedder</Filter>
+    </ClInclude>
+    <ClInclude Include="KUtility.h">
+      <Filter>ヘッダー ファイル\AddNewHedder</Filter>
+    </ClInclude>
+    <ClInclude Include="KVertexBuff.h">
+      <Filter>ヘッダー ファイル\AddNewHedder</Filter>
+    </ClInclude>
+    <ClInclude Include="KRenderTargetBuffer.h">
+      <Filter>ヘッダー ファイル\AddNewHedder</Filter>
+    </ClInclude>
+    <ClInclude Include="KRtvDescriptorHeap.h">
+      <Filter>ヘッダー ファイル\AddNewHedder</Filter>
+    </ClInclude>
+    <ClInclude Include="KDepthStencilBuffer.h">
+      <Filter>ヘッダー ファイル\AddNewHedder</Filter>
+    </ClInclude>
+    <ClInclude Include="KDescriptorHeap.h">
+      <Filter>ヘッダー ファイル\AddNewHedder</Filter>
+    </ClInclude>
+    <ClInclude Include="KDsvDescriptorHeap.h">
+      <Filter>ヘッダー ファイル\AddNewHedder</Filter>
+    </ClInclude>
+    <ClInclude Include="KPipelineState.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

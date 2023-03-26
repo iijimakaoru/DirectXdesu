@@ -2,6 +2,8 @@
 #include "KDirectXCommon.h"
 #include <string>
 
+KTextureManager* KTextureManager::textureManager = nullptr;
+
 void KTexture::CreateTexture(const std::string& directoryPath, const std::string& filename)
 {
 	LoadTexture(directoryPath, filename);
@@ -100,9 +102,7 @@ void KTexture::SetDescHeap() {
 }
 
 void KTexture::GeneDescHeap() {
-	result = KDirectXCommon::GetInstance()->GetDev()->CreateDescriptorHeap(
-		&srvHeapDesc,
-		IID_PPV_ARGS(&srvHeap));
+	result = KDirectXCommon::GetInstance()->GetDev()->CreateDescriptorHeap(&srvHeapDesc, IID_PPV_ARGS(&srvHeap));
 	assert(SUCCEEDED(result));
 }
 

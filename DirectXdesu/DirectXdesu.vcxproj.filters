@@ -211,7 +211,7 @@
       <Filter>ソース ファイル\AddNewSouce</Filter>
     </ClCompile>
     <ClCompile Include="KPipelineState.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\AddNewSouce</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -366,7 +366,7 @@
       <Filter>ヘッダー ファイル\AddNewHedder</Filter>
     </ClInclude>
     <ClInclude Include="KPipelineState.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\AddNewHedder</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

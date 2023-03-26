@@ -130,7 +130,7 @@ public: // 静的メンバ関数
 	/// 3Dオブジェクト生成
 	/// </summary>
 	/// <returns></returns>
-	static BillParticleManager* Create();
+	static BillParticleManager* Create(const wchar_t* fileName);
 
 	/// <summary>
 	/// 視点座標の取得
@@ -232,7 +232,7 @@ private:// 静的メンバ関数
 	/// <summary>
 	/// テクスチャ読み込み
 	/// </summary>
-	static void LoadTexture();
+	static void LoadTexture(const wchar_t* fileName);
 
 	/// <summary>
 	/// モデル作成
@@ -245,7 +245,7 @@ private:// 静的メンバ関数
 	static void UpdateViewMatrix();
 
 public: // メンバ関数
-	bool Initialize();
+	bool Initialize(const wchar_t* fileName);
 	/// <summary>
 	/// 毎フレーム処理
 	/// </summary>

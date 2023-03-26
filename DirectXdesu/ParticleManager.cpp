@@ -341,7 +341,7 @@ void BillParticleManager::StaticInitialize(ID3D12Device* device, int window_widt
 	InitializeGraphicsPipeline();
 
 	// テクスチャ読み込み
-	LoadTexture();
+	//LoadTexture(fileName);
 
 	// モデル生成
 	CreateModel();
@@ -370,7 +370,7 @@ void BillParticleManager::PostDraw()
 	BillParticleManager::cmdList = nullptr;
 }
 
-BillParticleManager* BillParticleManager::Create()
+BillParticleManager* BillParticleManager::Create(const wchar_t* fileName)
 {
 	// 3Dオブジェクトのインスタンスを生成
 	BillParticleManager* object3d = new BillParticleManager();
@@ -379,7 +379,7 @@ BillParticleManager* BillParticleManager::Create()
 	}
 
 	// 初期化
-	if (!object3d->Initialize()) {
+	if (!object3d->Initialize(fileName)) {
 		delete object3d;
 		assert(0);
 		return nullptr;
@@ -642,7 +642,7 @@ void BillParticleManager::InitializeGraphicsPipeline()
 
 }
 
-void BillParticleManager::LoadTexture()
+void BillParticleManager::LoadTexture(const wchar_t* fileName)
 {
 	HRESULT result = S_FALSE;
 
@@ -650,7 +650,7 @@ void BillParticleManager::LoadTexture()
 	ScratchImage scratchImg{};
 
 	// WICテクスチャのロード
-	result = LoadFromWICFile(L"Resources/texture/effect1.png", WIC_FLAGS_NONE, &metadata, scratchImg);
+	result = LoadFromWICFile(fileName, WIC_FLAGS_NONE, &metadata, scratchImg);
 	assert(SUCCEEDED(result));
 
 	ScratchImage mipChain{};
@@ -841,10 +841,12 @@ void BillParticleManager::UpdateViewMatrix()
 #pragma endregion
 }
 
-bool BillParticleManager::Initialize()
+bool BillParticleManager::Initialize(const wchar_t* fileName)
 {
 	// nullptrチェック
 	assert(KDirectXCommon::GetInstance()->GetDev());
+
+	LoadTexture(fileName);
 
 	// ヒーププロパティ
 	CD3DX12_HEAP_PROPERTIES heapProps = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);

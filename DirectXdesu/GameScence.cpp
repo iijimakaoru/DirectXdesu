@@ -148,7 +148,7 @@ void GameScence::Init()
 	ray.dir = XMVectorSet(0, -1, 0, 0); // 下向き
 
 	// 3Dオブジェクト生成
-	partMan = BillParticleManager::Create();
+	partMan = BillParticleManager::Create(L"Resources/texture/playerColor.png");
 	for (int i = 0; i < 1; i++)
 	{
 		const float rnd_pos = 10.0f;

@@ -20,6 +20,8 @@
 
 #include <array>
 
+#include "ParticleManager.h"
+
 class GameScence
 {
 public:
@@ -134,5 +136,7 @@ private:
 	ColTriangle colTriangle;
 
 	bool isHit = false;
+
+	BillParticleManager* partMan = nullptr;
 };
 

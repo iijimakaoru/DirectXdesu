@@ -16,6 +16,7 @@ GameScence::~GameScence()
 	delete camera;
 	sound->GetxAudio().Reset();
 	sound->SoundUnLoad(&soundData1);
+	delete partMan;
 };
 
 void GameScence::LoadResources()
@@ -145,6 +146,31 @@ void GameScence::Init()
 	// レイの初期値設定
 	ray.start = XMVectorSet(0, 1, 0, 1); // 原点やや上
 	ray.dir = XMVectorSet(0, -1, 0, 0); // 下向き
+
+	// 3Dオブジェクト生成
+	partMan = BillParticleManager::Create();
+	for (int i = 0; i < 1; i++)
+	{
+		const float rnd_pos = 10.0f;
+		XMFLOAT3 pos{};
+		pos.x = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+		pos.y = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+		pos.z = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+
+		const float rnd_vel = 0.1f;
+		XMFLOAT3 vel{};
+		vel.x = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+		vel.y = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+		vel.z = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+
+		XMFLOAT3 acc{};
+		const float rnd_acc = 0.001f;
+		acc.y = -(float)rand() / RAND_MAX * rnd_acc;
+
+		partMan->Add(100, pos, vel, acc, 1.0f, 0.0f);
+	}
+
+	partMan->Update(camera->viewProjection);
 }
 
 void GameScence::Update()
@@ -393,6 +419,29 @@ void GameScence::Update()
 	skydorm->Update(camera->viewProjection);
 
 	ParticleManager::GetInstance()->Update(camera->viewProjection);
+
+	for (int i = 0; i < 10; i++)
+	{
+		const float rnd_pos = 10.0f;
+		XMFLOAT3 pos{};
+		pos.x = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+		pos.y = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+		pos.z = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+
+		const float rnd_vel = 0.1f;
+		XMFLOAT3 vel{};
+		vel.x = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+		vel.y = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+		vel.z = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+
+		XMFLOAT3 acc{};
+		const float rnd_acc = 0.001f;
+		acc.y = -(float)rand() / RAND_MAX * rnd_acc;
+
+		partMan->Add(100, pos, vel, acc, 1.0f, 0.0f);
+	}
+
+	partMan->Update(camera->viewProjection);
 }
 
 void GameScence::Draw()
@@ -437,11 +486,16 @@ void GameScence::Draw()
 			testTriangle->Draw(&mario);
 		}
 	}
-	
 
 	skydorm->Draw();
 
 	ParticleManager::GetInstance()->Draw();
+
+	BillParticleManager::PreDraw(KDirectXCommon::GetInstance()->GetCmdlist());
+
+	partMan->Draw();
+
+	BillParticleManager::PostDraw();
 
 	// スプライト描画
 	sprite->SpriteCommonBeginDraw(spriteCommon);

@@ -28,6 +28,9 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 	AhoSpriteCommon* spriteCommon = AhoSpriteCommon::GetInstance();
 
+	// 3Dオブジェクト静的初期化
+	BillParticleManager::StaticInitialize(dx->GetDev(), win->GetWindowSizeW(), win->GetWindowSizeH());
+
 	std::unique_ptr<GameScence> gameScene = std::make_unique<GameScence>();
 
 	ImguiManager imguiMane;

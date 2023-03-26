@@ -384,6 +384,9 @@
     <None Include="Resources\Shader\Sprite.hlsli">
       <Filter>シェーダー</Filter>
     </None>
+    <None Include="Resources\Shader\Particle.hlsli">
+      <Filter>シェーダー</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shader\BasicPS.hlsl">
@@ -402,6 +405,15 @@
       <Filter>シェーダー</Filter>
     </FxCompile>
     <FxCompile Include="Resources\Shader\SpriteVS.hlsl">
+      <Filter>シェーダー</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\ParticleGS.hlsl">
+      <Filter>シェーダー</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\ParticlePS.hlsl">
+      <Filter>シェーダー</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\ParticleVS.hlsl">
       <Filter>シェーダー</Filter>
     </FxCompile>
   </ItemGroup>

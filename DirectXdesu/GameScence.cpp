@@ -189,6 +189,7 @@ void GameScence::Update()
 	if (isDebug)
 	{
 		ImGui::InputText("mode", bufD, IM_ARRAYSIZE(bufD));
+
 	}
 	else
 	{

@@ -115,7 +115,7 @@ private:
 
 	bool isChange = false;
 
-	static const int MaxHoge = 1;
+	static const int MaxHoge = 2;
 	std::array<SpriteInfo, MaxHoge> spriteHoge;
 
 	Camera* camera = nullptr;

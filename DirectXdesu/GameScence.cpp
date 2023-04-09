@@ -100,12 +100,16 @@ void GameScence::Init()
 	for (int i = 0; i < MaxHoge; i++)
 	{
 		spriteHoge[i] = sprite->SpriteCreate(spriteHoge[i].texNum, spriteCommon);
-		spriteHoge[i].size.x = 1;
-		spriteHoge[i].size.y = (float)KWinApp::GetWindowSizeH();
 		sprite->SpriteTransferVertexBuffer(spriteHoge[i], spriteCommon);
 		spriteHoge[i].texNum = 1;
 	}
+	spriteHoge[0].size.x = 1;
+	spriteHoge[0].size.y = (float)KWinApp::GetWindowSizeH();
 	spriteHoge[0].position = { (float)KWinApp::GetWindowSizeW() / 2, (float)KWinApp::GetWindowSizeH() / 2, 0 };
+	spriteHoge[1].position = { 5,5,0 };
+	spriteHoge[1].size.x = 5;
+	spriteHoge[1].size.y = 5;
+	spriteHoge[1].texNum = 0;
 #pragma endregion
 
 #pragma region デバッグテキスト
@@ -193,8 +197,8 @@ void GameScence::Update()
 
 	if (isChange)
 	{
-		spriteHoge[0].size.x += 20;
-		if (spriteHoge[0].size.x >= KWinApp::GetWindowSizeW())
+		spriteHoge[0].size.x += 2;
+		if (spriteHoge[0].size.x >= KWinApp::GetWindowSizeW() / 10)
 		{
 			if (isDebug)
 			{
@@ -215,7 +219,7 @@ void GameScence::Update()
 	{
 		if (spriteHoge[0].size.x > 0)
 		{
-			spriteHoge[0].size.x -= 20;
+			spriteHoge[0].size.x -= 2;
 		}
 	}
 
@@ -502,11 +506,10 @@ void GameScence::Draw()
 
 	if (spriteHoge[0].size.x > 1)
 	{
-		for (int i = 0; i < MaxHoge; i++)
-		{
-			sprite->SpriteDraw(spriteHoge[i], spriteCommon);
-		}
+		sprite->SpriteDraw(spriteHoge[0], spriteCommon);
 	}
+
+	sprite->SpriteDraw(spriteHoge[1], spriteCommon);
 
 	debugtext->Print(spriteCommon, "FPS(w)" + std::to_string(KDirectXCommon::GetInstance()->fps), { 10,50 }, 0.5f);
 	debugtext->DrawAll(spriteCommon);

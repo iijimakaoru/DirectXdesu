@@ -361,30 +361,33 @@ void KDirectXCommon::EnbleInfoQueue()
 	result = dev->QueryInterface(IID_PPV_ARGS(&infoQueue));
 	if (SUCCEEDED(result))
 	{
+		// ヤバい
 		infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_CORRUPTION, true);
+		// 普通
 		infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_ERROR, true);
+		// 警告
 		infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_WARNING, true);
+
+		//抑制するエラー
+		D3D12_MESSAGE_ID denyIds[] =
+		{
+			/*
+			*windows11でのDXGIデバッグレイヤーとDX12デバッグレイヤー
+			*相互作用バグによるエラーメッセージ
+			*/
+			D3D12_MESSAGE_ID_RESOURCE_BARRIER_MISMATCHING_COMMAND_LIST_TYPE
+
+		};
+		//抑制する表示レベル
+		D3D12_MESSAGE_SEVERITY severities[] = { D3D12_MESSAGE_SEVERITY_INFO };
+		D3D12_INFO_QUEUE_FILTER filter{};
+		filter.DenyList.NumIDs = _countof(denyIds);
+		filter.DenyList.pIDList = denyIds;
+		filter.DenyList.NumSeverities = _countof(severities);
+		filter.DenyList.pSeverityList = severities;
+		//指定したエラーの表示を抑制する
+		infoQueue->PushStorageFilter(&filter);
 	}
-
-	//抑制するエラー
-	D3D12_MESSAGE_ID denyIds[] =
-	{
-		/*
-		*windows11でのDXGIデバッグレイヤーとDX12デバッグレイヤー
-		*相互作用バグによるエラーメッセージ
-		*/
-		D3D12_MESSAGE_ID_RESOURCE_BARRIER_MISMATCHING_COMMAND_LIST_TYPE
-
-	};
-	//抑制する表示レベル
-	D3D12_MESSAGE_SEVERITY severities[] = { D3D12_MESSAGE_SEVERITY_INFO };
-	D3D12_INFO_QUEUE_FILTER filter{};
-	filter.DenyList.NumIDs = _countof(denyIds);
-	filter.DenyList.pIDList = denyIds;
-	filter.DenyList.NumSeverities = _countof(severities);
-	filter.DenyList.pSeverityList = severities;
-	//指定したエラーの表示を抑制する
-	infoQueue->PushStorageFilter(&filter);
 }
 
 void KDirectXCommon::InitFixFPS()

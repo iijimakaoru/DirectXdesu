@@ -11,6 +11,8 @@
 #include <sstream>
 #include <iomanip>
 
+#include "FbxLoader.h"
+
 GameScence::~GameScence()
 {
 	delete camera;
@@ -175,6 +177,8 @@ void GameScence::Init()
 	}
 
 	partMan->Update(camera->viewProjection);
+
+	FbxLoader::GetInstance()->LoadModelFromFile("test");
 }
 
 void GameScence::Update()

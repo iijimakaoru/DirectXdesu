@@ -14,8 +14,12 @@
 #include "ParticleManager.h"
 #include "SpriteCommon.h"
 
+#include "FbxLoader.h"
+
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow)
 {
+	FbxLoader::GetInstance()->Init();
+
 	KWinApp* win = KWinApp::GetInstance();
 	win->Init();
 
@@ -73,6 +77,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	gameScene.release();
 
 	dx->Destroy();
+
+	FbxLoader::GetInstance()->Finalize();
 
 	return 0;
 }

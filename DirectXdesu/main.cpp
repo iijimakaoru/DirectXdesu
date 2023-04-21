@@ -42,12 +42,12 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	{
 		if (KWinApp::GetInstance()->ProcessMessage() || KInput::GetInstance()->IsPush(DIK_ESCAPE))
 		{
-			//// 変数名はサンプルコードに合わせた。
-			//ComPtr<ID3D12DebugDevice> pDebugDevice = NULL;
-			//KDirectXCommon::GetInstance()->GetDev()->QueryInterface(pDebugDevice.GetAddressOf());
-			//KDirectXCommon::GetInstance()->GetDev()->Release();
-			//pDebugDevice->ReportLiveDeviceObjects(D3D12_RLDO_DETAIL);
-			//pDebugDevice->Release();
+			// 変数名はサンプルコードに合わせた。
+			ComPtr<ID3D12DebugDevice> pDebugDevice = NULL;
+			/*KDirectXCommon::GetInstance()->GetDev()->QueryInterface(pDebugDevice.GetAddressOf());
+			KDirectXCommon::GetInstance()->GetDev()->Release();*/
+			/*pDebugDevice->ReportLiveDeviceObjects(D3D12_RLDO_DETAIL);
+			pDebugDevice->Release();*/
 			break;
 		}
 

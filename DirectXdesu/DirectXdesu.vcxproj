@@ -97,6 +97,7 @@
     <ClCompile Include="DebugText.cpp" />
     <ClCompile Include="Ease.cpp" />
     <ClCompile Include="FbxLoader.cpp" />
+    <ClCompile Include="FbxModel.cpp" />
     <ClCompile Include="GameCamera.cpp" />
     <ClCompile Include="GameScence.cpp" />
     <ClCompile Include="ImguiManager.cpp" />
@@ -151,6 +152,7 @@
     <ClInclude Include="DebugText.h" />
     <ClInclude Include="Ease.h" />
     <ClInclude Include="FbxLoader.h" />
+    <ClInclude Include="FbxModel.h" />
     <ClInclude Include="GameCamera.h" />
     <ClInclude Include="GameScence.h" />
     <ClInclude Include="ImguiManager.h" />

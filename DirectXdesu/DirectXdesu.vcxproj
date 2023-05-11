@@ -98,6 +98,7 @@
     <ClCompile Include="Ease.cpp" />
     <ClCompile Include="FbxLoader.cpp" />
     <ClCompile Include="FbxModel.cpp" />
+    <ClCompile Include="FbxObject3D.cpp" />
     <ClCompile Include="GameCamera.cpp" />
     <ClCompile Include="GameScence.cpp" />
     <ClCompile Include="ImguiManager.cpp" />
@@ -153,6 +154,7 @@
     <ClInclude Include="Ease.h" />
     <ClInclude Include="FbxLoader.h" />
     <ClInclude Include="FbxModel.h" />
+    <ClInclude Include="FbxObject3D.h" />
     <ClInclude Include="GameCamera.h" />
     <ClInclude Include="GameScence.h" />
     <ClInclude Include="ImguiManager.h" />
@@ -207,6 +209,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shader\Basic.hlsli" />
+    <None Include="Resources\Shader\FBX.hlsli" />
     <None Include="Resources\Shader\Obj.hlsli" />
     <None Include="Resources\Shader\Particle.hlsli" />
     <None Include="Resources\Shader\Sprite.hlsli" />
@@ -223,6 +226,14 @@
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\FBXPS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\FBXVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>
     <FxCompile Include="Resources\Shader\ObjPS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>

@@ -289,16 +289,6 @@ MtlObj::MtlObj(const string modelname)
 	vector<XMFLOAT3> normals;
 	vector<XMFLOAT2> texcoords;
 
-	UINT sizeVB = static_cast<UINT>(sizeof(VertexPosNormalUV) * vertices.size());
-	UINT sizeIB = static_cast<UINT>(sizeof(unsigned short) * indices.size());
-
-	vertexs->vbView.SizeInBytes = sizeVB;
-	vertexs->ibView.SizeInBytes = sizeIB;
-
-	std::copy(vertices.begin(), vertices.end(), vertexs->vertMap);
-
-	std::copy(indices.begin(), indices.end(), vertexs->indexMap);
-
 	std::string line;
 	while (getline(file, line))
 	{

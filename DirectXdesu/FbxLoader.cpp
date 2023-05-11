@@ -61,6 +61,8 @@ void FbxLoader::LoadModelFromFile(const string& modelName)
 	ParseNodeRecursive(fbxModel, fbxScene->GetRootNode());
 	// Fbxシーン解放
 	fbxScene->Destroy();
+
+	fbxModel->CreateModel();
 }
 
 void FbxLoader::ParseNodeRecursive(FbxModel* model, FbxNode* fbxNode, Node* parent)
@@ -135,7 +137,7 @@ void FbxLoader::ParseMeshVertices(FbxModel* model, FbxMesh* fbxMesh)
 	const int controlPointsCount = fbxMesh->GetControlPointsCount();
 
 	// 必要数だけ頂点データ配列を確保
-	FbxModel::VertexPosNormalUV vert{};
+	VertexPosNormalUV vert{};
 	model->vertices.resize(controlPointsCount, vert);
 
 	// Fbxメッシュの頂点座標配列を取得
@@ -144,7 +146,7 @@ void FbxLoader::ParseMeshVertices(FbxModel* model, FbxMesh* fbxMesh)
 	// Fbxメッシュの全頂点座標をモデル内の配列にコピーする
 	for (int i = 0; i < controlPointsCount; i++)
 	{
-		FbxModel::VertexPosNormalUV& vertex = vertices[i];
+		VertexPosNormalUV& vertex = vertices[i];
 		// 座標のコピー
 		vertex.pos.x = static_cast<float>(pCoord[i][0]);
 		vertex.pos.y = static_cast<float>(pCoord[i][1]);
@@ -182,7 +184,7 @@ void FbxLoader::ParseMeshFaces(FbxModel* model, FbxMesh* fbxMesh)
 			assert(index >= 0);
 
 			// 頂点法線読み込み
-			FbxModel::VertexPosNormalUV& vertex = vertices[index];
+			VertexPosNormalUV& vertex = vertices[index];
 			FbxVector4 normal;
 			if (fbxMesh->GetPolygonVertexNormal(i, j, normal))
 			{
@@ -285,8 +287,8 @@ void FbxLoader::LoadTexture(FbxModel* model, const std::string& fullpath)
 {
 	HRESULT result = S_FALSE;
 	// WICテクスチャロード
-	TexMetadata& metadata = model->metadata;
-	ScratchImage& scratchImage = model->scratchImage;
+	TexMetadata& metadata = model->texture.metadata;
+	ScratchImage& scratchImage = model->texture.scraychImg;
 	// ユニコード文字列に変換
 	wchar_t wfilepath[128];
 	MultiByteToWideChar(CP_ACP, 0, fullpath.c_str(), -1, wfilepath, _countof(wfilepath));

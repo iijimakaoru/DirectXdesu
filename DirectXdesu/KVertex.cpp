@@ -37,6 +37,7 @@ void KVertex::KVertexInit(ID3D12Device* dev, std::vector<VertexPosNormalUV>& ver
 	assert(SUCCEEDED(result));
 	// 全頂点に対して
 	for (int i = 0; i < vertices.size(); i++) {
+		std::copy(vertices.begin(), vertices.end(), vertMap);
 		vertMap[i] = vertices[i];
 	}
 	// 繋がりを解除
@@ -66,6 +67,7 @@ void KVertex::KVertexInit(ID3D12Device* dev, std::vector<VertexPosNormalUV>& ver
 	result = indexBuff->Map(0, nullptr, (void**)&indexMap);
 	// 全インデックスに対して
 	for (int i = 0; i < indices.size(); i++) {
+		std::copy(indices.begin(), indices.end(), indexMap);
 		indexMap[i] = indices[i];
 	}
 	// マッピング解除

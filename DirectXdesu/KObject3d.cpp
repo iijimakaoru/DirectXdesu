@@ -116,10 +116,10 @@ void KObject3d::Draw()
 	KDirectXCommon::GetInstance()->GetCmdlist()->SetDescriptorHeaps(1, &model_->texture.srvHeap);
 
 	// 先頭ハンドルを取得
-	D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle = model_->texture.srvHeap->GetGPUDescriptorHandleForHeapStart();
+	//D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle = model_->texture.srvHeap->GetGPUDescriptorHandleForHeapStart();
 
 	// シェーダーリソースビューをセット
-	KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootDescriptorTable(0, srvGpuHandle);
+	KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootDescriptorTable(0, model_->texture.srvHeap->GetGPUDescriptorHandleForHeapStart());
 	
 	// 頂点バッファビューの設定
 	KDirectXCommon::GetInstance()->GetCmdlist()->IASetVertexBuffers(0, 1, &model_->vertexs->vbView);

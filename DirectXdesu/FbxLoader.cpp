@@ -33,7 +33,7 @@ void FbxLoader::Finalize()
 	fbxManager->Destroy();
 }
 
-void FbxLoader::LoadModelFromFile(const string& modelName)
+FbxModel* FbxLoader::LoadModelFromFile(const string& modelName)
 {
 	// 格納場所+モデル名
 	const string directoryPath = baseDirectory + modelName + "/";
@@ -62,7 +62,9 @@ void FbxLoader::LoadModelFromFile(const string& modelName)
 	// Fbxシーン解放
 	fbxScene->Destroy();
 
-	fbxModel->CreateModel();
+	fbxModel->CreateBuffer();
+
+	return fbxModel;
 }
 
 void FbxLoader::ParseNodeRecursive(FbxModel* model, FbxNode* fbxNode, Node* parent)
@@ -287,8 +289,8 @@ void FbxLoader::LoadTexture(FbxModel* model, const std::string& fullpath)
 {
 	HRESULT result = S_FALSE;
 	// WICテクスチャロード
-	TexMetadata& metadata = model->texture.metadata;
-	ScratchImage& scratchImage = model->texture.scraychImg;
+	TexMetadata& metadata = model->metadata;
+	ScratchImage& scratchImage = model->scratchImg;
 	// ユニコード文字列に変換
 	wchar_t wfilepath[128];
 	MultiByteToWideChar(CP_ACP, 0, fullpath.c_str(), -1, wfilepath, _countof(wfilepath));

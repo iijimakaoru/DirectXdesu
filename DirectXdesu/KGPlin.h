@@ -28,15 +28,9 @@ private:
 	ComPtr<ID3D12RootSignature> rootSignature;
 
 	void SetShader(KShader shader);
-	void SetRootParam(D3D12_ROOT_PARAMETER& rootParam,
-		D3D12_ROOT_PARAMETER_TYPE type,
-		UINT shaderRegister,
-		UINT registerSpace,
+	void SetRootParam(D3D12_ROOT_PARAMETER& rootParam, D3D12_ROOT_PARAMETER_TYPE type, UINT shaderRegister, UINT registerSpace,
 		D3D12_SHADER_VISIBILITY shaderVisibility = D3D12_SHADER_VISIBILITY_ALL);
-	void SetRootParam(D3D12_ROOT_PARAMETER& rootParam,
-		D3D12_ROOT_PARAMETER_TYPE type,
-		D3D12_DESCRIPTOR_RANGE pDescripterRange,
-		UINT numDescripterRanges,
+	void SetRootParam(D3D12_ROOT_PARAMETER& rootParam, D3D12_ROOT_PARAMETER_TYPE type, D3D12_DESCRIPTOR_RANGE pDescripterRange, UINT numDescripterRanges,
 		D3D12_SHADER_VISIBILITY shaderVisibility = D3D12_SHADER_VISIBILITY_ALL);
 	void SetRootSignature(UINT rootParamNum = 1);
 	void SetScreenRootSignature();
@@ -44,26 +38,15 @@ private:
 
 public:
 	KGPlin();
+
 	~KGPlin();
 
-	KGPlin(KShader shader, float constBuffNum);
+	void CreatePipeline(KShader shader, float constBuffNum);
 
-	KGPlin(D3D12_INPUT_ELEMENT_DESC* inputLayout, UINT inputLayoutSize, KShader shader);
+	void CreatePipelineAll(KShader shader, bool Obj = false, bool Sprite = false, bool Particle = false, bool Fbx = false);
 
-	KGPlin(KShader shader,
-		D3D12_INPUT_ELEMENT_DESC* inputLayout,
-		UINT inputLayoutSize,
-		float constBuffNum,
-		D3D12_PRIMITIVE_TOPOLOGY_TYPE topologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE,
-		D3D12_FILL_MODE fillmord = D3D12_FILL_MODE_SOLID);
-
-	void Init(KShader shader,
-		D3D12_INPUT_ELEMENT_DESC* inputLayout,
-		UINT inputLayoutSize,
-		float constBuffNum,
-		D3D12_PRIMITIVE_TOPOLOGY_TYPE topologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE,
-		D3D12_FILL_MODE fillmord = D3D12_FILL_MODE_SOLID,
-		D3D12_CULL_MODE cullmord = D3D12_CULL_MODE_BACK,
+	void Init(KShader shader, D3D12_INPUT_ELEMENT_DESC* inputLayout, UINT inputLayoutSize, float constBuffNum,
+		D3D12_PRIMITIVE_TOPOLOGY_TYPE topologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, D3D12_FILL_MODE fillmord = D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE cullmord = D3D12_CULL_MODE_BACK,
 		bool isDeep = true);
 
 	void Update(D3D12_PRIMITIVE_TOPOLOGY primitive = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);

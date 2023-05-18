@@ -83,7 +83,7 @@ void DebugCamera::Update()
 	viewProjection.target.y = viewProjection.eye.y + 100 * sinf(PI / 180 * viewProjection.angleY);
 	viewProjection.target.z = viewProjection.eye.z + 100 * sinf(PI / 180 * viewProjection.angleX) * cosf(PI / 180 * viewProjection.angleY);*/
 
-	viewProjection.target = { 0,0,0 };
+	viewProjection.target = { 0,20,0 };
 
 	viewProjection.Update();
 }

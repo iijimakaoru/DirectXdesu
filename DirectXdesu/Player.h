@@ -25,6 +25,11 @@ public:
 
 	Vector3& GetPos() { return object->transform.pos; }
 
+	void SetPos(Vector3 pos_)
+	{
+		object->transform.pos = pos_;
+	}
+
 private:
 	std::unique_ptr<KObject3d> object;
 	std::unique_ptr<KModel> model;

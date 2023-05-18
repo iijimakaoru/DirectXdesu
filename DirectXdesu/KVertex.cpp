@@ -33,6 +33,7 @@ void KVertex::KVertexInit(ID3D12Device* dev, std::vector<VertexPosNormalUV>& ver
 	assert(SUCCEEDED(result));
 
 	// GPU上のバッファに対応した仮想メモリを取得
+	VertexPosNormalUV* vertMap = nullptr;
 	result = vertBuff->Map(0, nullptr, (void**)&vertMap);
 	assert(SUCCEEDED(result));
 	// 全頂点に対して
@@ -42,6 +43,13 @@ void KVertex::KVertexInit(ID3D12Device* dev, std::vector<VertexPosNormalUV>& ver
 	}
 	// 繋がりを解除
 	vertBuff->Unmap(0, nullptr);
+
+	// GPU仮想アドレス
+	vbView.BufferLocation = vertBuff->GetGPUVirtualAddress();
+	// 頂点バッファのサイズ
+	vbView.SizeInBytes = sizeVB;
+	// 頂点一つ分のデータサイズ
+	vbView.StrideInBytes = sizeof(vertices[0]);
 #pragma endregion
 
 #pragma region インデックス
@@ -64,6 +72,8 @@ void KVertex::KVertexInit(ID3D12Device* dev, std::vector<VertexPosNormalUV>& ver
 		nullptr,
 		IID_PPV_ARGS(&indexBuff));
 
+	// インデックスバッファをマッピング
+	uint16_t* indexMap = nullptr;
 	result = indexBuff->Map(0, nullptr, (void**)&indexMap);
 	// 全インデックスに対して
 	for (int i = 0; i < indices.size(); i++) {
@@ -101,11 +111,4 @@ void KVertex::KVertexInit(ID3D12Device* dev, std::vector<VertexPosNormalUV>& ver
 		XMStoreFloat3(&vertices[indices2].normal, normal);
 	}
 #pragma endregion
-
-	// GPU仮想アドレス
-	vbView.BufferLocation = vertBuff->GetGPUVirtualAddress();
-	// 頂点バッファのサイズ
-	vbView.SizeInBytes = sizeVB;
-	// 頂点一つ分のデータサイズ
-	vbView.StrideInBytes = sizeof(vertices[0]);
 }

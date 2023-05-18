@@ -68,11 +68,32 @@ private:
 
 	std::unique_ptr<KVertex> vertexs = make_unique<KVertex>();
 
-	KTexture texture;
+	ScratchImage scratchImg;
+
+	TexMetadata metadata;
+
+	// 
+	ComPtr<ID3D12Resource> vertBuff;
+
+	ComPtr<ID3D12Resource> indexBuff;
+
+	// テクスチャバッファの生成
+	ComPtr<ID3D12Resource> texBuff;
+
+	// インデックスバッファビュー
+	D3D12_INDEX_BUFFER_VIEW ibView{};
+	// 頂点バッファビューの作成
+	D3D12_VERTEX_BUFFER_VIEW vbView{};
+
+	// 設定を元にSRV用デスクリプタヒープを生成
+	ComPtr<ID3D12DescriptorHeap> srvHeap = nullptr;
+
+	//KTexture texture;
 
 public: // 関数
 	// メンバ
-	void CreateModel();
+	void CreateBuffer();
+	void LoadTexture();
 	void Draw();
 
 	// ゲッター

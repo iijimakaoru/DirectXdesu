@@ -22,6 +22,8 @@
 
 #include "ParticleManager.h"
 
+#include "FbxObject3D.h"
+
 class GameScence
 {
 public:
@@ -47,9 +49,11 @@ public:
 private:
 	// パイプライン
 	std::unique_ptr<KGPlin> objPipeline;
+	std::unique_ptr<KGPlin> fbxPipeline;
 
 	// シェーダー
 	KShader objShader;
+	KShader fbxShader;
 
 	// モデル
 	std::unique_ptr<KModel> triangle;
@@ -138,5 +142,9 @@ private:
 	bool isHit = false;
 
 	BillParticleManager* partMan = nullptr;
+
+	// Fbx関連
+	FbxModel* fbxModel1 = nullptr;
+	FbxObject3D* object1 = nullptr;
 };
 

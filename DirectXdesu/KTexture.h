@@ -36,7 +36,7 @@ public:
 	const size_t kMaxSRVCount = 2056;
 
 	// 設定を元にSRV用デスクリプタヒープを生成
-	ID3D12DescriptorHeap* srvHeap = nullptr;
+	ComPtr<ID3D12DescriptorHeap> srvHeap = nullptr;
 
 	// SRVヒープの先頭ハンドルを取得
 	D3D12_CPU_DESCRIPTOR_HANDLE srvHandle;

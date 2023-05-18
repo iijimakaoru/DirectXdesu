@@ -19,6 +19,9 @@ GameScence::~GameScence()
 	sound->GetxAudio().Reset();
 	sound->SoundUnLoad(&soundData1);
 	delete partMan;
+
+	delete object1;
+	delete fbxModel1;
 };
 
 void GameScence::LoadResources()
@@ -47,9 +50,25 @@ void GameScence::LoadResources()
 
 void GameScence::Init()
 {
+	// Obj
 	objShader.Init(L"Resources/Shader/ObjVS.hlsl", L"Resources/Shader/ObjPS.hlsl");
+	objPipeline = std::make_unique<KGPlin>();
+	objPipeline->CreatePipeline(objShader, 5);
 
-	objPipeline = std::make_unique<KGPlin>(objShader, 5);
+	// Fbx
+	fbxShader.Init(L"Resources/Shader/FBXVS.hlsl", L"Resources/Shader/FBXPS.hlsl");
+	fbxPipeline = std::make_unique<KGPlin>();
+	fbxPipeline->CreatePipelineAll(fbxShader, false, false, false, true);
+
+#pragma region Fbxテスト
+	fbxModel1 = FbxLoader::GetInstance()->LoadModelFromFile("cube");
+
+	object1 = new FbxObject3D;
+	object1->Init();
+	object1->SetPipline(fbxPipeline.get());
+	object1->SetModel(fbxModel1);
+#pragma endregion
+
 
 	if (!ParticleManager::GetInstance()->IsPoolCreated())
 	{
@@ -390,6 +409,13 @@ void GameScence::Update()
 
 	camera->Update();
 
+	Vector3 playerPos = player.GetPos();
+	ImGui::Text("Player");
+	ImGui::Text("pos: (%.2f,%.2f,%.2f)", playerPos.x, playerPos.y, playerPos.z);
+	ImGui::SliderFloat("playerPosX", &playerPos.x, -60.0f, 60.0f);
+
+	player.SetPos({ playerPos.x,playerPos.y,playerPos.z });
+
 	// プレイヤー初期化
 	player.Update(camera->viewProjection);
 	// 球判定
@@ -450,6 +476,16 @@ void GameScence::Update()
 	}
 
 	partMan->Update(camera->viewProjection);
+
+	XMFLOAT3 fbxPos = object1->GetPosition();
+	ImGui::Text("Fbx");
+	ImGui::Text("pos: (%.2f,%.2f,%.2f)", fbxPos.x, fbxPos.y, fbxPos.z);
+	ImGui::SliderFloat("FbxPosX", &fbxPos.x, -60.0f, 60.0f);
+
+	object1->SetPosition({ fbxPos.x,fbxPos.y,fbxPos.z });
+
+	// Fbx
+	object1->Update(camera->viewProjection);
 }
 
 void GameScence::Draw()
@@ -494,6 +530,8 @@ void GameScence::Draw()
 			testTriangle->Draw(&mario);
 		}
 	}
+
+	object1->Draw();
 
 	skydorm->Draw();
 

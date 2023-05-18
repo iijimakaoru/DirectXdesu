@@ -28,13 +28,9 @@ public:
 	
 	// 頂点バッファの生成
 	ComPtr<ID3D12Resource> vertBuff;
-
-	VertexPosNormalUV* vertMap = nullptr;
 	
 	// インデックスバッファの生成
 	ComPtr<ID3D12Resource> indexBuff;
-	// インデックスバッファをマッピング
-	uint16_t* indexMap = nullptr;
 	// インデックスバッファビュー
 	D3D12_INDEX_BUFFER_VIEW ibView{};
 	// 頂点バッファビューの作成

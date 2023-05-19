@@ -52,6 +52,9 @@ public:
 
 	// modelusakusei
 	void CreateModel();
+
+	void Draw();
+	void Draw(KTexture* texture);
 };
 
 class Cube : public KModel {

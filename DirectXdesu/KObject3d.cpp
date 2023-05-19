@@ -112,21 +112,7 @@ void KObject3d::Draw()
 	KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootConstantBufferView(1, constBuffB0->GetGPUVirtualAddress());
 	KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootConstantBufferView(2, constBuffB1->GetGPUVirtualAddress());
 
-	// 頂点バッファビューの設定
-	KDirectXCommon::GetInstance()->GetCmdlist()->IASetVertexBuffers(0, 1, &model_->vertexs->vbView);
-
-	// インデックスバッファビューの設定
-	KDirectXCommon::GetInstance()->GetCmdlist()->IASetIndexBuffer(&model_->vertexs->ibView);
-	
-	// デスクリプタヒープのセット
-	ID3D12DescriptorHeap* ppHeaps[] = { model_->texture.srvHeap.Get() };
-	KDirectXCommon::GetInstance()->GetCmdlist()->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
-
-	// シェーダーリソースビューをセット
-	KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootDescriptorTable(0, model_->texture.srvHeap->GetGPUDescriptorHandleForHeapStart());
-
-	// 描画
-	KDirectXCommon::GetInstance()->GetCmdlist()->DrawIndexedInstanced(model_->indices.size(), 1, 0, 0, 0);
+	model_->Draw();
 }
 
 void KObject3d::Draw(KTexture* texture)
@@ -138,24 +124,7 @@ void KObject3d::Draw(KTexture* texture)
 	KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootConstantBufferView(1, constBuffB0->GetGPUVirtualAddress());
 	KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootConstantBufferView(2, constBuffB1->GetGPUVirtualAddress());
 
-	// 頂点バッファビューの設定
-	KDirectXCommon::GetInstance()->GetCmdlist()->IASetVertexBuffers(0, 1, &model_->vertexs->vbView);
-
-	// インデックスバッファビューの設定
-	KDirectXCommon::GetInstance()->GetCmdlist()->IASetIndexBuffer(&model_->vertexs->ibView);
-
-	// デスクリプタヒープのセット
-	ID3D12DescriptorHeap* ppHeaps[] = { texture->srvHeap.Get() };
-	KDirectXCommon::GetInstance()->GetCmdlist()->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
-
-	// 先頭ハンドルを取得
-	D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle = texture->srvHeap->GetGPUDescriptorHandleForHeapStart();
-
-	// シェーダーリソースビューをセット
-	KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootDescriptorTable(0, srvGpuHandle);
-
-	// 描画
-	KDirectXCommon::GetInstance()->GetCmdlist()->DrawIndexedInstanced(model_->indices.size(), 1, 0, 0, 0);
+	model_->Draw(texture);
 }
 
 void KObject3d::Finalize()

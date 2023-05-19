@@ -264,6 +264,47 @@ void KModel::CreateModel()
 	vertexs.reset(new KVertex(KDirectXCommon::GetInstance()->GetDev(), vertices, indices));
 }
 
+void KModel::Draw()
+{
+	// 頂点バッファビューの設定
+	KDirectXCommon::GetInstance()->GetCmdlist()->IASetVertexBuffers(0, 1, &vertexs->vbView);
+
+	// インデックスバッファビューの設定
+	KDirectXCommon::GetInstance()->GetCmdlist()->IASetIndexBuffer(&vertexs->ibView);
+
+	// デスクリプタヒープのセット
+	ID3D12DescriptorHeap* ppHeaps[] = { texture.srvHeap.Get() };
+	KDirectXCommon::GetInstance()->GetCmdlist()->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
+
+	// シェーダーリソースビューをセット
+	KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootDescriptorTable(0, texture.srvHeap->GetGPUDescriptorHandleForHeapStart());
+
+	// 描画
+	KDirectXCommon::GetInstance()->GetCmdlist()->DrawIndexedInstanced(indices.size(), 1, 0, 0, 0);
+}
+
+void KModel::Draw(KTexture* texture)
+{
+	// 頂点バッファビューの設定
+	KDirectXCommon::GetInstance()->GetCmdlist()->IASetVertexBuffers(0, 1, &vertexs->vbView);
+
+	// インデックスバッファビューの設定
+	KDirectXCommon::GetInstance()->GetCmdlist()->IASetIndexBuffer(&vertexs->ibView);
+
+	// デスクリプタヒープのセット
+	ID3D12DescriptorHeap* ppHeaps[] = { texture->srvHeap.Get() };
+	KDirectXCommon::GetInstance()->GetCmdlist()->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
+
+	// 先頭ハンドルを取得
+	D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle = texture->srvHeap->GetGPUDescriptorHandleForHeapStart();
+
+	// シェーダーリソースビューをセット
+	KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootDescriptorTable(0, srvGpuHandle);
+
+	// 描画
+	KDirectXCommon::GetInstance()->GetCmdlist()->DrawIndexedInstanced(indices.size(), 1, 0, 0, 0);
+}
+
 MtlObj::MtlObj(const string modelname)
 {
 	ifstream file;

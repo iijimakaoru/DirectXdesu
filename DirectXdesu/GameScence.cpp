@@ -481,6 +481,8 @@ void GameScence::Update()
 	ImGui::Text("Fbx");
 	ImGui::Text("pos: (%.2f,%.2f,%.2f)", fbxPos.x, fbxPos.y, fbxPos.z);
 	ImGui::SliderFloat("FbxPosX", &fbxPos.x, -60.0f, 60.0f);
+	ImGui::SliderFloat("FbxPosY", &fbxPos.y, -60.0f, 60.0f);
+	ImGui::SliderFloat("FbxPosZ", &fbxPos.z, -60.0f, 60.0f);
 
 	object1->SetPosition({ fbxPos.x,fbxPos.y,fbxPos.z });
 

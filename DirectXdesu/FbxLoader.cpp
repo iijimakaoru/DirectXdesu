@@ -99,6 +99,15 @@ void FbxLoader::ParseNodeRecursive(FbxModel* model, FbxNode* fbxNode, Node* pare
 	node.transform *= matRotation; // 回転
 	node.transform *= matTransition; // 平行移動
 
+	// グローバル変形行列の計算
+	node.globalTransform = node.transform;
+	if (parent)
+	{
+		node.parent = parent;
+		// 親の変形を計算
+		node.globalTransform *= parent->globalTransform;
+	}
+
 	// Fbxノードのメッシュ情報を解析
 	FbxNodeAttribute* fbxNodeAttribute = fbxNode->GetNodeAttribute();
 

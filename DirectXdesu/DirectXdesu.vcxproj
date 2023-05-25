@@ -121,6 +121,7 @@
     <ClCompile Include="KUtility.cpp" />
     <ClCompile Include="KVertex.cpp" />
     <ClCompile Include="KVertexBuff.cpp" />
+    <ClCompile Include="LevelData.cpp" />
     <ClCompile Include="LevelEditor.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="KWinApp.cpp" />
@@ -181,6 +182,7 @@
     <ClInclude Include="KWinApp.h" />
     <ClInclude Include="KObject3d.h" />
     <ClInclude Include="KTexture.h" />
+    <ClInclude Include="LevelData.h" />
     <ClInclude Include="LevelEditor.h" />
     <ClInclude Include="Matrix4.h" />
     <ClInclude Include="MyMath.h" />

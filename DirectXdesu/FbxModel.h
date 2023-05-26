@@ -11,6 +11,8 @@
 #include "KVertex.h"
 #include "KTexture.h"
 
+#include <fbxsdk.h>
+
 // ノード
 struct Node
 {
@@ -36,6 +38,31 @@ public:
 	// フレンドクラス
 	friend class FbxLoader;
 
+	static const int MAX_BONE_INDICES = 4;
+
+	struct Bone
+	{
+		std::string name;
+		// 初期姿勢の逆行列
+		DirectX::XMMATRIX invInitialPose;
+		// クラスター
+		FbxCluster* fbxCluster;
+		// コントラクタ
+		Bone(const std::string& name_)
+		{
+			name = name_;
+		}
+	};
+
+	struct VertexPosNormalUVSkin
+	{
+		XMFLOAT3 pos;	 // xyz座標
+		XMFLOAT3 normal; // 法線ベクトル
+		XMFLOAT2 uv;	 // uv座標
+		UINT boneIndex[MAX_BONE_INDICES];
+		float boneWeight[MAX_BONE_INDICES];
+	};
+
 private: // エイリアス
 	// Microsoft::WRL::を省略
 	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
@@ -58,7 +85,7 @@ private:
 	// メッシュを持つノード
 	Node* meshNode = nullptr;
 	// 頂点データ配列
-	std::vector<VertexPosNormalUV> vertices;
+	std::vector<VertexPosNormalUVSkin> vertices;
 	// 頂点インデックス配列
 	std::vector<unsigned short> indices;
 	// アンビエント係数
@@ -90,6 +117,8 @@ private:
 
 	//KTexture texture;
 
+	std::vector<Bone> bones;
+
 public: // 関数
 	// メンバ
 	void CreateBuffer();
@@ -98,5 +127,6 @@ public: // 関数
 
 	// ゲッター
 	const XMMATRIX& GetModelTransform() { return meshNode->globalTransform; }
+	std::vector<Bone>& GetBones() { return bones; }
 };
 

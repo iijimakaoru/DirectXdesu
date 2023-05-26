@@ -7,7 +7,7 @@ void FbxModel::CreateBuffer()
 	ID3D12Device* device = KDirectXCommon::GetInstance()->GetDev();
 
 	// 頂点データ全体のサイズ = 頂点データ一つ分のサイズ * 頂点データの要素数
-	UINT sizeVB = static_cast<UINT>(sizeof(VertexPosNormalUV) * vertices.size());
+	UINT sizeVB = static_cast<UINT>(sizeof(VertexPosNormalUVSkin) * vertices.size());
 
 	CD3DX12_HEAP_PROPERTIES heap1 = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
 
@@ -23,7 +23,7 @@ void FbxModel::CreateBuffer()
 	assert(SUCCEEDED(result));
 
 	// 頂点バッファへのデータ転送
-	VertexPosNormalUV* vertMap = nullptr;
+	VertexPosNormalUVSkin* vertMap = nullptr;
 	result = vertBuff->Map(0, nullptr, (void**)&vertMap);
 	std::copy(vertices.begin(), vertices.end(), vertMap);
 	vertBuff->Unmap(0, nullptr);

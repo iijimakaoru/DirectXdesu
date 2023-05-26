@@ -71,6 +71,14 @@ public:
 	// ディレクトリを含んだファイルパスからファイル名を抽出する
 	std::string ExtractFileName(const std::string& path);
 
+	// スキニング情報読み取り
+	void ParseSkin(FbxModel* model_, FbxMesh* fbxMesh);
+
+/// <summary>
+/// FBXの行列をXMMatrixに変換
+/// </summary>
+	static void ConvertMatrixFromFbx(DirectX::XMMATRIX* dst, const FbxAMatrix& src);
+
 private:
 	// privateなコンストラクタ（シングルトンパターン）
 	FbxLoader() = default;

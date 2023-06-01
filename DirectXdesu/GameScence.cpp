@@ -46,6 +46,9 @@ void GameScence::LoadResources()
 	soundData1 = sound->SoundLoadWave("Resources/Sound/Alarm01.wav");
 	soundData2 = sound->SoundLoadWave("Resources/Sound/Alarm02.wav");
 	soundData3 = sound->SoundLoadWave("Resources/Sound/Alarm03.wav");
+
+	bossModel = new MtlObj("boss_model");
+	bossModel->CreateModel();
 }
 
 void GameScence::Init()
@@ -198,6 +201,48 @@ void GameScence::Init()
 	partMan->Update(camera->viewProjection);
 
 	FbxLoader::GetInstance()->LoadModelFromFile("test");
+
+	levelData = LevelLoader::LoadFile("untitled");
+
+	models.insert(std::make_pair("boss_model", bossModel));
+
+	for (auto& objectData : levelData->objects)
+	{
+		KModel* model = nullptr;
+		decltype(models)::iterator it = models.find(objectData.fileName);
+		if (it != models.end())
+		{
+			model = it->second;
+		}
+
+		KObject3d* newObject = new KObject3d();
+		newObject->LoadModel(model);
+		newObject->SetPipeline(objPipeline.get());
+
+		// À•W
+		DirectX::XMFLOAT3 pos;
+		DirectX::XMStoreFloat3(&pos, objectData.translation);
+		newObject->transform.pos.x = pos.x;
+		newObject->transform.pos.y = pos.y;
+		newObject->transform.pos.z = pos.z;
+
+		// ‰ñ“]Šp
+		DirectX::XMFLOAT3 rot;
+		DirectX::XMStoreFloat3(&rot, objectData.rotation);
+		newObject->transform.rot.x = rot.x;
+		newObject->transform.rot.y = rot.y;
+		newObject->transform.rot.z = rot.z;
+
+		// À•W
+		DirectX::XMFLOAT3 scale;
+		DirectX::XMStoreFloat3(&scale, objectData.scaling);
+		newObject->transform.scale.x = scale.x;
+		newObject->transform.scale.y = scale.y;
+		newObject->transform.scale.z = scale.z;
+
+		// ”z—ñ‚É“o˜^
+		objects.push_back(newObject);
+	}
 }
 
 void GameScence::Update()
@@ -488,73 +533,81 @@ void GameScence::Update()
 
 	// Fbx
 	object1->Update(camera->viewProjection);
+
+	for (auto& object : objects) {
+		object->Update(camera->viewProjection);
+	}
 }
 
 void GameScence::Draw()
 {
-	player.Draw();
+	//player.Draw();
 
-	if (isHit)
-	{
-		if (colMode == CollisionMode::Sphere_Plane)
-		{
-			stage->Draw(&haikei);
-		}
-		else if (colMode == CollisionMode::Sphere_Triangle)
-		{
-			testTriangle->Draw(&haikei);
-		}
-		else if (colMode == CollisionMode::Ray_Plane)
-		{
-			stage->Draw(&haikei);
-		}
-		else if (colMode == CollisionMode::Ray_Triangle)
-		{
-			testTriangle->Draw(&haikei);
-		}
+	//if (isHit)
+	//{
+	//	if (colMode == CollisionMode::Sphere_Plane)
+	//	{
+	//		stage->Draw(&haikei);
+	//	}
+	//	else if (colMode == CollisionMode::Sphere_Triangle)
+	//	{
+	//		testTriangle->Draw(&haikei);
+	//	}
+	//	else if (colMode == CollisionMode::Ray_Plane)
+	//	{
+	//		stage->Draw(&haikei);
+	//	}
+	//	else if (colMode == CollisionMode::Ray_Triangle)
+	//	{
+	//		testTriangle->Draw(&haikei);
+	//	}
+	//}
+	//else
+	//{
+	//	if (colMode == CollisionMode::Sphere_Plane)
+	//	{
+	//		stage->Draw(&mario);
+	//	}
+	//	else if (colMode == CollisionMode::Sphere_Triangle)
+	//	{
+	//		testTriangle->Draw(&mario);
+	//	}
+	//	else if (colMode == CollisionMode::Ray_Plane)
+	//	{
+	//		stage->Draw(&mario);
+	//	}
+	//	else if (colMode == CollisionMode::Ray_Triangle)
+	//	{
+	//		testTriangle->Draw(&mario);
+	//	}
+	//}
+
+	//object1->Draw();
+
+	//skydorm->Draw();
+
+	//ParticleManager::GetInstance()->Draw();
+
+	//BillParticleManager::PreDraw(KDirectXCommon::GetInstance()->GetCmdlist());
+
+	//partMan->Draw();
+
+	//BillParticleManager::PostDraw();
+
+	//// ƒXƒvƒ‰ƒCƒg•`‰æ
+	//sprite->SpriteCommonBeginDraw(spriteCommon);
+
+	//if (spriteHoge[0].size.x > 1)
+	//{
+	//	sprite->SpriteDraw(spriteHoge[0], spriteCommon);
+	//}
+
+	//sprite->SpriteDraw(spriteHoge[1], spriteCommon);
+
+	//debugtext->Print(spriteCommon, "FPS(w)" + std::to_string(KDirectXCommon::GetInstance()->fps), { 10,50 }, 0.5f);
+	//debugtext->DrawAll(spriteCommon);
+
+	for (auto& object : objects) {
+		object->Draw();
 	}
-	else
-	{
-		if (colMode == CollisionMode::Sphere_Plane)
-		{
-			stage->Draw(&mario);
-		}
-		else if (colMode == CollisionMode::Sphere_Triangle)
-		{
-			testTriangle->Draw(&mario);
-		}
-		else if (colMode == CollisionMode::Ray_Plane)
-		{
-			stage->Draw(&mario);
-		}
-		else if (colMode == CollisionMode::Ray_Triangle)
-		{
-			testTriangle->Draw(&mario);
-		}
-	}
-
-	object1->Draw();
-
-	skydorm->Draw();
-
-	ParticleManager::GetInstance()->Draw();
-
-	BillParticleManager::PreDraw(KDirectXCommon::GetInstance()->GetCmdlist());
-
-	partMan->Draw();
-
-	BillParticleManager::PostDraw();
-
-	// ƒXƒvƒ‰ƒCƒg•`‰æ
-	sprite->SpriteCommonBeginDraw(spriteCommon);
-
-	if (spriteHoge[0].size.x > 1)
-	{
-		sprite->SpriteDraw(spriteHoge[0], spriteCommon);
-	}
-
-	sprite->SpriteDraw(spriteHoge[1], spriteCommon);
-
-	debugtext->Print(spriteCommon, "FPS(w)" + std::to_string(KDirectXCommon::GetInstance()->fps), { 10,50 }, 0.5f);
-	debugtext->DrawAll(spriteCommon);
 }

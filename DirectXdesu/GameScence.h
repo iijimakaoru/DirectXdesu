@@ -24,6 +24,10 @@
 
 #include "FbxObject3D.h"
 
+#include "LevelLoader.h"
+
+#include "KModel.h"
+
 class GameScence
 {
 public:
@@ -146,5 +150,14 @@ private:
 	// FbxŠÖ˜A
 	FbxModel* fbxModel1 = nullptr;
 	FbxObject3D* object1 = nullptr;
+
+	LevelData* levelData;
+
+	KModel* bossModel = nullptr;
+
+	std::array<std::unique_ptr<KObject3d>, 2>bossObject;
+
+	std::map<std::string, KModel*> models;
+	std::vector<KObject3d*> objects;
 };
 

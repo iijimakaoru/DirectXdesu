@@ -309,7 +309,6 @@ MtlObj::MtlObj(const string modelname)
 {
 	ifstream file;
 
-	//file.open("Resources/obj/triangle_tex.obj");
 	const string filename = modelname + ".obj";
 	const string directoryPath = "Resources/obj/";
 	file.open(directoryPath + filename);

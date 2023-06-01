@@ -14,17 +14,9 @@
 
 #include "Camera.h"
 
-#include "Player.h"
-
-#include "CollisionPrimitive.h"
-
 #include <array>
 
-#include "ParticleManager.h"
-
 #include "FbxObject3D.h"
-
-#include "LevelLoader.h"
 
 #include "KModel.h"
 
@@ -75,9 +67,6 @@ private:
 	std::unique_ptr<KObject3d> stage;
 	std::unique_ptr<KObject3d> testTriangle;
 
-	// プレイヤー
-	Player player;
-
 	// スプライト
 	std::unique_ptr<Sprite> sprite;
 	SpriteCommon spriteCommon;
@@ -97,67 +86,12 @@ private:
 
 	SpriteInfo sprites[2];
 
-	std::unique_ptr<DebugText> debugtext;
-
-	Vector3 vec = { 1,1,1 };
-
-	float angle = 0;
-
-	float hogeSpeed = 0;
-
-	float speedLevel = 1;
-
-	float speed = 0;
-
-	float hogeLifeTime = 0;
-
-	float hogeAngle = 0;
-
-	float hogeRot = 0;
-
-	float hogeCooltime = 0;
-
-	float hogehoge = 0;
-
 	bool isDebug = true;
 
-	bool isChange = false;
-
-	static const int MaxHoge = 2;
-	std::array<SpriteInfo, MaxHoge> spriteHoge;
-
 	Camera* camera = nullptr;
-
-	bool isWave = false;
-	bool isTaihun = false;
-
-	CollisionMode colMode = CollisionMode::Sphere_Plane;
-
-	/// 当たり判定
-	// 球
-	Sphere sphere;
-	// 平面
-	Plane plane;
-	// レイ
-	Ray ray;
-	// 三角形
-	ColTriangle colTriangle;
-
-	bool isHit = false;
-
-	BillParticleManager* partMan = nullptr;
 
 	// Fbx関連
 	FbxModel* fbxModel1 = nullptr;
 	FbxObject3D* object1 = nullptr;
-
-	LevelData* levelData;
-
-	KModel* bossModel = nullptr;
-
-	std::array<std::unique_ptr<KObject3d>, 2>bossObject;
-
-	std::map<std::string, KModel*> models;
-	std::vector<KObject3d*> objects;
 };
 

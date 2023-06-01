@@ -46,12 +46,6 @@
     <Filter Include="シェーダー">
       <UniqueIdentifier>{8d46f641-b509-490f-b94c-6d3bb85c48ee}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\Boss">
-      <UniqueIdentifier>{f6ea5bcb-11ad-402b-ad8a-bbe93ca54eff}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Boss">
-      <UniqueIdentifier>{4a99b731-db43-4c21-971b-453fb4f8a6b1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\AddNewSouce">
       <UniqueIdentifier>{b4f9b7af-adfd-415c-9d89-0199eeabc968}</UniqueIdentifier>
     </Filter>
@@ -126,23 +120,11 @@
     <ClCompile Include="Sound.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Player.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Stage.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Boss.cpp">
-      <Filter>ソース ファイル\Boss</Filter>
-    </ClCompile>
     <ClCompile Include="Camera.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="DebugCamera.cpp">
       <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="BossActState.cpp">
-      <Filter>ソース ファイル\Boss</Filter>
     </ClCompile>
     <ClCompile Include="Particle.cpp">
       <Filter>ソース ファイル</Filter>
@@ -154,9 +136,6 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="MyMath.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Quaternion.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="ConstBuffer.cpp">
@@ -225,8 +204,8 @@
     <ClCompile Include="LevelLoader.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="LevelData.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="Quaternion.cpp">
+      <Filter>ソース ファイル\Math</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -299,23 +278,11 @@
     <ClInclude Include="PipelineSet.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Player.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Stage.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Boss.h">
-      <Filter>ヘッダー ファイル\Boss</Filter>
-    </ClInclude>
     <ClInclude Include="Camera.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="DebugCamera.h">
       <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="BossActState.h">
-      <Filter>ヘッダー ファイル\Boss</Filter>
     </ClInclude>
     <ClInclude Include="Particle.h">
       <Filter>ヘッダー ファイル</Filter>
@@ -327,9 +294,6 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="MyMath.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Quaternion.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="SpriteCommon.h">
@@ -395,8 +359,8 @@
     <ClInclude Include="LevelLoader.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="LevelData.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="Quaternion.h">
+      <Filter>ヘッダー ファイル\Math</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,5 +1,4 @@
 #include "GameCamera.h"
-#include "Player.h"
 
 GameCamera::GameCamera()
 {
@@ -9,7 +8,6 @@ GameCamera::GameCamera()
 
 void GameCamera::Update()
 {
-	Player* player = Player::nowPlayer;
 
 	viewProjection.target = { 0,0,0 };
 

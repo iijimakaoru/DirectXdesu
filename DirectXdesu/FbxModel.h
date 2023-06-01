@@ -119,11 +119,18 @@ private:
 
 	std::vector<Bone> bones;
 
+	// FBXシーン
+	FbxScene* fbxScene = nullptr;
+
 public: // 関数
 	// メンバ
 	void CreateBuffer();
 	void LoadTexture();
 	void Draw();
+
+	~FbxModel();
+
+	FbxScene* GetFbxScene() { return fbxScene; }
 
 	// ゲッター
 	const XMMATRIX& GetModelTransform() { return meshNode->globalTransform; }

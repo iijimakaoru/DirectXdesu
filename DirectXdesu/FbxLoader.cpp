@@ -60,7 +60,7 @@ FbxModel* FbxLoader::LoadModelFromFile(const string& modelName)
 	// ルートノードから順に解析してモデルに流し込む
 	ParseNodeRecursive(fbxModel, fbxScene->GetRootNode());
 	// Fbxシーン解放
-	fbxScene->Destroy();
+	fbxModel->fbxScene = fbxScene;
 
 	fbxModel->CreateBuffer();
 
@@ -447,8 +447,11 @@ void FbxLoader::ParseSkin(FbxModel* model_, FbxMesh* fbxMesh)
 				// 2番目以降のウェイトを合計
 				for (int j = 1; j < FbxModel::MAX_BONE_INDICES; j++)
 				{
-
+					weight += vertices[i].boneWeight[j];
 				}
+				// 合計で1.0f(100%)になるように調整
+				vertices[i].boneWeight[0] = 1.0f - weight;
+				break;
 			}
 		}
 	}

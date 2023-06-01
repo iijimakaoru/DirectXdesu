@@ -154,3 +154,9 @@ void FbxModel::Draw()
 	// •`‰æ
 	cmdList->DrawIndexedInstanced((UINT)indices.size(), 1, 0, 0, 0);
 }
+
+FbxModel::~FbxModel()
+{
+	// FbxƒV[ƒ“‚Ì‰ð•ú
+	fbxScene->Destroy();
+}

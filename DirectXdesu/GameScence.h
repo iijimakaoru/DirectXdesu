@@ -52,9 +52,6 @@ private:
 	KShader fbxShader;
 
 	// モデル
-	std::unique_ptr<KModel> triangle;
-	std::unique_ptr<KModel> cube;
-	std::unique_ptr<KModel> hoge;
 	std::unique_ptr<KModel> SkyBox;
 
 	// テクスチャ
@@ -62,10 +59,7 @@ private:
 	KTexture haikei;
 
 	// 3Dオブジェクト
-	std::unique_ptr<KObject3d> obj;
 	std::unique_ptr<KObject3d> skydorm;
-	std::unique_ptr<KObject3d> stage;
-	std::unique_ptr<KObject3d> testTriangle;
 
 	// スプライト
 	std::unique_ptr<Sprite> sprite;

@@ -26,12 +26,6 @@ GameScence::~GameScence()
 void GameScence::LoadResources()
 {
 	// モデル
-	triangle = std::make_unique<Triangle>();
-	triangle->CreateModel();
-	cube = std::make_unique<Cube>();
-	cube->CreateModel();
-	hoge = std::make_unique<MtlObj>("hoge");
-	hoge->CreateModel();
 	SkyBox = std::make_unique<MtlObj>("boxSky");
 	SkyBox->CreateModel();
 
@@ -68,25 +62,11 @@ void GameScence::Init()
 	object1->SetModel(fbxModel1);
 #pragma endregion
 
-
-	if (!ParticleManager::GetInstance()->IsPoolCreated())
-	{
-		ParticleManager::GetInstance()->CreatePool(hoge.get(), objPipeline.get());
-	}
-
 	skydorm = std::make_unique<KObject3d>();
 	skydorm->Initialize();
 	skydorm->LoadModel(SkyBox.get());
 	skydorm->SetPipeline(objPipeline.get());
 	skydorm->transform.scale = { 500,500,500 };
-
-	testTriangle = std::make_unique<KObject3d>();
-	testTriangle->Initialize();
-	testTriangle->LoadModel(triangle.get());
-	testTriangle->SetPipeline(objPipeline.get());
-	testTriangle->transform.scale = { 100,100,1 };
-	testTriangle->transform.pos.y = -10;
-	testTriangle->transform.rot.x = XMConvertToRadians(90);
 
 #pragma region スプライト
 	sprite = std::make_unique<Sprite>();
@@ -97,12 +77,6 @@ void GameScence::Init()
 
 	isDebug = true;
 	camera = new DebugCamera();
-
-	stage = std::make_unique<KObject3d>();
-	stage->transform.scale = { 80,0.1f,80 };
-	stage->transform.pos.y = -10;
-	stage->LoadModel(cube.get());
-	stage->SetPipeline(objPipeline.get());
 
 	FbxLoader::GetInstance()->LoadModelFromFile("test");
 }
@@ -149,10 +123,6 @@ void GameScence::Update()
 	{
 		sound->SoundPlayWave(soundData3);
 	}
-
-	stage->Update(camera->viewProjection);
-
-	testTriangle->Update(camera->viewProjection);
 
 	camera->Update();
 

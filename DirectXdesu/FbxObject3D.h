@@ -52,6 +52,15 @@ public:
 		return position;
 	}
 
+public:// 定数
+	// ボーンの最大値
+	static const int MAX_BONES = 32;
+
+	struct ConstBufferDataSkin
+	{
+		XMMATRIX bones[MAX_BONES];
+	};
+
 protected:
 	ComPtr<ID3D12Resource> constBuffTransform;
 	HRESULT result;
@@ -66,6 +75,8 @@ protected:
 	XMMATRIX matWorld;
 	// モデル
 	FbxModel* model = nullptr;
+
+	ComPtr<ID3D12Resource> constBuffSkin;
 
 	static KGPlin* pipeline;
 };

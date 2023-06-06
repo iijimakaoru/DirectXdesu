@@ -1,3 +1,11 @@
+// ボーンの最大値
+static const int MAX_BONES = 32;
+
+cbuffer skinning:register(b3)
+{
+	matrix matSkinning[MAX_BONES];
+}
+
 cbuffer cbuff0 : register(b0)
 {
 	matrix viewproj; // ビュープロジェクション行列
@@ -8,15 +16,17 @@ cbuffer cbuff0 : register(b0)
 // 頂点バッファの入力構造体
 struct VSInput
 {
-	float4 pos  : POSITION; // 位置
-	float3 normal : NORMAL; // 頂点座標
-	float2 uv	: TEXCOORD; // テクスチャ座標
+	float4 pos		   : POSITION; // 位置
+	float3 normal	   : NORMAL; // 頂点座標
+	float2 uv		   : TEXCOORD; // テクスチャ座標
+	uint4  boneIndices : BONEINDICES; // ボーンの番号
+	float4 boneWeights : BONEWEIGHTS; // ボーンのスキンウェイト
 };
 
 // 頂点シェーダーからピクセルシェーダーへのやり取りに使用する構造体
 struct VSOutput
 {
-	float4 svpos : SV_POSITION; // システム用頂点座標
-	float3 normal	  : NORMAL; // 法線
+	float4 svpos	: SV_POSITION; // システム用頂点座標
+	float3 normal	: NORMAL; // 法線
 	float2 uv		: TEXCOORD; // uv値
 };

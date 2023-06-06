@@ -127,12 +127,12 @@ void KGPlin::Blending(D3D12_RENDER_TARGET_BLEND_DESC& blendDesc, const int mord)
 
 KGPlin::KGPlin()
 {
-	
+
 }
 
 KGPlin::~KGPlin()
 {
-	
+
 }
 
 void KGPlin::CreatePipeline(KShader shader, float constBuffNum)
@@ -197,14 +197,22 @@ void KGPlin::CreatePipelineAll(KShader shader, bool Obj, bool Sprite, bool Parti
 				D3D12_APPEND_ALIGNED_ELEMENT,
 				D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0
 			},
+			{// 影響を受けるボーン番号(4つ)
+				"BONEINDICES", 0, DXGI_FORMAT_R32G32B32A32_UINT,0,
+				D3D12_APPEND_ALIGNED_ELEMENT,
+				D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0
+			},
+			{// ボーンスキンウェイト(4つ)
+				"BONEWEIGHTS", 0, DXGI_FORMAT_R32G32B32A32_FLOAT,0,
+				D3D12_APPEND_ALIGNED_ELEMENT,
+				D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0
+			},
 		};
 
 		// サンプルマスク
 		piplineDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK; // 標準設定
 		// ラスタライザステート
 		piplineDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
-		//gpipeline.RasterizerState.CullMode = D3D12_CULL_MODE_NONE;
-		//gpipeline.RasterizerState.FillMode = D3D12_FILL_MODE_WIREFRAME;
 		// デプスステンシルステート
 		piplineDesc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
 
@@ -242,11 +250,13 @@ void KGPlin::CreatePipelineAll(KShader shader, bool Obj, bool Sprite, bool Parti
 		descRangeSRV.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0);
 
 		// ルートパラメータ
-		CD3DX12_ROOT_PARAMETER rootparams[2];
+		CD3DX12_ROOT_PARAMETER rootparams[3];
 		// CBV(座標変換行列用)
 		rootparams[0].InitAsConstantBufferView(0, 0, D3D12_SHADER_VISIBILITY_ALL);
 		// SRV(テクスチャ)
 		rootparams[1].InitAsDescriptorTable(1, &descRangeSRV, D3D12_SHADER_VISIBILITY_ALL);
+		// CBV(スキニング用)
+		rootparams[2].InitAsConstantBufferView(3, 0, D3D12_SHADER_VISIBILITY_ALL);
 
 		// スタティックサンプラー
 		CD3DX12_STATIC_SAMPLER_DESC samplerDesc = CD3DX12_STATIC_SAMPLER_DESC(0);

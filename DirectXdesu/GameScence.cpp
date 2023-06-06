@@ -54,7 +54,7 @@ void GameScence::Init()
 	fbxPipeline->CreatePipelineAll(fbxShader, false, false, false, true);
 
 #pragma region FbxƒeƒXƒg
-	fbxModel1 = FbxLoader::GetInstance()->LoadModelFromFile("cube");
+	fbxModel1 = FbxLoader::GetInstance()->LoadModelFromFile("boneTest");
 
 	object1 = new FbxObject3D;
 	object1->Init();

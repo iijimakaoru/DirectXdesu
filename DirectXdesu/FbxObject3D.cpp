@@ -46,6 +46,8 @@ void FbxObject3D::Init()
 		nullptr,
 		IID_PPV_ARGS(&constBuffSkin));
 	assert(SUCCEEDED(result));
+
+	frameTime.SetTime(0, 0, 0, 1, 0, FbxTime::EMode::eFrames60);
 }
 
 void FbxObject3D::Update(ViewProjection& viewProjection)
@@ -82,6 +84,17 @@ void FbxObject3D::Update(ViewProjection& viewProjection)
 	// ボーン配列
 	std::vector<FbxModel::Bone>& bones = model->GetBones();
 
+	// アニメーション
+	if (isPlay)
+	{
+		// 1フレーム進める
+		currentTime += frameTime;
+		if (currentTime > endTime)
+		{
+			currentTime = startTime;
+		}
+	}
+
 	// 定数バッファデータ転送
 	ConstBufferDataSkin* constMapSkin = nullptr;
 	result = constBuffSkin->Map(0, nullptr, (void**)&constMapSkin);
@@ -90,7 +103,7 @@ void FbxObject3D::Update(ViewProjection& viewProjection)
 		// 今の姿勢行列
 		XMMATRIX matCurrentPose;
 		// 今の姿勢行列を取得
-		FbxAMatrix fbxCurrentPose = bones[i].fbxCluster->GetLink()->EvaluateGlobalTransform(0);
+		FbxAMatrix fbxCurrentPose = bones[i].fbxCluster->GetLink()->EvaluateGlobalTransform(currentTime);
 		// XMMATRIXに変換
 		FbxLoader::ConvertMatrixFromFbx(&matCurrentPose, fbxCurrentPose);
 		// 合成してスキニング行列に
@@ -115,4 +128,24 @@ void FbxObject3D::Draw()
 	cmdList->SetGraphicsRootConstantBufferView(2, constBuffSkin->GetGPUVirtualAddress());
 
 	model->Draw();
+}
+
+void FbxObject3D::PlayAnimation()
+{
+	// Fbxシーン取得
+	FbxScene* fbxScene = model->GetFbxScene();
+	// 0番のアニメーション取得
+	FbxAnimStack* animstack = fbxScene->GetSrcObject<FbxAnimStack>(0);
+	// アニメーションの名前取得
+	const char* animStackName = animstack->GetName();
+	// アニメーションの時間取得
+	FbxTakeInfo* takeInfo = fbxScene->GetTakeInfo(animStackName);
+	// 開始時間取得
+	startTime = takeInfo->mLocalTimeSpan.GetStart();
+	// 終了時間取得
+	endTime = takeInfo->mLocalTimeSpan.GetStop();
+	// 開始時間に合わせる
+	currentTime = startTime;
+	// 再生中状態にする
+	isPlay = true;
 }

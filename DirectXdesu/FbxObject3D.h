@@ -26,31 +26,62 @@ public: // エイリアス
 	};
 
 public:
+	/// <summary>
+	/// 初期化
+	/// </summary>
 	void Init();
 
+	/// <summary>
+	/// 更新
+	/// </summary>
+	/// <param name="viewProjection"></param>
 	void Update(ViewProjection& viewProjection);
 
+	/// <summary>
+	/// 描画
+	/// </summary>
 	void Draw();
 
+	/// <summary>
+	/// パイプラインセッター
+	/// </summary>
+	/// <param name="pipeline_"></param>
 	void SetPipline(KGPlin* pipeline_)
 	{
 		FbxObject3D::pipeline = pipeline_;
 	}
 
+	/// <summary>
+	/// モデルセッター
+	/// </summary>
+	/// <param name="model_"></param>
 	void SetModel(FbxModel* model_) 
 	{ 
 		model = model_; 
 	}
 
+	/// <summary>
+	/// ポジションセッター
+	/// </summary>
+	/// <param name="pos_"></param>
 	void SetPosition(XMFLOAT3 pos_)
 	{
 		position = pos_;
 	}
 
+	/// <summary>
+	/// ポジションゲッター
+	/// </summary>
+	/// <returns></returns>
 	XMFLOAT3 GetPosition()
 	{
 		return position;
 	}
+
+	/// <summary>
+	/// アニメーション開始
+	/// </summary>
+	void PlayAnimation();
 
 public:// 定数
 	// ボーンの最大値
@@ -77,6 +108,17 @@ protected:
 	FbxModel* model = nullptr;
 
 	ComPtr<ID3D12Resource> constBuffSkin;
+
+	// 1フレームの時間
+	FbxTime frameTime;
+	// アニメーション開始時間
+	FbxTime startTime;
+	// アニメーション終了時間
+	FbxTime endTime;
+	// アニメーション現在時間
+	FbxTime currentTime;
+	// アニメーション再生フラグ
+	bool isPlay = false;
 
 	static KGPlin* pipeline;
 };

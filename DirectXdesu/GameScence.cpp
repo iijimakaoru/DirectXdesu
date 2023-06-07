@@ -137,6 +137,8 @@ void GameScence::Update()
 
 	object1->SetPosition({ fbxPos.x,fbxPos.y,fbxPos.z });
 
+	object1->PlayAnimation();
+
 	// Fbx
 	object1->Update(camera->viewProjection);
 }

@@ -8,22 +8,9 @@ using namespace DirectX;
 void FbxObject3D::Init()
 {
 	// ヒープ設定
-	/*D3D12_HEAP_PROPERTIES heapProp{};
-	heapProp.Type = D3D12_HEAP_TYPE_UPLOAD;*/
-
 	CD3DX12_HEAP_PROPERTIES heapProp = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
 
 	// 定数バッファB1
-	// リソース設定
-	/*D3D12_RESOURCE_DESC resourceDesc{};
-	resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-	resourceDesc.Width = (sizeof(ConstBufferDataTransform) + 0xff) & ~0xff;
-	resourceDesc.Height = 1;
-	resourceDesc.DepthOrArraySize = 1;
-	resourceDesc.MipLevels = 1;
-	resourceDesc.SampleDesc.Count = 1;
-	resourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;*/
-
 	CD3DX12_RESOURCE_DESC buff = CD3DX12_RESOURCE_DESC::Buffer((sizeof(ConstBufferDataTransform) + 0xff) & ~0xff);
 
 	// 定数バッファの生成
@@ -136,6 +123,8 @@ void FbxObject3D::PlayAnimation()
 	FbxScene* fbxScene = model->GetFbxScene();
 	// 0番のアニメーション取得
 	FbxAnimStack* animstack = fbxScene->GetSrcObject<FbxAnimStack>(0);
+
+	fbxScene->SetCurrentAnimationStack(animstack);
 	// アニメーションの名前取得
 	const char* animStackName = animstack->GetName();
 	// アニメーションの時間取得

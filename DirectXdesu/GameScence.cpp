@@ -60,6 +60,7 @@ void GameScence::Init()
 	object1->Init();
 	object1->SetPipline(fbxPipeline.get());
 	object1->SetModel(fbxModel1);
+	object1->PlayAnimation();
 #pragma endregion
 
 	skydorm = std::make_unique<KObject3d>();
@@ -77,8 +78,6 @@ void GameScence::Init()
 
 	isDebug = true;
 	camera = new DebugCamera();
-
-	FbxLoader::GetInstance()->LoadModelFromFile("test");
 }
 
 void GameScence::Update()
@@ -136,8 +135,6 @@ void GameScence::Update()
 	ImGui::SliderFloat("FbxPosZ", &fbxPos.z, -60.0f, 60.0f);
 
 	object1->SetPosition({ fbxPos.x,fbxPos.y,fbxPos.z });
-
-	object1->PlayAnimation();
 
 	// Fbx
 	object1->Update(camera->viewProjection);

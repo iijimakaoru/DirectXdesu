@@ -27,6 +27,6 @@ public:
 private:
 	Sprite* sprite_ = nullptr;
 	SpriteInfo sprites[maxCharCount];
-	int spriteIndex = 0;
+	size_t spriteIndex = 0;
 };
 

@@ -39,7 +39,7 @@ void FbxObject3D::Init()
 	// 定数バッファデータ転送
 	ConstBufferDataSkin* constMapSkin = nullptr;
 	result = constBuffSkin->Map(0, nullptr, (void**)&constMapSkin);
-	for (int i = 0; i < MAX_BONES; i++)
+	for (size_t i = 0; i < MAX_BONES; i++)
 	{
 		constMapSkin->bones[i] = XMMatrixIdentity();
 	}
@@ -94,7 +94,7 @@ void FbxObject3D::Update(ViewProjection& viewProjection)
 	// 定数バッファデータ転送
 	ConstBufferDataSkin* constMapSkin = nullptr;
 	result = constBuffSkin->Map(0, nullptr, (void**)&constMapSkin);
-	for (int i = 0; i < bones.size(); i++)
+	for (size_t i = 0; i < bones.size(); i++)
 	{
 		// 今の姿勢行列
 		XMMATRIX matCurrentPose;

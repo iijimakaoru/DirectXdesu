@@ -54,7 +54,7 @@ FbxModel* FbxLoader::LoadModelFromFile(const string& modelName)
 	FbxModel* fbxModel = new FbxModel();
 	fbxModel->name = modelName;
 	// Fbxノードの数を取得
-	int nodeCount = fbxScene->GetNodeCount();
+	size_t nodeCount = fbxScene->GetNodeCount();
 	// あらかじめ必要分のメモリを確保することで、アドレスがずれるのを予防
 	fbxModel->nodes.reserve(nodeCount);
 	// ルートノードから順に解析してモデルに流し込む
@@ -121,7 +121,7 @@ void FbxLoader::ParseNodeRecursive(FbxModel* model, FbxNode* fbxNode, Node* pare
 	}
 
 	// 子ノードに対して再帰呼び出し
-	for (int i = 0; i < fbxNode->GetChildCount(); i++)
+	for (size_t i = 0; i < fbxNode->GetChildCount(); i++)
 	{
 		ParseNodeRecursive(model, fbxNode->GetChild(i), &node);
 	}
@@ -147,7 +147,7 @@ void FbxLoader::ParseMeshVertices(FbxModel* model, FbxMesh* fbxMesh)
 	auto& vertices = model->vertices;
 
 	// 頂点座標データの数
-	const int controlPointsCount = fbxMesh->GetControlPointsCount();
+	const size_t controlPointsCount = fbxMesh->GetControlPointsCount();
 
 	// 必要数だけ頂点データ配列を確保
 	FbxModel::VertexPosNormalUVSkin vert{};
@@ -157,7 +157,7 @@ void FbxLoader::ParseMeshVertices(FbxModel* model, FbxMesh* fbxMesh)
 	FbxVector4* pCoord = fbxMesh->GetControlPoints();
 
 	// Fbxメッシュの全頂点座標をモデル内の配列にコピーする
-	for (int i = 0; i < controlPointsCount; i++)
+	for (size_t i = 0; i < controlPointsCount; i++)
 	{
 		FbxModel::VertexPosNormalUVSkin& vertex = vertices[i];
 		// 座標のコピー
@@ -175,25 +175,25 @@ void FbxLoader::ParseMeshFaces(FbxModel* model, FbxMesh* fbxMesh)
 	// 1ファイルに複数メッシュのモデルは非対応
 	assert(indices.size() == 0);
 	// 面の数
-	const int polygonCount = fbxMesh->GetPolygonCount();
+	const size_t polygonCount = fbxMesh->GetPolygonCount();
 	// UVデータの数
-	const int textureUVConut = fbxMesh->GetTextureUVCount();
+	const size_t textureUVConut = fbxMesh->GetTextureUVCount();
 	// UV名リスト
 	FbxStringList uvNames;
 	fbxMesh->GetUVSetNames(uvNames);
 
 	// 面ごとの情報読み取り
-	for (int i = 0; i < polygonCount; i++)
+	for (size_t i = 0; i < polygonCount; i++)
 	{
 		// 面を構築する頂点の数を取得
-		const int polygonSize = fbxMesh->GetPolygonSize(i);
+		const size_t polygonSize = fbxMesh->GetPolygonSize(i);
 		assert(polygonSize <= 4);
 
 		// 頂点ごとの処理
-		for (int j = 0; j < polygonSize; j++)
+		for (size_t j = 0; j < polygonSize; j++)
 		{
 			// Fbx頂点配列のインデックス
-			int index = fbxMesh->GetPolygonVertex(i, j);
+			size_t index = fbxMesh->GetPolygonVertex(i, j);
 			assert(index >= 0);
 
 			// 頂点法線読み込み
@@ -231,9 +231,9 @@ void FbxLoader::ParseMeshFaces(FbxModel* model, FbxMesh* fbxMesh)
 			{
 				// 3点追加し、
 				// 四角形の0,1,2,3の内2,3,0で三角形構築する
-				int index2 = indices[indices.size() - 1];
-				int index3 = index;
-				int index0 = indices[indices.size() - 3];
+				size_t index2 = indices[indices.size() - 1];
+				size_t index3 = index;
+				size_t index0 = indices[indices.size() - 3];
 				indices.push_back(index2);
 				indices.push_back(index3);
 				indices.push_back(index0);
@@ -244,7 +244,7 @@ void FbxLoader::ParseMeshFaces(FbxModel* model, FbxMesh* fbxMesh)
 
 void FbxLoader::ParseMaterial(FbxModel* model, FbxNode* fbxNode)
 {
-	const int materialCount = fbxNode->GetMaterialCount();
+	const size_t materialCount = fbxNode->GetMaterialCount();
 	if (materialCount > 0)
 	{
 		// 先頭のマテリアル取得
@@ -339,7 +339,7 @@ void FbxLoader::ParseSkin(FbxModel* model_, FbxMesh* fbxMesh)
 	if (fbxSkin == nullptr)
 	{
 		// 各頂点についての処理
-		for (int i = 0; i < model_->vertices.size(); i++)
+		for (size_t i = 0; i < model_->vertices.size(); i++)
 		{
 			// 最初のボーン(単位行列)の影響100%にする
 			model_->vertices[i].boneIndex[0] = 0;
@@ -352,11 +352,11 @@ void FbxLoader::ParseSkin(FbxModel* model_, FbxMesh* fbxMesh)
 	std::vector<FbxModel::Bone>& bones = model_->bones;
 
 	// ボーンの数
-	int clusterCount = fbxSkin->GetClusterCount();
+	size_t clusterCount = fbxSkin->GetClusterCount();
 	bones.reserve(clusterCount);
 
 	// 全てのボーンについて
-	for (int i = 0; i < clusterCount; i++)
+	for (size_t i = 0; i < clusterCount; i++)
 	{
 		// FBXボーン情報
 		FbxCluster* fbxCluster = fbxSkin->GetCluster(i);
@@ -396,23 +396,23 @@ void FbxLoader::ParseSkin(FbxModel* model_, FbxMesh* fbxMesh)
 	std::vector<std::list<WeightSet>>weightLists(model_->vertices.size());
 
 	// 全てのボーンについて
-	for (int i = 0; i < clusterCount; i++)
+	for (size_t i = 0; i < clusterCount; i++)
 	{
 		// FBXボーン情報
 		FbxCluster* fbxCluster = fbxSkin->GetCluster(i);
 
 		// このボーンに影響を受ける頂点の数
-		int controlPointIndicesCount = fbxCluster->GetControlPointIndicesCount();
+		size_t controlPointIndicesCount = fbxCluster->GetControlPointIndicesCount();
 
 		// このボーンに影響を受ける頂点の配列
 		int* controlPointIndices = fbxCluster->GetControlPointIndices();
 		double* controlPointWeights = fbxCluster->GetControlPointWeights();
 
 		// 影響を受ける全頂点について
-		for (int j = 0; j < controlPointIndicesCount; j++)
+		for (size_t j = 0; j < controlPointIndicesCount; j++)
 		{
 			// 頂点番号
-			int vertIndex = controlPointIndices[j];
+			size_t vertIndex = controlPointIndices[j];
 
 			// スキンウェイト
 			float weight = static_cast<float>(controlPointWeights[j]);
@@ -426,7 +426,7 @@ void FbxLoader::ParseSkin(FbxModel* model_, FbxMesh* fbxMesh)
 	auto& vertices = model_->vertices;
 
 	// 各頂点の処理
-	for (int i = 0; i < vertices.size(); i++)
+	for (size_t i = 0; i < vertices.size(); i++)
 	{
 		// 頂点のウェイトから最も大きい4つを選択
 		auto& weightList = weightLists[i];
@@ -438,7 +438,7 @@ void FbxLoader::ParseSkin(FbxModel* model_, FbxMesh* fbxMesh)
 			}
 		);
 
-		int weightArrayIndex = 0;
+		size_t weightArrayIndex = 0;
 
 		// 降順ソート済みのウェイトリスト
 		for (auto& weightSet : weightList)
@@ -452,7 +452,7 @@ void FbxLoader::ParseSkin(FbxModel* model_, FbxMesh* fbxMesh)
 			{
 				float weight = 0.0f;
 				// 2番目以降のウェイトを合計
-				for (int j = 1; j < FbxModel::MAX_BONE_INDICES; j++)
+				for (size_t j = 1; j < FbxModel::MAX_BONE_INDICES; j++)
 				{
 					weight += vertices[i].boneWeight[j];
 				}
@@ -466,9 +466,9 @@ void FbxLoader::ParseSkin(FbxModel* model_, FbxMesh* fbxMesh)
 
 void FbxLoader::ConvertMatrixFromFbx(DirectX::XMMATRIX* dst, const FbxAMatrix& src)
 {
-	for (int i = 0; i < 4; i++)
+	for (size_t i = 0; i < 4; i++)
 	{
-		for (int j = 0; j < 4; j++)
+		for (size_t j = 0; j < 4; j++)
 		{
 			dst->r[i].m128_f32[j] = static_cast<float>(src.Get(i, j));
 		}

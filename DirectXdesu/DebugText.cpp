@@ -4,7 +4,7 @@ void DebugText::Init(Sprite* sprite ,UINT texnumber, const SpriteCommon& spriteC
 {
 	sprite_ = sprite;
 
-	for (int i = 0; i < _countof(sprites); i++)
+	for (size_t i = 0; i < _countof(sprites); i++)
 	{
 		sprites[i] = sprite_->SpriteCreate( texnumber, spriteCommon, { 0,0 });
 	}
@@ -13,7 +13,7 @@ void DebugText::Init(Sprite* sprite ,UINT texnumber, const SpriteCommon& spriteC
 void DebugText::Print(const SpriteCommon& spriteCommon, const std::string& text,
 	Vector2 pos, float scale)
 {
-	for (int i = 0; i < text.size(); i++)
+	for (size_t i = 0; i < text.size(); i++)
 	{
 		if (spriteIndex >= maxCharCount)
 		{
@@ -28,8 +28,8 @@ void DebugText::Print(const SpriteCommon& spriteCommon, const std::string& text,
 			fontIndex = 0;
 		}
 
-		int fontIndexY = fontIndex / fontLineCount;
-		int fontIndexX = fontIndex % fontLineCount;
+		size_t fontIndexY = fontIndex / fontLineCount;
+		size_t fontIndexX = fontIndex % fontLineCount;
 
 		sprites[spriteIndex].position = { pos.x + fontWidth * scale * i,pos.y,0 };
 		sprites[spriteIndex].texLeftTop = { (float)fontIndexX * fontWidth,(float)fontIndexY * fontHeight };

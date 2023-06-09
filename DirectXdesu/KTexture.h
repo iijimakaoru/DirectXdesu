@@ -19,6 +19,11 @@ class KTexture
 public:
 	KTexture() {};
 	void CreateTexture(const std::string& directoryPath, const std::string& filename);
+	ID3D12Resource* CreateBufferResource(ID3D12Device* device, uint32_t resouce);
+
+	[[nodiscard]]
+	ID3D12Resource* UploadTextureData(ID3D12Resource* texture, const DirectX::ScratchImage& mipImages, ID3D12Device* device,
+		ID3D12GraphicsCommandList* cmdList);
 
 	TexMetadata metadata{};
 

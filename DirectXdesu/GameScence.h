@@ -46,10 +46,12 @@ private:
 	// パイプライン
 	std::unique_ptr<KGPlin> objPipeline;
 	std::unique_ptr<KGPlin> fbxPipeline;
+	std::unique_ptr<KGPlin> spritePipeline;
 
 	// シェーダー
 	KShader objShader;
 	KShader fbxShader;
+	KShader spriteShader;
 
 	// モデル
 	std::unique_ptr<KModel> SkyBox;

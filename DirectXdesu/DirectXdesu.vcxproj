@@ -104,6 +104,7 @@
     <ClCompile Include="KDepthStencilBuffer.cpp" />
     <ClCompile Include="KDescriptorHeap.cpp" />
     <ClCompile Include="KDsvDescriptorHeap.cpp" />
+    <ClCompile Include="KGamePlayScene.cpp" />
     <ClCompile Include="KGPlin.cpp" />
     <ClCompile Include="KDepth.cpp" />
     <ClCompile Include="KDirectXCommon.cpp" />
@@ -158,6 +159,7 @@
     <ClInclude Include="KDepthStencilBuffer.h" />
     <ClInclude Include="KDescriptorHeap.h" />
     <ClInclude Include="KDsvDescriptorHeap.h" />
+    <ClInclude Include="KGamePlayScene.h" />
     <ClInclude Include="KGPlin.h" />
     <ClInclude Include="KDepth.h" />
     <ClInclude Include="KDirectXCommon.h" />

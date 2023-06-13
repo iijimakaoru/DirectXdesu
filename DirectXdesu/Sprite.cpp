@@ -3,6 +3,8 @@
 #include "KDirectXCommon.h"
 #include "KWinApp.h"
 
+KGPlin* Sprite::pipeline = nullptr;
+
 void Sprite::Init(KDirectXCommon* dxCommon)
 {
 	dxCommon_ = dxCommon;
@@ -306,12 +308,8 @@ SpriteInfo Sprite::SpriteCreate(UINT texNumber, const SpriteCommon& spriteCommon
 
 void Sprite::SpriteCommonBeginDraw(const SpriteCommon& spriteCommon)
 {
-	// パイプラインステートの設定
-	dxCommon_->GetCmdlist()->SetPipelineState(spriteCommon.pipelineSet.pipelineState.Get());
-	// ルートシグネチャの設定
-	dxCommon_->GetCmdlist()->SetGraphicsRootSignature(spriteCommon.pipelineSet.rootSignature.Get());
-	// プリミティブ形状を設定
-	dxCommon_->GetCmdlist()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+	pipeline->Setting();
+	pipeline->Update(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 	// テクスチャ用デスクリプタヒープの設定
 	ID3D12DescriptorHeap* ppHeaps[] = { spriteCommon.descHeap.Get() };
 	dxCommon_->GetCmdlist()->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
@@ -478,6 +476,11 @@ HRESULT Sprite::SpriteCommonLoadTexture(SpriteCommon& spriteCommon, UINT texnumb
 			dxCommon_->GetDev()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV)));
 
 	return S_OK;
+}
+
+void Sprite::SetPipeline(KGPlin* pipeline_)
+{
+	Sprite::pipeline = pipeline_;
 }
 
 void BakaSprite::Init()

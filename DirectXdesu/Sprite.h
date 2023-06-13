@@ -70,7 +70,16 @@ struct SpriteCommon
 class Sprite
 {
 public:
+	/// <summary>
+	/// èâä˙âª
+	/// </summary>
+	/// <param name="dxCommon"></param>
 	void Init(KDirectXCommon* dxCommon);
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="sprite"></param>
+	/// <param name="spriteCommon"></param>
 	void SpriteTransferVertexBuffer(const SpriteInfo& sprite, const SpriteCommon& spriteCommon);
 	PipelineSet SpriteCreateGraphicsPipeline();
 	SpriteInfo SpriteCreate(UINT texNumber, const SpriteCommon& spriteCommon, Vector2 anchorpoint = { 0.5f,0.5f }, bool isFlipX = false, bool isFlipY = false);
@@ -80,8 +89,12 @@ public:
 	void SpriteUpdate(SpriteInfo& sprite, const SpriteCommon& spriteCommon);
 	HRESULT SpriteCommonLoadTexture(SpriteCommon& spriteCommon, UINT texnumber, const wchar_t* filename);
 
+	void SetPipeline(KGPlin* pipeline_);
+
 private:
 	KDirectXCommon* dxCommon_ = nullptr;
+
+	static KGPlin* pipeline;
 };
 
 class BakaSprite

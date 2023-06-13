@@ -55,6 +55,11 @@ void GameScence::Init()
 	fbxPipeline = std::make_unique<KGPlin>();
 	fbxPipeline->CreatePipelineAll(fbxShader, false, false, false, true);
 
+	// Sprite
+	spriteShader.Init(L"Resources/Shader/SpriteVS.hlsl", L"Resources/Shader/SpritePS.hlsl");
+	spritePipeline = std::make_unique<KGPlin>();
+	spritePipeline->CreatePipelineAll(spriteShader, false, true);
+
 #pragma region Fbxテスト
 	fbxModel1 = FbxLoader::GetInstance()->LoadModelFromFile("boneTest");
 
@@ -74,6 +79,7 @@ void GameScence::Init()
 #pragma region スプライト
 	sprite = std::make_unique<Sprite>();
 	sprite->Init(KDirectXCommon::GetInstance());
+	sprite->SetPipeline(spritePipeline.get());
 	spriteCommon = sprite->SpriteCommonCreate();
 #pragma endregion
 #pragma endregion

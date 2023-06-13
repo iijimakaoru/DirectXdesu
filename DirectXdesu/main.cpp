@@ -17,29 +17,15 @@
 
 #include "KMyGame.h"
 
+#include "Framework.h"
+
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow)
 {
-	KMyGame game;
-	game.Init();
+	Framework* game = new KMyGame();
 
-	// ウィンドウ表示
-	// ゲームループ
-	while (true)
-	{
-		if (game.IsEndRequest())
-		{
-			break;
-		}
+	game->Run();
 
-		// 毎フレーム更新
-		game.Update();
-
-		// 描画開始
-		game.Draw();
-	}
-
-	// 終了
-	game.Final();
+	delete game;
 
 	return 0;
 }

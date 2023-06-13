@@ -2,40 +2,12 @@
 
 void KMyGame::Init()
 {
-	// FBX初期化
-	fbxLoader = FbxLoader::GetInstance();
-	fbxLoader->Init();
-
-	// ウィンドウ初期化
-	win = KWinApp::GetInstance();
-	win->Init();
-
-	// DirectX初期化
-	dx = KDirectXCommon::GetInstance();
-	dx->Init();
-
-	// Input初期化
-	input = KInput::GetInstance();
-	input->Init();
-
-	// 3Dオブジェクト静的初期化
-	BillParticleManager::StaticInitialize(dx->GetDev(), win->GetWindowSizeW(), win->GetWindowSizeH());
-
-	gameScene = std::make_unique<GameScence>();
-
-	imguiMane.Init();
+	Framework::Init();
 }
 
 void KMyGame::Update()
 {
-	// 更新
-	imguiMane.Begin();
-
-	input->Update();
-
-	gameScene->Update();
-
-	imguiMane.End();
+	Framework::Update();
 }
 
 void KMyGame::Draw()
@@ -52,19 +24,5 @@ void KMyGame::Draw()
 
 void KMyGame::Final()
 {
-	gameScene.release();
-
-	dx->Destroy();
-
-	fbxLoader->Finalize();
-}
-
-bool KMyGame::IsEndRequest()
-{
-	if (win->ProcessMessage() || input->IsPush(DIK_ESCAPE))
-	{
-		return true;
-	}
-
-	return false;
+	Framework::Final();
 }

@@ -96,6 +96,7 @@
     <ClCompile Include="FbxLoader.cpp" />
     <ClCompile Include="FbxModel.cpp" />
     <ClCompile Include="FbxObject3D.cpp" />
+    <ClCompile Include="Framework.cpp" />
     <ClCompile Include="GameCamera.cpp" />
     <ClCompile Include="GameScence.cpp" />
     <ClCompile Include="ImguiManager.cpp" />
@@ -149,6 +150,7 @@
     <ClInclude Include="FbxLoader.h" />
     <ClInclude Include="FbxModel.h" />
     <ClInclude Include="FbxObject3D.h" />
+    <ClInclude Include="Framework.h" />
     <ClInclude Include="GameCamera.h" />
     <ClInclude Include="GameScence.h" />
     <ClInclude Include="ImguiManager.h" />

@@ -16,41 +16,21 @@
 
 #include "FbxLoader.h"
 
-class KMyGame
+#include "Framework.h"
+
+class KMyGame : public Framework
 {
 public:
-	/// <summary>
-	/// 初期化
-	/// </summary>
-	void Init();
-	/// <summary>
-	/// 更新
-	/// </summary>
-	void Update();
-	/// <summary>
-	/// 描画
-	/// </summary>
-	void Draw();
-	/// <summary>
-	/// 終了
-	/// </summary>
-	void Final();
-	/// <summary>
-	/// 終了リクエスト
-	/// </summary>
-	bool IsEndRequest();
+	// 初期化
+	void Init() override;
+	// 更新
+	void Update() override;
+	// 描画
+	void Draw() override;
+	// 終了
+	void Final() override;
 
 private:
-	FbxLoader* fbxLoader = nullptr;
-
-	KWinApp* win = nullptr;
-
-	KDirectXCommon* dx = nullptr;
-
-	KInput* input = nullptr;
-
-	std::unique_ptr<GameScence> gameScene = nullptr;
-
-	ImguiManager imguiMane;
+	
 };
 

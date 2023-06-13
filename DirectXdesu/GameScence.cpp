@@ -153,4 +153,6 @@ void GameScence::Draw()
 	object1->Draw();
 
 	skydorm->Draw();
+
+	sprite->SpriteCommonBeginDraw(spriteCommon);
 }

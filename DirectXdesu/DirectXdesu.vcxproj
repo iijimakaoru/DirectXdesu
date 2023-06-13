@@ -110,6 +110,7 @@
     <ClCompile Include="KInput.cpp" />
     <ClCompile Include="KMaterial.cpp" />
     <ClCompile Include="KModel.cpp" />
+    <ClCompile Include="KMyGame.cpp" />
     <ClCompile Include="KPipelineState.cpp" />
     <ClCompile Include="KRenderTargetBuffer.cpp" />
     <ClCompile Include="KRootSignature.cpp" />
@@ -162,6 +163,7 @@
     <ClInclude Include="KInput.h" />
     <ClInclude Include="KMaterial.h" />
     <ClInclude Include="KModel.h" />
+    <ClInclude Include="KMyGame.h" />
     <ClInclude Include="KPipelineState.h" />
     <ClInclude Include="KRenderTargetBuffer.h" />
     <ClInclude Include="KRootSignature.h" />

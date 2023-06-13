@@ -18,6 +18,8 @@ GameScence::~GameScence()
 	delete camera;
 	sound->GetxAudio().Reset();
 	sound->SoundUnLoad(&soundData1);
+	sound->SoundUnLoad(&soundData2);
+	sound->SoundUnLoad(&soundData3);
 
 	delete object1;
 	delete fbxModel1;

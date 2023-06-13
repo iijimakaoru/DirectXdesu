@@ -12,73 +12,34 @@
 #include "GameScence.h"
 #include "ImguiManager.h"
 #include "ParticleManager.h"
-#include "SpriteCommon.h"
 
 #include "FbxLoader.h"
 
+#include "KMyGame.h"
+
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow)
 {
-	FbxLoader::GetInstance()->Init();
-
-	KWinApp* win = KWinApp::GetInstance();
-	win->Init();
-
-	KDirectXCommon* dx = KDirectXCommon::GetInstance();
-	dx->Init();
-
-	// キーボード入力
-	KInput* input = KInput::GetInstance();
-	input->Init();
-
-	AhoSpriteCommon* spriteCommon = AhoSpriteCommon::GetInstance();
-
-	// 3Dオブジェクト静的初期化
-	BillParticleManager::StaticInitialize(dx->GetDev(), win->GetWindowSizeW(), win->GetWindowSizeH());
-
-	std::unique_ptr<GameScence> gameScene = std::make_unique<GameScence>();
-
-	ImguiManager imguiMane;
-	imguiMane.Init();
+	KMyGame game;
+	game.Init();
 
 	// ウィンドウ表示
 	// ゲームループ
 	while (true)
 	{
-		if (KWinApp::GetInstance()->ProcessMessage() || KInput::GetInstance()->IsPush(DIK_ESCAPE))
+		if (game.IsEndRequest())
 		{
-			// 変数名はサンプルコードに合わせた。
-			ComPtr<ID3D12DebugDevice> pDebugDevice = NULL;
-			/*KDirectXCommon::GetInstance()->GetDev()->QueryInterface(pDebugDevice.GetAddressOf());
-			KDirectXCommon::GetInstance()->GetDev()->Release();*/
-			/*pDebugDevice->ReportLiveDeviceObjects(D3D12_RLDO_DETAIL);
-			pDebugDevice->Release();*/
 			break;
 		}
 
-		// 更新
-		imguiMane.Begin();
-
-		input->Update();
-
-		gameScene->Update();
-
-		imguiMane.End();
+		// 毎フレーム更新
+		game.Update();
 
 		// 描画開始
-		KDirectXCommon::GetInstance()->PreDraw();
-
-		gameScene->Draw();
-
-		imguiMane.Draw();
-
-		KDirectXCommon::GetInstance()->PostDraw();
+		game.Draw();
 	}
 
-	gameScene.release();
-
-	dx->Destroy();
-
-	FbxLoader::GetInstance()->Finalize();
+	// 終了
+	game.Final();
 
 	return 0;
 }

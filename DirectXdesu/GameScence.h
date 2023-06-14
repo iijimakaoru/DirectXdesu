@@ -80,7 +80,7 @@ private:
 	SoundData soundData2;
 	SoundData soundData3;
 
-	SpriteInfo sprites[2];
+	SpriteInfo sprites;
 
 	bool isDebug = true;
 

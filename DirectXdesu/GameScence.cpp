@@ -81,6 +81,10 @@ void GameScence::Init()
 	sprite->Init(KDirectXCommon::GetInstance());
 	sprite->SetPipeline(spritePipeline.get());
 	spriteCommon = sprite->SpriteCommonCreate();
+	sprite->SpriteCommonLoadTexture(spriteCommon, 0, L"Resources/texture/playerColor.png");
+	
+	sprites.texNum = 0;
+	sprites.position = { 100,100,0 };
 #pragma endregion
 #pragma endregion
 
@@ -146,6 +150,8 @@ void GameScence::Update()
 
 	// Fbx
 	object1->Update(camera->viewProjection);
+
+	sprite->SpriteUpdate(sprites, spriteCommon);
 }
 
 void GameScence::Draw()
@@ -155,4 +161,5 @@ void GameScence::Draw()
 	skydorm->Draw();
 
 	sprite->SpriteCommonBeginDraw(spriteCommon);
+	sprite->SpriteDraw(sprites, spriteCommon);
 }

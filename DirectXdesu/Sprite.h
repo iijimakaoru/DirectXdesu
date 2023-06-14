@@ -76,18 +76,55 @@ public:
 	/// <param name="dxCommon"></param>
 	void Init(KDirectXCommon* dxCommon);
 	/// <summary>
-	/// 
+	/// 頂点バッファ
 	/// </summary>
 	/// <param name="sprite"></param>
 	/// <param name="spriteCommon"></param>
 	void SpriteTransferVertexBuffer(const SpriteInfo& sprite, const SpriteCommon& spriteCommon);
+	/// <summary>
+	/// スプライト生成
+	/// </summary>
+	/// <param name="texNumber"></param>
+	/// <param name="spriteCommon"></param>
+	/// <param name="anchorpoint"></param>
+	/// <param name="isFlipX"></param>
+	/// <param name="isFlipY"></param>
+	/// <returns></returns>
 	SpriteInfo SpriteCreate(UINT texNumber, const SpriteCommon& spriteCommon, Vector2 anchorpoint = { 0.5f,0.5f }, bool isFlipX = false, bool isFlipY = false);
+	/// <summary>
+	/// スプライトのPreDraw
+	/// </summary>
+	/// <param name="spriteCommon"></param>
 	void SpriteCommonBeginDraw(const SpriteCommon& spriteCommon);
+	/// <summary>
+	/// 描画
+	/// </summary>
+	/// <param name="sprite"></param>
+	/// <param name="spriteCommon"></param>
 	void SpriteDraw(const SpriteInfo& sprite, const SpriteCommon& spriteCommon);
+	/// <summary>
+	/// SpriteCommon生成
+	/// </summary>
+	/// <returns></returns>
 	SpriteCommon SpriteCommonCreate();
+	/// <summary>
+	/// スプライトの更新
+	/// </summary>
+	/// <param name="sprite"></param>
+	/// <param name="spriteCommon"></param>
 	void SpriteUpdate(SpriteInfo& sprite, const SpriteCommon& spriteCommon);
+	/// <summary>
+	/// テクスチャの読み込み
+	/// </summary>
+	/// <param name="spriteCommon"></param>
+	/// <param name="texnumber"></param>
+	/// <param name="filename"></param>
+	/// <returns></returns>
 	HRESULT SpriteCommonLoadTexture(SpriteCommon& spriteCommon, UINT texnumber, const wchar_t* filename);
-
+	/// <summary>
+	/// パイプラインセッター
+	/// </summary>
+	/// <param name="pipeline_"></param>
 	void SetPipeline(KGPlin* pipeline_);
 
 private:

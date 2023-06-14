@@ -84,7 +84,9 @@ void GameScence::Init()
 	sprite->SpriteCommonLoadTexture(spriteCommon, 0, L"Resources/texture/playerColor.png");
 	
 	sprites.texNum = 0;
+	sprites = sprite->SpriteCreate(sprites.texNum, spriteCommon);
 	sprites.position = { 100,100,0 };
+	sprite->SpriteTransferVertexBuffer(sprites, spriteCommon);
 #pragma endregion
 #pragma endregion
 

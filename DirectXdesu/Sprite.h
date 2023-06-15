@@ -121,4 +121,6 @@ public:
 	DirectX::XMFLOAT4 color = { 1,1,1,1 };
 	// 表示サイズ
 	DirectX::XMFLOAT2 size_ = { 100.0f,100.0f };
+	// アンカーポイント
+	DirectX::XMFLOAT2 anchorPoint = { 0.5f,0.5f };
 };

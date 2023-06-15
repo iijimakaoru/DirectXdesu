@@ -142,11 +142,17 @@ void GameScence::Update()
 	ImGui::SliderFloat("FbxPosZ", &fbxPos.z, -60.0f, 60.0f);
 
 	ImGui::Text("Sprite");
-	ImGui::Text("pos: (%.2f,%.2f)", sprite->size_.x, sprite->size_.y);
+	ImGui::Text("pos: (%.2f,%.2f)", sprite->position.x, sprite->position.y);
+	ImGui::SliderFloat("SpritePosX", &sprite->position.x, 0.0f, 1.5f);
+	ImGui::SliderFloat("SpritePosY", &sprite->position.y, -1.5f, 0.0f);
+	ImGui::Text("size: (%.2f,%.2f)", sprite->size_.x, sprite->size_.y);
 	ImGui::SliderFloat("SpriteSizeX", &sprite->size_.x, 0.0f, 250.0f);
 	ImGui::SliderFloat("SpriteSizeY", &sprite->size_.y, 0.0f, 250.0f);
 	ImGui::Text("rot: (%.2f)", sprite->rotation);
 	ImGui::SliderFloat("SpriteRot", &sprite->rotation, 0.0f, 180.0f);
+	ImGui::Text("anchor: (%.2f,%.2f)", sprite->anchorPoint.x, sprite->anchorPoint.y);
+	ImGui::SliderFloat("SpriteAnchorX", &sprite->anchorPoint.x, 0.0f, 1.0f);
+	ImGui::SliderFloat("SpriteAnchorY", &sprite->anchorPoint.y, 0.0f, 1.0f);
 
 	object1->SetPosition({ fbxPos.x,fbxPos.y,fbxPos.z });
 

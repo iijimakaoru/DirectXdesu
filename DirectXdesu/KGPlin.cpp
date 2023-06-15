@@ -234,49 +234,49 @@ void KGPlin::CreatePipelineAll(KShader shader, bool Obj, bool Sprite, bool Parti
 		blenddesc.BlendOp = D3D12_BLEND_OP_ADD;
 		blenddesc.SrcBlend = D3D12_BLEND_SRC_ALPHA;
 		blenddesc.DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
-		//// デスクリプタレンジの設定
-		//D3D12_DESCRIPTOR_RANGE descriptorRange{};
-		//descriptorRange.NumDescriptors = 1;
-		//descriptorRange.RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
-		//descriptorRange.BaseShaderRegister = 0;
-		//descriptorRange.OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+		// デスクリプタレンジの設定
+		D3D12_DESCRIPTOR_RANGE descriptorRange{};
+		descriptorRange.NumDescriptors = 1; // 一度の描画で使うテクスチャ数
+		descriptorRange.RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
+		descriptorRange.BaseShaderRegister = 0; // テクスチャレジスタ0番
+		descriptorRange.OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
 		// ルートパラメータの設定
-		D3D12_ROOT_PARAMETER rootParam = {};
+		D3D12_ROOT_PARAMETER rootParams[2] = {};
 		// 定数バッファ0番
-		rootParam.ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;  // 定数バッファビュー
-		rootParam.Descriptor.ShaderRegister = 0;				  // 定数バッファ番
-		rootParam.Descriptor.RegisterSpace = 0;					  // デフォルト値
-		rootParam.ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL; // 全てのシェーダーから見える
-		//// テクスチャレジスタ0番
-		//rootParam[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
-		//rootParam[1].DescriptorTable.pDescriptorRanges = &descriptorRange;
-		//rootParam[1].DescriptorTable.NumDescriptorRanges = 1;
-		//rootParam[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
+		rootParams[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;  // 定数バッファビュー
+		rootParams[0].Descriptor.ShaderRegister = 0;				  // 定数バッファ番
+		rootParams[0].Descriptor.RegisterSpace = 0;					  // デフォルト値
+		rootParams[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL; // 全てのシェーダーから見える
+		// テクスチャレジスタ0番
+		rootParams[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+		rootParams[1].DescriptorTable.pDescriptorRanges = &descriptorRange;
+		rootParams[1].DescriptorTable.NumDescriptorRanges = 1;
+		rootParams[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
 		//// 定数バッファ1番
 		//rootParam[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 		//rootParam[2].Descriptor.ShaderRegister = 1;
 		//rootParam[2].Descriptor.RegisterSpace = 0;
 		//rootParam[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
 		//// テクスチャサンブラーの設定
-		//D3D12_STATIC_SAMPLER_DESC samplerDesc{};
-		//samplerDesc.AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
-		//samplerDesc.AddressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
-		//samplerDesc.AddressW = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
-		//samplerDesc.BorderColor = D3D12_STATIC_BORDER_COLOR_TRANSPARENT_BLACK;
-		//samplerDesc.Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR;
-		//samplerDesc.MaxLOD = D3D12_FLOAT32_MAX;
-		//samplerDesc.MinLOD = 0.0f;
-		//samplerDesc.ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER;
-		//samplerDesc.ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+		D3D12_STATIC_SAMPLER_DESC samplerDesc{};
+		samplerDesc.AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+		samplerDesc.AddressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+		samplerDesc.AddressW = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+		samplerDesc.BorderColor = D3D12_STATIC_BORDER_COLOR_TRANSPARENT_BLACK;
+		samplerDesc.Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR;
+		samplerDesc.MaxLOD = D3D12_FLOAT32_MAX;
+		samplerDesc.MinLOD = 0.0f;
+		samplerDesc.ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER;
+		samplerDesc.ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 #pragma endregion
 #pragma region ルートシグネチャの生成
 		// ルートシグネチャの設定
 		D3D12_ROOT_SIGNATURE_DESC rootSignatureDesc{};
 		rootSignatureDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
-		rootSignatureDesc.pParameters = &rootParam; // ルートパラメータの先頭アドレス
-		rootSignatureDesc.NumParameters = 1; // ルートパラメータ数
-		//rootSignatureDesc.pStaticSamplers = &samplerDesc;
-		//rootSignatureDesc.NumStaticSamplers = 1;
+		rootSignatureDesc.pParameters = rootParams; // ルートパラメータの先頭アドレス
+		rootSignatureDesc.NumParameters = _countof(rootParams); // ルートパラメータ数
+		rootSignatureDesc.pStaticSamplers = &samplerDesc;
+		rootSignatureDesc.NumStaticSamplers = 1;
 		// ルートシグネチャのシリアライズ
 		ComPtr<ID3DBlob> rootSigBlob;
 		ComPtr<ID3DBlob> errorBlob;

@@ -37,6 +37,9 @@ private:
 	// 画像イメージデータ配列
 	DirectX::XMFLOAT4* imageData = new DirectX::XMFLOAT4[imageDataCount]; // あとで解放する
 
+	// 設定を元にSRV用デスクリプタヒープを生成
+	ID3D12DescriptorHeap* srvHeap = nullptr;
+
 public:
 	// 初期化
 	void Init();

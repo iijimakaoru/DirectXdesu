@@ -28,18 +28,15 @@ private:
 	// 頂点バッファ
 	Microsoft::WRL::ComPtr<ID3D12Resource> vertBuff = nullptr;
 
-	// 定数バッファ
-	Microsoft::WRL::ComPtr<ID3D12Resource> constBuffMaterial = nullptr;
-
 	// 頂点バッファビュー
 	D3D12_VERTEX_BUFFER_VIEW vbView{};
-
-	// 定数バッファ
-	Microsoft::WRL::ComPtr<ID3D12Resource> constBuffTransform = nullptr;
 
 public:
 	// 初期化
 	void Init();
+
+	// 更新
+	void Update();
 
 	// 描画
 	void Draw();
@@ -47,11 +44,7 @@ public:
 	static SpriteCommon* GetInstance();
 
 private:
-	// 定数バッファマテリアル
-	void CreateCBMaterial();
-
-	// 定数バッファトランスフォーム
-	void CreateCBTransform();
+	
 
 private:
 	SpriteCommon() = default;
@@ -70,6 +63,9 @@ public:
 	/// <param name="spriteCommon"></param>
 	void Init();
 
+	// 更新
+	void Update();
+
 	// 描画
 	void Draw(KTexture* texture);
 
@@ -80,7 +76,36 @@ public:
 	void SetPipeline(KGPlin* pipeline_);
 
 private:
+	// 定数バッファマテリアル
+	void CreateCBMaterial();
+
+	// 定数バッファトランスフォーム
+	void CreateCBTransform();
+
+private:
+	HRESULT result;
+
+	ID3D12Device* device;
+
 	static KGPlin* pipeline;
 
 	SpriteCommon* spriteCommon = nullptr;
+
+	// 定数バッファ
+	Microsoft::WRL::ComPtr<ID3D12Resource> constBuffMaterial = nullptr;
+
+	// 定数バッファのマップ
+	ConstBufferDataMaterial* constMapMaterial = nullptr;
+
+	// 定数バッファ
+	Microsoft::WRL::ComPtr<ID3D12Resource> constBuffTransform = nullptr;
+
+	// 定数バッファのマップ
+	KConstBufferDataTransform* constMapTransform = nullptr;
+
+public:
+	// 位置
+	DirectX::XMFLOAT2 position = { 0.0f,0.0f };
+	// 回転
+	float rotation = 0.0f;
 };

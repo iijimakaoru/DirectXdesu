@@ -63,12 +63,11 @@ void SpriteCommon::Init()
 	vbView.SizeInBytes = sizeVB;
 	// 頂点一つ分のデータサイズ
 	vbView.StrideInBytes = sizeof(vertices[0]);
+}
 
-	// 定数バッファマテリアル
-	CreateCBMaterial();
-
-	// 定数バッファトランスフォーム
-	CreateCBTransform();
+void SpriteCommon::Update()
+{
+	
 }
 
 void SpriteCommon::Draw()
@@ -76,10 +75,6 @@ void SpriteCommon::Draw()
 	ID3D12GraphicsCommandList* cmdList = KDirectXCommon::GetInstance()->GetCmdlist();
 	// 頂点バッファビューの設定コマンド
 	cmdList->IASetVertexBuffers(0, 1, &vbView);
-	// 定数バッファビュー(CBV)の設定コマンド(マテリアル)
-	cmdList->SetGraphicsRootConstantBufferView(0, constBuffMaterial->GetGPUVirtualAddress());
-	// 定数バッファビュー(CBV)の設定コマンド(トランスフォーム)
-	cmdList->SetGraphicsRootConstantBufferView(2, constBuffTransform->GetGPUVirtualAddress());
 	// 描画コマンド
 	cmdList->DrawInstanced(vertices.size(), 1, 0, 0);
 }
@@ -90,7 +85,7 @@ SpriteCommon* SpriteCommon::GetInstance()
 	return &instance;
 }
 
-void SpriteCommon::CreateCBMaterial()
+void Sprite::CreateCBMaterial()
 {
 	// 定数バッファ生成用
 	D3D12_HEAP_PROPERTIES cbHeapProp{}; // ヒープの設定
@@ -118,15 +113,14 @@ void SpriteCommon::CreateCBMaterial()
 	assert(SUCCEEDED(result));
 
 	// 定数バッファのマッピング
-	ConstBufferDataMaterial* constMapMaterial = nullptr;
 	result = constBuffMaterial->Map(0, nullptr, (void**)&constMapMaterial); // マッピング
 	assert(SUCCEEDED(result));
 
 	// 値の代入
-	constMapMaterial->color = DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 0.5f);
+	constMapMaterial->color = DirectX::XMFLOAT4(0.5f, 0.5f, 0.0f, 0.5f);
 }
 
-void SpriteCommon::CreateCBTransform()
+void Sprite::CreateCBTransform()
 {
 	// 定数バッファ生成用
 	D3D12_HEAP_PROPERTIES cbHeapProp{}; // ヒープの設定
@@ -154,7 +148,6 @@ void SpriteCommon::CreateCBTransform()
 	assert(SUCCEEDED(result));
 
 	// 定数バッファのマッピング
-	KConstBufferDataTransform* constMapTransform = nullptr;
 	result = constBuffTransform->Map(0, nullptr, (void**)&constMapTransform); // マッピング
 	assert(SUCCEEDED(result));
 
@@ -169,6 +162,14 @@ void SpriteCommon::CreateCBTransform()
 void Sprite::Init()
 {
 	spriteCommon = SpriteCommon::GetInstance();
+
+	device = KDirectXCommon::GetInstance()->GetDev();
+
+	// 定数バッファマテリアル
+	CreateCBMaterial();
+
+	// 定数バッファトランスフォーム
+	CreateCBTransform();
 }
 
 void Sprite::Draw(KTexture* texture)
@@ -186,8 +187,38 @@ void Sprite::Draw(KTexture* texture)
 	D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle = texture->srvHeap->GetGPUDescriptorHandleForHeapStart();
 	// SRVヒープの先頭にあるSRVをルートパラメータ1番に設定
 	cmdList->SetGraphicsRootDescriptorTable(1, srvGpuHandle);
+
+	// 定数バッファビュー(CBV)の設定コマンド(マテリアル)
+	cmdList->SetGraphicsRootConstantBufferView(0, constBuffMaterial->GetGPUVirtualAddress());
+	// 定数バッファビュー(CBV)の設定コマンド(トランスフォーム)
+	cmdList->SetGraphicsRootConstantBufferView(2, constBuffTransform->GetGPUVirtualAddress());
 	
 	spriteCommon->Draw();
+}
+
+void Sprite::Update()
+{
+	// ワールド変換
+	DirectX::XMMATRIX matWorld;
+	matWorld = XMMatrixIdentity();
+
+	// 回転
+	DirectX::XMMATRIX matRot;
+	matRot = XMMatrixIdentity();
+	matRot = XMMatrixRotationZ(XMConvertToRadians(rotation));
+	matWorld *= matRot;
+
+	// 平行
+	DirectX::XMMATRIX matTrans;
+	matTrans = XMMatrixTranslation(position.x, position.y, 0.0f);
+	matWorld *= matTrans;
+
+	// 定数バッファへ転送
+	constMapTransform->mat.r[0].m128_f32[0] = 2.0f / static_cast<float>(KWinApp::GetInstance()->GetWindowSizeW());
+	constMapTransform->mat.r[1].m128_f32[1] = -2.0f / static_cast<float>(KWinApp::GetInstance()->GetWindowSizeH());
+	constMapTransform->mat.r[3].m128_f32[0] = -1.0f;
+	constMapTransform->mat.r[3].m128_f32[1] = 1.0f;
+	constMapTransform->mat *= matWorld;
 }
 
 void Sprite::SetPipeline(KGPlin* pipeline_)

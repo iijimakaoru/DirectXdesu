@@ -141,10 +141,19 @@ void GameScence::Update()
 	ImGui::SliderFloat("FbxPosY", &fbxPos.y, -60.0f, 60.0f);
 	ImGui::SliderFloat("FbxPosZ", &fbxPos.z, -60.0f, 60.0f);
 
+	ImGui::Text("Sprite");
+	ImGui::Text("pos: (%.2f,%.2f)", sprite->position.x, sprite->position.y);
+	ImGui::SliderFloat("SpritePosX", &sprite->position.x, 0.0f, 1.0f);
+	ImGui::SliderFloat("SpritePosY", &sprite->position.y, 0.0f, 1.0f);
+	ImGui::Text("rot: (%.2f)", sprite->rotation);
+	ImGui::SliderFloat("SpriteRot", &sprite->rotation, 0.0f, 180.0f);
+
 	object1->SetPosition({ fbxPos.x,fbxPos.y,fbxPos.z });
 
 	// Fbx
 	object1->Update(camera->viewProjection);
+
+	sprite->Update();
 }
 
 void GameScence::Draw()

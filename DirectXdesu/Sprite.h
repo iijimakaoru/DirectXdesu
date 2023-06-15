@@ -127,4 +127,6 @@ public:
 	bool isFlipX = false;
 	// 上下フリップ
 	bool isFlipY = false;
+	// 非表示
+	bool isInvisible = false;
 };

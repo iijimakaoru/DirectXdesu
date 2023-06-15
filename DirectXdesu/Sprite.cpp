@@ -171,6 +171,11 @@ void Sprite::Init()
 
 void Sprite::Draw(KTexture* texture)
 {
+	if (isInvisible)
+	{
+		return;
+	}
+
 	spriteCommon->Draw();
 
 	ID3D12GraphicsCommandList* cmdList = KDirectXCommon::GetInstance()->GetCmdlist();

@@ -175,6 +175,17 @@ void GameScence::Update()
 			sprite->isFlipY = true;
 		}
 	}
+	if (ImGui::Button("Invisible"))
+	{
+		if (sprite->isInvisible)
+		{
+			sprite->isInvisible = false;
+		}
+		else
+		{
+			sprite->isInvisible = true;
+		}
+	}
 
 	object1->SetPosition({ fbxPos.x,fbxPos.y,fbxPos.z });
 

@@ -57,8 +57,6 @@ struct SpriteInfo
 
 struct SpriteCommon
 {
-	// パイプラインセット
-	PipelineSet pipelineSet;
 	// 射影行列
 	XMMATRIX matProjection{};
 	// テクスチャ用デスクリプタヒープ

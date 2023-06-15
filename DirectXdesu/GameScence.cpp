@@ -153,5 +153,5 @@ void GameScence::Draw()
 
 	skydorm->Draw();
 
-	sprite->Draw();
+	sprite->Draw(&mario);
 }

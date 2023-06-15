@@ -6,6 +6,7 @@
 #include "KGPlin.h"
 #include "KMaterial.h"
 #include <wrl.h>
+#include "KTexture.h"
 
 const int spriteSRVCount = 512;
 
@@ -28,24 +29,6 @@ private:
 
 	// 頂点バッファビュー
 	D3D12_VERTEX_BUFFER_VIEW vbView{};
-
-	// SRV最大数
-	const size_t kMaxSRVCount = 2056;
-
-	// 横方向ピクセル数
-	const size_t textureWidth = 256;
-	// 縦方向ピクセル数
-	const size_t textureHeight = 256;
-	// 配列の要素数
-	const size_t imageDataCount = textureWidth * textureHeight;
-	// 画像イメージデータ配列
-	DirectX::XMFLOAT4* imageData = new DirectX::XMFLOAT4[imageDataCount]; // あとで解放する
-
-	// 設定を元にSRV用デスクリプタヒープを生成
-	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> srvHeap = nullptr;
-
-	// テクスチャバッファ
-	Microsoft::WRL::ComPtr<ID3D12Resource> texBuff = nullptr;
 
 public:
 	// 初期化
@@ -77,7 +60,7 @@ public:
 	void Init();
 
 	// 描画
-	void Draw();
+	void Draw(KTexture* texture);
 
 	/// <summary>
 	/// パイプラインセッター

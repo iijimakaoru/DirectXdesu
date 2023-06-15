@@ -25,6 +25,18 @@ private:
 	// 頂点バッファビュー
 	D3D12_VERTEX_BUFFER_VIEW vbView{};
 
+	// SRV最大数
+	const size_t kMaxSRVCount = 2056;
+
+	// 横方向ピクセル数
+	const size_t textureWidth = 256;
+	// 縦方向ピクセル数
+	const size_t textureHeight = 256;
+	// 配列の要素数
+	const size_t imageDataCount = textureWidth * textureHeight;
+	// 画像イメージデータ配列
+	DirectX::XMFLOAT4* imageData = new DirectX::XMFLOAT4[imageDataCount]; // あとで解放する
+
 public:
 	// 初期化
 	void Init();

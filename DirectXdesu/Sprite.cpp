@@ -98,6 +98,14 @@ void SpriteCommon::Init()
 
 	// ’l‚Ì‘ã“ü
 	constMapMaterial->color = DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 0.5f);
+
+	for (size_t i = 0; i < imageDataCount; i++)
+	{
+		imageData[i].x = 1.0f; // R
+		imageData[i].y = 0.0f; // G
+		imageData[i].z = 0.0f; // B
+		imageData[i].w = 1.0f; // A
+	}
 }
 
 void SpriteCommon::Draw()

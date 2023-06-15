@@ -77,9 +77,9 @@ void GameScence::Init()
 	skydorm->transform.scale = { 500,500,500 };
 
 #pragma region スプライト
+	SpriteCommon::GetInstance()->SetPipeline(spritePipeline.get());
 	sprite = new Sprite();
 	sprite->Init();
-	sprite->SetPipeline(spritePipeline.get());
 #pragma endregion
 #pragma endregion
 
@@ -142,16 +142,11 @@ void GameScence::Update()
 	ImGui::SliderFloat("FbxPosZ", &fbxPos.z, -60.0f, 60.0f);
 
 	ImGui::Text("Sprite");
-	ImGui::Text("pos: (%.2f,%.2f)", sprite->position.x, sprite->position.y);
-	ImGui::SliderFloat("SpritePosX", &sprite->position.x, 0.0f, 1.0f);
-	ImGui::SliderFloat("SpritePosY", &sprite->position.y, 0.0f, 1.0f);
+	ImGui::Text("pos: (%.2f,%.2f)", sprite->size_.x, sprite->size_.y);
+	ImGui::SliderFloat("SpriteSizeX", &sprite->size_.x, 0.0f, 250.0f);
+	ImGui::SliderFloat("SpriteSizeY", &sprite->size_.y, 0.0f, 250.0f);
 	ImGui::Text("rot: (%.2f)", sprite->rotation);
 	ImGui::SliderFloat("SpriteRot", &sprite->rotation, 0.0f, 180.0f);
-	ImGui::Text("color: (%.2f,%.2f,%.2f,%.2f)", sprite->color.x, sprite->color.y, sprite->color.z, sprite->color.w);
-	ImGui::SliderFloat("SpriteColorR", &sprite->color.x, 0.0f, 1.0f);
-	ImGui::SliderFloat("SpriteColorG", &sprite->color.y, 0.0f, 1.0f);
-	ImGui::SliderFloat("SpriteColorB", &sprite->color.z, 0.0f, 1.0f);
-	ImGui::SliderFloat("SpriteColorA", &sprite->color.w, 0.0f, 1.0f);
 
 	object1->SetPosition({ fbxPos.x,fbxPos.y,fbxPos.z });
 

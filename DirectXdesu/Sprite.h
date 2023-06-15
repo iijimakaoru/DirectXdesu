@@ -8,28 +8,20 @@
 #include <wrl.h>
 #include "KTexture.h"
 
-const int spriteSRVCount = 512;
+struct Vertex
+{
+	DirectX::XMFLOAT3 pos;
+	DirectX::XMFLOAT2 uv;
+};
 
 class SpriteCommon
 {
 private:
-	struct Vertex
-	{
-		DirectX::XMFLOAT3 pos;
-		DirectX::XMFLOAT2 uv;
-	};
+	
 private:
 	HRESULT result;
 
 	ID3D12Device* device;
-
-	std::vector<Vertex> vertices;
-
-	// 頂点バッファ
-	Microsoft::WRL::ComPtr<ID3D12Resource> vertBuff = nullptr;
-
-	// 頂点バッファビュー
-	D3D12_VERTEX_BUFFER_VIEW vbView{};
 
 public:
 	// 初期化
@@ -43,8 +35,14 @@ public:
 
 	static SpriteCommon* GetInstance();
 
+	/// <summary>
+	/// パイプラインセッター
+	/// </summary>
+	/// <param name="pipeline_"></param>
+	void SetPipeline(KGPlin* pipeline_);
+
 private:
-	
+	KGPlin* pipeline;
 
 private:
 	SpriteCommon() = default;
@@ -69,12 +67,6 @@ public:
 	// 描画
 	void Draw(KTexture* texture);
 
-	/// <summary>
-	/// パイプラインセッター
-	/// </summary>
-	/// <param name="pipeline_"></param>
-	void SetPipeline(KGPlin* pipeline_);
-
 private:
 	// 定数バッファマテリアル
 	void CreateCBMaterial();
@@ -83,13 +75,25 @@ private:
 	void CreateCBTransform();
 
 private:
+	enum VertexNumber
+	{
+		LB, // 左下
+		LT, // 左上
+		RB, // 右下
+		RT, // 右上
+	};
+
 	HRESULT result;
 
 	ID3D12Device* device;
 
-	static KGPlin* pipeline;
-
 	SpriteCommon* spriteCommon = nullptr;
+
+	// 頂点バッファ
+	Microsoft::WRL::ComPtr<ID3D12Resource> vertBuff = nullptr;
+
+	// 頂点バッファビュー
+	D3D12_VERTEX_BUFFER_VIEW vbView{};
 
 	// 定数バッファ
 	Microsoft::WRL::ComPtr<ID3D12Resource> constBuffMaterial = nullptr;
@@ -103,6 +107,11 @@ private:
 	// 定数バッファのマップ
 	KConstBufferDataTransform* constMapTransform = nullptr;
 
+	// 頂点データ
+	std::vector<Vertex> vertices;
+
+	Vertex* vertMap = nullptr;
+
 public:
 	// 位置
 	DirectX::XMFLOAT2 position = { 0.0f,0.0f };
@@ -110,4 +119,6 @@ public:
 	float rotation = 0.0f;
 	// 色
 	DirectX::XMFLOAT4 color = { 1,1,1,1 };
+	// 表示サイズ
+	DirectX::XMFLOAT2 size_ = { 100.0f,100.0f };
 };

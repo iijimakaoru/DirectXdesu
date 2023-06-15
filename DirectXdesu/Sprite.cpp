@@ -122,8 +122,6 @@ void SpriteCommon::Init()
 	textureResourceDesc.MipLevels = 1;
 	textureResourceDesc.SampleDesc.Count = 1;
 	// テクスチャバッファの生成
-	// テクスチャバッファ
-	ID3D12Resource* texBuff = nullptr;
 	result = device->CreateCommittedResource(
 		&textureHeapProp,
 		D3D12_HEAP_FLAG_NONE,
@@ -162,7 +160,7 @@ void SpriteCommon::Init()
 	srvDesc.Texture2D.MipLevels = srvResDesc.MipLevels;
 
 	// ハンドルの指す位置にシェーダーリソースビュー作成
-	device->CreateShaderResourceView(texBuff, &srvDesc, srvHeap->GetCPUDescriptorHandleForHeapStart());
+	device->CreateShaderResourceView(texBuff.Get(), &srvDesc, srvHeap->GetCPUDescriptorHandleForHeapStart());
 }
 
 void SpriteCommon::Draw()

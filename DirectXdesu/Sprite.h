@@ -41,6 +41,9 @@ private:
 	// 設定を元にSRV用デスクリプタヒープを生成
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> srvHeap = nullptr;
 
+	// テクスチャバッファ
+	Microsoft::WRL::ComPtr<ID3D12Resource> texBuff = nullptr;
+
 public:
 	// 初期化
 	void Init();

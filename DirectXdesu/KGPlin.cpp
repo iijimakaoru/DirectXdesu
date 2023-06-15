@@ -217,17 +217,17 @@ void KGPlin::CreatePipelineAll(KShader shader, bool Obj, bool Sprite, bool Parti
 		//piplineDesc.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_ALWAYS;
 		//piplineDesc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
 		//piplineDesc.DepthStencilState.DepthEnable = false;
-		//// レンダーターゲットのブレンド設定
-		//D3D12_RENDER_TARGET_BLEND_DESC& blenddesc = piplineDesc.BlendState.RenderTarget[0];
-		//blenddesc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
-		//blenddesc.BlendEnable = true;
-		//blenddesc.BlendOpAlpha = D3D12_BLEND_OP_ADD;
-		//blenddesc.SrcBlendAlpha = D3D12_BLEND_ONE;
-		//blenddesc.DestBlendAlpha = D3D12_BLEND_ZERO;
-		//// 半透明合成
-		//blenddesc.BlendOp = D3D12_BLEND_OP_ADD;
-		//blenddesc.SrcBlend = D3D12_BLEND_SRC_ALPHA;
-		//blenddesc.DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
+		// レンダーターゲットのブレンド設定
+		D3D12_RENDER_TARGET_BLEND_DESC& blenddesc = piplineDesc.BlendState.RenderTarget[0];
+		blenddesc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
+		blenddesc.BlendEnable = true;
+		blenddesc.BlendOpAlpha = D3D12_BLEND_OP_ADD;
+		blenddesc.SrcBlendAlpha = D3D12_BLEND_ONE;
+		blenddesc.DestBlendAlpha = D3D12_BLEND_ZERO;
+		// 半透明合成
+		blenddesc.BlendOp = D3D12_BLEND_OP_ADD;
+		blenddesc.SrcBlend = D3D12_BLEND_SRC_ALPHA;
+		blenddesc.DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
 		//// デスクリプタレンジの設定
 		//D3D12_DESCRIPTOR_RANGE descriptorRange{};
 		//descriptorRange.NumDescriptors = 1;

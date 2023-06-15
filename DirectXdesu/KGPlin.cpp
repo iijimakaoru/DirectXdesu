@@ -181,7 +181,7 @@ void KGPlin::CreatePipelineAll(KShader shader, bool Obj, bool Sprite, bool Parti
 	if (Sprite)
 	{
 #pragma region 頂点レイアウト配列の宣言と設定
-		static D3D12_INPUT_ELEMENT_DESC inputLayout[2] = {
+		static D3D12_INPUT_ELEMENT_DESC inputLayout[] = {
 		{// xyz座標
 			"POSITION",										// セマンティック名
 			0,												// 同じセマンティック名が複数あるときに使うインデックス
@@ -191,16 +191,13 @@ void KGPlin::CreatePipelineAll(KShader shader, bool Obj, bool Sprite, bool Parti
 			D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,		// 入力データ種別
 			0												// 一度に描画するインスタンス数
 		},
-		{// uv座標
-			"TEXCOORD",0,DXGI_FORMAT_R32G32_FLOAT,0,D3D12_APPEND_ALIGNED_ELEMENT,D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0
-		},
 		};
 #pragma endregion
 #pragma region パイプラインステート設定変数の宣言と各種項目の設定
 		// サンプルマスクの設定
 		piplineDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
 		// ラスタライザの設定
-		piplineDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
+		//piplineDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
 		piplineDesc.RasterizerState.CullMode = D3D12_CULL_MODE_NONE; // 背面をカリングしない
 		piplineDesc.RasterizerState.FillMode = D3D12_FILL_MODE_SOLID;
 		piplineDesc.RasterizerState.DepthClipEnable = true;
@@ -215,65 +212,65 @@ void KGPlin::CreatePipelineAll(KShader shader, bool Obj, bool Sprite, bool Parti
 		piplineDesc.NumRenderTargets = 1;
 		piplineDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
 		piplineDesc.SampleDesc.Count = 1;
-		// 深度ステンシルステート
-		piplineDesc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
-		piplineDesc.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_ALWAYS;
-		piplineDesc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
-		piplineDesc.DepthStencilState.DepthEnable = false;
-		// レンダーターゲットのブレンド設定
-		D3D12_RENDER_TARGET_BLEND_DESC& blenddesc = piplineDesc.BlendState.RenderTarget[0];
-		blenddesc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
-		blenddesc.BlendEnable = true;
-		blenddesc.BlendOpAlpha = D3D12_BLEND_OP_ADD;
-		blenddesc.SrcBlendAlpha = D3D12_BLEND_ONE;
-		blenddesc.DestBlendAlpha = D3D12_BLEND_ZERO;
-		// 半透明合成
-		blenddesc.BlendOp = D3D12_BLEND_OP_ADD;
-		blenddesc.SrcBlend = D3D12_BLEND_SRC_ALPHA;
-		blenddesc.DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
-		// デスクリプタレンジの設定
-		D3D12_DESCRIPTOR_RANGE descriptorRange{};
-		descriptorRange.NumDescriptors = 1;
-		descriptorRange.RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
-		descriptorRange.BaseShaderRegister = 0;
-		descriptorRange.OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
-		// ルートパラメータの設定
-		D3D12_ROOT_PARAMETER rootParam[3] = {};
-		// 定数バッファ0番
-		rootParam[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
-		rootParam[0].Descriptor.ShaderRegister = 0;
-		rootParam[0].Descriptor.RegisterSpace = 0;
-		rootParam[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
-		// テクスチャレジスタ0番
-		rootParam[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
-		rootParam[1].DescriptorTable.pDescriptorRanges = &descriptorRange;
-		rootParam[1].DescriptorTable.NumDescriptorRanges = 1;
-		rootParam[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
-		// 定数バッファ1番
-		rootParam[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
-		rootParam[2].Descriptor.ShaderRegister = 1;
-		rootParam[2].Descriptor.RegisterSpace = 0;
-		rootParam[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
-		// テクスチャサンブラーの設定
-		D3D12_STATIC_SAMPLER_DESC samplerDesc{};
-		samplerDesc.AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
-		samplerDesc.AddressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
-		samplerDesc.AddressW = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
-		samplerDesc.BorderColor = D3D12_STATIC_BORDER_COLOR_TRANSPARENT_BLACK;
-		samplerDesc.Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR;
-		samplerDesc.MaxLOD = D3D12_FLOAT32_MAX;
-		samplerDesc.MinLOD = 0.0f;
-		samplerDesc.ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER;
-		samplerDesc.ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+		//// 深度ステンシルステート
+		//piplineDesc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
+		//piplineDesc.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_ALWAYS;
+		//piplineDesc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
+		//piplineDesc.DepthStencilState.DepthEnable = false;
+		//// レンダーターゲットのブレンド設定
+		//D3D12_RENDER_TARGET_BLEND_DESC& blenddesc = piplineDesc.BlendState.RenderTarget[0];
+		//blenddesc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
+		//blenddesc.BlendEnable = true;
+		//blenddesc.BlendOpAlpha = D3D12_BLEND_OP_ADD;
+		//blenddesc.SrcBlendAlpha = D3D12_BLEND_ONE;
+		//blenddesc.DestBlendAlpha = D3D12_BLEND_ZERO;
+		//// 半透明合成
+		//blenddesc.BlendOp = D3D12_BLEND_OP_ADD;
+		//blenddesc.SrcBlend = D3D12_BLEND_SRC_ALPHA;
+		//blenddesc.DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
+		//// デスクリプタレンジの設定
+		//D3D12_DESCRIPTOR_RANGE descriptorRange{};
+		//descriptorRange.NumDescriptors = 1;
+		//descriptorRange.RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
+		//descriptorRange.BaseShaderRegister = 0;
+		//descriptorRange.OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+		//// ルートパラメータの設定
+		//D3D12_ROOT_PARAMETER rootParam[3] = {};
+		//// 定数バッファ0番
+		//rootParam[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+		//rootParam[0].Descriptor.ShaderRegister = 0;
+		//rootParam[0].Descriptor.RegisterSpace = 0;
+		//rootParam[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
+		//// テクスチャレジスタ0番
+		//rootParam[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+		//rootParam[1].DescriptorTable.pDescriptorRanges = &descriptorRange;
+		//rootParam[1].DescriptorTable.NumDescriptorRanges = 1;
+		//rootParam[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
+		//// 定数バッファ1番
+		//rootParam[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+		//rootParam[2].Descriptor.ShaderRegister = 1;
+		//rootParam[2].Descriptor.RegisterSpace = 0;
+		//rootParam[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
+		//// テクスチャサンブラーの設定
+		//D3D12_STATIC_SAMPLER_DESC samplerDesc{};
+		//samplerDesc.AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+		//samplerDesc.AddressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+		//samplerDesc.AddressW = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+		//samplerDesc.BorderColor = D3D12_STATIC_BORDER_COLOR_TRANSPARENT_BLACK;
+		//samplerDesc.Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR;
+		//samplerDesc.MaxLOD = D3D12_FLOAT32_MAX;
+		//samplerDesc.MinLOD = 0.0f;
+		//samplerDesc.ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER;
+		//samplerDesc.ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 #pragma endregion
 #pragma region ルートシグネチャの生成
 		// ルートシグネチャの設定
 		D3D12_ROOT_SIGNATURE_DESC rootSignatureDesc{};
 		rootSignatureDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
-		rootSignatureDesc.pParameters = rootParam;
+		/*rootSignatureDesc.pParameters = rootParam;
 		rootSignatureDesc.NumParameters = _countof(rootParam);
 		rootSignatureDesc.pStaticSamplers = &samplerDesc;
-		rootSignatureDesc.NumStaticSamplers = 1;
+		rootSignatureDesc.NumStaticSamplers = 1;*/
 		// ルートシグネチャのシリアライズ
 		ComPtr<ID3DBlob> rootSigBlob;
 		ComPtr<ID3DBlob> errorBlob;

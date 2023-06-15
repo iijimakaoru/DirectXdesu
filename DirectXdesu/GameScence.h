@@ -63,10 +63,6 @@ private:
 	// 3Dオブジェクト
 	std::unique_ptr<KObject3d> skydorm;
 
-	// スプライト
-	std::unique_ptr<Sprite> sprite;
-	SpriteCommon spriteCommon;
-
 	Vector3 center = { 0,0,1 };
 
 	float rSpeed = -0.02f;
@@ -80,8 +76,6 @@ private:
 	SoundData soundData2;
 	SoundData soundData3;
 
-	SpriteInfo sprites;
-
 	bool isDebug = true;
 
 	Camera* camera = nullptr;
@@ -89,5 +83,8 @@ private:
 	// Fbx関連
 	FbxModel* fbxModel1 = nullptr;
 	FbxObject3D* object1 = nullptr;
+
+	// スプライト
+	Sprite* sprite = nullptr;
 };
 

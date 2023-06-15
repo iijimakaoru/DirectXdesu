@@ -77,16 +77,9 @@ void GameScence::Init()
 	skydorm->transform.scale = { 500,500,500 };
 
 #pragma region スプライト
-	sprite = std::make_unique<Sprite>();
-	sprite->Init(KDirectXCommon::GetInstance());
+	sprite = new Sprite();
+	sprite->Init();
 	sprite->SetPipeline(spritePipeline.get());
-	spriteCommon = sprite->SpriteCommonCreate();
-	sprite->SpriteCommonLoadTexture(spriteCommon, 0, L"Resources/texture/playerColor.png");
-	
-	sprites.texNum = 0;
-	sprites = sprite->SpriteCreate(sprites.texNum, spriteCommon);
-	sprites.position = { 100,100,0 };
-	sprite->SpriteTransferVertexBuffer(sprites, spriteCommon);
 #pragma endregion
 #pragma endregion
 
@@ -152,8 +145,6 @@ void GameScence::Update()
 
 	// Fbx
 	object1->Update(camera->viewProjection);
-
-	sprite->SpriteUpdate(sprites, spriteCommon);
 }
 
 void GameScence::Draw()
@@ -162,6 +153,5 @@ void GameScence::Draw()
 
 	skydorm->Draw();
 
-	sprite->SpriteCommonBeginDraw(spriteCommon);
-	sprite->SpriteDraw(sprites, spriteCommon);
+	sprite->Draw();
 }

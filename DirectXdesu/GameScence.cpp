@@ -153,6 +153,28 @@ void GameScence::Update()
 	ImGui::Text("anchor: (%.2f,%.2f)", sprite->anchorPoint.x, sprite->anchorPoint.y);
 	ImGui::SliderFloat("SpriteAnchorX", &sprite->anchorPoint.x, 0.0f, 1.0f);
 	ImGui::SliderFloat("SpriteAnchorY", &sprite->anchorPoint.y, 0.0f, 1.0f);
+	if (ImGui::Button("FlipX"))
+	{
+		if (sprite->isFlipX)
+		{
+			sprite->isFlipX = false;
+		}
+		else
+		{
+			sprite->isFlipX = true;
+		}
+	}
+	if (ImGui::Button("FlipY"))
+	{
+		if (sprite->isFlipY)
+		{
+			sprite->isFlipY = false;
+		}
+		else
+		{
+			sprite->isFlipY = true;
+		}
+	}
 
 	object1->SetPosition({ fbxPos.x,fbxPos.y,fbxPos.z });
 

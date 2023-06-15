@@ -206,6 +206,19 @@ void Sprite::Update()
 	float top =    (0.0f - anchorPoint.y) * size_.y;
 	float bottom = (1.0f - anchorPoint.y) * size_.y;
 
+	// 左右反転
+	if (isFlipX)
+	{
+		left = -left;
+		right = -right;
+	}
+	// 上下反転
+	if (isFlipY)
+	{
+		top = -top;
+		bottom = -bottom;
+	}
+
 	// 頂点データ
 	vertices[LB].pos = {  left, bottom, 0.0f };
 	vertices[LT].pos = {  left,	   top, 0.0f };

@@ -123,4 +123,8 @@ public:
 	DirectX::XMFLOAT2 size_ = { 100.0f,100.0f };
 	// アンカーポイント
 	DirectX::XMFLOAT2 anchorPoint = { 0.5f,0.5f };
+	// 左右フリップ
+	bool isFlipX = false;
+	// 上下フリップ
+	bool isFlipY = false;
 };

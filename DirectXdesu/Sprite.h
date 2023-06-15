@@ -20,6 +20,9 @@ private:
 private:
 	std::vector<Vertex> vertices;
 
+	// 頂点バッファ
+	Microsoft::WRL::ComPtr<ID3D12Resource> vertBuff = nullptr;
+
 	// 定数バッファ
 	ID3D12Resource* constBuffMaterial = nullptr;
 

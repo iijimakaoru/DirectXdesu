@@ -36,7 +36,6 @@ void SpriteCommon::Init()
 	resDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 
 	// 頂点バッファの設定
-	ID3D12Resource* vertBuff = nullptr;
 	result = device->CreateCommittedResource(
 		&heapProp, // ヒープ設定
 		D3D12_HEAP_FLAG_NONE,

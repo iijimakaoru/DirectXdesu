@@ -1,21 +1,20 @@
 #include "Sprite.h"
 #include "KDirectXCommon.h"
+#include "KWinApp.h"
 
 KGPlin* Sprite::pipeline = nullptr;
 
 void SpriteCommon::Init()
 {
-	HRESULT result;
-
-	ID3D12Device* device = KDirectXCommon::GetInstance()->GetDev();
+	device = KDirectXCommon::GetInstance()->GetDev();
 
 	// 頂点データ
 	vertices =
 	{
-		{{-0.4f,-0.7f,0.0f},{0.0f,1.0f}}, // 左下
-		{{-0.4f,+0.7f,0.0f},{0.0f,0.0f}}, // 左上
-		{{+0.4f,-0.7f,0.0f},{1.0f,1.0f}}, // 右下
-		{{+0.4f,+0.7f,0.0f},{1.0f,0.0f}}, // 右上
+		{{  0.0f,100.0f,0.0f},{0.0f,1.0f}}, // 左下
+		{{  0.0f,  0.0f,0.0f},{0.0f,0.0f}}, // 左上
+		{{100.0f,100.0f,0.0f},{1.0f,1.0f}}, // 右下
+		{{100.0f,  0.0f,0.0f},{1.0f,0.0f}}, // 右上
 	};
 
 	// 頂点データ全体のサイズ
@@ -65,6 +64,34 @@ void SpriteCommon::Init()
 	// 頂点一つ分のデータサイズ
 	vbView.StrideInBytes = sizeof(vertices[0]);
 
+	// 定数バッファマテリアル
+	CreateCBMaterial();
+
+	// 定数バッファトランスフォーム
+	CreateCBTransform();
+}
+
+void SpriteCommon::Draw()
+{
+	ID3D12GraphicsCommandList* cmdList = KDirectXCommon::GetInstance()->GetCmdlist();
+	// 頂点バッファビューの設定コマンド
+	cmdList->IASetVertexBuffers(0, 1, &vbView);
+	// 定数バッファビュー(CBV)の設定コマンド(マテリアル)
+	cmdList->SetGraphicsRootConstantBufferView(0, constBuffMaterial->GetGPUVirtualAddress());
+	// 定数バッファビュー(CBV)の設定コマンド(トランスフォーム)
+	cmdList->SetGraphicsRootConstantBufferView(2, constBuffTransform->GetGPUVirtualAddress());
+	// 描画コマンド
+	cmdList->DrawInstanced(vertices.size(), 1, 0, 0);
+}
+
+SpriteCommon* SpriteCommon::GetInstance()
+{
+	static SpriteCommon instance;
+	return &instance;
+}
+
+void SpriteCommon::CreateCBMaterial()
+{
 	// 定数バッファ生成用
 	D3D12_HEAP_PROPERTIES cbHeapProp{}; // ヒープの設定
 	cbHeapProp.Type = D3D12_HEAP_TYPE_UPLOAD; // GPUへの転送用
@@ -99,26 +126,44 @@ void SpriteCommon::Init()
 	constMapMaterial->color = DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 0.5f);
 }
 
-void SpriteCommon::Draw()
+void SpriteCommon::CreateCBTransform()
 {
-	ID3D12GraphicsCommandList* cmdList = KDirectXCommon::GetInstance()->GetCmdlist();
-	// 頂点バッファビューの設定コマンド
-	cmdList->IASetVertexBuffers(0, 1, &vbView);
-	// 定数バッファビュー(CBV)の設定コマンド
-	cmdList->SetGraphicsRootConstantBufferView(0, constBuffMaterial->GetGPUVirtualAddress());
-	// 描画コマンド
-	cmdList->DrawInstanced(vertices.size(), 1, 0, 0);
-}
+	// 定数バッファ生成用
+	D3D12_HEAP_PROPERTIES cbHeapProp{}; // ヒープの設定
+	cbHeapProp.Type = D3D12_HEAP_TYPE_UPLOAD; // GPUへの転送用
 
-SpriteCommon* SpriteCommon::GetInstance()
-{
-	static SpriteCommon instance;
-	return &instance;
-}
+	// リソース設定
+	D3D12_RESOURCE_DESC cbResourceDesc{};
+	cbResourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
+	cbResourceDesc.Width = (sizeof(KConstBufferDataTransform) + 0xff) & ~0xff; // 256バイトアライメント
+	cbResourceDesc.Height = 1;
+	cbResourceDesc.DepthOrArraySize = 1;
+	cbResourceDesc.MipLevels = 1;
+	cbResourceDesc.SampleDesc.Count = 1;
+	cbResourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 
-D3D12_VERTEX_BUFFER_VIEW& SpriteCommon::GetVbView()
-{
-	return vbView;
+	// 定数バッファの生成
+	result = device->CreateCommittedResource(
+		&cbHeapProp, // ヒープ設定
+		D3D12_HEAP_FLAG_NONE,
+		&cbResourceDesc, // リソース設定
+		D3D12_RESOURCE_STATE_GENERIC_READ,
+		nullptr,
+		IID_PPV_ARGS(&constBuffTransform)
+	);
+	assert(SUCCEEDED(result));
+
+	// 定数バッファのマッピング
+	KConstBufferDataTransform* constMapTransform = nullptr;
+	result = constBuffTransform->Map(0, nullptr, (void**)&constMapTransform); // マッピング
+	assert(SUCCEEDED(result));
+
+	// 単位行列を代入
+	constMapTransform->mat = XMMatrixIdentity();
+	constMapTransform->mat.r[0].m128_f32[0] = 2.0f / static_cast<float>(KWinApp::GetInstance()->GetWindowSizeW());
+	constMapTransform->mat.r[1].m128_f32[1] = -2.0f / static_cast<float>(KWinApp::GetInstance()->GetWindowSizeH());
+	constMapTransform->mat.r[3].m128_f32[0] = -1.0f;
+	constMapTransform->mat.r[3].m128_f32[1] = 1.0f;
 }
 
 void Sprite::Init()

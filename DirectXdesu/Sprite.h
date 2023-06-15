@@ -19,16 +19,23 @@ private:
 		DirectX::XMFLOAT2 uv;
 	};
 private:
+	HRESULT result;
+
+	ID3D12Device* device;
+
 	std::vector<Vertex> vertices;
 
 	// 頂点バッファ
 	Microsoft::WRL::ComPtr<ID3D12Resource> vertBuff = nullptr;
 
 	// 定数バッファ
-	ID3D12Resource* constBuffMaterial = nullptr;
+	Microsoft::WRL::ComPtr<ID3D12Resource> constBuffMaterial = nullptr;
 
 	// 頂点バッファビュー
 	D3D12_VERTEX_BUFFER_VIEW vbView{};
+
+	// 定数バッファ
+	Microsoft::WRL::ComPtr<ID3D12Resource> constBuffTransform = nullptr;
 
 public:
 	// 初期化
@@ -39,8 +46,12 @@ public:
 
 	static SpriteCommon* GetInstance();
 
-	// ゲッター
-	D3D12_VERTEX_BUFFER_VIEW& GetVbView();
+private:
+	// 定数バッファマテリアル
+	void CreateCBMaterial();
+
+	// 定数バッファトランスフォーム
+	void CreateCBTransform();
 
 private:
 	SpriteCommon() = default;

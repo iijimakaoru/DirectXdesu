@@ -241,22 +241,22 @@ void KGPlin::CreatePipelineAll(KShader shader, bool Obj, bool Sprite, bool Parti
 		descriptorRange.BaseShaderRegister = 0; // テクスチャレジスタ0番
 		descriptorRange.OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
 		// ルートパラメータの設定
-		D3D12_ROOT_PARAMETER rootParams[2] = {};
+		D3D12_ROOT_PARAMETER rootParams[3] = {};
 		// 定数バッファ0番
-		rootParams[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;  // 定数バッファビュー
-		rootParams[0].Descriptor.ShaderRegister = 0;				  // 定数バッファ番
+		rootParams[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;  // 種類
+		rootParams[0].Descriptor.ShaderRegister = 0;				  // 定数バッファ番号
 		rootParams[0].Descriptor.RegisterSpace = 0;					  // デフォルト値
 		rootParams[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL; // 全てのシェーダーから見える
 		// テクスチャレジスタ0番
-		rootParams[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+		rootParams[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE; // 種類
 		rootParams[1].DescriptorTable.pDescriptorRanges = &descriptorRange;
-		rootParams[1].DescriptorTable.NumDescriptorRanges = 1;
-		rootParams[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
-		//// 定数バッファ1番
-		//rootParam[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
-		//rootParam[2].Descriptor.ShaderRegister = 1;
-		//rootParam[2].Descriptor.RegisterSpace = 0;
-		//rootParam[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
+		rootParams[1].DescriptorTable.NumDescriptorRanges = 1;					  // デスクリプタレンジ数
+		rootParams[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;			  // 全てのシェーダーから見える
+		// 定数バッファ1番
+		rootParams[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;  // 種類
+		rootParams[2].Descriptor.ShaderRegister = 1;				  // 定数バッファ番号
+		rootParams[2].Descriptor.RegisterSpace = 0;					  // デフォルト値
+		rootParams[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL; // 全てのシェーダーから見える
 		//// テクスチャサンブラーの設定
 		D3D12_STATIC_SAMPLER_DESC samplerDesc{};
 		samplerDesc.AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP;

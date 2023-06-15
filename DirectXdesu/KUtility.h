@@ -42,7 +42,7 @@ private:
 // 座標変換行列
 struct KConstBufferDataTransform
 {
-	Matrix mat; // 3D変換行列
+	DirectX::XMMATRIX mat; // 3D変換行列
 };
 
 struct KPosColor
@@ -66,7 +66,7 @@ struct KPosUvColor
 	Vector4 color; // カラー
 };
 
-typedef struct
+typedef struct KModelShareVaria
 {
 	// パイプラインステート
 	Microsoft::WRL::ComPtr<ID3D12PipelineState> pipelineState;

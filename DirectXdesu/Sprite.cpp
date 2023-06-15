@@ -201,17 +201,10 @@ void Sprite::Update()
 	// ワールド変換
 	DirectX::XMMATRIX matWorld;
 	matWorld = XMMatrixIdentity();
-
 	// 回転
-	DirectX::XMMATRIX matRot;
-	matRot = XMMatrixIdentity();
-	matRot = XMMatrixRotationZ(XMConvertToRadians(rotation));
-	matWorld *= matRot;
-
-	// 平行
-	DirectX::XMMATRIX matTrans;
-	matTrans = XMMatrixTranslation(position.x, position.y, 0.0f);
-	matWorld *= matTrans;
+	matWorld *= XMMatrixRotationZ(XMConvertToRadians(rotation));
+	// 平行移動
+	matWorld *= XMMatrixTranslation(position.x, position.y, 0.0f);
 
 	// 定数バッファへ転送
 	constMapTransform->mat.r[0].m128_f32[0] = 2.0f / static_cast<float>(KWinApp::GetInstance()->GetWindowSizeW());

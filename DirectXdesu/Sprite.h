@@ -4,6 +4,7 @@
 #include <memory>
 #include <d3dx12.h>
 #include "KGPlin.h"
+#include "KMaterial.h"
 
 const int spriteSRVCount = 512;
 
@@ -12,7 +13,10 @@ class SpriteCommon
 private:
 	std::vector<DirectX::XMFLOAT3> vertices;
 
-	// 頂点バッファビューの作成
+	// 定数バッファ
+	ID3D12Resource* constBuffMaterial = nullptr;
+
+	// 頂点バッファビュー
 	D3D12_VERTEX_BUFFER_VIEW vbView{};
 
 public:

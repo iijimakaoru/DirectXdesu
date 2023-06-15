@@ -26,9 +26,6 @@ public:
 
 	ScratchImage mipChain{};
 
-	// ヒープ設定
-	D3D12_HEAP_PROPERTIES textureHeapProp{};
-
 	// テクスチャバッファの生成
 	ComPtr<ID3D12Resource> texBuff;
 

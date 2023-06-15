@@ -11,7 +11,13 @@ const int spriteSRVCount = 512;
 class SpriteCommon
 {
 private:
-	std::vector<DirectX::XMFLOAT3> vertices;
+	struct Vertex
+	{
+		DirectX::XMFLOAT3 pos;
+		DirectX::XMFLOAT2 uv;
+	};
+private:
+	std::vector<Vertex> vertices;
 
 	// 定数バッファ
 	ID3D12Resource* constBuffMaterial = nullptr;

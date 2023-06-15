@@ -181,16 +181,22 @@ void KGPlin::CreatePipelineAll(KShader shader, bool Obj, bool Sprite, bool Parti
 	if (Sprite)
 	{
 #pragma region 頂点レイアウト配列の宣言と設定
-		static D3D12_INPUT_ELEMENT_DESC inputLayout[] = {
-		{// xyz座標
-			"POSITION",										// セマンティック名
-			0,												// 同じセマンティック名が複数あるときに使うインデックス
-			DXGI_FORMAT_R32G32B32_FLOAT,					// 要素数とビット数を表す
-			0,												// 入力スロットインデックス
-			D3D12_APPEND_ALIGNED_ELEMENT,					// データのオフセット
-			D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,		// 入力データ種別
-			0												// 一度に描画するインスタンス数
-		},
+		static D3D12_INPUT_ELEMENT_DESC inputLayout[] = 
+		{
+			{// xyz座標
+				"POSITION",										// セマンティック名
+				0,												// 同じセマンティック名が複数あるときに使うインデックス
+				DXGI_FORMAT_R32G32B32_FLOAT,					// 要素数とビット数を表す
+				0,												// 入力スロットインデックス
+				D3D12_APPEND_ALIGNED_ELEMENT,					// データのオフセット
+				D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,		// 入力データ種別
+				0												// 一度に描画するインスタンス数
+			},
+			{ // uv座標(1行で書いたほうが見やすい)
+				"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0,
+				D3D12_APPEND_ALIGNED_ELEMENT,
+				D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0
+			},
 		};
 #pragma endregion
 #pragma region パイプラインステート設定変数の宣言と各種項目の設定

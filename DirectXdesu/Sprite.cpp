@@ -12,14 +12,14 @@ void SpriteCommon::Init()
 	// 頂点データ
 	vertices =
 	{
-		{-0.4f,-0.7f,0.0f}, // 左下
-		{-0.4f,+0.7f,0.0f}, // 左上
-		{+0.4f,-0.7f,0.0f}, // 右下
-		{+0.4f,+0.7f,0.0f}, // 右上
+		{{-0.4f,-0.7f,0.0f},{0.0f,1.0f}}, // 左下
+		{{-0.4f,+0.7f,0.0f},{0.0f,0.0f}}, // 左上
+		{{+0.4f,-0.7f,0.0f},{1.0f,1.0f}}, // 右下
+		{{+0.4f,+0.7f,0.0f},{1.0f,0.0f}}, // 右上
 	};
 
 	// 頂点データ全体のサイズ
-	UINT sizeVB = static_cast<UINT>(sizeof(DirectX::XMFLOAT3) * vertices.size());
+	UINT sizeVB = static_cast<UINT>(sizeof(vertices[0]) * vertices.size());
 
 	// 頂点バッファの設定
 	D3D12_HEAP_PROPERTIES heapProp{}; // ヒープ設定
@@ -48,7 +48,7 @@ void SpriteCommon::Init()
 	assert(SUCCEEDED(result));
 
 	// GPU上のバッファに対応した仮想メモリ(メインメモリ上)を取得
-	DirectX::XMFLOAT3* vertMap = nullptr;
+	Vertex* vertMap = nullptr;
 	result = vertBuff->Map(0, nullptr, (void**)&vertMap);
 	assert(SUCCEEDED(result));
 	// 全頂点に対して
@@ -64,7 +64,7 @@ void SpriteCommon::Init()
 	// 頂点バッファのサイズ
 	vbView.SizeInBytes = sizeVB;
 	// 頂点一つ分のデータサイズ
-	vbView.StrideInBytes = sizeof(DirectX::XMFLOAT3);
+	vbView.StrideInBytes = sizeof(vertices[0]);
 
 	// 定数バッファ生成用
 	D3D12_HEAP_PROPERTIES cbHeapProp{}; // ヒープの設定

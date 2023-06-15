@@ -12,9 +12,10 @@ void SpriteCommon::Init()
 	// 頂点データ
 	vertices =
 	{
-		{-0.5f,-0.5f,0.0f},
-		{-0.5f,+0.5f,0.0f},
-		{+0.5f,-0.5f,0.0f},
+		{-0.4f,-0.7f,0.0f}, // 左下
+		{-0.4f,+0.7f,0.0f}, // 左上
+		{+0.4f,-0.7f,0.0f}, // 右下
+		{+0.4f,+0.7f,0.0f}, // 右上
 	};
 
 	// 頂点データ全体のサイズ
@@ -130,7 +131,7 @@ void Sprite::Draw()
 {
 	// パイプラインセット
 	pipeline->Setting();
-	pipeline->Update(); // 三角形リスト
+	pipeline->Update(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP); // 三角形リスト
 	
 	spriteCommon->Draw();
 }

@@ -147,6 +147,11 @@ void GameScence::Update()
 	ImGui::SliderFloat("SpritePosY", &sprite->position.y, 0.0f, 1.0f);
 	ImGui::Text("rot: (%.2f)", sprite->rotation);
 	ImGui::SliderFloat("SpriteRot", &sprite->rotation, 0.0f, 180.0f);
+	ImGui::Text("color: (%.2f,%.2f,%.2f,%.2f)", sprite->color.x, sprite->color.y, sprite->color.z, sprite->color.w);
+	ImGui::SliderFloat("SpriteColorR", &sprite->color.x, 0.0f, 1.0f);
+	ImGui::SliderFloat("SpriteColorG", &sprite->color.y, 0.0f, 1.0f);
+	ImGui::SliderFloat("SpriteColorB", &sprite->color.z, 0.0f, 1.0f);
+	ImGui::SliderFloat("SpriteColorA", &sprite->color.w, 0.0f, 1.0f);
 
 	object1->SetPosition({ fbxPos.x,fbxPos.y,fbxPos.z });
 

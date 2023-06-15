@@ -212,6 +212,9 @@ void Sprite::Update()
 	constMapTransform->mat.r[3].m128_f32[0] = -1.0f;
 	constMapTransform->mat.r[3].m128_f32[1] = 1.0f;
 	constMapTransform->mat *= matWorld;
+
+	// F‚Ì‘ã“ü
+	constMapMaterial->color = color;
 }
 
 void Sprite::SetPipeline(KGPlin* pipeline_)

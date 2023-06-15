@@ -108,4 +108,6 @@ public:
 	DirectX::XMFLOAT2 position = { 0.0f,0.0f };
 	// âÒì]
 	float rotation = 0.0f;
+	// êF
+	DirectX::XMFLOAT4 color = { 1,1,1,1 };
 };

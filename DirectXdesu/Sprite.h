@@ -5,6 +5,7 @@
 #include <d3dx12.h>
 #include "KGPlin.h"
 #include "KMaterial.h"
+#include <wrl.h>
 
 const int spriteSRVCount = 512;
 
@@ -38,7 +39,7 @@ private:
 	DirectX::XMFLOAT4* imageData = new DirectX::XMFLOAT4[imageDataCount]; // あとで解放する
 
 	// 設定を元にSRV用デスクリプタヒープを生成
-	ID3D12DescriptorHeap* srvHeap = nullptr;
+	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> srvHeap = nullptr;
 
 public:
 	// 初期化

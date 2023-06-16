@@ -55,14 +55,14 @@ struct KPosNormalUV
 {
 	Vector3 pos; // 座標
 	Vector3 normal; // 法線ベクトル
-	Vector2 uv; // uv座標
+	KMyMath::Vector2 uv; // uv座標
 };
 
 // 座標・UV・カラー
 struct KPosUvColor
 {
 	Vector3 pos; // 座標
-	Vector2 uv; // uv座標
+	KMyMath::Vector2 uv; // uv座標
 	Vector4 color; // カラー
 };
 

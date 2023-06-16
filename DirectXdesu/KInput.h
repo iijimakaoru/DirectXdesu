@@ -57,9 +57,9 @@ public:
 	// ホイール
 	static LONG GetMouseWheel();
 	// マウスの位置取得
-	static Vector2 GetMousePos();
+	static KMyMath::Vector2 GetMousePos();
 	// 前回のマウスの位置を取得
-	static Vector2 GetOldMousePos();
+	static KMyMath::Vector2 GetOldMousePos();
 	// マウスの移動量を取得
 	static Vector3 GetMouseMove();
 
@@ -73,9 +73,9 @@ public:
 	//パッドのボタンが押された瞬間か
 	bool GetPadButtonDown(UINT button);
 	//パッドの左スティック
-	Vector2 GetPadLStick();
+	KMyMath::Vector2 GetPadLStick();
 	//パッドの右スティック
-	Vector2 GetPadRStick();
+	KMyMath::Vector2 GetPadRStick();
 	//左トリガーを押し込んだ瞬間か
 	bool GetLTriggerDown();
 	//右トリガーを押し込んだ瞬間か
@@ -99,8 +99,8 @@ private:
 	Microsoft::WRL::ComPtr<IDirectInputDevice8> mouse = nullptr;
 	DIMOUSESTATE2 mouseState = {};
 	DIMOUSESTATE2 oldMouseState = {};
-	Vector2 mousePos;
-	Vector2 oldMousePos;
+	KMyMath::Vector2 mousePos;
+	KMyMath::Vector2 oldMousePos;
 
 	// パッド
 	XINPUT_STATE xInputState;

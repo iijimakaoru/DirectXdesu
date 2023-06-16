@@ -145,12 +145,12 @@ LONG KInput::GetMouseWheel()
 	return GetInstance()->mouseState.lZ;
 }
 
-Vector2 KInput::GetMousePos()
+KMyMath::Vector2 KInput::GetMousePos()
 {
 	return GetInstance()->mousePos;
 }
 
-Vector2 KInput::GetOldMousePos()
+KMyMath::Vector2 KInput::GetOldMousePos()
 {
 	return GetInstance()->oldMousePos;
 }
@@ -180,20 +180,20 @@ bool KInput::GetPadButtonDown(UINT button)
 	return xInputState.Gamepad.wButtons == button && oldXInputState.Gamepad.wButtons != button;
 }
 
-Vector2 KInput::GetPadLStick()
+KMyMath::Vector2 KInput::GetPadLStick()
 {
 	SHORT x = xInputState.Gamepad.sThumbLX;
 	SHORT y = xInputState.Gamepad.sThumbLY;
 
-	return Vector2(static_cast<float>(x) / 32767.0f, static_cast<float>(y) / 32767.0f);
+	return KMyMath::Vector2(static_cast<float>(x) / 32767.0f, static_cast<float>(y) / 32767.0f);
 }
 
-Vector2 KInput::GetPadRStick()
+KMyMath::Vector2 KInput::GetPadRStick()
 {
 	SHORT x = xInputState.Gamepad.sThumbRX;
 	SHORT y = xInputState.Gamepad.sThumbRY;
 
-	return Vector2(static_cast<float>(x) / 32767.0f, static_cast<float>(y) / 32767.0f);
+	return KMyMath::Vector2(static_cast<float>(x) / 32767.0f, static_cast<float>(y) / 32767.0f);
 }
 
 bool KInput::GetLTriggerDown()

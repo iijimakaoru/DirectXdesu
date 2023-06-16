@@ -1,106 +1,468 @@
 #include "MyMath.h"
-#include <windows.h>
-#include <random>
-#include "KWinApp.h"
+#include <cmath>
+#include <cassert>
 
-using namespace std;
-
-MyMath* MyMath::GetInstance()
+namespace MyMathUtility
 {
-    static MyMath instance;
-    return &instance;
+	float Vector2Length(const KMyMath::Vector2& v)
+	{
+		return static_cast<float>(std::sqrt(v.x * v.x + v.y * v.y));
+	}
+
+	float Vector3Length(const KMyMath::Vector3& v)
+	{
+		return static_cast<float>(std::sqrt(v.x * v.x + v.y * v.y + v.z * v.z));
+	}
+
+	KMyMath::Vector3 MakeNormalize(KMyMath::Vector3 v)
+	{
+		float len = Vector3Length(v);
+		if (len != 0) 
+		{
+			return v /= len;
+		}
+		return v;
+	}
+
+	KMyMath::Matrix4 MakeIdentity()
+	{
+		KMyMath::Matrix4 matIdentity;
+		matIdentity.m[0][0] = 1.0f;
+		matIdentity.m[1][1] = 1.0f;
+		matIdentity.m[2][2] = 1.0f;
+		matIdentity.m[3][3] = 1.0f;
+
+		return matIdentity;
+	}
+
+	KMyMath::Matrix4 MakeScaling(const KMyMath::Vector3& scale)
+	{
+		KMyMath::Matrix4 matScale;
+
+		matScale.m[0][0] = scale.x;
+		matScale.m[1][1] = scale.y;
+		matScale.m[2][2] = scale.z;
+		matScale.m[3][3] = 1.0f;
+
+		return matScale;
+	}
+
+	KMyMath::Matrix4 MakeRotation(const KMyMath::Vector3& rotation)
+	{
+		KMyMath::Matrix4 matRotationX;
+		matRotationX = MakeIdentity();
+		matRotationX.m[1][1] =  cos(rotation.x);
+		matRotationX.m[1][2] =  sin(rotation.x);
+		matRotationX.m[2][1] = -sin(rotation.x);
+		matRotationX.m[2][2] =  cos(rotation.x);
+
+		KMyMath::Matrix4 matRotationY;
+		matRotationY = MakeIdentity();
+		matRotationY.m[0][0] =  cos(rotation.y);
+		matRotationY.m[0][2] = -sin(rotation.y);
+		matRotationY.m[2][0] =  sin(rotation.y);
+		matRotationY.m[2][2] =  cos(rotation.y);
+
+		KMyMath::Matrix4 matRotationZ;
+		matRotationZ = MakeIdentity();
+		matRotationZ.m[0][0] =  cos(rotation.z);
+		matRotationZ.m[0][1] =  sin(rotation.z);
+		matRotationZ.m[1][0] = -sin(rotation.z);
+		matRotationZ.m[1][1] =  cos(rotation.z);
+
+		KMyMath::Matrix4 matRotation;
+		matRotation = MakeIdentity();
+		matRotation *= matRotationZ;
+		matRotation *= matRotationX;
+		matRotation *= matRotationY;
+
+		return matRotation;
+	}
+
+	KMyMath::Matrix4 MakeTranslation(const KMyMath::Vector3& trans)
+	{
+		KMyMath::Matrix4 matTranslation;
+		matTranslation = MakeIdentity();
+		matTranslation.m[3][0] = trans.x;
+		matTranslation.m[3][1] = trans.y;
+		matTranslation.m[3][2] = trans.z;
+
+		return matTranslation;
+	}
+
+	void SinCos(float& sin_, float& cos_, float angle)
+	{
+		sin_ = Sin(angle);
+		cos_ = Cos(angle);
+	}
+
+	KMyMath::Matrix4 MatMulVector(KMyMath::Matrix4 m, KMyMath::Vector3 v)
+	{
+		return KMyMath::Matrix4();
+	}
+
+	void MakeOrthogonalL(float left, float right, float bottom, float top, float near_, float far_, KMyMath::Matrix4 m)
+	{
+		float width = 1.0f / (right - left);
+		float height = 1.0f / (top - bottom);
+		float range = 1.0f / (far_ - near_);
+
+		m.m[0][0] = width * 2;
+
+		m.m[1][1] = height * 2;
+
+		m.m[2][2] = range;
+
+		m.m[3][0] = -(left + right) * width;
+		m.m[3][1] = -(top + bottom) * height;
+		m.m[3][2] = range * -near_;
+		m.m[3][3] = 1.0f;
+
+		m.m[0][1] = m.m[0][2] = m.m[0][3] =
+			m.m[1][0] = m.m[1][2] = m.m[1][3] =
+			m.m[2][0] = m.m[2][1] = m.m[2][3] = 0.0f;
+	}
+	void MakeOrthogonalR(float left, float right, float bottom, float top, float near_, float far_, KMyMath::Matrix4 m)
+	{
+		float width = 1.0f / (right - left);
+		float height = 1.0f / (top - bottom);
+		float range = 1.0f / (far_ - near_);
+
+		m.m[0][0] = width * 2;
+
+		m.m[1][1] = height * 2;
+
+		m.m[2][2] = range;
+
+		m.m[3][0] = -(left + right) * width;
+		m.m[3][1] = -(top + bottom) * height;
+		m.m[3][2] = range * -near_;
+		m.m[3][3] = 1.0f;
+
+		m.m[0][1] = m.m[0][2] = m.m[0][3] =
+			m.m[1][0] = m.m[1][2] = m.m[1][3] =
+			m.m[2][0] = m.m[2][1] = m.m[2][3] = 0.0f;
+	}
+
+	KMyMath::Matrix4 MakeLockAt(KMyMath::Vector3& eye, KMyMath::Vector3& target, KMyMath::Vector3& up)
+	{
+		KMyMath::Vector3 zVec = target - eye;
+		zVec.Normalize();
+
+		KMyMath::Vector3 xVec = up.Cross(zVec);
+		xVec.Normalize();
+
+		KMyMath::Vector3 yVec = zVec.Cross(xVec);
+		yVec.Normalize();
+
+		KMyMath::Matrix4 matrix;
+		matrix.m[0][0] = xVec.x;
+		matrix.m[0][1] = xVec.y;
+		matrix.m[0][2] = xVec.z;
+
+		matrix.m[1][0] = yVec.x;
+		matrix.m[1][1] = yVec.y;
+		matrix.m[1][2] = yVec.z;
+
+		matrix.m[2][0] = zVec.x;
+		matrix.m[2][1] = zVec.y;
+		matrix.m[2][2] = zVec.z;
+
+		matrix.m[3][0] = -eye.x;
+		matrix.m[3][1] = -eye.y;
+		matrix.m[3][2] = -eye.z;
+
+		return matrix;
+	}
+
+	KMyMath::Matrix4 MakePerspective(float fogAngleY, float aspectRatio, float nearZ, float farZ)
+	{
+		// アスペクト比を作成
+		KMyMath::Matrix4 matrix;
+		float sinFov = 0.0f;
+		float cosFov = 0.0f;
+		SinCos(sinFov, cosFov, 0.5f * fogAngleY);
+
+		float range = farZ / (farZ - nearZ);
+		float height = cosFov / sinFov;
+
+		matrix.m[0][0] = height / aspectRatio;
+
+		matrix.m[1][1] = cosFov / sinFov;
+
+		matrix.m[2][2] = range;
+		matrix.m[2][3] = 1.0f;
+
+		matrix.m[3][2] = -range * nearZ;
+
+		matrix.m[0][1] = matrix.m[0][2] = matrix.m[0][3] =
+			matrix.m[1][0] = matrix.m[1][2] = matrix.m[1][3] =
+			matrix.m[2][0] = matrix.m[2][1] =
+			matrix.m[3][0] = matrix.m[3][1] = matrix.m[3][3] = 0.0f;
+
+		return matrix;
+	}
+
+	KMyMath::Matrix4 MakeInverse(KMyMath::Matrix4& mat)
+	{
+		//掃き出し法を行う行列
+		float sweep[4][8]{};
+		//定数倍用
+		float constTimes = 0.0f;
+		//許容する誤差
+		float MAX_ERR = 1e-10f;
+		//戻り値用
+		KMyMath::Matrix4 retMat;
+
+		for (int i = 0; i < 4; i++)
+		{
+			for (int j = 0; j < 4; j++)
+			{
+				//weepの左側に逆行列を求める行列をセット
+				sweep[i][j] = mat.m[i][j];
+
+				//sweepの右側に単位行列をセット
+				sweep[i][4 + j] = MakeIdentity().m[i][j];
+			}
+		}
+
+		//全ての列の対角成分に対する繰り返し
+		for (int i = 0; i < 4; i++)
+		{
+			//最大の絶対値を注目対角成分の絶対値と仮定
+			float max = std::fabs(sweep[i][i]);
+			int maxIndex = i;
+
+			//i列目が最大の絶対値となる行を探す
+			for (int j = i + 1; j < 4; j++)
+			{
+				if (std::fabs(sweep[j][i]) > max)
+				{
+					max = std::fabs(sweep[j][i]);
+					maxIndex = j;
+				}
+			}
+
+			if (fabs(sweep[maxIndex][i]) <= MAX_ERR)
+			{
+				//逆行列は求められない
+				return MakeIdentity();
+			}
+
+			//操作(1):i行目とmaxIndex行目を入れ替える
+			if (i != maxIndex)
+			{
+				for (int j = 0; j < 8; j++)
+				{
+					float tmp = sweep[maxIndex][j];
+					sweep[maxIndex][j] = sweep[i][j];
+					sweep[i][j] = tmp;
+				}
+			}
+
+			//sweep[i][i]に掛けると1になる値を求める
+			constTimes = 1 / sweep[i][i];
+
+			//操作(2):p行目をa倍する
+			for (int j = 0; j < 8; j++)
+			{
+				//これによりsweep[i][i]が1になる
+				sweep[i][j] *= constTimes;
+			}
+
+			//操作(3)によりi行目以外の行のi列目を0にする
+			for (int j = 0; j < 4; j++)
+			{
+				if (j == i)
+				{
+					//i行目はそのまま
+					continue;
+				}
+
+				//i行目に掛ける値を求める
+				constTimes = -sweep[j][i];
+
+				for (int k = 0; k < 8; k++)
+				{
+					//j行目にi行目をa倍した行を足す
+					//これによりsweep[j][i]が0になる
+					sweep[j][k] += sweep[i][k] * constTimes;
+				}
+			}
+		}
+
+		//sweepの右半分がmatの逆行列
+		for (int i = 0; i < 4; i++)
+		{
+			for (int j = 0; j < 4; j++)
+			{
+				retMat.m[i][j] = sweep[i][4 + j];
+			}
+		}
+
+		return retMat;
+	}
+
+	float Sin(float sin)
+	{
+		return std::sinf(sin);
+	}
+
+	float Cos(float cos)
+	{
+		return std::cosf(cos);
+	}
+
+	float Tan(float tan)
+	{
+		return std::tanf(tan);
+	}
+
+	float Asin(float sin)
+	{
+		return std::asinf(sin);
+	}
+
+	float Acos(float cos)
+	{
+		return std::acosf(cos);
+	}
+
+	float Atan(float tan)
+	{
+		return std::atanf(tan);
+	}
+
+	float Atan2(float y, float x)
+	{
+		return std::atan2f(y, x);
+	}
+
+	void Complement(float& x1, float x2, float flame)
+	{
+		//距離を出す
+		float distanceX = x2 - x1;
+		//距離をflameで割った値
+		float dividedDistanceX = distanceX / flame;
+
+		//距離をflameで割った値を足す
+		x1 += dividedDistanceX;
+	}
+
+	float Clamp(float Value, const float low, const float high)
+	{
+		if (high < Value)
+		{
+			Value = high;
+		}
+
+		if (Value < low)
+		{
+			Value = low;
+		}
+
+		return Value;
+	}
+
+	float Clamp0To1(float val)
+	{
+		if (val < 0.0f)
+		{
+			return 0.0f;
+		}
+		if (val > 1.0f)
+		{
+			return 1.0f;
+		}
+
+		return val;
+	}
+
+	bool Approximately(float a, float b)
+	{
+		float tmp = 1e-06f * std::max(fabs(a), fabs(b));
+
+		float tmp2 = EPSILON * 8.0f;
+
+		if (fabs(b - a) < std::max(tmp, tmp2))
+		{
+			return true;
+		}
+
+		return false;
+	}
+
+	KMyMath::Vector3 HermiteGetPoint(KMyMath::Vector3 p0, KMyMath::Vector3 p1, KMyMath::Vector3 v0, KMyMath::Vector3 v1, float t)
+	{
+		KMyMath::Vector3 c0 = 2.0f * p0 + -2.0f * p1 + v0 + v1;
+		KMyMath::Vector3 c1 = -3.0f * p0 + 3.0f * p1 + -2.0f * v0 - v1;
+		KMyMath::Vector3 c2 = v0;
+		KMyMath::Vector3 c3 = p0;
+
+		float t2 = t * t;
+		float t3 = t2 * t;
+		return c0 * t3 + c1 * t2 + c2 * t + c3;
+	}
 }
 
-int MyMath::GetRand(int min, int max)
+namespace KMyMath
 {
-    std::random_device rd;
-    std::mt19937_64 eng(rd());
-    std::uniform_real_distribution<> distr(min, max);
-    return distr(eng);
-}
+	Vector3 Vec3Mat4Mul(Vector3& vec, Matrix4& mat)
+	{
+		Vector3 retVec = {};
 
-float MyMath::GetRand(float min, float max)
-{
-    std::random_device rd;
-    std::mt19937_64 eng(rd());
-    std::uniform_real_distribution<float> distr(min, max);
-    return distr(eng);
-}
+		retVec.x = vec.x * mat.m[0][0] + vec.y * mat.m[1][0] + vec.z * mat.m[2][0];
+		retVec.y = vec.x * mat.m[0][1] + vec.y * mat.m[1][1] + vec.z * mat.m[2][1];
+		retVec.z = vec.x * mat.m[0][2] + vec.y * mat.m[1][2] + vec.z * mat.m[2][2];
 
-double MyMath::GetRand(double min, float max)
-{
-    std::random_device rd;
-    std::mt19937_64 eng(rd());
-    std::uniform_real_distribution<double> distr(min, max);
-    return distr(eng);
-}
+		return retVec;
+	}
 
-KMyMath::Matrix4 MyMath::LockAt(const KMyMath::Vector3& eye, const KMyMath::Vector3& target, const KMyMath::Vector3& up)
-{
-    KMyMath::Vector3 baseX = up;
-    KMyMath::Vector3 baseY;
-    KMyMath::Vector3 baseZ = target - eye;
+	Vector3 CatMullRomSprine(std::vector<Vector3>& points, float t)
+	{
+		float length = static_cast<float>(points.size());
+		float progress = (length - 1) * t;
+		float index = std::floor(progress);
+		float weight = progress - index;
 
-    baseZ.Normalize();
+		if (MyMathUtility::Approximately(weight, 0.0f) && index >= length - 1)
+		{
+			index = length - 2;
+			weight = 1;
+		}
 
-    baseX = baseX.Cross(baseZ);
-    baseX.Normalize();
+		Vector3 p0 = points[static_cast<size_t>(index)];
+		Vector3 p1 = points[static_cast<size_t>(index + 1.0f)];
+		Vector3 p2;
+		Vector3 p3;
 
-    baseY = baseZ;
-    baseY = baseY.Cross(baseX);
+		if (index > 0.0f)
+		{
+			p2 = 0.5f * (points[static_cast<size_t>(index + 1.0f)] - points[static_cast<size_t>(index - 1.0f)]);
+		}
+		else
+		{
+			p2 = points[static_cast<size_t>(index + 1.0f)] - points[static_cast<size_t>(index)];
+		}
 
-    KMyMath::Matrix4 matView;
+		if (index < length - 2.0f)
+		{
+			p3 = 0.5f * (points[static_cast<size_t>(index + 2.0f)] - points[static_cast<size_t>(index)]);
+		}
+		else
+		{
+			p3 = points[static_cast<size_t>(index + 1.0f)] - points[static_cast<size_t>(index)];
+		}
 
-    matView.m[0][0] = baseX.x;
-    matView.m[1][0] = baseX.y;
-    matView.m[2][0] = baseX.z;
+		return MyMathUtility::HermiteGetPoint(p0, p1, p2, p3, weight);
+	}
 
-    matView.m[0][1] = baseY.x;
-    matView.m[1][1] = baseY.y;
-    matView.m[2][1] = baseY.z;
-
-    matView.m[0][2] = baseZ.x;
-    matView.m[1][2] = baseZ.y;
-    matView.m[2][2] = baseZ.z;
-
-    matView.m[3][0] = baseX.Dot(eye);
-    matView.m[3][1] = baseY.Dot(eye);
-    matView.m[3][2] = baseZ.Dot(eye);
-
-    return matView;
-}
-
-KMyMath::Matrix4 MyMath::PerspectiveFov(float fovY, float nearZ, float farZ)
-{
-    assert(nearZ > 0.0f && farZ > 0.0f);
-
-    float aspect = (float)KWinApp::GetWindowSizeW() / KWinApp::GetWindowSizeH();
-
-    float height = 1.0f / tanf(fovY / 2.0f);
-
-    KMyMath::Matrix4 matProjection;
-    matProjection.m[0][0] = height;
-    matProjection.m[1][1] = height * aspect;
-    matProjection.m[2][2] = (float)(farZ + nearZ) / (farZ - nearZ);
-    matProjection.m[2][3] = 1.0f;
-    matProjection.m[3][2] = -2.0f * farZ * nearZ / (float)(farZ - nearZ);
-    matProjection.m[3][3] = 0.0f;
-
-    return matProjection;
-}
-
-KMyMath::Matrix4 MyMath::Ortho(float nearZ, float farZ)
-{
-    KMyMath::Matrix4 matProjection;
-    matProjection.m[0][0] = 2 / (float)KWinApp::GetWindowSizeW();
-    matProjection.m[1][1] = 2 / (float)KWinApp::GetWindowSizeH();
-    matProjection.m[2][2] = 1 / (float)(farZ - nearZ);
-    matProjection.m[3][2] = nearZ / (float)(nearZ - farZ);
-
-    return matProjection;
-}
-
-float MyMath::ConvertToRad(float angle)
-{
-    return angle / 180.0f * PI;
+	float LenSegLineOfSeparateAxis(Vector3* sep, Vector3* e1, Vector3* e2, Vector3* e3)
+	{
+		// 3つの内積の絶対値の和で投影線分長を計算
+		float r1 = fabs(sep->Dot(*e1));
+		float r2 = fabs(sep->Dot(*e2));
+		float r3 = e3 ? (fabs(sep->Dot(*e3))) : 0;
+		return r1 + r2 + r3;
+	}
 }

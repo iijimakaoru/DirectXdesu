@@ -39,7 +39,7 @@ public:
 		UINT16 mipLevel = 0,
 		UINT16 arraySize = 1,
 		DXGI_FORMAT format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,
-		const Vector4& clearColor = { 1.0f,1.0f,1.0f,1.0f });
+		const KMyMath::Vector4& clearColor = { 1.0f,1.0f,1.0f,1.0f });
 
 	/// <summary>
 	/// ê∂ê¨

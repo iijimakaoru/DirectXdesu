@@ -30,7 +30,7 @@ ConstBuff::ConstBuff()
 	result = material->Map(0, nullptr, (void**)&mapMaterial); // マッピング
 	assert(SUCCEEDED(result));
 
-	ChangeColor(Vector4(1, 1, 1, 1));
+	ChangeColor(KMyMath::Vector4(1, 1, 1, 1));
 
 	resourceDesc.Width = (sizeof(ConstBufferTimeMaterial) + 0xff) & ~0xff;
 
@@ -58,7 +58,7 @@ ConstBuff::~ConstBuff()
 	timeMaterial->Unmap(0, nullptr);
 }
 
-void ConstBuff::ChangeColor(const Vector4& color)
+void ConstBuff::ChangeColor(const KMyMath::Vector4& color)
 {
 	// GPUのメモリへデータ転送
 	mapMaterial->color = color;

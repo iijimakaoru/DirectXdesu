@@ -27,7 +27,7 @@ struct KTextureData
 	size_t height = 0;
 
 	//カラー
-	Vector4 color = { 1.0f,1.0f,1.0f,1.0f };
+	KMyMath::Vector4 color = { 1.0f,1.0f,1.0f,1.0f };
 
 	std::string path;
 
@@ -48,7 +48,7 @@ struct KConstBufferDataTransform
 struct KPosColor
 {
 	KMyMath::Vector3 pos; // 座標
-	Vector4 color; // カラー
+	KMyMath::Vector4 color; // カラー
 };
 
 struct KPosNormalUV
@@ -63,7 +63,7 @@ struct KPosUvColor
 {
 	KMyMath::Vector3 pos; // 座標
 	KMyMath::Vector2 uv; // uv座標
-	Vector4 color; // カラー
+	KMyMath::Vector4 color; // カラー
 };
 
 typedef struct KModelShareVaria

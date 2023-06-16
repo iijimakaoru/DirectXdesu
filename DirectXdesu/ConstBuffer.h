@@ -42,7 +42,7 @@ public:
 
 	struct ConstBufferDataMaterial
 	{
-		Vector4 color;
+		KMyMath::Vector4 color;
 	};
 
 	struct ConstBufferTimeMaterial
@@ -58,7 +58,7 @@ public:
 public:
 	ConstBuff();
 	~ConstBuff();
-	void ChangeColor(const Vector4& color);
+	void ChangeColor(const KMyMath::Vector4& color);
 	void TimeUpdate();
 	void Update();
 	void SetBufferView();

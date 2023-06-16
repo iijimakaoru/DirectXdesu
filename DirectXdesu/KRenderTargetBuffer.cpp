@@ -1,7 +1,7 @@
 #include "KRenderTargetBuffer.h"
 #include "KDirectXCommon.h"
 
-bool KRenderTargetBuffer::Create(UINT w, UINT h, D3D12_RESOURCE_STATES resourceStates, UINT16 mipLevel, UINT16 arraySize, DXGI_FORMAT format, const Vector4& clearColor)
+bool KRenderTargetBuffer::Create(UINT w, UINT h, D3D12_RESOURCE_STATES resourceStates, UINT16 mipLevel, UINT16 arraySize, DXGI_FORMAT format, const KMyMath::Vector4& clearColor)
 {
 	width = w;
 	height = h;

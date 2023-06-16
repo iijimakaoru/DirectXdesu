@@ -91,9 +91,9 @@ struct KPipelineSet
 struct KworldViewpojCamera
 {
 	//ワールド行列
-	Matrix world;
+	KMyMath::Matrix4 world;
 	//ワールド座標
-	Matrix matWorld;
+	KMyMath::Matrix4 matWorld;
 	//カメラ座標(ワールド座標)
 	KMyMath::Vector3 cameraPos;
 };
@@ -101,12 +101,12 @@ struct KworldViewpojCamera
 struct worldViewpojCameraWVP
 {
 	//ワールド行列
-	Matrix world;
+	KMyMath::Matrix4 world;
 	//ワールド座標
-	Matrix matWorld;
+	KMyMath::Matrix4 matWorld;
 	//カメラ座標(ワールド座標)
 	KMyMath::Vector3 cameraPos;
-	Matrix WVP;
+	KMyMath::Matrix4 WVP;
 };
 
 //マテリアルよう定数バッファ構造体

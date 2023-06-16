@@ -23,7 +23,7 @@ public:
 	Quaternion GetConjugation();
 	void Normalize();
 
-	Matrix GetRotMatrix();
+	KMyMath::Matrix4 GetRotMatrix();
 
 	Quaternion& operator+=(const Quaternion& q);
 	Quaternion& operator*=(float s);
@@ -59,7 +59,7 @@ Quaternion MakeAxisAngle(const KMyMath::Vector3& axis, float angle);
 KMyMath::Vector3 RotateVector(const KMyMath::Vector3& vec, const Quaternion& q);
 
 // âÒì]çsóÒ
-Matrix MakeRotateMatrix(const Quaternion& q);
+KMyMath::Matrix4 MakeRotateMatrix(const Quaternion& q);
 
 float Dot(const Quaternion& q1, const Quaternion& q2);
 

@@ -35,7 +35,7 @@ double MyMath::GetRand(double min, float max)
     return distr(eng);
 }
 
-Matrix MyMath::LockAt(const KMyMath::Vector3& eye, const KMyMath::Vector3& target, const KMyMath::Vector3& up)
+KMyMath::Matrix4 MyMath::LockAt(const KMyMath::Vector3& eye, const KMyMath::Vector3& target, const KMyMath::Vector3& up)
 {
     KMyMath::Vector3 baseX = up;
     KMyMath::Vector3 baseY;
@@ -49,7 +49,7 @@ Matrix MyMath::LockAt(const KMyMath::Vector3& eye, const KMyMath::Vector3& targe
     baseY = baseZ;
     baseY = baseY.Cross(baseX);
 
-    Matrix matView;
+    KMyMath::Matrix4 matView;
 
     matView.m[0][0] = baseX.x;
     matView.m[1][0] = baseX.y;
@@ -70,7 +70,7 @@ Matrix MyMath::LockAt(const KMyMath::Vector3& eye, const KMyMath::Vector3& targe
     return matView;
 }
 
-Matrix MyMath::PerspectiveFov(float fovY, float nearZ, float farZ)
+KMyMath::Matrix4 MyMath::PerspectiveFov(float fovY, float nearZ, float farZ)
 {
     assert(nearZ > 0.0f && farZ > 0.0f);
 
@@ -78,8 +78,7 @@ Matrix MyMath::PerspectiveFov(float fovY, float nearZ, float farZ)
 
     float height = 1.0f / tanf(fovY / 2.0f);
 
-    Matrix matProjection;
-    matProjection.Identity();
+    KMyMath::Matrix4 matProjection;
     matProjection.m[0][0] = height;
     matProjection.m[1][1] = height * aspect;
     matProjection.m[2][2] = (float)(farZ + nearZ) / (farZ - nearZ);
@@ -90,10 +89,9 @@ Matrix MyMath::PerspectiveFov(float fovY, float nearZ, float farZ)
     return matProjection;
 }
 
-Matrix MyMath::Ortho(float nearZ, float farZ)
+KMyMath::Matrix4 MyMath::Ortho(float nearZ, float farZ)
 {
-    Matrix matProjection;
-    matProjection.Identity();
+    KMyMath::Matrix4 matProjection;
     matProjection.m[0][0] = 2 / (float)KWinApp::GetWindowSizeW();
     matProjection.m[1][1] = 2 / (float)KWinApp::GetWindowSizeH();
     matProjection.m[2][2] = 1 / (float)(farZ - nearZ);

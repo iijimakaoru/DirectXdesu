@@ -84,9 +84,9 @@ void Quaternion::Normalize()
 	}
 }
 
-Matrix Quaternion::GetRotMatrix()
+KMyMath::Matrix4 Quaternion::GetRotMatrix()
 {
-	Matrix mat;
+	KMyMath::Matrix4 mat;
 	//mat.m[0][0] = w * w + x * x - y * y - z * z;
 	mat.m[0][0] = 1 - (2 * y * y) - (2 * z * z);
 	mat.m[0][1] = (2 * x * y) + (2 * w * z);
@@ -235,9 +235,9 @@ KMyMath::Vector3 RotateVector(const KMyMath::Vector3& vec, const Quaternion& q)
 	return vecQ.GetVec();
 }
 
-Matrix MakeRotateMatrix(const Quaternion& q)
+KMyMath::Matrix4 MakeRotateMatrix(const Quaternion& q)
 {
-	Matrix mat;
+	KMyMath::Matrix4 mat;
 	mat.m[0][0] = (q.w * q.w) + (q.x * q.x) - (q.y * q.y) - (q.z * q.z);
 	mat.m[0][0] = 1 - (2 * q.y * q.y) - (2 * q.z * q.z);
 	mat.m[0][1] = (2 * q.x * q.y) + (2 * q.w * q.z);

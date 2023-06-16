@@ -4,100 +4,137 @@
 
 const float EPSILON = 0.000001f;
 
-Matrix::Matrix()
+namespace KMyMath
 {
-	Identity();
-}
-
-void Matrix::Identity()
-{
-	for (size_t y = 0; y < 4; y++)
+	Matrix4::Matrix4()
 	{
-		for (size_t x = 0; x < 4; x++)
-		{
-			if (x == y)
-			{
-				m[y][x] = 1.0f;
-			}
-			else
-			{
-				m[y][x] = 0.0f;
-			}
-		}
-	}
-}
+		m[0][0] = 1.0f;
+		m[0][1] = 0.0f;
+		m[0][2] = 0.0f;
+		m[0][3] = 0.0f;
 
-Matrix& Matrix::operator*=(const Matrix& mat)
-{
-	Matrix tmp(*this);
+		m[1][0] = 0.0f;
+		m[1][1] = 1.0f;
+		m[1][2] = 0.0f;
+		m[1][3] = 0.0f;
 
-	for (size_t y = 0; y < 4; y++)
-	{
-		for (size_t x = 0; x < 4; x++)
-		{
-			this->m[y][x] =
-				(tmp.m[y][0] * mat.m[0][x]) +
-				(tmp.m[y][1] * mat.m[1][x]) +
-				(tmp.m[y][2] * mat.m[2][x]) +
-				(tmp.m[y][3] * mat.m[3][x]);
-		}
+		m[2][0] = 0.0f;
+		m[2][1] = 0.0f;
+		m[2][2] = 1.0f;
+		m[2][3] = 0.0f;
+
+		m[3][0] = 0.0f;
+		m[3][1] = 0.0f;
+		m[3][2] = 0.0f;
+		m[3][3] = 1.0f;
 	}
 
-	return *this;
-}
+	Matrix4::Matrix4(
+		float m00, float m01, float m02, float m03,
+		float m10, float m11, float m12, float m13,
+		float m20, float m21, float m22, float m23,
+		float m30, float m31, float m32, float m33)
+	{
+		m[0][0] = m00;
+		m[0][1] = m01;
+		m[0][2] = m02;
+		m[0][3] = m03;
 
-Matrix Matrix::RotationX(float radian)
-{
-	Matrix mat;
-	mat.m[1][1] = cosf(radian);
-	mat.m[1][2] = sinf(radian);
-	mat.m[2][1] = -sinf(radian);
-	mat.m[2][2] = cosf(radian);
-	return mat;
-}
+		m[1][0] = m10;
+		m[1][1] = m11;
+		m[1][2] = m12;
+		m[1][3] = m13;
 
-Matrix Matrix::RotationY(float radian)
-{
-	Matrix mat;
-	mat.m[0][0] = cosf(radian);
-	mat.m[0][2] = -sinf(radian);
-	mat.m[2][0] = sinf(radian);
-	mat.m[2][2] = cosf(radian);
-	return mat;
-}
+		m[2][0] = m20;
+		m[2][1] = m21;
+		m[2][2] = m22;
+		m[2][3] = m23;
 
-Matrix Matrix::RotationZ(float radian)
-{
-	Matrix mat;
-	mat.m[0][0] = cosf(radian);
-	mat.m[0][1] = sinf(radian);
-	mat.m[1][0] = -sinf(radian);
-	mat.m[1][1] = cosf(radian);
-	return mat;
-}
+		m[3][0] = m30;
+		m[3][1] = m31;
+		m[3][2] = m32;
+		m[3][3] = m33;
+	}
 
-Matrix Matrix::RotationAll(float radian)
-{
-	Matrix mat;
-	mat *= RotationZ(radian);
-	mat *= RotationX(radian);
-	mat *= RotationY(radian);
+	Matrix4& Matrix4::operator=(const Matrix4& m_)
+	{
+		for (int i = 0; i < 4; i++)
+		{
+			for (int j = 0; j < 4; j++)
+			{
+				m[i][j] = m_.m[i][j];
+			}
+		}
 
-	return mat;
-}
+		return *this;
+	}
 
-KMyMath::Vector3 operator*(const KMyMath::Vector3 vec, const Matrix mat)
-{
-	KMyMath::Vector3 temp = vec;
-	temp.x = vec.x * mat.m[0][0] + vec.y * mat.m[1][0] + vec.z * mat.m[2][0];
-	temp.y = vec.x * mat.m[0][1] + vec.y * mat.m[1][1] + vec.z * mat.m[2][1];
-	temp.z = vec.x * mat.m[0][2] + vec.y * mat.m[1][2] + vec.z * mat.m[2][2];
-	return temp;
-}
+	Matrix4& Matrix4::operator+=(const Matrix4& m_)
+	{
+		for (int i = 0; i < 4; i++)
+		{
+			for (int j = 0; j < 4; j++)
+			{
+				m[i][j] += m_.m[i][j];
+			}
+		}
 
-KMyMath::Vector3& operator*=(KMyMath::Vector3& vec, const Matrix mat)
-{
-	KMyMath::Vector3 temp = vec * mat;
-	vec = temp;
-	return vec;
+		return *this;
+	}
+
+	Matrix4& Matrix4::operator-=(const Matrix4& m_)
+	{
+		for (int i = 0; i < 4; i++)
+		{
+			for (int j = 0; j < 4; j++)
+			{
+				m[i][j] -= m_.m[i][j];
+			}
+		}
+
+		return *this;
+	}
+
+	Matrix4& Matrix4::operator*=(const Matrix4& m_)
+	{
+		Matrix4 temp(*this);
+
+		for (size_t i = 0; i < 4; i++)
+		{
+			for (size_t j = 0; j < 4; j++)
+			{
+				double f = 0.0;
+				for (size_t k = 0; k < 4; k++)
+				{
+					f += (double)temp.m[i][k] * (double)m_.m[k][j];
+
+					m[i][j] = (float)f;
+				}
+
+
+			}
+		}
+		return *this;
+	}
+
+	Matrix4 Matrix4::operator+(const Matrix4& m_) const
+	{
+		Matrix4 temp(*this);
+		temp += m_;
+		return temp;
+	}
+
+	Matrix4 Matrix4::operator-(const Matrix4& m_) const
+	{
+		Matrix4 temp(*this);
+		temp -= m_;
+		return temp;
+	}
+
+	Matrix4 Matrix4::operator*(const Matrix4& m_) const
+	{
+		Matrix4 temp(*this);
+		temp *= m_;
+		return temp;
+	}
 }

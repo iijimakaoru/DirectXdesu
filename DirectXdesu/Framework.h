@@ -6,7 +6,6 @@
 #include "KWinApp.h"
 #include "KDirectXCommon.h"
 #include "KInput.h"
-#include "Sprite.h"
 
 class Framework
 {
@@ -39,7 +38,5 @@ protected:
 	std::unique_ptr<GameScence> gameScene = nullptr;
 
 	ImguiManager imguiMane;
-
-	SpriteCommon* spriteCommon = nullptr;
 };
 

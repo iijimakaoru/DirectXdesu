@@ -8,50 +8,6 @@
 #include <wrl.h>
 #include "KTexture.h"
 
-struct Vertex
-{
-	DirectX::XMFLOAT3 pos;
-	DirectX::XMFLOAT2 uv;
-};
-
-class SpriteCommon
-{
-private:
-	
-private:
-	HRESULT result;
-
-	ID3D12Device* device;
-
-public:
-	// 初期化
-	void Init();
-
-	// 更新
-	void Update();
-
-	// 描画
-	void Draw();
-
-	static SpriteCommon* GetInstance();
-
-	/// <summary>
-	/// パイプラインセッター
-	/// </summary>
-	/// <param name="pipeline_"></param>
-	void SetPipeline(KGPlin* pipeline_);
-
-private:
-	KGPlin* pipeline;
-
-private:
-	SpriteCommon() = default;
-	~SpriteCommon() = default;
-
-	SpriteCommon(const SpriteCommon&) = default;
-	const SpriteCommon& operator=(const SpriteCommon&) = delete;
-};
-
 class Sprite
 {
 public:
@@ -65,7 +21,14 @@ public:
 	void Update();
 
 	// 描画
-	void Draw(KTexture* texture);
+	void Draw(KTexture* texture, bool isFlipX_ = false, bool isFlipY_ = false,
+		DirectX::XMFLOAT2 anchorPoint_ = { 0.5f,0.5f }, DirectX::XMFLOAT2 setSize_ = { 100.0f,100.0f });
+
+	/// <summary>
+	/// パイプラインセッター
+	/// </summary>
+	/// <param name="pipeline_"></param>
+	void SetPipeline(KGPlin* pipeline_);
 
 private:
 	// 定数バッファマテリアル
@@ -75,6 +38,12 @@ private:
 	void CreateCBTransform();
 
 private:
+	struct Vertex
+	{
+		DirectX::XMFLOAT3 pos;
+		DirectX::XMFLOAT2 uv;
+	};
+
 	enum VertexNumber
 	{
 		LB, // 左下
@@ -83,11 +52,29 @@ private:
 		RT, // 右上
 	};
 
+	struct Info
+	{
+		// 位置
+		DirectX::XMFLOAT2 position = { 0.0f,0.0f };
+		// 回転
+		float rotation = 0.0f;
+		// 色
+		DirectX::XMFLOAT4 color = { 1,1,1,1 };
+		// 表示サイズ
+		DirectX::XMFLOAT2 size_ = { 100.0f,100.0f };
+		// アンカーポイント
+		DirectX::XMFLOAT2 anchorPoint = { 0.5f,0.5f };
+		// 左右フリップ
+		bool isFlipX = false;
+		// 上下フリップ
+		bool isFlipY = false;
+		// 非表示
+		bool isInvisible = false;
+	};
+
 	HRESULT result;
 
 	ID3D12Device* device;
-
-	SpriteCommon* spriteCommon = nullptr;
 
 	// 頂点バッファ
 	Microsoft::WRL::ComPtr<ID3D12Resource> vertBuff = nullptr;
@@ -110,23 +97,11 @@ private:
 	// 頂点データ
 	std::vector<Vertex> vertices;
 
+	// 頂点マップ
 	Vertex* vertMap = nullptr;
 
+	static KGPlin* pipeline;
+
 public:
-	// 位置
-	DirectX::XMFLOAT2 position = { 0.0f,0.0f };
-	// 回転
-	float rotation = 0.0f;
-	// 色
-	DirectX::XMFLOAT4 color = { 1,1,1,1 };
-	// 表示サイズ
-	DirectX::XMFLOAT2 size_ = { 100.0f,100.0f };
-	// アンカーポイント
-	DirectX::XMFLOAT2 anchorPoint = { 0.5f,0.5f };
-	// 左右フリップ
-	bool isFlipX = false;
-	// 上下フリップ
-	bool isFlipY = false;
-	// 非表示
-	bool isInvisible = false;
+	Info info;
 };

@@ -18,10 +18,6 @@ void Framework::Init()
 	input = KInput::GetInstance();
 	input->Init();
 
-	// spriteCommon初期化
-	spriteCommon = SpriteCommon::GetInstance();
-	spriteCommon->Init();
-
 	// 3Dオブジェクト静的初期化
 	BillParticleManager::StaticInitialize(dx->GetDev(), win->GetWindowSizeW(), win->GetWindowSizeH());
 

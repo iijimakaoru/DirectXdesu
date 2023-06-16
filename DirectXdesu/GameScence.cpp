@@ -77,9 +77,9 @@ void GameScence::Init()
 	skydorm->transform.scale = { 500,500,500 };
 
 #pragma region スプライト
-	SpriteCommon::GetInstance()->SetPipeline(spritePipeline.get());
 	sprite = new Sprite();
 	sprite->Init();
+	sprite->SetPipeline(spritePipeline.get());
 #pragma endregion
 #pragma endregion
 
@@ -142,48 +142,48 @@ void GameScence::Update()
 	ImGui::SliderFloat("FbxPosZ", &fbxPos.z, -60.0f, 60.0f);
 
 	ImGui::Text("Sprite");
-	ImGui::Text("pos: (%.2f,%.2f)", sprite->position.x, sprite->position.y);
-	ImGui::SliderFloat("SpritePosX", &sprite->position.x, 0.0f, 1.5f);
-	ImGui::SliderFloat("SpritePosY", &sprite->position.y, -1.5f, 0.0f);
-	ImGui::Text("size: (%.2f,%.2f)", sprite->size_.x, sprite->size_.y);
-	ImGui::SliderFloat("SpriteSizeX", &sprite->size_.x, 0.0f, 250.0f);
-	ImGui::SliderFloat("SpriteSizeY", &sprite->size_.y, 0.0f, 250.0f);
-	ImGui::Text("rot: (%.2f)", sprite->rotation);
-	ImGui::SliderFloat("SpriteRot", &sprite->rotation, 0.0f, 180.0f);
-	ImGui::Text("anchor: (%.2f,%.2f)", sprite->anchorPoint.x, sprite->anchorPoint.y);
-	ImGui::SliderFloat("SpriteAnchorX", &sprite->anchorPoint.x, 0.0f, 1.0f);
-	ImGui::SliderFloat("SpriteAnchorY", &sprite->anchorPoint.y, 0.0f, 1.0f);
+	ImGui::Text("pos: (%.2f,%.2f)", sprite->info.position.x, sprite->info.position.y);
+	ImGui::SliderFloat("SpritePosX", &sprite->info.position.x, 0.0f, 1.5f);
+	ImGui::SliderFloat("SpritePosY", &sprite->info.position.y, -1.5f, 0.0f);
+	ImGui::Text("size: (%.2f,%.2f)", sprite->info.size_.x, sprite->info.size_.y);
+	ImGui::SliderFloat("SpriteSizeX", &sprite->info.size_.x, 0.0f, 250.0f);
+	ImGui::SliderFloat("SpriteSizeY", &sprite->info.size_.y, 0.0f, 250.0f);
+	ImGui::Text("rot: (%.2f)", sprite->info.rotation);
+	ImGui::SliderFloat("SpriteRot", &sprite->info.rotation, 0.0f, 180.0f);
+	ImGui::Text("anchor: (%.2f,%.2f)", sprite->info.anchorPoint.x, sprite->info.anchorPoint.y);
+	ImGui::SliderFloat("SpriteAnchorX", &sprite->info.anchorPoint.x, 0.0f, 1.0f);
+	ImGui::SliderFloat("SpriteAnchorY", &sprite->info.anchorPoint.y, 0.0f, 1.0f);
 	if (ImGui::Button("FlipX"))
 	{
-		if (sprite->isFlipX)
+		if (sprite->info.isFlipX)
 		{
-			sprite->isFlipX = false;
+			sprite->info.isFlipX = false;
 		}
 		else
 		{
-			sprite->isFlipX = true;
+			sprite->info.isFlipX = true;
 		}
 	}
 	if (ImGui::Button("FlipY"))
 	{
-		if (sprite->isFlipY)
+		if (sprite->info.isFlipY)
 		{
-			sprite->isFlipY = false;
+			sprite->info.isFlipY = false;
 		}
 		else
 		{
-			sprite->isFlipY = true;
+			sprite->info.isFlipY = true;
 		}
 	}
 	if (ImGui::Button("Invisible"))
 	{
-		if (sprite->isInvisible)
+		if (sprite->info.isInvisible)
 		{
-			sprite->isInvisible = false;
+			sprite->info.isInvisible = false;
 		}
 		else
 		{
-			sprite->isInvisible = true;
+			sprite->info.isInvisible = true;
 		}
 	}
 

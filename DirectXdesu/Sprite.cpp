@@ -2,33 +2,12 @@
 #include "KDirectXCommon.h"
 #include "KWinApp.h"
 
-void SpriteCommon::Init()
-{
-	device = KDirectXCommon::GetInstance()->GetDev();
-}
-
-void SpriteCommon::Update()
-{
-	
-}
-
-void SpriteCommon::Draw()
-{
-	// パイプラインセット
-	pipeline->Setting();
-	pipeline->Update(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP); // 三角形リスト
-}
-
-SpriteCommon* SpriteCommon::GetInstance()
-{
-	static SpriteCommon instance;
-	return &instance;
-}
-
-void SpriteCommon::SetPipeline(KGPlin* pipeline_)
+void Sprite::SetPipeline(KGPlin* pipeline_)
 {
 	pipeline = pipeline_;
 }
+
+KGPlin* Sprite::pipeline = nullptr;
 
 void Sprite::CreateCBMaterial()
 {
@@ -106,8 +85,6 @@ void Sprite::CreateCBTransform()
 
 void Sprite::Init()
 {
-	spriteCommon = SpriteCommon::GetInstance();
-
 	device = KDirectXCommon::GetInstance()->GetDev();
 
 	// 頂点データ
@@ -169,14 +146,42 @@ void Sprite::Init()
 	CreateCBTransform();
 }
 
-void Sprite::Draw(KTexture* texture)
+void Sprite::Draw(KTexture* texture, bool isFlipX_, bool isFlipY_,
+	DirectX::XMFLOAT2 anchorPoint_, DirectX::XMFLOAT2 setSize_)
 {
-	if (isInvisible)
+	// アンカーポイント
+	float left = (0.0f - info.anchorPoint.x) * info.size_.x;
+	float right = (1.0f - info.anchorPoint.x) * info.size_.x;
+	float top = (0.0f - info.anchorPoint.y) * info.size_.y;
+	float bottom = (1.0f - info.anchorPoint.y) * info.size_.y;
+
+	// 左右反転
+	if (info.isFlipX)
+	{
+		left = -left;
+		right = -right;
+	}
+	// 上下反転
+	if (info.isFlipY)
+	{
+		top = -top;
+		bottom = -bottom;
+	}
+
+	// 頂点データ
+	vertices[LB].pos = { left, bottom, 0.0f };
+	vertices[LT].pos = { left,	   top, 0.0f };
+	vertices[RB].pos = { right, bottom, 0.0f };
+	vertices[RT].pos = { right,	   top, 0.0f };
+
+	if (info.isInvisible)
 	{
 		return;
 	}
 
-	spriteCommon->Draw();
+	// パイプラインセット
+	pipeline->Setting();
+	pipeline->Update(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP); // 三角形リスト
 
 	ID3D12GraphicsCommandList* cmdList = KDirectXCommon::GetInstance()->GetCmdlist();
 
@@ -205,31 +210,6 @@ void Sprite::Update()
 	result = vertBuff->Map(0, nullptr, (void**)&vertMap);
 	assert(SUCCEEDED(result));
 
-	// アンカーポイント
-	float left =   (0.0f - anchorPoint.x) * size_.x;
-	float right =  (1.0f - anchorPoint.x) * size_.x;
-	float top =    (0.0f - anchorPoint.y) * size_.y;
-	float bottom = (1.0f - anchorPoint.y) * size_.y;
-
-	// 左右反転
-	if (isFlipX)
-	{
-		left = -left;
-		right = -right;
-	}
-	// 上下反転
-	if (isFlipY)
-	{
-		top = -top;
-		bottom = -bottom;
-	}
-
-	// 頂点データ
-	vertices[LB].pos = {  left, bottom, 0.0f };
-	vertices[LT].pos = {  left,	   top, 0.0f };
-	vertices[RB].pos = { right, bottom, 0.0f };
-	vertices[RT].pos = { right,	   top, 0.0f };
-
 	// 全頂点に対して
 	std::copy(std::begin(vertices), std::end(vertices), vertMap);
 	// 繋がりを解除
@@ -239,9 +219,11 @@ void Sprite::Update()
 	DirectX::XMMATRIX matWorld;
 	matWorld = XMMatrixIdentity();
 	// 回転
-	matWorld *= XMMatrixRotationZ(XMConvertToRadians(rotation));
+	matWorld *= XMMatrixRotationZ(XMConvertToRadians(info.rotation));
+	matWorld *= XMMatrixRotationX(XMConvertToRadians(0.0f));
+	matWorld *= XMMatrixRotationY(XMConvertToRadians(0.0f));
 	// 平行移動
-	matWorld *= XMMatrixTranslation(position.x, position.y, 0.0f);
+	matWorld *= XMMatrixTranslation(info.position.x, info.position.y, 0.0f);
 
 	// 定数バッファへ転送
 	constMapTransform->mat.r[0].m128_f32[0] = 2.0f / static_cast<float>(KWinApp::GetInstance()->GetWindowSizeW());
@@ -251,5 +233,5 @@ void Sprite::Update()
 	constMapTransform->mat *= matWorld;
 
 	// 色の代入
-	constMapMaterial->color = color;
+	constMapMaterial->color = info.color;
 }

@@ -25,7 +25,7 @@ public:
 	double GetRand(double min, float max);
 
 	// 視点座標、注視座標、上方ベクトル
-	Matrix LockAt(const Vector3& eye, const Vector3& target, const Vector3& up);
+	Matrix LockAt(const KMyMath::Vector3& eye, const KMyMath::Vector3& target, const KMyMath::Vector3& up);
 
 	Matrix PerspectiveFov(float fovY, float nearZ, float farZ);
 	Matrix Ortho(float nearZ, float farZ);

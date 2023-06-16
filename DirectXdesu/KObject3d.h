@@ -24,9 +24,9 @@ struct WorldTransfom {
 	ConstBufferDataTransform* constMapTransform = {};
 
 	// アフィン変換
-	Vector3 scale = { 1,1,1 };
-	Vector3 rot = { 0,0,0 };
-	Vector3 pos = { 0,0,0 };
+	KMyMath::Vector3 scale = { 1,1,1 };
+	KMyMath::Vector3 rot = { 0,0,0 };
+	KMyMath::Vector3 pos = { 0,0,0 };
 
 	// ワールド変換行列
 	XMMATRIX matWorld = {};
@@ -55,7 +55,7 @@ private:
 	static KGPlin* pipeline;
 
 public:
-	Vector3 rotResult;
+	KMyMath::Vector3 rotResult;
 
 	ComPtr<ID3D12Resource> constBuffB0;
 	ComPtr<ID3D12Resource> constBuffB1;

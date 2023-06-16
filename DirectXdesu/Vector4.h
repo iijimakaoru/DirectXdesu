@@ -11,7 +11,7 @@ public:
 
 	Vector4();
 	Vector4(float x, float y, float z, float w);
-	Vector4(Vector3 v3d, float w);
+	Vector4(KMyMath::Vector3 v3d, float w);
 
 	float Length() const;
 	Vector4& Normalize();

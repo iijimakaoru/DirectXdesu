@@ -17,5 +17,5 @@ public:
 	static Matrix RotationAll(float radian);
 };
 
-Vector3 operator*(const Vector3 vec, const Matrix mat);
-Vector3& operator*=(Vector3& vec, const Matrix mat);
+KMyMath::Vector3 operator*(const KMyMath::Vector3 vec, const Matrix mat);
+KMyMath::Vector3& operator*=(KMyMath::Vector3& vec, const Matrix mat);

@@ -1,7 +1,6 @@
 #include "GameScence.h"
 #include "KInput.h"
 
-#include "ParticleManager.h"
 #include "MyMath.h"
 
 #include "DebugCamera.h"

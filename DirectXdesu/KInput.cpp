@@ -155,9 +155,9 @@ KMyMath::Vector2 KInput::GetOldMousePos()
 	return GetInstance()->oldMousePos;
 }
 
-Vector3 KInput::GetMouseMove()
+KMyMath::Vector3 KInput::GetMouseMove()
 {
-	return Vector3((float)GetInstance()->mouseState.lX, (float)GetInstance()->mouseState.lY, (float)GetInstance()->mouseState.lZ);
+	return KMyMath::Vector3((float)GetInstance()->mouseState.lX, (float)GetInstance()->mouseState.lY, (float)GetInstance()->mouseState.lZ);
 }
 
 bool KInput::GetPadConnect()

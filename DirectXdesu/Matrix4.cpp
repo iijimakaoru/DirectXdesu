@@ -86,18 +86,18 @@ Matrix Matrix::RotationAll(float radian)
 	return mat;
 }
 
-Vector3 operator*(const Vector3 vec, const Matrix mat)
+KMyMath::Vector3 operator*(const KMyMath::Vector3 vec, const Matrix mat)
 {
-	Vector3 temp = vec;
+	KMyMath::Vector3 temp = vec;
 	temp.x = vec.x * mat.m[0][0] + vec.y * mat.m[1][0] + vec.z * mat.m[2][0];
 	temp.y = vec.x * mat.m[0][1] + vec.y * mat.m[1][1] + vec.z * mat.m[2][1];
 	temp.z = vec.x * mat.m[0][2] + vec.y * mat.m[1][2] + vec.z * mat.m[2][2];
 	return temp;
 }
 
-Vector3& operator*=(Vector3& vec, const Matrix mat)
+KMyMath::Vector3& operator*=(KMyMath::Vector3& vec, const Matrix mat)
 {
-	Vector3 temp = vec * mat;
+	KMyMath::Vector3 temp = vec * mat;
 	vec = temp;
 	return vec;
 }

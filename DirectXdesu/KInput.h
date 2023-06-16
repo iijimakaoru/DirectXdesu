@@ -61,7 +61,7 @@ public:
 	// 前回のマウスの位置を取得
 	static KMyMath::Vector2 GetOldMousePos();
 	// マウスの移動量を取得
-	static Vector3 GetMouseMove();
+	static KMyMath::Vector3 GetMouseMove();
 
 	// ゲームパッド
 	//パッドに接続されてるか

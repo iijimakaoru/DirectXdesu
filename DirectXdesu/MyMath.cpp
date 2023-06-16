@@ -35,11 +35,11 @@ double MyMath::GetRand(double min, float max)
     return distr(eng);
 }
 
-Matrix MyMath::LockAt(const Vector3& eye, const Vector3& target, const Vector3& up)
+Matrix MyMath::LockAt(const KMyMath::Vector3& eye, const KMyMath::Vector3& target, const KMyMath::Vector3& up)
 {
-    Vector3 baseX = up;
-    Vector3 baseY;
-    Vector3 baseZ = target - eye;
+    KMyMath::Vector3 baseX = up;
+    KMyMath::Vector3 baseY;
+    KMyMath::Vector3 baseZ = target - eye;
 
     baseZ.Normalize();
 

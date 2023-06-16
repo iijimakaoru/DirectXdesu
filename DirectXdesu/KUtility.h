@@ -47,21 +47,21 @@ struct KConstBufferDataTransform
 
 struct KPosColor
 {
-	Vector3 pos; // 座標
+	KMyMath::Vector3 pos; // 座標
 	Vector4 color; // カラー
 };
 
 struct KPosNormalUV
 {
-	Vector3 pos; // 座標
-	Vector3 normal; // 法線ベクトル
+	KMyMath::Vector3 pos; // 座標
+	KMyMath::Vector3 normal; // 法線ベクトル
 	KMyMath::Vector2 uv; // uv座標
 };
 
 // 座標・UV・カラー
 struct KPosUvColor
 {
-	Vector3 pos; // 座標
+	KMyMath::Vector3 pos; // 座標
 	KMyMath::Vector2 uv; // uv座標
 	Vector4 color; // カラー
 };
@@ -95,7 +95,7 @@ struct KworldViewpojCamera
 	//ワールド座標
 	Matrix matWorld;
 	//カメラ座標(ワールド座標)
-	Vector3 cameraPos;
+	KMyMath::Vector3 cameraPos;
 };
 
 struct worldViewpojCameraWVP
@@ -105,7 +105,7 @@ struct worldViewpojCameraWVP
 	//ワールド座標
 	Matrix matWorld;
 	//カメラ座標(ワールド座標)
-	Vector3 cameraPos;
+	KMyMath::Vector3 cameraPos;
 	Matrix WVP;
 };
 
@@ -113,15 +113,15 @@ struct worldViewpojCameraWVP
 struct KConstBuffDataMaterial
 {
 	//アンビエント係数
-	Vector3 ambient;
+	KMyMath::Vector3 ambient;
 	//パディング
 	float pad1;
 	//ディフューズ係数
-	Vector3 diffuse;
+	KMyMath::Vector3 diffuse;
 	//パディング
 	float pad2;
 	//スペキュラー係数
-	Vector3 specular;
+	KMyMath::Vector3 specular;
 	//アルファ
 	float alpha;
 };
@@ -132,13 +132,13 @@ struct KModelMaterial
 	//マテリアル名
 	std::string name;
 	//アンビエント影響度
-	Vector3 ambient = { 0.06f, 0.06f, 0.06f };
+	KMyMath::Vector3 ambient = { 0.06f, 0.06f, 0.06f };
 	//ディフューズ影響度
-	Vector3 diffuse = { 0.0f,0.0f,0.0f };
+	KMyMath::Vector3 diffuse = { 0.0f,0.0f,0.0f };
 	//スペキュラー影響度
-	Vector3 specular = { 0.0f,0.0f,0.0f };
+	KMyMath::Vector3 specular = { 0.0f,0.0f,0.0f };
 
-	Vector3 emission = { 0.0f,0.0f,0.0f };
+	KMyMath::Vector3 emission = { 0.0f,0.0f,0.0f };
 
 	float shininess = 1.0f;
 	//アルファ

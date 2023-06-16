@@ -126,12 +126,6 @@
     <ClCompile Include="DebugCamera.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Particle.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="ParticleManager.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Ease.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -139,9 +133,6 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="ConstBuffer.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="SpriteCommon.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="ImguiManager.cpp">
@@ -293,19 +284,10 @@
     <ClInclude Include="DebugCamera.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Particle.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="ParticleManager.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Ease.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="MyMath.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="SpriteCommon.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="ImguiManager.h">

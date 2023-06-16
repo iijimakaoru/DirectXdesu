@@ -18,9 +18,6 @@ void Framework::Init()
 	input = KInput::GetInstance();
 	input->Init();
 
-	// 3Dオブジェクト静的初期化
-	BillParticleManager::StaticInitialize(dx->GetDev(), win->GetWindowSizeW(), win->GetWindowSizeH());
-
 	gameScene = std::make_unique<GameScence>();
 
 	imguiMane.Init();

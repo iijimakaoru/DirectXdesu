@@ -63,7 +63,7 @@ private:
 	// 3Dオブジェクト
 	std::unique_ptr<KObject3d> skydorm;
 
-	Vector3 center = { 0,0,1 };
+	KMyMath::Vector3 center = { 0,0,1 };
 
 	float rSpeed = -0.02f;
 	float gSpeed = 0.02f;

@@ -3,7 +3,7 @@
 
 const float EPSILON = 0.000001f;
 
-void Quaternion::SetQuaternion(Vector3 v, float angle)
+void Quaternion::SetQuaternion(KMyMath::Vector3 v, float angle)
 {
 	v.Normalize();
 
@@ -16,7 +16,7 @@ void Quaternion::SetQuaternion(Vector3 v, float angle)
 	Normalize();
 }
 
-Quaternion Quaternion::SetQuaternion(Vector3 v)
+Quaternion Quaternion::SetQuaternion(KMyMath::Vector3 v)
 {
 	Quaternion r;
 	r.x = v.x;
@@ -31,7 +31,7 @@ Quaternion Quaternion::SetQuaternion(Vector3 v)
 	return r;
 }
 
-void Quaternion::SetVec(const Vector3& vec)
+void Quaternion::SetVec(const KMyMath::Vector3& vec)
 {
 	x = vec.x;
 	y = vec.y;
@@ -205,10 +205,10 @@ Quaternion Inverce(const Quaternion& q)
 	return ans;
 }
 
-Quaternion MakeAxisAngle(const Vector3& axis, float angle)
+Quaternion MakeAxisAngle(const KMyMath::Vector3& axis, float angle)
 {
 	Quaternion ans;
-	Vector3 axis_ = axis;
+	KMyMath::Vector3 axis_ = axis;
 	axis_.Normalize();
 
 	float rad = sinf(angle / 2);
@@ -222,7 +222,7 @@ Quaternion MakeAxisAngle(const Vector3& axis, float angle)
 	return ans;
 }
 
-Vector3 RotateVector(const Vector3& vec, const Quaternion& q)
+KMyMath::Vector3 RotateVector(const KMyMath::Vector3& vec, const Quaternion& q)
 {
 	Quaternion vecQ;
 	vecQ.SetVec(vec);
@@ -291,15 +291,15 @@ Quaternion Slerp(const Quaternion& q1, const Quaternion& q2, float time)
 	}
 }
 
-Quaternion DirectionToDirection(const Vector3& v1, const Vector3& v2)
+Quaternion DirectionToDirection(const KMyMath::Vector3& v1, const KMyMath::Vector3& v2)
 {
 	// v1とv2を正規化して内積を求める。v1とv2を単位ベクトル前提とするなら正規化は不要
 	float dot = v1.Dot(v2);
 	// v1,v2の外積
-	Vector3 cross = v1.Cross(v2);
+	KMyMath::Vector3 cross = v1.Cross(v2);
 	// 軸は単位ベクトルである必要があるので正規化
 	// v1とv2が単位ベクトルであっても、外積が単位ベクトルとは限らないのでここの正規化は必須
-	Vector3 axis = axis.Normalize();
+	KMyMath::Vector3 axis = axis.Normalize();
 	// 単位ベクトルで内積をとっているのでacosで角度を求める
 	float theta = std::acos(dot);
 	// axisとthetaで任意軸回転を作って返す

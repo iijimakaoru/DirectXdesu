@@ -2,7 +2,6 @@
 #include "FbxLoader.h"
 #include "GameScence.h"
 #include "ImguiManager.h"
-#include "ParticleManager.h"
 #include "KWinApp.h"
 #include "KDirectXCommon.h"
 #include "KInput.h"

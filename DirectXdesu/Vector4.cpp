@@ -9,7 +9,7 @@ Vector4::Vector4(float x, float y, float z, float w) : x(x), y(y), z(z), w(w) {
 
 }
 
-Vector4::Vector4(Vector3 v3d, float w) : x(v3d.x), y(v3d.y), z(v3d.z), w(w)
+Vector4::Vector4(KMyMath::Vector3 v3d, float w) : x(v3d.x), y(v3d.y), z(v3d.z), w(w)
 {
 }
 

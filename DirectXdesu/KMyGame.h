@@ -12,7 +12,6 @@
 #include <d3dx12.h>
 #include "GameScence.h"
 #include "ImguiManager.h"
-#include "ParticleManager.h"
 
 #include "FbxLoader.h"
 

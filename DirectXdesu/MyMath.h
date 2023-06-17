@@ -86,7 +86,7 @@ namespace MyMathUtility
 	/// <param name="near_"></param>
 	/// <param name="far_"></param>
 	/// <param name="m"></param>
-	void MakeOrthogonalL(float left, float right, float bottom, float top, float near_, float far_, KMyMath::Matrix4 m);
+	KMyMath::Matrix4 MakeOrthogonalL(float left, float right, float bottom, float top, float near_, float far_);
 
 	/// <summary>
 	/// 平行投影変換(右手)
@@ -98,7 +98,7 @@ namespace MyMathUtility
 	/// <param name="near_"></param>
 	/// <param name="far_"></param>
 	/// <param name="m"></param>
-	void MakeOrthogonalR(float left, float right, float bottom, float top, float near_, float far_, KMyMath::Matrix4 m);
+	KMyMath::Matrix4 MakeOrthogonalR(float left, float right, float bottom, float top, float near_, float far_);
 
 	/// <summary>
 	/// ビュー行列の作成

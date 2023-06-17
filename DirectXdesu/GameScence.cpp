@@ -141,48 +141,40 @@ void GameScence::Update()
 	ImGui::SliderFloat("FbxPosZ", &fbxPos.z, -60.0f, 60.0f);
 
 	ImGui::Text("Sprite");
-	ImGui::Text("pos: (%.2f,%.2f)", sprite->info.position.x, sprite->info.position.y);
-	ImGui::SliderFloat("SpritePosX", &sprite->info.position.x, 0.0f, 1.5f);
-	ImGui::SliderFloat("SpritePosY", &sprite->info.position.y, -1.5f, 0.0f);
-	ImGui::Text("size: (%.2f,%.2f)", sprite->info.size_.x, sprite->info.size_.y);
-	ImGui::SliderFloat("SpriteSizeX", &sprite->info.size_.x, 0.0f, 250.0f);
-	ImGui::SliderFloat("SpriteSizeY", &sprite->info.size_.y, 0.0f, 250.0f);
-	ImGui::Text("rot: (%.2f)", sprite->info.rotation);
-	ImGui::SliderFloat("SpriteRot", &sprite->info.rotation, 0.0f, 180.0f);
-	ImGui::Text("anchor: (%.2f,%.2f)", sprite->info.anchorPoint.x, sprite->info.anchorPoint.y);
-	ImGui::SliderFloat("SpriteAnchorX", &sprite->info.anchorPoint.x, 0.0f, 1.0f);
-	ImGui::SliderFloat("SpriteAnchorY", &sprite->info.anchorPoint.y, 0.0f, 1.0f);
+	ImGui::Text("pos: (%.2f,%.2f)", spritePos.x, spritePos.y);
+	ImGui::SliderFloat("SpritePosX", &spritePos.x, 0.0f, 100.0f);
+	ImGui::SliderFloat("SpritePosY", &spritePos.y, 0.0f, 100.0f);
+	ImGui::Text("size: (%.2f,%.2f)", spriteSize.x, spriteSize.y);
+	ImGui::SliderFloat("SpriteSizeX", &spriteSize.x, 0.0f, 100.0f);
+	ImGui::SliderFloat("SpriteSizeY", &spriteSize.y, 0.0f, 100.0f);
+	ImGui::Text("rot: (%.2f)", spriteRot);
+	ImGui::SliderFloat("SpriteRot", &spriteRot, 0.0f, 180.0f);
+	ImGui::Text("color: (%.2f,%.2f,%.2f,%.2f)", spriteColor.x, spriteColor.y, spriteColor.z, spriteColor.w);
+	ImGui::SliderFloat("SpriteColorR", &spriteColor.x, 0.0f, 1.0f);
+	ImGui::SliderFloat("SpriteColorG", &spriteColor.y, 0.0f, 1.0f);
+	ImGui::SliderFloat("SpriteColorB", &spriteColor.z, 0.0f, 1.0f);
+	ImGui::SliderFloat("SpriteColorA", &spriteColor.w, 0.0f, 1.0f);
+	ImGui::Text("Flip");
 	if (ImGui::Button("FlipX"))
 	{
-		if (sprite->info.isFlipX)
+		if (spriteFlipX)
 		{
-			sprite->info.isFlipX = false;
+			spriteFlipX = false;
 		}
 		else
 		{
-			sprite->info.isFlipX = true;
+			spriteFlipX = true;
 		}
 	}
 	if (ImGui::Button("FlipY"))
 	{
-		if (sprite->info.isFlipY)
+		if (spriteFlipY)
 		{
-			sprite->info.isFlipY = false;
+			spriteFlipY = false;
 		}
 		else
 		{
-			sprite->info.isFlipY = true;
-		}
-	}
-	if (ImGui::Button("Invisible"))
-	{
-		if (sprite->info.isInvisible)
-		{
-			sprite->info.isInvisible = false;
-		}
-		else
-		{
-			sprite->info.isInvisible = true;
+			spriteFlipY = true;
 		}
 	}
 
@@ -190,8 +182,6 @@ void GameScence::Update()
 
 	// Fbx
 	object1->Update(camera->viewProjection);
-
-	sprite->Update();
 }
 
 void GameScence::Draw()
@@ -200,5 +190,5 @@ void GameScence::Draw()
 
 	skydorm->Draw();
 
-	sprite->Draw(&mario);
+	sprite->Draw(&mario,spritePos, spriteSize,spriteRot, spriteColor, spriteFlipX, spriteFlipY);
 }

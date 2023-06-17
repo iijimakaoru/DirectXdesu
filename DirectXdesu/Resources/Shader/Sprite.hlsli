@@ -1,5 +1,5 @@
 // ƒ}ƒeƒŠƒAƒ‹
-cbuffer ConstBufferDataMaterial : register(b0)
+cbuffer cbuff0 : register(b0)
 {
 	float4 color;
 };

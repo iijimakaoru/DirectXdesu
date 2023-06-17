@@ -86,5 +86,10 @@ private:
 
 	// スプライト
 	Sprite* sprite = nullptr;
+	KMyMath::Vector2 spritePos = { 0,0 };
+	KMyMath::Vector2 spriteSize = { 0,0 };
+	float spriteRot = 0;
+	KMyMath::Vector4 spriteColor = { 1.0f,1.0f,1.0f,1.0f };
+	bool spriteFlipX, spriteFlipY = false;
 };
 

@@ -175,6 +175,8 @@ void KGPlin::CreatePipelineAll(KShader shader, bool Obj, bool Sprite, bool Parti
 {
 	HRESULT result;
 
+	ID3D12Device* device = KDirectXCommon::GetInstance()->GetDev();
+
 	// シェーダー設定
 	SetShader(shader);
 
@@ -283,7 +285,7 @@ void KGPlin::CreatePipelineAll(KShader shader, bool Obj, bool Sprite, bool Parti
 		result = D3D12SerializeRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1_0,
 			rootSigBlob.ReleaseAndGetAddressOf(), errorBlob.ReleaseAndGetAddressOf());
 		assert(SUCCEEDED(result));
-		result = KDirectXCommon::GetInstance()->GetDev()->CreateRootSignature(0, rootSigBlob->GetBufferPointer(), rootSigBlob->GetBufferSize(),
+		result = device->CreateRootSignature(0, rootSigBlob->GetBufferPointer(), rootSigBlob->GetBufferSize(),
 			IID_PPV_ARGS(&rootSignature));
 		assert(SUCCEEDED(result));
 		// パイプラインにルートシグネチャをセット
@@ -296,7 +298,7 @@ void KGPlin::CreatePipelineAll(KShader shader, bool Obj, bool Sprite, bool Parti
 		piplineDesc.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_LESS; // 小さければ合格
 		piplineDesc.DSVFormat = DXGI_FORMAT_D32_FLOAT; // 深度値フォーマット
 
-		result = KDirectXCommon::GetInstance()->GetDev()->CreateGraphicsPipelineState(&piplineDesc, IID_PPV_ARGS(&pipelineState));
+		result = device->CreateGraphicsPipelineState(&piplineDesc, IID_PPV_ARGS(&pipelineState));
 		assert(SUCCEEDED(result));
 #pragma endregion
 	}
@@ -393,13 +395,13 @@ void KGPlin::CreatePipelineAll(KShader shader, bool Obj, bool Sprite, bool Parti
 		// バージョン自動判定のシリアライズ
 		result = D3DX12SerializeVersionedRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1_0, &rootSigBlob, &errorBlob);
 		// ルートシグネチャの生成
-		result = KDirectXCommon::GetInstance()->GetDev()->CreateRootSignature(0, rootSigBlob->GetBufferPointer(), rootSigBlob->GetBufferSize(), IID_PPV_ARGS(rootSignature.ReleaseAndGetAddressOf()));
+		result = device->CreateRootSignature(0, rootSigBlob->GetBufferPointer(), rootSigBlob->GetBufferSize(), IID_PPV_ARGS(rootSignature.ReleaseAndGetAddressOf()));
 		if (FAILED(result)) { assert(0); }
 
 		piplineDesc.pRootSignature = rootSignature.Get();
 
 		// グラフィックスパイプラインの生成
-		result = KDirectXCommon::GetInstance()->GetDev()->CreateGraphicsPipelineState(&piplineDesc, IID_PPV_ARGS(pipelineState.ReleaseAndGetAddressOf()));
+		result = device->CreateGraphicsPipelineState(&piplineDesc, IID_PPV_ARGS(pipelineState.ReleaseAndGetAddressOf()));
 		if (FAILED(result)) { assert(0); }
 	}
 }

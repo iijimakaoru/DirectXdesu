@@ -1,5 +1,7 @@
 #include "Framework.h"
 
+#include "Sprite.h"
+
 void Framework::Init()
 {
 	// FBX‰Šú‰»
@@ -17,6 +19,8 @@ void Framework::Init()
 	// Input‰Šú‰»
 	input = KInput::GetInstance();
 	input->Init();
+
+	Sprite::StaticInit();
 
 	gameScene = std::make_unique<GameScence>();
 

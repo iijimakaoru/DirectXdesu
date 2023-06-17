@@ -1,7 +1,5 @@
 #pragma once
 #include "FbxLoader.h"
-#include "GameScence.h"
-#include "ImguiManager.h"
 #include "KWinApp.h"
 #include "KDirectXCommon.h"
 #include "KInput.h"
@@ -33,9 +31,5 @@ protected:
 	KDirectXCommon* dx = nullptr;
 
 	KInput* input = nullptr;
-
-	std::unique_ptr<GameScence> gameScene = nullptr;
-
-	ImguiManager imguiMane;
 };
 

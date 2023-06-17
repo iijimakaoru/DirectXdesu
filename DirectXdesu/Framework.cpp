@@ -21,16 +21,10 @@ void Framework::Init()
 	input->Init();
 
 	Sprite::StaticInit();
-
-	gameScene = std::make_unique<GameScence>();
-
-	imguiMane.Init();
 }
 
 void Framework::Final()
 {
-	gameScene.release();
-
 	dx->Destroy();
 
 	fbxLoader->Finalize();
@@ -39,13 +33,7 @@ void Framework::Final()
 void Framework::Update()
 {
 	// XV
-	imguiMane.Begin();
-
 	input->Update();
-
-	gameScene->Update();
-
-	imguiMane.End();
 }
 
 bool Framework::IsEndRwquest()

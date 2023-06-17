@@ -114,7 +114,7 @@ public:
 	static void DeleteInstance();
 
 private:
-	KInput() {};
+	KInput() = default;
 	~KInput() = default;
 	KInput(const KInput&) = default;
 	const KInput& operator=(const KInput&) = delete;

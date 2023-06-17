@@ -34,7 +34,7 @@ protected:
 
 	KInput* input = nullptr;
 
-	std::unique_ptr<SceneManager> sceneManager = nullptr;
+	SceneManager* sceneManager = nullptr;
 
 	ImguiManager imguiMane;
 };

@@ -35,8 +35,6 @@ public: // メンバ関数
 	}
 
 protected:
-	std::unique_ptr<Camera> camera = nullptr;
-
 	// シーンマネージャーを借りてくる
 	SceneManager* sceneManager = nullptr;
 

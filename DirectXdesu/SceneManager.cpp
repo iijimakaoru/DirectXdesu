@@ -1,11 +1,5 @@
 #include "SceneManager.h"
 
-SceneManager::~SceneManager()
-{
-	scene->Final();
-	delete scene;
-}
-
 void SceneManager::Update()
 {
 	// シーン切り替え
@@ -15,7 +9,7 @@ void SceneManager::Update()
 		if (scene)
 		{
 			scene->Final();
-			scene = nullptr;
+			delete scene;
 		}
 
 		// シーン切り替え
@@ -36,4 +30,16 @@ void SceneManager::Update()
 void SceneManager::Draw()
 {
 	scene->Draw();
+}
+
+void SceneManager::Final()
+{
+	scene->Final();
+	delete scene;
+}
+
+SceneManager* SceneManager::GetInstance()
+{
+	static SceneManager instance;
+	return &instance;
 }

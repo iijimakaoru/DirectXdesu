@@ -23,7 +23,7 @@ void Framework::Init()
 	Sprite::StaticInit();
 
 	// シーンマネージャー生成
-	sceneManager = std::make_unique<SceneManager>();
+	sceneManager = SceneManager::GetInstance();
 
 	// Imgui初期化
 	imguiMane.Init();
@@ -32,7 +32,7 @@ void Framework::Init()
 void Framework::Final()
 {
 	// シーンマネージャーの解放
-	sceneManager.release();
+	sceneManager->Final();
 
 	dx->Destroy();
 

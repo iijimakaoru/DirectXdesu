@@ -43,6 +43,9 @@ public:
 	void Final()override;
 
 private:
+	// カメラ
+	std::unique_ptr<Camera> camera = nullptr;
+
 	// パイプライン
 	std::unique_ptr<KGPlin> objPipeline;
 	std::unique_ptr<KGPlin> fbxPipeline;

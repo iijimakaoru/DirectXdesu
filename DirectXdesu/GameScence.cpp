@@ -14,14 +14,7 @@
 
 GameScence::~GameScence()
 {
-	delete camera;
-	sound->GetxAudio().Reset();
-	sound->SoundUnLoad(&soundData1);
-	sound->SoundUnLoad(&soundData2);
-	sound->SoundUnLoad(&soundData3);
-
-	delete object1;
-	delete fbxModel1;
+	Final();
 };
 
 void GameScence::LoadResources()
@@ -83,7 +76,7 @@ void GameScence::Init()
 #pragma endregion
 
 	isDebug = true;
-	camera = new DebugCamera();
+	camera = std::make_unique<DebugCamera>();
 }
 
 void GameScence::Update()
@@ -96,14 +89,14 @@ void GameScence::Update()
 		if (isDebug)
 		{
 			isDebug = false;
-			delete camera;
-			camera = new GameCamera();
+			camera.release();
+			camera = std::make_unique<GameCamera>();
 		}
 		else
 		{
 			isDebug = true;
-			delete camera;
-			camera = new DebugCamera();
+			camera.release();
+			camera = std::make_unique<DebugCamera>();
 		}
 	}
 	if (isDebug)
@@ -191,4 +184,15 @@ void GameScence::Draw()
 	skydorm->Draw();
 
 	sprite->Draw(&mario,spritePos, spriteSize,spriteRot, spriteColor, spriteFlipX, spriteFlipY);
+}
+
+void GameScence::Final()
+{
+	sound->GetxAudio().Reset();
+	sound->SoundUnLoad(&soundData1);
+	sound->SoundUnLoad(&soundData2);
+	sound->SoundUnLoad(&soundData3);
+
+	delete object1;
+	delete fbxModel1;
 }

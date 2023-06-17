@@ -1,10 +1,12 @@
 #include "KMyGame.h"
+#include "GameScence.h"
+#include "TitleScene.h"
 
 void KMyGame::Init()
 {
 	Framework::Init();
 
-	gameScene = std::make_unique<GameScence>();
+	scene = std::make_unique<GameScence>();
 
 	imguiMane.Init();
 }
@@ -15,7 +17,7 @@ void KMyGame::Update()
 
 	imguiMane.Begin();
 
-	gameScene->Update();
+	scene->Update();
 
 	imguiMane.End();
 }
@@ -25,7 +27,7 @@ void KMyGame::Draw()
 	// •`‰æŠJŽn
 	dx->PreDraw();
 
-	gameScene->Draw();
+	scene->Draw();
 
 	imguiMane.Draw();
 
@@ -36,5 +38,5 @@ void KMyGame::Final()
 {
 	Framework::Final();
 
-	gameScene.release();
+	scene.release();
 }

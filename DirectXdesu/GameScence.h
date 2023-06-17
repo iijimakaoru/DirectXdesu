@@ -1,9 +1,6 @@
 #pragma once
 #include "KDirectXCommon.h"
 #include "KObject3d.h"
-#include "ViewProjection.h"
-#include "KModel.h"
-#include "PipelineSet.h"
 #include "Sprite.h"
 #include "DebugText.h"
 #include "KTexture.h"
@@ -20,7 +17,9 @@
 
 #include "KModel.h"
 
-class GameScence
+#include "BaseScene.h"
+
+class GameScence : public BaseScene
 {
 public:
 	enum class CollisionMode
@@ -37,10 +36,11 @@ public:
 		Init();
 	};
 	~GameScence();
-	void LoadResources();
-	void Init();
-	void Update();
-	void Draw();
+	void LoadResources() override;
+	void Init() override;
+	void Update() override;
+	void Draw() override;
+	void Final()override;
 
 private:
 	// パイプライン
@@ -77,8 +77,6 @@ private:
 	SoundData soundData3;
 
 	bool isDebug = true;
-
-	Camera* camera = nullptr;
 
 	// Fbx関連
 	FbxModel* fbxModel1 = nullptr;

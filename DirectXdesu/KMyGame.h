@@ -17,9 +17,9 @@
 
 #include "Framework.h"
 
-#include "GameScence.h"
-
 #include "ImguiManager.h"
+
+#include "BaseScene.h"
 
 class KMyGame : public Framework
 {
@@ -34,7 +34,7 @@ public:
 	void Final() override;
 
 private:
-	std::unique_ptr<GameScence> gameScene = nullptr;
+	std::unique_ptr<BaseScene> scene = nullptr;
 
 	ImguiManager imguiMane;
 };

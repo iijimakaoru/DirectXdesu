@@ -19,6 +19,8 @@
 
 #include "BaseScene.h"
 
+#include "KInput.h"
+
 class GameScence : public BaseScene
 {
 public:
@@ -43,6 +45,9 @@ public:
 	void Final()override;
 
 private:
+	// インプット
+	KInput* input = nullptr;
+
 	// カメラ
 	std::unique_ptr<Camera> camera = nullptr;
 

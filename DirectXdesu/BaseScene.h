@@ -1,7 +1,6 @@
 #pragma once
 #include "Camera.h"
 #include<memory>
-#include "KInput.h"
 
 class SceneManager;
 
@@ -37,8 +36,5 @@ public: // メンバ関数
 protected:
 	// シーンマネージャーを借りてくる
 	SceneManager* sceneManager = nullptr;
-
-	// インプット
-	KInput* input = nullptr;
 };
 

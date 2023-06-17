@@ -12,6 +12,10 @@
 
 #include "FbxLoader.h"
 
+#include "SceneManager.h"
+
+#include "TitleScene.h"
+
 GameScence::~GameScence()
 {
 	Final();
@@ -37,6 +41,8 @@ void GameScence::LoadResources()
 
 void GameScence::Init()
 {
+	input = KInput::GetInstance();
+
 	// Obj
 	objShader.Init(L"Resources/Shader/ObjVS.hlsl", L"Resources/Shader/ObjPS.hlsl");
 	objPipeline = std::make_unique<KGPlin>();
@@ -77,10 +83,18 @@ void GameScence::Init()
 
 	isDebug = true;
 	camera = std::make_unique<DebugCamera>();
+
+	sceneManager = SceneManager::GetInstance();
 }
 
 void GameScence::Update()
 {
+	if (input->IsTrigger(DIK_SPACE))
+	{
+		BaseScene* scene = new TitleScene();
+		sceneManager->SetNestScene(scene);
+	}
+
 	char bufD[255] = "DebugCamera";
 	char bufG[255] = "GameCamera";
 	ImGui::Text("CameraMode");

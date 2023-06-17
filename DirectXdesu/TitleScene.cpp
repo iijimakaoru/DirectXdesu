@@ -20,6 +20,8 @@ void TitleScene::Init()
 {
 	input = KInput::GetInstance();
 
+	sceneManager = SceneManager::GetInstance();
+
 	// Fbx
 	fbxShader.Init(L"Resources/Shader/FBXVS.hlsl", L"Resources/Shader/FBXPS.hlsl");
 	fbxPipeline = std::make_unique<KGPlin>();

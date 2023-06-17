@@ -9,7 +9,7 @@ void SceneManager::Update()
 		if (scene)
 		{
 			scene->Final();
-			delete scene;
+			scene = nullptr;
 		}
 
 		// ƒV[ƒ“Ø‚è‘Ö‚¦
@@ -35,6 +35,8 @@ void SceneManager::Draw()
 void SceneManager::Final()
 {
 	scene->Final();
+	scene = nullptr;
+
 	delete scene;
 }
 

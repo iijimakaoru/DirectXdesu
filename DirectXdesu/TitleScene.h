@@ -5,6 +5,8 @@
 
 #include "BaseScene.h"
 
+#include "KInput.h"
+
 class TitleScene : public BaseScene
 {
 public:
@@ -21,6 +23,9 @@ public:
 	void Final()override;
 
 private:
+	// インプット
+	KInput* input = nullptr;
+
 	// カメラ
 	std::unique_ptr<Camera> camera = nullptr;
 

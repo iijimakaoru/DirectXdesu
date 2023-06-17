@@ -3,6 +3,10 @@
 
 #include "DebugCamera.h"
 
+#include "GameScence.h"
+
+#include "SceneManager.h"
+
 TitleScene::~TitleScene()
 {
 	Final();
@@ -14,6 +18,8 @@ void TitleScene::LoadResources()
 
 void TitleScene::Init()
 {
+	input = KInput::GetInstance();
+
 	// Fbx
 	fbxShader.Init(L"Resources/Shader/FBXVS.hlsl", L"Resources/Shader/FBXPS.hlsl");
 	fbxPipeline = std::make_unique<KGPlin>();
@@ -36,6 +42,15 @@ void TitleScene::Update()
 {
 	// Fbx
 	object1->Update(camera->viewProjection);
+
+	// 次のシーンへ
+	if (input->IsTrigger(DIK_SPACE))
+	{
+		// ゲームシーンを生成
+		BaseScene* scene = new GameScence();
+		// シーン切り替え依頼
+		sceneManager->SetNestScene(scene);
+	}
 }
 
 void TitleScene::Draw()

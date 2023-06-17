@@ -130,6 +130,7 @@
     <ClCompile Include="MyMath.cpp" />
     <ClCompile Include="PostEffect.cpp" />
     <ClCompile Include="Quaternion.cpp" />
+    <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="Sound.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="TitleScene.cpp" />
@@ -184,6 +185,7 @@
     <ClInclude Include="PipelineSet.h" />
     <ClInclude Include="PostEffect.h" />
     <ClInclude Include="Quaternion.h" />
+    <ClInclude Include="SceneManager.h" />
     <ClInclude Include="Sound.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="TitleScene.h" />

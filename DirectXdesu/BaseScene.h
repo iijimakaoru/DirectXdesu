@@ -1,7 +1,9 @@
 #pragma once
 #include "Camera.h"
-
 #include<memory>
+#include "KInput.h"
+
+class SceneManager;
 
 class BaseScene
 {
@@ -22,8 +24,23 @@ public: // メンバ関数
 
 	// リソース読み込み
 	virtual void LoadResources() = 0;
+	
+	/// <summary>
+	/// シーンマネージャーセット
+	/// </summary>
+	/// <param name="sceneManager_"></param>
+	virtual void SetSceneManager(SceneManager* sceneManager_)
+	{
+		sceneManager = sceneManager_;
+	}
 
 protected:
 	std::unique_ptr<Camera> camera = nullptr;
+
+	// シーンマネージャーを借りてくる
+	SceneManager* sceneManager = nullptr;
+
+	// インプット
+	KInput* input = nullptr;
 };
 

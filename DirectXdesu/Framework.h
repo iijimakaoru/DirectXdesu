@@ -3,6 +3,8 @@
 #include "KWinApp.h"
 #include "KDirectXCommon.h"
 #include "KInput.h"
+#include "SceneManager.h"
+#include "ImguiManager.h"
 
 class Framework
 {
@@ -31,5 +33,9 @@ protected:
 	KDirectXCommon* dx = nullptr;
 
 	KInput* input = nullptr;
+
+	std::unique_ptr<SceneManager> sceneManager = nullptr;
+
+	ImguiManager imguiMane;
 };
 

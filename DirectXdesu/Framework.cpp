@@ -1,6 +1,6 @@
 #include "Framework.h"
-
 #include "Sprite.h"
+#include "BaseScene.h"
 
 void Framework::Init()
 {
@@ -21,10 +21,19 @@ void Framework::Init()
 	input->Init();
 
 	Sprite::StaticInit();
+
+	// シーンマネージャー生成
+	sceneManager = std::make_unique<SceneManager>();
+
+	// Imgui初期化
+	imguiMane.Init();
 }
 
 void Framework::Final()
 {
+	// シーンマネージャーの解放
+	sceneManager.release();
+
 	dx->Destroy();
 
 	fbxLoader->Finalize();
@@ -34,6 +43,15 @@ void Framework::Update()
 {
 	// 更新
 	input->Update();
+
+	// Imgui更新はじめ
+	imguiMane.Begin();
+
+	// シーンマネージャーの更新
+	sceneManager->Update();
+
+	// Imgui更新終了
+	imguiMane.End();
 }
 
 bool Framework::IsEndRwquest()

@@ -11,6 +11,8 @@ void SceneManager::Update()
 		{
 			scene->Final();
 			scene = nullptr;
+
+			delete scene;
 		}
 
 		// ƒV[ƒ“Ø‚è‘Ö‚¦

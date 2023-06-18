@@ -2,7 +2,6 @@
 #include "KDirectXCommon.h"
 #include "KObject3d.h"
 #include "Sprite.h"
-#include "DebugText.h"
 #include "KTexture.h"
 #include "Sound.h"
 #include "KGPlin.h"

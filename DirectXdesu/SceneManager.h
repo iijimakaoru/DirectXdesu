@@ -1,5 +1,6 @@
 #pragma once
 #include "BaseScene.h"
+#include "ASceneFactory.h"
 
 class SceneManager
 {
@@ -14,12 +15,18 @@ public:
 	void Final();
 
 	/// <summary>
-	/// 次のシーン予約
+	/// 次のシーン
 	/// </summary>
-	/// <param name="nextScene_"></param>
-	void SetNestScene(BaseScene* nextScene_)
+	/// <param name="sceneName"></param>
+	void ChangeScene(const std::string& sceneName);
+
+	/// <summary>
+	/// シーンファクトリーのセッター
+	/// </summary>
+	/// <param name="sceneFactory_"></param>
+	void SetSceneFactory(ASceneFactory* sceneFactory_)
 	{
-		nextScene = nextScene_;
+		sceneFactory = sceneFactory_;
 	}
 
 	static SceneManager* GetInstance();
@@ -29,6 +36,9 @@ private:
 	BaseScene* scene = nullptr;
 	// 次のシーン
 	BaseScene* nextScene = nullptr;
+
+	// シーンファクトリー
+	ASceneFactory* sceneFactory = nullptr;
 
 	SceneManager() = default;
 	~SceneManager() = default;

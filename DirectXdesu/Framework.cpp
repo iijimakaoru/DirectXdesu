@@ -34,6 +34,9 @@ void Framework::Final()
 	// シーンマネージャーの解放
 	sceneManager->Final();
 
+	// シーンファクトリー解放
+	delete sceneFactory;
+
 	dx->Destroy();
 
 	fbxLoader->Finalize();

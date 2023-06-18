@@ -5,6 +5,7 @@
 #include "KInput.h"
 #include "SceneManager.h"
 #include "ImguiManager.h"
+#include "ASceneFactory.h"
 
 class Framework
 {
@@ -35,6 +36,9 @@ protected:
 	KInput* input = nullptr;
 
 	SceneManager* sceneManager = nullptr;
+
+	// シーンファクトリー
+	ASceneFactory* sceneFactory = nullptr;
 
 	ImguiManager imguiMane;
 };

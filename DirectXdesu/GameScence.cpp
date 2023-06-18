@@ -14,8 +14,6 @@
 
 #include "SceneManager.h"
 
-#include "TitleScene.h"
-
 GameScence::~GameScence()
 {
 	Final();
@@ -91,8 +89,7 @@ void GameScence::Update()
 {
 	if (input->IsTrigger(DIK_SPACE))
 	{
-		BaseScene* scene = new TitleScene();
-		sceneManager->SetNestScene(scene);
+		SceneManager::GetInstance()->ChangeScene("TITLE");
 	}
 
 	char bufD[255] = "DebugCamera";

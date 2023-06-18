@@ -1,15 +1,16 @@
 #include "KMyGame.h"
-#include "GameScence.h"
-#include "TitleScene.h"
+#include "SceneFactory.h"
 
 void KMyGame::Init()
 {
 	Framework::Init();
 
-	// 最初のシーン作成
-	BaseScene* scene = new TitleScene();
-	// シーンマネージャーにシーンセット
-	sceneManager->SetNestScene(scene);
+	// シーンファクトリーを生成
+	sceneFactory = new SceneFactory();
+	// シーンマネージャーにセット
+	SceneManager::GetInstance()->SetSceneFactory(sceneFactory);
+	// 最初のシーン
+	SceneManager::GetInstance()->ChangeScene("TITLE");
 }
 
 void KMyGame::Update()

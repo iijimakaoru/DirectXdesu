@@ -3,8 +3,6 @@
 
 #include "DebugCamera.h"
 
-#include "GameScence.h"
-
 #include "SceneManager.h"
 
 TitleScene::~TitleScene()
@@ -48,10 +46,8 @@ void TitleScene::Update()
 	// 次のシーンへ
 	if (input->IsTrigger(DIK_SPACE))
 	{
-		// ゲームシーンを生成
-		BaseScene* scene = new GameScence();
 		// シーン切り替え依頼
-		sceneManager->SetNestScene(scene);
+		SceneManager::GetInstance()->ChangeScene("GAME");
 	}
 }
 

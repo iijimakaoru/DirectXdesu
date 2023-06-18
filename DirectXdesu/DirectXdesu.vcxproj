@@ -91,7 +91,6 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Collision.cpp" />
     <ClCompile Include="CollisionPrimitive.cpp" />
-    <ClCompile Include="ConstBuffer.cpp" />
     <ClCompile Include="DebugCamera.cpp" />
     <ClCompile Include="Ease.cpp" />
     <ClCompile Include="FbxLoader.cpp" />
@@ -110,7 +109,6 @@
     <ClCompile Include="KDirectXCommon.cpp" />
     <ClCompile Include="KIndexBuff.cpp" />
     <ClCompile Include="KInput.cpp" />
-    <ClCompile Include="KMaterial.cpp" />
     <ClCompile Include="KModel.cpp" />
     <ClCompile Include="KMyGame.cpp" />
     <ClCompile Include="KPipelineState.cpp" />
@@ -147,7 +145,6 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Collision.h" />
     <ClInclude Include="CollisionPrimitive.h" />
-    <ClInclude Include="ConstBuffer.h" />
     <ClInclude Include="DebugCamera.h" />
     <ClInclude Include="Ease.h" />
     <ClInclude Include="FbxLoader.h" />
@@ -166,7 +163,6 @@
     <ClInclude Include="KDirectXCommon.h" />
     <ClInclude Include="KIndexBuff.h" />
     <ClInclude Include="KInput.h" />
-    <ClInclude Include="KMaterial.h" />
     <ClInclude Include="KModel.h" />
     <ClInclude Include="KMyGame.h" />
     <ClInclude Include="KPipelineState.h" />

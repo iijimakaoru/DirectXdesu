@@ -4,7 +4,6 @@
 #include <memory>
 #include <d3dx12.h>
 #include "KGPlin.h"
-#include "KMaterial.h"
 #include <wrl.h>
 #include "KTexture.h"
 

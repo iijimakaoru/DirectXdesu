@@ -4,16 +4,24 @@
 #include "Vector3.h"
 #include "KModel.h"
 #include "KTexture.h"
-#include "KMaterial.h"
-//#include <memory>
 #include "ViewProjection.h"
 #include "KGPlin.h"
 
 using namespace DirectX;
 
-// 定数バッファ用データ構造体(3D変換行列)
-struct ConstBufferDataTransform {
-	XMMATRIX mat; // 3D変換行列
+struct ConstBufferDataB1
+{
+	XMFLOAT3 ambient;
+	float pad1;
+	XMFLOAT3 diffuse;
+	float pad2;
+	XMFLOAT3 specular;
+	float alpha;
+};
+
+struct ConstBufferDataB0
+{
+	XMMATRIX mat;
 };
 
 struct WorldTransfom {
@@ -21,7 +29,7 @@ struct WorldTransfom {
 	ID3D12Resource* constBuffTransform = {};
 
 	// 定数バッファマップ(行列)
-	ConstBufferDataTransform* constMapTransform = {};
+	ConstBufferDataB0* constMapTransform = {};
 
 	// アフィン変換
 	KMyMath::Vector3 scale = { 1,1,1 };
@@ -68,8 +76,5 @@ public:
 	KModel* model_ = nullptr;
 
 	KTexture* texture_ = nullptr;
-
-	// マテリアル
-	KMaterial* material = nullptr;
 };
 

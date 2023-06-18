@@ -1,6 +1,5 @@
 #include "KObject3d.h"
 #include "KDirectXCommon.h"
-#include "ConstBuffer.h"
 
 KGPlin* KObject3d::pipeline = nullptr;
 
@@ -54,8 +53,6 @@ void KObject3d::Initialize() {
 		nullptr,
 		IID_PPV_ARGS(&constBuffB0));
 	assert(SUCCEEDED(result));
-
-	material = new KMaterial();
 }
 
 void KObject3d::LoadModel(KModel* model)

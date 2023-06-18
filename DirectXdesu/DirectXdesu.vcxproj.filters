@@ -120,9 +120,6 @@
     <ClCompile Include="KVertex.cpp">
       <Filter>ソース ファイル\2d</Filter>
     </ClCompile>
-    <ClCompile Include="KMaterial.cpp">
-      <Filter>ソース ファイル\2d</Filter>
-    </ClCompile>
     <ClCompile Include="KTexture.cpp">
       <Filter>ソース ファイル\2d</Filter>
     </ClCompile>
@@ -133,9 +130,6 @@
       <Filter>ソース ファイル\Math</Filter>
     </ClCompile>
     <ClCompile Include="Sound.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="ConstBuffer.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="KComputePipelineState.cpp">
@@ -275,9 +269,6 @@
     <ClInclude Include="KVertex.h">
       <Filter>ヘッダー ファイル\2d</Filter>
     </ClInclude>
-    <ClInclude Include="KMaterial.h">
-      <Filter>ヘッダー ファイル\2d</Filter>
-    </ClInclude>
     <ClInclude Include="Blend.h">
       <Filter>ヘッダー ファイル\2d</Filter>
     </ClInclude>
@@ -294,9 +285,6 @@
       <Filter>ヘッダー ファイル\Math</Filter>
     </ClInclude>
     <ClInclude Include="Sound.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="ConstBuffer.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="KComputePipelineState.h">

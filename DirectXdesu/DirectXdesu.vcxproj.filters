@@ -94,6 +94,12 @@
     <Filter Include="ヘッダー ファイル\Scene">
       <UniqueIdentifier>{17875ed8-7555-4fb0-9567-69a17d3c6121}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Sound">
+      <UniqueIdentifier>{fcbd73ff-83b4-40ca-b661-6fea37d7aa27}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Sound">
+      <UniqueIdentifier>{5c31a1bb-53d5-4a68-bfb2-1e9b628acf30}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -114,9 +120,6 @@
     <ClCompile Include="KWinApp.cpp">
       <Filter>ソース ファイル\Base</Filter>
     </ClCompile>
-    <ClCompile Include="Blend.cpp">
-      <Filter>ソース ファイル\2d</Filter>
-    </ClCompile>
     <ClCompile Include="KVertex.cpp">
       <Filter>ソース ファイル\2d</Filter>
     </ClCompile>
@@ -128,9 +131,6 @@
     </ClCompile>
     <ClCompile Include="Matrix4.cpp">
       <Filter>ソース ファイル\Math</Filter>
-    </ClCompile>
-    <ClCompile Include="Sound.cpp">
-      <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="KComputePipelineState.cpp">
       <Filter>ソース ファイル\AddNewSouce</Filter>
@@ -252,6 +252,9 @@
     <ClCompile Include="GameCamera.cpp">
       <Filter>ソース ファイル\Camera</Filter>
     </ClCompile>
+    <ClCompile Include="Sound.cpp">
+      <Filter>ソース ファイル\Sound</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="KInput.h">
@@ -269,9 +272,6 @@
     <ClInclude Include="KVertex.h">
       <Filter>ヘッダー ファイル\2d</Filter>
     </ClInclude>
-    <ClInclude Include="Blend.h">
-      <Filter>ヘッダー ファイル\2d</Filter>
-    </ClInclude>
     <ClInclude Include="Vector2.h">
       <Filter>ヘッダー ファイル\Math</Filter>
     </ClInclude>
@@ -283,9 +283,6 @@
     </ClInclude>
     <ClInclude Include="Matrix4.h">
       <Filter>ヘッダー ファイル\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Sound.h">
-      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="KComputePipelineState.h">
       <Filter>ヘッダー ファイル\AddNewHedder</Filter>
@@ -406,6 +403,9 @@
     </ClInclude>
     <ClInclude Include="MyMath.h">
       <Filter>ヘッダー ファイル\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Sound.h">
+      <Filter>ヘッダー ファイル\Sound</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -87,7 +87,6 @@
   <ItemGroup>
     <ClCompile Include="ASceneFactory.cpp" />
     <ClCompile Include="BaseScene.cpp" />
-    <ClCompile Include="Blend.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Collision.cpp" />
     <ClCompile Include="CollisionPrimitive.cpp" />
@@ -141,7 +140,6 @@
   <ItemGroup>
     <ClInclude Include="ASceneFactory.h" />
     <ClInclude Include="BaseScene.h" />
-    <ClInclude Include="Blend.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Collision.h" />
     <ClInclude Include="CollisionPrimitive.h" />

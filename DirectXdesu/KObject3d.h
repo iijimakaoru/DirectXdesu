@@ -63,8 +63,6 @@ private:
 	static KGPlin* pipeline;
 
 public:
-	KMyMath::Vector3 rotResult;
-
 	ComPtr<ID3D12Resource> constBuffB0;
 	ComPtr<ID3D12Resource> constBuffB1;
 

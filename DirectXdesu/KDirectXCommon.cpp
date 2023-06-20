@@ -316,6 +316,7 @@ HRESULT KDirectXCommon::InitCommand()
 	//コマンドキューの設定＆生成
 	D3D12_COMMAND_QUEUE_DESC commandQueueDesc{};
 	result = dev->CreateCommandQueue(&commandQueueDesc, IID_PPV_ARGS(cmdQueue.ReleaseAndGetAddressOf()));
+
 	if (FAILED(result))
 	{
 		return result;

@@ -45,12 +45,12 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)DirectXTex;$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)imgui;$(ProjectDir)lib\fbx_sdk\include</IncludePath>
+    <IncludePath>$(SolutionDir)External\DirectXTex;$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)External\imgui;$(ProjectDir)lib\fbx_sdk\include</IncludePath>
     <LibraryPath>$(ProjectDir)lib\fbx_sdk\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)DirectXTex;$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)imgui;$(ProjectDir)lib\fbx_sdk\include</IncludePath>
+    <IncludePath>$(SolutionDir)External\DirectXTex;$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)External\imgui;$(ProjectDir)lib\fbx_sdk\include</IncludePath>
     <LibraryPath>$(ProjectDir)lib\fbx_sdk\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -180,14 +180,6 @@
     <ClInclude Include="Engine\Base\View\ViewProjection.h" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">
-      <Project>{04cc41ef-3b57-4fff-927d-bd1dc5f3062d}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\Imgui\Imgui.vcxproj">
-      <Project>{148b8d44-a664-4b58-b904-220a3ce485e3}</Project>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <ResourceCompile Include="DirectXdesu.rc" />
   </ItemGroup>
   <ItemGroup>
@@ -260,6 +252,14 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\External\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">
+      <Project>{04cc41ef-3b57-4fff-927d-bd1dc5f3062d}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\External\Imgui\Imgui.vcxproj">
+      <Project>{148b8d44-a664-4b58-b904-220a3ce485e3}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

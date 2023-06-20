@@ -132,21 +132,6 @@
     <ClCompile Include="Matrix4.cpp">
       <Filter>ソース ファイル\Math</Filter>
     </ClCompile>
-    <ClCompile Include="KComputePipelineState.cpp">
-      <Filter>ソース ファイル\AddNewSouce</Filter>
-    </ClCompile>
-    <ClCompile Include="KIndexBuff.cpp">
-      <Filter>ソース ファイル\AddNewSouce</Filter>
-    </ClCompile>
-    <ClCompile Include="KRootSignature.cpp">
-      <Filter>ソース ファイル\AddNewSouce</Filter>
-    </ClCompile>
-    <ClCompile Include="KUtility.cpp">
-      <Filter>ソース ファイル\AddNewSouce</Filter>
-    </ClCompile>
-    <ClCompile Include="KVertexBuff.cpp">
-      <Filter>ソース ファイル\AddNewSouce</Filter>
-    </ClCompile>
     <ClCompile Include="KRenderTargetBuffer.cpp">
       <Filter>ソース ファイル\AddNewSouce</Filter>
     </ClCompile>
@@ -160,9 +145,6 @@
       <Filter>ソース ファイル\AddNewSouce</Filter>
     </ClCompile>
     <ClCompile Include="KDsvDescriptorHeap.cpp">
-      <Filter>ソース ファイル\AddNewSouce</Filter>
-    </ClCompile>
-    <ClCompile Include="KPipelineState.cpp">
       <Filter>ソース ファイル\AddNewSouce</Filter>
     </ClCompile>
     <ClCompile Include="Quaternion.cpp">
@@ -284,21 +266,6 @@
     <ClInclude Include="Matrix4.h">
       <Filter>ヘッダー ファイル\Math</Filter>
     </ClInclude>
-    <ClInclude Include="KComputePipelineState.h">
-      <Filter>ヘッダー ファイル\AddNewHedder</Filter>
-    </ClInclude>
-    <ClInclude Include="KIndexBuff.h">
-      <Filter>ヘッダー ファイル\AddNewHedder</Filter>
-    </ClInclude>
-    <ClInclude Include="KRootSignature.h">
-      <Filter>ヘッダー ファイル\AddNewHedder</Filter>
-    </ClInclude>
-    <ClInclude Include="KUtility.h">
-      <Filter>ヘッダー ファイル\AddNewHedder</Filter>
-    </ClInclude>
-    <ClInclude Include="KVertexBuff.h">
-      <Filter>ヘッダー ファイル\AddNewHedder</Filter>
-    </ClInclude>
     <ClInclude Include="KRenderTargetBuffer.h">
       <Filter>ヘッダー ファイル\AddNewHedder</Filter>
     </ClInclude>
@@ -312,9 +279,6 @@
       <Filter>ヘッダー ファイル\AddNewHedder</Filter>
     </ClInclude>
     <ClInclude Include="KDsvDescriptorHeap.h">
-      <Filter>ヘッダー ファイル\AddNewHedder</Filter>
-    </ClInclude>
-    <ClInclude Include="KPipelineState.h">
       <Filter>ヘッダー ファイル\AddNewHedder</Filter>
     </ClInclude>
     <ClInclude Include="Quaternion.h">

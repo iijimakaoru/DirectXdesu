@@ -100,6 +100,54 @@
     <Filter Include="ヘッダー ファイル\Sound">
       <UniqueIdentifier>{5c31a1bb-53d5-4a68-bfb2-1e9b628acf30}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Base\Depth">
+      <UniqueIdentifier>{ba76feeb-4a88-4679-b004-890d1a1758e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Base\RenderTarget">
+      <UniqueIdentifier>{962f48d2-5493-4410-bcfe-2dd3050ab7a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Base\Window">
+      <UniqueIdentifier>{f573d9ba-4a05-4b35-b34e-331016a425b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Base\Pipeline">
+      <UniqueIdentifier>{8cd73527-204b-48bf-b934-14125e5fb2af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Base\Descriptor">
+      <UniqueIdentifier>{0fd70e1b-6c65-4124-a44d-f27225d8daf1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Base\DirectX12">
+      <UniqueIdentifier>{13f60230-e6d1-4616-a759-aa2c685b9eac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Base\Level">
+      <UniqueIdentifier>{77d58046-fea2-40d1-a7b4-6f8b252f6503}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Base\View">
+      <UniqueIdentifier>{5fab7d23-732e-4f54-9e2f-93fdedb3884e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Base\Depth">
+      <UniqueIdentifier>{c857289b-0081-45d3-a12c-80e1df70538f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Base\Descriptor">
+      <UniqueIdentifier>{31fbbbc9-944a-485c-8470-5693a38ff3c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Base\DirectX12">
+      <UniqueIdentifier>{76c77eb6-bef1-44aa-b022-721995855169}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Base\Pipeline">
+      <UniqueIdentifier>{e86145cc-fd0a-49cd-bd01-8c2a2bd8ef16}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Base\RenderTarget">
+      <UniqueIdentifier>{0ac369b8-d5ff-4349-b2fa-35e266060922}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Base\Window">
+      <UniqueIdentifier>{7af7e369-b56b-41e6-9c1d-ac6ed90d9a6d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Base\Level">
+      <UniqueIdentifier>{c41ce2b9-844a-4b3e-92d5-3a07b89cd168}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Base\View">
+      <UniqueIdentifier>{de035a25-2272-4b73-9b39-e4d0bfce42e1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -114,12 +162,6 @@
     <ClCompile Include="KInput.cpp">
       <Filter>ソース ファイル\Input</Filter>
     </ClCompile>
-    <ClCompile Include="KDirectXCommon.cpp">
-      <Filter>ソース ファイル\Base</Filter>
-    </ClCompile>
-    <ClCompile Include="KWinApp.cpp">
-      <Filter>ソース ファイル\Base</Filter>
-    </ClCompile>
     <ClCompile Include="KVertex.cpp">
       <Filter>ソース ファイル\2d</Filter>
     </ClCompile>
@@ -132,29 +174,8 @@
     <ClCompile Include="Matrix4.cpp">
       <Filter>ソース ファイル\Math</Filter>
     </ClCompile>
-    <ClCompile Include="KRenderTargetBuffer.cpp">
-      <Filter>ソース ファイル\AddNewSouce</Filter>
-    </ClCompile>
-    <ClCompile Include="KRtvDescriptorHeap.cpp">
-      <Filter>ソース ファイル\AddNewSouce</Filter>
-    </ClCompile>
-    <ClCompile Include="KDepthStencilBuffer.cpp">
-      <Filter>ソース ファイル\AddNewSouce</Filter>
-    </ClCompile>
-    <ClCompile Include="KDescriptorHeap.cpp">
-      <Filter>ソース ファイル\AddNewSouce</Filter>
-    </ClCompile>
-    <ClCompile Include="KDsvDescriptorHeap.cpp">
-      <Filter>ソース ファイル\AddNewSouce</Filter>
-    </ClCompile>
     <ClCompile Include="Quaternion.cpp">
       <Filter>ソース ファイル\Math</Filter>
-    </ClCompile>
-    <ClCompile Include="KDepth.cpp">
-      <Filter>ソース ファイル\Base</Filter>
-    </ClCompile>
-    <ClCompile Include="ViewProjection.cpp">
-      <Filter>ソース ファイル\Base</Filter>
     </ClCompile>
     <ClCompile Include="BaseScene.cpp">
       <Filter>ソース ファイル\Scene</Filter>
@@ -198,9 +219,6 @@
     <ClCompile Include="MyMath.cpp">
       <Filter>ソース ファイル\Math</Filter>
     </ClCompile>
-    <ClCompile Include="KGPlin.cpp">
-      <Filter>ソース ファイル\Base</Filter>
-    </ClCompile>
     <ClCompile Include="FbxLoader.cpp">
       <Filter>ソース ファイル\3d\Fbx</Filter>
     </ClCompile>
@@ -215,12 +233,6 @@
     </ClCompile>
     <ClCompile Include="KObject3d.cpp">
       <Filter>ソース ファイル\3d</Filter>
-    </ClCompile>
-    <ClCompile Include="KShader.cpp">
-      <Filter>ソース ファイル\Base</Filter>
-    </ClCompile>
-    <ClCompile Include="LevelLoader.cpp">
-      <Filter>ソース ファイル\Base</Filter>
     </ClCompile>
     <ClCompile Include="Ease.cpp">
       <Filter>ソース ファイル\Math</Filter>
@@ -237,16 +249,46 @@
     <ClCompile Include="Sound.cpp">
       <Filter>ソース ファイル\Sound</Filter>
     </ClCompile>
+    <ClCompile Include="KDepth.cpp">
+      <Filter>ソース ファイル\Base\Depth</Filter>
+    </ClCompile>
+    <ClCompile Include="KDepthStencilBuffer.cpp">
+      <Filter>ソース ファイル\Base\Depth</Filter>
+    </ClCompile>
+    <ClCompile Include="KRenderTargetBuffer.cpp">
+      <Filter>ソース ファイル\Base\RenderTarget</Filter>
+    </ClCompile>
+    <ClCompile Include="KRtvDescriptorHeap.cpp">
+      <Filter>ソース ファイル\Base\RenderTarget</Filter>
+    </ClCompile>
+    <ClCompile Include="KWinApp.cpp">
+      <Filter>ソース ファイル\Base\Window</Filter>
+    </ClCompile>
+    <ClCompile Include="KGPlin.cpp">
+      <Filter>ソース ファイル\Base\Pipeline</Filter>
+    </ClCompile>
+    <ClCompile Include="KShader.cpp">
+      <Filter>ソース ファイル\Base\Pipeline</Filter>
+    </ClCompile>
+    <ClCompile Include="KDescriptorHeap.cpp">
+      <Filter>ソース ファイル\Base\Descriptor</Filter>
+    </ClCompile>
+    <ClCompile Include="KDsvDescriptorHeap.cpp">
+      <Filter>ソース ファイル\Base\Descriptor</Filter>
+    </ClCompile>
+    <ClCompile Include="KDirectXCommon.cpp">
+      <Filter>ソース ファイル\Base\DirectX12</Filter>
+    </ClCompile>
+    <ClCompile Include="LevelLoader.cpp">
+      <Filter>ソース ファイル\Base\Level</Filter>
+    </ClCompile>
+    <ClCompile Include="ViewProjection.cpp">
+      <Filter>ソース ファイル\Base\View</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="KInput.h">
       <Filter>ヘッダー ファイル\Input</Filter>
-    </ClInclude>
-    <ClInclude Include="KWinApp.h">
-      <Filter>ヘッダー ファイル\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="KDirectXCommon.h">
-      <Filter>ヘッダー ファイル\Base</Filter>
     </ClInclude>
     <ClInclude Include="KTexture.h">
       <Filter>ヘッダー ファイル\2d</Filter>
@@ -266,21 +308,6 @@
     <ClInclude Include="Matrix4.h">
       <Filter>ヘッダー ファイル\Math</Filter>
     </ClInclude>
-    <ClInclude Include="KRenderTargetBuffer.h">
-      <Filter>ヘッダー ファイル\AddNewHedder</Filter>
-    </ClInclude>
-    <ClInclude Include="KRtvDescriptorHeap.h">
-      <Filter>ヘッダー ファイル\AddNewHedder</Filter>
-    </ClInclude>
-    <ClInclude Include="KDepthStencilBuffer.h">
-      <Filter>ヘッダー ファイル\AddNewHedder</Filter>
-    </ClInclude>
-    <ClInclude Include="KDescriptorHeap.h">
-      <Filter>ヘッダー ファイル\AddNewHedder</Filter>
-    </ClInclude>
-    <ClInclude Include="KDsvDescriptorHeap.h">
-      <Filter>ヘッダー ファイル\AddNewHedder</Filter>
-    </ClInclude>
     <ClInclude Include="Quaternion.h">
       <Filter>ヘッダー ファイル\Math</Filter>
     </ClInclude>
@@ -299,12 +326,6 @@
     <ClInclude Include="FbxObject3D.h">
       <Filter>ヘッダー ファイル\3d\Fbx</Filter>
     </ClInclude>
-    <ClInclude Include="KDepth.h">
-      <Filter>ヘッダー ファイル\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="ViewProjection.h">
-      <Filter>ヘッダー ファイル\Base</Filter>
-    </ClInclude>
     <ClInclude Include="KModel.h">
       <Filter>ヘッダー ファイル\3d</Filter>
     </ClInclude>
@@ -316,15 +337,6 @@
     </ClInclude>
     <ClInclude Include="KMyGame.h">
       <Filter>ヘッダー ファイル\Base\RunGame</Filter>
-    </ClInclude>
-    <ClInclude Include="KGPlin.h">
-      <Filter>ヘッダー ファイル\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="KShader.h">
-      <Filter>ヘッダー ファイル\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="LevelLoader.h">
-      <Filter>ヘッダー ファイル\Base</Filter>
     </ClInclude>
     <ClInclude Include="ImguiManager.h">
       <Filter>ヘッダー ファイル\Imgui</Filter>
@@ -370,6 +382,42 @@
     </ClInclude>
     <ClInclude Include="Sound.h">
       <Filter>ヘッダー ファイル\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="KDepth.h">
+      <Filter>ヘッダー ファイル\Base\Depth</Filter>
+    </ClInclude>
+    <ClInclude Include="KDepthStencilBuffer.h">
+      <Filter>ヘッダー ファイル\Base\Depth</Filter>
+    </ClInclude>
+    <ClInclude Include="KDescriptorHeap.h">
+      <Filter>ヘッダー ファイル\Base\Descriptor</Filter>
+    </ClInclude>
+    <ClInclude Include="KDsvDescriptorHeap.h">
+      <Filter>ヘッダー ファイル\Base\Descriptor</Filter>
+    </ClInclude>
+    <ClInclude Include="KDirectXCommon.h">
+      <Filter>ヘッダー ファイル\Base\DirectX12</Filter>
+    </ClInclude>
+    <ClInclude Include="KGPlin.h">
+      <Filter>ヘッダー ファイル\Base\Pipeline</Filter>
+    </ClInclude>
+    <ClInclude Include="KShader.h">
+      <Filter>ヘッダー ファイル\Base\Pipeline</Filter>
+    </ClInclude>
+    <ClInclude Include="KRenderTargetBuffer.h">
+      <Filter>ヘッダー ファイル\Base\RenderTarget</Filter>
+    </ClInclude>
+    <ClInclude Include="KRtvDescriptorHeap.h">
+      <Filter>ヘッダー ファイル\Base\RenderTarget</Filter>
+    </ClInclude>
+    <ClInclude Include="KWinApp.h">
+      <Filter>ヘッダー ファイル\Base\Window</Filter>
+    </ClInclude>
+    <ClInclude Include="LevelLoader.h">
+      <Filter>ヘッダー ファイル\Base\Level</Filter>
+    </ClInclude>
+    <ClInclude Include="ViewProjection.h">
+      <Filter>ヘッダー ファイル\Base\View</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -159,270 +159,270 @@
     <ClCompile Include="main.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Vector2.cpp">
+    <ClCompile Include="Engine\Math\Vector2\Vector2.cpp">
       <Filter>ソース ファイル\Engine\Math</Filter>
     </ClCompile>
-    <ClCompile Include="Vector3.cpp">
+    <ClCompile Include="Engine\Math\Vector3\Vector3.cpp">
       <Filter>ソース ファイル\Engine\Math</Filter>
     </ClCompile>
-    <ClCompile Include="KInput.cpp">
+    <ClCompile Include="Engine\Input\KInput.cpp">
       <Filter>ソース ファイル\Engine\Input</Filter>
     </ClCompile>
-    <ClCompile Include="KVertex.cpp">
+    <ClCompile Include="Engine\2D\Vertex\KVertex.cpp">
       <Filter>ソース ファイル\Engine\2d</Filter>
     </ClCompile>
-    <ClCompile Include="KTexture.cpp">
+    <ClCompile Include="Engine\2D\Texture\KTexture.cpp">
       <Filter>ソース ファイル\Engine\2d</Filter>
     </ClCompile>
-    <ClCompile Include="Vector4.cpp">
+    <ClCompile Include="Engine\Math\Vector4\Vector4.cpp">
       <Filter>ソース ファイル\Engine\Math</Filter>
     </ClCompile>
-    <ClCompile Include="Matrix4.cpp">
+    <ClCompile Include="Engine\Math\Matrix4\Matrix4.cpp">
       <Filter>ソース ファイル\Engine\Math</Filter>
     </ClCompile>
-    <ClCompile Include="Quaternion.cpp">
+    <ClCompile Include="Engine\Math\Quaternion\Quaternion.cpp">
       <Filter>ソース ファイル\Engine\Math</Filter>
     </ClCompile>
-    <ClCompile Include="BaseScene.cpp">
+    <ClCompile Include="Engine\Base\BaseScene\BaseScene.cpp">
       <Filter>ソース ファイル\Application\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="GameScence.cpp">
+    <ClCompile Include="Application\Scene\GameScence.cpp">
       <Filter>ソース ファイル\Application\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="SceneManager.cpp">
+    <ClCompile Include="Engine\Base\BaseScene\SceneManager.cpp">
       <Filter>ソース ファイル\Application\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="TitleScene.cpp">
+    <ClCompile Include="Application\Scene\TitleScene.cpp">
       <Filter>ソース ファイル\Application\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="SceneFactory.cpp">
+    <ClCompile Include="Application\Scene\SceneFactory.cpp">
       <Filter>ソース ファイル\Application\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="Camera.cpp">
+    <ClCompile Include="Engine\Base\BaseCamera\Camera.cpp">
       <Filter>ソース ファイル\Application\Camera</Filter>
     </ClCompile>
-    <ClCompile Include="DebugCamera.cpp">
+    <ClCompile Include="Application\Camera\DebugCamera.cpp">
       <Filter>ソース ファイル\Application\Camera</Filter>
     </ClCompile>
-    <ClCompile Include="ImguiManager.cpp">
+    <ClCompile Include="Engine\Imgui\ImguiManager.cpp">
       <Filter>ソース ファイル\Engine\Imgui</Filter>
     </ClCompile>
-    <ClCompile Include="ASceneFactory.cpp">
+    <ClCompile Include="Engine\Base\BaseScene\ASceneFactory.cpp">
       <Filter>ソース ファイル\Application\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="PostEffect.cpp">
+    <ClCompile Include="Engine\2D\PostEffect\PostEffect.cpp">
       <Filter>ソース ファイル\Engine\2d\Sprites</Filter>
     </ClCompile>
-    <ClCompile Include="Sprite.cpp">
+    <ClCompile Include="Engine\2D\Sprite\Sprite.cpp">
       <Filter>ソース ファイル\Engine\2d\Sprites</Filter>
     </ClCompile>
-    <ClCompile Include="Collision.cpp">
+    <ClCompile Include="Engine\Collision\Collision.cpp">
       <Filter>ソース ファイル\Engine\Collision</Filter>
     </ClCompile>
-    <ClCompile Include="CollisionPrimitive.cpp">
+    <ClCompile Include="Engine\Collision\CollisionPrimitive.cpp">
       <Filter>ソース ファイル\Engine\Collision</Filter>
     </ClCompile>
-    <ClCompile Include="MyMath.cpp">
+    <ClCompile Include="Engine\Math\MyMath\MyMath.cpp">
       <Filter>ソース ファイル\Engine\Math</Filter>
     </ClCompile>
-    <ClCompile Include="FbxLoader.cpp">
+    <ClCompile Include="Engine\3D\Loader\FbxLoader.cpp">
       <Filter>ソース ファイル\Engine\3d\Fbx</Filter>
     </ClCompile>
-    <ClCompile Include="FbxModel.cpp">
+    <ClCompile Include="Engine\3D\Model\FbxModel.cpp">
       <Filter>ソース ファイル\Engine\3d\Fbx</Filter>
     </ClCompile>
-    <ClCompile Include="FbxObject3D.cpp">
+    <ClCompile Include="Engine\3D\Object3D\FbxObject3D.cpp">
       <Filter>ソース ファイル\Engine\3d\Fbx</Filter>
     </ClCompile>
-    <ClCompile Include="KModel.cpp">
+    <ClCompile Include="Engine\3D\Model\KModel.cpp">
       <Filter>ソース ファイル\Engine\3d</Filter>
     </ClCompile>
-    <ClCompile Include="KObject3d.cpp">
+    <ClCompile Include="Engine\3D\Object3D\KObject3d.cpp">
       <Filter>ソース ファイル\Engine\3d</Filter>
     </ClCompile>
-    <ClCompile Include="Ease.cpp">
+    <ClCompile Include="Engine\Math\Ease\Ease.cpp">
       <Filter>ソース ファイル\Engine\Math</Filter>
     </ClCompile>
-    <ClCompile Include="Framework.cpp">
+    <ClCompile Include="Engine\Base\RunGame\Framework.cpp">
       <Filter>ソース ファイル\Engine\Base\RunGame</Filter>
     </ClCompile>
-    <ClCompile Include="KMyGame.cpp">
+    <ClCompile Include="Engine\Base\RunGame\KMyGame.cpp">
       <Filter>ソース ファイル\Engine\Base\RunGame</Filter>
     </ClCompile>
-    <ClCompile Include="GameCamera.cpp">
+    <ClCompile Include="Application\Camera\GameCamera.cpp">
       <Filter>ソース ファイル\Application\Camera</Filter>
     </ClCompile>
-    <ClCompile Include="Sound.cpp">
+    <ClCompile Include="Engine\Sound\Sound.cpp">
       <Filter>ソース ファイル\Engine\Sound</Filter>
     </ClCompile>
-    <ClCompile Include="KDepth.cpp">
+    <ClCompile Include="Engine\Base\Depth\KDepth.cpp">
       <Filter>ソース ファイル\Engine\Base\Depth</Filter>
     </ClCompile>
-    <ClCompile Include="KDepthStencilBuffer.cpp">
+    <ClCompile Include="Engine\Base\Depth\KDepthStencilBuffer.cpp">
       <Filter>ソース ファイル\Engine\Base\Depth</Filter>
     </ClCompile>
-    <ClCompile Include="KRenderTargetBuffer.cpp">
+    <ClCompile Include="Engine\Base\RenderTarget\KRenderTargetBuffer.cpp">
       <Filter>ソース ファイル\Engine\Base\RenderTarget</Filter>
     </ClCompile>
-    <ClCompile Include="KRtvDescriptorHeap.cpp">
+    <ClCompile Include="Engine\Base\Descriptor\KRtvDescriptorHeap.cpp">
       <Filter>ソース ファイル\Engine\Base\RenderTarget</Filter>
     </ClCompile>
-    <ClCompile Include="KWinApp.cpp">
+    <ClCompile Include="Engine\Base\Window\KWinApp.cpp">
       <Filter>ソース ファイル\Engine\Base\Window</Filter>
     </ClCompile>
-    <ClCompile Include="KGPlin.cpp">
+    <ClCompile Include="Engine\Base\Pipeline\KGPlin.cpp">
       <Filter>ソース ファイル\Engine\Base\Pipeline</Filter>
     </ClCompile>
-    <ClCompile Include="KShader.cpp">
+    <ClCompile Include="Engine\Base\Pipeline\KShader.cpp">
       <Filter>ソース ファイル\Engine\Base\Pipeline</Filter>
     </ClCompile>
-    <ClCompile Include="KDescriptorHeap.cpp">
+    <ClCompile Include="Engine\Base\Descriptor\KDescriptorHeap.cpp">
       <Filter>ソース ファイル\Engine\Base\Descriptor</Filter>
     </ClCompile>
-    <ClCompile Include="KDsvDescriptorHeap.cpp">
+    <ClCompile Include="Engine\Base\Descriptor\KDsvDescriptorHeap.cpp">
       <Filter>ソース ファイル\Engine\Base\Descriptor</Filter>
     </ClCompile>
-    <ClCompile Include="KDirectXCommon.cpp">
+    <ClCompile Include="Engine\Base\DirectXCommon\KDirectXCommon.cpp">
       <Filter>ソース ファイル\Engine\Base\DirectX12</Filter>
     </ClCompile>
-    <ClCompile Include="LevelLoader.cpp">
+    <ClCompile Include="Engine\Level\LevelLoader.cpp">
       <Filter>ソース ファイル\Engine\Base\Level</Filter>
     </ClCompile>
-    <ClCompile Include="ViewProjection.cpp">
+    <ClCompile Include="Engine\Base\View\ViewProjection.cpp">
       <Filter>ソース ファイル\Engine\Base\View</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="KInput.h">
+    <ClInclude Include="Engine\Input\KInput.h">
       <Filter>ヘッダー ファイル\Engine\Input</Filter>
     </ClInclude>
-    <ClInclude Include="KTexture.h">
+    <ClInclude Include="Engine\2D\Texture\KTexture.h">
       <Filter>ヘッダー ファイル\Engine\2d</Filter>
     </ClInclude>
-    <ClInclude Include="KVertex.h">
+    <ClInclude Include="Engine\2D\Vertex\KVertex.h">
       <Filter>ヘッダー ファイル\Engine\2d</Filter>
     </ClInclude>
-    <ClInclude Include="Vector2.h">
+    <ClInclude Include="Engine\Math\Vector2\Vector2.h">
       <Filter>ヘッダー ファイル\Engine\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Vector3.h">
+    <ClInclude Include="Engine\Math\Vector3\Vector3.h">
       <Filter>ヘッダー ファイル\Engine\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Vector4.h">
+    <ClInclude Include="Engine\Math\Vector4\Vector4.h">
       <Filter>ヘッダー ファイル\Engine\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Matrix4.h">
+    <ClInclude Include="Engine\Math\Matrix4\Matrix4.h">
       <Filter>ヘッダー ファイル\Engine\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Quaternion.h">
+    <ClInclude Include="Engine\Math\Quaternion\Quaternion.h">
       <Filter>ヘッダー ファイル\Engine\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Sprite.h">
+    <ClInclude Include="Engine\2D\Sprite\Sprite.h">
       <Filter>ヘッダー ファイル\Engine\2d\Sprites</Filter>
     </ClInclude>
-    <ClInclude Include="PostEffect.h">
+    <ClInclude Include="Engine\2D\PostEffect\PostEffect.h">
       <Filter>ヘッダー ファイル\Engine\2d\Sprites</Filter>
     </ClInclude>
-    <ClInclude Include="FbxLoader.h">
+    <ClInclude Include="Engine\3D\Loader\FbxLoader.h">
       <Filter>ヘッダー ファイル\Engine\3d\Fbx</Filter>
     </ClInclude>
-    <ClInclude Include="FbxModel.h">
+    <ClInclude Include="Engine\3D\Model\FbxModel.h">
       <Filter>ヘッダー ファイル\Engine\3d\Fbx</Filter>
     </ClInclude>
-    <ClInclude Include="FbxObject3D.h">
+    <ClInclude Include="Engine\3D\Object3D\FbxObject3D.h">
       <Filter>ヘッダー ファイル\Engine\3d\Fbx</Filter>
     </ClInclude>
-    <ClInclude Include="KModel.h">
+    <ClInclude Include="Engine\3D\Model\KModel.h">
       <Filter>ヘッダー ファイル\Engine\3d</Filter>
     </ClInclude>
-    <ClInclude Include="KObject3d.h">
+    <ClInclude Include="Engine\3D\Object3D\KObject3d.h">
       <Filter>ヘッダー ファイル\Engine\3d</Filter>
     </ClInclude>
-    <ClInclude Include="Framework.h">
+    <ClInclude Include="Engine\Base\RunGame\Framework.h">
       <Filter>ヘッダー ファイル\Engine\Base\RunGame</Filter>
     </ClInclude>
-    <ClInclude Include="KMyGame.h">
+    <ClInclude Include="Engine\Base\RunGame\KMyGame.h">
       <Filter>ヘッダー ファイル\Engine\Base\RunGame</Filter>
     </ClInclude>
-    <ClInclude Include="ImguiManager.h">
+    <ClInclude Include="Engine\Imgui\ImguiManager.h">
       <Filter>ヘッダー ファイル\Engine\Imgui</Filter>
     </ClInclude>
-    <ClInclude Include="Collision.h">
+    <ClInclude Include="Engine\Collision\Collision.h">
       <Filter>ヘッダー ファイル\Engine\Collision</Filter>
     </ClInclude>
-    <ClInclude Include="CollisionPrimitive.h">
+    <ClInclude Include="Engine\Collision\CollisionPrimitive.h">
       <Filter>ヘッダー ファイル\Engine\Collision</Filter>
     </ClInclude>
-    <ClInclude Include="Camera.h">
+    <ClInclude Include="Engine\Base\BaseCamera\Camera.h">
       <Filter>ヘッダー ファイル\Application\Camera</Filter>
     </ClInclude>
-    <ClInclude Include="DebugCamera.h">
+    <ClInclude Include="Application\Camera\DebugCamera.h">
       <Filter>ヘッダー ファイル\Application\Camera</Filter>
     </ClInclude>
-    <ClInclude Include="GameCamera.h">
+    <ClInclude Include="Application\Camera\GameCamera.h">
       <Filter>ヘッダー ファイル\Application\Camera</Filter>
     </ClInclude>
-    <ClInclude Include="ASceneFactory.h">
+    <ClInclude Include="Engine\Base\BaseScene\ASceneFactory.h">
       <Filter>ヘッダー ファイル\Application\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="GameScence.h">
+    <ClInclude Include="Application\Scene\GameScence.h">
       <Filter>ヘッダー ファイル\Application\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="BaseScene.h">
+    <ClInclude Include="Engine\Base\BaseScene\BaseScene.h">
       <Filter>ヘッダー ファイル\Application\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="TitleScene.h">
+    <ClInclude Include="Application\Scene\TitleScene.h">
       <Filter>ヘッダー ファイル\Application\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="SceneManager.h">
+    <ClInclude Include="Engine\Base\BaseScene\SceneManager.h">
       <Filter>ヘッダー ファイル\Application\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="SceneFactory.h">
+    <ClInclude Include="Application\Scene\SceneFactory.h">
       <Filter>ヘッダー ファイル\Application\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="Ease.h">
+    <ClInclude Include="Engine\Math\Ease\Ease.h">
       <Filter>ヘッダー ファイル\Engine\Math</Filter>
     </ClInclude>
-    <ClInclude Include="MyMath.h">
+    <ClInclude Include="Engine\Math\MyMath\MyMath.h">
       <Filter>ヘッダー ファイル\Engine\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Sound.h">
+    <ClInclude Include="Engine\Sound\Sound.h">
       <Filter>ヘッダー ファイル\Engine\Sound</Filter>
     </ClInclude>
-    <ClInclude Include="KDepth.h">
+    <ClInclude Include="Engine\Base\Depth\KDepth.h">
       <Filter>ヘッダー ファイル\Engine\Base\Depth</Filter>
     </ClInclude>
-    <ClInclude Include="KDepthStencilBuffer.h">
+    <ClInclude Include="Engine\Base\Depth\KDepthStencilBuffer.h">
       <Filter>ヘッダー ファイル\Engine\Base\Depth</Filter>
     </ClInclude>
-    <ClInclude Include="KDescriptorHeap.h">
+    <ClInclude Include="Engine\Base\Descriptor\KDescriptorHeap.h">
       <Filter>ヘッダー ファイル\Engine\Base\Descriptor</Filter>
     </ClInclude>
-    <ClInclude Include="KDsvDescriptorHeap.h">
+    <ClInclude Include="Engine\Base\Descriptor\KDsvDescriptorHeap.h">
       <Filter>ヘッダー ファイル\Engine\Base\Descriptor</Filter>
     </ClInclude>
-    <ClInclude Include="KDirectXCommon.h">
+    <ClInclude Include="Engine\Base\DirectXCommon\KDirectXCommon.h">
       <Filter>ヘッダー ファイル\Engine\Base\DirectX12</Filter>
     </ClInclude>
-    <ClInclude Include="KGPlin.h">
+    <ClInclude Include="Engine\Base\Pipeline\KGPlin.h">
       <Filter>ヘッダー ファイル\Engine\Base\Pipeline</Filter>
     </ClInclude>
-    <ClInclude Include="KShader.h">
+    <ClInclude Include="Engine\Base\Pipeline\KShader.h">
       <Filter>ヘッダー ファイル\Engine\Base\Pipeline</Filter>
     </ClInclude>
-    <ClInclude Include="KRenderTargetBuffer.h">
+    <ClInclude Include="Engine\Base\RenderTarget\KRenderTargetBuffer.h">
       <Filter>ヘッダー ファイル\Engine\Base\RenderTarget</Filter>
     </ClInclude>
-    <ClInclude Include="KRtvDescriptorHeap.h">
+    <ClInclude Include="Engine\Base\Descriptor\KRtvDescriptorHeap.h">
       <Filter>ヘッダー ファイル\Engine\Base\RenderTarget</Filter>
     </ClInclude>
-    <ClInclude Include="KWinApp.h">
+    <ClInclude Include="Engine\Base\Window\KWinApp.h">
       <Filter>ヘッダー ファイル\Engine\Base\Window</Filter>
     </ClInclude>
-    <ClInclude Include="LevelLoader.h">
+    <ClInclude Include="Engine\Level\LevelLoader.h">
       <Filter>ヘッダー ファイル\Engine\Base\Level</Filter>
     </ClInclude>
-    <ClInclude Include="ViewProjection.h">
+    <ClInclude Include="Engine\Base\View\ViewProjection.h">
       <Filter>ヘッダー ファイル\Engine\Base\View</Filter>
     </ClInclude>
   </ItemGroup>

@@ -59,6 +59,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(ProjectDir)Engine\2D\PostEffect;$(ProjectDir)Engine\2D\Sprite;$(ProjectDir)Engine\2D\Texture;$(ProjectDir)Engine\2D\Vertex;$(ProjectDir)Engine\3D\Loader;$(ProjectDir)Engine\3D\Model;$(ProjectDir)Engine\3D\Object3D;$(ProjectDir)Engine\Base\BaseCamera;$(ProjectDir)Engine\Base\BaseScene;$(ProjectDir)Engine\Base\Depth;$(ProjectDir)Engine\Base\Descriptor;$(ProjectDir)Engine\Base\DirectXCommon;$(ProjectDir)Engine\Base\Pipeline;$(ProjectDir)Engine\Base\RenderTarget;$(ProjectDir)Engine\Base\RunGame;$(ProjectDir)Engine\Base\View;$(ProjectDir)Engine\Base\Window;$(ProjectDir)Engine\Collision;$(ProjectDir)Engine\Imgui;$(ProjectDir)Engine\Input;$(ProjectDir)Engine\Level;$(ProjectDir)Engine\Math\Ease;$(ProjectDir)Engine\Sound;$(ProjectDir)Application\Camera;$(ProjectDir)Application\Scene;$(ProjectDir)Engine\Math\Matrix4;$(ProjectDir)Engine\Math\MyMath;$(ProjectDir)Engine\Math\Quaternion;$(ProjectDir)Engine\Math\Vector2;$(ProjectDir)Engine\Math\Vector3;$(ProjectDir)Engine\Math\Vector4;$(ProjectDir)DirectXdesu;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -75,6 +76,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <AdditionalIncludeDirectories>$(ProjectDir)Engine\2D\PostEffect;$(ProjectDir)Engine\2D\Sprite;$(ProjectDir)Engine\2D\Texture;$(ProjectDir)Engine\2D\Vertex;$(ProjectDir)Engine\3D\Loader;$(ProjectDir)Engine\3D\Model;$(ProjectDir)Engine\3D\Object3D;$(ProjectDir)Engine\Base\BaseCamera;$(ProjectDir)Engine\Base\BaseScene;$(ProjectDir)Engine\Base\Depth;$(ProjectDir)Engine\Base\Descriptor;$(ProjectDir)Engine\Base\DirectXCommon;$(ProjectDir)Engine\Base\Pipeline;$(ProjectDir)Engine\Base\RenderTarget;$(ProjectDir)Engine\Base\RunGame;$(ProjectDir)Engine\Base\View;$(ProjectDir)Engine\Base\Window;$(ProjectDir)Engine\Collision;$(ProjectDir)Engine\Imgui;$(ProjectDir)Engine\Input;$(ProjectDir)Engine\Level;$(ProjectDir)Engine\Math\Ease;$(ProjectDir)Engine\Sound;$(ProjectDir)Application\Camera;$(ProjectDir)Application\Scene;$(ProjectDir)Engine\Math\Matrix4;$(ProjectDir)Engine\Math\MyMath;$(ProjectDir)Engine\Math\Quaternion;$(ProjectDir)Engine\Math\Vector2;$(ProjectDir)Engine\Math\Vector3;$(ProjectDir)Engine\Math\Vector4;$(ProjectDir)DirectXdesu;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -85,97 +87,97 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="ASceneFactory.cpp" />
-    <ClCompile Include="BaseScene.cpp" />
-    <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="Collision.cpp" />
-    <ClCompile Include="CollisionPrimitive.cpp" />
-    <ClCompile Include="DebugCamera.cpp" />
-    <ClCompile Include="Ease.cpp" />
-    <ClCompile Include="FbxLoader.cpp" />
-    <ClCompile Include="FbxModel.cpp" />
-    <ClCompile Include="FbxObject3D.cpp" />
-    <ClCompile Include="Framework.cpp" />
-    <ClCompile Include="GameCamera.cpp" />
-    <ClCompile Include="GameScence.cpp" />
-    <ClCompile Include="ImguiManager.cpp" />
-    <ClCompile Include="KDepthStencilBuffer.cpp" />
-    <ClCompile Include="KDescriptorHeap.cpp" />
-    <ClCompile Include="KDsvDescriptorHeap.cpp" />
-    <ClCompile Include="KGPlin.cpp" />
-    <ClCompile Include="KDepth.cpp" />
-    <ClCompile Include="KDirectXCommon.cpp" />
-    <ClCompile Include="KInput.cpp" />
-    <ClCompile Include="KModel.cpp" />
-    <ClCompile Include="KMyGame.cpp" />
-    <ClCompile Include="KRenderTargetBuffer.cpp" />
-    <ClCompile Include="KRtvDescriptorHeap.cpp" />
-    <ClCompile Include="KShader.cpp" />
-    <ClCompile Include="KVertex.cpp" />
-    <ClCompile Include="LevelLoader.cpp" />
+    <ClCompile Include="Engine\Base\BaseScene\ASceneFactory.cpp" />
+    <ClCompile Include="Engine\Base\BaseScene\BaseScene.cpp" />
+    <ClCompile Include="Engine\Base\BaseCamera\Camera.cpp" />
+    <ClCompile Include="Engine\Collision\Collision.cpp" />
+    <ClCompile Include="Engine\Collision\CollisionPrimitive.cpp" />
+    <ClCompile Include="Application\Camera\DebugCamera.cpp" />
+    <ClCompile Include="Engine\Math\Ease\Ease.cpp" />
+    <ClCompile Include="Engine\3D\Loader\FbxLoader.cpp" />
+    <ClCompile Include="Engine\3D\Model\FbxModel.cpp" />
+    <ClCompile Include="Engine\3D\Object3D\FbxObject3D.cpp" />
+    <ClCompile Include="Engine\Base\RunGame\Framework.cpp" />
+    <ClCompile Include="Application\Camera\GameCamera.cpp" />
+    <ClCompile Include="Application\Scene\GameScence.cpp" />
+    <ClCompile Include="Engine\Imgui\ImguiManager.cpp" />
+    <ClCompile Include="Engine\Base\Depth\KDepthStencilBuffer.cpp" />
+    <ClCompile Include="Engine\Base\Descriptor\KDescriptorHeap.cpp" />
+    <ClCompile Include="Engine\Base\Descriptor\KDsvDescriptorHeap.cpp" />
+    <ClCompile Include="Engine\Base\Pipeline\KGPlin.cpp" />
+    <ClCompile Include="Engine\Base\Depth\KDepth.cpp" />
+    <ClCompile Include="Engine\Base\DirectXCommon\KDirectXCommon.cpp" />
+    <ClCompile Include="Engine\Input\KInput.cpp" />
+    <ClCompile Include="Engine\3D\Model\KModel.cpp" />
+    <ClCompile Include="Engine\Base\RunGame\KMyGame.cpp" />
+    <ClCompile Include="Engine\Base\RenderTarget\KRenderTargetBuffer.cpp" />
+    <ClCompile Include="Engine\Base\Descriptor\KRtvDescriptorHeap.cpp" />
+    <ClCompile Include="Engine\Base\Pipeline\KShader.cpp" />
+    <ClCompile Include="Engine\2D\Vertex\KVertex.cpp" />
+    <ClCompile Include="Engine\Level\LevelLoader.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="KWinApp.cpp" />
-    <ClCompile Include="KObject3d.cpp" />
-    <ClCompile Include="KTexture.cpp" />
-    <ClCompile Include="Matrix4.cpp" />
-    <ClCompile Include="MyMath.cpp" />
-    <ClCompile Include="PostEffect.cpp" />
-    <ClCompile Include="Quaternion.cpp" />
-    <ClCompile Include="SceneFactory.cpp" />
-    <ClCompile Include="SceneManager.cpp" />
-    <ClCompile Include="Sound.cpp" />
-    <ClCompile Include="Sprite.cpp" />
-    <ClCompile Include="TitleScene.cpp" />
-    <ClCompile Include="Vector2.cpp" />
-    <ClCompile Include="Vector3.cpp" />
-    <ClCompile Include="Vector4.cpp" />
-    <ClCompile Include="ViewProjection.cpp" />
+    <ClCompile Include="Engine\Base\Window\KWinApp.cpp" />
+    <ClCompile Include="Engine\3D\Object3D\KObject3d.cpp" />
+    <ClCompile Include="Engine\2D\Texture\KTexture.cpp" />
+    <ClCompile Include="Engine\Math\Matrix4\Matrix4.cpp" />
+    <ClCompile Include="Engine\Math\MyMath\MyMath.cpp" />
+    <ClCompile Include="Engine\2D\PostEffect\PostEffect.cpp" />
+    <ClCompile Include="Engine\Math\Quaternion\Quaternion.cpp" />
+    <ClCompile Include="Application\Scene\SceneFactory.cpp" />
+    <ClCompile Include="Engine\Base\BaseScene\SceneManager.cpp" />
+    <ClCompile Include="Engine\Sound\Sound.cpp" />
+    <ClCompile Include="Engine\2D\Sprite\Sprite.cpp" />
+    <ClCompile Include="Application\Scene\TitleScene.cpp" />
+    <ClCompile Include="Engine\Math\Vector2\Vector2.cpp" />
+    <ClCompile Include="Engine\Math\Vector3\Vector3.cpp" />
+    <ClCompile Include="Engine\Math\Vector4\Vector4.cpp" />
+    <ClCompile Include="Engine\Base\View\ViewProjection.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ASceneFactory.h" />
-    <ClInclude Include="BaseScene.h" />
-    <ClInclude Include="Camera.h" />
-    <ClInclude Include="Collision.h" />
-    <ClInclude Include="CollisionPrimitive.h" />
-    <ClInclude Include="DebugCamera.h" />
-    <ClInclude Include="Ease.h" />
-    <ClInclude Include="FbxLoader.h" />
-    <ClInclude Include="FbxModel.h" />
-    <ClInclude Include="FbxObject3D.h" />
-    <ClInclude Include="Framework.h" />
-    <ClInclude Include="GameCamera.h" />
-    <ClInclude Include="GameScence.h" />
-    <ClInclude Include="ImguiManager.h" />
-    <ClInclude Include="KDepthStencilBuffer.h" />
-    <ClInclude Include="KDescriptorHeap.h" />
-    <ClInclude Include="KDsvDescriptorHeap.h" />
-    <ClInclude Include="KGPlin.h" />
-    <ClInclude Include="KDepth.h" />
-    <ClInclude Include="KDirectXCommon.h" />
-    <ClInclude Include="KInput.h" />
-    <ClInclude Include="KModel.h" />
-    <ClInclude Include="KMyGame.h" />
-    <ClInclude Include="KRenderTargetBuffer.h" />
-    <ClInclude Include="KRtvDescriptorHeap.h" />
-    <ClInclude Include="KShader.h" />
-    <ClInclude Include="KVertex.h" />
-    <ClInclude Include="KWinApp.h" />
-    <ClInclude Include="KObject3d.h" />
-    <ClInclude Include="KTexture.h" />
-    <ClInclude Include="LevelLoader.h" />
-    <ClInclude Include="Matrix4.h" />
-    <ClInclude Include="MyMath.h" />
-    <ClInclude Include="PostEffect.h" />
-    <ClInclude Include="Quaternion.h" />
-    <ClInclude Include="SceneFactory.h" />
-    <ClInclude Include="SceneManager.h" />
-    <ClInclude Include="Sound.h" />
-    <ClInclude Include="Sprite.h" />
-    <ClInclude Include="TitleScene.h" />
-    <ClInclude Include="Vector2.h" />
-    <ClInclude Include="Vector3.h" />
-    <ClInclude Include="Vector4.h" />
-    <ClInclude Include="ViewProjection.h" />
+    <ClInclude Include="Engine\Base\BaseScene\ASceneFactory.h" />
+    <ClInclude Include="Engine\Base\BaseScene\BaseScene.h" />
+    <ClInclude Include="Engine\Base\BaseCamera\Camera.h" />
+    <ClInclude Include="Engine\Collision\Collision.h" />
+    <ClInclude Include="Engine\Collision\CollisionPrimitive.h" />
+    <ClInclude Include="Application\Camera\DebugCamera.h" />
+    <ClInclude Include="Engine\Math\Ease\Ease.h" />
+    <ClInclude Include="Engine\3D\Loader\FbxLoader.h" />
+    <ClInclude Include="Engine\3D\Model\FbxModel.h" />
+    <ClInclude Include="Engine\3D\Object3D\FbxObject3D.h" />
+    <ClInclude Include="Engine\Base\RunGame\Framework.h" />
+    <ClInclude Include="Application\Camera\GameCamera.h" />
+    <ClInclude Include="Application\Scene\GameScence.h" />
+    <ClInclude Include="Engine\Imgui\ImguiManager.h" />
+    <ClInclude Include="Engine\Base\Depth\KDepthStencilBuffer.h" />
+    <ClInclude Include="Engine\Base\Descriptor\KDescriptorHeap.h" />
+    <ClInclude Include="Engine\Base\Descriptor\KDsvDescriptorHeap.h" />
+    <ClInclude Include="Engine\Base\Pipeline\KGPlin.h" />
+    <ClInclude Include="Engine\Base\Depth\KDepth.h" />
+    <ClInclude Include="Engine\Base\DirectXCommon\KDirectXCommon.h" />
+    <ClInclude Include="Engine\Input\KInput.h" />
+    <ClInclude Include="Engine\3D\Model\KModel.h" />
+    <ClInclude Include="Engine\Base\RunGame\KMyGame.h" />
+    <ClInclude Include="Engine\Base\RenderTarget\KRenderTargetBuffer.h" />
+    <ClInclude Include="Engine\Base\Descriptor\KRtvDescriptorHeap.h" />
+    <ClInclude Include="Engine\Base\Pipeline\KShader.h" />
+    <ClInclude Include="Engine\2D\Vertex\KVertex.h" />
+    <ClInclude Include="Engine\Base\Window\KWinApp.h" />
+    <ClInclude Include="Engine\3D\Object3D\KObject3d.h" />
+    <ClInclude Include="Engine\2D\Texture\KTexture.h" />
+    <ClInclude Include="Engine\Level\LevelLoader.h" />
+    <ClInclude Include="Engine\Math\Matrix4\Matrix4.h" />
+    <ClInclude Include="Engine\Math\MyMath\MyMath.h" />
+    <ClInclude Include="Engine\2D\PostEffect\PostEffect.h" />
+    <ClInclude Include="Engine\Math\Quaternion\Quaternion.h" />
+    <ClInclude Include="Application\Scene\SceneFactory.h" />
+    <ClInclude Include="Engine\Base\BaseScene\SceneManager.h" />
+    <ClInclude Include="Engine\Sound\Sound.h" />
+    <ClInclude Include="Engine\2D\Sprite\Sprite.h" />
+    <ClInclude Include="Application\Scene\TitleScene.h" />
+    <ClInclude Include="Engine\Math\Vector2\Vector2.h" />
+    <ClInclude Include="Engine\Math\Vector3\Vector3.h" />
+    <ClInclude Include="Engine\Math\Vector4\Vector4.h" />
+    <ClInclude Include="Engine\Base\View\ViewProjection.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">

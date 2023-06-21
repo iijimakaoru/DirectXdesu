@@ -23,8 +23,24 @@ public:
 	// 更新
 	void Update(KMyMath::Vector2 pos, KMyMath::Vector2 scale, float rot, KMyMath::Vector4 color);
 
-	// 描画
-	void Draw(KTexture* texture, KMyMath::Vector2 pos = { 0.0f,0.0f }, KMyMath::Vector2 setSize_ = { 0.004f,-0.007f }, float rot = 0.0f,
+	/// <summary>
+	/// 描画情報
+	/// </summary>
+	/// <param name="texture"></param>
+	void DrawCommand(KTexture* texture);
+
+	/// <summary>
+	/// 描画
+	/// </summary>
+	/// <param name="texture"></param>
+	/// <param name="pos"></param>
+	/// <param name="setSize_"></param>
+	/// <param name="rot"></param>
+	/// <param name="color"></param>
+	/// <param name="isFlipX_"></param>
+	/// <param name="isFlipY_"></param>
+	/// <param name="anchorPoint_"></param>
+	void Draw(KTexture* texture, KMyMath::Vector2 pos = { 0.0f,0.0f }, KMyMath::Vector2 setSize_ = { 100.0f,100.0f }, float rot = 0.0f,
 		KMyMath::Vector4 color = {1.0f,1.0f,1.0f,1.0f}, bool isFlipX_ = false, bool isFlipY_ = false, KMyMath::Vector2 anchorPoint_ = { 0.5f,0.5f });
 
 	/// <summary>
@@ -42,9 +58,6 @@ private:
 
 	// 定数バッファトランスフォーム
 	void CreateCBTransform();
-
-	// 描画情報
-	void DrawCommand(KTexture* texture);
 
 private:
 	struct Vertex
@@ -110,7 +123,6 @@ private:
 	// 非表示
 	bool isInvisible = false;
 
-private:
 	// デバイス
 	static Microsoft::WRL::ComPtr<ID3D12Device> device;
 

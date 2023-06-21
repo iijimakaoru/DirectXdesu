@@ -1,5 +1,6 @@
 #include "Framework.h"
 #include "Sprite.h"
+#include "PostEffect.h"
 #include "BaseScene.h"
 
 void Framework::Init()
@@ -20,7 +21,9 @@ void Framework::Init()
 	input = KInput::GetInstance();
 	input->Init();
 
+	// 静的初期化
 	Sprite::StaticInit();
+	PostEffect::StaticInit();
 
 	// シーンマネージャー生成
 	sceneManager = SceneManager::GetInstance();

@@ -240,10 +240,10 @@ void Sprite::Draw(KTexture* texture, KMyMath::Vector2 pos, KMyMath::Vector2 setS
 	}
 
 	// アンカーポイント
-	float left   = ((0.0f - anchorPoint.x) * setSize_.x) * flipX;
-	float right  = ((1.0f - anchorPoint.x) * setSize_.x) * flipX;
-	float top    = ((0.0f - anchorPoint.y) * setSize_.y) * flipY;
-	float bottom = ((1.0f - anchorPoint.y) * setSize_.y) * flipY;
+	float left   = ((0.0f - anchorPoint_.x) * setSize_.x) * flipX;
+	float right  = ((1.0f - anchorPoint_.x) * setSize_.x) * flipX;
+	float top    = ((0.0f - anchorPoint_.y) * setSize_.y) * flipY;
+	float bottom = ((1.0f - anchorPoint_.y) * setSize_.y) * flipY;
 
 	// 頂点データ
 	Vertex vertices[] =

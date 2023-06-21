@@ -115,7 +115,7 @@ void TitleScene::Draw()
 
 	sprite->Draw(&tex1, spritePos, spriteSize, spriteRot, spriteColor, spriteFlipX, spriteFlipY);
 
-	//postEffect->Draw(&tex1, { 100,100 }, { 200,200 });
+	postEffect->Draw(&tex1, { 100,100 }, { 200,200 });
 }
 
 void TitleScene::Final()

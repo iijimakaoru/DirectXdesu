@@ -143,7 +143,7 @@ void Sprite::CreateVertexIndex()
 	ibView.BufferLocation = indexBuff->GetGPUVirtualAddress();
 	ibView.Format = DXGI_FORMAT_R16_UINT;
 	// 頂点バッファのサイズ
-	ibView.SizeInBytes = sizeVB;
+	ibView.SizeInBytes = sizeIB;
 	assert(SUCCEEDED(result));
 }
 
@@ -196,6 +196,7 @@ void Sprite::DrawCommand(KTexture* texture)
 
 	// 頂点バッファビューの設定コマンド
 	cmdList->IASetVertexBuffers(0, 1, &vbView);
+	cmdList->IASetIndexBuffer(&ibView);
 }
 
 void Sprite::Init()

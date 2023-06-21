@@ -262,7 +262,7 @@ void PostEffect::CreateVertexIndex()
 	ibView.BufferLocation = indexBuff->GetGPUVirtualAddress();
 	ibView.Format = DXGI_FORMAT_R16_UINT;
 	// 頂点バッファのサイズ
-	ibView.SizeInBytes = sizeVB;
+	ibView.SizeInBytes = sizeIB;
 	assert(SUCCEEDED(result));
 }
 

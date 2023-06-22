@@ -25,14 +25,6 @@
 class GameScence : public BaseScene
 {
 public:
-	enum class CollisionMode
-	{
-		Sphere_Plane,
-		Sphere_Triangle,
-		Ray_Plane,
-		Ray_Triangle,
-	};
-
 	GameScence()
 	{
 		LoadResources();
@@ -54,30 +46,15 @@ private:
 
 	// パイプライン
 	std::unique_ptr<KGPlin> objPipeline;
-	std::unique_ptr<KGPlin> fbxPipeline;
 	std::unique_ptr<KGPlin> spritePipeline;
 
 	// シェーダー
 	KShader objShader;
-	KShader fbxShader;
 	KShader spriteShader;
-
-	// モデル
-	std::unique_ptr<KModel> SkyBox;
 
 	// テクスチャ
 	KTexture mario;
 	KTexture haikei;
-
-	// 3Dオブジェクト
-	std::unique_ptr<KObject3d> skydorm;
-
-	KMyMath::Vector3 center = { 0,0,1 };
-
-	float rSpeed = -0.02f;
-	float gSpeed = 0.02f;
-	float bSpeed = -0.02f;
-	float aSpeed = -0.02f;
 
 	std::unique_ptr<Sound> sound;
 
@@ -86,10 +63,6 @@ private:
 	SoundData soundData3;
 
 	bool isDebug = true;
-
-	// Fbx関連
-	FbxModel* fbxModel1 = nullptr;
-	FbxObject3D* object1 = nullptr;
 
 	// スプライト
 	Sprite* sprite = nullptr;

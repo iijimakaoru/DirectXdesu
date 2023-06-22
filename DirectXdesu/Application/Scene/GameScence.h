@@ -22,6 +22,8 @@
 
 #include "PostEffect.h"
 
+#include "Player.h"
+
 class GameScence : public BaseScene
 {
 public:
@@ -74,5 +76,8 @@ private:
 
 	// ポストエフェクト
 	std::unique_ptr<PostEffect> postEffect = nullptr;
+
+	// プレイヤー
+	std::unique_ptr<Player> player = nullptr;
 };
 

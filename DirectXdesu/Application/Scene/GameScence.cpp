@@ -63,6 +63,10 @@ void GameScence::Init()
 	postEffect->SetPipeline(spritePipeline.get());
 
 	sceneManager = SceneManager::GetInstance();
+
+	// ƒvƒŒƒCƒ„[
+	player = std::make_unique<Player>();
+	player->Init();
 }
 
 void GameScence::Update()
@@ -151,11 +155,15 @@ void GameScence::Update()
 		}
 	}
 
+	player->Update(camera->viewProjection);
+
 	camera->Update();
 }
 
 void GameScence::Draw()
 {
+	player->Draw();
+
 	sprite->Draw(&mario,spritePos, spriteSize,spriteRot, spriteColor, spriteFlipX, spriteFlipY);
 
 	postEffect->Draw(&mario, { 200,200 }, {200,200});

@@ -2,6 +2,8 @@
 
 void Player::Init()
 {
+	input = KInput::GetInstance();
+
 	// ƒ‚ƒfƒ‹¶¬
 	model = std::make_unique<Cube>();
 	model->CreateModel();
@@ -22,7 +24,18 @@ void Player::Init()
 	object3d->LoadModel(model.get());
 }
 
-void Player::Update(Camera* camera_)
+void Player::Update(ViewProjection& viewPro)
+{
+	leftStickPos = input->GetPadLStick();
+	if (leftStickPos.x != 0 && leftStickPos.y != 0)
+	{
+		Move();
+	}
+
+	object3d->Update(viewPro);
+}
+
+void Player::Move()
 {
 	
 }

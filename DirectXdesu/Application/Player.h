@@ -5,6 +5,7 @@
 #include "KTexture.h"
 #include "KGPlin.h"
 #include "KShader.h"
+#include "KInput.h"
 
 /// <summary>
 /// 自キャラ
@@ -19,12 +20,20 @@ public:
 	/// 更新
 	/// </summary>
 	/// <param name="camera_"></param>
-	void Update(Camera* camera_);
+	void Update(ViewProjection& viewPro);
+
+	// 移動
+	void Move();
 
 	// 描画
 	void Draw();
 
 private:
+	// Input
+	KInput* input = nullptr;
+	// パッドの入力情報
+	KMyMath::Vector2 leftStickPos;
+
 	// オブジェクト
 	std::unique_ptr<KObject3d> object3d;
 

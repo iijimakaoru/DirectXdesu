@@ -48,4 +48,7 @@ private:
 
 	// シェーダー
 	KShader shader;
+
+	// スピード
+	float speed = 1.0f;
 };

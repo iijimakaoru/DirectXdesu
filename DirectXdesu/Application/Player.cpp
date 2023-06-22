@@ -37,7 +37,16 @@ void Player::Update(ViewProjection& viewPro)
 
 void Player::Move()
 {
-	
+	object3d->transform.pos.x += (leftStickPos.x * speed) * leftStickPos.Length();
+	object3d->transform.pos.y += (leftStickPos.y * speed) * leftStickPos.Length();
+
+	const float moveLimitX = 60;
+	const float moveLimitY = 30;
+
+	object3d->transform.pos.x = max(object3d->transform.pos.x, -moveLimitX);
+	object3d->transform.pos.x = min(object3d->transform.pos.x, moveLimitX);
+	object3d->transform.pos.y = max(object3d->transform.pos.y, -moveLimitY);
+	object3d->transform.pos.y = min(object3d->transform.pos.y, moveLimitY);
 }
 
 void Player::Draw()

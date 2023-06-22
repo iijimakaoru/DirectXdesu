@@ -40,7 +40,7 @@ void GameScence::Init()
 	// Obj
 	objShader.Init(L"Resources/Shader/ObjVS.hlsl", L"Resources/Shader/ObjPS.hlsl");
 	objPipeline = std::make_unique<KGPlin>();
-	objPipeline->CreatePipeline(objShader, 5);
+	objPipeline->CreatePipelineAll(objShader, true);
 
 	// Sprite
 	spriteShader.Init(L"Resources/Shader/SpriteVS.hlsl", L"Resources/Shader/SpritePS.hlsl");

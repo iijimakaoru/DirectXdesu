@@ -15,13 +15,14 @@ void Player::Init()
 	pipeline = std::make_unique<KGPlin>();
 	shader.Init(L"Resources/Shader/ObjVS.hlsl", L"Resources/Shader/ObjPS.hlsl");
 	pipeline = std::make_unique<KGPlin>();
-	pipeline->CreatePipeline(shader, 5);
+	pipeline->CreatePipelineAll(shader, true);
 
 	// オブジェクト生成
 	object3d = std::make_unique<KObject3d>();
 	object3d->Initialize();
 	object3d->SetPipeline(pipeline.get());
 	object3d->LoadModel(model.get());
+	object3d->transform.scale = { 2.0f,2.0f,2.0f };
 }
 
 void Player::Update(ViewProjection& viewPro)

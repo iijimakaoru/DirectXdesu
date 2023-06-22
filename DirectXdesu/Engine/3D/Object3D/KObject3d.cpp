@@ -114,6 +114,8 @@ void KObject3d::Draw()
 
 void KObject3d::Draw(KTexture* texture)
 {
+	assert(texture);
+
 	pipeline->Setting();
 	pipeline->Update(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 

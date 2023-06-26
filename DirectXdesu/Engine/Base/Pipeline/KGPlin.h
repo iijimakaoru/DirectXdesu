@@ -37,10 +37,6 @@ private:
 	void Blending(D3D12_RENDER_TARGET_BLEND_DESC& blendDesc, const int mord = ALPHA);
 
 public:
-	KGPlin();
-
-	~KGPlin();
-
 	void CreatePipelineAll(KShader shader, bool Obj = false, bool Sprite = false, bool Particle = false, bool Fbx = false);
 
 	void Update(D3D12_PRIMITIVE_TOPOLOGY primitive = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);

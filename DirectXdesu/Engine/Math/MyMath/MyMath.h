@@ -10,6 +10,7 @@ namespace MyMathUtility
 {
 	// “x‚©‚çƒ‰ƒWƒAƒ“‚Ñ•ÏŠ·‚·‚é’è”
 	const float PI = 3.141592654f;
+	const float PIDouble = 3.141592654f * 2.0f;
 	constexpr float degree2Radius = 3.141592654f / 180.0f;
 	constexpr float PIHalf = 3.141592654f / 2.0f;
 

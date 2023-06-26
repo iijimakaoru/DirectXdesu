@@ -85,6 +85,26 @@ public:
 	//左スティックを下に倒した瞬間か
 	bool GetLStickDown();
 
+	/// <summary>
+	/// 左スティックXのデッドゾーン設定
+	/// </summary>
+	/// <param name="incline"></param>
+	/// <returns></returns>
+	bool LStickTiltX(float incline);
+
+	/// <summary>
+	/// 左スティックYのデッドゾーン設定
+	/// </summary>
+	/// <param name="incline"></param>
+	/// <returns></returns>
+	bool LStickTiltY(float incline);
+
+	// 左スティックの傾き
+	KMyMath::Vector2 GetLStickInline();
+
+	// 左スティックの角度取得
+	float GetLStickAngle();
+
 private:
 	// 全キーの入力状態を所得
 	BYTE key[256] = {};

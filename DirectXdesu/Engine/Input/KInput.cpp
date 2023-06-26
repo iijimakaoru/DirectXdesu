@@ -1,6 +1,7 @@
 #include "KInput.h"
 #include <cassert>
 #include"KWinApp.h"
+#include "MyMath.h"
 
 KInput* KInput::GetInstance()
 {
@@ -232,4 +233,76 @@ bool KInput::GetLStickDown()
 		return true;
 	}
 	return false;
+}
+
+bool KInput::LStickTiltX(float incline)
+{
+	//下に倒した時の判定
+	if (incline > 0)
+	{
+		//スティックの傾斜が指定した数値より大きければtrueを返す
+		if (xInputState.Gamepad.sThumbLX >= incline)
+		{
+			return true;
+		}
+	}
+	//上に倒した時の判定
+	else if (incline < 0)
+	{
+		//スティックの傾斜が指定した数値より小さければtrueを返す
+		if (xInputState.Gamepad.sThumbLX <= incline)
+		{
+			return true;
+		}
+	}
+
+	//どちらでもtrueがなければfalseを返す
+	return false;
+}
+
+bool KInput::LStickTiltY(float incline)
+{
+	//下に倒した時の判定
+	if (incline > 0) 
+	{
+		//スティックの傾斜が指定した数値より大きければtrueを返す
+		if (xInputState.Gamepad.sThumbLY >= incline) 
+		{
+			return true;
+		}
+	}
+	//上に倒した時の判定
+	else if (incline < 0) 
+	{
+		//スティックの傾斜が指定した数値より小さければtrueを返す
+		if (xInputState.Gamepad.sThumbLY <= incline) 
+		{
+			return true;
+		}
+	}
+
+	//どちらでもtrueがなければfalseを返す
+	return false;
+}
+
+KMyMath::Vector2 KInput::GetLStickInline()
+{
+	return KMyMath::Vector2((float)xInputState.Gamepad.sThumbLX / 1000, (float)xInputState.Gamepad.sThumbLY / 1000);
+}
+
+float KInput::GetLStickAngle()
+{
+	KMyMath::Vector2 tilt = GetLStickInline();
+	float x = tilt.x;
+	float y = tilt.y;
+
+	float radians = atan2f(y, x) * 360 / MyMathUtility::PIDouble;
+
+	// マイナスだった場合の修正
+	if (radians < 0)
+	{
+		radians += 360;
+	}
+
+	return radians;
 }

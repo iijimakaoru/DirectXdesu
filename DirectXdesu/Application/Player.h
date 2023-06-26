@@ -25,6 +25,9 @@ public:
 	// 移動
 	void Move();
 
+	// 回転
+	void Rot();
+
 	// 描画
 	void Draw();
 
@@ -51,4 +54,15 @@ private:
 
 	// スピード
 	float speed = 1.0f;
+
+	// 回転戻すイージング用
+	KMyMath::Vector2 oldRot;
+	float rotEaseTimer = 0;
+	bool isRotEase = false;
+
+	// 動くスピード
+	float moveSpeed = 0.5f;
+
+	// 角度上限
+	const KMyMath::Vector2 rotLimit = { 35.0f, 25.0f };
 };

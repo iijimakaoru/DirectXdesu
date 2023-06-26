@@ -125,16 +125,6 @@ void KGPlin::Blending(D3D12_RENDER_TARGET_BLEND_DESC& blendDesc, const int mord)
 	}
 }
 
-KGPlin::KGPlin()
-{
-
-}
-
-KGPlin::~KGPlin()
-{
-
-}
-
 void KGPlin::CreatePipelineAll(KShader shader, bool Obj, bool Sprite, bool Particle, bool Fbx)
 {
 	HRESULT result;

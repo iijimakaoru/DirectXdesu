@@ -72,9 +72,9 @@ void KObject3d::Update(ViewProjection& viewProjection) {
 	// 親オブジェクト要素
 	matScale = XMMatrixScaling(transform.scale.x, transform.scale.y, transform.scale.z);
 	matRot = XMMatrixIdentity();
-	matRot *= XMMatrixRotationZ(transform.rot.z);
-	matRot *= XMMatrixRotationX(transform.rot.x);
-	matRot *= XMMatrixRotationY(transform.rot.y);
+	matRot *= XMMatrixRotationZ(XMConvertToRadians(transform.rot.z));
+	matRot *= XMMatrixRotationX(XMConvertToRadians(transform.rot.x));
+	matRot *= XMMatrixRotationY(XMConvertToRadians(transform.rot.y));
 	matTrans = XMMatrixTranslation(transform.pos.x, transform.pos.y, transform.pos.z);
 
 	transform.matWorld = XMMatrixIdentity();

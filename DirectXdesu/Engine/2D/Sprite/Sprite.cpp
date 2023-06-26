@@ -222,6 +222,7 @@ void Sprite::Draw(KTexture* texture, KMyMath::Vector2 pos, KMyMath::Vector2 setS
 		return;
 	}
 
+	// X”½“]
 	if (isFlipX_)
 	{
 		flipX = -1;
@@ -231,6 +232,7 @@ void Sprite::Draw(KTexture* texture, KMyMath::Vector2 pos, KMyMath::Vector2 setS
 		flipX = 1;
 	}
 
+	// Y”½“]
 	if (isFlipY_)
 	{
 		flipY = -1;

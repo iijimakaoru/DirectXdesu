@@ -79,6 +79,7 @@ void PostEffect::Draw(KTexture* texture, KMyMath::Vector2 pos, KMyMath::Vector2 
 		return;
 	}
 
+	// X”½“]
 	if (isFlipX_)
 	{
 		flipX = -1;
@@ -87,7 +88,7 @@ void PostEffect::Draw(KTexture* texture, KMyMath::Vector2 pos, KMyMath::Vector2 
 	{
 		flipX = 1;
 	}
-
+	// Y”½“]
 	if (isFlipY_)
 	{
 		flipY = -1;

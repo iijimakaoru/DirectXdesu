@@ -15,7 +15,7 @@ public:
 	void SetQuaternion(KMyMath::Vector3 v, float angle);
 	Quaternion SetQuaternion(KMyMath::Vector3 v);
 
-	const KMyMath::Vector3& GetVec() { return KMyMath::Vector3(x, y, z); }
+	KMyMath::Vector3 GetVec() { return KMyMath::Vector3(x, y, z); }
 	void SetVec(const KMyMath::Vector3& vec);
 
 	Quaternion CalcProduct(const Quaternion& q, const Quaternion& r);

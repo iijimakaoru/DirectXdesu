@@ -6,7 +6,7 @@
 class KGPlin
 {
 public:
-	static enum BlendMord
+	 enum BlendMord
 	{
 		NONE = 0,
 		ADD,

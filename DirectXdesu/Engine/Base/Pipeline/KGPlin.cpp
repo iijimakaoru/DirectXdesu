@@ -46,7 +46,7 @@ void KGPlin::SetRootSignature(UINT rootParamNum)
 	SetRootParam(rootParams[0], D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE, descripterRange, 1);
 	for (size_t i = 0; i < rootParamNum; i++)
 	{
-		SetRootParam(rootParams[i + 1], D3D12_ROOT_PARAMETER_TYPE_CBV, i, 0);
+		SetRootParam(rootParams[i + 1], D3D12_ROOT_PARAMETER_TYPE_CBV, static_cast<UINT>(i), 0);
 	}
 
 	//// ÉTÉìÉvÉâÅ[
@@ -67,7 +67,7 @@ void KGPlin::SetRootSignature(UINT rootParamNum)
 	D3D12_ROOT_SIGNATURE_DESC rootSignatureDesc{};
 	rootSignatureDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
 	rootSignatureDesc.pParameters = &rootParams.front();
-	rootSignatureDesc.NumParameters = rootParams.size();
+	rootSignatureDesc.NumParameters = static_cast<UINT>(rootParams.size());
 	rootSignatureDesc.pStaticSamplers = &samplerDesc;
 	rootSignatureDesc.NumStaticSamplers = 1;
 

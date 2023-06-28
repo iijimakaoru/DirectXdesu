@@ -16,7 +16,7 @@ using namespace Microsoft::WRL;
 class KInput
 {
 public:
-	static enum MouseBotton
+	 enum MouseBotton
 	{
 		Left,
 		Right,

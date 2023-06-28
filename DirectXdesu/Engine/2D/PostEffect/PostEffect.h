@@ -2,6 +2,7 @@
 #include "KTexture.h"
 #include "MyMath.h"
 #include "KGPlin.h"
+#include "KWinApp.h"
 
 class PostEffect
 {
@@ -54,6 +55,9 @@ private:
 	// 定数バッファトランスフォーム
 	void CreateCBTransform();
 
+	// テクスチャバッファ
+	void CreateTextureBuff();
+
 private:
 	struct Vertex
 	{
@@ -101,6 +105,12 @@ private:
 	// 定数バッファのマップ
 	KMyMath::Matrix4* constMapTransform = nullptr;
 
+	// テクスチャバッファ
+	Microsoft::WRL::ComPtr<ID3D12Resource> texBuff = nullptr;
+
+	// デスクリプタヒープ
+	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> descHeapSRV;
+
 	// 位置
 	KMyMath::Vector2 position = { 0.0f,0.0f };
 	// 回転
@@ -125,6 +135,8 @@ private:
 	static Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> cmdList;
 
 	static KGPlin* pipeline;
+
+	static KWinApp* window;
 
 	static KMyMath::Matrix4 matPro;
 };

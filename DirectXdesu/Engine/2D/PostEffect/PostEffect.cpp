@@ -1,19 +1,21 @@
 #include "PostEffect.h"
-#include "KWinApp.h"
 
 KMyMath::Matrix4 PostEffect::matPro;
 KGPlin* PostEffect::pipeline = nullptr;
 ComPtr<ID3D12Device> PostEffect::device;
 ComPtr<ID3D12GraphicsCommandList> PostEffect::cmdList;
+KWinApp* PostEffect::window = nullptr;
 
 void PostEffect::StaticInit()
 {
 	device = KDirectXCommon::GetInstance()->GetDev();
 
+	window = KWinApp::GetInstance();
+
 	cmdList = KDirectXCommon::GetInstance()->GetCmdlist();
 
-	float width = static_cast<float>(KWinApp::GetInstance()->GetWindowSizeW());
-	float height = static_cast<float>(KWinApp::GetInstance()->GetWindowSizeH());
+	float width = static_cast<float>(window->GetWindowSizeW());
+	float height = static_cast<float>(window->GetWindowSizeH());
 
 	matPro = MyMathUtility::MakeOrthogonalL(0.0f, width, height, 0.0f, 0.0f, 1.0f);
 }
@@ -28,6 +30,9 @@ void PostEffect::Init()
 
 	// 定数バッファトランスフォーム
 	CreateCBTransform();
+
+	// テクスチャ
+	CreateTextureBuff();
 
 	*constMapTransform = MyMathUtility::MakeIdentity();
 }
@@ -54,10 +59,10 @@ void PostEffect::Update(KMyMath::Vector2 pos, KMyMath::Vector2 scale, float rot,
 void PostEffect::DrawCommand(KTexture* texture)
 {
 	// デスクリプタヒープの配列をセットするコマンド
-	ID3D12DescriptorHeap* ppHeaps[] = { texture->srvHeap.Get() };
+	ID3D12DescriptorHeap* ppHeaps[] = { descHeapSRV.Get() };
 	cmdList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 	// SRVヒープの先頭ハンドルを取得
-	D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle = texture->srvHeap->GetGPUDescriptorHandleForHeapStart();
+	D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle = descHeapSRV->GetGPUDescriptorHandleForHeapStart();
 	// SRVヒープの先頭にあるSRVをルートパラメータ1番に設定
 	cmdList->SetGraphicsRootDescriptorTable(1, srvGpuHandle);
 
@@ -297,4 +302,69 @@ void PostEffect::CreateCBTransform()
 	// 定数バッファのマッピング
 	result = constBuffTransform->Map(0, nullptr, (void**)&constMapTransform); // マッピング
 	assert(SUCCEEDED(result));
+}
+
+void PostEffect::CreateTextureBuff()
+{
+	// テクスチャリソース設定
+	CD3DX12_RESOURCE_DESC textureDesc = CD3DX12_RESOURCE_DESC::Tex2D(
+		DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,
+		window->GetWindowSizeW(),
+		(UINT)window->GetWindowSizeH(),
+		1, 0, 1, 0, D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET
+	);
+
+	CD3DX12_HEAP_PROPERTIES heapProp = CD3DX12_HEAP_PROPERTIES(D3D12_CPU_PAGE_PROPERTY_WRITE_BACK, D3D12_MEMORY_POOL_L0);
+
+	// テクスチャバッファの生成
+	result = device->CreateCommittedResource(
+		&heapProp,
+		D3D12_HEAP_FLAG_NONE,
+		&textureDesc,
+		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
+		nullptr,
+		IID_PPV_ARGS(&texBuff)
+	);
+	assert(SUCCEEDED(result));
+
+	{// テクスチャ赤クリア
+		// 画素数 ウィンドウ横 × ウィンドウ縦 = 総ピクセル数
+		const UINT pixcelCount = window->GetWindowSizeW() * window->GetWindowSizeH();
+		// 画素1行分のデータサイズ
+		const UINT rowPitch = sizeof(UINT) * window->GetWindowSizeW();
+		// 画像全体のデータサイズ
+		const UINT depthPitch = rowPitch * window->GetWindowSizeH();
+		// 画像イメージ
+		UINT* img = new UINT[pixcelCount];
+		for (size_t i = 0; i < pixcelCount; i++)
+		{
+			img[i] = 0xff0000ff;
+		}
+
+		// テクスチャバッファにデータ転送
+		result = texBuff->WriteToSubresource(0, nullptr, img, rowPitch, depthPitch);
+		assert(SUCCEEDED(result));
+		delete[] img;
+	}
+
+	// SRVデスクリプタヒープ設定
+	D3D12_DESCRIPTOR_HEAP_DESC srvDescHeapDesc = {};
+	srvDescHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+	srvDescHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+	srvDescHeapDesc.NumDescriptors = 1;
+	// SRV用デスクリプタヒープ生成
+	result = device->CreateDescriptorHeap(&srvDescHeapDesc, IID_PPV_ARGS(&descHeapSRV));
+	assert(SUCCEEDED(result));
+
+	// SRV設定
+	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{}; // 設定構造体
+	srvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D; // 2Dテクスチャ
+	srvDesc.Texture2D.MipLevels = 1;
+
+	// デスクリプタヒープにSRV作成
+	device->CreateShaderResourceView(texBuff.Get(), // ビューと関連付けるバッファ
+		&srvDesc,
+		descHeapSRV->GetCPUDescriptorHandleForHeapStart());
 }

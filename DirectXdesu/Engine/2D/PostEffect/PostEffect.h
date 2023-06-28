@@ -58,6 +58,15 @@ private:
 	// テクスチャバッファ
 	void CreateTextureBuff();
 
+	// 深度バッファ
+	void CreateDepthBuff();
+
+	// DSV用デスクリプタヒープ
+	void CreateDSVDescHeap();
+
+	// RTV用デスクリプタヒープ
+	void CreateRTVDescHeap();
+
 private:
 	struct Vertex
 	{
@@ -110,6 +119,15 @@ private:
 
 	// デスクリプタヒープ
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> descHeapSRV;
+
+	// 深度バッファ
+	Microsoft::WRL::ComPtr<ID3D12Resource> depthBuff = nullptr;
+
+	// RTV用デスクリプタヒープ
+	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> descHeapRTV;
+
+	// DSV用デスクリプタヒープ
+	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> descHeapDSV;
 
 	// 位置
 	KMyMath::Vector2 position = { 0.0f,0.0f };

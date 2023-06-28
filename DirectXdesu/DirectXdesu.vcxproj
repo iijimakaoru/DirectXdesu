@@ -61,11 +61,14 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(ProjectDir)Engine\2D\PostEffect;$(ProjectDir)Engine\2D\Sprite;$(ProjectDir)Engine\2D\Texture;$(ProjectDir)Engine\2D\Vertex;$(ProjectDir)Engine\3D\Loader;$(ProjectDir)Engine\3D\Model;$(ProjectDir)Engine\3D\Object3D;$(ProjectDir)Engine\Base\BaseCamera;$(ProjectDir)Engine\Base\BaseScene;$(ProjectDir)Engine\Base\Depth;$(ProjectDir)Engine\Base\Descriptor;$(ProjectDir)Engine\Base\DirectXCommon;$(ProjectDir)Engine\Base\Pipeline;$(ProjectDir)Engine\Base\RenderTarget;$(ProjectDir)Engine\Base\RunGame;$(ProjectDir)Engine\Base\View;$(ProjectDir)Engine\Base\Window;$(ProjectDir)Engine\Collision;$(ProjectDir)Engine\Imgui;$(ProjectDir)Engine\Input;$(ProjectDir)Engine\Level;$(ProjectDir)Engine\Math\Ease;$(ProjectDir)Engine\Sound;$(ProjectDir)Application\Camera;$(ProjectDir)Application\Scene;$(ProjectDir)Engine\Math\Matrix4;$(ProjectDir)Engine\Math\MyMath;$(ProjectDir)Engine\Math\Quaternion;$(ProjectDir)Engine\Math\Vector2;$(ProjectDir)Engine\Math\Vector3;$(ProjectDir)Engine\Math\Vector4;$(ProjectDir)DirectXdesu;$(ProjectDir)Application;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
+      <AdditionalOptions>/ignore:4049 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>libfbxsdk-md.lib;libxml2-md.lib;zlib-md.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <TreatLinkerWarningAsErrors>true</TreatLinkerWarningAsErrors>
+      <AdditionalOptions>/IGNORE:4099 %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -79,6 +82,7 @@
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <AdditionalIncludeDirectories>$(ProjectDir)Engine\2D\PostEffect;$(ProjectDir)Engine\2D\Sprite;$(ProjectDir)Engine\2D\Texture;$(ProjectDir)Engine\2D\Vertex;$(ProjectDir)Engine\3D\Loader;$(ProjectDir)Engine\3D\Model;$(ProjectDir)Engine\3D\Object3D;$(ProjectDir)Engine\Base\BaseCamera;$(ProjectDir)Engine\Base\BaseScene;$(ProjectDir)Engine\Base\Depth;$(ProjectDir)Engine\Base\Descriptor;$(ProjectDir)Engine\Base\DirectXCommon;$(ProjectDir)Engine\Base\Pipeline;$(ProjectDir)Engine\Base\RenderTarget;$(ProjectDir)Engine\Base\RunGame;$(ProjectDir)Engine\Base\View;$(ProjectDir)Engine\Base\Window;$(ProjectDir)Engine\Collision;$(ProjectDir)Engine\Imgui;$(ProjectDir)Engine\Input;$(ProjectDir)Engine\Level;$(ProjectDir)Engine\Math\Ease;$(ProjectDir)Engine\Sound;$(ProjectDir)Application\Camera;$(ProjectDir)Application\Scene;$(ProjectDir)Engine\Math\Matrix4;$(ProjectDir)Engine\Math\MyMath;$(ProjectDir)Engine\Math\Quaternion;$(ProjectDir)Engine\Math\Vector2;$(ProjectDir)Engine\Math\Vector3;$(ProjectDir)Engine\Math\Vector4;$(ProjectDir)DirectXdesu;$(ProjectDir)Application;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
+      <AdditionalOptions>/ignore:4049 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -86,6 +90,8 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>libfbxsdk-mt.lib;libxml2-mt.lib;zlib-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <TreatLinkerWarningAsErrors>true</TreatLinkerWarningAsErrors>
+      <AdditionalOptions>/IGNORE:4099 %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

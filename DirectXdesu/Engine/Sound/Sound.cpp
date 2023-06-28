@@ -11,7 +11,6 @@ void Sound::Init()
 
 SoundData Sound::SoundLoadWave(const char* filename)
 {
-	HRESULT result;
 #pragma region ファイルオープン
 	// ファイル入力ストリームのインスタンス
 	std::ifstream file;

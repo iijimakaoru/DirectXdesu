@@ -31,13 +31,13 @@ namespace MyMathUtility
 	{
 		float len = startPoint - endPoint;
 
-		return endPoint + len * cos(((nowFlame / endFlame) * PI) / 2);
+		return static_cast<float>(endPoint + len * cos(((nowFlame / endFlame) * PI) / 2));
 	}
 
 	float EaseOutSine(const float startPoint, const float endPoint, float nowFlame, float endFlame)
 	{
 		float len = endPoint - startPoint;
 
-		return startPoint + len * sin(((nowFlame / endFlame) * PI) / 2);
+		return static_cast<float>(startPoint + len * sin(((nowFlame / endFlame) * PI) / 2));
 	}
 }

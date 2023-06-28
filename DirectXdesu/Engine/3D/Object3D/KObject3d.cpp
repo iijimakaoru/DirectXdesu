@@ -134,7 +134,7 @@ void KObject3d::Finalize()
 
 void KObject3d::StaticInitialize()
 {
-
+	
 }
 
 KObject3d KObject3d::Create()

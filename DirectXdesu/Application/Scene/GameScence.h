@@ -74,9 +74,6 @@ private:
 	KMyMath::Vector4 spriteColor = { 1.0f,1.0f,1.0f,1.0f };
 	bool spriteFlipX, spriteFlipY = false;
 
-	// ポストエフェクト
-	std::unique_ptr<PostEffect> postEffect = nullptr;
-
 	// プレイヤー
 	std::unique_ptr<Player> player = nullptr;
 };

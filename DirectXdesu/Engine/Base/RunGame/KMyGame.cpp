@@ -20,11 +20,19 @@ void KMyGame::Update()
 
 void KMyGame::Draw()
 {
-	// 描画開始
-	dx->PreDraw();
+	// レンダーテクスチャへの描画
+	postEffect->PreDrawScene();
 
 	// シーンマネージャーの描画
 	sceneManager->Draw();
+
+	postEffect->PostDrawScene();
+
+	// 描画開始
+	dx->PreDraw();
+
+	// ポストエフェクト描画
+	postEffect->Draw({ 640,360 }, { 640,360 }, 0, { 1.0f,1.0f,1.0f,1.0f }, false, false, { 0,0 });
 
 	// Imgui描画
 	imguiMane.Draw();

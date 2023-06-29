@@ -6,6 +6,9 @@
 #include "SceneManager.h"
 #include "ImguiManager.h"
 #include "ASceneFactory.h"
+#include "PostEffect.h"
+#include "KGPlin.h"
+#include "KShader.h"
 
 class Framework
 {
@@ -41,5 +44,14 @@ protected:
 	ASceneFactory* sceneFactory = nullptr;
 
 	ImguiManager imguiMane;
+
+	// パイプライン
+	std::unique_ptr<KGPlin> spritePipeline;
+
+	// シェーダー
+	KShader spriteShader;
+
+	// ポストエフェクト
+	std::unique_ptr<PostEffect> postEffect = nullptr;
 };
 

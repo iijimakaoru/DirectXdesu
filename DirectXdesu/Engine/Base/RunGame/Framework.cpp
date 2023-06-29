@@ -1,6 +1,5 @@
 #include "Framework.h"
 #include "Sprite.h"
-#include "PostEffect.h"
 #include "BaseScene.h"
 
 void Framework::Init()
@@ -30,6 +29,16 @@ void Framework::Init()
 
 	// Imgui初期化
 	imguiMane.Init();
+
+	// Spriteパイプライン
+	spriteShader.Init(L"Resources/Shader/SpriteVS.hlsl", L"Resources/Shader/SpritePS.hlsl");
+	spritePipeline = std::make_unique<KGPlin>();
+	spritePipeline->CreatePipelineAll(spriteShader, false, true);
+
+	// ポストエフェクトテスト
+	postEffect = std::make_unique<PostEffect>();
+	postEffect->Init();
+	postEffect->SetPipeline(spritePipeline.get());
 }
 
 void Framework::Final()

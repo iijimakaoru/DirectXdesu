@@ -1,10 +1,12 @@
 #include "PostEffect.h"
 
+// 静的メンバ変数の実体
 KMyMath::Matrix4 PostEffect::matPro;
 KGPlin* PostEffect::pipeline = nullptr;
 ComPtr<ID3D12Device> PostEffect::device;
 ComPtr<ID3D12GraphicsCommandList> PostEffect::cmdList;
 KWinApp* PostEffect::window = nullptr;
+const float PostEffect::clearColor[4] = { 1.0f, 0.0f, 0.0f, 0.0f };
 
 void PostEffect::StaticInit()
 {
@@ -34,6 +36,9 @@ void PostEffect::Init()
 	// テクスチャ
 	CreateTextureBuff();
 
+	// 深度バッファ
+	CreateDepthBuff();
+
 	*constMapTransform = MyMathUtility::MakeIdentity();
 }
 
@@ -56,7 +61,7 @@ void PostEffect::Update(KMyMath::Vector2 pos, KMyMath::Vector2 scale, float rot,
 	*constMapMaterial = color;
 }
 
-void PostEffect::DrawCommand(KTexture* texture)
+void PostEffect::DrawCommand()
 {
 	// デスクリプタヒープの配列をセットするコマンド
 	ID3D12DescriptorHeap* ppHeaps[] = { descHeapSRV.Get() };
@@ -73,9 +78,55 @@ void PostEffect::DrawCommand(KTexture* texture)
 
 	// 頂点バッファビューの設定コマンド
 	cmdList->IASetVertexBuffers(0, 1, &vbView);
+
+	// インデックスバッファの設定コマンド
+	cmdList->IASetIndexBuffer(&ibView);
 }
 
-void PostEffect::Draw(KTexture* texture, KMyMath::Vector2 pos, KMyMath::Vector2 setSize_, float rot, KMyMath::Vector4 color,
+void PostEffect::PreDrawScene()
+{
+	// リソースバリア変更
+	CD3DX12_RESOURCE_BARRIER barrier = CD3DX12_RESOURCE_BARRIER::Transition(texBuff.Get(),
+		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
+		D3D12_RESOURCE_STATE_RENDER_TARGET);
+	cmdList->ResourceBarrier(1,&barrier);
+
+	// レンダーターゲットビュー用デスクリプタヒープのハンドル取得
+	D3D12_CPU_DESCRIPTOR_HANDLE rtvH = descHeapRTV->GetCPUDescriptorHandleForHeapStart();
+
+	// 深度ステンシルビュー用デスクリプタヒープのハンドル取得
+	D3D12_CPU_DESCRIPTOR_HANDLE dsvH = descHeapDSV->GetCPUDescriptorHandleForHeapStart();
+
+	// レンダーターゲットをセット
+	cmdList->OMSetRenderTargets(1, &rtvH, false, &dsvH);
+
+	// ビューポート設定
+	CD3DX12_VIEWPORT viewPort = 
+		CD3DX12_VIEWPORT(0.0f, 0.0f, static_cast<FLOAT>(window->GetWindowSizeW()), static_cast<FLOAT>(window->GetWindowSizeH()));
+	cmdList->RSSetViewports(1, &viewPort);
+
+	// シザリング矩形設定
+	CD3DX12_RECT rect =
+		CD3DX12_RECT(0, 0, static_cast<LONG>(window->GetWindowSizeW()), static_cast<LONG>(window->GetWindowSizeH()));
+	cmdList->RSSetScissorRects(1, &rect);
+
+	// 背面クリア
+	cmdList->ClearRenderTargetView(rtvH, clearColor, 0, nullptr);
+
+	// 深度バッファのクリア
+	cmdList->ClearDepthStencilView(dsvH, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+}
+
+void PostEffect::PostDrawScene()
+{
+	// リソースバリアを変更
+	CD3DX12_RESOURCE_BARRIER barrier = CD3DX12_RESOURCE_BARRIER::Transition(texBuff.Get(),
+		D3D12_RESOURCE_STATE_RENDER_TARGET,
+		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
+	cmdList->ResourceBarrier(1, &barrier);
+}
+
+void PostEffect::Draw(KMyMath::Vector2 pos, KMyMath::Vector2 setSize_, float rot, KMyMath::Vector4 color,
 	bool isFlipX_, bool isFlipY_, KMyMath::Vector2 anchorPoint_)
 {
 	// 非表示処理
@@ -138,7 +189,7 @@ void PostEffect::Draw(KTexture* texture, KMyMath::Vector2 pos, KMyMath::Vector2 
 	pipeline->Update(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP); // 三角形リスト
 
 	// 描画の条件
-	DrawCommand(texture);
+	DrawCommand();
 
 	// 描画コマンド
 	cmdList->DrawIndexedInstanced(_countof(indices), 1, 0, 0, 0);
@@ -316,13 +367,15 @@ void PostEffect::CreateTextureBuff()
 
 	CD3DX12_HEAP_PROPERTIES heapProp = CD3DX12_HEAP_PROPERTIES(D3D12_CPU_PAGE_PROPERTY_WRITE_BACK, D3D12_MEMORY_POOL_L0);
 
+	CD3DX12_CLEAR_VALUE clear = CD3DX12_CLEAR_VALUE(DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, clearColor);
+
 	// テクスチャバッファの生成
 	result = device->CreateCommittedResource(
 		&heapProp,
 		D3D12_HEAP_FLAG_NONE,
 		&textureDesc,
 		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
-		nullptr,
+		&clear,
 		IID_PPV_ARGS(&texBuff)
 	);
 	assert(SUCCEEDED(result));
@@ -429,8 +482,8 @@ void PostEffect::CreateRTVDescHeap()
 	CD3DX12_RESOURCE_DESC depthResDesc =
 		CD3DX12_RESOURCE_DESC::Tex2D(
 			DXGI_FORMAT_D32_FLOAT,
-			window->GetWindowSizeW(),
-			window->GetWindowSizeH(),
+			static_cast<UINT>(window->GetWindowSizeW()),
+			static_cast<UINT>(window->GetWindowSizeH()),
 			1, 0, 1, 0,
 			D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL
 		);

@@ -6,10 +6,11 @@
 
 class PostEffect
 {
-public:
+public:// 静的メンバ関数
 	//　静的初期化
 	static void StaticInit();
 
+public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
@@ -22,13 +23,17 @@ public:
 	/// <summary>
 	/// 描画情報
 	/// </summary>
-	/// <param name="texture"></param>
-	void DrawCommand(KTexture* texture);
+	void DrawCommand();
+
+	// シーン描画前処理
+	void PreDrawScene();
+
+	// シーン描画後処理
+	void PostDrawScene();
 
 	/// <summary>
 	/// 描画
 	/// </summary>
-	/// <param name="texture"></param>
 	/// <param name="pos"></param>
 	/// <param name="setSize_"></param>
 	/// <param name="rot"></param>
@@ -36,7 +41,7 @@ public:
 	/// <param name="isFlipX_"></param>
 	/// <param name="isFlipY_"></param>
 	/// <param name="anchorPoint_"></param>
-	void Draw(KTexture* texture, KMyMath::Vector2 pos = { 0.0f,0.0f }, KMyMath::Vector2 setSize_ = { 100.0f,100.0f }, float rot = 0.0f,
+	void Draw(KMyMath::Vector2 pos = { 0.0f,0.0f }, KMyMath::Vector2 setSize_ = { 100.0f,100.0f }, float rot = 0.0f,
 		KMyMath::Vector4 color = { 1.0f,1.0f,1.0f,1.0f }, bool isFlipX_ = false, bool isFlipY_ = false, KMyMath::Vector2 anchorPoint_ = { 0.5f,0.5f });
 
 	/// <summary>
@@ -45,7 +50,7 @@ public:
 	/// <param name="pipeline_"></param>
 	void SetPipeline(KGPlin* pipeline_);
 
-private:
+private:// クラス内でしか使わない関数
 	// 定数バッファマテリアル
 	void CreateCBMaterial();
 
@@ -146,16 +151,23 @@ private:
 	// 非表示
 	bool isInvisible = false;
 
+private:// 静的メンバ変数
 	// デバイス
 	static Microsoft::WRL::ComPtr<ID3D12Device> device;
 
 	// コマンドリスト
 	static Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> cmdList;
 
+	// パイプライン
 	static KGPlin* pipeline;
 
+	// ウィンドウ
 	static KWinApp* window;
 
+	// マットプロジェクション
 	static KMyMath::Matrix4 matPro;
+
+	// 画面クリアカラー
+	static const float clearColor[4];
 };
 

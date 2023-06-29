@@ -57,11 +57,6 @@ void GameScence::Init()
 	isDebug = true;
 	camera = std::make_unique<DebugCamera>();
 
-	// ポストエフェクトテスト
-	postEffect = std::make_unique<PostEffect>();
-	postEffect->Init();
-	postEffect->SetPipeline(spritePipeline.get());
-
 	sceneManager = SceneManager::GetInstance();
 
 	// プレイヤー
@@ -165,8 +160,6 @@ void GameScence::Draw()
 	player->Draw();
 
 	sprite->Draw(&mario,spritePos, spriteSize,spriteRot, spriteColor, spriteFlipX, spriteFlipY);
-
-	postEffect->Draw(&mario, { 200,200 }, {200,200});
 }
 
 void GameScence::Final()

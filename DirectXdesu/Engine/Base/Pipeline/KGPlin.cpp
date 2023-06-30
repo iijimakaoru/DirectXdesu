@@ -125,7 +125,7 @@ void KGPlin::Blending(D3D12_RENDER_TARGET_BLEND_DESC& blendDesc, const int mord)
 	}
 }
 
-void KGPlin::CreatePipelineAll(KShader shader, bool Obj, bool Sprite, bool Particle, bool Fbx)
+void KGPlin::CreatePipelineAll(KShader shader, bool Obj, bool Sprite, bool Particle, bool Fbx, bool Post)
 {
 	HRESULT result;
 
@@ -285,7 +285,7 @@ void KGPlin::CreatePipelineAll(KShader shader, bool Obj, bool Sprite, bool Parti
 #pragma region 頂点レイアウト配列の宣言と設定
 		static D3D12_INPUT_ELEMENT_DESC inputLayout[] = 
 		{
-			{// xyz座標
+			{// xy座標
 				"POSITION",										// セマンティック名
 				0,												// 同じセマンティック名が複数あるときに使うインデックス
 				DXGI_FORMAT_R32G32B32_FLOAT,					// 要素数とビット数を表す
@@ -509,6 +509,104 @@ void KGPlin::CreatePipelineAll(KShader shader, bool Obj, bool Sprite, bool Parti
 
 		// バージョン自動判定のシリアライズ
 		result = D3DX12SerializeVersionedRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1_0, &rootSigBlob, &errorBlob);
+
+		// ルートシグネチャの生成
+		result = device->CreateRootSignature(0, rootSigBlob->GetBufferPointer(), rootSigBlob->GetBufferSize(), IID_PPV_ARGS(rootSignature.ReleaseAndGetAddressOf()));
+		if (FAILED(result)) { assert(0); }
+
+		piplineDesc.pRootSignature = rootSignature.Get();
+
+		// グラフィックスパイプラインの生成
+		result = device->CreateGraphicsPipelineState(&piplineDesc, IID_PPV_ARGS(pipelineState.ReleaseAndGetAddressOf()));
+		if (FAILED(result)) { assert(0); }
+	}
+
+	if (Post)
+	{
+		D3D12_INPUT_ELEMENT_DESC inputLayout[] =
+		{
+			{// xy座標
+				"POSITION",										// セマンティック名
+				0,												// 同じセマンティック名が複数あるときに使うインデックス
+				DXGI_FORMAT_R32G32B32_FLOAT,					// 要素数とビット数を表す
+				0,												// 入力スロットインデックス
+				D3D12_APPEND_ALIGNED_ELEMENT,					// データのオフセット
+				D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,		// 入力データ種別
+				0												// 一度に描画するインスタンス数
+			},
+			{ // uv座標(1行で書いたほうが見やすい)
+				"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0,
+				D3D12_APPEND_ALIGNED_ELEMENT,
+				D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0
+			},
+		};
+
+		// サンプルマスク
+		piplineDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK; // 標準設定
+
+		// ラスタライザステート
+		piplineDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
+		piplineDesc.RasterizerState.CullMode = D3D12_CULL_MODE_NONE;
+
+		// デプスステンシルステート
+		piplineDesc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
+		piplineDesc.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_ALWAYS; // 常に上書き
+
+		// レンダーターゲットのブレンド設定
+		D3D12_RENDER_TARGET_BLEND_DESC blenddesc{};
+		blenddesc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;    // RBGA全てのチャンネルを描画
+		blenddesc.BlendEnable = true;
+		blenddesc.BlendOp = D3D12_BLEND_OP_ADD;
+		blenddesc.SrcBlend = D3D12_BLEND_SRC_ALPHA;
+		blenddesc.DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
+
+		blenddesc.BlendOpAlpha = D3D12_BLEND_OP_ADD;
+		blenddesc.SrcBlendAlpha = D3D12_BLEND_ONE;
+		blenddesc.DestBlendAlpha = D3D12_BLEND_ZERO;
+
+		// ブレンドステートの設定
+		piplineDesc.BlendState.RenderTarget[0] = blenddesc;
+
+		// 深度バッファのフォーマット
+		piplineDesc.DSVFormat = DXGI_FORMAT_D32_FLOAT;
+
+		// 頂点レイアウトの設定
+		piplineDesc.InputLayout.pInputElementDescs = inputLayout;
+		piplineDesc.InputLayout.NumElements = _countof(inputLayout);
+
+		// 図形の形状設定（三角形）
+		piplineDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+
+		piplineDesc.NumRenderTargets = 1;    // 描画対象は1つ
+		piplineDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB; // 0～255指定のRGBA(SRGB版)
+		piplineDesc.SampleDesc.Count = 1; // 1ピクセルにつき1回サンプリング
+
+		// デスクリプタレンジ
+		CD3DX12_DESCRIPTOR_RANGE descRangeSRV;
+		descRangeSRV.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0);
+
+		// ルートパラメータ
+		CD3DX12_ROOT_PARAMETER rootparams[2] = {};
+
+		// CBV(座標変換行列用)
+		rootparams[0].InitAsConstantBufferView(0, 0, D3D12_SHADER_VISIBILITY_ALL);
+
+		// SRV(テクスチャ)
+		rootparams[1].InitAsDescriptorTable(1, &descRangeSRV, D3D12_SHADER_VISIBILITY_ALL);
+
+		// スタティックサンプラー
+		CD3DX12_STATIC_SAMPLER_DESC samplerDesc = CD3DX12_STATIC_SAMPLER_DESC(0, D3D12_FILTER_MIN_MAG_MIP_POINT);
+
+		// ルートシグネチャの設定
+		CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC rootSignatureDesc;
+		rootSignatureDesc.Init_1_0(_countof(rootparams), rootparams, 1, &samplerDesc, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+
+		ComPtr<ID3DBlob> rootSigBlob;
+		ComPtr<ID3DBlob> errorBlob;
+
+		// バージョン自動判定のシリアライズ
+		result = D3DX12SerializeVersionedRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1_0, &rootSigBlob, &errorBlob);
+		if (FAILED(result)) { assert(0); }
 
 		// ルートシグネチャの生成
 		result = device->CreateRootSignature(0, rootSigBlob->GetBufferPointer(), rootSigBlob->GetBufferSize(), IID_PPV_ARGS(rootSignature.ReleaseAndGetAddressOf()));

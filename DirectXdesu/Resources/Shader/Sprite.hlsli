@@ -5,7 +5,7 @@ cbuffer cbuff0 : register(b0)
 };
 
 // 3D•ÏŠ·s—ñ
-cbuffer ConstBufferDataTransform : register(b1)
+cbuffer cbuff1 : register(b1)
 {
     matrix mat;
 };

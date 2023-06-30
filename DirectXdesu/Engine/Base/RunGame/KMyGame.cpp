@@ -32,7 +32,7 @@ void KMyGame::Draw()
 	dx->PreDraw();
 
 	// ポストエフェクト描画
-	postEffect->Draw({ 640,360 }, { 640,360 }, 0, { 1.0f,1.0f,1.0f,1.0f }, false, false, { 0,0 });
+	postEffect->Draw({ 0,0 }, { 1.0f,1.0f,1.0f,1.0f });
 
 	// Imgui描画
 	imguiMane.Draw();

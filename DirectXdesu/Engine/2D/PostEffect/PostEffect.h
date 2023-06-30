@@ -17,9 +17,6 @@ public:
 	/// <param name="spriteCommon"></param>
 	void Init();
 
-	// 更新
-	void Update(KMyMath::Vector2 pos, KMyMath::Vector2 scale, float rot, KMyMath::Vector4 color);
-
 	/// <summary>
 	/// 描画情報
 	/// </summary>
@@ -41,8 +38,7 @@ public:
 	/// <param name="isFlipX_"></param>
 	/// <param name="isFlipY_"></param>
 	/// <param name="anchorPoint_"></param>
-	void Draw(KMyMath::Vector2 pos = { 0.0f,0.0f }, KMyMath::Vector2 setSize_ = { 100.0f,100.0f }, float rot = 0.0f,
-		KMyMath::Vector4 color = { 1.0f,1.0f,1.0f,1.0f }, bool isFlipX_ = false, bool isFlipY_ = false, KMyMath::Vector2 anchorPoint_ = { 0.5f,0.5f });
+	void Draw(KMyMath::Vector2 pos = { 0.0f,0.0f }, KMyMath::Vector4 color = { 1.0f,1.0f,1.0f,1.0f });
 
 	/// <summary>
 	/// パイプラインセッター
@@ -54,8 +50,8 @@ private:// クラス内でしか使わない関数
 	// 定数バッファマテリアル
 	void CreateCBMaterial();
 
-	// 頂点、インデックス生成
-	void CreateVertexIndex();
+	// 頂点生成
+	void CreateVertex();
 
 	// 定数バッファトランスフォーム
 	void CreateCBTransform();
@@ -92,20 +88,11 @@ private:
 	// 頂点バッファ
 	Microsoft::WRL::ComPtr<ID3D12Resource> vertBuff = nullptr;
 
-	// 頂点マップ
-	Vertex* vertMap = nullptr;
-
 	// 頂点バッファビュー
 	D3D12_VERTEX_BUFFER_VIEW vbView{};
 
 	// インデックスバッファ
 	Microsoft::WRL::ComPtr<ID3D12Resource> indexBuff = nullptr;
-
-	// インデックスマップ
-	uint16_t* indexMap = nullptr;
-
-	// インデックスバッファビュー
-	D3D12_INDEX_BUFFER_VIEW ibView{};
 
 	// 定数バッファ
 	Microsoft::WRL::ComPtr<ID3D12Resource> constBuffMaterial = nullptr;
@@ -134,22 +121,7 @@ private:
 	// DSV用デスクリプタヒープ
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> descHeapDSV;
 
-	// 位置
-	KMyMath::Vector2 position = { 0.0f,0.0f };
-	// 回転
-	float rotation = 0.0f;
-	// 色
-	KMyMath::Vector4 color = { 1.0f,1.0f,1.0f,1.0f };
-	// 表示サイズ
-	KMyMath::Vector2 size_ = { 100.0f,100.0f };
-	// アンカーポイント
-	KMyMath::Vector2 anchorPoint = { 0.5f,0.5f };
-	// 左右フリップ
-	int flipX = 1;
-	// 上下フリップ
-	int flipY = 1;
-	// 非表示
-	bool isInvisible = false;
+	Vertex vertices_[4];
 
 private:// 静的メンバ変数
 	// デバイス

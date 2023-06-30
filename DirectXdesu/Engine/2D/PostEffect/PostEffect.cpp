@@ -6,7 +6,7 @@ KGPlin* PostEffect::pipeline = nullptr;
 ComPtr<ID3D12Device> PostEffect::device;
 ComPtr<ID3D12GraphicsCommandList> PostEffect::cmdList;
 KWinApp* PostEffect::window = nullptr;
-const float PostEffect::clearColor[4] = { 1.0f, 0.0f, 0.0f, 0.0f };
+const float PostEffect::clearColor[4] = { 1.0f, 0.0f, 0.0f, 1.0f };
 
 void PostEffect::StaticInit()
 {
@@ -27,8 +27,8 @@ void PostEffect::Init()
 	// 定数バッファマテリアル
 	CreateCBMaterial();
 
-	// 頂点、インデックス
-	CreateVertexIndex();
+	// 頂点
+	CreateVertex();
 
 	// 定数バッファトランスフォーム
 	CreateCBTransform();
@@ -40,25 +40,6 @@ void PostEffect::Init()
 	CreateDepthBuff();
 
 	*constMapTransform = MyMathUtility::MakeIdentity();
-}
-
-void PostEffect::Update(KMyMath::Vector2 pos, KMyMath::Vector2 scale, float rot, KMyMath::Vector4 color)
-{
-	// ワールド変換
-	KMyMath::Matrix4 matWorld, matTrans, matRot;
-	// 移動行列
-	matTrans = MyMathUtility::MakeTranslation({ pos.x,pos.y,0.0f });
-	// 回転行列
-	matRot = MyMathUtility::MakeRotation({ 0.0f,0.0f,XMConvertToRadians(rot) });
-
-	// 全て合体
-	matWorld = matRot * matTrans;
-
-	// 定数バッファへ転送
-	*constMapTransform = matWorld * matPro;
-
-	// 色の代入
-	*constMapMaterial = color;
 }
 
 void PostEffect::DrawCommand()
@@ -78,9 +59,6 @@ void PostEffect::DrawCommand()
 
 	// 頂点バッファビューの設定コマンド
 	cmdList->IASetVertexBuffers(0, 1, &vbView);
-
-	// インデックスバッファの設定コマンド
-	cmdList->IASetIndexBuffer(&ibView);
 }
 
 void PostEffect::PreDrawScene()
@@ -126,64 +104,8 @@ void PostEffect::PostDrawScene()
 	cmdList->ResourceBarrier(1, &barrier);
 }
 
-void PostEffect::Draw(KMyMath::Vector2 pos, KMyMath::Vector2 setSize_, float rot, KMyMath::Vector4 color,
-	bool isFlipX_, bool isFlipY_, KMyMath::Vector2 anchorPoint_)
+void PostEffect::Draw(KMyMath::Vector2 pos, KMyMath::Vector4 color)
 {
-	// 非表示処理
-	if (isInvisible)
-	{
-		return;
-	}
-
-	// X反転
-	if (isFlipX_)
-	{
-		flipX = -1;
-	}
-	else
-	{
-		flipX = 1;
-	}
-	// Y反転
-	if (isFlipY_)
-	{
-		flipY = -1;
-	}
-	else
-	{
-		flipY = 1;
-	}
-
-	// アンカーポイント
-	float left = ((0.0f - anchorPoint_.x) * setSize_.x) * flipX;
-	float right = ((1.0f - anchorPoint_.x) * setSize_.x) * flipX;
-	float top = ((0.0f - anchorPoint_.y) * setSize_.y) * flipY;
-	float bottom = ((1.0f - anchorPoint_.y) * setSize_.y) * flipY;
-
-	// 頂点データ
-	Vertex vertices[] =
-	{
-		{{ left,   top,0.0f},{0.0f,0.0f}}, // 左上
-		{{ left,bottom,0.0f},{0.0f,1.0f}}, // 左下
-		{{right,   top,0.0f},{1.0f,0.0f}}, // 右上
-		{{right,bottom,0.0f},{1.0f,1.0f}}, // 右下
-	};
-
-	// インデックスデータ
-	uint16_t indices[] =
-	{
-		1,0,3, // 三角形1つ目
-		2,3,0, // 三角形2つ目
-	};
-
-	// 全頂点に対して
-	std::copy(std::begin(vertices), std::end(vertices), vertMap);
-
-	// 全インデックスに対して
-	std::copy(std::begin(indices), std::end(indices), indexMap);
-
-	Update(pos, setSize_, rot, color);
-
 	// パイプラインセット
 	pipeline->Setting();
 	pipeline->Update(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP); // 三角形リスト
@@ -192,7 +114,7 @@ void PostEffect::Draw(KMyMath::Vector2 pos, KMyMath::Vector2 setSize_, float rot
 	DrawCommand();
 
 	// 描画コマンド
-	cmdList->DrawIndexedInstanced(_countof(indices), 1, 0, 0, 0);
+	cmdList->DrawInstanced(_countof(vertices_), 1, 0, 0);
 }
 
 void PostEffect::SetPipeline(KGPlin* pipeline_)
@@ -235,28 +157,16 @@ void PostEffect::CreateCBMaterial()
 	*constMapMaterial = KMyMath::Vector4(1.0f, 0.5f, 0.5f, 1.0f);
 }
 
-void PostEffect::CreateVertexIndex()
+void PostEffect::CreateVertex()
 {
 	// ヒープ設定
-	D3D12_HEAP_PROPERTIES heapProp{};
-
-	// リソース設定
-	D3D12_RESOURCE_DESC resDesc{};
+	CD3DX12_HEAP_PROPERTIES heapProp = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
 
 	// 頂点データ全体のサイズ = 頂点データ一つ分のサイズ * 頂点データの数
 	UINT sizeVB = static_cast<UINT>(sizeof(Vertex) * 4);
 
-	// 頂点バッファの設定
-	heapProp.Type = D3D12_HEAP_TYPE_UPLOAD; // GPUへの転換
-
 	// リソース設定
-	resDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-	resDesc.Width = sizeVB;
-	resDesc.Height = 1;
-	resDesc.DepthOrArraySize = 1;
-	resDesc.MipLevels = 1;
-	resDesc.SampleDesc.Count = 1;
-	resDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+	CD3DX12_RESOURCE_DESC resDesc = CD3DX12_RESOURCE_DESC::Buffer(sizeVB);
 
 	// 頂点バッファの設定
 	result = device->CreateCommittedResource(
@@ -269,8 +179,30 @@ void PostEffect::CreateVertexIndex()
 	);
 	assert(SUCCEEDED(result));
 
+	// 頂点データ
+	Vertex vertices[4] =
+	{
+		{{-0.5f, 0.5f,0.0f},{0.0f,0.0f}}, // 左上
+		{{-0.5f,-0.5f,0.0f},{0.0f,1.0f}}, // 左下
+		{{ 0.5f, 0.5f,0.0f},{1.0f,0.0f}}, // 右上
+		{{ 0.5f,-0.5f,0.0f},{1.0f,1.0f}}, // 右下
+	};
+
+	for (size_t i = 0; i < 4; i++)
+	{
+		vertices_[i] = vertices[i];
+	}
+
+	// 頂点マップ
+	Vertex* vertMap = nullptr;
+
 	// GPU上のバッファに対応した仮想メモリ(メインメモリ上)を取得
 	result = vertBuff->Map(0, nullptr, (void**)&vertMap);
+	if (SUCCEEDED(result))
+	{
+		memcpy(vertMap, vertices_, sizeof(vertices_));
+		vertBuff->Unmap(0, nullptr);
+	}
 	assert(SUCCEEDED(result));
 
 	// 頂点バッファビューの作成
@@ -280,47 +212,6 @@ void PostEffect::CreateVertexIndex()
 	vbView.SizeInBytes = sizeVB;
 	// 頂点一つ分のデータサイズ
 	vbView.StrideInBytes = sizeof(Vertex);
-
-	// インデックスデータのサイズ
-	UINT sizeIB = static_cast<UINT>(sizeof(uint16_t) * 6);
-
-	// 頂点バッファの設定
-	heapProp.Type = D3D12_HEAP_TYPE_UPLOAD; // GPUへの転換
-
-	// リソース設定
-	resDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-	resDesc.Width = sizeIB;
-	resDesc.Height = 1;
-	resDesc.DepthOrArraySize = 1;
-	resDesc.MipLevels = 1;
-	resDesc.SampleDesc.Count = 1;
-	resDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
-
-	// 頂点バッファの設定
-	result = device->CreateCommittedResource(
-		&heapProp, // ヒープ設定
-		D3D12_HEAP_FLAG_NONE,
-		&resDesc, // リソース設定
-		D3D12_RESOURCE_STATE_GENERIC_READ,
-		nullptr,
-		IID_PPV_ARGS(indexBuff.ReleaseAndGetAddressOf())
-	);
-	assert(SUCCEEDED(result));
-
-	// インデックスバッファのマッピング
-	result = indexBuff->Map(0, nullptr, (void**)&indexMap);
-	assert(SUCCEEDED(result));
-
-	// マッピング解除
-	indexBuff->Unmap(0, nullptr);
-
-	// インデックスバッファビューの作成
-	// GPU仮想アドレス
-	ibView.BufferLocation = indexBuff->GetGPUVirtualAddress();
-	ibView.Format = DXGI_FORMAT_R16_UINT;
-	// 頂点バッファのサイズ
-	ibView.SizeInBytes = sizeIB;
-	assert(SUCCEEDED(result));
 }
 
 void PostEffect::CreateCBTransform()

@@ -33,7 +33,7 @@ void Framework::Init()
 	// Spriteパイプライン
 	spriteShader.Init(L"Resources/Shader/PostEffectVS.hlsl", L"Resources/Shader/PostEffectPS.hlsl");
 	spritePipeline = std::make_unique<KGPlin>();
-	spritePipeline->CreatePipelineAll(spriteShader, false, false, false, false, true);
+	spritePipeline->CreatePipelineAll(spriteShader, "PostEffect");
 
 	// ポストエフェクトテスト
 	postEffect = std::make_unique<PostEffect>();

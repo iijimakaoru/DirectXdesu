@@ -16,7 +16,7 @@ void Player::Init()
 	pipeline = std::make_unique<KGPlin>();
 	shader.Init(L"Resources/Shader/ObjVS.hlsl", L"Resources/Shader/ObjPS.hlsl");
 	pipeline = std::make_unique<KGPlin>();
-	pipeline->CreatePipelineAll(shader, true);
+	pipeline->CreatePipelineAll(shader, "Obj");
 
 	// オブジェクト生成
 	object3d = std::make_unique<KObject3d>();

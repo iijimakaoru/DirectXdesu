@@ -2,6 +2,7 @@
 #include <d3d12.h>
 #include "KShader.h"
 #include "KVertex.h"
+#include <string>
 
 class KGPlin
 {
@@ -37,7 +38,7 @@ private:
 	void Blending(D3D12_RENDER_TARGET_BLEND_DESC& blendDesc, const int mord = ALPHA);
 
 public:
-	void CreatePipelineAll(KShader shader, bool Obj = false, bool Sprite = false, bool Particle = false, bool Fbx = false, bool Post = false);
+	void CreatePipelineAll(KShader shader, std::string shaderName);
 
 	void Update(D3D12_PRIMITIVE_TOPOLOGY primitive = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	void Setting();

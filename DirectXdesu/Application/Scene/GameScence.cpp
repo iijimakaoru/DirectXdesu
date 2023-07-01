@@ -40,12 +40,12 @@ void GameScence::Init()
 	// Obj
 	objShader.Init(L"Resources/Shader/ObjVS.hlsl", L"Resources/Shader/ObjPS.hlsl");
 	objPipeline = std::make_unique<KGPlin>();
-	objPipeline->CreatePipelineAll(objShader, true);
+	objPipeline->CreatePipelineAll(objShader, "Obj");
 
 	// Sprite
 	spriteShader.Init(L"Resources/Shader/SpriteVS.hlsl", L"Resources/Shader/SpritePS.hlsl");
 	spritePipeline = std::make_unique<KGPlin>();
-	spritePipeline->CreatePipelineAll(spriteShader, false, true);
+	spritePipeline->CreatePipelineAll(spriteShader, "Sprite");
 
 #pragma region スプライト
 	sprite = new Sprite();

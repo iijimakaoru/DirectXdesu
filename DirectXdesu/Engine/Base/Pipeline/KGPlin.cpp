@@ -125,7 +125,7 @@ void KGPlin::Blending(D3D12_RENDER_TARGET_BLEND_DESC& blendDesc, const int mord)
 	}
 }
 
-void KGPlin::CreatePipelineAll(KShader shader, bool Obj, bool Sprite, bool Particle, bool Fbx, bool Post)
+void KGPlin::CreatePipelineAll(KShader shader, std::string shaderName)
 {
 	HRESULT result;
 
@@ -134,7 +134,8 @@ void KGPlin::CreatePipelineAll(KShader shader, bool Obj, bool Sprite, bool Parti
 	// シェーダー設定
 	SetShader(shader);
 
-	if (Obj)
+	// Objシェーダー
+	if (shaderName == "Obj")
 	{
 		D3D12_INPUT_ELEMENT_DESC inputLayout[] =
 		{
@@ -279,8 +280,8 @@ void KGPlin::CreatePipelineAll(KShader shader, bool Obj, bool Sprite, bool Parti
 		result = device->CreateGraphicsPipelineState(&piplineDesc, IID_PPV_ARGS(&pipelineState));
 		assert(SUCCEEDED(result));
 	}
-
-	if (Sprite)
+	// Spriteシェーダー
+	else if (shaderName == "Sprite")
 	{
 #pragma region 頂点レイアウト配列の宣言と設定
 		static D3D12_INPUT_ELEMENT_DESC inputLayout[] = 
@@ -411,8 +412,8 @@ void KGPlin::CreatePipelineAll(KShader shader, bool Obj, bool Sprite, bool Parti
 		assert(SUCCEEDED(result));
 #pragma endregion
 	}
-
-	if (Fbx)
+	// Fbxシェーダー
+	else if (shaderName == "Fbx")
 	{
 		// 頂点レイアウト
 		D3D12_INPUT_ELEMENT_DESC inputLayout[] = {
@@ -520,8 +521,8 @@ void KGPlin::CreatePipelineAll(KShader shader, bool Obj, bool Sprite, bool Parti
 		result = device->CreateGraphicsPipelineState(&piplineDesc, IID_PPV_ARGS(pipelineState.ReleaseAndGetAddressOf()));
 		if (FAILED(result)) { assert(0); }
 	}
-
-	if (Post)
+	// PostEffectシェーダー
+	else if (shaderName == "PostEffect")
 	{
 		D3D12_INPUT_ELEMENT_DESC inputLayout[] =
 		{

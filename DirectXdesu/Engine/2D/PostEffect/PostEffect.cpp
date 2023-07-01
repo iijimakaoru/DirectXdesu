@@ -104,7 +104,7 @@ void PostEffect::PostDrawScene()
 	cmdList->ResourceBarrier(1, &barrier);
 }
 
-void PostEffect::Draw(KMyMath::Vector2 pos, KMyMath::Vector4 color)
+void PostEffect::Draw()
 {
 	// パイプラインセット
 	pipeline->Setting();
@@ -182,10 +182,10 @@ void PostEffect::CreateVertex()
 	// 頂点データ
 	Vertex vertices[4] =
 	{
-		{{-0.5f, 0.5f,0.0f},{0.0f,0.0f}}, // 左上
-		{{-0.5f,-0.5f,0.0f},{0.0f,1.0f}}, // 左下
-		{{ 0.5f, 0.5f,0.0f},{1.0f,0.0f}}, // 右上
-		{{ 0.5f,-0.5f,0.0f},{1.0f,1.0f}}, // 右下
+		{{-1.0f, 1.0f,0.0f},{0.0f,0.0f}}, // 左上
+		{{-1.0f,-1.0f,0.0f},{0.0f,1.0f}}, // 左下
+		{{ 1.0f, 1.0f,0.0f},{1.0f,0.0f}}, // 右上
+		{{ 1.0f,-1.0f,0.0f},{1.0f,1.0f}}, // 右下
 	};
 
 	for (size_t i = 0; i < 4; i++)

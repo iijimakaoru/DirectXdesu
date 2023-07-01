@@ -14,7 +14,6 @@ public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	/// <param name="spriteCommon"></param>
 	void Init();
 
 	/// <summary>
@@ -31,14 +30,7 @@ public:
 	/// <summary>
 	/// 描画
 	/// </summary>
-	/// <param name="pos"></param>
-	/// <param name="setSize_"></param>
-	/// <param name="rot"></param>
-	/// <param name="color"></param>
-	/// <param name="isFlipX_"></param>
-	/// <param name="isFlipY_"></param>
-	/// <param name="anchorPoint_"></param>
-	void Draw(KMyMath::Vector2 pos = { 0.0f,0.0f }, KMyMath::Vector4 color = { 1.0f,1.0f,1.0f,1.0f });
+	void Draw();
 
 	/// <summary>
 	/// パイプラインセッター

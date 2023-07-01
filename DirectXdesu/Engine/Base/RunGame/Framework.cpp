@@ -31,7 +31,7 @@ void Framework::Init()
 	imguiMane.Init();
 
 	// Spriteパイプライン
-	spriteShader.Init(L"Resources/Shader/SpriteVS.hlsl", L"Resources/Shader/SpritePS.hlsl");
+	spriteShader.Init(L"Resources/Shader/PostEffectVS.hlsl", L"Resources/Shader/PostEffectPS.hlsl");
 	spritePipeline = std::make_unique<KGPlin>();
 	spritePipeline->CreatePipelineAll(spriteShader, false, false, false, false, true);
 

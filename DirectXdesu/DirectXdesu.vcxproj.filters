@@ -459,6 +459,9 @@
     <None Include="Resources\Shader\FBX.hlsli">
       <Filter>シェーダー</Filter>
     </None>
+    <None Include="Resources\Shader\PostEffect.hlsli">
+      <Filter>シェーダー</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shader\BasicPS.hlsl">
@@ -492,6 +495,12 @@
       <Filter>シェーダー</Filter>
     </FxCompile>
     <FxCompile Include="Resources\Shader\FBXVS.hlsl">
+      <Filter>シェーダー</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\PostEffectPS.hlsl">
+      <Filter>シェーダー</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\PostEffectVS.hlsl">
       <Filter>シェーダー</Filter>
     </FxCompile>
   </ItemGroup>

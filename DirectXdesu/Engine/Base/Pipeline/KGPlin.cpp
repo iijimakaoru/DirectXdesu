@@ -624,6 +624,11 @@ void KGPlin::CreatePipelineAll(KShader shader, std::string shaderName)
 		result = device->CreateGraphicsPipelineState(&piplineDesc, IID_PPV_ARGS(pipelineState.ReleaseAndGetAddressOf()));
 		if (FAILED(result)) { assert(0); }
 	}
+	// なんもシェーダー入ってないとき
+	else
+	{
+		assert(0);
+	}
 }
 
 void KGPlin::Update(D3D12_PRIMITIVE_TOPOLOGY primitive)

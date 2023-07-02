@@ -253,7 +253,7 @@ HRESULT KDirectXCommon::CreateFinalRenderTarget()
 		backBuffers[i] = std::make_unique<KRenderTargetBuffer>(dev.Get(), rtvHeap.get());
 
 		//¶¬
-		backBuffers[i]->Create(swapChain.Get(), i);
+		backBuffers[i]->Create(swapChain.Get(), static_cast<UINT>(i));
 	}
 
 	return S_OK;

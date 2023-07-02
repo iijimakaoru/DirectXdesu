@@ -280,7 +280,8 @@ void KModel::Draw()
 	KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootDescriptorTable(0, texture.srvHeap->GetGPUDescriptorHandleForHeapStart());
 
 	// •`‰æ
-	KDirectXCommon::GetInstance()->GetCmdlist()->DrawIndexedInstanced(indices.size(), 1, 0, 0, 0);
+	KDirectXCommon::GetInstance()->GetCmdlist()->DrawIndexedInstanced(static_cast<UINT>(indices.size()),
+		static_cast < UINT>(1), static_cast < UINT>(0), static_cast < UINT>(0), static_cast < UINT>(0));
 }
 
 void KModel::Draw(KTexture* texture)
@@ -302,7 +303,7 @@ void KModel::Draw(KTexture* texture)
 	KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootDescriptorTable(0, srvGpuHandle);
 
 	// •`‰æ
-	KDirectXCommon::GetInstance()->GetCmdlist()->DrawIndexedInstanced(indices.size(), 1, 0, 0, 0);
+	KDirectXCommon::GetInstance()->GetCmdlist()->DrawIndexedInstanced(static_cast<UINT>(indices.size()), 1, 0, 0, 0);
 }
 
 MtlObj::MtlObj(const string modelname)

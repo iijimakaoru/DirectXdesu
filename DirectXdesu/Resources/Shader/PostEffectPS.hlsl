@@ -10,6 +10,6 @@ float4 main(VSOutput input) : SV_TARGET
     
     float4 maxColor = (1, 1, 1, 1);
     
-    // RGBの数値を2倍にして出力
+    // RGBの数値を出力
     return float4((texColor.rgb) * 1.0f, 1);
 }

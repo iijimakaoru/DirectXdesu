@@ -151,6 +151,14 @@ namespace MyMathUtility
 	bool Approximately(float a, float b);
 
 	KMyMath::Vector3 HermiteGetPoint(KMyMath::Vector3 p0, KMyMath::Vector3 p1, KMyMath::Vector3 v0, KMyMath::Vector3 v1, float t);
+
+	/// <summary>
+	/// ƒ‰ƒ“ƒ_ƒ€‚È’l‚ðŽæ“¾
+	/// </summary>
+	/// <param name="min"></param>
+	/// <param name="max"></param>
+	/// <returns></returns>
+	float GetRand(float min, float max);
 }
 
 namespace KMyMath

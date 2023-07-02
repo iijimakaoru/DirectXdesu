@@ -1,6 +1,7 @@
 #include "MyMath.h"
 #include <cmath>
 #include <cassert>
+#include <random>
 
 namespace MyMathUtility
 {
@@ -403,6 +404,19 @@ namespace MyMathUtility
 		float t2 = t * t;
 		float t3 = t2 * t;
 		return c0 * t3 + c1 * t2 + c2 * t + c3;
+	}
+
+	float GetRand(float min, float max)
+	{
+		// —”¶¬Ší
+		static std::random_device rd;
+		static std::default_random_engine eng(rd());
+
+		// •ª•z¶¬Ší
+		std::uniform_real_distribution<float> get_rand_uni_real(min, max);
+
+		// —”‚ğ¶¬
+		return get_rand_uni_real(eng);
 	}
 }
 

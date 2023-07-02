@@ -26,6 +26,8 @@
 
 #include "Bullet.h"
 
+#include "MobEnemy.h"
+
 class GameScence : public BaseScene
 {
 public:
@@ -78,5 +80,8 @@ private:
 
 	// ƒvƒŒƒCƒ„[
 	std::unique_ptr<Player> player = nullptr;
+
+	// G‹›
+	std::unique_ptr<MobEnemy> mobEnemy = nullptr;
 };
 

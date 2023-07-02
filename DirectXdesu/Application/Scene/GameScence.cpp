@@ -62,6 +62,10 @@ void GameScence::Init()
 	// ƒvƒŒƒCƒ„[
 	player = std::make_unique<Player>();
 	player->Init();
+
+	// G‹›“G
+	mobEnemy = std::make_unique<MobEnemy>();
+	mobEnemy->Init();
 }
 
 void GameScence::Update()
@@ -152,12 +156,16 @@ void GameScence::Update()
 
 	player->Update(camera->viewProjection);
 
+	mobEnemy->Update(camera->viewProjection);
+
 	camera->Update();
 }
 
 void GameScence::Draw()
 {
 	player->Draw();
+
+	mobEnemy->Draw();
 
 	sprite->Draw(&mario,spritePos, spriteSize,spriteRot, spriteColor, spriteFlipX, spriteFlipY);
 }

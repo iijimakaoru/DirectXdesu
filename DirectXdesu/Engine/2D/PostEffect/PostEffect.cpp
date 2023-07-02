@@ -6,7 +6,7 @@ KGPlin* PostEffect::pipeline = nullptr;
 ComPtr<ID3D12Device> PostEffect::device;
 ComPtr<ID3D12GraphicsCommandList> PostEffect::cmdList;
 KWinApp* PostEffect::window = nullptr;
-const float PostEffect::clearColor[4] = { 1.0f, 0.0f, 0.0f, 1.0f };
+const float PostEffect::clearColor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
 
 void PostEffect::StaticInit()
 {

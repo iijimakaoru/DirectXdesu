@@ -10,7 +10,7 @@ void Player::Init()
 	model->CreateModel();
 
 	// テクスチャ生成
-	tex.CreateTexture("Resources/texture/", "mario.jpg");
+	tex.CreateTexture("Resources/texture/", "white1x1.png");
 
 	// パイプライン生成
 	pipeline = std::make_unique<KGPlin>();
@@ -24,6 +24,12 @@ void Player::Init()
 	object3d->SetPipeline(pipeline.get());
 	object3d->LoadModel(model.get());
 	object3d->transform.scale = { 2.0f,2.0f,2.0f };
+
+	for (size_t i = 0; i < bullet.size(); i++)
+	{
+		bullet[i] = std::make_unique<Bullet>();
+		bullet[i]->Init();
+	}
 }
 
 void Player::Update(ViewProjection& viewPro)
@@ -33,16 +39,27 @@ void Player::Update(ViewProjection& viewPro)
 	Move();
 	Rot();
 
+	Attack();
+
 	object3d->Update(viewPro);
+
+	for (size_t i = 0; i < bullet.size(); i++)
+	{
+		bullet[i]->Update(viewPro);
+	}
 }
 
 void Player::Move()
 {
 	//自機が傾いている角度に移動させる
 	KMyMath::Vector3 velocity = { 0, 0, 0 };
-	velocity.x = moveSpeed * (object3d->transform.rot.y / rotLimit.y);
-	velocity.y = moveSpeed * -(object3d->transform.rot.x / rotLimit.x);
-	object3d->transform.pos += velocity;
+	velocity.x = (object3d->transform.rot.y / rotLimit.y);
+	velocity.y = -(object3d->transform.rot.x / rotLimit.x);
+
+	object3d->transform.pos.x += velocity.x * moveSpeed;
+	object3d->transform.pos.y += velocity.y * moveSpeed;
+
+	bulletVec = velocity;
 
 	const float moveLimitX = 60;
 	const float moveLimitY = 30;
@@ -136,7 +153,27 @@ void Player::Rot()
 	object3d->transform.rot.x = min(object3d->transform.rot.x,  rotLimit.x);
 }
 
+void Player::Attack()
+{
+	if (input->GetPadButtonDown(XINPUT_GAMEPAD_A))
+	{
+		for (size_t i = 0; i < bullet.size(); i++)
+		{
+			if (bullet[i]->GetIsDead())
+			{
+				bullet[i]->Set(object3d->transform.pos, bulletVec);
+				return;
+			}
+		}
+	}
+}
+
 void Player::Draw()
 {
 	object3d->Draw(&tex);
+	
+	for (size_t i = 0; i < bullet.size(); i++)
+	{
+		bullet[i]->Draw();
+	}
 }

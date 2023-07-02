@@ -6,6 +6,7 @@
 #include "KGPlin.h"
 #include "KShader.h"
 #include "KInput.h"
+#include "Bullet.h"
 
 /// <summary>
 /// ©ƒLƒƒƒ‰
@@ -27,6 +28,9 @@ public:
 
 	// ‰ñ“]
 	void Rot();
+
+	// UŒ‚
+	void Attack();
 
 	// •`‰æ
 	void Draw();
@@ -65,4 +69,8 @@ private:
 
 	// Šp“xãŒÀ
 	const KMyMath::Vector2 rotLimit = { 35.0f, 25.0f };
+
+	// ’e
+	std::array<std::unique_ptr<Bullet>, 60> bullet = { nullptr };
+	KMyMath::Vector3 bulletVec;
 };

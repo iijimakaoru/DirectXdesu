@@ -24,6 +24,8 @@
 
 #include "Player.h"
 
+#include "Bullet.h"
+
 class GameScence : public BaseScene
 {
 public:

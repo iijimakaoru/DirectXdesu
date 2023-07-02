@@ -32,6 +32,7 @@ void MobEnemy::Set()
 	if (isDead)
 	{
 		object3d->transform.pos = { MyMathUtility::GetRand(-limitX,limitX),MyMathUtility::GetRand(-limitY,limitY),50 };
+		speed = MyMathUtility::GetRand(0.3f, 0.5f);
 		isDead = false;
 	}
 }
@@ -42,9 +43,9 @@ void MobEnemy::Update(ViewProjection& viewPro)
 
 	if (!isDead)
 	{
-		object3d->transform.pos.z -= 0.1f;
+		object3d->transform.pos.z -= speed;
 
-		if (object3d->transform.pos.z <= min(object3d->transform.pos.z, 0))
+		if (object3d->transform.pos.z <= min(object3d->transform.pos.z, -100))
 		{
 			isDead = true;
 		}

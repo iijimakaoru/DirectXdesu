@@ -64,8 +64,11 @@ void GameScence::Init()
 	player->Init();
 
 	// ŽG‹›“G
-	mobEnemy = std::make_unique<MobEnemy>();
-	mobEnemy->Init();
+	for (size_t i = 0; i < mobEnemy.size(); i++)
+	{
+		mobEnemy[i] = std::make_unique<MobEnemy>();
+		mobEnemy[i]->Init();
+	}
 }
 
 void GameScence::Update()
@@ -156,7 +159,10 @@ void GameScence::Update()
 
 	player->Update(camera->viewProjection);
 
-	mobEnemy->Update(camera->viewProjection);
+	for (size_t i = 0; i < mobEnemy.size(); i++)
+	{
+		mobEnemy[i]->Update(camera->viewProjection);
+	}
 
 	camera->Update();
 }
@@ -165,7 +171,10 @@ void GameScence::Draw()
 {
 	player->Draw();
 
-	mobEnemy->Draw();
+	for (size_t i = 0; i < mobEnemy.size(); i++)
+	{
+		mobEnemy[i]->Draw();
+	}
 
 	sprite->Draw(&mario,spritePos, spriteSize,spriteRot, spriteColor, spriteFlipX, spriteFlipY);
 }

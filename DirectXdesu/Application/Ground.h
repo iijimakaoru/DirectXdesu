@@ -17,7 +17,7 @@ public:
 	/// çXêV
 	/// </summary>
 	/// <param name="viewPro"></param>
-	void Update(ViewProjection& viewPro);
+	void Update(ViewProjection* viewPro);
 
 	// ï`âÊ
 	void Draw();

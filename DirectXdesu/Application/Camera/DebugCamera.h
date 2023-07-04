@@ -7,7 +7,12 @@
 class DebugCamera : public Camera
 {
 public:
-	DebugCamera();
+	DebugCamera() 
+	{
+		Init();
+	};
+
+	void Init() override;
 
 	void Update() override;
 };

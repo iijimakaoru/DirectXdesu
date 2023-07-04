@@ -7,7 +7,12 @@
 class GameCamera : public Camera
 {
 public:
-	GameCamera();
+	GameCamera() 
+	{
+		Init();
+	};
+
+	void Init()override;
 
 	void Update()override;
 };

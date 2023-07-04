@@ -21,7 +21,7 @@ public:
 	/// XV
 	/// </summary>
 	/// <param name="camera_"></param>
-	void Update(ViewProjection& viewPro);
+	void Update(ViewProjection* viewPro);
 
 	// ˆÚ“®
 	void Move();

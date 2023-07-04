@@ -161,14 +161,14 @@ void GameScence::Update()
 		}
 	}
 
-	player->Update(camera->viewProjection);
+	player->Update(camera->viewProjection.get());
 
 	for (size_t i = 0; i < mobEnemy.size(); i++)
 	{
-		mobEnemy[i]->Update(camera->viewProjection);
+		mobEnemy[i]->Update(camera->viewProjection.get());
 	}
 
-	ground->Update(camera->viewProjection);
+	ground->Update(camera->viewProjection.get());
 
 	camera->Update();
 }

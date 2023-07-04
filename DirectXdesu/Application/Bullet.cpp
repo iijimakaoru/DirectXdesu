@@ -33,7 +33,7 @@ void Bullet::Set(const KMyMath::Vector3 pos, const KMyMath::Vector3 vec)
 	isDead = false;
 }
 
-void Bullet::Update(ViewProjection& viewPro)
+void Bullet::Update(ViewProjection* viewPro)
 {
 	if (!isDead)
 	{

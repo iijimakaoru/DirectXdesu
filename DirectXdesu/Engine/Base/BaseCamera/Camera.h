@@ -6,10 +6,12 @@
 class Camera
 {
 public:
-	ViewProjection viewProjection;
+	std::unique_ptr<ViewProjection> viewProjection = nullptr;
 
 public:
 	virtual ~Camera() {}
+
+	virtual void Init() = 0;
 
 	virtual void Update() = 0;
 };

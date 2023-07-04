@@ -37,7 +37,7 @@ void MobEnemy::Set()
 	}
 }
 
-void MobEnemy::Update(ViewProjection& viewPro)
+void MobEnemy::Update(ViewProjection* viewPro)
 {
 	Set();
 

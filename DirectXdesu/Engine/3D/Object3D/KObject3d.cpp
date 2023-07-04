@@ -65,7 +65,7 @@ void KObject3d::SetPipeline(KGPlin* pipeline_)
 	KObject3d::pipeline = pipeline_;
 }
 
-void KObject3d::Update(ViewProjection& viewProjection) {
+void KObject3d::Update(ViewProjection* viewProjection) {
 	// マトリックス
 	XMMATRIX matScale, matRot, matTrans;
 
@@ -95,7 +95,7 @@ void KObject3d::Update(ViewProjection& viewProjection) {
 	// B0
 	ConstBufferDataB0* constMap0 = nullptr;
 	result = constBuffB0->Map(0, nullptr, (void**)&constMap0);
-	constMap0->mat = transform.matWorld * viewProjection.matView * viewProjection.matProjection;
+	constMap0->mat = transform.matWorld * viewProjection->matView * viewProjection->matProjection;
 	constBuffB0->Unmap(0, nullptr);
 	assert(SUCCEEDED(result));
 }

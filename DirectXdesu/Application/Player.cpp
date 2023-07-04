@@ -32,7 +32,7 @@ void Player::Init()
 	}
 }
 
-void Player::Update(ViewProjection& viewPro)
+void Player::Update(ViewProjection* viewPro)
 {
 	leftStickPos = input->GetPadLStick();
 

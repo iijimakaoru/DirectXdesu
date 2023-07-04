@@ -50,7 +50,7 @@ public:
 	void Initialize();
 	void LoadModel(KModel* model);
 	void SetPipeline(KGPlin* pipeline_);
-	void Update(ViewProjection& viewProjection);
+	void Update(ViewProjection* viewProjection);
 	void Draw();
 	void Draw(KTexture* texture);
 

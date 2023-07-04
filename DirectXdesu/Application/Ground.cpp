@@ -24,7 +24,7 @@ void Ground::Init()
 	object3d->transform.scale = { 150.0f,0.5f,300.0f };
 }
 
-void Ground::Update(ViewProjection& viewPro)
+void Ground::Update(ViewProjection* viewPro)
 {
 	object3d->Update(viewPro);
 }

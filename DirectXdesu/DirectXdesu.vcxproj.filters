@@ -303,6 +303,9 @@
     <ClCompile Include="Application\Ground.cpp">
       <Filter>ソース ファイル\Application</Filter>
     </ClCompile>
+    <ClCompile Include="Application\Camera\RailCamera.cpp">
+      <Filter>ソース ファイル\Application\Camera</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Input\KInput.h">
@@ -448,6 +451,9 @@
     </ClInclude>
     <ClInclude Include="Application\Ground.h">
       <Filter>ヘッダー ファイル\Application</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\Camera\RailCamera.h">
+      <Filter>ヘッダー ファイル\Application\Camera</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

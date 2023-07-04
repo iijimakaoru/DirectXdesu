@@ -28,6 +28,8 @@
 
 #include "MobEnemy.h"
 
+#include "Ground.h"
+
 class GameScence : public BaseScene
 {
 public:
@@ -83,5 +85,8 @@ private:
 
 	// ŽG‹›
 	std::array<std::unique_ptr<MobEnemy>, 5> mobEnemy = { nullptr };
+
+	// ŠÈˆÕ’n–Ê
+	std::unique_ptr<Ground> ground = nullptr;
 };
 

@@ -10,7 +10,7 @@ void Player::Init()
 	model->CreateModel();
 
 	// テクスチャ生成
-	tex.CreateTexture("Resources/texture/", "white1x1.png");
+	tex.CreateTexture("Resources/texture/", "mario.jpg");
 
 	// パイプライン生成
 	pipeline = std::make_unique<KGPlin>();

@@ -69,6 +69,10 @@ void GameScence::Init()
 		mobEnemy[i] = std::make_unique<MobEnemy>();
 		mobEnemy[i]->Init();
 	}
+
+	// ’n–Ê
+	ground = std::make_unique<Ground>();
+	ground->Init();
 }
 
 void GameScence::Update()
@@ -164,6 +168,8 @@ void GameScence::Update()
 		mobEnemy[i]->Update(camera->viewProjection);
 	}
 
+	ground->Update(camera->viewProjection);
+
 	camera->Update();
 }
 
@@ -175,6 +181,8 @@ void GameScence::Draw()
 	{
 		mobEnemy[i]->Draw();
 	}
+
+	ground->Draw();
 
 	sprite->Draw(&mario,spritePos, spriteSize,spriteRot, spriteColor, spriteFlipX, spriteFlipY);
 }

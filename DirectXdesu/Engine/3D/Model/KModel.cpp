@@ -66,9 +66,9 @@ Triangle::Triangle()
 
 	assert(!file.fail());
 
-	vector<XMFLOAT3> positions;
-	vector<XMFLOAT3> normals;
-	vector<XMFLOAT2> texcoords;
+	vector<KMyMath::Vector3> positions;
+	vector<KMyMath::Vector3> normals;
+	vector<KMyMath::Vector2> texcoords;
 
 	std::string line;
 	while (getline(file, line))
@@ -81,7 +81,7 @@ Triangle::Triangle()
 
 		if (key == "v")
 		{
-			XMFLOAT3 pos{};
+			KMyMath::Vector3 pos{};
 			line_stream >> pos.x;
 			line_stream >> pos.y;
 			line_stream >> pos.z;
@@ -91,7 +91,7 @@ Triangle::Triangle()
 
 		if (key == "vt")
 		{
-			XMFLOAT2 texcoord{};
+			KMyMath::Vector2 texcoord{};
 			line_stream >> texcoord.x;
 			line_stream >> texcoord.y;
 
@@ -102,7 +102,7 @@ Triangle::Triangle()
 
 		if (key == "vn")
 		{
-			XMFLOAT3 normal{};
+			KMyMath::Vector3 normal{};
 			line_stream >> normal.x;
 			line_stream >> normal.y;
 			line_stream >> normal.z;
@@ -316,9 +316,9 @@ MtlObj::MtlObj(const string modelname)
 
 	assert(!file.fail());
 
-	vector<XMFLOAT3> positions;
-	vector<XMFLOAT3> normals;
-	vector<XMFLOAT2> texcoords;
+	vector<KMyMath::Vector3> positions;
+	vector<KMyMath::Vector3> normals;
+	vector<KMyMath::Vector2> texcoords;
 
 	std::string line;
 	while (getline(file, line))
@@ -340,7 +340,7 @@ MtlObj::MtlObj(const string modelname)
 
 		if (key == "v")
 		{
-			XMFLOAT3 pos{};
+			KMyMath::Vector3 pos{};
 			line_stream >> pos.x;
 			line_stream >> pos.y;
 			line_stream >> pos.z;
@@ -350,7 +350,7 @@ MtlObj::MtlObj(const string modelname)
 
 		if (key == "vt")
 		{
-			XMFLOAT2 texcoord{};
+			KMyMath::Vector2 texcoord{};
 			line_stream >> texcoord.x;
 			line_stream >> texcoord.y;
 
@@ -361,7 +361,7 @@ MtlObj::MtlObj(const string modelname)
 
 		if (key == "vn")
 		{
-			XMFLOAT3 normal{};
+			KMyMath::Vector3 normal{};
 			line_stream >> normal.x;
 			line_stream >> normal.y;
 			line_stream >> normal.z;

@@ -77,7 +77,7 @@ public:
 /// <summary>
 /// FBXの行列をXMMatrixに変換
 /// </summary>
-	static void ConvertMatrixFromFbx(DirectX::XMMATRIX* dst, const FbxAMatrix& src);
+	static void ConvertMatrixFromFbx(KMyMath::Matrix4* dst, const FbxAMatrix& src);
 
 private:
 	// privateなコンストラクタ（シングルトンパターン）

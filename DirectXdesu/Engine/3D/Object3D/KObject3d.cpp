@@ -65,23 +65,26 @@ void KObject3d::SetPipeline(KGPlin* pipeline_)
 	KObject3d::pipeline = pipeline_;
 }
 
-void KObject3d::Update(ViewProjection* viewProjection) {
+void KObject3d::TransUpdate()
+{
 	// マトリックス
-	XMMATRIX matScale, matRot, matTrans;
+	KMyMath::Matrix4 matScale, matRot, matTrans;
+	matScale = matRot = matTrans = MyMathUtility::MakeIdentity();
 
 	// 親オブジェクト要素
-	matScale = XMMatrixScaling(transform.scale.x, transform.scale.y, transform.scale.z);
-	matRot = XMMatrixIdentity();
-	matRot *= XMMatrixRotationZ(XMConvertToRadians(transform.rot.z));
-	matRot *= XMMatrixRotationX(XMConvertToRadians(transform.rot.x));
-	matRot *= XMMatrixRotationY(XMConvertToRadians(transform.rot.y));
-	matTrans = XMMatrixTranslation(transform.pos.x, transform.pos.y, transform.pos.z);
+	matScale = MyMathUtility::MakeScaling(transform.scale);
+	matRot = MyMathUtility::MakeRotation({ XMConvertToRadians(transform.rot.x),
+		XMConvertToRadians(transform.rot.y),XMConvertToRadians(transform.rot.z) });
+	matTrans = MyMathUtility::MakeTranslation(transform.pos);
 
-	transform.matWorld = XMMatrixIdentity();
+	transform.matWorld = MyMathUtility::MakeIdentity();
 	transform.matWorld *= matScale;
 	transform.matWorld *= matRot;
 	transform.matWorld *= matTrans;
+}
 
+void KObject3d::MatUpdate(ViewProjection* viewProjection)
+{
 	// 定数バッファのマッピング
 	// B1
 	ConstBufferDataB1* constMap1 = nullptr;
@@ -98,6 +101,13 @@ void KObject3d::Update(ViewProjection* viewProjection) {
 	constMap0->mat = transform.matWorld * viewProjection->matView * viewProjection->matProjection;
 	constBuffB0->Unmap(0, nullptr);
 	assert(SUCCEEDED(result));
+}
+
+void KObject3d::Update(ViewProjection* viewProjection) 
+{
+	TransUpdate();
+
+	MatUpdate(viewProjection);
 }
 
 void KObject3d::Draw() 

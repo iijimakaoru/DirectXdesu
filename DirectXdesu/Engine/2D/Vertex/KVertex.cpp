@@ -1,4 +1,5 @@
 #include "KVertex.h"
+#include "MyMath.h"
 
 KVertex::KVertex(ID3D12Device* dev, std::vector<VertexPosNormalUV>& vertices, std::vector<unsigned short>& indices) {
 	KVertexInit(dev, vertices, indices);
@@ -72,9 +73,12 @@ void KVertex::KVertexInit(ID3D12Device* dev, std::vector<VertexPosNormalUV>& ver
 		unsigned short indices1 = indices[i * 3 + 1];
 		unsigned short indices2 = indices[i * 3 + 2];
 		// 三角形を構成する頂点座標をベクトルに代入
-		XMVECTOR p0 = XMLoadFloat3(&vertices[indices0].pos);
-		XMVECTOR p1 = XMLoadFloat3(&vertices[indices1].pos);
-		XMVECTOR p2 = XMLoadFloat3(&vertices[indices2].pos);
+		XMFLOAT3 pV0 = MyMathConvert::ChangeVector3toXMfloat3(vertices[indices0].pos);
+		XMVECTOR p0 = XMLoadFloat3(&pV0);
+		XMFLOAT3 pV1 = MyMathConvert::ChangeVector3toXMfloat3(vertices[indices1].pos);
+		XMVECTOR p1 = XMLoadFloat3(&pV1);
+		XMFLOAT3 pV2 = MyMathConvert::ChangeVector3toXMfloat3(vertices[indices2].pos);
+		XMVECTOR p2 = XMLoadFloat3(&pV2);
 		// p0 → p1ベクトル、p0 → p2ベクトルを計算 (ベクトルの減算)
 		XMVECTOR v1 = XMVectorSubtract(p1, p0);
 		XMVECTOR v2 = XMVectorSubtract(p2, p0);
@@ -83,9 +87,12 @@ void KVertex::KVertexInit(ID3D12Device* dev, std::vector<VertexPosNormalUV>& ver
 		// 正規化(長さを１にする)
 		normal = XMVector3Normalize(normal);
 		// 求めた法線を頂点データに代入
-		XMStoreFloat3(&vertices[indices0].normal, normal);
-		XMStoreFloat3(&vertices[indices1].normal, normal);
-		XMStoreFloat3(&vertices[indices2].normal, normal);
+		XMFLOAT3 nV0 = MyMathConvert::ChangeVector3toXMfloat3(vertices[indices0].normal);
+		XMStoreFloat3(&nV0, normal);
+		XMFLOAT3 nV1 = MyMathConvert::ChangeVector3toXMfloat3(vertices[indices1].normal);
+		XMStoreFloat3(&nV1, normal);
+		XMFLOAT3 nV2 = MyMathConvert::ChangeVector3toXMfloat3(vertices[indices2].normal);
+		XMStoreFloat3(&nV2, normal);
 	}
 #pragma endregion
 }

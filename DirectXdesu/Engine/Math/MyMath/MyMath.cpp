@@ -18,7 +18,7 @@ namespace MyMathUtility
 	KMyMath::Vector3 MakeNormalize(KMyMath::Vector3 v)
 	{
 		float len = Vector3Length(v);
-		if (len != 0) 
+		if (len != 0)
 		{
 			return v /= len;
 		}
@@ -52,24 +52,24 @@ namespace MyMathUtility
 	{
 		KMyMath::Matrix4 matRotationX;
 		matRotationX = MakeIdentity();
-		matRotationX.m[1][1] =  cos(rotation.x);
-		matRotationX.m[1][2] =  sin(rotation.x);
+		matRotationX.m[1][1] = cos(rotation.x);
+		matRotationX.m[1][2] = sin(rotation.x);
 		matRotationX.m[2][1] = -sin(rotation.x);
-		matRotationX.m[2][2] =  cos(rotation.x);
+		matRotationX.m[2][2] = cos(rotation.x);
 
 		KMyMath::Matrix4 matRotationY;
 		matRotationY = MakeIdentity();
-		matRotationY.m[0][0] =  cos(rotation.y);
+		matRotationY.m[0][0] = cos(rotation.y);
 		matRotationY.m[0][2] = -sin(rotation.y);
-		matRotationY.m[2][0] =  sin(rotation.y);
-		matRotationY.m[2][2] =  cos(rotation.y);
+		matRotationY.m[2][0] = sin(rotation.y);
+		matRotationY.m[2][2] = cos(rotation.y);
 
 		KMyMath::Matrix4 matRotationZ;
 		matRotationZ = MakeIdentity();
-		matRotationZ.m[0][0] =  cos(rotation.z);
-		matRotationZ.m[0][1] =  sin(rotation.z);
+		matRotationZ.m[0][0] = cos(rotation.z);
+		matRotationZ.m[0][1] = sin(rotation.z);
 		matRotationZ.m[1][0] = -sin(rotation.z);
-		matRotationZ.m[1][1] =  cos(rotation.z);
+		matRotationZ.m[1][1] = cos(rotation.z);
 
 		KMyMath::Matrix4 matRotation;
 		matRotation = MakeIdentity();
@@ -479,5 +479,80 @@ namespace KMyMath
 		float r2 = fabs(sep->Dot(*e2));
 		float r3 = e3 ? (fabs(sep->Dot(*e3))) : 0;
 		return r1 + r2 + r3;
+	}
+}
+
+namespace MyMathConvert
+{
+	DirectX::XMVECTOR ChangeVector4toXMVECTOR(KMyMath::Vector4 vector4)
+	{
+		DirectX::XMVECTOR result;
+		result.m128_f32[0] = vector4.x;
+		result.m128_f32[1] = vector4.y;
+		result.m128_f32[2] = vector4.z;
+		result.m128_f32[3] = vector4.w;
+
+		return result;
+	}
+
+	KMyMath::Vector4 ChangeXMVECTORtoVector4(DirectX::XMVECTOR vector)
+	{
+		KMyMath::Vector4 result;
+		result.x = vector.m128_f32[0];
+		result.y = vector.m128_f32[1];
+		result.z = vector.m128_f32[2];
+		result.w = vector.m128_f32[3];
+
+		return result;
+	}
+
+	KMyMath::Matrix4 ChangeXMMATRIXtoMatrix4(DirectX::XMMATRIX matrix)
+	{
+		KMyMath::Matrix4 result;
+
+		for (size_t i = 0; i < 4; i++)
+		{
+			result.m[i][0] = DirectX::XMVectorGetX(matrix.r[i]);
+			result.m[i][1] = DirectX::XMVectorGetY(matrix.r[i]);
+			result.m[i][2] = DirectX::XMVectorGetZ(matrix.r[i]);
+			result.m[i][3] = DirectX::XMVectorGetW(matrix.r[i]);
+		}
+
+		return result;
+	}
+
+	DirectX::XMMATRIX ChangeMatrix4toXMVECTOR(KMyMath::Matrix4 matrix)
+	{
+		DirectX::XMMATRIX result;
+
+		result = DirectX::XMMatrixSet(
+			matrix.m[0][0], matrix.m[0][1], matrix.m[0][2], matrix.m[0][3],
+			matrix.m[1][0], matrix.m[1][1], matrix.m[1][2], matrix.m[1][3],
+			matrix.m[2][0], matrix.m[2][1], matrix.m[2][2], matrix.m[2][3],
+			matrix.m[3][0], matrix.m[3][1], matrix.m[3][2], matrix.m[3][3]);
+
+		return result;
+	}
+
+	KMyMath::Vector3 ChangeXMFloat3toVector3(DirectX::XMFLOAT3 float3)
+	{
+		KMyMath::Vector3 result;
+
+		result.x = float3.x;
+		result.y = float3.y;
+		result.z = float3.z;
+
+		return result;
+	}
+
+	DirectX::XMFLOAT3 ChangeVector3toXMfloat3(KMyMath::Vector3 vector3)
+	{
+		DirectX::XMFLOAT3 result;
+
+		result.x = vector3.x;
+		result.y = vector3.y;
+		result.z = vector3.z;
+
+		return result;
 	}
 }

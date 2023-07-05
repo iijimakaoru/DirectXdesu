@@ -18,11 +18,11 @@ public:
 		// マテリアル名
 		std::string name;
 		// アンビエント影響度
-		XMFLOAT3 ambient;
+		KMyMath::Vector3 ambient;
 		// ディヒューズ影響度
-		XMFLOAT3 diffuse;
+		KMyMath::Vector3 diffuse;
 		// スペキュラー影響度
-		XMFLOAT3 specular;
+		KMyMath::Vector3 specular;
 		// アルファ
 		float alpha;
 		// テクスチャファイル名

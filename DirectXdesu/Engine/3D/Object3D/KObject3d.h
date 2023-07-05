@@ -11,17 +11,17 @@ using namespace DirectX;
 
 struct ConstBufferDataB1
 {
-	XMFLOAT3 ambient;
+	KMyMath::Vector3 ambient;
 	float pad1;
-	XMFLOAT3 diffuse;
+	KMyMath::Vector3 diffuse;
 	float pad2;
-	XMFLOAT3 specular;
+	KMyMath::Vector3 specular;
 	float alpha;
 };
 
 struct ConstBufferDataB0
 {
-	XMMATRIX mat;
+	KMyMath::Matrix4 mat;
 };
 
 struct WorldTransfom {
@@ -37,7 +37,7 @@ struct WorldTransfom {
 	KMyMath::Vector3 pos = { 0,0,0 };
 
 	// ワールド変換行列
-	XMMATRIX matWorld = {};
+	KMyMath::Matrix4 matWorld = {};
 
 	// 親オブジェクトへのポインタ
 	WorldTransfom* parent = nullptr;
@@ -50,6 +50,8 @@ public:
 	void Initialize();
 	void LoadModel(KModel* model);
 	void SetPipeline(KGPlin* pipeline_);
+	void TransUpdate();
+	void MatUpdate(ViewProjection* viewProjection);
 	void Update(ViewProjection* viewProjection);
 	void Draw();
 	void Draw(KTexture* texture);

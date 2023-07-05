@@ -1,5 +1,6 @@
 ﻿#include "FbxLoader.h"
 #include <cassert>
+#include "MyMath.h"
 
 /// <summary>
 /// 静的メンバ変数の実体
@@ -85,19 +86,19 @@ void FbxLoader::ParseNodeRecursive(FbxModel* model, FbxNode* fbxNode, Node* pare
 	node.scaling = { (float)scaling[0],(float)scaling[1],(float)scaling[2],0.0f };
 	node.translation = { (float)translation[0],(float)translation[1],(float)translation[2],1.0f };
 	// 回転角をDegree(度)からラジアンに変換
-	node.rotation.m128_f32[0] = XMConvertToRadians(node.rotation.m128_f32[0]);
-	node.rotation.m128_f32[1] = XMConvertToRadians(node.rotation.m128_f32[1]);
-	node.rotation.m128_f32[2] = XMConvertToRadians(node.rotation.m128_f32[2]);
+	node.rotation.x = XMConvertToRadians(node.rotation.x);
+	node.rotation.y = XMConvertToRadians(node.rotation.y);
+	node.rotation.z = XMConvertToRadians(node.rotation.z);
 	// スケール、回転、平行移動行列の計算
 	XMMATRIX matScaling, matRotation, matTransition;
-	matScaling = XMMatrixScalingFromVector(node.scaling);
-	matRotation = XMMatrixRotationRollPitchYawFromVector(node.rotation);
-	matTransition = XMMatrixTranslationFromVector(node.translation);
+	matScaling = XMMatrixScalingFromVector(MyMathConvert::ChangeVector4toXMVECTOR(node.scaling));
+	matRotation = XMMatrixRotationRollPitchYawFromVector(MyMathConvert::ChangeVector4toXMVECTOR(node.rotation));
+	matTransition = XMMatrixTranslationFromVector(MyMathConvert::ChangeVector4toXMVECTOR(node.translation));
 	// ローカル変形行列の計算
-	node.transform = XMMatrixIdentity();
-	node.transform *= matScaling; // スケーリング
-	node.transform *= matRotation; // 回転
-	node.transform *= matTransition; // 平行移動
+	node.transform = MyMathUtility::MakeIdentity();
+	node.transform *= MyMathConvert::ChangeXMMATRIXtoMatrix4(matScaling); // スケーリング
+	node.transform *= MyMathConvert::ChangeXMMATRIXtoMatrix4(matRotation); // 回転
+	node.transform *= MyMathConvert::ChangeXMMATRIXtoMatrix4(matTransition); // 平行移動
 
 	// グローバル変形行列の計算
 	node.globalTransform = node.transform;
@@ -376,11 +377,11 @@ void FbxLoader::ParseSkin(FbxModel* model_, FbxMesh* fbxMesh)
 		fbxCluster->GetTransformLinkMatrix(fbxMat);
 
 		// XMMatrix型に変換する
-		XMMATRIX initialPose;
+		KMyMath::Matrix4 initialPose;
 		ConvertMatrixFromFbx(&initialPose, fbxMat);
 
 		// 初期姿勢行列の逆行列を得る
-		bone.invInitialPose = XMMatrixInverse(nullptr, initialPose);
+		bone.invInitialPose = MyMathUtility::MakeInverse(initialPose);
 	}
 
 	// ボーン番号とスキンウェイトのペア
@@ -464,13 +465,13 @@ void FbxLoader::ParseSkin(FbxModel* model_, FbxMesh* fbxMesh)
 	}
 }
 
-void FbxLoader::ConvertMatrixFromFbx(DirectX::XMMATRIX* dst, const FbxAMatrix& src)
+void FbxLoader::ConvertMatrixFromFbx(KMyMath::Matrix4* dst, const FbxAMatrix& src)
 {
 	for (int i = 0; i < 4; i++)
 	{
 		for (int j = 0; j < 4; j++)
 		{
-			dst->r[i].m128_f32[j] = static_cast<float>(src.Get(i, j));
+			dst->m[i][j] = static_cast<float>(src.Get(i, j));
 		}
 	}
 }

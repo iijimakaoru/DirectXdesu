@@ -20,9 +20,9 @@ public: // エイリアス
 	// 定数バッファデータ構造体
 	struct ConstBufferDataTransform
 	{
-		XMMATRIX viewproj; // ビュープロジェクション
-		XMMATRIX world;	   // ワールド行列
-		XMFLOAT3 cameraPos;// カメラ座標
+		KMyMath::Matrix4 viewproj; // ビュープロジェクション
+		KMyMath::Matrix4 world;	   // ワールド行列
+		KMyMath::Vector3 cameraPos;// カメラ座標
 	};
 
 public:
@@ -35,7 +35,7 @@ public:
 	/// 更新
 	/// </summary>
 	/// <param name="viewProjection"></param>
-	void Update(ViewProjection& viewProjection);
+	void Update(ViewProjection* viewProjection);
 
 	/// <summary>
 	/// 描画
@@ -64,7 +64,7 @@ public:
 	/// ポジションセッター
 	/// </summary>
 	/// <param name="pos_"></param>
-	void SetPosition(XMFLOAT3 pos_)
+	void SetPosition(KMyMath::Vector3 pos_)
 	{
 		position = pos_;
 	}
@@ -73,7 +73,7 @@ public:
 	/// ポジションゲッター
 	/// </summary>
 	/// <returns></returns>
-	XMFLOAT3 GetPosition()
+	KMyMath::Vector3 GetPosition()
 	{
 		return position;
 	}
@@ -89,7 +89,7 @@ public:// 定数
 
 	struct ConstBufferDataSkin
 	{
-		XMMATRIX bones[MAX_BONES];
+		KMyMath::Matrix4 bones[MAX_BONES];
 	};
 
 protected:
@@ -97,13 +97,13 @@ protected:
 	HRESULT result;
 
 	// ローカルスケール
-	XMFLOAT3 scale = { 1,1,1 };
+	KMyMath::Vector3 scale = { 1,1,1 };
 	// ローカル回転角
-	XMFLOAT3 rotation = { 0,0,0 };
+	KMyMath::Vector3 rotation = { 0,0,0 };
 	// ローカル座標
-	XMFLOAT3 position = { 0,0,0 };
+	KMyMath::Vector3 position = { 0,0,0 };
 	// ローカルワールド変換行列
-	XMMATRIX matWorld;
+	KMyMath::Matrix4 matWorld;
 	// モデル
 	FbxModel* model = nullptr;
 

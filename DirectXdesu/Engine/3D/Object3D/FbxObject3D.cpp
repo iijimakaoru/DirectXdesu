@@ -1,5 +1,6 @@
 #include "FbxObject3D.h"
 #include "FbxLoader.h"
+#include "MyMath.h"
 
 KGPlin* FbxObject3D::pipeline = nullptr;
 
@@ -41,34 +42,35 @@ void FbxObject3D::Init()
 	result = constBuffSkin->Map(0, nullptr, (void**)&constMapSkin);
 	for (int i = 0; i < MAX_BONES; i++)
 	{
-		constMapSkin->bones[i] = XMMatrixIdentity();
+		constMapSkin->bones[i] = MyMathUtility::MakeIdentity();
 	}
 	constBuffSkin->Unmap(0, nullptr);
 }
 
-void FbxObject3D::Update(ViewProjection& viewProjection)
+void FbxObject3D::Update(ViewProjection* viewProjection)
 {
 	// マトリックス
-	XMMATRIX matScale, matRot, matTrans;
+	KMyMath::Matrix4 matScale, matRot, matTrans;
 
 	// 親オブジェクト要素
-	matScale = XMMatrixScaling(scale.x, scale.y, scale.z);
-	matRot = XMMatrixIdentity();
-	matRot *= XMMatrixRotationZ(rotation.z);
-	matRot *= XMMatrixRotationX(rotation.x);
-	matRot *= XMMatrixRotationY(rotation.y);
-	matTrans = XMMatrixTranslation(position.x, position.y, position.z);
+	matScale = MyMathUtility::MakeIdentity();
+	matScale = MyMathUtility::MakeScaling(scale);
+	matRot = MyMathUtility::MakeIdentity();
+	matRot = MyMathUtility::MakeRotation({ XMConvertToRadians(rotation.x),
+		XMConvertToRadians(rotation.y),XMConvertToRadians(rotation.z) });
+	matTrans = MyMathUtility::MakeIdentity();
+	matTrans = MyMathUtility::MakeTranslation(position);
 
-	matWorld = XMMatrixIdentity();
+	matWorld = MyMathUtility::MakeIdentity();
 	matWorld *= matScale;
 	matWorld *= matRot;
 	matWorld *= matTrans;
 
-	const XMMATRIX& matViewProjection = viewProjection.matView * viewProjection.matProjection;
+	const KMyMath::Matrix4& matViewProjection = viewProjection->matView * viewProjection->matProjection;
 
-	const XMMATRIX& modelTransform = model->GetModelTransform();
+	const KMyMath::Matrix4& modelTransform = model->GetModelTransform();
 
-	const XMFLOAT3& cameraPos = viewProjection.eye;
+	const KMyMath::Vector3& cameraPos = viewProjection->eye;
 
 	ConstBufferDataTransform* constMap = nullptr;
 	result = constBuffTransform->Map(0, nullptr, (void**)&constMap);
@@ -97,7 +99,7 @@ void FbxObject3D::Update(ViewProjection& viewProjection)
 	for (int i = 0; i < bones.size(); i++)
 	{
 		// 今の姿勢行列
-		XMMATRIX matCurrentPose;
+		KMyMath::Matrix4 matCurrentPose;
 		// 今の姿勢行列を取得
 		FbxAMatrix fbxCurrentPose = bones[i].fbxCluster->GetLink()->EvaluateGlobalTransform(currentTime);
 		// XMMATRIXに変換

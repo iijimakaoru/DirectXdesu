@@ -14,9 +14,9 @@ using namespace DirectX;
 
 // 頂点データ構造体
 struct VertexPosNormalUV {
-	XMFLOAT3 pos;	 // xyz座標
-	XMFLOAT3 normal; // 法線ベクトル
-	XMFLOAT2 uv;	 // uv座標
+	KMyMath::Vector3 pos;	 // xyz座標
+	KMyMath::Vector3 normal; // 法線ベクトル
+	KMyMath::Vector2 uv;	 // uv座標
 };
 
 class KVertex

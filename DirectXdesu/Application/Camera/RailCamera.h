@@ -4,12 +4,27 @@
 
 class RailCamera : public Camera
 {
+public:
 	RailCamera() {};
 
 	void Init() override;
 
 	void Update()override;
 
+	void SetPos(KMyMath::Vector3 pos);
+
+	void SetWorldTransform(WorldTransfom transform_)
+	{
+		object->transform = transform_;
+	}
+
+	void SetRadian(float angle_)
+	{
+		angle = angle_;
+	}
+
 private:
-	WorldTransfom transform;
+	std::unique_ptr<KObject3d> object;
+
+	float angle = 0;
 };

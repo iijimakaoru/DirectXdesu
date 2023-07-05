@@ -5,6 +5,7 @@
 #include "Matrix4.h"
 #include "Vector3.h"
 #include "Vector2.h"
+#include "Vector4.h"
 
 namespace MyMathUtility
 {
@@ -188,4 +189,49 @@ namespace KMyMath
 	/// <param name="e3"></param>
 	/// <returns></returns>
 	float LenSegLineOfSeparateAxis(Vector3* sep, Vector3* e1, Vector3* e2, Vector3* e3 = 0);
+}
+
+namespace MyMathConvert
+{
+	/// <summary>
+	/// Vector4‚©‚çXMVECTOR‚Ö•ÏŠ·
+	/// </summary>
+	/// <param name="vector4"></param>
+	/// <returns></returns>
+	DirectX::XMVECTOR ChangeVector4toXMVECTOR(KMyMath::Vector4 vector4);
+
+	/// <summary>
+	/// XMVECTOR‚©‚çVector4‚Ö•ÏŠ·
+	/// </summary>
+	/// <param name=""></param>
+	/// <returns></returns>
+	KMyMath::Vector4 ChangeXMVECTORtoVector4(DirectX::XMVECTOR vector);
+
+	/// <summary>
+	/// XMMATRIX‚©‚çMatrix4‚Ö•ÏŠ·
+	/// </summary>
+	/// <param name="matrix"></param>
+	/// <returns></returns>
+	KMyMath::Matrix4 ChangeXMMATRIXtoMatrix4(DirectX::XMMATRIX matrix);
+
+	/// <summary>
+	/// Matrix4‚©‚çXMMATRIX‚Ö•ÏŠ·
+	/// </summary>
+	/// <param name="matrix"></param>
+	/// <returns></returns>
+	DirectX::XMMATRIX ChangeMatrix4toXMVECTOR(KMyMath::Matrix4 matrix);
+
+	/// <summary>
+	/// XMFloat3‚©‚çVector3‚Ö•ÏŠ·
+	/// </summary>
+	/// <param name="float3"></param>
+	/// <returns></returns>
+	KMyMath::Vector3 ChangeXMFloat3toVector3(DirectX::XMFLOAT3 float3);
+
+	/// <summary>
+	/// Vector3‚©‚çXMFloat3‚Ö•ÏŠ·
+	/// </summary>
+	/// <param name="vector3"></param>
+	/// <returns></returns>
+	DirectX::XMFLOAT3 ChangeVector3toXMfloat3(KMyMath::Vector3 vector3);
 }

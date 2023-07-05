@@ -3,6 +3,7 @@
 #include <DirectXTex.h>
 #include "Vector3.h"
 #include "KWinApp.h"
+#include "MyMath.h"
 
 using namespace DirectX;
 
@@ -18,12 +19,12 @@ public:
 	float angleX = 0; // カメラの回転角X
 	float angleY = 0; // カメラの回転角Y
 	// ビュー変換行列
-	XMMATRIX matView{};
-	XMFLOAT3 eye{};
-	XMFLOAT3 target{};
-	XMFLOAT3 up{};
+	KMyMath::Matrix4 matView{};
+	KMyMath::Vector3 eye{};
+	KMyMath::Vector3 target{};
+	KMyMath::Vector3 up{};
 	// 射影変換行列の計算
-	XMMATRIX matProjection{};
+	KMyMath::Matrix4 matProjection{};
 
 	float aspect = (float)KWinApp::GetWindowSizeW() / KWinApp::GetWindowSizeH(); // アスペクト比
 };

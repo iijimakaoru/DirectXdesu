@@ -19,15 +19,15 @@ struct Node
 	// 名前
 	std::string name;
 	// ローカルスケール
-	DirectX::XMVECTOR scaling = { 1,1,1,0 };
+	KMyMath::Vector4 scaling = { 1,1,1,0 };
 	// ローカル回転角
-	DirectX::XMVECTOR rotation = { 0,0,0,0 };
+	KMyMath::Vector4 rotation = { 0,0,0,0 };
 	// ローカル移動
-	DirectX::XMVECTOR translation = { 0,0,0,1 };
+	KMyMath::Vector4 translation = { 0,0,0,1 };
 	// ローカル変形行列
-	DirectX::XMMATRIX transform;
+	KMyMath::Matrix4 transform;
 	// グローバル変形行列
-	DirectX::XMMATRIX globalTransform;
+	KMyMath::Matrix4 globalTransform;
 	// 親ノード
 	Node* parent = nullptr;
 };
@@ -44,7 +44,7 @@ public:
 	{
 		std::string name;
 		// 初期姿勢の逆行列
-		DirectX::XMMATRIX invInitialPose;
+		KMyMath::Matrix4 invInitialPose;
 		// クラスター
 		FbxCluster* fbxCluster;
 		// コントラクタ
@@ -56,9 +56,9 @@ public:
 
 	struct VertexPosNormalUVSkin
 	{
-		XMFLOAT3 pos;	 // xyz座標
-		XMFLOAT3 normal; // 法線ベクトル
-		XMFLOAT2 uv;	 // uv座標
+		KMyMath::Vector3 pos;	 // xyz座標
+		KMyMath::Vector3 normal; // 法線ベクトル
+		KMyMath::Vector2 uv;	 // uv座標
 		UINT boneIndex[MAX_BONE_INDICES];
 		float boneWeight[MAX_BONE_INDICES];
 	};
@@ -133,7 +133,7 @@ public: // 関数
 	FbxScene* GetFbxScene() { return fbxScene; }
 
 	// ゲッター
-	const XMMATRIX& GetModelTransform() { return meshNode->globalTransform; }
+	const KMyMath::Matrix4& GetModelTransform() { return meshNode->globalTransform; }
 	std::vector<Bone>& GetBones() { return bones; }
 };
 

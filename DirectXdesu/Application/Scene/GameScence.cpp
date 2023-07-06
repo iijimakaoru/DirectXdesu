@@ -5,6 +5,7 @@
 
 #include "DebugCamera.h"
 #include "GameCamera.h"
+#include "RailCamera.h"
 
 #include "Collision.h"
 #include <sstream>
@@ -55,13 +56,15 @@ void GameScence::Init()
 #pragma endregion
 
 	isDebug = true;
-	camera = std::make_unique<DebugCamera>();
+	camera = std::make_unique<RailCamera>();
 
 	sceneManager = SceneManager::GetInstance();
 
 	// ÉvÉåÉCÉÑÅ[
 	player = std::make_unique<Player>();
 	player->Init();
+	WorldTransfom cameraToPlayer = camera->GetTransform();
+	//player->SetParent(&cameraToPlayer);
 
 	// éGãõìG
 	for (size_t i = 0; i < mobEnemy.size(); i++)
@@ -80,33 +83,6 @@ void GameScence::Update()
 	if (input->IsTrigger(DIK_SPACE))
 	{
 		SceneManager::GetInstance()->ChangeScene("TITLE");
-	}
-
-	char bufD[255] = "DebugCamera";
-	char bufG[255] = "GameCamera";
-	ImGui::Text("CameraMode");
-	if (ImGui::Button("ChangeCamera"))
-	{
-		if (isDebug)
-		{
-			isDebug = false;
-			camera.release();
-			camera = std::make_unique<GameCamera>();
-		}
-		else
-		{
-			isDebug = true;
-			camera.release();
-			camera = std::make_unique<DebugCamera>();
-		}
-	}
-	if (isDebug)
-	{
-		ImGui::InputText("mode", bufD, IM_ARRAYSIZE(bufD));
-	}
-	else
-	{
-		ImGui::InputText("mode", bufG, IM_ARRAYSIZE(bufG));
 	}
 
 	ImGui::Text("Sound");
@@ -160,6 +136,14 @@ void GameScence::Update()
 			spriteFlipY = true;
 		}
 	}
+
+	ImGui::Begin("Player");
+	ImGui::Text("pos: (%.2f,%.2f, %.2f)", player->GetPosition().x, player->GetPosition().y, player->GetPosition().z);
+	ImGui::End();
+
+	ImGui::Begin("Camera");
+	ImGui::Text("pos: (%.2f,%.2f, %.2f)", camera->GetPos().x, camera->GetPos().y, camera->GetPos().z);
+	ImGui::End();
 
 	player->Update(camera->viewProjection.get());
 

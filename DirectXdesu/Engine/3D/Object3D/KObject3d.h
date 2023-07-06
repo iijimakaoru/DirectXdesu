@@ -47,14 +47,47 @@ class KObject3d
 {
 public:
 	KObject3d();
+	// 初期化
 	void Initialize();
+	/// <summary>
+	/// モデル読み込み(セッター)
+	/// </summary>
+	/// <param name="model"></param>
 	void LoadModel(KModel* model);
+	/// <summary>
+	/// パイプラインセッター
+	/// </summary>
+	/// <param name="pipeline_"></param>
 	void SetPipeline(KGPlin* pipeline_);
+	/// <summary>
+	/// トランスフォーム更新
+	/// </summary>
 	void TransUpdate();
+	/// <summary>
+	/// 行列更新
+	/// </summary>
+	/// <param name="viewProjection"></param>
 	void MatUpdate(ViewProjection* viewProjection);
+	/// <summary>
+	/// 上の複合
+	/// </summary>
+	/// <param name="viewProjection"></param>
 	void Update(ViewProjection* viewProjection);
+	/// <summary>
+	/// デフォルトテクスチャ描画
+	/// </summary>
 	void Draw();
+	/// <summary>
+	/// テクスチャ切り替え描画
+	/// </summary>
+	/// <param name="texture"></param>
 	void Draw(KTexture* texture);
+
+	/// <summary>
+	/// 親子セッター
+	/// </summary>
+	/// <param name="parent_"></param>
+	void SetParent(WorldTransfom* parent_);
 
 	void Finalize();
 

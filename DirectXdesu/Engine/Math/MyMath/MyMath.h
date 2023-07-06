@@ -63,6 +63,15 @@ namespace MyMathUtility
 	KMyMath::Matrix4 MakeTranslation(const KMyMath::Vector3& trans);
 
 	/// <summary>
+	/// ワールド行列
+	/// </summary>
+	/// <param name="translation"></param>
+	/// <param name="scaling"></param>
+	/// <param name="rotation"></param>
+	/// <returns></returns>
+	KMyMath::Matrix4 MakeWorld(KMyMath::Matrix4 translation, KMyMath::Matrix4 scaling, KMyMath::Matrix4 rotation);
+
+	/// <summary>
 	/// サインとコサイン
 	/// </summary>
 	/// <param name="sin_"></param>

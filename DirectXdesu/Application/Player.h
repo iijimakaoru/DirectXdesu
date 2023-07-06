@@ -35,6 +35,18 @@ public:
 	// 描画
 	void Draw();
 
+	/// <summary>
+	/// パイプラインセッター
+	/// </summary>
+	/// <param name="parent"></param>
+	void SetParent(WorldTransfom* parent);
+
+	// ポジションゲッター
+	KMyMath::Vector3& GetPosition()
+	{
+		return object3d->transform.pos;
+	}
+
 private:
 	// Input
 	KInput* input = nullptr;

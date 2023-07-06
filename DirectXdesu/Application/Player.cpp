@@ -23,6 +23,7 @@ void Player::Init()
 	object3d->Initialize();
 	object3d->SetPipeline(pipeline.get());
 	object3d->LoadModel(model.get());
+	object3d->transform.pos.z = 50;
 	object3d->transform.scale = { 2.0f,2.0f,2.0f };
 
 	for (size_t i = 0; i < bullet.size(); i++)
@@ -34,8 +35,6 @@ void Player::Init()
 
 void Player::Update(ViewProjection* viewPro)
 {
-	leftStickPos = input->GetPadLStick();
-
 	Move();
 	Rot();
 
@@ -51,6 +50,16 @@ void Player::Update(ViewProjection* viewPro)
 
 void Player::Move()
 {
+	if (input->IsPush(DIK_UP))
+	{
+		object3d->transform.pos.z++;
+	}
+
+	if (input->IsPush(DIK_DOWN))
+	{
+		object3d->transform.pos.z--;
+	}
+
 	//Ž©‹@‚ªŒX‚¢‚Ä‚¢‚éŠp“x‚ÉˆÚ“®‚³‚¹‚é
 	KMyMath::Vector3 velocity = { 0, 0, 0 };
 	velocity.x = (object3d->transform.rot.y / rotLimit.y);
@@ -176,4 +185,9 @@ void Player::Draw()
 	{
 		bullet[i]->Draw();
 	}
+}
+
+void Player::SetParent(WorldTransfom* parent)
+{
+	object3d->transform.parent = parent;
 }

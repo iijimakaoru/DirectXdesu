@@ -91,6 +91,15 @@ namespace MyMathUtility
 		return matTranslation;
 	}
 
+	KMyMath::Matrix4 MakeWorld(KMyMath::Matrix4 translation, KMyMath::Matrix4 scaling, KMyMath::Matrix4 rotation)
+	{
+		KMyMath::Matrix4 result;
+
+		result = scaling * rotation * translation;
+
+		return result;
+	}
+
 	void SinCos(float& sin_, float& cos_, float angle)
 	{
 		sin_ = Sin(angle);

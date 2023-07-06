@@ -77,10 +77,15 @@ void KObject3d::TransUpdate()
 		XMConvertToRadians(transform.rot.y),XMConvertToRadians(transform.rot.z) });
 	matTrans = MyMathUtility::MakeTranslation(transform.pos);
 
+	// s—ñ‰Šú‰»
 	transform.matWorld = MyMathUtility::MakeIdentity();
-	transform.matWorld *= matScale;
-	transform.matWorld *= matRot;
-	transform.matWorld *= matTrans;
+	// 
+	transform.matWorld *= MyMathUtility::MakeWorld(matTrans, matScale, matRot);
+
+	if (transform.parent)
+	{
+		transform.matWorld *= transform.parent->matWorld;
+	}
 }
 
 void KObject3d::MatUpdate(ViewProjection* viewProjection)
@@ -134,6 +139,11 @@ void KObject3d::Draw(KTexture* texture)
 	KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootConstantBufferView(2, constBuffB1->GetGPUVirtualAddress());
 
 	model_->Draw(texture);
+}
+
+void KObject3d::SetParent(WorldTransfom* parent_)
+{
+	transform.parent = parent_;
 }
 
 void KObject3d::Finalize()

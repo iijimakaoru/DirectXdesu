@@ -5,7 +5,10 @@
 class RailCamera : public Camera
 {
 public:
-	RailCamera() {};
+	RailCamera() 
+	{
+		Init();
+	};
 
 	void Init() override;
 
@@ -13,18 +16,11 @@ public:
 
 	void SetPos(KMyMath::Vector3 pos);
 
-	void SetWorldTransform(WorldTransfom transform_)
-	{
-		object->transform = transform_;
-	}
-
 	void SetRadian(float angle_)
 	{
 		angle = angle_;
 	}
 
 private:
-	std::unique_ptr<KObject3d> object;
-
 	float angle = 0;
 };

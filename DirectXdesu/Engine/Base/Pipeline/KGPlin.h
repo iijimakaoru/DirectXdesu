@@ -38,6 +38,15 @@ private:
 	void Blending(D3D12_RENDER_TARGET_BLEND_DESC& blendDesc, const int mord = ALPHA);
 
 public:
+	/// <summary>
+	/// パイプライン生成
+	/// </summary>
+	/// <param name="shader"></param>
+	/// <param name="shaderName"></param>
+	/// Obj = "Obj"
+	/// Sprite = "Sprite"
+	/// Fbx = "Fbx"
+	/// PostEffect = "PostEffect"
 	void CreatePipelineAll(KShader shader, std::string shaderName = "Null");
 
 	void Update(D3D12_PRIMITIVE_TOPOLOGY primitive = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);

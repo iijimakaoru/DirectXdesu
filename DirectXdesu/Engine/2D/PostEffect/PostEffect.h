@@ -99,7 +99,7 @@ private:
 	KMyMath::Matrix4* constMapTransform = nullptr;
 
 	// テクスチャバッファ
-	Microsoft::WRL::ComPtr<ID3D12Resource> texBuff = nullptr;
+	std::array<Microsoft::WRL::ComPtr<ID3D12Resource>,2> texBuff = { nullptr };
 
 	// デスクリプタヒープ
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> descHeapSRV;

@@ -55,10 +55,12 @@ private:
 	// パイプライン
 	std::unique_ptr<KGPlin> objPipeline;
 	std::unique_ptr<KGPlin> spritePipeline;
+	std::unique_ptr<KGPlin> fbxPipeline;
 
 	// シェーダー
 	KShader objShader;
 	KShader spriteShader;
+	KShader fbxShader;
 
 	// テクスチャ
 	KTexture mario;
@@ -79,6 +81,9 @@ private:
 	float spriteRot = 0;
 	KMyMath::Vector4 spriteColor = { 1.0f,1.0f,1.0f,1.0f };
 	bool spriteFlipX, spriteFlipY = false;
+
+	FbxModel* model1 = nullptr;
+	std::unique_ptr<FbxObject3D> object1 = nullptr;
 
 	// プレイヤー
 	std::unique_ptr<Player> player = nullptr;

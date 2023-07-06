@@ -47,6 +47,11 @@ void GameScence::Init()
 	spritePipeline = std::make_unique<KGPlin>();
 	spritePipeline->CreatePipelineAll(spriteShader, "Sprite");
 
+	// Fbx
+	fbxShader.Init(L"Resources/Shader/FbxVS.hlsl", L"Resources/Shader/FbxPS.hlsl");
+	fbxPipeline = std::make_unique<KGPlin>();
+	fbxPipeline->CreatePipelineAll(fbxShader, "Fbx");
+
 #pragma region スプライト
 	sprite = new Sprite();
 	sprite->Init();
@@ -73,6 +78,15 @@ void GameScence::Init()
 	// 地面
 	ground = std::make_unique<Ground>();
 	ground->Init();
+
+	// 
+	model1 = FbxLoader::GetInstance()->LoadModelFromFile("boneTest");
+
+	object1 = std::make_unique<FbxObject3D>();
+	object1->Init();
+	object1->SetModel(model1);
+	object1->SetPipline(fbxPipeline.get());
+	object1->PlayAnimation();
 }
 
 void GameScence::Update()
@@ -170,17 +184,21 @@ void GameScence::Update()
 
 	ground->Update(camera->viewProjection);
 
+	object1->Update(camera->viewProjection);
+
 	camera->Update();
 }
 
 void GameScence::Draw()
 {
-	player->Draw();
+	//player->Draw();
 
 	for (size_t i = 0; i < mobEnemy.size(); i++)
 	{
-		mobEnemy[i]->Draw();
+		//mobEnemy[i]->Draw();
 	}
+
+	object1->Draw();
 
 	ground->Draw();
 
@@ -193,4 +211,6 @@ void GameScence::Final()
 	sound->SoundUnLoad(&soundData1);
 	sound->SoundUnLoad(&soundData2);
 	sound->SoundUnLoad(&soundData3);
+
+	delete model1;
 }

@@ -467,6 +467,7 @@ void KGPlin::CreatePipelineAll(KShader shader, std::string shaderName)
 
 		// ブレンドステートの設定
 		piplineDesc.BlendState.RenderTarget[0] = blenddesc;
+		piplineDesc.BlendState.RenderTarget[1] = blenddesc;
 
 		// 深度バッファのフォーマット
 		piplineDesc.DSVFormat = DXGI_FORMAT_D32_FLOAT;
@@ -478,8 +479,9 @@ void KGPlin::CreatePipelineAll(KShader shader, std::string shaderName)
 		// 図形の形状設定（三角形）
 		piplineDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 
-		piplineDesc.NumRenderTargets = 1;    // 描画対象は1つ
+		piplineDesc.NumRenderTargets = 2;    // 描画対象は1つ
 		piplineDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB; // 0～255指定のRGBA(SRGB版)
+		piplineDesc.RTVFormats[1] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB; // 0～255指定のRGBA(SRGB版)
 		piplineDesc.SampleDesc.Count = 1; // 1ピクセルにつき1回サンプリング
 
 		// デスクリプタレンジ
@@ -623,11 +625,6 @@ void KGPlin::CreatePipelineAll(KShader shader, std::string shaderName)
 		// グラフィックスパイプラインの生成
 		result = device->CreateGraphicsPipelineState(&piplineDesc, IID_PPV_ARGS(pipelineState.ReleaseAndGetAddressOf()));
 		if (FAILED(result)) { assert(0); }
-	}
-	// なんもシェーダー入ってないとき
-	else
-	{
-		assert(0);
 	}
 }
 

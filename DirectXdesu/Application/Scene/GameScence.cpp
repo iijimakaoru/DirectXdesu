@@ -200,9 +200,9 @@ void GameScence::Draw()
 
 	object1->Draw();
 
-	ground->Draw();
+	//ground->Draw();
 
-	sprite->Draw(&mario,spritePos, spriteSize,spriteRot, spriteColor, spriteFlipX, spriteFlipY);
+	//sprite->Draw(&mario,spritePos, spriteSize,spriteRot, spriteColor, spriteFlipX, spriteFlipY);
 }
 
 void GameScence::Final()

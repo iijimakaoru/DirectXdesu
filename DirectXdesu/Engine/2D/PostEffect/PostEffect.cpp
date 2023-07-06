@@ -2,12 +2,11 @@
 #include "KInput.h"
 
 // 静的メンバ変数の実体
-KMyMath::Matrix4 PostEffect::matPro;
 KGPlin* PostEffect::pipeline = nullptr;
 ComPtr<ID3D12Device> PostEffect::device;
 ComPtr<ID3D12GraphicsCommandList> PostEffect::cmdList;
 KWinApp* PostEffect::window = nullptr;
-const float PostEffect::clearColor[4] = { 0.5f, 0.5f, 0.5f, 0.0f };
+const float PostEffect::clearColor[4] = { 255.0f / 255.0f, 0.0f / 255.0f, 0.0f / 255.0f, 0.0f };
 
 void PostEffect::StaticInit()
 {
@@ -16,11 +15,6 @@ void PostEffect::StaticInit()
 	window = KWinApp::GetInstance();
 
 	cmdList = KDirectXCommon::GetInstance()->GetCmdlist();
-
-	float width = static_cast<float>(window->GetWindowSizeW());
-	float height = static_cast<float>(window->GetWindowSizeH());
-
-	matPro = MyMathUtility::MakeOrthogonalL(0.0f, width, height, 0.0f, 0.0f, 1.0f);
 }
 
 void PostEffect::Init()
@@ -51,12 +45,17 @@ void PostEffect::DrawCommand()
 	// SRVヒープの先頭ハンドルを取得
 	D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle = descHeapSRV->GetGPUDescriptorHandleForHeapStart();
 	// SRVヒープの先頭にあるSRVをルートパラメータ1番に設定
-	cmdList->SetGraphicsRootDescriptorTable(1, srvGpuHandle);
+	cmdList->SetGraphicsRootDescriptorTable(1,
+		CD3DX12_GPU_DESCRIPTOR_HANDLE(srvGpuHandle, 0,
+			device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV)));
+	cmdList->SetGraphicsRootDescriptorTable(2,
+		CD3DX12_GPU_DESCRIPTOR_HANDLE(srvGpuHandle, 1,
+			device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV)));
 
 	// 定数バッファビュー(CBV)の設定コマンド(マテリアル)
 	cmdList->SetGraphicsRootConstantBufferView(0, constBuffMaterial->GetGPUVirtualAddress());
 	// 定数バッファビュー(CBV)の設定コマンド(トランスフォーム)
-	cmdList->SetGraphicsRootConstantBufferView(2, constBuffTransform->GetGPUVirtualAddress());
+	cmdList->SetGraphicsRootConstantBufferView(3, constBuffTransform->GetGPUVirtualAddress());
 
 	// 頂点バッファビューの設定コマンド
 	cmdList->IASetVertexBuffers(0, 1, &vbView);
@@ -131,23 +130,6 @@ void PostEffect::Draw()
 	pipeline->Setting();
 	pipeline->Update(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP); // 三角形リスト
 
-	if (KInput::GetInstance()->IsTrigger(DIK_0))
-	{
-		// デスクリプタヒープにSRV作成
-		static size_t tex = 0;
-
-		tex = (tex + 1) % 2;
-
-		D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
-		srvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
-		srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-		srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-		srvDesc.Texture2D.MipLevels = 1;
-		device->CreateShaderResourceView(texBuff[tex].Get(),
-			&srvDesc,
-			descHeapSRV->GetCPUDescriptorHandleForHeapStart());
-	}
-
 	// 描画の条件
 	DrawCommand();
 
@@ -220,10 +202,10 @@ void PostEffect::CreateVertex()
 	// 頂点データ
 	Vertex vertices[4] =
 	{
-		{{-1.0f, 1.0f,0.0f},{0.0f,0.0f}}, // 左上
-		{{-1.0f,-1.0f,0.0f},{0.0f,1.0f}}, // 左下
-		{{ 1.0f, 1.0f,0.0f},{1.0f,0.0f}}, // 右上
-		{{ 1.0f,-1.0f,0.0f},{1.0f,1.0f}}, // 右下
+		{{-1.0f, 0.5f,0.0f},{0.0f,0.0f}}, // 左上
+		{{-1.0f,-0.5f,0.0f},{0.0f,1.0f}}, // 左下
+		{{ 1.0f, 0.5f,0.0f},{1.0f,0.0f}}, // 右上
+		{{ 1.0f,-0.5f,0.0f},{1.0f,1.0f}}, // 右下
 	};
 
 	for (size_t i = 0; i < 4; i++)
@@ -339,7 +321,7 @@ void PostEffect::CreateTextureBuff()
 	D3D12_DESCRIPTOR_HEAP_DESC srvDescHeapDesc = {};
 	srvDescHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
 	srvDescHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-	srvDescHeapDesc.NumDescriptors = 1;
+	srvDescHeapDesc.NumDescriptors = 2;
 
 	// SRV用デスクリプタヒープ生成
 	result = device->CreateDescriptorHeap(&srvDescHeapDesc, IID_PPV_ARGS(&descHeapSRV));
@@ -353,9 +335,14 @@ void PostEffect::CreateTextureBuff()
 	srvDesc.Texture2D.MipLevels = 1;
 
 	// デスクリプタヒープにSRV作成
-	device->CreateShaderResourceView(texBuff[0].Get(), // ビューと関連付けるバッファ
-		&srvDesc,
-		descHeapSRV->GetCPUDescriptorHandleForHeapStart());
+	for (size_t i = 0; i < 2; i++)
+	{
+		device->CreateShaderResourceView(texBuff[i].Get(), // ビューと関連付けるバッファ
+			&srvDesc,
+			CD3DX12_CPU_DESCRIPTOR_HANDLE(
+				descHeapSRV->GetCPUDescriptorHandleForHeapStart(), static_cast<INT>(i),
+				device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV)));
+	}
 }
 
 void PostEffect::CreateDepthBuff()
@@ -410,7 +397,7 @@ void PostEffect::CreateRTVDescHeap()
 		// デスクリプタヒープにRTV作成
 		device->CreateRenderTargetView(texBuff[i].Get(),
 			nullptr,
-			CD3DX12_CPU_DESCRIPTOR_HANDLE(descHeapRTV->GetCPUDescriptorHandleForHeapStart(),static_cast<INT>(i),
+			CD3DX12_CPU_DESCRIPTOR_HANDLE(descHeapRTV->GetCPUDescriptorHandleForHeapStart(), static_cast<INT>(i),
 				device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV)));
 	}
 

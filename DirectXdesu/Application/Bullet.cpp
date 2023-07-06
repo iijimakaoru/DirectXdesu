@@ -23,10 +23,13 @@ void Bullet::Init()
 	object3d->transform.scale = { 3.0f,3.0f,3.0f };
 }
 
-void Bullet::Set(const KMyMath::Vector3 pos, const KMyMath::Vector3 vec)
+void Bullet::Set(const KMyMath::Vector3 pos, const KMyMath::Vector3 vec_,
+	const KMyMath::Vector3 rot_, const float bulletSpeed)
 {
 	object3d->transform.pos = pos;
-	this->vec = vec;
+	this->vec = vec_;
+	vec = vec.Normalize() * bulletSpeed;
+	object3d->transform.rot = rot_;
 
 	lifeTimer = 120;
 
@@ -38,7 +41,7 @@ void Bullet::Update(ViewProjection* viewPro)
 	if (!isDead)
 	{
 		lifeTimer--;
-		object3d->transform.pos.z += speed;
+		object3d->transform.pos += vec;
 
 		if (lifeTimer <= 0)
 		{

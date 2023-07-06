@@ -68,8 +68,6 @@ void Player::Move()
 	object3d->transform.pos.x += velocity.x * moveSpeed;
 	object3d->transform.pos.y += velocity.y * moveSpeed;
 
-	bulletVec = velocity;
-
 	const float moveLimitX = 60;
 	const float moveLimitY = 30;
 
@@ -166,11 +164,17 @@ void Player::Attack()
 {
 	if (input->GetPadButtonDown(XINPUT_GAMEPAD_A))
 	{
+		const float bulletSpeed = 6.0f;
+		KMyMath::Vector3 bulletVec(0, 0, 1);
+
+		// 速度ベクトルを自機の向きに合わせて回転
+		bulletVec = MyMathUtility::TransforNormal(bulletVec, object3d->transform.matWorld);
+
 		for (size_t i = 0; i < bullet.size(); i++)
 		{
 			if (bullet[i]->GetIsDead())
 			{
-				bullet[i]->Set(GetWorldPos(), bulletVec);
+				bullet[i]->Set(GetWorldPos(), bulletVec, object3d->transform.rot, bulletSpeed);
 				return;
 			}
 		}

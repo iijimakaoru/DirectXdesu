@@ -169,6 +169,14 @@ namespace MyMathUtility
 	/// <param name="max"></param>
 	/// <returns></returns>
 	float GetRand(float min, float max);
+
+	/// <summary>
+	/// ƒxƒNƒgƒ‹•ÏŠ·
+	/// </summary>
+	/// <param name="v"></param>
+	/// <param name="m"></param>
+	/// <returns></returns>
+	KMyMath::Vector3 TransforNormal(const KMyMath::Vector3& v, const KMyMath::Matrix4& m);
 }
 
 namespace KMyMath

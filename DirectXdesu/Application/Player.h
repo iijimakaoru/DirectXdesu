@@ -97,5 +97,4 @@ private:
 
 	// ’e
 	std::array<std::unique_ptr<Bullet>, 60> bullet = { nullptr };
-	KMyMath::Vector3 bulletVec;
 };

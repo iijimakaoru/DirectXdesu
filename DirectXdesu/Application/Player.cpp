@@ -187,7 +187,7 @@ void Player::Draw()
 	}
 }
 
-void Player::SetParent(WorldTransfom* parent)
+void Player::SetParent(const WorldTransfom* parent)
 {
 	object3d->transform.parent = parent;
 }

@@ -39,7 +39,7 @@ public:
 	/// パイプラインセッター
 	/// </summary>
 	/// <param name="parent"></param>
-	void SetParent(WorldTransfom* parent);
+	void SetParent(const WorldTransfom* parent);
 
 	// ポジションゲッター
 	KMyMath::Vector3& GetPosition()

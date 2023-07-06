@@ -40,7 +40,7 @@ struct WorldTransfom {
 	KMyMath::Matrix4 matWorld = {};
 
 	// 親オブジェクトへのポインタ
-	WorldTransfom* parent = nullptr;
+	const WorldTransfom* parent = nullptr;
 };
 
 class KObject3d

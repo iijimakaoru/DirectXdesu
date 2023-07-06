@@ -63,8 +63,8 @@ void GameScence::Init()
 	// ƒvƒŒƒCƒ„[
 	player = std::make_unique<Player>();
 	player->Init();
-	WorldTransfom cameraToPlayer = camera->GetTransform();
-	//player->SetParent(&cameraToPlayer);
+	const WorldTransfom& cameraToPlayer = camera->GetTransform();
+	player->SetParent(&cameraToPlayer);
 
 	// G‹›“G
 	for (size_t i = 0; i < mobEnemy.size(); i++)

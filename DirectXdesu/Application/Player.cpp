@@ -170,7 +170,7 @@ void Player::Attack()
 		{
 			if (bullet[i]->GetIsDead())
 			{
-				bullet[i]->Set(object3d->transform.pos, bulletVec);
+				bullet[i]->Set(GetWorldPos(), bulletVec);
 				return;
 			}
 		}

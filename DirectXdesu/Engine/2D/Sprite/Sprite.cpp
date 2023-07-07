@@ -24,6 +24,11 @@ void Sprite::SetPipeline(KGPlin* pipeline_)
 	pipeline = pipeline_;
 }
 
+const KMyMath::Vector2 Sprite::GetPos() const
+{
+	return position;
+}
+
 void Sprite::CreateCBMaterial()
 {
 	// 定数バッファ生成用

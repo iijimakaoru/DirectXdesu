@@ -8,6 +8,8 @@
 #include "KInput.h"
 #include "Bullet.h"
 
+#include "Reticle3D.h"
+
 /// <summary>
 /// 自キャラ
 /// </summary>
@@ -97,4 +99,7 @@ private:
 
 	// 弾
 	std::array<std::unique_ptr<Bullet>, 60> bullet = { nullptr };
+
+	// レティクル
+	std::unique_ptr<Reticle3D> reticle3d = nullptr;
 };

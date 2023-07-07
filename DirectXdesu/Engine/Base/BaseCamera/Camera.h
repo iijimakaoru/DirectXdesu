@@ -6,7 +6,7 @@
 
 class Camera
 {
-public:
+protected:
 	std::unique_ptr<ViewProjection> viewProjection = nullptr;
 
 	std::unique_ptr<KObject3d> cameraObject = nullptr;
@@ -18,6 +18,11 @@ public:
 
 	virtual void Update() = 0;
 
+	ViewProjection* GetViewPro()
+	{
+		return viewProjection.get();
+	}
+
 	const WorldTransfom& GetTransform()const
 	{
 		return cameraObject->transform;
@@ -26,5 +31,10 @@ public:
 	const KMyMath::Vector3& GetPos()const
 	{
 		return cameraObject->transform.pos;
+	}
+
+	void SetPos(const KMyMath::Vector3 pos)
+	{
+		cameraObject->transform.pos = pos;
 	}
 };

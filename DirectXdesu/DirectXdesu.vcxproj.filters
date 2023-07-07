@@ -306,6 +306,15 @@
     <ClCompile Include="Application\Camera\RailCamera.cpp">
       <Filter>ソース ファイル\Application\Camera</Filter>
     </ClCompile>
+    <ClCompile Include="Application\Reticle.cpp">
+      <Filter>ソース ファイル\Application</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\Reticle2D.cpp">
+      <Filter>ソース ファイル\Application</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\Reticle3D.cpp">
+      <Filter>ソース ファイル\Application</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Input\KInput.h">
@@ -454,6 +463,15 @@
     </ClInclude>
     <ClInclude Include="Application\Camera\RailCamera.h">
       <Filter>ヘッダー ファイル\Application\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\Reticle.h">
+      <Filter>ヘッダー ファイル\Application</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\Reticle2D.h">
+      <Filter>ヘッダー ファイル\Application</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\Reticle3D.h">
+      <Filter>ヘッダー ファイル\Application</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

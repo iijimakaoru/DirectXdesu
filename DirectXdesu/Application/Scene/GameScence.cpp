@@ -145,14 +145,14 @@ void GameScence::Update()
 	ImGui::Text("pos: (%.2f,%.2f, %.2f)", camera->GetPos().x, camera->GetPos().y, camera->GetPos().z);
 	ImGui::End();
 
-	player->Update(camera->viewProjection.get());
+	player->Update(camera->GetViewPro());
 
 	for (size_t i = 0; i < mobEnemy.size(); i++)
 	{
-		mobEnemy[i]->Update(camera->viewProjection.get());
+		mobEnemy[i]->Update(camera->GetViewPro());
 	}
 
-	ground->Update(camera->viewProjection.get());
+	ground->Update(camera->GetViewPro());
 
 	camera->Update();
 }

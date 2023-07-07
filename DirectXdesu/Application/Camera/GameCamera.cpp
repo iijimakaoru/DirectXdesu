@@ -1,12 +1,5 @@
 #include "GameCamera.h"
 
-void GameCamera::Init()
-{
-	viewProjection = std::make_unique<ViewProjection>();
-	viewProjection->Initialize();
-	viewProjection->aspect = (float)KWinApp::GetWindowSizeW() / KWinApp::GetWindowSizeH();
-}
-
 void GameCamera::Update()
 {
 

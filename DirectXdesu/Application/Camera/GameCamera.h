@@ -12,8 +12,6 @@ public:
 		Init();
 	};
 
-	void Init()override;
-
 	void Update()override;
 };
 

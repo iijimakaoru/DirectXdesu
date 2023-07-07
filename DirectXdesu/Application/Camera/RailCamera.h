@@ -14,8 +14,6 @@ public:
 
 	void Update()override;
 
-	void SetPos(KMyMath::Vector3 pos);
-
 	void SetRadian(float angle_)
 	{
 		angle = angle_;

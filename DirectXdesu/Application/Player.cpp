@@ -15,7 +15,6 @@ void Player::Init()
 	// パイプライン生成
 	pipeline = std::make_unique<KGPlin>();
 	shader.Init(L"Resources/Shader/ObjVS.hlsl", L"Resources/Shader/ObjPS.hlsl");
-	pipeline = std::make_unique<KGPlin>();
 	pipeline->CreatePipelineAll(shader, "Obj");
 
 	// オブジェクト生成
@@ -26,11 +25,16 @@ void Player::Init()
 	object3d->transform.pos.z = 50;
 	object3d->transform.scale = { 2.0f,2.0f,2.0f };
 
+	// 弾生成
 	for (size_t i = 0; i < bullet.size(); i++)
 	{
 		bullet[i] = std::make_unique<Bullet>();
 		bullet[i]->Init();
 	}
+
+	// レティクル
+	reticle3d = std::make_unique<Reticle3D>();
+	reticle3d->Init();
 }
 
 void Player::Update(ViewProjection* viewPro)
@@ -39,6 +43,8 @@ void Player::Update(ViewProjection* viewPro)
 	Rot();
 
 	Attack();
+
+	reticle3d->Update(viewPro, object3d->transform.matWorld, GetWorldPos());
 
 	object3d->Update(viewPro);
 
@@ -183,6 +189,8 @@ void Player::Attack()
 
 void Player::Draw()
 {
+	reticle3d->Draw();
+
 	object3d->Draw(&tex);
 	
 	for (size_t i = 0; i < bullet.size(); i++)

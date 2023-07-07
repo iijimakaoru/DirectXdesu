@@ -21,7 +21,3 @@ void RailCamera::Update()
 
 	viewProjection->matView = MyMathUtility::MakeInverse(cameraObject->transform.matWorld);
 }
-
-void RailCamera::SetPos(KMyMath::Vector3 pos)
-{
-}

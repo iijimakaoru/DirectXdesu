@@ -28,7 +28,7 @@ void Bullet::Set(const KMyMath::Vector3 pos, const KMyMath::Vector3 vec_,
 {
 	object3d->transform.pos = pos;
 	this->vec = vec_;
-	vec = vec.Normalize() * bulletSpeed;
+	vec = MyMathUtility::MakeNormalize(vec) * bulletSpeed;
 	object3d->transform.rot = rot_;
 
 	lifeTimer = 120;

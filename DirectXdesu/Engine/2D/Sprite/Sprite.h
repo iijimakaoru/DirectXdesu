@@ -49,6 +49,9 @@ public:
 	/// <param name="pipeline_"></param>
 	void SetPipeline(KGPlin* pipeline_);
 
+	// ポジションゲッター
+	const KMyMath::Vector2 GetPos() const;
+
 private:
 	// 定数バッファマテリアル
 	void CreateCBMaterial();

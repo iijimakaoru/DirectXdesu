@@ -35,6 +35,8 @@ void Player::Init()
 	// ƒŒƒeƒBƒNƒ‹
 	reticle3d = std::make_unique<Reticle3D>();
 	reticle3d->Init();
+	reticle2d = std::make_unique<Reticle2D>();
+	reticle2d->Init();
 }
 
 void Player::Update(ViewProjection* viewPro)
@@ -45,6 +47,8 @@ void Player::Update(ViewProjection* viewPro)
 	Attack();
 
 	reticle3d->Update(viewPro, object3d->transform.matWorld, GetWorldPos());
+
+	reticle2d->Update(viewPro,reticle3d->GetWorldPos());
 
 	object3d->Update(viewPro);
 
@@ -189,14 +193,16 @@ void Player::Attack()
 
 void Player::Draw()
 {
-	reticle3d->Draw();
-
 	object3d->Draw(&tex);
-	
+
 	for (size_t i = 0; i < bullet.size(); i++)
 	{
 		bullet[i]->Draw();
 	}
+
+	reticle3d->Draw();
+
+	reticle2d->Draw();
 }
 
 void Player::SetParent(const WorldTransfom* parent)

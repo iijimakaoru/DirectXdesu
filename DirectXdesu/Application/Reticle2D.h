@@ -1,12 +1,13 @@
 #pragma once
 #include "Sprite.h"
+#include "ViewProjection.h"
 
 class Reticle2D
 {
 public:
 	void Init();
 
-	void Update();
+	void Update(ViewProjection* viewPro,KMyMath::Vector3 reticle3dPos);
 
 	void Draw();
 
@@ -28,7 +29,9 @@ protected:
 
 	KMyMath::Vector2 position;
 
-	KMyMath::Vector2 size;
+	KMyMath::Vector2 scale;
 
 	KMyMath::Vector4 color;
+
+	float rot;
 };

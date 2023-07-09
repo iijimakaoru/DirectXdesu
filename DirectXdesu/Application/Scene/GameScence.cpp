@@ -159,14 +159,16 @@ void GameScence::Update()
 
 void GameScence::Draw()
 {
-	player->Draw();
+	// ’n–Ê•`‰æ
+	ground->Draw();
 
 	for (size_t i = 0; i < mobEnemy.size(); i++)
 	{
 		mobEnemy[i]->Draw();
 	}
 
-	ground->Draw();
+	// ƒvƒŒƒCƒ„[•`‰æ
+	player->Draw();
 
 	sprite->Draw(&mario,spritePos, spriteSize,spriteRot, spriteColor, spriteFlipX, spriteFlipY);
 }

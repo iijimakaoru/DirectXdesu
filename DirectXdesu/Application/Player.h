@@ -9,6 +9,7 @@
 #include "Bullet.h"
 
 #include "Reticle3D.h"
+#include "Reticle2D.h"
 
 /// <summary>
 /// 自キャラ
@@ -102,4 +103,5 @@ private:
 
 	// レティクル
 	std::unique_ptr<Reticle3D> reticle3d = nullptr;
+	std::unique_ptr<Reticle2D> reticle2d = nullptr;
 };

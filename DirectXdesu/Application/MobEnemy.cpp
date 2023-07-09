@@ -4,7 +4,7 @@
 void MobEnemy::Init()
 {
 	// モデル生成
-	model = std::make_unique<Cube>();
+	model = std::make_unique<MtlObj>("boss_model");
 	model->CreateModel();
 
 	// テクスチャ生成
@@ -58,6 +58,6 @@ void MobEnemy::Draw()
 {
 	if (!isDead)
 	{
-		object3d->Draw(&tex);
+		object3d->Draw();
 	}
 }

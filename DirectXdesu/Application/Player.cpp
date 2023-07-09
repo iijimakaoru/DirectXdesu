@@ -60,16 +60,6 @@ void Player::Update(ViewProjection* viewPro)
 
 void Player::Move()
 {
-	if (input->IsPush(DIK_UP))
-	{
-		object3d->transform.pos.z++;
-	}
-
-	if (input->IsPush(DIK_DOWN))
-	{
-		object3d->transform.pos.z--;
-	}
-
 	//é©ã@Ç™åXÇ¢ÇƒÇ¢ÇÈäpìxÇ…à⁄ìÆÇ≥ÇπÇÈ
 	KMyMath::Vector3 velocity = { 0, 0, 0 };
 	velocity.x = (object3d->transform.rot.y / rotLimit.y);
@@ -90,14 +80,14 @@ void Player::Move()
 void Player::Rot()
 {
 	//âÒì]ë¨ìx
-	const float rotSpeed = 0.5f;
+	const float rotSpeed = 1.0f;
 
 	//äpìxèCê≥äÓèÄë¨ìx
-	const float correctionSpeed = rotSpeed / 6.0f;
+	const float correctionSpeed = rotSpeed / 1.5f;
 	KMyMath::Vector3 rot = { 0, 0, 0 };
 
 	//Ç«Ç±Ç‹Ç≈åXÇØÇΩÇÁîªíËÇÇ∆ÇÈÇ©
-	const float stickNum = 200;
+	const float stickNum = 100;
 
 	// Yé≤âÒì]
 	if (input->LStickTiltX(stickNum) || input->LStickTiltX(-stickNum))
@@ -149,11 +139,11 @@ void Player::Rot()
 		const float rotMin = 0.5f;
 		if (object3d->transform.rot.x > rotMin)
 		{
-			rot.y -= backSpeed;
+			rot.x -= backSpeed;
 		}
 		else if (object3d->transform.rot.x < -rotMin)
 		{
-			rot.y += backSpeed;
+			rot.x += backSpeed;
 		}
 		else
 		{
@@ -161,7 +151,29 @@ void Player::Rot()
 		}
 	}
 
-	object3d->transform.rot = rot;
+	// Zé≤âÒì]
+	{
+		const float rotZspeed = 0.04f;
+		const float rotZLimit = 1.0f;
+		//âEâÒì]
+		if (isRotZRight) {
+			swayZ += rotZspeed;
+			if (swayZ >= rotZLimit) {
+				isRotZRight = false;
+			}
+		}
+		//ç∂âÒì]
+		else {
+			swayZ -= rotZspeed;
+			if (swayZ <= -rotZLimit) {
+				isRotZRight = true;
+			}
+		}
+
+		object3d->transform.rot.z = -object3d->transform.rot.y + swayZ;
+	}
+
+	object3d->transform.rot += rot;
 
 	// äpìxêßå¿
 	object3d->transform.rot.y = max(object3d->transform.rot.y, -rotLimit.y);

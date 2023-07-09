@@ -92,8 +92,12 @@ private:
 	float rotEaseTimer = 0;
 	bool isRotEase = false;
 
+	// Z軸
+	bool isRotZRight = false;
+	float swayZ = 0.0f;
+
 	// 動くスピード
-	float moveSpeed = 0.5f;
+	float moveSpeed = 0.16f;
 
 	// 角度上限
 	const KMyMath::Vector2 rotLimit = { 35.0f, 25.0f };

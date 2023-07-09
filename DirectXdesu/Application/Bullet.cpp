@@ -59,3 +59,7 @@ void Bullet::Draw()
 		object3d->Draw(&tex);
 	}
 }
+
+void Bullet::OnCollision()
+{
+}

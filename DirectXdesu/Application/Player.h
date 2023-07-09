@@ -63,6 +63,9 @@ public:
 		return result;
 	}
 
+	// Õ“Ë‚ÉŒÄ‚Ño‚µ
+	void OnCollision();
+
 private:
 	// Input
 	KInput* input = nullptr;

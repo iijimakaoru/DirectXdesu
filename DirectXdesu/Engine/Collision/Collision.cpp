@@ -245,3 +245,16 @@ bool Collision::CheckRay2Sphere(const Ray& ray, const Sphere& sphere, float* dis
 
 	return true;
 }
+
+namespace MyCollisions
+{
+	bool CheckSphereToSphere(const KMyMath::Vector3& posA, const KMyMath::Vector3& posB, const float radiusA, const float radiusB)
+	{
+		float disX = posB.x - posA.x;
+		float disY = posB.y - posA.y;
+		float disZ = posB.z - posA.z;
+		float d = disX * disX + disY * disY + disZ * disZ;
+		float r = radiusA + radiusB;
+		return d < r * r;
+	}
+}

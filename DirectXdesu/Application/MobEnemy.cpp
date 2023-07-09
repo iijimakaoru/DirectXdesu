@@ -61,3 +61,7 @@ void MobEnemy::Draw()
 		object3d->Draw();
 	}
 }
+
+void MobEnemy::OnCollision()
+{
+}

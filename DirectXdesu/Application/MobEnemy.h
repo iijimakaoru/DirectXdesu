@@ -25,6 +25,9 @@ public:
 	// 描画
 	void Draw();
 
+	// 衝突時に呼び出し
+	void OnCollision();
+
 private:
 	// オブジェクト
 	std::unique_ptr<KObject3d> object3d;

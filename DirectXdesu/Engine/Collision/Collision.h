@@ -1,5 +1,6 @@
 #pragma once
 #include "CollisionPrimitive.h"
+#include "MyMath.h"
 
 class Collision
 {
@@ -17,3 +18,15 @@ public:
 	static bool CheckRay2Sphere(const Ray& ray, const Sphere& sphere, float* distance = nullptr, DirectX::XMVECTOR* inter = nullptr);
 };
 
+namespace MyCollisions
+{
+	/// <summary>
+	/// ‹…‚Æ‹…
+	/// </summary>
+	/// <param name="posA"></param>
+	/// <param name="posB"></param>
+	/// <param name="radiusA"></param>
+	/// <param name="radiusB"></param>
+	/// <returns></returns>
+	bool CheckSphereToSphere(const KMyMath::Vector3& posA, const KMyMath::Vector3& posB, const float radiusA, const float radiusB);
+}

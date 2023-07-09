@@ -46,6 +46,10 @@ public:
 	void Final()override;
 
 private:
+	// 衝突判定
+	void CheckAllCollisions();
+
+private:
 	// インプット
 	KInput* input = nullptr;
 

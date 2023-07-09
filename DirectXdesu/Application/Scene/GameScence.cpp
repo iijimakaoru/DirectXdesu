@@ -180,3 +180,11 @@ void GameScence::Final()
 	sound->SoundUnLoad(&soundData2);
 	sound->SoundUnLoad(&soundData3);
 }
+
+void GameScence::CheckAllCollisions()
+{
+	// ”»’è‘ÎÛA‚ÆB‚ÌÀ•W
+	KMyMath::Vector3 posA, posB;
+
+	// ©‹@’e‚Ìæ“¾
+}

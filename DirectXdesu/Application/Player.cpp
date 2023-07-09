@@ -221,3 +221,7 @@ void Player::SetParent(const WorldTransfom* parent)
 {
 	object3d->transform.parent = parent;
 }
+
+void Player::OnCollision()
+{
+}

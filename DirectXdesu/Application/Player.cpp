@@ -212,8 +212,6 @@ void Player::Draw()
 		bullet[i]->Draw();
 	}
 
-	reticle3d->Draw();
-
 	reticle2d->Draw();
 }
 

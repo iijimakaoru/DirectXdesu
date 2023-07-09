@@ -6,7 +6,7 @@ void Player::Init()
 	input = KInput::GetInstance();
 
 	// モデル生成
-	model = std::make_unique<Cube>();
+	model = std::make_unique<MtlObj>("kariBattle");
 	model->CreateModel();
 
 	// テクスチャ生成
@@ -205,7 +205,7 @@ void Player::Attack()
 
 void Player::Draw()
 {
-	object3d->Draw(&tex);
+	object3d->Draw();
 
 	for (size_t i = 0; i < bullet.size(); i++)
 	{

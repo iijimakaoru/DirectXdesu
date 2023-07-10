@@ -201,7 +201,6 @@ void Player::Attack()
 			}
 		}
 	}
-
 }
 
 void Player::Draw()

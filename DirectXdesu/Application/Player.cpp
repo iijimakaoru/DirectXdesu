@@ -34,6 +34,12 @@ void Player::Init()
 
 void Player::Update(ViewProjection* viewPro)
 {
+	// ’eíœ
+	bullets.remove_if([](std::unique_ptr<Bullet>& bullet)
+		{
+			return bullet->GetIsDead();
+		});
+
 	Move();
 	Rot();
 
@@ -49,12 +55,6 @@ void Player::Update(ViewProjection* viewPro)
 	{
 		bullet->Update(viewPro);
 	}
-
-	// ’eíœ
-	bullets.remove_if([](std::unique_ptr<Bullet>& bullet)
-		{
-			return bullet->GetIsDead();
-		});
 }
 
 void Player::Move()

@@ -16,11 +16,7 @@
 class TitleScene : public BaseScene
 {
 public:
-	TitleScene()
-	{
-		LoadResources();
-		Init();
-	};
+	TitleScene(){};
 	~TitleScene();
 	void LoadResources()override;
 	void Init() override;

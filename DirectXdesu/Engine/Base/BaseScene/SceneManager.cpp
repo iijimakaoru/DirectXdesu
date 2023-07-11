@@ -22,6 +22,9 @@ void SceneManager::Update()
 		// シーンマネージャーをセット
 		scene->SetSceneManager(this);
 
+		// リソース読み込み
+		scene->LoadResources();
+
 		// シーン初期化
 		scene->Init();
 	}

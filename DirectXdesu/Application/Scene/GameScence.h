@@ -33,11 +33,7 @@
 class GameScence : public BaseScene
 {
 public:
-	GameScence()
-	{
-		LoadResources();
-		Init();
-	};
+	GameScence(){};
 	~GameScence();
 	void LoadResources() override;
 	void Init() override;

@@ -95,7 +95,7 @@ public:
 	static KObject3d Create();
 
 private:
-	static KGPlin* pipeline;
+	KGPlin* pipeline;
 
 public:
 	ComPtr<ID3D12Resource> constBuffB0;

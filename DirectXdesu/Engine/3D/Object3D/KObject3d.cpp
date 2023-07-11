@@ -1,8 +1,6 @@
 #include "KObject3d.h"
 #include "KDirectXCommon.h"
 
-KGPlin* KObject3d::pipeline = nullptr;
-
 KObject3d::KObject3d() {
 	Initialize();
 }
@@ -62,7 +60,7 @@ void KObject3d::LoadModel(KModel* model)
 
 void KObject3d::SetPipeline(KGPlin* pipeline_)
 {
-	KObject3d::pipeline = pipeline_;
+	pipeline = pipeline_;
 }
 
 void KObject3d::TransUpdate()

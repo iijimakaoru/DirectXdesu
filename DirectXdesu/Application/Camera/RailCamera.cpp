@@ -4,7 +4,6 @@
 void RailCamera::Init()
 {
 	cameraObject = std::make_unique<KObject3d>();
-	cameraObject->Initialize();
 	cameraObject->transform.pos = { 0,0,-200 };
 	cameraObject->transform.scale = { 1.0f,1.0f,1.0f };
 	cameraObject->transform.rot = { 0,0,0 };

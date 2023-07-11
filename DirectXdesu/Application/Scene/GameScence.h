@@ -68,8 +68,6 @@ private:
 	KTexture mario;
 	KTexture haikei;
 
-	std::unique_ptr<Sound> sound;
-
 	SoundData soundData1;
 	SoundData soundData2;
 	SoundData soundData3;

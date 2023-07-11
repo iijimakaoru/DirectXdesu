@@ -104,3 +104,9 @@ void Sound::SoundPlayWave(const SoundData& soundData)
 	result = pSourceVoice->SubmitSourceBuffer(&buf);
 	result = pSourceVoice->Start();
 }
+
+Sound* Sound::GetInstance()
+{
+	static Sound instance;
+	return &instance;
+}

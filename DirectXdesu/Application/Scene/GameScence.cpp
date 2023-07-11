@@ -27,11 +27,9 @@ void GameScence::LoadResources()
 	haikei.CreateTexture("Resources/texture/", "haikei.jpg");
 
 	// ƒTƒEƒ“ƒh
-	sound = std::make_unique<Sound>();
-	sound->Init();
-	soundData1 = sound->SoundLoadWave("Resources/Sound/Alarm01.wav");
-	soundData2 = sound->SoundLoadWave("Resources/Sound/Alarm02.wav");
-	soundData3 = sound->SoundLoadWave("Resources/Sound/Alarm03.wav");
+	soundData1 = Sound::GetInstance()->SoundLoadWave("Resources/Sound/Alarm01.wav");
+	soundData2 = Sound::GetInstance()->SoundLoadWave("Resources/Sound/Alarm02.wav");
+	soundData3 = Sound::GetInstance()->SoundLoadWave("Resources/Sound/Alarm03.wav");
 }
 
 void GameScence::Init()
@@ -88,15 +86,15 @@ void GameScence::Update()
 	ImGui::Text("Sound");
 	if (ImGui::Button("Play1"))
 	{
-		sound->SoundPlayWave(soundData1);
+		Sound::GetInstance()->SoundPlayWave(soundData1);
 	}
 	if (ImGui::Button("Play2"))
 	{
-		sound->SoundPlayWave(soundData2);
+		Sound::GetInstance()->SoundPlayWave(soundData2);
 	}
 	if (ImGui::Button("Play3"))
 	{
-		sound->SoundPlayWave(soundData3);
+		Sound::GetInstance()->SoundPlayWave(soundData3);
 	}
 
 	ImGui::Text("Sprite");
@@ -175,10 +173,10 @@ void GameScence::Draw()
 
 void GameScence::Final()
 {
-	sound->GetxAudio().Reset();
-	sound->SoundUnLoad(&soundData1);
-	sound->SoundUnLoad(&soundData2);
-	sound->SoundUnLoad(&soundData3);
+	Sound::GetInstance()->GetxAudio().Reset();
+	Sound::GetInstance()->SoundUnLoad(&soundData1);
+	Sound::GetInstance()->SoundUnLoad(&soundData2);
+	Sound::GetInstance()->SoundUnLoad(&soundData3);
 }
 
 void GameScence::CheckAllCollisions()

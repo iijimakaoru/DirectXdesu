@@ -33,14 +33,43 @@ struct SoundData
 class Sound
 {
 public:
+	// 初期化
 	void Init();
+
+	/// <summary>
+	/// 音読み込み
+	/// </summary>
+	/// <param name="filename"></param>
+	/// <returns></returns>
 	SoundData SoundLoadWave(const char* filename);
+
+	/// <summary>
+	/// 音削除
+	/// </summary>
+	/// <param name="soundData"></param>
 	void SoundUnLoad(SoundData* soundData);
+
+	/// <summary>
+	/// 再生
+	/// </summary>
+	/// <param name="soundData"></param>
 	void SoundPlayWave(const SoundData& soundData);
+
+	// ゲッター
 	ComPtr<IXAudio2> GetxAudio() { return xAudio2; }
+
+	// インスタンス
+	static Sound* GetInstance();
 
 private:
 	ComPtr<IXAudio2> xAudio2;
 	IXAudio2MasteringVoice* masterVoice;
+
+private:
+	Sound() = default;
+	~Sound() = default;
+
+	Sound(const Sound&) = default;
+	const Sound& operator=(const Sound&) = delete;
 };
 

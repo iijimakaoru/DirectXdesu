@@ -9,6 +9,7 @@
 #include "PostEffect.h"
 #include "KGPlin.h"
 #include "KShader.h"
+#include "Sound.h"
 
 class Framework
 {
@@ -42,6 +43,8 @@ protected:
 
 	// シーンファクトリー
 	ASceneFactory* sceneFactory = nullptr;
+
+	Sound* sound = nullptr;
 
 	ImguiManager imguiMane;
 

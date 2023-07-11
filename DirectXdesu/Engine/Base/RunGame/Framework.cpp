@@ -20,6 +20,9 @@ void Framework::Init()
 	input = KInput::GetInstance();
 	input->Init();
 
+	sound = Sound::GetInstance();
+	sound->Init();
+
 	// Ã“I‰Šú‰»
 	Sprite::StaticInit();
 	PostEffect::StaticInit();

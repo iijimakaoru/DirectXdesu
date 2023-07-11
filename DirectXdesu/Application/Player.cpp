@@ -80,10 +80,10 @@ void Player::Move()
 void Player::Rot()
 {
 	//‰ñ“]‘¬“x
-	const float rotSpeed = 1.0f;
+	const float rotSpeed = 0.05f;
 
 	//Šp“xC³Šî€‘¬“x
-	const float correctionSpeed = rotSpeed / 1.5f;
+	const float correctionSpeed = rotSpeed / 0.05f;
 	KMyMath::Vector3 rot = { 0, 0, 0 };
 
 	//‚Ç‚±‚Ü‚ÅŒX‚¯‚½‚ç”»’è‚ğ‚Æ‚é‚©

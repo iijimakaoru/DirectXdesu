@@ -25,13 +25,6 @@ void Player::Init()
 	object3d->transform.pos.z = 50;
 	object3d->transform.scale = { 2.0f,2.0f,2.0f };
 
-	// 弾生成
-	for (size_t i = 0; i < bullet.size(); i++)
-	{
-		bullet[i] = std::make_unique<Bullet>();
-		bullet[i]->Init();
-	}
-
 	// レティクル
 	reticle3d = std::make_unique<Reticle3D>();
 	reticle3d->Init();
@@ -52,10 +45,16 @@ void Player::Update(ViewProjection* viewPro)
 
 	object3d->Update(viewPro);
 
-	for (size_t i = 0; i < bullet.size(); i++)
+	for (std::unique_ptr<Bullet>& bullet : bullets)
 	{
-		bullet[i]->Update(viewPro);
+		bullet->Update(viewPro);
 	}
+
+	// 弾削除
+	bullets.remove_if([](std::unique_ptr<Bullet>& bullet)
+		{
+			return bullet->GetIsDead();
+		});
 }
 
 void Player::Move()
@@ -192,14 +191,14 @@ void Player::Attack()
 		// 速度ベクトルを自機の向きに合わせて回転
 		bulletVec = MyMathUtility::TransforNormal(bulletVec, object3d->transform.matWorld);
 
-		for (size_t i = 0; i < bullet.size(); i++)
-		{
-			if (bullet[i]->GetIsDead())
-			{
-				bullet[i]->Set(GetWorldPos(), bulletVec, object3d->transform.rot, bulletSpeed);
-				return;
-			}
-		}
+		// 弾生成
+		std::unique_ptr<Bullet> newBullet = std::make_unique<Bullet>();
+		// 初期化
+		newBullet->Init();
+		// 配置
+		newBullet->Set(GetWorldPos(), bulletVec, object3d->transform.rot, bulletSpeed);
+		// 登録
+		bullets.push_back(std::move(newBullet));
 	}
 }
 
@@ -207,9 +206,9 @@ void Player::Draw()
 {
 	object3d->Draw();
 
-	for (size_t i = 0; i < bullet.size(); i++)
+	for (std::unique_ptr<Bullet>& bullet : bullets)
 	{
-		bullet[i]->Draw();
+		bullet->Draw();
 	}
 
 	reticle2d->Draw();

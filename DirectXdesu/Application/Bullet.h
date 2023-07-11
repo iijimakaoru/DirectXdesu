@@ -30,7 +30,7 @@ public:
 	void Draw();
 
 	// ゲッター
-	bool GetIsDead()
+	bool GetIsDead() const
 	{
 		return isDead;
 	}
@@ -57,7 +57,7 @@ private:
 	// スピード
 	float speed = 1.0f;
 
-	bool isDead = true;
+	bool isDead = false;
 
 	KMyMath::Vector3 vec;
 

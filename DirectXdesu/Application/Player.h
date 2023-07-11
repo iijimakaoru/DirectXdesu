@@ -106,7 +106,7 @@ private:
 	const KMyMath::Vector2 rotLimit = { 35.0f, 25.0f };
 
 	// ’e
-	std::array<std::unique_ptr<Bullet>, 60> bullet = { nullptr };
+	std::list<std::unique_ptr<Bullet>> bullets;
 
 	// ƒŒƒeƒBƒNƒ‹
 	std::unique_ptr<Reticle3D> reticle3d = nullptr;

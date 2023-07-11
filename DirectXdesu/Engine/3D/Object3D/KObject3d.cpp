@@ -1,9 +1,7 @@
 #include "KObject3d.h"
 #include "KDirectXCommon.h"
 
-KObject3d::KObject3d() {
-	Initialize();
-}
+KObject3d::KObject3d() {}
 
 void KObject3d::Initialize() {
 	// ÉqÅ[Évê›íË

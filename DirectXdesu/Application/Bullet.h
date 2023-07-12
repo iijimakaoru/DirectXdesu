@@ -38,6 +38,9 @@ public:
 	// 衝突時に呼び出し
 	void OnCollision();
 
+	// ワールドポジションゲッター
+	KMyMath::Vector3 GetWorldPos();
+
 private:
 	// オブジェクト
 	std::unique_ptr<KObject3d> object3d;

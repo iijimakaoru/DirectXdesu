@@ -42,7 +42,7 @@ void MobEnemy::Update(ViewProjection* viewPro)
 
 	if (!isDead)
 	{
-		object3d->transform.pos.z -= speed;
+		//object3d->transform.pos.z -= speed;
 
 		if (object3d->transform.pos.z <= min(object3d->transform.pos.z, -100))
 		{
@@ -63,4 +63,18 @@ void MobEnemy::Draw()
 
 void MobEnemy::OnCollision()
 {
+	isDead = true;
+}
+
+KMyMath::Vector3 MobEnemy::GetWorldPos()
+{
+	// ワールド座標格納変数
+	KMyMath::Vector3 result;
+
+	// ワールド行列の平行移動成分取得
+	result.x = object3d->transform.matWorld.m[3][0];
+	result.y = object3d->transform.matWorld.m[3][1];
+	result.z = object3d->transform.matWorld.m[3][2];
+
+	return result;
 }

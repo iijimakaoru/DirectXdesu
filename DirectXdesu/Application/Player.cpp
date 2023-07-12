@@ -219,6 +219,19 @@ void Player::SetParent(const WorldTransfom* parent)
 	object3d->transform.parent = parent;
 }
 
+KMyMath::Vector3 Player::GetWorldPos()
+{
+	// ワールド座標格納変数
+	KMyMath::Vector3 result;
+
+	// ワールド行列の平行移動成分取得
+	result.x = object3d->transform.matWorld.m[3][0];
+	result.y = object3d->transform.matWorld.m[3][1];
+	result.z = object3d->transform.matWorld.m[3][2];
+
+	return result;
+}
+
 void Player::OnCollision()
 {
 }

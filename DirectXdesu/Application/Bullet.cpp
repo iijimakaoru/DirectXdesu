@@ -61,4 +61,18 @@ void Bullet::Draw()
 
 void Bullet::OnCollision()
 {
+	isDead = true;
+}
+
+KMyMath::Vector3 Bullet::GetWorldPos()
+{
+	// ワールド座標格納変数
+	KMyMath::Vector3 result;
+
+	// ワールド行列の平行移動成分取得
+	result.x = object3d->transform.matWorld.m[3][0];
+	result.y = object3d->transform.matWorld.m[3][1];
+	result.z = object3d->transform.matWorld.m[3][2];
+
+	return result;
 }

@@ -50,21 +50,17 @@ public:
 		return object3d->transform.pos;
 	}
 
-	KMyMath::Vector3 GetWorldPos()
-	{
-		// ワールド座標格納変数
-		KMyMath::Vector3 result;
-
-		// ワールド行列の平行移動成分取得
-		result.x = object3d->transform.matWorld.m[3][0];
-		result.y = object3d->transform.matWorld.m[3][1];
-		result.z = object3d->transform.matWorld.m[3][2];
-
-		return result;
-	}
+	// ワールドポジションゲッター
+	KMyMath::Vector3 GetWorldPos();
 
 	// 衝突時に呼び出し
 	void OnCollision();
+
+	// 弾のリストを取得
+	const std::list<std::unique_ptr<Bullet>>& GetBullets() 
+	{ 
+		return bullets; 
+	}
 
 private:
 	// Input

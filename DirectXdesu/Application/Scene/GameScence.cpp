@@ -65,10 +65,10 @@ void GameScence::Init()
 	player->SetParent(&cameraToPlayer);
 
 	// G‹›“G
-	for (size_t i = 0; i < mobEnemy.size(); i++)
+	for (size_t i = 0; i < mobEnemys.size(); i++)
 	{
-		mobEnemy[i] = std::make_unique<MobEnemy>();
-		mobEnemy[i]->Init();
+		mobEnemys[i] = std::make_unique<MobEnemy>();
+		mobEnemys[i]->Init();
 	}
 
 	// ’n–Ê
@@ -143,11 +143,13 @@ void GameScence::Update()
 	ImGui::Text("pos: (%.2f,%.2f, %.2f)", camera->GetPos().x, camera->GetPos().y, camera->GetPos().z);
 	ImGui::End();
 
+	CheckAllCollisions();
+
 	player->Update(camera->GetViewPro());
 
-	for (size_t i = 0; i < mobEnemy.size(); i++)
+	for (size_t i = 0; i < mobEnemys.size(); i++)
 	{
-		mobEnemy[i]->Update(camera->GetViewPro());
+		mobEnemys[i]->Update(camera->GetViewPro());
 	}
 
 	ground->Update(camera->GetViewPro());
@@ -160,9 +162,9 @@ void GameScence::Draw()
 	// ’n–Ê•`‰æ
 	ground->Draw();
 
-	for (size_t i = 0; i < mobEnemy.size(); i++)
+	for (size_t i = 0; i < mobEnemys.size(); i++)
 	{
-		mobEnemy[i]->Draw();
+		mobEnemys[i]->Draw();
 	}
 
 	// ƒvƒŒƒCƒ„[•`‰æ
@@ -185,4 +187,29 @@ void GameScence::CheckAllCollisions()
 	KMyMath::Vector3 posA, posB;
 
 	// ©‹@’e‚Ìæ“¾
+	const std::list<std::unique_ptr<Bullet>>& playerBullets = player->GetBullets();
+
+	// ©’e‚Æ“G‚Ì“–‚½‚è”»’è
+	{
+		for (std::unique_ptr<MobEnemy>& mobEnemy : mobEnemys)
+		{
+			// “G‚ÌÀ•W
+			posA = mobEnemy->GetWorldPos();
+
+			for (const std::unique_ptr<Bullet>& bullet : playerBullets)
+			{
+				posB = bullet->GetWorldPos();
+
+				// ‹…“¯m‚ÌŒğ·”»’è
+				if (MyCollisions::CheckSphereToSphere(posA, posB, 3, 2))
+				{
+					// ’eÁ‹
+					bullet->OnCollision();
+
+					// “GÁ‹
+					mobEnemy->OnCollision();
+				}
+			}
+		}
+	}
 }

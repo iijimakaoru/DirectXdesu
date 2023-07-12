@@ -82,7 +82,7 @@ private:
 	std::unique_ptr<Player> player = nullptr;
 
 	// ŽG‹›
-	std::array<std::unique_ptr<MobEnemy>, 5> mobEnemy = { nullptr };
+	std::array<std::unique_ptr<MobEnemy>, 5> mobEnemys = { nullptr };
 
 	// ŠÈˆÕ’n–Ê
 	std::unique_ptr<Ground> ground = nullptr;

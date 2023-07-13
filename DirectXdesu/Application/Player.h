@@ -26,15 +26,6 @@ public:
 	/// <param name="camera_"></param>
 	void Update(ViewProjection* viewPro);
 
-	// 移動
-	void Move();
-
-	// 回転
-	void Rot();
-
-	// 攻撃
-	void Attack();
-
 	// 描画
 	void Draw();
 
@@ -45,13 +36,18 @@ public:
 	void SetParent(const WorldTransfom* parent);
 
 	// ポジションゲッター
-	KMyMath::Vector3& GetPosition()
+	const KMyMath::Vector3& GetPosition() const
 	{
 		return object3d->transform.pos;
 	}
 
 	// ワールドポジションゲッター
 	KMyMath::Vector3 GetWorldPos();
+
+	const KMyMath::Vector3 GetRot() const
+	{
+		return object3d->transform.rot;
+	}
 
 	// 衝突時に呼び出し
 	void OnCollision();
@@ -61,6 +57,16 @@ public:
 	{ 
 		return bullets; 
 	}
+
+private:
+	// 移動
+	void Move();
+
+	// 回転
+	void Rot();
+
+	// 攻撃
+	void Attack();
 
 private:
 	// Input

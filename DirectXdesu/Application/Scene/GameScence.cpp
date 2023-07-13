@@ -151,6 +151,9 @@ void GameScence::Update()
 		mobEnemys[i]->Update(camera->GetViewPro());
 	}
 
+	camera->SetPosXY(player->GetPosition().x, player->GetPosition().y);
+	camera->SetRotZ(player->GetRot().z);
+
 	ground->Update(camera->GetViewPro());
 
 	camera->Update();

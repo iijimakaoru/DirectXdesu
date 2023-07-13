@@ -38,8 +38,14 @@ public:
 		cameraObject->transform.pos = pos;
 	}
 
-	void SetRot(const KMyMath::Vector3 rot)
+	void SetPosXY(const float x, const float y)
 	{
-		cameraObject->transform.rot = rot;
+		cameraObject->transform.pos.x = x;
+		cameraObject->transform.pos.y = y;
+	}
+
+	void SetRotZ(const float rotZ)
+	{
+		cameraObject->transform.rot.z = rotZ;
 	}
 };

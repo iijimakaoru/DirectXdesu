@@ -47,10 +47,9 @@ void GameScence::Init()
 	spritePipeline->CreatePipelineAll(spriteShader, "Sprite");
 
 #pragma region スプライト
-	sprite = new Sprite();
+	sprite = std::make_unique<Sprite>();
 	sprite->Init();
 	sprite->SetPipeline(spritePipeline.get());
-#pragma endregion
 #pragma endregion
 
 	isDebug = true;
@@ -136,7 +135,7 @@ void GameScence::Update()
 	}
 
 	ImGui::Begin("Player");
-	ImGui::Text("pos: (%.2f,%.2f, %.2f)", player->GetPosition().x, player->GetPosition().y, player->GetPosition().z);
+	ImGui::Text("pos: (%.2f,%.2f, %.2f)", player->GetWorldPos().x, player->GetWorldPos().y, player->GetWorldPos().z);
 	ImGui::End();
 
 	ImGui::Begin("Camera");
@@ -201,7 +200,7 @@ void GameScence::CheckAllCollisions()
 				posB = bullet->GetWorldPos();
 
 				// 球同士の交差判定
-				if (MyCollisions::CheckSphereToSphere(posA, posB, 3, 2))
+				if (MyCollisions::CheckSphereToSphere(posA, posB, 6, 2))
 				{
 					// 弾消去
 					bullet->OnCollision();

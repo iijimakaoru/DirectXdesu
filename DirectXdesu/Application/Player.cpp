@@ -82,7 +82,7 @@ void Player::Rot()
 	const float rotSpeed = 0.05f;
 
 	//äpìxèCê≥äÓèÄë¨ìx
-	const float correctionSpeed = rotSpeed / 0.05f;
+	const float correctionSpeed = rotSpeed / 0.1f;
 	KMyMath::Vector3 rot = { 0, 0, 0 };
 
 	//Ç«Ç±Ç‹Ç≈åXÇØÇΩÇÁîªíËÇÇ∆ÇÈÇ©
@@ -152,19 +152,23 @@ void Player::Rot()
 
 	// Zé≤âÒì]
 	{
-		const float rotZspeed = 0.04f;
+		const float rotZspeed = 0.01f;
 		const float rotZLimit = 1.0f;
 		//âEâÒì]
-		if (isRotZRight) {
+		if (isRotZRight) 
+		{
 			swayZ += rotZspeed;
-			if (swayZ >= rotZLimit) {
+			if (swayZ >= rotZLimit) 
+			{
 				isRotZRight = false;
 			}
 		}
 		//ç∂âÒì]
-		else {
+		else 
+		{
 			swayZ -= rotZspeed;
-			if (swayZ <= -rotZLimit) {
+			if (swayZ <= -rotZLimit) 
+			{
 				isRotZRight = true;
 			}
 		}

@@ -71,7 +71,7 @@ private:
 	bool isDebug = true;
 
 	// スプライト
-	Sprite* sprite = nullptr;
+	std::unique_ptr<Sprite> sprite = nullptr;
 	KMyMath::Vector2 spritePos = { 0,0 };
 	KMyMath::Vector2 spriteSize = { 100,100 };
 	float spriteRot = 0;

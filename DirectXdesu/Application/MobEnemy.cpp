@@ -20,7 +20,7 @@ void MobEnemy::Init()
 	object3d->Initialize();
 	object3d->SetPipeline(pipeline.get());
 	object3d->LoadModel(model.get());
-	object3d->transform.scale = { 2.0f,2.0f,2.0f };
+	object3d->transform.scale = { 4.0f,4.0f,4.0f };
 }
 
 void MobEnemy::Set()

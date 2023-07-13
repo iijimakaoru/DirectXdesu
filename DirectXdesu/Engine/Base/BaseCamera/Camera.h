@@ -37,4 +37,9 @@ public:
 	{
 		cameraObject->transform.pos = pos;
 	}
+
+	void SetRot(const KMyMath::Vector3 rot)
+	{
+		cameraObject->transform.rot = rot;
+	}
 };

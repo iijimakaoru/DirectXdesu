@@ -303,6 +303,12 @@
     <ClCompile Include="Application\Ground.cpp">
       <Filter>ソース ファイル\Application</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Light\DirectionLight.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Light\LightGroup.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Input\KInput.h">
@@ -449,6 +455,12 @@
     <ClInclude Include="Application\Ground.h">
       <Filter>ヘッダー ファイル\Application</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Light\DirectionLight.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Light\LightGroup.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DirectXdesu.rc">
@@ -474,6 +486,9 @@
     <None Include="Resources\Shader\PostEffect.hlsli">
       <Filter>シェーダー</Filter>
     </None>
+    <None Include="Resources\Shader\LambertFbx.hlsli" />
+    <None Include="Resources\Shader\GaussianPostEffect.hlsli" />
+    <None Include="Resources\Shader\ReversalPostEffect.hlsli" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shader\BasicPS.hlsl">
@@ -515,5 +530,11 @@
     <FxCompile Include="Resources\Shader\PostEffectVS.hlsl">
       <Filter>シェーダー</Filter>
     </FxCompile>
+    <FxCompile Include="Resources\Shader\LambertFbxPS.hlsl" />
+    <FxCompile Include="Resources\Shader\LambertFbxVS.hlsl" />
+    <FxCompile Include="Resources\Shader\GaussianPostEffectVS.hlsl" />
+    <FxCompile Include="Resources\Shader\GaussianPostEffectPS.hlsl" />
+    <FxCompile Include="Resources\Shader\ReversalPostEffectVS.hlsl" />
+    <FxCompile Include="Resources\Shader\ReversalPostEffectPS.hlsl" />
   </ItemGroup>
 </Project>

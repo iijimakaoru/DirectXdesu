@@ -59,7 +59,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)Engine\2D\PostEffect;$(ProjectDir)Engine\2D\Sprite;$(ProjectDir)Engine\2D\Texture;$(ProjectDir)Engine\2D\Vertex;$(ProjectDir)Engine\3D\Loader;$(ProjectDir)Engine\3D\Model;$(ProjectDir)Engine\3D\Object3D;$(ProjectDir)Engine\Base\BaseCamera;$(ProjectDir)Engine\Base\BaseScene;$(ProjectDir)Engine\Base\Depth;$(ProjectDir)Engine\Base\Descriptor;$(ProjectDir)Engine\Base\DirectXCommon;$(ProjectDir)Engine\Base\Pipeline;$(ProjectDir)Engine\Base\RenderTarget;$(ProjectDir)Engine\Base\RunGame;$(ProjectDir)Engine\Base\View;$(ProjectDir)Engine\Base\Window;$(ProjectDir)Engine\Collision;$(ProjectDir)Engine\Imgui;$(ProjectDir)Engine\Input;$(ProjectDir)Engine\Level;$(ProjectDir)Engine\Math\Ease;$(ProjectDir)Engine\Sound;$(ProjectDir)Application\Camera;$(ProjectDir)Application\Scene;$(ProjectDir)Engine\Math\Matrix4;$(ProjectDir)Engine\Math\MyMath;$(ProjectDir)Engine\Math\Quaternion;$(ProjectDir)Engine\Math\Vector2;$(ProjectDir)Engine\Math\Vector3;$(ProjectDir)Engine\Math\Vector4;$(ProjectDir)DirectXdesu;$(ProjectDir)Application;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Engine\2D\PostEffect;$(ProjectDir)Engine\2D\Sprite;$(ProjectDir)Engine\2D\Texture;$(ProjectDir)Engine\2D\Vertex;$(ProjectDir)Engine\3D\Loader;$(ProjectDir)Engine\3D\Model;$(ProjectDir)Engine\3D\Object3D;$(ProjectDir)Engine\Base\BaseCamera;$(ProjectDir)Engine\Base\BaseScene;$(ProjectDir)Engine\Base\Depth;$(ProjectDir)Engine\Base\Descriptor;$(ProjectDir)Engine\Base\DirectXCommon;$(ProjectDir)Engine\Base\Pipeline;$(ProjectDir)Engine\Base\RenderTarget;$(ProjectDir)Engine\Base\RunGame;$(ProjectDir)Engine\Base\View;$(ProjectDir)Engine\Base\Window;$(ProjectDir)Engine\Collision;$(ProjectDir)Engine\Imgui;$(ProjectDir)Engine\Input;$(ProjectDir)Engine\Level;$(ProjectDir)Engine\Math\Ease;$(ProjectDir)Engine\Sound;$(ProjectDir)Application\Camera;$(ProjectDir)Application\Scene;$(ProjectDir)Engine\Math\Matrix4;$(ProjectDir)Engine\Math\MyMath;$(ProjectDir)Engine\Math\Quaternion;$(ProjectDir)Engine\Math\Vector2;$(ProjectDir)Engine\Math\Vector3;$(ProjectDir)Engine\Math\Vector4;$(ProjectDir)DirectXdesu;$(ProjectDir)Application;$(ProjectDir)Engine\Light;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <AdditionalOptions>/ignore:4049 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
@@ -83,7 +83,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <AdditionalIncludeDirectories>$(ProjectDir)Engine\2D\PostEffect;$(ProjectDir)Engine\2D\Sprite;$(ProjectDir)Engine\2D\Texture;$(ProjectDir)Engine\2D\Vertex;$(ProjectDir)Engine\3D\Loader;$(ProjectDir)Engine\3D\Model;$(ProjectDir)Engine\3D\Object3D;$(ProjectDir)Engine\Base\BaseCamera;$(ProjectDir)Engine\Base\BaseScene;$(ProjectDir)Engine\Base\Depth;$(ProjectDir)Engine\Base\Descriptor;$(ProjectDir)Engine\Base\DirectXCommon;$(ProjectDir)Engine\Base\Pipeline;$(ProjectDir)Engine\Base\RenderTarget;$(ProjectDir)Engine\Base\RunGame;$(ProjectDir)Engine\Base\View;$(ProjectDir)Engine\Base\Window;$(ProjectDir)Engine\Collision;$(ProjectDir)Engine\Imgui;$(ProjectDir)Engine\Input;$(ProjectDir)Engine\Level;$(ProjectDir)Engine\Math\Ease;$(ProjectDir)Engine\Sound;$(ProjectDir)Application\Camera;$(ProjectDir)Application\Scene;$(ProjectDir)Engine\Math\Matrix4;$(ProjectDir)Engine\Math\MyMath;$(ProjectDir)Engine\Math\Quaternion;$(ProjectDir)Engine\Math\Vector2;$(ProjectDir)Engine\Math\Vector3;$(ProjectDir)Engine\Math\Vector4;$(ProjectDir)DirectXdesu;$(ProjectDir)Application;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Engine\2D\PostEffect;$(ProjectDir)Engine\2D\Sprite;$(ProjectDir)Engine\2D\Texture;$(ProjectDir)Engine\2D\Vertex;$(ProjectDir)Engine\3D\Loader;$(ProjectDir)Engine\3D\Model;$(ProjectDir)Engine\3D\Object3D;$(ProjectDir)Engine\Base\BaseCamera;$(ProjectDir)Engine\Base\BaseScene;$(ProjectDir)Engine\Base\Depth;$(ProjectDir)Engine\Base\Descriptor;$(ProjectDir)Engine\Base\DirectXCommon;$(ProjectDir)Engine\Base\Pipeline;$(ProjectDir)Engine\Base\RenderTarget;$(ProjectDir)Engine\Base\RunGame;$(ProjectDir)Engine\Base\View;$(ProjectDir)Engine\Base\Window;$(ProjectDir)Engine\Collision;$(ProjectDir)Engine\Imgui;$(ProjectDir)Engine\Input;$(ProjectDir)Engine\Level;$(ProjectDir)Engine\Math\Ease;$(ProjectDir)Engine\Sound;$(ProjectDir)Application\Camera;$(ProjectDir)Application\Scene;$(ProjectDir)Engine\Math\Matrix4;$(ProjectDir)Engine\Math\MyMath;$(ProjectDir)Engine\Math\Quaternion;$(ProjectDir)Engine\Math\Vector2;$(ProjectDir)Engine\Math\Vector3;$(ProjectDir)Engine\Math\Vector4;$(ProjectDir)DirectXdesu;$(ProjectDir)Application;$(ProjectDir)Engine\Light;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <AdditionalOptions>/ignore:4049 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
@@ -111,6 +111,8 @@
     <ClCompile Include="Engine\Collision\Collision.cpp" />
     <ClCompile Include="Engine\Collision\CollisionPrimitive.cpp" />
     <ClCompile Include="Application\Camera\DebugCamera.cpp" />
+    <ClCompile Include="Engine\Light\DirectionLight.cpp" />
+    <ClCompile Include="Engine\Light\LightGroup.cpp" />
     <ClCompile Include="Engine\Math\Ease\Ease.cpp" />
     <ClCompile Include="Engine\3D\Loader\FbxLoader.cpp" />
     <ClCompile Include="Engine\3D\Model\FbxModel.cpp" />
@@ -162,6 +164,8 @@
     <ClInclude Include="Engine\Collision\Collision.h" />
     <ClInclude Include="Engine\Collision\CollisionPrimitive.h" />
     <ClInclude Include="Application\Camera\DebugCamera.h" />
+    <ClInclude Include="Engine\Light\DirectionLight.h" />
+    <ClInclude Include="Engine\Light\LightGroup.h" />
     <ClInclude Include="Engine\Math\Ease\Ease.h" />
     <ClInclude Include="Engine\3D\Loader\FbxLoader.h" />
     <ClInclude Include="Engine\3D\Model\FbxModel.h" />
@@ -207,9 +211,12 @@
   <ItemGroup>
     <None Include="Resources\Shader\Basic.hlsli" />
     <None Include="Resources\Shader\FBX.hlsli" />
+    <None Include="Resources\Shader\GaussianPostEffect.hlsli" />
+    <None Include="Resources\Shader\LambertFbx.hlsli" />
     <None Include="Resources\Shader\Obj.hlsli" />
     <None Include="Resources\Shader\Particle.hlsli" />
     <None Include="Resources\Shader\PostEffect.hlsli" />
+    <None Include="Resources\Shader\ReversalPostEffect.hlsli" />
     <None Include="Resources\Shader\Sprite.hlsli" />
   </ItemGroup>
   <ItemGroup>
@@ -236,6 +243,22 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\GaussianPostEffectPS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\GaussianPostEffectVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\LambertFbxPS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\LambertFbxVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>
     <FxCompile Include="Resources\Shader\ObjPS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
@@ -278,6 +301,14 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\ReversalPostEffectPS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\ReversalPostEffectVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>
     <FxCompile Include="Resources\Shader\SpritePS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>

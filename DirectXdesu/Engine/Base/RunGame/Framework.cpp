@@ -31,7 +31,8 @@ void Framework::Init()
 	imguiMane.Init();
 
 	// Spriteパイプライン
-	spriteShader.Init(L"Resources/Shader/PostEffectVS.hlsl", L"Resources/Shader/PostEffectPS.hlsl");
+	spriteShader.Init(L"Resources/Shader/PostEffectVS.hlsl",
+		L"Resources/Shader/PostEffectPS.hlsl");
 	spritePipeline = std::make_unique<KGPlin>();
 	spritePipeline->CreatePipelineAll(spriteShader, "PostEffect");
 
@@ -58,6 +59,28 @@ void Framework::Update()
 {
 	// 更新
 	input->Update();
+
+	if (input->IsTrigger(DIK_0))
+	{
+		spriteShader.Init(L"Resources/Shader/GaussianPostEffectVS.hlsl",
+			L"Resources/Shader/GaussianPostEffectPS.hlsl");
+		spritePipeline->CreatePipelineAll(spriteShader, "PostEffect");
+		postEffect->SetPipeline(spritePipeline.get());
+	}
+	else if (input->IsTrigger(DIK_1))
+	{
+		spriteShader.Init(L"Resources/Shader/ReversalPostEffectVS.hlsl",
+			L"Resources/Shader/ReversalPostEffectPS.hlsl");
+		spritePipeline->CreatePipelineAll(spriteShader, "PostEffect");
+		postEffect->SetPipeline(spritePipeline.get());
+	}
+	else if (input->IsTrigger(DIK_2))
+	{
+		spriteShader.Init(L"Resources/Shader/PostEffectVS.hlsl",
+			L"Resources/Shader/PostEffectPS.hlsl");
+		spritePipeline->CreatePipelineAll(spriteShader, "PostEffect");
+		postEffect->SetPipeline(spritePipeline.get());
+	}
 
 	// Imgui更新はじめ
 	imguiMane.Begin();

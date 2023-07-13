@@ -5,7 +5,6 @@
 
 #include "DebugCamera.h"
 #include "GameCamera.h"
-#include "RailCamera.h"
 
 #include "Collision.h"
 #include <sstream>
@@ -135,7 +134,8 @@ void GameScence::Update()
 	}
 
 	ImGui::Begin("Player");
-	ImGui::Text("pos: (%.2f,%.2f, %.2f)", player->GetWorldPos().x, player->GetWorldPos().y, player->GetWorldPos().z);
+	ImGui::Text("pos: (%.2f,%.2f, %.2f)", player->GetPosition().x,
+		player->GetPosition().y, player->GetPosition().z);
 	ImGui::End();
 
 	ImGui::Begin("Camera");
@@ -151,12 +151,9 @@ void GameScence::Update()
 		mobEnemys[i]->Update(camera->GetViewPro());
 	}
 
-	camera->SetPosXY(player->GetPosition().x, player->GetPosition().y);
-	camera->SetRotZ(player->GetRot().z);
-
 	ground->Update(camera->GetViewPro());
 
-	camera->Update();
+	camera->Update(player.get());
 }
 
 void GameScence::Draw()

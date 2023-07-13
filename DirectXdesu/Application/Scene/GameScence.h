@@ -30,6 +30,8 @@
 
 #include "Ground.h"
 
+#include "RailCamera.h"
+
 class GameScence : public BaseScene
 {
 public:
@@ -50,7 +52,7 @@ private:
 	KInput* input = nullptr;
 
 	// カメラ
-	std::unique_ptr<Camera> camera = nullptr;
+	std::unique_ptr<RailCamera> camera = nullptr;
 
 	// パイプライン
 	std::unique_ptr<KGPlin> objPipeline;

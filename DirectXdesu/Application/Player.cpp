@@ -1,6 +1,11 @@
 #include "Player.h"
 #include "Ease.h"
 
+const float Player::moveSpeed = 0.16f;
+const KMyMath::Vector2 Player::rotLimit = { 35.0f, 25.0f };
+const KMyMath::Vector2 Player::posLimitMin = { -15.0f, -4.0f };
+const KMyMath::Vector2 Player::posLimitMax = { 15.0f, Player::posLimitMin.y + 12.0f };
+
 void Player::Init()
 {
 	input = KInput::GetInstance();
@@ -67,22 +72,19 @@ void Player::Move()
 	object3d->transform.pos.x += velocity.x * moveSpeed;
 	object3d->transform.pos.y += velocity.y * moveSpeed;
 
-	const float moveLimitX = 60;
-	const float moveLimitY = 30;
-
-	object3d->transform.pos.x = max(object3d->transform.pos.x, -moveLimitX);
-	object3d->transform.pos.x = min(object3d->transform.pos.x, moveLimitX);
-	object3d->transform.pos.y = max(object3d->transform.pos.y, -moveLimitY);
-	object3d->transform.pos.y = min(object3d->transform.pos.y, moveLimitY);
+	object3d->transform.pos.x = max(object3d->transform.pos.x, posLimitMin.x);
+	object3d->transform.pos.x = min(object3d->transform.pos.x, posLimitMax.x);
+	object3d->transform.pos.y = max(object3d->transform.pos.y, posLimitMin.y);
+	object3d->transform.pos.y = min(object3d->transform.pos.y, posLimitMax.y);
 }
 
 void Player::Rot()
 {
 	//‰ñ“]‘¬“x
-	const float rotSpeed = 0.05f;
+	const float rotSpeed = 0.025f;
 
 	//Šp“xC³Šî€‘¬“x
-	const float correctionSpeed = rotSpeed / 0.1f;
+	const float correctionSpeed = (rotSpeed * 2.0f) / 0.1f;
 	KMyMath::Vector3 rot = { 0, 0, 0 };
 
 	//‚Ç‚±‚Ü‚ÅŒX‚¯‚½‚ç”»’è‚ğ‚Æ‚é‚©

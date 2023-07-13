@@ -58,6 +58,11 @@ public:
 		return bullets; 
 	}
 
+	// ゲッター
+	static const KMyMath::Vector2& GetRotLimit() { return rotLimit; }
+	static const float GetMoveSpeed() { return moveSpeed; }
+	static const KMyMath::Vector2& GetPosLimitMax() { return posLimitMax; }
+	static const KMyMath::Vector2& GetPosLimitMin() { return posLimitMin; }
 private:
 	// 移動
 	void Move();
@@ -101,16 +106,20 @@ private:
 	bool isRotZRight = false;
 	float swayZ = 0.0f;
 
-	// 動くスピード
-	float moveSpeed = 0.16f;
-
-	// 角度上限
-	const KMyMath::Vector2 rotLimit = { 35.0f, 25.0f };
-
 	// 弾
 	std::list<std::unique_ptr<Bullet>> bullets;
 
 	// レティクル
 	std::unique_ptr<Reticle3D> reticle3d = nullptr;
 	std::unique_ptr<Reticle2D> reticle2d = nullptr;
+
+	// 動くスピード
+	static const float moveSpeed; // = 0.16f
+
+	// 角度上限
+	static const KMyMath::Vector2 rotLimit; // = { 35.0f, 25.0f };
+
+	// 移動上限
+	static const KMyMath::Vector2 posLimitMax; // = { 45.0f, 25.0f };
+	static const KMyMath::Vector2 posLimitMin; // = { 45.0f, 25.0f };
 };

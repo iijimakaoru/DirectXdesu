@@ -14,38 +14,23 @@ protected:
 public:
 	virtual ~Camera() {}
 
-	virtual void Init() = 0;
+	virtual void Init();
 
-	virtual void Update() = 0;
+	virtual void Update();
 
-	ViewProjection* GetViewPro()
-	{
-		return viewProjection.get();
-	}
+	ViewProjection* GetViewPro();
 
-	const WorldTransfom& GetTransform()const
-	{
-		return cameraObject->transform;
-	}
+	const WorldTransfom& GetTransform()const;
 
-	const KMyMath::Vector3& GetPos()const
-	{
-		return cameraObject->transform.pos;
-	}
+	const KMyMath::Vector3& GetPos()const;
 
-	void SetPos(const KMyMath::Vector3 pos)
-	{
-		cameraObject->transform.pos = pos;
-	}
+	void SetPos(const KMyMath::Vector3 pos);
 
-	void SetPosXY(const float x, const float y)
-	{
-		cameraObject->transform.pos.x = x;
-		cameraObject->transform.pos.y = y;
-	}
+	void SetWorldPosXY(const float x, const float y);
 
-	void SetRotZ(const float rotZ)
-	{
-		cameraObject->transform.rot.z = rotZ;
-	}
+	void SetPosXY(const float x, const float y);
+
+	void SetRotZ(const float rotZ);
+
+	const KMyMath::Vector3 GetWorldPos() const;
 };

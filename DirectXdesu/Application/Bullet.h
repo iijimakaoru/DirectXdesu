@@ -11,37 +11,37 @@ class Bullet
 {
 public:
 	// 初期化
-	void Init();
+	virtual void Init() = 0;
 
 	/// <summary>
 	/// 呼び出し
 	/// </summary>
 	/// <param name="pos"></param>
-	void Set(const KMyMath::Vector3 pos, const KMyMath::Vector3 vec_,
+	virtual void Set(const KMyMath::Vector3 pos, const KMyMath::Vector3 vec_,
 		const KMyMath::Vector3 rot_ , const float bulletSpeed);
 
 	/// <summary>
 	/// 更新
 	/// </summary>
 	/// <param name="viewPro"></param>
-	void Update(ViewProjection* viewPro);
+	virtual void Update(ViewProjection* viewPro);
 
 	// 描画
-	void Draw();
+	virtual void Draw();
 
 	// ゲッター
-	bool GetIsDead() const
+	virtual bool GetIsDead() const
 	{
 		return isDead;
 	}
 
 	// 衝突時に呼び出し
-	void OnCollision();
+	virtual void OnCollision();
 
 	// ワールドポジションゲッター
-	KMyMath::Vector3 GetWorldPos();
+	virtual KMyMath::Vector3 GetWorldPos();
 
-private:
+protected:
 	// オブジェクト
 	std::unique_ptr<KObject3d> object3d;
 

@@ -28,6 +28,11 @@ public:
 	// 衝突時に呼び出し
 	void OnCollision();
 
+	const bool GetIsDead()const
+	{
+		return isDead;
+	}
+
 	// ワールドポジションゲッター
 	KMyMath::Vector3 GetWorldPos();
 

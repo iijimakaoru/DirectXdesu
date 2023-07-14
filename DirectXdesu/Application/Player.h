@@ -6,7 +6,7 @@
 #include "KGPlin.h"
 #include "KShader.h"
 #include "KInput.h"
-#include "Bullet.h"
+#include "PlayerBullet.h"
 
 #include "Reticle3D.h"
 #include "Reticle2D.h"
@@ -53,7 +53,7 @@ public:
 	void OnCollision();
 
 	// 弾のリストを取得
-	const std::list<std::unique_ptr<Bullet>>& GetBullets() 
+	const std::list<std::unique_ptr<PlayerBullet>>& GetBullets() 
 	{ 
 		return bullets; 
 	}
@@ -107,7 +107,7 @@ private:
 	float swayZ = 0.0f;
 
 	// 弾
-	std::list<std::unique_ptr<Bullet>> bullets;
+	std::list<std::unique_ptr<PlayerBullet>> bullets;
 
 	// レティクル
 	std::unique_ptr<Reticle3D> reticle3d = nullptr;

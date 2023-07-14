@@ -141,6 +141,12 @@ void GameScence::Update()
 	// “GoŒ»
 	UpdateEnemyPopCommands();
 
+	// “GÁ‹
+	mobEnemys.remove_if([](std::unique_ptr<MobEnemy>& MobEnemy)
+		{
+			return MobEnemy->GetIsDead();
+		});
+
 	// “–‚½‚è”»’è
 	CheckAllCollisions();
 
@@ -186,7 +192,7 @@ void GameScence::CheckAllCollisions()
 	KMyMath::Vector3 posA, posB;
 
 	// ©‹@’e‚Ìæ“¾
-	const std::list<std::unique_ptr<Bullet>>& playerBullets = player->GetBullets();
+	const std::list<std::unique_ptr<PlayerBullet>>& playerBullets = player->GetBullets();
 
 	// ©’e‚Æ“G‚Ì“–‚½‚è”»’è
 	{
@@ -195,7 +201,7 @@ void GameScence::CheckAllCollisions()
 			// “G‚ÌÀ•W
 			posA = mobEnemy->GetWorldPos();
 
-			for (const std::unique_ptr<Bullet>& bullet : playerBullets)
+			for (const std::unique_ptr<PlayerBullet>& bullet : playerBullets)
 			{
 				posB = bullet->GetWorldPos();
 

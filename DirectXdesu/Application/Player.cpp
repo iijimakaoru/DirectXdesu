@@ -1,7 +1,7 @@
 #include "Player.h"
 #include "Ease.h"
 
-const float Player::moveSpeed = 0.16f;
+const float Player::moveSpeed = 0.32f;
 const KMyMath::Vector2 Player::rotLimit = { 35.0f, 25.0f };
 const KMyMath::Vector2 Player::posLimitMin = { -15.0f, -4.0f };
 const KMyMath::Vector2 Player::posLimitMax = { 15.0f, Player::posLimitMin.y + 12.0f };
@@ -40,7 +40,7 @@ void Player::Init()
 void Player::Update(ViewProjection* viewPro)
 {
 	// íeçÌèú
-	bullets.remove_if([](std::unique_ptr<Bullet>& bullet)
+	bullets.remove_if([](std::unique_ptr<PlayerBullet>& bullet)
 		{
 			return bullet->GetIsDead();
 		});
@@ -56,7 +56,7 @@ void Player::Update(ViewProjection* viewPro)
 
 	object3d->Update(viewPro);
 
-	for (std::unique_ptr<Bullet>& bullet : bullets)
+	for (std::unique_ptr<PlayerBullet>& bullet : bullets)
 	{
 		bullet->Update(viewPro);
 	}
@@ -198,7 +198,7 @@ void Player::Attack()
 		bulletVec = MyMathUtility::TransforNormal(bulletVec, object3d->transform.matWorld);
 
 		// íeê∂ê¨
-		std::unique_ptr<Bullet> newBullet = std::make_unique<Bullet>();
+		std::unique_ptr<PlayerBullet> newBullet = std::make_unique<PlayerBullet>();
 		// èâä˙âª
 		newBullet->Init();
 		// îzíu
@@ -212,7 +212,7 @@ void Player::Draw()
 {
 	object3d->Draw();
 
-	for (std::unique_ptr<Bullet>& bullet : bullets)
+	for (std::unique_ptr<PlayerBullet>& bullet : bullets)
 	{
 		bullet->Draw();
 	}

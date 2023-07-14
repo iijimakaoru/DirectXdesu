@@ -100,6 +100,7 @@
     <ClCompile Include="Application\Ground.cpp" />
     <ClCompile Include="Application\MobEnemy.cpp" />
     <ClCompile Include="Application\Player.cpp" />
+    <ClCompile Include="Application\PlayerBullet.cpp" />
     <ClCompile Include="Application\Reticle.cpp" />
     <ClCompile Include="Application\Reticle2D.cpp" />
     <ClCompile Include="Application\Reticle3D.cpp" />
@@ -155,6 +156,7 @@
     <ClInclude Include="Application\Ground.h" />
     <ClInclude Include="Application\MobEnemy.h" />
     <ClInclude Include="Application\Player.h" />
+    <ClInclude Include="Application\PlayerBullet.h" />
     <ClInclude Include="Application\Reticle.h" />
     <ClInclude Include="Application\Reticle2D.h" />
     <ClInclude Include="Application\Reticle3D.h" />

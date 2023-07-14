@@ -29,7 +29,7 @@ private:
 	float angle = 0;
 
 	// 前進するか
-	bool isAdvance = true;
+	bool isAdvance = false;
 
 	// 前進スピード
 	static const float advanceSpeed;

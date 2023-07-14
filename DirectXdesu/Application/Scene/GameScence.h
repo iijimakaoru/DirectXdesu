@@ -47,6 +47,12 @@ private:
 	// 衝突判定
 	void CheckAllCollisions();
 
+	// 敵発生データの読み込み
+	void LoadEnemyPopData();
+
+	// 敵発生コマンドの更新
+	void UpdateEnemyPopCommands();
+
 private:
 	// インプット
 	KInput* input = nullptr;
@@ -84,9 +90,14 @@ private:
 	std::unique_ptr<Player> player = nullptr;
 
 	// 雑魚
-	std::array<std::unique_ptr<MobEnemy>, 5> mobEnemys = { nullptr };
+	std::list<std::unique_ptr<MobEnemy>> mobEnemys;
 
 	// 簡易地面
 	std::unique_ptr<Ground> ground = nullptr;
+
+	// 敵発生コマンド
+	std::stringstream enemyPopCommands;
+	bool isStand = false;
+	int32_t waitTimer = 0;
 };
 

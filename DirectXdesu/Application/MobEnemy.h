@@ -14,7 +14,7 @@ public:
 	void Init();
 
 	// 仮配置
-	void Set();
+	void Set(KMyMath::Vector3& pos);
 
 	/// <summary>
 	/// 更新
@@ -48,7 +48,7 @@ private:
 	KShader shader;
 
 	// スピード
-	float speed = 1.0f;
+	float speed = 0.5f;
 
-	bool isDead = true;
+	bool isDead = false;
 };

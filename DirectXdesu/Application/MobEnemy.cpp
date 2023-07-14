@@ -23,26 +23,18 @@ void MobEnemy::Init()
 	object3d->transform.scale = { 4.0f,4.0f,4.0f };
 }
 
-void MobEnemy::Set()
+void MobEnemy::Set(KMyMath::Vector3& pos)
 {
-	const float limitX = 60;
-	const float limitY = 30;
-
-	if (isDead)
-	{
-		object3d->transform.pos = { MyMathUtility::GetRand(-limitX,limitX),MyMathUtility::GetRand(-limitY,limitY),50 };
-		speed = MyMathUtility::GetRand(0.3f, 0.5f);
-		isDead = false;
-	}
+	object3d->transform.pos = pos;
+	speed = MyMathUtility::GetRand(0.3f, 0.5f);
+	isDead = false;
 }
 
 void MobEnemy::Update(ViewProjection* viewPro)
 {
-	Set();
-
 	if (!isDead)
 	{
-		//object3d->transform.pos.z -= speed;
+		object3d->transform.pos.z -= speed;
 
 		if (object3d->transform.pos.z <= min(object3d->transform.pos.z, -100))
 		{

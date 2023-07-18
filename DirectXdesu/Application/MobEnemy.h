@@ -11,7 +11,7 @@ class MobEnemy
 {
 public:
 	// 初期化
-	void Init();
+	void Init(KModel* model_);
 
 	// 仮配置
 	void Set(KMyMath::Vector3& pos);
@@ -41,10 +41,7 @@ private:
 	std::unique_ptr<KObject3d> object3d;
 
 	// モデル
-	std::unique_ptr<KModel> model;
-
-	// テクスチャ
-	KTexture tex;
+	KModel* model = nullptr;
 
 	// パイプライン
 	std::unique_ptr<KGPlin> pipeline;

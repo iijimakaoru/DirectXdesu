@@ -18,7 +18,7 @@ class Player
 {
 public:
 	// 初期化
-	void Init();
+	void Init(KModel* model_);
 
 	/// <summary>
 	/// 更新
@@ -44,6 +44,7 @@ public:
 	// ワールドポジションゲッター
 	KMyMath::Vector3 GetWorldPos();
 
+	// 回転ゲッター
 	const KMyMath::Vector3 GetRot() const
 	{
 		return object3d->transform.rot;
@@ -83,7 +84,7 @@ private:
 	std::unique_ptr<KObject3d> object3d;
 
 	// モデル
-	std::unique_ptr<KModel> model;
+	KModel* model = nullptr;
 
 	// テクスチャ
 	KTexture tex;

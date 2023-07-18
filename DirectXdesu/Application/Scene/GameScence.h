@@ -88,9 +88,11 @@ private:
 
 	// プレイヤー
 	std::unique_ptr<Player> player = nullptr;
+	std::unique_ptr<KModel> playerModel;
 
 	// 雑魚
 	std::list<std::unique_ptr<MobEnemy>> mobEnemys;
+	std::unique_ptr<KModel> mobEnemysModel;
 
 	// 簡易地面
 	std::unique_ptr<Ground> ground = nullptr;

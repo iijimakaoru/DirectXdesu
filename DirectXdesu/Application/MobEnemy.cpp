@@ -1,14 +1,10 @@
 #include "MobEnemy.h"
 #include "MyMath.h"
 
-void MobEnemy::Init()
+void MobEnemy::Init(KModel* model_)
 {
 	// モデル生成
-	model = std::make_unique<MtlObj>("boss_model");
-	model->CreateModel();
-
-	// テクスチャ生成
-	tex.CreateTexture("Resources/texture/", "kitanai.jpg");
+	model = model_;
 
 	// パイプライン生成
 	pipeline = std::make_unique<KGPlin>();
@@ -19,7 +15,7 @@ void MobEnemy::Init()
 	object3d = std::make_unique<KObject3d>();
 	object3d->Initialize();
 	object3d->SetPipeline(pipeline.get());
-	object3d->LoadModel(model.get());
+	object3d->LoadModel(model);
 	object3d->transform.scale = { 4.0f,4.0f,4.0f };
 }
 

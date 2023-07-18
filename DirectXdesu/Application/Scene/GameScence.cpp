@@ -25,6 +25,12 @@ void GameScence::LoadResources()
 	mario.CreateTexture("Resources/texture/", "mario.jpg");
 	haikei.CreateTexture("Resources/texture/", "haikei.jpg");
 
+	// モデル
+	playerModel = std::make_unique<MtlObj>("kariBattle");
+	playerModel->CreateModel();
+	mobEnemysModel = std::make_unique<MtlObj>("boss_model");
+	mobEnemysModel->CreateModel();
+
 	// サウンド
 	soundData1 = Sound::GetInstance()->SoundLoadWave("Resources/Sound/Alarm01.wav");
 	soundData2 = Sound::GetInstance()->SoundLoadWave("Resources/Sound/Alarm02.wav");
@@ -58,7 +64,7 @@ void GameScence::Init()
 
 	// プレイヤー
 	player = std::make_unique<Player>();
-	player->Init();
+	player->Init(playerModel.get());
 	const WorldTransfom& cameraToPlayer = camera->GetTransform();
 	player->SetParent(&cameraToPlayer);
 
@@ -272,7 +278,7 @@ void GameScence::UpdateEnemyPopCommands()
 			// 生成
 			std::unique_ptr<MobEnemy> newMEnemy = std::make_unique<MobEnemy>();
 			// 初期化
-			newMEnemy->Init();
+			newMEnemy->Init(mobEnemysModel.get());
 			// セット
 			KMyMath::Vector3 pos = { x,y,z };
 			newMEnemy->Set(pos);

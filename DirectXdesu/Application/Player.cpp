@@ -6,13 +6,12 @@ const KMyMath::Vector2 Player::rotLimit = { 35.0f, 25.0f };
 const KMyMath::Vector2 Player::posLimitMin = { -15.0f, -4.0f };
 const KMyMath::Vector2 Player::posLimitMax = { 15.0f, Player::posLimitMin.y + 12.0f };
 
-void Player::Init()
+void Player::Init(KModel* model_)
 {
 	input = KInput::GetInstance();
 
 	// モデル生成
-	model = std::make_unique<MtlObj>("kariBattle");
-	model->CreateModel();
+	model = model_;
 
 	// テクスチャ生成
 	tex.CreateTexture("Resources/texture/", "mario.jpg");
@@ -26,7 +25,7 @@ void Player::Init()
 	object3d = std::make_unique<KObject3d>();
 	object3d->Initialize();
 	object3d->SetPipeline(pipeline.get());
-	object3d->LoadModel(model.get());
+	object3d->LoadModel(model);
 	object3d->transform.pos.z = 50;
 	object3d->transform.scale = { 2.0f,2.0f,2.0f };
 

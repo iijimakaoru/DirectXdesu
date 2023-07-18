@@ -20,7 +20,7 @@ public:
 	/// çXêV
 	/// </summary>
 	/// <param name="viewPro"></param>
-	void Update(ViewProjection* viewPro);
+	void Update(ViewProjection* viewPro,const KMyMath::Vector3& cameraPos);
 
 	// ï`âÊ
 	void Draw();

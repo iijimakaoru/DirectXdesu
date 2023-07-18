@@ -30,13 +30,11 @@ void MobEnemy::Set(KMyMath::Vector3& pos)
 	isDead = false;
 }
 
-void MobEnemy::Update(ViewProjection* viewPro)
+void MobEnemy::Update(ViewProjection* viewPro, const KMyMath::Vector3& cameraPos)
 {
 	if (!isDead)
 	{
-		object3d->transform.pos.z -= speed;
-
-		if (object3d->transform.pos.z <= min(object3d->transform.pos.z, -100))
+		if (object3d->transform.pos.z <= min(object3d->transform.pos.z ,cameraPos.z))
 		{
 			isDead = true;
 		}

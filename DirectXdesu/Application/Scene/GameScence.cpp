@@ -105,28 +105,14 @@ void GameScence::Update()
 	ImGui::SliderFloat("SpriteColorG", &spriteColor.y, 0.0f, 1.0f);
 	ImGui::SliderFloat("SpriteColorB", &spriteColor.z, 0.0f, 1.0f);
 	ImGui::SliderFloat("SpriteColorA", &spriteColor.w, 0.0f, 1.0f);
-	ImGui::Text("Flip");
-	if (ImGui::Button("FlipX"))
+	ImGui::Text("CameraAdvance");
+	if (ImGui::Button("ON"))
 	{
-		if (spriteFlipX)
-		{
-			spriteFlipX = false;
-		}
-		else
-		{
-			spriteFlipX = true;
-		}
+		camera->SetIsAdvance(true);
 	}
-	if (ImGui::Button("FlipY"))
+	if (ImGui::Button("OFF"))
 	{
-		if (spriteFlipY)
-		{
-			spriteFlipY = false;
-		}
-		else
-		{
-			spriteFlipY = true;
-		}
+		camera->SetIsAdvance(false);
 	}
 
 	ImGui::Begin("Player");
@@ -154,7 +140,7 @@ void GameScence::Update()
 
 	for (std::unique_ptr<MobEnemy>& mobEnemy : mobEnemys)
 	{
-		mobEnemy->Update(camera->GetViewPro());
+		mobEnemy->Update(camera->GetViewPro(), camera->GetPos());
 	}
 
 	ground->Update(camera->GetViewPro());

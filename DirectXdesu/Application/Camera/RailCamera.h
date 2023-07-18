@@ -23,13 +23,26 @@ public:
 
 	void Move();
 
+	/// <summary>
+	/// プレイヤーの角度と連動させる
+	/// </summary>
+	/// <param name="playersRot"></param>
 	void SetRot(const KMyMath::Vector3& playersRot);
+
+	/// <summary>
+	/// 前進フラグ
+	/// </summary>
+	/// <param name="isAdvance_"></param>
+	void SetIsAdvance(bool isAdvance_)
+	{
+		isAdvance = isAdvance_;
+	}
 
 private:
 	float angle = 0;
 
 	// 前進するか
-	bool isAdvance = false;
+	bool isAdvance = true;
 
 	// 前進スピード
 	static const float advanceSpeed;

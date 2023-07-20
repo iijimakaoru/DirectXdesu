@@ -2,7 +2,6 @@
 #include "Camera.h"
 #include "KObject3d.h"
 #include "KModel.h"
-#include "KTexture.h"
 #include "KGPlin.h"
 #include "KShader.h"
 #include "KInput.h"
@@ -85,9 +84,6 @@ private:
 
 	// モデル
 	KModel* model = nullptr;
-
-	// テクスチャ
-	KTexture tex;
 
 	// パイプライン
 	std::unique_ptr<KGPlin> pipeline;

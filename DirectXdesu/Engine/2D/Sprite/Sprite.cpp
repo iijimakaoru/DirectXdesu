@@ -187,8 +187,8 @@ void Sprite::CreateCBTransform()
 void Sprite::DrawCommand(TextureData texData)
 {
 	// デスクリプタヒープの配列をセットするコマンド
-	//ID3D12DescriptorHeap* ppHeaps[] = { texData.srvHeap.Get() };
-	cmdList->SetDescriptorHeaps(1, texData.srvHeap.GetAddressOf());
+	ID3D12DescriptorHeap* ppHeaps[] = { texData.srvHeap.Get() };
+	cmdList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 	// SRVヒープの先頭ハンドルを取得
 	D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle = texData.gpuHandle;
 	// SRVヒープの先頭にあるSRVをルートパラメータ1番に設定

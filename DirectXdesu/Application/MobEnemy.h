@@ -3,7 +3,6 @@
 #include "Camera.h"
 #include "KObject3d.h"
 #include "KModel.h"
-#include "KTexture.h"
 #include "KGPlin.h"
 #include "KShader.h"
 

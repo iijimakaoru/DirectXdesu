@@ -22,8 +22,6 @@ GameScence::~GameScence()
 void GameScence::LoadResources()
 {
 	// テクスチャ
-	mario.CreateTexture("Resources/texture/", "mario.jpg");
-	haikei.CreateTexture("Resources/texture/", "haikei.jpg");
 
 	// モデル
 	playerModel = std::make_unique<MtlObj>("kariBattle");

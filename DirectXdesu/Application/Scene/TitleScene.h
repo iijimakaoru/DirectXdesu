@@ -9,8 +9,6 @@
 
 #include "PostEffect.h"
 
-#include "KTexture.h"
-
 #include "Sprite.h"
 
 class TitleScene : public BaseScene

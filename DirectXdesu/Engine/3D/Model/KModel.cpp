@@ -252,7 +252,7 @@ void KModel::LoadMaterial(const std::string& directoryPath, const std::string& f
 			// テクスチャのファイル名読み込み
 			line_stream >> objMtl.textureFilename;
 			// テクスチャ読み込み
-			texture.CreateTexture(directoryPath, objMtl.textureFilename);
+			texData = TextureManager::Load(directoryPath + objMtl.textureFilename);
 		}
 	}
 	// ファイルを閉じる
@@ -273,18 +273,18 @@ void KModel::Draw()
 	KDirectXCommon::GetInstance()->GetCmdlist()->IASetIndexBuffer(&vertexs->ibView);
 
 	// デスクリプタヒープのセット
-	ID3D12DescriptorHeap* ppHeaps[] = { texture.srvHeap.Get() };
+	ID3D12DescriptorHeap* ppHeaps[] = { texData.srvHeap.Get() };
 	KDirectXCommon::GetInstance()->GetCmdlist()->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 
 	// シェーダーリソースビューをセット
-	KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootDescriptorTable(0, texture.srvHeap->GetGPUDescriptorHandleForHeapStart());
+	KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootDescriptorTable(0, texData.gpuHandle);
 
 	// 描画
 	KDirectXCommon::GetInstance()->GetCmdlist()->DrawIndexedInstanced(static_cast<UINT>(indices.size()),
 		static_cast < UINT>(1), static_cast < UINT>(0), static_cast < UINT>(0), static_cast < UINT>(0));
 }
 
-void KModel::Draw(KTexture* texture)
+void KModel::Draw(TextureData texData)
 {
 	// 頂点バッファビューの設定
 	KDirectXCommon::GetInstance()->GetCmdlist()->IASetVertexBuffers(0, 1, &vertexs->vbView);
@@ -293,11 +293,11 @@ void KModel::Draw(KTexture* texture)
 	KDirectXCommon::GetInstance()->GetCmdlist()->IASetIndexBuffer(&vertexs->ibView);
 
 	// デスクリプタヒープのセット
-	ID3D12DescriptorHeap* ppHeaps[] = { texture->srvHeap.Get() };
+	ID3D12DescriptorHeap* ppHeaps[] = { texData.srvHeap.Get() };
 	KDirectXCommon::GetInstance()->GetCmdlist()->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 
 	// 先頭ハンドルを取得
-	D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle = texture->srvHeap->GetGPUDescriptorHandleForHeapStart();
+	D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle = texData.gpuHandle;
 
 	// シェーダーリソースビューをセット
 	KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootDescriptorTable(0, srvGpuHandle);

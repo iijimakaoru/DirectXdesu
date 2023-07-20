@@ -3,7 +3,6 @@
 #include <DirectXMath.h>
 #include "Vector3.h"
 #include "KModel.h"
-#include "KTexture.h"
 #include "ViewProjection.h"
 #include "KGPlin.h"
 
@@ -81,7 +80,7 @@ public:
 	/// テクスチャ切り替え描画
 	/// </summary>
 	/// <param name="texture"></param>
-	void Draw(KTexture* texture);
+	void Draw(TextureData& texData);
 
 	/// <summary>
 	/// 親子セッター
@@ -107,7 +106,5 @@ public:
 	HRESULT result;
 
 	KModel* model_ = nullptr;
-
-	KTexture* texture_ = nullptr;
 };
 

@@ -7,7 +7,7 @@ void Ground::Init()
 	model->CreateModel();
 
 	// テクスチャ生成
-	tex.CreateTexture("Resources/texture/", "haikei.jpg");
+	texData = TextureManager::Load("Resources/texture/haikei.jpg");
 
 	// パイプライン生成
 	pipeline = std::make_unique<KGPlin>();
@@ -30,5 +30,5 @@ void Ground::Update(ViewProjection* viewPro)
 
 void Ground::Draw()
 {
-	object3d->Draw(&tex);
+	object3d->Draw(texData);
 }

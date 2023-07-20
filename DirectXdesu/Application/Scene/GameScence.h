@@ -2,7 +2,6 @@
 #include "KDirectXCommon.h"
 #include "KObject3d.h"
 #include "Sprite.h"
-#include "KTexture.h"
 #include "Sound.h"
 #include "KGPlin.h"
 #include "KShader.h"
@@ -69,8 +68,6 @@ private:
 	KShader spriteShader;
 
 	// テクスチャ
-	KTexture mario;
-	KTexture haikei;
 
 	SoundData soundData1;
 	SoundData soundData2;

@@ -13,9 +13,6 @@ void Player::Init(KModel* model_)
 	// モデル生成
 	model = model_;
 
-	// テクスチャ生成
-	tex.CreateTexture("Resources/texture/", "mario.jpg");
-
 	// パイプライン生成
 	pipeline = std::make_unique<KGPlin>();
 	shader.Init(L"Resources/Shader/ObjVS.hlsl", L"Resources/Shader/ObjPS.hlsl");
@@ -49,7 +46,7 @@ void Player::Update(ViewProjection* viewPro)
 
 	Attack();
 
-	reticle3d->Update(viewPro, object3d->transform.matWorld, GetWorldPos());
+	reticle3d->Update(object3d->transform.matWorld, GetWorldPos());
 
 	reticle2d->Update(viewPro,reticle3d->GetWorldPos());
 

@@ -9,9 +9,10 @@
 #include <d3dx12.h>
 
 #include "KVertex.h"
-#include "KTexture.h"
 
 #include <fbxsdk.h>
+
+#include "TextureManager.h"
 
 // ノード
 struct Node
@@ -93,7 +94,7 @@ private:
 	// ディフーズ係数
 	DirectX::XMFLOAT3 diffuse = { 1,1,1 };
 
-	std::unique_ptr<KVertex> vertexs = make_unique<KVertex>();
+	std::unique_ptr<KVertex> vertexs = std::make_unique<KVertex>();
 
 	ScratchImage scratchImg;
 

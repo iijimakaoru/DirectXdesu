@@ -3,7 +3,6 @@
 #include "Camera.h"
 #include "KObject3d.h"
 #include "KModel.h"
-#include "KTexture.h"
 #include "KGPlin.h"
 #include "KShader.h"
 
@@ -30,7 +29,7 @@ private:
 	std::unique_ptr<KModel> model;
 
 	// テクスチャ
-	KTexture tex;
+	TextureData texData;
 
 	// パイプライン
 	std::unique_ptr<KGPlin> pipeline;

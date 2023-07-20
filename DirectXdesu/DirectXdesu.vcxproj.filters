@@ -171,9 +171,6 @@
     <ClCompile Include="Engine\2D\Vertex\KVertex.cpp">
       <Filter>ソース ファイル\Engine\2d</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\2D\Texture\KTexture.cpp">
-      <Filter>ソース ファイル\Engine\2d</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Math\Vector4\Vector4.cpp">
       <Filter>ソース ファイル\Engine\Math</Filter>
     </ClCompile>
@@ -325,9 +322,6 @@
   <ItemGroup>
     <ClInclude Include="Engine\Input\KInput.h">
       <Filter>ヘッダー ファイル\Engine\Input</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\2D\Texture\KTexture.h">
-      <Filter>ヘッダー ファイル\Engine\2d</Filter>
     </ClInclude>
     <ClInclude Include="Engine\2D\Vertex\KVertex.h">
       <Filter>ヘッダー ファイル\Engine\2d</Filter>

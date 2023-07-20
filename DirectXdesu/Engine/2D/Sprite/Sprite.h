@@ -5,7 +5,6 @@
 #include <d3dx12.h>
 #include "KGPlin.h"
 #include <wrl.h>
-#include "KTexture.h"
 
 #include "MyMath.h"
 

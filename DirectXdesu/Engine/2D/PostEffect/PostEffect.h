@@ -1,5 +1,4 @@
 #pragma once
-#include "KTexture.h"
 #include "MyMath.h"
 #include "KGPlin.h"
 #include "KWinApp.h"

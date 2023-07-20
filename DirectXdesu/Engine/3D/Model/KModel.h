@@ -6,7 +6,7 @@
 #include <sstream>
 #include <string>
 #include <DirectXTex.h>
-#include "KTexture.h"
+#include "TextureManager.h"
 
 using namespace DirectX;
 using namespace std;
@@ -44,7 +44,7 @@ public:
 
 	std::unique_ptr<KVertex> vertexs = make_unique<KVertex>();
 
-	KTexture texture;
+	TextureData texData;
 
 	ObjMaterialInfo objMtl;
 
@@ -54,7 +54,7 @@ public:
 	void CreateModel();
 
 	void Draw();
-	void Draw(KTexture* texture);
+	void Draw(TextureData texData);
 };
 
 class Cube : public KModel {

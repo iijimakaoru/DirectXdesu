@@ -135,7 +135,6 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Engine\Base\Window\KWinApp.cpp" />
     <ClCompile Include="Engine\3D\Object3D\KObject3d.cpp" />
-    <ClCompile Include="Engine\2D\Texture\KTexture.cpp" />
     <ClCompile Include="Engine\Math\Matrix4\Matrix4.cpp" />
     <ClCompile Include="Engine\Math\MyMath\MyMath.cpp" />
     <ClCompile Include="Engine\2D\PostEffect\PostEffect.cpp" />
@@ -190,7 +189,6 @@
     <ClInclude Include="Engine\2D\Vertex\KVertex.h" />
     <ClInclude Include="Engine\Base\Window\KWinApp.h" />
     <ClInclude Include="Engine\3D\Object3D\KObject3d.h" />
-    <ClInclude Include="Engine\2D\Texture\KTexture.h" />
     <ClInclude Include="Engine\Level\LevelLoader.h" />
     <ClInclude Include="Engine\Math\Matrix4\Matrix4.h" />
     <ClInclude Include="Engine\Math\MyMath\MyMath.h" />

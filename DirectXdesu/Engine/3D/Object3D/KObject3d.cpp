@@ -123,10 +123,8 @@ void KObject3d::Draw()
 	model_->Draw();
 }
 
-void KObject3d::Draw(KTexture* texture)
+void KObject3d::Draw(TextureData& texData)
 {
-	assert(texture);
-
 	pipeline->Setting();
 	pipeline->Update(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
@@ -134,7 +132,7 @@ void KObject3d::Draw(KTexture* texture)
 	KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootConstantBufferView(1, constBuffB0->GetGPUVirtualAddress());
 	KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootConstantBufferView(2, constBuffB1->GetGPUVirtualAddress());
 
-	model_->Draw(texture);
+	model_->Draw(texData);
 }
 
 void KObject3d::SetParent(WorldTransfom* parent_)

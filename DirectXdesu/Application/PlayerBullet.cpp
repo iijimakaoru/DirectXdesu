@@ -7,7 +7,7 @@ void PlayerBullet::Init()
 	model->CreateModel();
 
 	// テクスチャ生成
-	tex.CreateTexture("Resources/texture/", "mario.jpg");
+	texData = TextureManager::Load("Resources/texture/mario.jpg");
 
 	// パイプライン生成
 	pipeline = std::make_unique<KGPlin>();

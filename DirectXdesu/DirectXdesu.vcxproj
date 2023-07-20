@@ -149,6 +149,7 @@
     <ClCompile Include="Engine\Math\Vector3\Vector3.cpp" />
     <ClCompile Include="Engine\Math\Vector4\Vector4.cpp" />
     <ClCompile Include="Engine\Base\View\ViewProjection.cpp" />
+    <ClCompile Include="Engine\2D\Texture\TextureManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\Bullet.h" />
@@ -204,6 +205,7 @@
     <ClInclude Include="Engine\Math\Vector3\Vector3.h" />
     <ClInclude Include="Engine\Math\Vector4\Vector4.h" />
     <ClInclude Include="Engine\Base\View\ViewProjection.h" />
+    <ClInclude Include="Engine\2D\Texture\TextureManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DirectXdesu.rc" />

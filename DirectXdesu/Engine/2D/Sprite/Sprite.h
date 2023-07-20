@@ -9,6 +9,8 @@
 
 #include "MyMath.h"
 
+#include "TextureManager.h"
+
 class Sprite
 {
 public:
@@ -27,7 +29,7 @@ public:
 	/// ï`âÊèÓïÒ
 	/// </summary>
 	/// <param name="texture"></param>
-	void DrawCommand(KTexture* texture);
+	void DrawCommand(TextureData texData);
 
 	/// <summary>
 	/// ï`âÊ
@@ -40,7 +42,7 @@ public:
 	/// <param name="isFlipX_"></param>
 	/// <param name="isFlipY_"></param>
 	/// <param name="anchorPoint_"></param>
-	void Draw(KTexture* texture, KMyMath::Vector2 pos = { 0.0f,0.0f }, KMyMath::Vector2 setSize_ = { 100.0f,100.0f }, float rot = 0.0f,
+	void Draw(TextureData& texData, KMyMath::Vector2 pos = { 0.0f,0.0f }, KMyMath::Vector2 setSize_ = { 100.0f,100.0f }, float rot = 0.0f,
 		KMyMath::Vector4 color = {1.0f,1.0f,1.0f,1.0f}, bool isFlipX_ = false, bool isFlipY_ = false, KMyMath::Vector2 anchorPoint_ = { 0.5f,0.5f });
 
 	/// <summary>

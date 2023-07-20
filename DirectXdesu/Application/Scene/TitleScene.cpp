@@ -14,7 +14,13 @@ TitleScene::~TitleScene()
 
 void TitleScene::LoadResources()
 {
-	
+	// パイプライン
+	spriteShader.Init(L"Resources/Shader/SpriteVS.hlsl", L"Resources/Shader/SpritePS.hlsl");
+	spritePipeline = std::make_unique<KGPlin>();
+	spritePipeline->CreatePipelineAll(spriteShader, "Sprite");
+
+	//// タイトル名テクスチャ
+	//titleTex.CreateTexture("Resources/texture/", "kariTitle.png");
 }
 
 void TitleScene::Init()
@@ -24,6 +30,11 @@ void TitleScene::Init()
 	camera = std::make_unique<DebugCamera>();
 
 	sceneManager = SceneManager::GetInstance();
+
+	//// タイトル名
+	//titleName = std::make_unique<Sprite>();
+	//titleName->Init();
+	//titleName->SetPipeline(spritePipeline.get());
 }
 
 void TitleScene::Update()
@@ -40,7 +51,8 @@ void TitleScene::Update()
 
 void TitleScene::Draw()
 {
-	
+	/*titleName->Draw(&titleTex, { static_cast<float>(KWinApp::GetInstance()->GetWindowSizeW()) / 2,
+		static_cast<float>(KWinApp::GetInstance()->GetWindowSizeH()) / 2 },{500,120});*/
 }
 
 void TitleScene::Final()

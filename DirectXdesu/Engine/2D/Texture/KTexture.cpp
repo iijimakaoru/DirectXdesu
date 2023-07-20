@@ -2,8 +2,6 @@
 #include "KDirectXCommon.h"
 #include <string>
 
-KTextureManager* KTextureManager::textureManager = nullptr;
-
 void KTexture::CreateTexture(const std::string& directoryPath, const std::string& filename)
 {
 	// シングルトンのデバイス受け取り

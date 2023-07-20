@@ -1,6 +1,7 @@
 #pragma once
 #include "Camera.h"
 #include<memory>
+#include "TextureManager.h"
 
 class SceneManager;
 

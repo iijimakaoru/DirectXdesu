@@ -10,6 +10,7 @@
 #include "KGPlin.h"
 #include "KShader.h"
 #include "Sound.h"
+#include "TextureManager.h"
 
 class Framework
 {
@@ -31,15 +32,23 @@ public:
 	void Run();
 
 protected:
+	// FBXローダー
 	FbxLoader* fbxLoader = nullptr;
 
+	// ウィンドウ
 	KWinApp* win = nullptr;
 
+	// DirectX
 	KDirectXCommon* dx = nullptr;
 
+	// Input
 	KInput* input = nullptr;
 
+	// シーンマネージャー
 	SceneManager* sceneManager = nullptr;
+
+	// テクスチャマネージャー
+	TextureManager* textureManager = nullptr;
 
 	// シーンファクトリー
 	ASceneFactory* sceneFactory = nullptr;

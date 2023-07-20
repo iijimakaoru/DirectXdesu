@@ -81,7 +81,7 @@ private:
 	// スプライト
 	std::unique_ptr<Sprite> sprite = nullptr;
 	KMyMath::Vector2 spritePos = { 0,0 };
-	KMyMath::Vector2 spriteSize = { 100,100 };
+	KMyMath::Vector2 spriteSize = { 1,1 };
 	float spriteRot = 0;
 	KMyMath::Vector4 spriteColor = { 1.0f,1.0f,1.0f,1.0f };
 	bool spriteFlipX, spriteFlipY = false;
@@ -101,5 +101,7 @@ private:
 	std::stringstream enemyPopCommands;
 	bool isStand = false;
 	int32_t waitTimer = 0;
+
+	TextureData textureData;
 };
 

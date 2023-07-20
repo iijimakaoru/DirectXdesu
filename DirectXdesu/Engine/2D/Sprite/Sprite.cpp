@@ -184,13 +184,13 @@ void Sprite::CreateCBTransform()
 	assert(SUCCEEDED(result));
 }
 
-void Sprite::DrawCommand(KTexture* texture)
+void Sprite::DrawCommand(TextureData texData)
 {
 	// デスクリプタヒープの配列をセットするコマンド
-	ID3D12DescriptorHeap* ppHeaps[] = { texture->srvHeap.Get() };
-	cmdList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
+	//ID3D12DescriptorHeap* ppHeaps[] = { texData.srvHeap.Get() };
+	cmdList->SetDescriptorHeaps(1, texData.srvHeap.GetAddressOf());
 	// SRVヒープの先頭ハンドルを取得
-	D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle = texture->srvHeap->GetGPUDescriptorHandleForHeapStart();
+	D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle = texData.gpuHandle;
 	// SRVヒープの先頭にあるSRVをルートパラメータ1番に設定
 	cmdList->SetGraphicsRootDescriptorTable(1, srvGpuHandle);
 
@@ -218,7 +218,7 @@ void Sprite::Init()
 	*constMapTransform = MyMathUtility::MakeIdentity();
 }
 
-void Sprite::Draw(KTexture* texture, KMyMath::Vector2 pos, KMyMath::Vector2 setSize_, float rot, KMyMath::Vector4 color,
+void Sprite::Draw(TextureData& texData, KMyMath::Vector2 pos, KMyMath::Vector2 setSize_, float rot, KMyMath::Vector4 color,
 	bool isFlipX_, bool isFlipY_, KMyMath::Vector2 anchorPoint_)
 {
 	// 非表示処理
@@ -248,10 +248,10 @@ void Sprite::Draw(KTexture* texture, KMyMath::Vector2 pos, KMyMath::Vector2 setS
 	}
 
 	// アンカーポイント
-	float left   = ((0.0f - anchorPoint_.x) * setSize_.x) * flipX;
-	float right  = ((1.0f - anchorPoint_.x) * setSize_.x) * flipX;
-	float top    = ((0.0f - anchorPoint_.y) * setSize_.y) * flipY;
-	float bottom = ((1.0f - anchorPoint_.y) * setSize_.y) * flipY;
+	float left   = ((0.0f - anchorPoint_.x) * (texData.width * setSize_.x)) * flipX;
+	float right  = ((1.0f - anchorPoint_.x) * (texData.width * setSize_.x)) * flipX;
+	float top    = ((0.0f - anchorPoint_.y) * (texData.height * setSize_.y)) * flipY;
+	float bottom = ((1.0f - anchorPoint_.y) * (texData.height * setSize_.y)) * flipY;
 
 	// 頂点データ
 	Vertex vertices[] =
@@ -282,7 +282,7 @@ void Sprite::Draw(KTexture* texture, KMyMath::Vector2 pos, KMyMath::Vector2 setS
 	pipeline->Update(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP); // 三角形リスト
 
 	// 描画の条件
-	DrawCommand(texture);
+	DrawCommand(texData);
 
 	// 描画コマンド
 	cmdList->DrawIndexedInstanced(_countof(indices), 1, 0, 0, 0);

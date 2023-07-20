@@ -4,7 +4,7 @@
 void Reticle2D::Init()
 {
 	// テクスチャ生成
-	tex.CreateTexture("Resources/texture/", "reticle.png");
+	texData = TextureManager::Load("Resources/texture/reticle.png");
 
 	// パイプライン生成
 	pipeline = std::make_unique<KGPlin>();
@@ -40,7 +40,7 @@ void Reticle2D::Update(ViewProjection* viewPro, KMyMath::Vector3 reticle3dPos)
 
 	position = { positionReticle.x, positionReticle.y };
 
-	scale = { 100.0f,100.0f };
+	scale = { 2.0f,2.0f };
 
 	color = { 1.0f,1.0f,1.0f,1.0f };
 
@@ -49,7 +49,7 @@ void Reticle2D::Update(ViewProjection* viewPro, KMyMath::Vector3 reticle3dPos)
 
 void Reticle2D::Draw()
 {
-	reticle->Draw(&tex, position, scale, rot, color, false, false, { 0.5f,0.5f });
+	reticle->Draw(texData, position, scale, rot, color, false, false, { 0.5f,0.5f });
 }
 
 const KMyMath::Vector2 Reticle2D::GetPos() const

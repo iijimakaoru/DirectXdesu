@@ -45,39 +45,3 @@ public:
 
 	HRESULT result;
 };
-
-class KTextureManager
-{
-public:
-	//TextureManager‚ğæ“¾‚·‚é
-	static KTextureManager* GetInstance() 
-	{
-		if (textureManager == nullptr)
-		{
-			textureManager = new KTextureManager();
-		}
-
-		return textureManager;
-	}
-
-	// ‰ğ•ú
-	void Destory()
-	{
-		delete textureManager;
-	}
-
-private:
-	KTextureManager() {
-		Init();
-	};
-	~KTextureManager() = default;
-	KTextureManager(const KTextureManager & a) {};
-	KTextureManager& operator=(const KTextureManager&) { return *this; }
-
-	static KTextureManager* textureManager;
-
-	void Init();
-
-public:
-	int textureNum;
-};

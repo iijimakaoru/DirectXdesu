@@ -25,7 +25,7 @@ protected:
 	KShader shader;
 
 	// テクスチャ
-	KTexture tex;
+	TextureData texData;
 
 	KMyMath::Vector2 position;
 

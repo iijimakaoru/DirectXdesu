@@ -30,6 +30,10 @@ void Framework::Init()
 	// シーンマネージャー生成
 	sceneManager = SceneManager::GetInstance();
 
+	// テクスチャマネージャー初期化
+	textureManager = TextureManager::GetInstance();
+	textureManager->Init();
+
 	// Imgui初期化
 	imguiMane.Init();
 
@@ -48,6 +52,9 @@ void Framework::Final()
 {
 	// シーンマネージャーの解放
 	sceneManager->Final();
+
+	// テクスチャマネージャーの解放
+	textureManager->Delete();
 
 	// シーンファクトリー解放
 	delete sceneFactory;

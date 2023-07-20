@@ -35,6 +35,8 @@ void GameScence::LoadResources()
 	soundData1 = Sound::GetInstance()->SoundLoadWave("Resources/Sound/Alarm01.wav");
 	soundData2 = Sound::GetInstance()->SoundLoadWave("Resources/Sound/Alarm02.wav");
 	soundData3 = Sound::GetInstance()->SoundLoadWave("Resources/Sound/Alarm03.wav");
+
+	textureData = TextureManager::Load("Resources/texture/mario.jpg");
 }
 
 void GameScence::Init()
@@ -167,7 +169,7 @@ void GameScence::Draw()
 	// ƒvƒŒƒCƒ„[•`‰æ
 	player->Draw();
 
-	sprite->Draw(&mario,spritePos, spriteSize,spriteRot, spriteColor, spriteFlipX, spriteFlipY);
+	sprite->Draw(textureData,spritePos, spriteSize,spriteRot, spriteColor, spriteFlipX, spriteFlipY);
 }
 
 void GameScence::Final()

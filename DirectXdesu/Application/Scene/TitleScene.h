@@ -30,5 +30,15 @@ private:
 
 	// カメラ
 	std::unique_ptr<Camera> camera = nullptr;
+
+	// パイプライン
+	std::unique_ptr<KGPlin> spritePipeline = nullptr;
+
+	// シェーダー
+	KShader spriteShader;
+
+	// タイトルスプライト
+	/*std::unique_ptr<Sprite> titleName = nullptr;
+	KTexture titleTex;*/
 };
 

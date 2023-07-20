@@ -49,6 +49,7 @@ void GameScence::LoadResources()
 
 void GameScence::Init()
 {
+	// インスタンス
 	input = KInput::GetInstance();
 
 #pragma region スプライト

@@ -22,6 +22,7 @@ GameScence::~GameScence()
 void GameScence::LoadResources()
 {
 	// テクスチャ
+	textureData = TextureManager::Load("Resources/texture/mario.jpg");
 
 	// モデル
 	playerModel = std::make_unique<MtlObj>("kariBattle");
@@ -34,13 +35,7 @@ void GameScence::LoadResources()
 	soundData2 = Sound::GetInstance()->SoundLoadWave("Resources/Sound/Alarm02.wav");
 	soundData3 = Sound::GetInstance()->SoundLoadWave("Resources/Sound/Alarm03.wav");
 
-	textureData = TextureManager::Load("Resources/texture/mario.jpg");
-}
-
-void GameScence::Init()
-{
-	input = KInput::GetInstance();
-
+	// パイプライン
 	// Obj
 	objShader.Init(L"Resources/Shader/ObjVS.hlsl", L"Resources/Shader/ObjPS.hlsl");
 	objPipeline = std::make_unique<KGPlin>();
@@ -50,6 +45,11 @@ void GameScence::Init()
 	spriteShader.Init(L"Resources/Shader/SpriteVS.hlsl", L"Resources/Shader/SpritePS.hlsl");
 	spritePipeline = std::make_unique<KGPlin>();
 	spritePipeline->CreatePipelineAll(spriteShader, "Sprite");
+}
+
+void GameScence::Init()
+{
+	input = KInput::GetInstance();
 
 #pragma region スプライト
 	sprite = std::make_unique<Sprite>();

@@ -36,7 +36,7 @@ private:
 	KShader spriteShader;
 
 	// タイトルスプライト
-	/*std::unique_ptr<Sprite> titleName = nullptr;
-	KTexture titleTex;*/
+	std::unique_ptr<Sprite> titleName = nullptr;
+	TextureData titleTex;
 };
 

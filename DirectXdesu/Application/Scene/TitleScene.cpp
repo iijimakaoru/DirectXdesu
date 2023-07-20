@@ -20,7 +20,7 @@ void TitleScene::LoadResources()
 	spritePipeline->CreatePipelineAll(spriteShader, "Sprite");
 
 	//// タイトル名テクスチャ
-	//titleTex.CreateTexture("Resources/texture/", "kariTitle.png");
+	titleTex = TextureManager::Load("Resources/texture/kariTitle.png");
 }
 
 void TitleScene::Init()
@@ -31,10 +31,10 @@ void TitleScene::Init()
 
 	sceneManager = SceneManager::GetInstance();
 
-	//// タイトル名
-	//titleName = std::make_unique<Sprite>();
-	//titleName->Init();
-	//titleName->SetPipeline(spritePipeline.get());
+	// タイトル名
+	titleName = std::make_unique<Sprite>();
+	titleName->Init();
+	titleName->SetPipeline(spritePipeline.get());
 }
 
 void TitleScene::Update()
@@ -51,8 +51,8 @@ void TitleScene::Update()
 
 void TitleScene::Draw()
 {
-	/*titleName->Draw(&titleTex, { static_cast<float>(KWinApp::GetInstance()->GetWindowSizeW()) / 2,
-		static_cast<float>(KWinApp::GetInstance()->GetWindowSizeH()) / 2 },{500,120});*/
+	titleName->Draw(titleTex, { static_cast<float>(KWinApp::GetInstance()->GetWindowSizeW()) / 2,
+		static_cast<float>(KWinApp::GetInstance()->GetWindowSizeH()) * 1 / 3 },{1,1});
 }
 
 void TitleScene::Final()

@@ -16,14 +16,16 @@ public:
 	/// 更新
 	/// </summary>
 	/// <param name="viewPro"></param>
-	void Update(ViewProjection* viewPro);
+	void Update(ViewProjection* viewPro, const KMyMath::Vector3& cameraPos);
 
 	// 描画
 	void Draw();
 
+	const KMyMath::Vector3 GetPos(size_t num) const;
+
 private:
 	// オブジェクト
-	std::unique_ptr<KObject3d> object3d;
+	std::array<std::unique_ptr<KObject3d>,2> object3d;
 
 	// モデル
 	std::unique_ptr<KModel> model;

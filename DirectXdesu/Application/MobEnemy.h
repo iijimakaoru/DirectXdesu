@@ -40,12 +40,6 @@ public:
 	// ワールドポジションゲッター
 	KMyMath::Vector3 GetWorldPos();
 
-	/// <summary>
-	/// 親子セッター
-	/// </summary>
-	/// <param name="parent"></param>
-	void SetParent(const WorldTransfom* parent);
-
 private:
 	// オブジェクト
 	std::unique_ptr<KObject3d> object3d;

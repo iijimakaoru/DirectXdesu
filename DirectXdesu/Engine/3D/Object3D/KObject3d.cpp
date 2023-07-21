@@ -155,3 +155,38 @@ KObject3d KObject3d::Create()
 {
 	return KObject3d();
 }
+
+const KMyMath::Vector3& KObject3d::GetPos() const
+{
+	return transform.pos;
+}
+
+const KMyMath::Vector3& KObject3d::GetRot() const
+{
+	return transform.rot;
+}
+
+const KMyMath::Vector3& KObject3d::GetScale() const
+{
+	return transform.scale;
+}
+
+const KMyMath::Matrix4& KObject3d::GetMatWorld() const
+{
+	return transform.matWorld;
+}
+
+void KObject3d::SetPos(const KMyMath::Vector3& pos)
+{
+	transform.pos = pos;
+}
+
+void KObject3d::SetRot(const KMyMath::Vector3& rot)
+{
+	transform.rot = rot;
+}
+
+void KObject3d::SetScale(const KMyMath::Vector3& scale)
+{
+	transform.scale = scale;
+}

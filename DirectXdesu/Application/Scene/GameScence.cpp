@@ -78,6 +78,15 @@ void GameScence::Init()
 
 void GameScence::Update()
 {
+	ImGui::Begin("Camera");
+	ImGui::Text("CameraPos(%f,%f,%f)", camera->GetPos().x, camera->GetPos().y, camera->GetPos().z);
+	ImGui::End();
+
+	ImGui::Begin("Ground");
+	ImGui::Text("Grand1Pos(%f,%f,%f)", ground->GetPos(0).x, ground->GetPos(0).y, ground->GetPos(0).z);
+	ImGui::Text("Grand2Pos(%f,%f,%f)", ground->GetPos(1).x, ground->GetPos(1).y, ground->GetPos(1).z);
+	ImGui::End();
+
 	// ボスバトル開始判定
 	BossBattleStart();
 
@@ -108,7 +117,7 @@ void GameScence::Update()
 	}
 
 	// 地面の更新
-	ground->Update(camera->GetViewPro());
+	ground->Update(camera->GetViewPro(), camera->GetPos());
 
 	// カメラの更新
 	camera->Update(player.get());
@@ -284,7 +293,7 @@ void GameScence::BossBattleStart()
 
 	if (!bossWarning)
 	{
-		bool isBossBattleStart = KInput::GetInstance()->IsTrigger(DIK_5);
+		bool isBossBattleStart = camera->GetPos().z >= bossBattleStartPos;
 		if (!isBossBattleStart) { return; }
 
 		// カメラ前進止める

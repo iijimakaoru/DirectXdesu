@@ -93,15 +93,27 @@ public:
 	static void StaticInitialize();
 	static KObject3d Create();
 
+	// ゲッター
+	const KMyMath::Vector3& GetPos() const;
+	const KMyMath::Vector3& GetRot() const;
+	const KMyMath::Vector3& GetScale() const;
+	const KMyMath::Matrix4& GetMatWorld() const;
+
+	// セッター
+	void SetPos(const KMyMath::Vector3& pos);
+	void SetRot(const KMyMath::Vector3& rot);
+	void SetScale(const KMyMath::Vector3& scale);
+
 private:
 	KGPlin* pipeline;
 
 public:
-	ComPtr<ID3D12Resource> constBuffB0;
-	ComPtr<ID3D12Resource> constBuffB1;
-
 	// 3Dオブジェクトの配列
 	WorldTransfom transform;
+
+private:
+	ComPtr<ID3D12Resource> constBuffB0;
+	ComPtr<ID3D12Resource> constBuffB1;
 
 	HRESULT result;
 

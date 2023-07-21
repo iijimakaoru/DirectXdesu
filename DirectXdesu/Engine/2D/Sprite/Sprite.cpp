@@ -3,7 +3,6 @@
 #include "KWinApp.h"
 
 KMyMath::Matrix4 Sprite::matPro;
-KGPlin* Sprite::pipeline = nullptr;
 ComPtr<ID3D12Device> Sprite::device;
 ComPtr<ID3D12GraphicsCommandList> Sprite::cmdList;
 
@@ -216,6 +215,8 @@ void Sprite::Init()
 	CreateCBTransform();
 
 	*constMapTransform = MyMathUtility::MakeIdentity();
+
+	isInvisible = false;
 }
 
 void Sprite::Draw(TextureData& texData, KMyMath::Vector2 pos, KMyMath::Vector2 setSize_, float rot, KMyMath::Vector4 color,

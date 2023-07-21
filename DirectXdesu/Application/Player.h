@@ -29,7 +29,7 @@ public:
 	void Draw();
 
 	/// <summary>
-	/// パイプラインセッター
+	/// 親子セッター
 	/// </summary>
 	/// <param name="parent"></param>
 	void SetParent(const WorldTransfom* parent);

@@ -101,9 +101,11 @@
     <ClCompile Include="Application\MobEnemy.cpp" />
     <ClCompile Include="Application\Player.cpp" />
     <ClCompile Include="Application\PlayerBullet.cpp" />
-    <ClCompile Include="Application\Reticle.cpp" />
     <ClCompile Include="Application\Reticle2D.cpp" />
     <ClCompile Include="Application\Reticle3D.cpp" />
+    <ClCompile Include="Application\EnemyBullet.cpp" />
+    <ClCompile Include="Application\BossEnemy.cpp" />
+    <ClCompile Include="Application\Blaster.cpp" />
     <ClCompile Include="Engine\Base\BaseScene\ASceneFactory.cpp" />
     <ClCompile Include="Engine\Base\BaseScene\BaseScene.cpp" />
     <ClCompile Include="Engine\Base\BaseCamera\Camera.cpp" />
@@ -149,6 +151,7 @@
     <ClCompile Include="Engine\Math\Vector4\Vector4.cpp" />
     <ClCompile Include="Engine\Base\View\ViewProjection.cpp" />
     <ClCompile Include="Engine\2D\Texture\TextureManager.cpp" />
+    <ClCompile Include="Application\Warning.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\Bullet.h" />
@@ -157,9 +160,11 @@
     <ClInclude Include="Application\MobEnemy.h" />
     <ClInclude Include="Application\Player.h" />
     <ClInclude Include="Application\PlayerBullet.h" />
-    <ClInclude Include="Application\Reticle.h" />
     <ClInclude Include="Application\Reticle2D.h" />
     <ClInclude Include="Application\Reticle3D.h" />
+    <ClInclude Include="Application\EnemyBullet.h" />
+    <ClInclude Include="Application\BossEnemy.h" />
+    <ClInclude Include="Application\Blaster.h" />
     <ClInclude Include="Engine\Base\BaseScene\ASceneFactory.h" />
     <ClInclude Include="Engine\Base\BaseScene\BaseScene.h" />
     <ClInclude Include="Engine\Base\BaseCamera\Camera.h" />
@@ -204,6 +209,7 @@
     <ClInclude Include="Engine\Math\Vector4\Vector4.h" />
     <ClInclude Include="Engine\Base\View\ViewProjection.h" />
     <ClInclude Include="Engine\2D\Texture\TextureManager.h" />
+    <ClInclude Include="Application\Warning.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DirectXdesu.rc" />

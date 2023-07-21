@@ -133,7 +133,7 @@ private:
 	// コマンドリスト
 	static Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> cmdList;
 
-	static KGPlin* pipeline;
+	KGPlin* pipeline;
 
 	static KMyMath::Matrix4 matPro;
 };

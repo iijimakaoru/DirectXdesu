@@ -31,6 +31,8 @@
 
 #include "RailCamera.h"
 
+#include "Warning.h"
+
 class GameScence : public BaseScene
 {
 public:
@@ -51,6 +53,9 @@ private:
 
 	// 敵発生コマンドの更新
 	void UpdateEnemyPopCommands();
+
+	// ボスバトル開始
+	void BossBattleStart();
 
 private:
 	// インプット
@@ -100,5 +105,9 @@ private:
 	int32_t waitTimer = 0;
 
 	TextureData textureData;
+
+	// ボスバトル
+	std::unique_ptr<Warning> bossWarning = nullptr;
+	bool isBossBattle = false;
 };
 

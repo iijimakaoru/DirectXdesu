@@ -9,6 +9,11 @@
 class MobEnemy
 {
 public:
+	enum EnemysKind
+	{
+		
+	};
+
 	// 初期化
 	void Init(KModel* model_);
 
@@ -34,6 +39,12 @@ public:
 
 	// ワールドポジションゲッター
 	KMyMath::Vector3 GetWorldPos();
+
+	/// <summary>
+	/// 親子セッター
+	/// </summary>
+	/// <param name="parent"></param>
+	void SetParent(const WorldTransfom* parent);
 
 private:
 	// オブジェクト

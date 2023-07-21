@@ -303,9 +303,6 @@
     <ClCompile Include="Application\Camera\RailCamera.cpp">
       <Filter>ソース ファイル\Application\Camera</Filter>
     </ClCompile>
-    <ClCompile Include="Application\Reticle.cpp">
-      <Filter>ソース ファイル\Application</Filter>
-    </ClCompile>
     <ClCompile Include="Application\Reticle2D.cpp">
       <Filter>ソース ファイル\Application</Filter>
     </ClCompile>
@@ -316,6 +313,18 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Engine\2D\Texture\TextureManager.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\EnemyBullet.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\BossEnemy.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\Blaster.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\Warning.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -464,9 +473,6 @@
     <ClInclude Include="Application\Camera\RailCamera.h">
       <Filter>ヘッダー ファイル\Application\Camera</Filter>
     </ClInclude>
-    <ClInclude Include="Application\Reticle.h">
-      <Filter>ヘッダー ファイル\Application</Filter>
-    </ClInclude>
     <ClInclude Include="Application\Reticle2D.h">
       <Filter>ヘッダー ファイル\Application</Filter>
     </ClInclude>
@@ -477,6 +483,18 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Engine\2D\Texture\TextureManager.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\EnemyBullet.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\BossEnemy.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\Blaster.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\Warning.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

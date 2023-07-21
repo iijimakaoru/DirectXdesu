@@ -66,8 +66,7 @@ void GameScence::Init()
 	// プレイヤー
 	player = std::make_unique<Player>();
 	player->Init(playerModel.get());
-	const WorldTransfom& cameraToPlayer = camera->GetTransform();
-	player->SetParent(&cameraToPlayer);
+	player->SetParent(&camera->GetTransform());
 
 	// 雑魚敵出現パターン読み込み
 	LoadEnemyPopData();
@@ -79,60 +78,19 @@ void GameScence::Init()
 
 void GameScence::Update()
 {
+	// ボスバトル開始判定
+	BossBattleStart();
+
+	// 敵出現
+	UpdateEnemyPopCommands();
+
+	// 当たり判定
+	CheckAllCollisions();
+
 	if (input->IsTrigger(DIK_SPACE))
 	{
 		SceneManager::GetInstance()->ChangeScene("TITLE");
 	}
-
-	ImGui::Text("Sound");
-	if (ImGui::Button("Play1"))
-	{
-		Sound::GetInstance()->SoundPlayWave(soundData1);
-	}
-	if (ImGui::Button("Play2"))
-	{
-		Sound::GetInstance()->SoundPlayWave(soundData2);
-	}
-	if (ImGui::Button("Play3"))
-	{
-		Sound::GetInstance()->SoundPlayWave(soundData3);
-	}
-
-	ImGui::Text("Sprite");
-	ImGui::Text("pos: (%.2f,%.2f)", spritePos.x, spritePos.y);
-	ImGui::SliderFloat("SpritePosX", &spritePos.x, 0.0f, 100.0f);
-	ImGui::SliderFloat("SpritePosY", &spritePos.y, 0.0f, 100.0f);
-	ImGui::Text("size: (%.2f,%.2f)", spriteSize.x, spriteSize.y);
-	ImGui::SliderFloat("SpriteSizeX", &spriteSize.x, 0.0f, 100.0f);
-	ImGui::SliderFloat("SpriteSizeY", &spriteSize.y, 0.0f, 100.0f);
-	ImGui::Text("rot: (%.2f)", spriteRot);
-	ImGui::SliderFloat("SpriteRot", &spriteRot, 0.0f, 180.0f);
-	ImGui::Text("color: (%.2f,%.2f,%.2f,%.2f)", spriteColor.x, spriteColor.y, spriteColor.z, spriteColor.w);
-	ImGui::SliderFloat("SpriteColorR", &spriteColor.x, 0.0f, 1.0f);
-	ImGui::SliderFloat("SpriteColorG", &spriteColor.y, 0.0f, 1.0f);
-	ImGui::SliderFloat("SpriteColorB", &spriteColor.z, 0.0f, 1.0f);
-	ImGui::SliderFloat("SpriteColorA", &spriteColor.w, 0.0f, 1.0f);
-	ImGui::Text("CameraAdvance");
-	if (ImGui::Button("ON"))
-	{
-		camera->SetIsAdvance(true);
-	}
-	if (ImGui::Button("OFF"))
-	{
-		camera->SetIsAdvance(false);
-	}
-
-	ImGui::Begin("Player");
-	ImGui::Text("pos: (%.2f,%.2f, %.2f)", player->GetPosition().x,
-		player->GetPosition().y, player->GetPosition().z);
-	ImGui::End();
-
-	ImGui::Begin("Camera");
-	ImGui::Text("pos: (%.2f,%.2f, %.2f)", camera->GetPos().x, camera->GetPos().y, camera->GetPos().z);
-	ImGui::End();
-
-	// 敵出現
-	UpdateEnemyPopCommands();
 
 	// 敵消去
 	mobEnemys.remove_if([](std::unique_ptr<MobEnemy>& MobEnemy)
@@ -140,19 +98,26 @@ void GameScence::Update()
 			return MobEnemy->GetIsDead();
 		});
 
-	// 当たり判定
-	CheckAllCollisions();
-
+	// プレイヤーの更新
 	player->Update(camera->GetViewPro());
 
+	// 雑魚敵の更新
 	for (std::unique_ptr<MobEnemy>& mobEnemy : mobEnemys)
 	{
 		mobEnemy->Update(camera->GetViewPro(), camera->GetPos());
 	}
 
+	// 地面の更新
 	ground->Update(camera->GetViewPro());
 
+	// カメラの更新
 	camera->Update(player.get());
+
+	// ボス登場警告
+	if (bossWarning)
+	{
+		bossWarning->Update();
+	}
 }
 
 void GameScence::Draw()
@@ -169,6 +134,11 @@ void GameScence::Draw()
 	player->Draw();
 
 	sprite->Draw(textureData,spritePos, spriteSize,spriteRot, spriteColor, spriteFlipX, spriteFlipY);
+
+	if (bossWarning)
+	{
+		bossWarning->Draw();
+	}
 }
 
 void GameScence::Final()
@@ -301,5 +271,38 @@ void GameScence::UpdateEnemyPopCommands()
 			// コマンドループを抜ける
 			break;
 		}
+	}
+}
+
+void GameScence::BossBattleStart()
+{
+	// ボスバトルが始まってればスキップ
+	if (isBossBattle) { return; }
+
+	// ボスバトル開始座標
+	const float bossBattleStartPos = 3200;
+
+	if (!bossWarning)
+	{
+		bool isBossBattleStart = KInput::GetInstance()->IsTrigger(DIK_5);
+		if (!isBossBattleStart) { return; }
+
+		// カメラ前進止める
+		camera->SetIsAdvance(false);
+
+		// ボス登場警告作成
+		bossWarning = std::make_unique<Warning>();
+		bossWarning->Init();
+	}
+	else
+	{
+		// 演出が終わってないときは抜ける
+		if (!bossWarning->GetIsDelete()) { return; }
+
+		// ボス登場警告解放
+		bossWarning.reset();
+
+		// ボスバトル開始
+		isBossBattle = true;
 	}
 }

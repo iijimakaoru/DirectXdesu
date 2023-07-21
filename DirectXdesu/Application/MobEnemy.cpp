@@ -64,3 +64,8 @@ KMyMath::Vector3 MobEnemy::GetWorldPos()
 
 	return result;
 }
+
+void MobEnemy::SetParent(const WorldTransfom* parent)
+{
+	object3d->transform.parent = parent;
+}

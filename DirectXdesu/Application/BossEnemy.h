@@ -7,7 +7,7 @@
 class BossEnemy
 {
 public:
-	virtual void Init(KModel* model_) = 0;
+	virtual void Init(KModel* model_, const KMyMath::Vector3& initPos) = 0;
 
 	virtual void Update(ViewProjection* viewPro) = 0;
 

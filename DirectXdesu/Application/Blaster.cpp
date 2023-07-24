@@ -1,6 +1,6 @@
 #include "Blaster.h"
 
-void Blaster::Init(KModel* model_)
+void Blaster::Init(KModel* model_, const KMyMath::Vector3& initPos)
 {
 	input = KInput::GetInstance();
 
@@ -18,10 +18,10 @@ void Blaster::Init(KModel* model_)
 	object3d->SetPipeline(pipeline.get());
 	object3d->LoadModel(model);
 	object3d->transform.scale = { 10.0f,10.0f,10.0f };
+	object3d->transform.pos = initPos;
 }
 
 void Blaster::Update(ViewProjection* viewPro)
 {
-
 	object3d->Update(viewPro);
 }

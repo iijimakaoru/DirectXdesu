@@ -5,7 +5,7 @@
 class Blaster : public BossEnemy
 {
 public:
-	void Init(KModel* model_) override;
+	void Init(KModel* model_, const KMyMath::Vector3& initPos) override;
 
 	void Update(ViewProjection* viewPro) override;
 

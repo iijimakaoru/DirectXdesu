@@ -33,6 +33,8 @@
 
 #include "Warning.h"
 
+#include "BossEnemy.h"
+
 class GameScence : public BaseScene
 {
 public:
@@ -107,6 +109,9 @@ private:
 	TextureData textureData;
 
 	// ボスバトル
+	std::unique_ptr<BossEnemy> boss = nullptr;
+
+	// 登場警告
 	std::unique_ptr<Warning> bossWarning = nullptr;
 	bool isBossBattle = false;
 };

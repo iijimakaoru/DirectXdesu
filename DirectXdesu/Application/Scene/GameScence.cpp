@@ -14,6 +14,8 @@
 
 #include "SceneManager.h"
 
+#include "Blaster.h"
+
 GameScence::~GameScence()
 {
 	Final();
@@ -116,6 +118,12 @@ void GameScence::Update()
 		mobEnemy->Update(camera->GetViewPro(), camera->GetPos());
 	}
 
+	// ボスの更新
+	if (boss)
+	{
+		boss->Update(camera->GetViewPro());
+	}
+
 	// 地面の更新
 	ground->Update(camera->GetViewPro(), camera->GetPos());
 
@@ -137,6 +145,11 @@ void GameScence::Draw()
 	for (std::unique_ptr<MobEnemy>& mobEnemy : mobEnemys)
 	{
 		mobEnemy->Draw();
+	}
+
+	if (boss)
+	{
+		boss->Draw();
 	}
 
 	// プレイヤー描画
@@ -310,6 +323,12 @@ void GameScence::BossBattleStart()
 
 		// ボス登場警告解放
 		bossWarning.reset();
+
+		// ボス配置
+		const float bossDistance = 150;
+		const KMyMath::Vector3 bossBasePos = { 0.0f, 23.0f, bossBattleStartPos + bossDistance };
+		boss = std::make_unique<Blaster>();
+		boss->Init(mobEnemysModel.get(), bossBasePos);
 
 		// ボスバトル開始
 		isBossBattle = true;

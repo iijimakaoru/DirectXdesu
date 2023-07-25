@@ -1,7 +1,6 @@
 #include "PostEffect.h"
 
 // Ã“Iƒƒ“ƒo•Ï”‚ÌÀ‘Ì
-KMyMath::Matrix4 PostEffect::matPro;
 KGPlin* PostEffect::pipeline = nullptr;
 ComPtr<ID3D12Device> PostEffect::device;
 ComPtr<ID3D12GraphicsCommandList> PostEffect::cmdList;
@@ -15,11 +14,6 @@ void PostEffect::StaticInit()
 	window = KWinApp::GetInstance();
 
 	cmdList = KDirectXCommon::GetInstance()->GetCmdlist();
-
-	float width = static_cast<float>(window->GetWindowSizeW());
-	float height = static_cast<float>(window->GetWindowSizeH());
-
-	matPro = MyMathUtility::MakeOrthogonalL(0.0f, width, height, 0.0f, 0.0f, 1.0f);
 }
 
 void PostEffect::Init()

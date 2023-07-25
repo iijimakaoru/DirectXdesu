@@ -16,6 +16,8 @@
 
 #include "Blaster.h"
 
+#include "AppearEnemy.h"
+
 GameScence::~GameScence()
 {
 	Final();
@@ -40,13 +42,11 @@ void GameScence::LoadResources()
 	// パイプライン
 	// Obj
 	objShader.Init(L"Resources/Shader/ObjVS.hlsl", L"Resources/Shader/ObjPS.hlsl");
-	objPipeline = std::make_unique<KGPlin>();
-	objPipeline->CreatePipelineAll(objShader, "Obj");
+	objPipeline.reset(KGPlin::Create(objShader, "Obj"));
 
 	// Sprite
 	spriteShader.Init(L"Resources/Shader/SpriteVS.hlsl", L"Resources/Shader/SpritePS.hlsl");
-	spritePipeline = std::make_unique<KGPlin>();
-	spritePipeline->CreatePipelineAll(spriteShader, "Sprite");
+	spritePipeline.reset(KGPlin::Create(spriteShader, "Sprite"));
 }
 
 void GameScence::Init()
@@ -66,8 +66,7 @@ void GameScence::Init()
 	sceneManager = SceneManager::GetInstance();
 
 	// プレイヤー
-	player = std::make_unique<Player>();
-	player->Init(playerModel.get());
+	player.reset(Player::Create(playerModel.get(),objPipeline.get()));
 	player->SetParent(&camera->GetTransform());
 
 	// 雑魚敵出現パターン読み込み
@@ -142,11 +141,13 @@ void GameScence::Draw()
 	// 地面描画
 	ground->Draw();
 
+	// 雑魚敵描画
 	for (std::unique_ptr<MobEnemy>& mobEnemy : mobEnemys)
 	{
 		mobEnemy->Draw();
 	}
 
+	// ボス描画
 	if (boss)
 	{
 		boss->Draw();
@@ -155,12 +156,13 @@ void GameScence::Draw()
 	// プレイヤー描画
 	player->Draw();
 
-	sprite->Draw(textureData,spritePos, spriteSize,spriteRot, spriteColor, spriteFlipX, spriteFlipY);
-
+	// ボス登場警告演出
 	if (bossWarning)
 	{
 		bossWarning->Draw();
 	}
+
+	sprite->Draw(textureData,spritePos, spriteSize,spriteRot, spriteColor, spriteFlipX, spriteFlipY);
 }
 
 void GameScence::Final()
@@ -269,12 +271,8 @@ void GameScence::UpdateEnemyPopCommands()
 
 			/// 敵を発生させる
 			// 生成
-			std::unique_ptr<MobEnemy> newMEnemy = std::make_unique<MobEnemy>();
-			// 初期化
-			newMEnemy->Init(mobEnemysModel.get());
-			// セット
-			KMyMath::Vector3 pos = { x,y,z };
-			newMEnemy->Set(pos);
+			std::unique_ptr<MobEnemy> newMEnemy;
+			newMEnemy.reset(AppearEnemy::Create(mobEnemysModel.get(), objPipeline.get(), { x,y,z }));
 			// 登録
 			mobEnemys.push_back(std::move(newMEnemy));
 		}
@@ -327,8 +325,7 @@ void GameScence::BossBattleStart()
 		// ボス配置
 		const float bossDistance = 150;
 		const KMyMath::Vector3 bossBasePos = { 0.0f, 23.0f, bossBattleStartPos + bossDistance };
-		boss = std::make_unique<Blaster>();
-		boss->Init(mobEnemysModel.get(), bossBasePos);
+		boss.reset(Blaster::Create(mobEnemysModel.get(), objPipeline.get(), bossBasePos));
 
 		// ボスバトル開始
 		isBossBattle = true;

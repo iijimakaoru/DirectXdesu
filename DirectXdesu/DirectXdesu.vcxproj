@@ -95,6 +95,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Application\AppearEnemy.cpp" />
     <ClCompile Include="Application\Bullet.cpp" />
     <ClCompile Include="Application\Camera\RailCamera.cpp" />
     <ClCompile Include="Application\Ground.cpp" />
@@ -154,6 +155,7 @@
     <ClCompile Include="Application\Warning.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Application\AppearEnemy.h" />
     <ClInclude Include="Application\Bullet.h" />
     <ClInclude Include="Application\Camera\RailCamera.h" />
     <ClInclude Include="Application\Ground.h" />

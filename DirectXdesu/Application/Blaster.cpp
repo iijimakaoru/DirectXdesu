@@ -1,6 +1,21 @@
 #include "Blaster.h"
 
-void Blaster::Init(KModel* model_, const KMyMath::Vector3& initPos)
+Blaster* Blaster::Create(KModel* model_, KGPlin* pipeline_, const KMyMath::Vector3& pos)
+{
+	// インスタンス生成
+	Blaster* blaster = new Blaster();
+	if (blaster == nullptr)
+	{
+		return nullptr;
+	}
+
+	// 初期化
+	blaster->Init(model_, pipeline_, pos);
+
+	return blaster;
+}
+
+void Blaster::Init(KModel* model_, KGPlin* pipeline_, const KMyMath::Vector3& initPos)
 {
 	input = KInput::GetInstance();
 
@@ -8,15 +23,10 @@ void Blaster::Init(KModel* model_, const KMyMath::Vector3& initPos)
 	model = model_;
 
 	// パイプライン生成
-	pipeline = std::make_unique<KGPlin>();
-	shader.Init(L"Resources/Shader/ObjVS.hlsl", L"Resources/Shader/ObjPS.hlsl");
-	pipeline->CreatePipelineAll(shader, "Obj");
+	pipeline = pipeline_;
 
 	// オブジェクト生成
-	object3d = std::make_unique<KObject3d>();
-	object3d->Initialize();
-	object3d->SetPipeline(pipeline.get());
-	object3d->LoadModel(model);
+	object3d.reset(KObject3d::Create(model, pipeline));
 	object3d->transform.scale = { 10.0f,10.0f,10.0f };
 	object3d->transform.pos = initPos;
 }

@@ -127,9 +127,6 @@ private:// 静的メンバ変数
 	// ウィンドウ
 	static KWinApp* window;
 
-	// マットプロジェクション
-	static KMyMath::Matrix4 matPro;
-
 	// 画面クリアカラー
 	static const float clearColor[4];
 };

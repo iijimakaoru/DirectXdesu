@@ -1,7 +1,22 @@
 #include "KObject3d.h"
 #include "KDirectXCommon.h"
 
-KObject3d::KObject3d() {}
+KObject3d* KObject3d::Create(KModel* model, KGPlin* pipeline_)
+{
+	// インスタンス生成
+	KObject3d* object3d = new KObject3d();
+	if (object3d == nullptr)
+	{
+		return nullptr;
+	}
+
+	// 初期化
+	object3d->Initialize();
+	object3d->LoadModel(model);
+	object3d->SetPipeline(pipeline_);
+
+	return object3d;
+}
 
 void KObject3d::Initialize() {
 	// ヒープ設定
@@ -144,16 +159,6 @@ void KObject3d::Finalize()
 {
 	constBuffB0->Release();
 	constBuffB1->Release();
-}
-
-void KObject3d::StaticInitialize()
-{
-	
-}
-
-KObject3d KObject3d::Create()
-{
-	return KObject3d();
 }
 
 const KMyMath::Vector3& KObject3d::GetPos() const

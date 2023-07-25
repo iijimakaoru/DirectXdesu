@@ -16,8 +16,16 @@
 class Player
 {
 public:
+	/// <summary>
+	/// 生成
+	/// </summary>
+	/// <param name="model_"></param>
+	/// <returns></returns>
+	static Player* Create(KModel* model_,KGPlin* pipeline_);
+
+public:
 	// 初期化
-	void Init(KModel* model_);
+	void Init(KModel* model_, KGPlin* pipeline_);
 
 	/// <summary>
 	/// 更新
@@ -86,10 +94,7 @@ private:
 	KModel* model = nullptr;
 
 	// パイプライン
-	std::unique_ptr<KGPlin> pipeline;
-
-	// シェーダー
-	KShader shader;
+	KGPlin* pipeline;
 
 	// スピード
 	float speed = 1.0f;

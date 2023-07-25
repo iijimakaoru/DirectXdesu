@@ -40,6 +40,8 @@ private:
 public:
 	void CreatePipelineAll(KShader shader, std::string shaderName = "Null");
 
+	static KGPlin* Create(KShader shader, std::string shaderName = "Null");
+
 	void Update(D3D12_PRIMITIVE_TOPOLOGY primitive = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	void Setting();
 	void SetBlending(int mord);

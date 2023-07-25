@@ -11,50 +11,48 @@ class MobEnemy
 public:
 	enum EnemysKind
 	{
-		
+		None,
+		Battery,
+		Fall,
+		Appear
 	};
 
 	// 初期化
-	void Init(KModel* model_);
-
-	// 仮配置
-	void Set(KMyMath::Vector3& pos);
+	virtual void Init(KModel* model_, KGPlin* pipeline_) = 0;
 
 	/// <summary>
 	/// 更新
 	/// </summary>
 	/// <param name="viewPro"></param>
-	void Update(ViewProjection* viewPro,const KMyMath::Vector3& cameraPos);
+	virtual void Update(ViewProjection* viewPro,const KMyMath::Vector3& cameraPos) = 0;
 
 	// 描画
-	void Draw();
+	virtual void Draw();
 
 	// 衝突時に呼び出し
-	void OnCollision();
+	virtual void OnCollision();
 
-	const bool GetIsDead()const
+	virtual const bool GetIsDead()const
 	{
 		return isDead;
 	}
 
 	// ワールドポジションゲッター
-	KMyMath::Vector3 GetWorldPos();
+	virtual const KMyMath::Vector3 GetWorldPos() const;
 
-private:
+protected:
 	// オブジェクト
 	std::unique_ptr<KObject3d> object3d;
 
 	// モデル
 	KModel* model = nullptr;
 
-	// パイプライン
-	std::unique_ptr<KGPlin> pipeline;
+	// 死亡フラグ
+	bool isDead = false;
 
-	// シェーダー
-	KShader shader;
+	// パイプライン
+	KGPlin* pipeline;
 
 	// スピード
 	float speed = 0.5f;
-
-	bool isDead = false;
 };

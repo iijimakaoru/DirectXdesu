@@ -631,6 +631,17 @@ void KGPlin::CreatePipelineAll(KShader shader, std::string shaderName)
 	}
 }
 
+KGPlin* KGPlin::Create(KShader shader, std::string shaderName)
+{
+	// インスタンス生成
+	KGPlin* pipeline = new KGPlin();
+
+	// パイプライン生成
+	pipeline->CreatePipelineAll(shader, shaderName);
+
+	return pipeline;
+}
+
 void KGPlin::Update(D3D12_PRIMITIVE_TOPOLOGY primitive)
 {
 	// パイプラインステートとルートシグネチャの設定コマンド

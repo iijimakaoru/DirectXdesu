@@ -7,7 +7,7 @@
 class BossEnemy
 {
 public:
-	virtual void Init(KModel* model_, const KMyMath::Vector3& initPos) = 0;
+	virtual void Init(KModel* model_, KGPlin* pipeline_, const KMyMath::Vector3& initPos) = 0;
 
 	virtual void Update(ViewProjection* viewPro) = 0;
 
@@ -19,9 +19,6 @@ protected:
 	KModel* model = nullptr;
 
 	// パイプライン
-	std::unique_ptr<KGPlin> pipeline;
-
-	// シェーダー
-	KShader shader;
+	KGPlin* pipeline;
 };
 

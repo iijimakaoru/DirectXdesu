@@ -1,5 +1,6 @@
 #include "Player.h"
 #include "Ease.h"
+#include "BulletManager.h"
 
 const float Player::moveSpeed = 0.48f;
 const KMyMath::Vector2 Player::rotLimit = { 35.0f, 25.0f };
@@ -203,18 +204,18 @@ void Player::Attack()
 		// ë¨ìxÉxÉNÉgÉãÇé©ã@ÇÃå¸Ç´Ç…çáÇÌÇπÇƒâÒì]
 		bulletVec = MyMathUtility::TransforNormal(bulletVec, object3d->transform.matWorld);
 
-		// íeê∂ê¨
-		std::unique_ptr<PlayerBullet> newBullet = std::make_unique<PlayerBullet>();
-		// èâä˙âª
-		newBullet->Init();
-		// îzíu
-		newBullet->Set(GetWorldPos(), bulletVec, object3d->transform.rot, bulletSpeed);
-		// ìoò^
-		bullets.push_back(std::move(newBullet));
+		// íeî≠éÀ
+		BulletManager::GetInstance()->PlayerBulletShot(model, pipeline, GetWorldPos(), bulletVec, object3d->transform.rot, bulletSpeed);
+
+		//// íeê∂ê¨
+		//std::unique_ptr<PlayerBullet> newBullet;
+		//newBullet.reset(PlayerBullet::Create(model, pipeline, GetWorldPos(), bulletVec, object3d->transform.rot, bulletSpeed));
+		//// ìoò^
+		//bullets.push_back(std::move(newBullet));
 	}
 }
 
-void Player::Draw()
+void Player::ObjDraw()
 {
 	object3d->Draw();
 
@@ -222,7 +223,10 @@ void Player::Draw()
 	{
 		bullet->Draw();
 	}
+}
 
+void Player::SpriteDraw()
+{
 	reticle2d->Draw();
 }
 

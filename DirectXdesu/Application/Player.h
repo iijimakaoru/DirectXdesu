@@ -34,7 +34,11 @@ public:
 	void Update(ViewProjection* viewPro);
 
 	// 描画
-	void Draw();
+	// オブジェクト
+	void ObjDraw();
+
+	// スプライト
+	void SpriteDraw();
 
 	/// <summary>
 	/// 親子セッター

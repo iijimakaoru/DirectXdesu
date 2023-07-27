@@ -17,7 +17,9 @@ public: // ƒƒ“ƒoŠÖ”
 	virtual void Update() = 0;
 
 	// •`‰æ
-	virtual void Draw() = 0;
+	virtual void ObjDraw() = 0;
+
+	virtual void SpriteDraw() = 0;
 
 	// I—¹
 	virtual void Final() = 0;

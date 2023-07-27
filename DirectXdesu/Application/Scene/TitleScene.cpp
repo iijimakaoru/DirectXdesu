@@ -49,10 +49,15 @@ void TitleScene::Update()
 	}
 }
 
-void TitleScene::Draw()
+void TitleScene::ObjDraw()
+{
+	
+}
+
+void TitleScene::SpriteDraw()
 {
 	titleName->Draw(titleTex, { static_cast<float>(KWinApp::GetInstance()->GetWindowSizeW()) / 2,
-		static_cast<float>(KWinApp::GetInstance()->GetWindowSizeH()) * 1 / 3 },{1,1});
+		static_cast<float>(KWinApp::GetInstance()->GetWindowSizeH()) * 1 / 3 }, { 1,1 });
 }
 
 void TitleScene::Final()

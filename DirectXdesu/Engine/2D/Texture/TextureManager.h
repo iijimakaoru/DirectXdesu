@@ -93,7 +93,7 @@ private:
 private:
 	TextureManager() = default;
 	~TextureManager() = default;
-	TextureManager& operator=(const TextureManager&) = delete;
 	TextureManager(const TextureManager&) = delete;
+	TextureManager& operator=(const TextureManager&) = delete;
 };
 

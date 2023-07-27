@@ -35,7 +35,9 @@ void SceneManager::Update()
 
 void SceneManager::Draw()
 {
-	scene->Draw();
+	scene->ObjDraw();
+
+	scene->SpriteDraw();
 }
 
 void SceneManager::Final()

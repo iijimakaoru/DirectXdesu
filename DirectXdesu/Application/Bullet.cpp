@@ -1,7 +1,6 @@
 #include "Bullet.h"
 
-void Bullet::Set(const KMyMath::Vector3 pos, const KMyMath::Vector3 vec_,
-	const KMyMath::Vector3 rot_, const float bulletSpeed)
+void Bullet::Set(const KMyMath::Vector3& pos, const KMyMath::Vector3& vec_, const KMyMath::Vector3& rot_, const float bulletSpeed)
 {
 	object3d->transform.pos = pos;
 	this->vec = vec_;

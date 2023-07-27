@@ -35,6 +35,8 @@
 
 #include "BossEnemy.h"
 
+#include "BulletManager.h"
+
 class GameScence : public BaseScene
 {
 public:
@@ -43,7 +45,8 @@ public:
 	void LoadResources() override;
 	void Init() override;
 	void Update() override;
-	void Draw() override;
+	void ObjDraw() override;
+	void SpriteDraw() override;
 	void Final()override;
 
 private:
@@ -114,5 +117,8 @@ private:
 	// 登場警告
 	std::unique_ptr<Warning> bossWarning = nullptr;
 	bool isBossBattle = false;
+
+	// バレットマネージャー
+	BulletManager* bulletManager = nullptr;
 };
 

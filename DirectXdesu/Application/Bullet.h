@@ -17,8 +17,7 @@ public:
 	/// åƒÇ—èoÇµ
 	/// </summary>
 	/// <param name="pos"></param>
-	virtual void Set(const KMyMath::Vector3 pos, const KMyMath::Vector3 vec_,
-		const KMyMath::Vector3 rot_ , const float bulletSpeed);
+	virtual void Set(const KMyMath::Vector3& pos, const KMyMath::Vector3& vec_, const KMyMath::Vector3& rot_, const float bulletSpeed);
 
 	/// <summary>
 	/// çXêV

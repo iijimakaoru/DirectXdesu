@@ -75,6 +75,8 @@ void GameScence::Init()
 	// 地面
 	ground = std::make_unique<Ground>();
 	ground->Init();
+
+	bulletManager = BulletManager::GetInstance();
 }
 
 void GameScence::Update()
@@ -123,6 +125,9 @@ void GameScence::Update()
 		boss->Update(camera->GetViewPro());
 	}
 
+	// 弾の更新
+	bulletManager->Update(camera->GetViewPro());
+
 	// 地面の更新
 	ground->Update(camera->GetViewPro(), camera->GetPos());
 
@@ -136,7 +141,7 @@ void GameScence::Update()
 	}
 }
 
-void GameScence::Draw()
+void GameScence::ObjDraw()
 {
 	// 地面描画
 	ground->Draw();
@@ -154,15 +159,22 @@ void GameScence::Draw()
 	}
 
 	// プレイヤー描画
-	player->Draw();
+	player->ObjDraw();
 
+	bulletManager->Draw();
+}
+
+void GameScence::SpriteDraw()
+{
 	// ボス登場警告演出
 	if (bossWarning)
 	{
 		bossWarning->Draw();
 	}
 
-	sprite->Draw(textureData,spritePos, spriteSize,spriteRot, spriteColor, spriteFlipX, spriteFlipY);
+	player->SpriteDraw();
+
+	sprite->Draw(textureData, spritePos, spriteSize, spriteRot, spriteColor, spriteFlipX, spriteFlipY);
 }
 
 void GameScence::Final()

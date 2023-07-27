@@ -19,7 +19,8 @@ public:
 	void LoadResources()override;
 	void Init() override;
 	void Update() override;
-	void Draw() override;
+	void ObjDraw() override;
+	void SpriteDraw() override;
 	void Final()override;
 
 private:

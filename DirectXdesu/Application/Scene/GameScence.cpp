@@ -191,7 +191,7 @@ void GameScence::CheckAllCollisions()
 	KMyMath::Vector3 posA, posB;
 
 	// Ž©‹@’e‚ÌŽæ“¾
-	const std::list<std::unique_ptr<PlayerBullet>>& playerBullets = player->GetBullets();
+	const std::list<std::unique_ptr<PlayerBullet>>& playerBullets = bulletManager->GetPlayerBullets();
 
 	// Ž©’e‚Æ“G‚Ì“–‚½‚è”»’è
 	{

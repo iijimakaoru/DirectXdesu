@@ -64,12 +64,6 @@ public:
 	// 衝突時に呼び出し
 	void OnCollision();
 
-	// 弾のリストを取得
-	const std::list<std::unique_ptr<PlayerBullet>>& GetBullets() 
-	{ 
-		return bullets; 
-	}
-
 	// ゲッター
 	static const KMyMath::Vector2& GetRotLimit() { return rotLimit; }
 	static const float GetMoveSpeed() { return moveSpeed; }
@@ -111,9 +105,6 @@ private:
 	// Z軸
 	bool isRotZRight = false;
 	float swayZ = 0.0f;
-
-	// 弾
-	std::list<std::unique_ptr<PlayerBullet>> bullets;
 
 	// レティクル
 	std::unique_ptr<Reticle3D> reticle3d = nullptr;

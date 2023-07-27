@@ -56,6 +56,16 @@ void BulletManager::Delete()
 	delete bulletManager;
 }
 
+const std::list<std::unique_ptr<PlayerBullet>>& BulletManager::GetPlayerBullets() const
+{
+	return playerBullets;
+}
+
+const std::list<std::unique_ptr<EnemyBullet>>& BulletManager::GetEnemyBullets() const
+{
+	return enemyBullets;
+}
+
 void BulletManager::DeleteBullet()
 {
 	// ƒvƒŒƒCƒ„[‚Ì’e

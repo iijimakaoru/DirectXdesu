@@ -46,12 +46,6 @@ void Player::Init(KModel* model_, KGPlin* pipeline_)
 
 void Player::Update(ViewProjection* viewPro)
 {
-	// íeçÌèú
-	bullets.remove_if([](std::unique_ptr<PlayerBullet>& bullet)
-		{
-			return bullet->GetIsDead();
-		});
-
 	Move();
 	Rot();
 
@@ -62,11 +56,6 @@ void Player::Update(ViewProjection* viewPro)
 	reticle2d->Update(viewPro,reticle3d->GetWorldPos());
 
 	object3d->Update(viewPro);
-
-	for (std::unique_ptr<PlayerBullet>& bullet : bullets)
-	{
-		bullet->Update(viewPro);
-	}
 }
 
 void Player::Move()
@@ -206,23 +195,12 @@ void Player::Attack()
 
 		// íeî≠éÀ
 		BulletManager::GetInstance()->PlayerBulletShot(model, pipeline, GetWorldPos(), bulletVec, object3d->transform.rot, bulletSpeed);
-
-		//// íeê∂ê¨
-		//std::unique_ptr<PlayerBullet> newBullet;
-		//newBullet.reset(PlayerBullet::Create(model, pipeline, GetWorldPos(), bulletVec, object3d->transform.rot, bulletSpeed));
-		//// ìoò^
-		//bullets.push_back(std::move(newBullet));
 	}
 }
 
 void Player::ObjDraw()
 {
 	object3d->Draw();
-
-	for (std::unique_ptr<PlayerBullet>& bullet : bullets)
-	{
-		bullet->Draw();
-	}
 }
 
 void Player::SpriteDraw()

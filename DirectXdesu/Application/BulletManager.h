@@ -36,6 +36,12 @@ public:
 	// ‰ğ•ú
 	void Delete();
 
+	// ©’e‚ÌƒŠƒXƒg‚ğæ“¾
+	const std::list<std::unique_ptr<PlayerBullet>>& GetPlayerBullets() const;
+
+	// “G’e‚ÌƒŠƒXƒg‚ğæ“¾
+	const std::list<std::unique_ptr<EnemyBullet>>& GetEnemyBullets() const;
+
 private:
 	// ’e‚Ìíœ
 	void DeleteBullet();

@@ -11,7 +11,7 @@ class Bullet
 {
 public:
 	// 初期化
-	virtual void Init() = 0;
+	virtual void Init(KModel* model_, KGPlin* pipeline_) = 0;
 
 	/// <summary>
 	/// 呼び出し
@@ -45,13 +45,10 @@ protected:
 	std::unique_ptr<KObject3d> object3d;
 
 	// モデル
-	std::unique_ptr<KModel> model;
-
-	// テクスチャ
-	TextureData texData;
+	KModel* model;
 
 	// パイプライン
-	std::unique_ptr<KGPlin> pipeline;
+	KGPlin* pipeline;
 
 	// シェーダー
 	KShader shader;

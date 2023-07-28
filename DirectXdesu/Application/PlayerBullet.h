@@ -19,5 +19,5 @@ public:
 
 public:
 	// ‰Šú‰»
-	void Init() override;
+	void Init(KModel* model_, KGPlin* pipeline_) override;
 };

@@ -5,6 +5,8 @@
 class BulletManager
 {
 public:
+	void Init(KModel* playersBulletModel_, KGPlin* pipeline_);
+
 	/// <summary>
 	/// 弾の更新
 	/// </summary>
@@ -25,10 +27,9 @@ public:
 	/// <param name="vec_"></param>
 	/// <param name="rot_"></param>
 	/// <param name="bulletSpeed"></param>
-	void PlayerBulletShot(KModel* model, KGPlin* pipeline_,
-		const KMyMath::Vector3& pos, const KMyMath::Vector3& vec_, const KMyMath::Vector3& rot_, const float bulletSpeed);
+	void PlayerBulletShot(const KMyMath::Vector3& pos, const KMyMath::Vector3& vec_, const KMyMath::Vector3& rot_, const float bulletSpeed);
 
-	void EnemyBulletShot();
+	void EnemyBulletShot(const KMyMath::Vector3& pos, const KMyMath::Vector3& vec_, const KMyMath::Vector3& rot_, const float bulletSpeed);
 
 	// インスタンスゲッター
 	static BulletManager* GetInstance();
@@ -49,9 +50,13 @@ private:
 private:
 	// プレイヤーの弾
 	std::list<std::unique_ptr<PlayerBullet>> playerBullets;
+	KModel* playersBulletModel = nullptr;
 
 	// 敵の弾
 	std::list<std::unique_ptr<EnemyBullet>> enemyBullets;
+
+	// パイプライン
+	KGPlin* pipeline = nullptr;
 
 	// インスタンス
 	static BulletManager* bulletManager;

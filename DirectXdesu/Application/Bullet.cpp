@@ -32,7 +32,7 @@ void Bullet::Draw()
 {
 	if (!isDead)
 	{
-		object3d->Draw(texData);
+		object3d->Draw();
 	}
 }
 

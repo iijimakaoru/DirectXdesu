@@ -11,27 +11,21 @@ PlayerBullet* PlayerBullet::Create(KModel* model, KGPlin* pipeline_,
 	}
 
 	// 初期化
-	playerBullet->Init();
+	playerBullet->Init(model, pipeline_);
 	playerBullet->Set(pos, vec_, rot_, bulletSpeed);
 
 	return playerBullet;
 }
 
-void PlayerBullet::Init()
+void PlayerBullet::Init(KModel* model_, KGPlin* pipeline_)
 {
 	// モデル生成
-	model = std::make_unique<Cube>();
-	model->CreateModel();
-
-	// テクスチャ生成
-	texData = TextureManager::Load("Resources/texture/mario.jpg");
+	model = model_;
 
 	// パイプライン生成
-	pipeline = std::make_unique<KGPlin>();
-	shader.Init(L"Resources/Shader/ObjVS.hlsl", L"Resources/Shader/ObjPS.hlsl");
-	pipeline->CreatePipelineAll(shader, "Obj");
+	pipeline = pipeline_;
 
 	// オブジェクト生成
-	object3d.reset(KObject3d::Create(model.get(),pipeline.get()));
-	object3d->transform.scale = { 3.0f,3.0f,3.0f };
+	object3d.reset(KObject3d::Create(model,pipeline));
+	object3d->transform.scale = { 10.0f,10.0f,10.0f };
 }

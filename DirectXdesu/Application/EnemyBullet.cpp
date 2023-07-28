@@ -1,23 +1,34 @@
 #include "EnemyBullet.h"
 
-void EnemyBullet::Init()
+EnemyBullet* EnemyBullet::Create(KModel* model, KGPlin* pipeline_,
+	const KMyMath::Vector3& pos, const KMyMath::Vector3& vec_, const KMyMath::Vector3& rot_, const float bulletSpeed)
+{
+	// インスタンス生成
+	EnemyBullet* enemyBullet = new EnemyBullet();
+	if (enemyBullet == nullptr)
+	{
+		return nullptr;
+	}
+
+	// 初期化
+	enemyBullet->Init(model, pipeline_);
+	enemyBullet->Set(pos, vec_, rot_, bulletSpeed);
+
+	return enemyBullet;
+}
+
+void EnemyBullet::Init(KModel* model_, KGPlin* pipeline_)
 {
 	// モデル生成
-	model = std::make_unique<Cube>();
-	model->CreateModel();
-
-	// テクスチャ生成
-	texData = TextureManager::Load("Resources/texture/mario.jpg");
+	model = model_;
 
 	// パイプライン生成
-	pipeline = std::make_unique<KGPlin>();
-	shader.Init(L"Resources/Shader/ObjVS.hlsl", L"Resources/Shader/ObjPS.hlsl");
-	pipeline->CreatePipelineAll(shader, "Obj");
+	pipeline = pipeline_;
 
 	// オブジェクト生成
 	object3d = std::make_unique<KObject3d>();
 	object3d->Initialize();
-	object3d->SetPipeline(pipeline.get());
-	object3d->LoadModel(model.get());
+	object3d->SetPipeline(pipeline);
+	object3d->LoadModel(model);
 	object3d->transform.scale = { 3.0f,3.0f,3.0f };
 }

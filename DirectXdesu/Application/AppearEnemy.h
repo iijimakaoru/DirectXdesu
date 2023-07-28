@@ -25,5 +25,10 @@ public:
 	/// <param name="viewPro"></param>
 	/// <param name="cameraPos"></param>
 	void Update(ViewProjection* viewPro, const KMyMath::Vector3& cameraPos) override;
+
+	/// <summary>
+	/// çUåÇ
+	/// </summary>
+	void Attack();
 };
 

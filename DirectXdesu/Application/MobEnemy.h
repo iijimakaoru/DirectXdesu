@@ -6,6 +6,8 @@
 #include "KGPlin.h"
 #include "KShader.h"
 
+class Player;
+
 class MobEnemy
 {
 public:
@@ -32,6 +34,7 @@ public:
 	// 衝突時に呼び出し
 	virtual void OnCollision();
 
+	// 死亡判定
 	virtual const bool GetIsDead()const
 	{
 		return isDead;
@@ -39,6 +42,9 @@ public:
 
 	// ワールドポジションゲッター
 	virtual const KMyMath::Vector3 GetWorldPos() const;
+
+	// プレイヤーポインタセッター
+	virtual void SetPlayer(Player* player_) { player = player_; }
 
 protected:
 	// オブジェクト
@@ -53,6 +59,9 @@ protected:
 	// パイプライン
 	KGPlin* pipeline;
 
-	// スピード
-	float speed = 0.5f;
+	// 弾クールタイム
+	float coolTimer;
+
+	// 自キャラ
+	Player* player = nullptr;
 };

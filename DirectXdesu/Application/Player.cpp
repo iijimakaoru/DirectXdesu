@@ -7,7 +7,7 @@ const KMyMath::Vector2 Player::rotLimit = { 35.0f, 25.0f };
 const KMyMath::Vector2 Player::posLimitMin = { -15.0f, -4.0f };
 const KMyMath::Vector2 Player::posLimitMax = { 15.0f, Player::posLimitMin.y + 12.0f };
 
-Player* Player::Create(KModel* model_, KGPlin* pipeline_)
+Player* Player::Create(KModel* model_, KGPlin* objPipeline_, const float playerHP, KGPlin* spritePipeline_)
 {
 	// インスタンス生成
 	Player* player = new Player();
@@ -17,12 +17,12 @@ Player* Player::Create(KModel* model_, KGPlin* pipeline_)
 	}
 
 	// 初期化
-	player->Init(model_, pipeline_);
+	player->Init(model_, objPipeline_, playerHP, spritePipeline_);
 
 	return player;
 }
 
-void Player::Init(KModel* model_, KGPlin* pipeline_)
+void Player::Init(KModel* model_, KGPlin* objPipeline_, const float playerHP, KGPlin* spritePipeline_)
 {
 	input = KInput::GetInstance();
 
@@ -30,10 +30,11 @@ void Player::Init(KModel* model_, KGPlin* pipeline_)
 	model = model_;
 
 	// パイプライン生成
-	pipeline = pipeline_;
+	objPipeline = objPipeline_;
+	spritePipeline = spritePipeline_;
 
 	// オブジェクト生成
-	object3d.reset(KObject3d::Create(model, pipeline));
+	object3d.reset(KObject3d::Create(model, objPipeline));
 	object3d->transform.pos.z = 50;
 	object3d->transform.scale = { 2.0f,2.0f,2.0f };
 
@@ -42,19 +43,42 @@ void Player::Init(KModel* model_, KGPlin* pipeline_)
 	reticle3d->Init();
 	reticle2d = std::make_unique<Reticle2D>();
 	reticle2d->Init();
+
+	// HP関連
+	maxHP = playerHP;
+	HP = maxHP;
+
+	HPUI = std::make_unique<Sprite>();
+	HPUI->Init();
+	HPUI->SetPipeline(spritePipeline);
+
+	hpTex = TextureManager::Load("Resources/texture/white1x1.png");
+
+	HPBarUI = std::make_unique<Sprite>();
+	HPBarUI->Init();
+	HPBarUI->SetPipeline(spritePipeline);
+
+	hpbarTex = TextureManager::Load("Resources/texture/PlayersHPBar.png");
 }
 
 void Player::Update(ViewProjection* viewPro)
 {
+	// 移動
 	Move();
+
+	// 回転
 	Rot();
 
+	// 攻撃
 	Attack();
 
+	// 3Dレティクルの更新
 	reticle3d->Update(object3d->transform.matWorld, GetWorldPos());
 
+	// 2Dレティクルの更新
 	reticle2d->Update(viewPro,reticle3d->GetWorldPos());
 
+	// オブジェクトの更新
 	object3d->Update(viewPro);
 }
 
@@ -190,11 +214,15 @@ void Player::Attack()
 		const float bulletSpeed = 6.0f;
 		KMyMath::Vector3 bulletVec(0, 0, 1);
 
+		const float distance = 20.0f;
+
 		// 速度ベクトルを自機の向きに合わせて回転
 		bulletVec = MyMathUtility::TransforNormal(bulletVec, object3d->transform.matWorld);
 
+		bulletVec = MyMathUtility::MakeNormalize(bulletVec);
+
 		// 弾発射
-		BulletManager::GetInstance()->PlayerBulletShot(model, pipeline, GetWorldPos(), bulletVec, object3d->transform.rot, bulletSpeed);
+		BulletManager::GetInstance()->PlayerBulletShot(GetWorldPos() + bulletVec * distance, bulletVec, object3d->transform.rot, bulletSpeed);
 	}
 }
 
@@ -206,6 +234,13 @@ void Player::ObjDraw()
 void Player::SpriteDraw()
 {
 	reticle2d->Draw();
+}
+
+void Player::UIDraw()
+{
+	HPUI->Draw(hpTex, { 11,11 }, { HP * (318 / maxHP),30 }, 0, { 0,1,0,1 }, false, false, { 0,0 });
+
+	HPBarUI->Draw(hpbarTex, { 10,10 }, { 1,1 }, 0, { 1,1,1,1 }, false, false, { 0,0 });
 }
 
 void Player::SetParent(const WorldTransfom* parent)
@@ -228,4 +263,5 @@ KMyMath::Vector3 Player::GetWorldPos()
 
 void Player::OnCollision()
 {
+	HP--;
 }

@@ -21,11 +21,11 @@ public:
 	/// </summary>
 	/// <param name="model_"></param>
 	/// <returns></returns>
-	static Player* Create(KModel* model_,KGPlin* pipeline_);
+	static Player* Create(KModel* model_,KGPlin* objPipeline_, const float playerHP, KGPlin* spritePipeline_);
 
 public:
 	// 初期化
-	void Init(KModel* model_, KGPlin* pipeline_);
+	void Init(KModel* model_, KGPlin* objPipeline_, const float playerHP, KGPlin* spritePipeline_);
 
 	/// <summary>
 	/// 更新
@@ -37,8 +37,11 @@ public:
 	// オブジェクト
 	void ObjDraw();
 
-	// スプライト
+	// ゲームスプライト
 	void SpriteDraw();
+
+	// UI
+	void UIDraw();
 
 	/// <summary>
 	/// 親子セッター
@@ -80,10 +83,9 @@ private:
 	void Attack();
 
 private:
+#pragma region 大元の変数
 	// Input
 	KInput* input = nullptr;
-	// パッドの入力情報
-	KMyMath::Vector2 leftStickPos;
 
 	// オブジェクト
 	std::unique_ptr<KObject3d> object3d;
@@ -92,11 +94,11 @@ private:
 	KModel* model = nullptr;
 
 	// パイプライン
-	KGPlin* pipeline;
+	KGPlin* objPipeline;
+	KGPlin* spritePipeline;
+#pragma endregion
 
-	// スピード
-	float speed = 1.0f;
-
+#pragma region 回転用変数
 	// 回転戻すイージング用
 	KMyMath::Vector2 oldRot;
 	float rotEaseTimer = 0;
@@ -105,18 +107,40 @@ private:
 	// Z軸
 	bool isRotZRight = false;
 	float swayZ = 0.0f;
+#pragma endregion
 
-	// レティクル
+#pragma region レティクル
+	// 2Dに変換するための3Dレティクル
 	std::unique_ptr<Reticle3D> reticle3d = nullptr;
+	// 最終的なレティクル
 	std::unique_ptr<Reticle2D> reticle2d = nullptr;
+#pragma endregion
 
+#pragma region 制限
 	// 動くスピード
-	static const float moveSpeed; // = 0.16f
+	static const float moveSpeed;
 
 	// 角度上限
-	static const KMyMath::Vector2 rotLimit; // = { 35.0f, 25.0f };
+	static const KMyMath::Vector2 rotLimit;
 
 	// 移動上限
-	static const KMyMath::Vector2 posLimitMax; // = { 45.0f, 25.0f };
-	static const KMyMath::Vector2 posLimitMin; // = { 45.0f, 25.0f };
+	static const KMyMath::Vector2 posLimitMax;
+	static const KMyMath::Vector2 posLimitMin;
+#pragma endregion
+
+#pragma region HP関連
+	// 最大体力
+	float maxHP;
+
+	// 現体力
+	float HP;
+
+	// HP
+	std::unique_ptr<Sprite> HPUI = nullptr;
+	TextureData hpTex;
+
+	// HPバー
+	std::unique_ptr<Sprite> HPBarUI = nullptr;
+	TextureData hpbarTex;
+#pragma endregion
 };

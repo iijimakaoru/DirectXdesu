@@ -29,10 +29,12 @@ void GameScence::LoadResources()
 	textureData = TextureManager::Load("Resources/texture/mario.jpg");
 
 	// モデル
-	playerModel = std::make_unique<MtlObj>("kariBattle");
+	playerModel = std::make_unique<MtlObj>("BattleShip");
 	playerModel->CreateModel();
 	mobEnemysModel = std::make_unique<MtlObj>("boss_model");
 	mobEnemysModel->CreateModel();
+	playersBulletModel = std::make_unique<MtlObj>("playerBullet");
+	playersBulletModel->CreateModel();
 
 	// サウンド
 	soundData1 = Sound::GetInstance()->SoundLoadWave("Resources/Sound/Alarm01.wav");
@@ -54,19 +56,12 @@ void GameScence::Init()
 	// インスタンス
 	input = KInput::GetInstance();
 
-#pragma region スプライト
-	sprite = std::make_unique<Sprite>();
-	sprite->Init();
-	sprite->SetPipeline(spritePipeline.get());
-#pragma endregion
-
-	isDebug = true;
 	camera = std::make_unique<RailCamera>();
 
 	sceneManager = SceneManager::GetInstance();
 
 	// プレイヤー
-	player.reset(Player::Create(playerModel.get(),objPipeline.get()));
+	player.reset(Player::Create(playerModel.get(), objPipeline.get(), 10, spritePipeline.get()));
 	player->SetParent(&camera->GetTransform());
 
 	// 雑魚敵出現パターン読み込み
@@ -77,6 +72,7 @@ void GameScence::Init()
 	ground->Init();
 
 	bulletManager = BulletManager::GetInstance();
+	bulletManager->Init(playersBulletModel.get(), objPipeline.get());
 }
 
 void GameScence::Update()
@@ -89,6 +85,11 @@ void GameScence::Update()
 	ImGui::Text("Grand1Pos(%f,%f,%f)", ground->GetPos(0).x, ground->GetPos(0).y, ground->GetPos(0).z);
 	ImGui::Text("Grand2Pos(%f,%f,%f)", ground->GetPos(1).x, ground->GetPos(1).y, ground->GetPos(1).z);
 	ImGui::End();
+
+	if (input->IsTrigger(DIK_0))
+	{
+		player->OnCollision();
+	}
 
 	// ボスバトル開始判定
 	BossBattleStart();
@@ -166,15 +167,15 @@ void GameScence::ObjDraw()
 
 void GameScence::SpriteDraw()
 {
+	player->SpriteDraw();
+
+	player->UIDraw();
+
 	// ボス登場警告演出
 	if (bossWarning)
 	{
 		bossWarning->Draw();
 	}
-
-	player->SpriteDraw();
-
-	sprite->Draw(textureData, spritePos, spriteSize, spriteRot, spriteColor, spriteFlipX, spriteFlipY);
 }
 
 void GameScence::Final()
@@ -285,6 +286,7 @@ void GameScence::UpdateEnemyPopCommands()
 			// 生成
 			std::unique_ptr<MobEnemy> newMEnemy;
 			newMEnemy.reset(AppearEnemy::Create(mobEnemysModel.get(), objPipeline.get(), { x,y,z }));
+			newMEnemy->SetPlayer(player.get());
 			// 登録
 			mobEnemys.push_back(std::move(newMEnemy));
 		}

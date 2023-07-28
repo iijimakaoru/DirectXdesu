@@ -2,6 +2,13 @@
 
 BulletManager* BulletManager::bulletManager = nullptr;
 
+void BulletManager::Init(KModel* playersBulletModel_, KGPlin* pipeline_)
+{
+	playersBulletModel = playersBulletModel_;
+
+	pipeline = pipeline_;
+}
+
 void BulletManager::Update(ViewProjection* viewPro)
 {
 	// íeÇÃçÌèú
@@ -31,18 +38,22 @@ void BulletManager::Draw()
 	}
 }
 
-void BulletManager::PlayerBulletShot(KModel* model, KGPlin* pipeline_,
-	const KMyMath::Vector3& pos, const KMyMath::Vector3& vec_, const KMyMath::Vector3& rot_, const float bulletSpeed)
+void BulletManager::PlayerBulletShot(const KMyMath::Vector3& pos, const KMyMath::Vector3& vec_, const KMyMath::Vector3& rot_, const float bulletSpeed)
 {
 	// íeê∂ê¨
 	std::unique_ptr<PlayerBullet> newBullet;
-	newBullet.reset(PlayerBullet::Create(model, pipeline_, pos, vec_, rot_, bulletSpeed));
+	newBullet.reset(PlayerBullet::Create(playersBulletModel, pipeline, pos, vec_, rot_, bulletSpeed));
 	// ìoò^
 	playerBullets.push_back(std::move(newBullet));
 }
 
-void BulletManager::EnemyBulletShot()
+void BulletManager::EnemyBulletShot(const KMyMath::Vector3& pos, const KMyMath::Vector3& vec_, const KMyMath::Vector3& rot_, const float bulletSpeed)
 {
+	// íeê∂ê¨
+	std::unique_ptr<EnemyBullet> newBullet;
+	newBullet.reset(EnemyBullet::Create(playersBulletModel, pipeline, pos, vec_, rot_, bulletSpeed));
+	// ìoò^
+	enemyBullets.push_back(std::move(newBullet));
 }
 
 BulletManager* BulletManager::GetInstance()

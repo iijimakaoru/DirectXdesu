@@ -77,29 +77,24 @@ private:
 	KShader objShader;
 	KShader spriteShader;
 
-	// テクスチャ
-
+	// サウンド
 	SoundData soundData1;
 	SoundData soundData2;
 	SoundData soundData3;
-
-	bool isDebug = true;
-
-	// スプライト
-	std::unique_ptr<Sprite> sprite = nullptr;
-	KMyMath::Vector2 spritePos = { 0,0 };
-	KMyMath::Vector2 spriteSize = { 1,1 };
-	float spriteRot = 0;
-	KMyMath::Vector4 spriteColor = { 1.0f,1.0f,1.0f,1.0f };
-	bool spriteFlipX, spriteFlipY = false;
 
 	// プレイヤー
 	std::unique_ptr<Player> player = nullptr;
 	std::unique_ptr<KModel> playerModel;
 
+	// プレイヤーの弾モデル
+	std::unique_ptr<KModel> playersBulletModel = nullptr;
+
 	// 雑魚
 	std::list<std::unique_ptr<MobEnemy>> mobEnemys;
 	std::unique_ptr<KModel> mobEnemysModel;
+
+	// 敵の弾モデル
+	std::unique_ptr<KModel> enemysBulletModel = nullptr;
 
 	// 簡易地面
 	std::unique_ptr<Ground> ground = nullptr;

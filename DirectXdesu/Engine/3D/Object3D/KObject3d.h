@@ -23,13 +23,8 @@ struct ConstBufferDataB0
 	KMyMath::Matrix4 mat;
 };
 
-struct WorldTransfom {
-	// 定数バッファ(行列)
-	ID3D12Resource* constBuffTransform = {};
-
-	// 定数バッファマップ(行列)
-	ConstBufferDataB0* constMapTransform = {};
-
+struct WorldTransfom 
+{
 	// アフィン変換
 	KMyMath::Vector3 scale = { 1,1,1 };
 	KMyMath::Vector3 rot = { 0,0,0 };

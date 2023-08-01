@@ -35,6 +35,8 @@ void GameScence::LoadResources()
 	mobEnemysModel->CreateModel();
 	playersBulletModel = std::make_unique<MtlObj>("playerBullet");
 	playersBulletModel->CreateModel();
+	skyBoxModel = std::make_unique<MtlObj>("SkyBox");
+	skyBoxModel->CreateModel();
 
 	// サウンド
 	soundData1 = Sound::GetInstance()->SoundLoadWave("Resources/Sound/Alarm01.wav");
@@ -49,6 +51,10 @@ void GameScence::LoadResources()
 	// Sprite
 	spriteShader.Init(L"Resources/Shader/SpriteVS.hlsl", L"Resources/Shader/SpritePS.hlsl");
 	spritePipeline.reset(KGPlin::Create(spriteShader, "Sprite"));
+
+	// fbx
+	fbxShader.Init(L"Resources/Shader/FbxVS.hlsl", L"Resources/Shader/FbxPS.hlsl");
+	fbxPipeline.reset(KGPlin::Create(fbxShader, "Fbx"));
 }
 
 void GameScence::Init()
@@ -70,6 +76,9 @@ void GameScence::Init()
 	// 地面
 	ground = std::make_unique<Ground>();
 	ground->Init();
+
+	// スカイボックス
+	skyBox.reset(SkyBox::Create(skyBoxModel.get(),objPipeline.get(),player->GetWorldPos().z));
 
 	bulletManager = BulletManager::GetInstance();
 	bulletManager->Init(playersBulletModel.get(), objPipeline.get());
@@ -132,6 +141,10 @@ void GameScence::Update()
 	// 地面の更新
 	ground->Update(camera->GetViewPro(), camera->GetPos());
 
+	// スカイボックスの更新
+	skyBox->SetPosZ(player->GetWorldPos().z);
+	skyBox->Update(camera->GetViewPro());
+
 	// カメラの更新
 	camera->Update(player.get());
 
@@ -161,6 +174,8 @@ void GameScence::ObjDraw()
 
 	// プレイヤー描画
 	player->ObjDraw();
+
+	skyBox->ObjDraw();
 
 	bulletManager->Draw();
 }

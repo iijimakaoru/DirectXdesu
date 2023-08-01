@@ -311,7 +311,7 @@ MtlObj::MtlObj(const string modelname)
 	ifstream file;
 
 	const string filename = modelname + ".obj";
-	const string directoryPath = "Resources/obj/";
+	const string directoryPath = "Resources/obj/" + modelname + "/";
 	file.open(directoryPath + filename);
 
 	assert(!file.fail());
@@ -390,7 +390,6 @@ MtlObj::MtlObj(const string modelname)
 				vertex.uv = texcoords[indexTexcoord - 1];
 				vertices.emplace_back(vertex);
 
-				//indices.emplace_back(indexPosition - 1);
 				indices.emplace_back((unsigned short)indices.size());
 			}
 		}

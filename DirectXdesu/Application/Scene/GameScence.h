@@ -37,6 +37,8 @@
 
 #include "BulletManager.h"
 
+#include "SkyBox.h"
+
 class GameScence : public BaseScene
 {
 public:
@@ -72,10 +74,12 @@ private:
 	// パイプライン
 	std::unique_ptr<KGPlin> objPipeline;
 	std::unique_ptr<KGPlin> spritePipeline;
+	std::unique_ptr<KGPlin> fbxPipeline;
 
 	// シェーダー
 	KShader objShader;
 	KShader spriteShader;
+	KShader fbxShader;
 
 	// サウンド
 	SoundData soundData1;
@@ -115,5 +119,9 @@ private:
 
 	// バレットマネージャー
 	BulletManager* bulletManager = nullptr;
+
+	// スカイボックス
+	std::unique_ptr<SkyBox> skyBox = nullptr;
+	std::unique_ptr<KModel> skyBoxModel = nullptr;
 };
 

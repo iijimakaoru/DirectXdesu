@@ -154,6 +154,7 @@
     <ClCompile Include="Engine\Base\View\ViewProjection.cpp" />
     <ClCompile Include="Engine\2D\Texture\TextureManager.cpp" />
     <ClCompile Include="Application\Warning.cpp" />
+    <ClCompile Include="Application\SkyBox.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\AppearEnemy.h" />
@@ -214,6 +215,7 @@
     <ClInclude Include="Engine\Base\View\ViewProjection.h" />
     <ClInclude Include="Engine\2D\Texture\TextureManager.h" />
     <ClInclude Include="Application\Warning.h" />
+    <ClInclude Include="Application\SkyBox.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DirectXdesu.rc" />

@@ -39,6 +39,8 @@
 
 #include "SkyBox.h"
 
+#include "ParticleManager.h"
+
 class GameScence : public BaseScene
 {
 public:
@@ -109,6 +111,7 @@ private:
 	int32_t waitTimer = 0;
 
 	TextureData textureData;
+	TextureData textureData2;
 
 	// ボスバトル
 	std::unique_ptr<BossEnemy> boss = nullptr;
@@ -123,5 +126,9 @@ private:
 	// スカイボックス
 	std::unique_ptr<SkyBox> skyBox = nullptr;
 	std::unique_ptr<KModel> skyBoxModel = nullptr;
+
+	// パーティクル
+	//std::array<std::unique_ptr<Particles>, 2> particleManager;
+	ParticleManager* particleManager = nullptr;
 };
 

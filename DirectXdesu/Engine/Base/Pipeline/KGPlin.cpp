@@ -7,6 +7,13 @@ void KGPlin::SetShader(KShader shader)
 	piplineDesc.VS.pShaderBytecode = shader.GetVSBlob()->GetBufferPointer();
 	piplineDesc.VS.BytecodeLength = shader.GetVSBlob()->GetBufferSize();
 
+	// GS
+	if (shader.GetGSBlob() && shader.GetGSBytecode())
+	{
+		piplineDesc.GS.pShaderBytecode = shader.GetGSBlob()->GetBufferPointer();
+		piplineDesc.GS.BytecodeLength = shader.GetGSBlob()->GetBufferSize();
+	}
+
 	// Pixcel
 	piplineDesc.PS.pShaderBytecode = shader.GetPSBlob()->GetBufferPointer();
 	piplineDesc.PS.BytecodeLength = shader.GetPSBlob()->GetBufferSize();
@@ -204,7 +211,7 @@ void KGPlin::CreatePipelineAll(KShader shader, std::string shaderName)
 		piplineDesc.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL; // 書き込み許可
 		piplineDesc.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_LESS; // 小さければ合格
 		piplineDesc.DSVFormat = DXGI_FORMAT_D32_FLOAT; // 深度値フォーマット
-		
+
 		// その他の設定
 		piplineDesc.NumRenderTargets = 1;
 		piplineDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
@@ -284,7 +291,7 @@ void KGPlin::CreatePipelineAll(KShader shader, std::string shaderName)
 	else if (shaderName == "Sprite")
 	{
 #pragma region 頂点レイアウト配列の宣言と設定
-		static D3D12_INPUT_ELEMENT_DESC inputLayout[] = 
+		static D3D12_INPUT_ELEMENT_DESC inputLayout[] =
 		{
 			{// xy座標
 				"POSITION",										// セマンティック名
@@ -331,7 +338,7 @@ void KGPlin::CreatePipelineAll(KShader shader, std::string shaderName)
 		piplineDesc.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL; // 書き込み許可
 		piplineDesc.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_LESS; // 小さければ合格
 		piplineDesc.DSVFormat = DXGI_FORMAT_D32_FLOAT; // 深度値フォーマット
-		
+
 		// レンダーターゲットのブレンド設定
 		D3D12_RENDER_TARGET_BLEND_DESC& blenddesc = piplineDesc.BlendState.RenderTarget[0];
 		blenddesc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
@@ -615,7 +622,8 @@ void KGPlin::CreatePipelineAll(KShader shader, std::string shaderName)
 		if (FAILED(result)) { assert(0); }
 
 		// ルートシグネチャの生成
-		result = device->CreateRootSignature(0, rootSigBlob->GetBufferPointer(), rootSigBlob->GetBufferSize(), IID_PPV_ARGS(rootSignature.ReleaseAndGetAddressOf()));
+		result = device->CreateRootSignature(0, rootSigBlob->GetBufferPointer(),
+			rootSigBlob->GetBufferSize(), IID_PPV_ARGS(rootSignature.ReleaseAndGetAddressOf()));
 		if (FAILED(result)) { assert(0); }
 
 		piplineDesc.pRootSignature = rootSignature.Get();
@@ -623,6 +631,97 @@ void KGPlin::CreatePipelineAll(KShader shader, std::string shaderName)
 		// グラフィックスパイプラインの生成
 		result = device->CreateGraphicsPipelineState(&piplineDesc, IID_PPV_ARGS(pipelineState.ReleaseAndGetAddressOf()));
 		if (FAILED(result)) { assert(0); }
+	}
+	// Particleシェーダー
+	else if (shaderName == "Particle")
+	{
+		// 頂点レイアウト
+		D3D12_INPUT_ELEMENT_DESC inputLayout[] =
+		{
+			{ // xy座標(1行で書いたほうが見やすい)
+				"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0,
+				D3D12_APPEND_ALIGNED_ELEMENT,
+				D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0
+			},
+			{
+				"TEXCOORD",0,DXGI_FORMAT_R32_FLOAT,0,
+				D3D12_APPEND_ALIGNED_ELEMENT,
+				D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0
+			},
+		};
+
+		// サンプルマスク
+		piplineDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK; // 標準設定
+
+		// ラスタライザステート
+		piplineDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
+
+		// デプスステンシルステート
+		piplineDesc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
+
+		// レンダーターゲットのブレンド設定
+		D3D12_RENDER_TARGET_BLEND_DESC blenddesc{};
+		blenddesc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;	// RBGA全てのチャンネルを描画
+		blenddesc.BlendEnable = true;
+
+		blenddesc.BlendOp = D3D12_BLEND_OP_ADD;
+		blenddesc.SrcBlend = D3D12_BLEND_ONE;
+		blenddesc.DestBlend = D3D12_BLEND_ONE;
+
+		blenddesc.BlendOpAlpha = D3D12_BLEND_OP_ADD;
+		blenddesc.SrcBlendAlpha = D3D12_BLEND_ONE;
+		blenddesc.DestBlendAlpha = D3D12_BLEND_ZERO;
+
+		// ブレンドステートの設定
+		piplineDesc.BlendState.RenderTarget[0] = blenddesc;
+
+		// 深度バッファのフォーマット
+		piplineDesc.DSVFormat = DXGI_FORMAT_D32_FLOAT;
+
+		// 頂点レイアウトの設定
+		piplineDesc.InputLayout.pInputElementDescs = inputLayout;
+		piplineDesc.InputLayout.NumElements = _countof(inputLayout);
+
+		// 図形の形状設定（三角形）
+		piplineDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT;
+		piplineDesc.NumRenderTargets = 1;	// 描画対象は1つ
+		piplineDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB; // 0～255指定のRGBA
+		piplineDesc.SampleDesc.Count = 1; // 1ピクセルにつき1回サンプリング
+
+		// デスクリプタレンジ
+		CD3DX12_DESCRIPTOR_RANGE descRangeSRV;
+		descRangeSRV.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0); // t0 レジスタ
+
+		// ルートパラメータ
+		CD3DX12_ROOT_PARAMETER rootparams[2];
+		rootparams[0].InitAsConstantBufferView(0, 0, D3D12_SHADER_VISIBILITY_ALL);
+		rootparams[1].InitAsDescriptorTable(1, &descRangeSRV, D3D12_SHADER_VISIBILITY_ALL);
+
+		// スタティックサンプラー
+		CD3DX12_STATIC_SAMPLER_DESC samplerDesc = CD3DX12_STATIC_SAMPLER_DESC(0);
+
+		// ルートシグネチャの設定
+		CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC rootSignatureDesc;
+		rootSignatureDesc.Init_1_0(_countof(rootparams), rootparams, 1, &samplerDesc, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+
+		ComPtr<ID3DBlob> rootSigBlob;
+		ComPtr<ID3DBlob> errorBlob;
+
+		// バージョン自動判定のシリアライズ
+		result = D3DX12SerializeVersionedRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1_0, &rootSigBlob, &errorBlob);
+
+		// ルートシグネチャの生成
+		result = device->CreateRootSignature(0, rootSigBlob->GetBufferPointer(),
+			rootSigBlob->GetBufferSize(), IID_PPV_ARGS(rootSignature.ReleaseAndGetAddressOf()));
+		assert(SUCCEEDED(result));
+
+		piplineDesc.pRootSignature = rootSignature.Get();
+
+		piplineDesc.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
+
+		// グラフィックスパイプラインの生成
+		result = device->CreateGraphicsPipelineState(&piplineDesc, IID_PPV_ARGS(pipelineState.ReleaseAndGetAddressOf()));
+		assert(SUCCEEDED(result));
 	}
 	// なんもシェーダー入ってないとき
 	else

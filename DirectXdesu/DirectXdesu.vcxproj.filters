@@ -160,6 +160,12 @@
     <Filter Include="ソース ファイル\Engine\Base\TextureManager">
       <UniqueIdentifier>{67bde7ad-17ce-4f0e-a87c-2aef69606d94}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Engine\Base\Particle">
+      <UniqueIdentifier>{da2f9fc0-c3e2-47a3-91a1-8ab82d4317a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Engine\Base\Particle">
+      <UniqueIdentifier>{029f01f4-2cb5-47e1-b28a-84110fc785b2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Math\Vector2\Vector2.cpp">
@@ -339,8 +345,11 @@
     <ClCompile Include="Engine\2D\Texture\TextureManager.cpp">
       <Filter>ソース ファイル\Engine\Base\TextureManager</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Particle\ParticleManager.cpp">
+      <Filter>ソース ファイル\Engine\Base\Particle</Filter>
+    </ClCompile>
     <ClCompile Include="Application\SkyBox.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\Application</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -518,8 +527,11 @@
     <ClInclude Include="Engine\2D\Texture\TextureManager.h">
       <Filter>ヘッダー ファイル\Engine\Base\TextureManager</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Particle\ParticleManager.h">
+      <Filter>ヘッダー ファイル\Engine\Base\Particle</Filter>
+    </ClInclude>
     <ClInclude Include="Application\SkyBox.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\Application</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

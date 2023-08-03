@@ -1,6 +1,7 @@
 #include "Framework.h"
 #include "Sprite.h"
 #include "BaseScene.h"
+#include "ParticleManager.h"
 
 void Framework::Init()
 {
@@ -34,6 +35,8 @@ void Framework::Init()
 	textureManager = TextureManager::GetInstance();
 	textureManager->Init();
 
+	Particles::StaticInitialize();
+
 	// Imgui初期化
 	imguiMane.Init();
 
@@ -55,6 +58,9 @@ void Framework::Final()
 
 	// テクスチャマネージャーの解放
 	textureManager->Delete();
+
+	// パーティクルマネージャー解放
+	ParticleManager::GetInstance()->Delete();
 
 	// シーンファクトリー解放
 	delete sceneFactory;

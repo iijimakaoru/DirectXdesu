@@ -27,6 +27,7 @@ void GameScence::LoadResources()
 {
 	// テクスチャ
 	textureData = TextureManager::Load("Resources/texture/mario.jpg");
+	textureData2 = TextureManager::Load("Resources/texture/kariPlayerColor.png");
 
 	// モデル
 	playerModel = std::make_unique<MtlObj>("BattleShip");
@@ -82,6 +83,10 @@ void GameScence::Init()
 
 	bulletManager = BulletManager::GetInstance();
 	bulletManager->Init(playersBulletModel.get(), objPipeline.get());
+
+	// パーティクル
+	particleManager = ParticleManager::GetInstance();
+	particleManager->Init();
 }
 
 void GameScence::Update()
@@ -111,8 +116,10 @@ void GameScence::Update()
 
 	if (input->IsTrigger(DIK_SPACE))
 	{
-		SceneManager::GetInstance()->ChangeScene("TITLE");
+		sceneManager->ChangeScene("TITLE");
 	}
+
+	camera->SetIsAdvance(false);
 
 	// 敵消去
 	mobEnemys.remove_if([](std::unique_ptr<MobEnemy>& MobEnemy)
@@ -144,6 +151,9 @@ void GameScence::Update()
 	// スカイボックスの更新
 	skyBox->SetPosZ(player->GetWorldPos().z);
 	skyBox->Update(camera->GetViewPro());
+
+	// パーティクルマネージャーの更新
+	particleManager->Update(camera->GetViewPro());
 
 	// カメラの更新
 	camera->Update(player.get());
@@ -178,6 +188,8 @@ void GameScence::ObjDraw()
 	skyBox->ObjDraw();
 
 	bulletManager->Draw();
+
+	particleManager->Draw();
 }
 
 void GameScence::SpriteDraw()

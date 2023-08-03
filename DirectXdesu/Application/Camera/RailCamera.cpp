@@ -30,6 +30,8 @@ void RailCamera::Update(Player* player)
 	cameraObject->TransUpdate();
 
 	viewProjection->matView = MyMathUtility::MakeInverse(cameraObject->transform.matWorld);
+
+	Camera::Update();
 }
 
 void RailCamera::Move()

@@ -19,6 +19,5 @@ void ViewProjection::Initialize()
 
 void ViewProjection::Update() 
 {
-	matView = MyMathUtility::MakeLockAt(eye, target, up);
 	matProjection = MyMathUtility::MakePerspective(XMConvertToRadians(45.0f), aspect, 0.1f, 1000.0f);
 }

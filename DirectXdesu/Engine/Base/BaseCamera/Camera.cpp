@@ -14,6 +14,7 @@ void Camera::Init()
 
 void Camera::Update()
 {
+	viewProjection->Update();
 }
 
 ViewProjection* Camera::GetViewPro()

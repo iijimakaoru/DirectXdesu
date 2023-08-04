@@ -1,6 +1,7 @@
 #include "AppearEnemy.h"
 #include "Player.h"
 #include "BulletManager.h"
+#include "Ease.h"
 
 AppearEnemy* AppearEnemy::Create(KModel* model_, KGPlin* pipeline_, const KMyMath::Vector3& pos)
 {
@@ -30,11 +31,28 @@ void AppearEnemy::Init(KModel* model_, KGPlin* pipeline_)
 
 	// オブジェクト生成
 	object3d.reset(KObject3d::Create(model, pipeline));
-	object3d->transform.scale = { 4.0f,4.0f,4.0f };
+
+	startScale = { 0,0,0 };
+
+	endScale = { 4.0f,4.0f,4.0f };
+
+	object3d->transform.scale = startScale;
+
+	isAppear = true;
+
+	easeTimer = 0;
+
+	isDead = false;
 }
 
 void AppearEnemy::Update(ViewProjection* viewPro, const KMyMath::Vector3& cameraPos)
 {
+	// 出現演出
+	if (isAppear)
+	{
+		Appear();
+	}
+
 	if (!isDead)
 	{
 		if (KInput::GetInstance()->IsTrigger(DIK_2))
@@ -69,4 +87,18 @@ void AppearEnemy::Attack()
 
 	// 弾生成
 	BulletManager::GetInstance()->EnemyBulletShot(ePos, vec, { 1,1,1 }, kBulletSpeed);
+}
+
+void AppearEnemy::Appear()
+{
+	easeTimer += 0.05f;
+
+	object3d->transform.scale = MyMathUtility::OutQuadVec3(startScale, endScale, easeTimer);
+	object3d->transform.rot.y = 
+		MyMathUtility::OutQuadFloat(0.0f, 360.0f * 2.0f, easeTimer);
+
+	if (easeTimer >= max(easeTimer, 1))
+	{
+		isAppear = false;
+	}
 }

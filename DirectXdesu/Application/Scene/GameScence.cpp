@@ -119,8 +119,6 @@ void GameScence::Update()
 		sceneManager->ChangeScene("TITLE");
 	}
 
-	camera->SetIsAdvance(false);
-
 	// “GÁ‹
 	mobEnemys.remove_if([](std::unique_ptr<MobEnemy>& MobEnemy)
 		{

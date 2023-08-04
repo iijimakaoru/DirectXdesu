@@ -128,7 +128,6 @@ private:
 	std::unique_ptr<KModel> skyBoxModel = nullptr;
 
 	// パーティクル
-	//std::array<std::unique_ptr<Particles>, 2> particleManager;
 	ParticleManager* particleManager = nullptr;
 };
 

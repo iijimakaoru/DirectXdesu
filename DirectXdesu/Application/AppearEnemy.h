@@ -30,5 +30,26 @@ public:
 	/// 攻撃
 	/// </summary>
 	void Attack();
+
+	/// <summary>
+	/// 出現
+	/// </summary>
+	void Appear();
+
+private:
+	// イージングタイマー
+	float easeTimer = 0;
+
+	// 上限
+	const float easeTime = 30;
+
+	// 最初のスケール
+	KMyMath::Vector3 startScale;
+
+	// 最終スケール
+	KMyMath::Vector3 endScale;
+
+	// 出現演出中かどうか
+	bool isAppear = false;
 };
 

@@ -236,47 +236,6 @@ void ParticleManager::Init()
 
 void ParticleManager::Update(ViewProjection* viewPro)
 {
-	if (KInput::GetInstance()->IsTrigger(DIK_1))
-	{
-		for (int i = 0; i < 100; i++)
-		{
-			KMyMath::Vector3 pos{};
-			pos.x = 0;
-			pos.y = 0;
-			pos.z = -150;
-			const float md_vel = 0.1f;
-			KMyMath::Vector3 vel{};
-			vel.x = (float)rand() / RAND_MAX * md_vel - md_vel / 2.0f;
-			vel.y = (float)rand() / RAND_MAX * md_vel - md_vel / 2.0f;
-			vel.z = (float)rand() / RAND_MAX * md_vel - md_vel / 2.0f;
-			KMyMath::Vector3 acc{};
-			const float rnd_acc = 0.001f;
-			acc.y = (float)rand() / RAND_MAX * rnd_acc;
-			particles1->Add(60, pos, vel, acc, 1, 0);
-		}
-	}
-
-	if (KInput::GetInstance()->IsTrigger(DIK_2))
-	{
-		for (int i = 0; i < 100; i++)
-		{
-			const float md_pos = 10.0f;
-			KMyMath::Vector3 pos{};
-			pos.x = (float)rand() / RAND_MAX * md_pos - md_pos / 2.0f;
-			pos.y = (float)rand() / RAND_MAX * md_pos - md_pos / 2.0f;
-			pos.z = ((float)rand() / RAND_MAX * md_pos - md_pos / 2.0f) - 150;
-			const float md_vel = 0.1f;
-			KMyMath::Vector3 vel{};
-			vel.x = (float)rand() / RAND_MAX * md_vel - md_vel / 2.0f;
-			vel.y = (float)rand() / RAND_MAX * md_vel - md_vel / 2.0f;
-			vel.z = (float)rand() / RAND_MAX * md_vel - md_vel / 2.0f;
-			KMyMath::Vector3 acc{};
-			const float rnd_acc = 0.001f;
-			acc.y = (float)rand() / RAND_MAX * rnd_acc;
-			particles2->Add(60, pos, vel, acc, 1, 0);
-		}
-	}
-
 	particles1->Update(viewPro);
 	particles2->Update(viewPro);
 }

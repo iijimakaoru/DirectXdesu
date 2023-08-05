@@ -3,7 +3,7 @@
 #include "Vector3.h"
 #include "MyMath.h"
 
-namespace MyMathUtility
+namespace MyEase
 {
 	float Lerp(const float start, const float end, const float time);
 	float EaseIn(const float start, const float end, const float time, const float power);

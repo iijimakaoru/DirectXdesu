@@ -1,5 +1,6 @@
 #include "MobEnemy.h"
 #include "MyMath.h"
+#include "ParticleManager.h"
 
 void MobEnemy::Draw()
 {

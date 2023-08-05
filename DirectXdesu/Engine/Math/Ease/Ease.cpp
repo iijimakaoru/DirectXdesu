@@ -1,6 +1,6 @@
 #include "Ease.h"
 
-namespace MyMathUtility
+namespace MyEase
 {
 	float Lerp(const float start, const float end, const float time)
 	{
@@ -31,14 +31,14 @@ namespace MyMathUtility
 	{
 		float len = startPoint - endPoint;
 
-		return static_cast<float>(endPoint + len * cos(((nowFlame / endFlame) * PI) / 2));
+		return static_cast<float>(endPoint + len * cos(((nowFlame / endFlame) * MyMathUtility::PI) / 2));
 	}
 
 	float EaseOutSine(const float startPoint, const float endPoint, float nowFlame, float endFlame)
 	{
 		float len = endPoint - startPoint;
 
-		return static_cast<float>(startPoint + len * sin(((nowFlame / endFlame) * PI) / 2));
+		return static_cast<float>(startPoint + len * sin(((nowFlame / endFlame) * MyMathUtility::PI) / 2));
 	}
 
 	KMyMath::Vector3 EaseInSine3D(const KMyMath::Vector3 startPoint, const KMyMath::Vector3 endPoint, float nowFlame, float endFlame)

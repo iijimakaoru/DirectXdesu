@@ -141,11 +141,26 @@ private: // メンバ変数
 class ParticleManager
 {
 public:
+	/// <summary>
+	/// 初期化
+	/// </summary>
 	void Init();
 
+	/// <summary>
+	/// 更新
+	/// </summary>
+	/// <param name="viewPro"></param>
 	void Update(ViewProjection* viewPro);
 
+	/// <summary>
+	/// 描画
+	/// </summary>
 	void Draw();
+
+	/// <summary>
+	/// 爆発
+	/// </summary>
+	void CallExp(const KMyMath::Vector3& pos);
 
 private:
 	// インスタンス

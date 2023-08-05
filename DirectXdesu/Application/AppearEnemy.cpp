@@ -93,9 +93,8 @@ void AppearEnemy::Appear()
 {
 	easeTimer += 0.05f;
 
-	object3d->transform.scale = MyMathUtility::OutQuadVec3(startScale, endScale, easeTimer);
-	object3d->transform.rot.y = 
-		MyMathUtility::OutQuadFloat(0.0f, 360.0f * 2.0f, easeTimer);
+	object3d->transform.scale = MyEase::OutQuadVec3(startScale, endScale, easeTimer);
+	object3d->transform.rot.y = MyEase::OutQuadFloat(0.0f, 360.0f * 2.0f, easeTimer);
 
 	if (easeTimer >= max(easeTimer, 1))
 	{

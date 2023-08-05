@@ -238,6 +238,7 @@ void GameScence::CheckAllCollisions()
 
 					// “GÁ‹Ž
 					mobEnemy->OnCollision();
+					particleManager->CallExp(posA);
 				}
 			}
 		}

@@ -51,5 +51,9 @@ private:
 
 	// 出現演出中かどうか
 	bool isAppear = false;
+
+	// クールタイム
+	float coolTimer = 0;
+	const float coolTime = 30;
 };
 

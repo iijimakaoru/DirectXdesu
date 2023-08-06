@@ -1,6 +1,7 @@
 #include "Player.h"
 #include "Ease.h"
 #include "BulletManager.h"
+#include "ParticleManager.h"
 
 const float Player::moveSpeed = 0.48f;
 const KMyMath::Vector2 Player::rotLimit = { 35.0f, 25.0f };
@@ -263,5 +264,6 @@ KMyMath::Vector3 Player::GetWorldPos()
 
 void Player::OnCollision()
 {
+	ParticleManager::GetInstance()->CallExp(GetWorldPos());
 	HP--;
 }

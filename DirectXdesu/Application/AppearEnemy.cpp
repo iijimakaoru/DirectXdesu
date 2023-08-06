@@ -13,7 +13,7 @@ AppearEnemy* AppearEnemy::Create(KModel* model_, KGPlin* pipeline_, const KMyMat
 	}
 
 	// 初期化
-	appearEnemy->Init(model_,pipeline_);
+	appearEnemy->Init(model_, pipeline_);
 
 	// 初期位置セット
 	appearEnemy->object3d->SetPos(pos);
@@ -55,10 +55,7 @@ void AppearEnemy::Update(ViewProjection* viewPro, const KMyMath::Vector3& camera
 
 	if (!isDead)
 	{
-		if (KInput::GetInstance()->IsTrigger(DIK_2))
-		{
-			Attack();
-		}
+		Attack();
 
 		if (object3d->transform.pos.z <= min(object3d->transform.pos.z, cameraPos.z))
 		{
@@ -73,20 +70,29 @@ void AppearEnemy::Attack()
 {
 	assert(player);
 
-	// 弾の速度
-	const float kBulletSpeed = 1.0f;
+	// クールタイム経過
+	coolTimer++;
 
-	// 自キャラのワールド座標
-	KMyMath::Vector3 pPos = player->GetWorldPos();
+	if (coolTimer >= max(coolTimer, coolTime))
+	{
+		// 弾の速度
+		const float kBulletSpeed = 1.0f;
 
-	// ワールド座標
-	KMyMath::Vector3 ePos = GetWorldPos();
+		// 自キャラのワールド座標
+		KMyMath::Vector3 pPos = player->GetWorldPos();
 
-	// 差分ベクトル
-	KMyMath::Vector3 vec = pPos - ePos;
+		// ワールド座標
+		KMyMath::Vector3 ePos = GetWorldPos();
 
-	// 弾生成
-	BulletManager::GetInstance()->EnemyBulletShot(ePos, vec, { 1,1,1 }, kBulletSpeed);
+		// 差分ベクトル
+		KMyMath::Vector3 vec = pPos - ePos;
+
+		// 弾生成
+		BulletManager::GetInstance()->EnemyBulletShot(ePos, vec, { 1,1,1 }, kBulletSpeed);
+
+		// クールタイム初期化
+		coolTimer = 0;
+	}
 }
 
 void AppearEnemy::Appear()

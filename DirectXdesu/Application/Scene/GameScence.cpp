@@ -219,6 +219,9 @@ void GameScence::CheckAllCollisions()
 	// Ž©‹@’e‚ÌŽæ“¾
 	const std::list<std::unique_ptr<PlayerBullet>>& playerBullets = bulletManager->GetPlayerBullets();
 
+	// “G’e‚ÌŽæ“¾
+	const std::list<std::unique_ptr<EnemyBullet>>& enemyBullets = bulletManager->GetEnemyBullets();
+
 	// Ž©’e‚Æ“G‚Ì“–‚½‚è”»’è
 	{
 		for (std::unique_ptr<MobEnemy>& mobEnemy : mobEnemys)
@@ -239,6 +242,27 @@ void GameScence::CheckAllCollisions()
 					// “GÁ‹Ž
 					mobEnemy->OnCollision();
 				}
+			}
+		}
+	}
+
+	// “G’e‚ÆŽ©‹@‚Ì“–‚½‚è”»’è
+	{
+		// Ž©‹@‚ÌÀ•W
+		posA = player->GetWorldPos();
+
+		for (const std::unique_ptr<EnemyBullet>& bullet : enemyBullets)
+		{
+			posB = bullet->GetWorldPos();
+
+			// ‹…“¯Žm‚ÌŒð·”»’è
+			if (MyCollisions::CheckSphereToSphere(posA, posB, 3, 2))
+			{
+				// ’eÁ‹Ž
+				bullet->OnCollision();
+
+				// Ž©‹@”í’eˆ—
+				player->OnCollision();
 			}
 		}
 	}

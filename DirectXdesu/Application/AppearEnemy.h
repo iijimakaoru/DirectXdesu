@@ -54,6 +54,6 @@ private:
 
 	// クールタイム
 	float coolTimer = 0;
-	const float coolTime = 30;
+	const float coolTime = 120;
 };
 

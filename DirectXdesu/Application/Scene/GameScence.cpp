@@ -226,21 +226,24 @@ void GameScence::CheckAllCollisions()
 	{
 		for (std::unique_ptr<MobEnemy>& mobEnemy : mobEnemys)
 		{
-			// ìGÇÃç¿ïW
-			posA = mobEnemy->GetWorldPos();
-
-			for (const std::unique_ptr<PlayerBullet>& bullet : playerBullets)
+			if (mobEnemy)
 			{
-				posB = bullet->GetWorldPos();
+				// ìGÇÃç¿ïW
+				posA = mobEnemy->GetWorldPos();
 
-				// ãÖìØémÇÃåç∑îªíË
-				if (MyCollisions::CheckSphereToSphere(posA, posB, 6, 2))
+				for (const std::unique_ptr<PlayerBullet>& bullet : playerBullets)
 				{
-					// íeè¡ãé
-					bullet->OnCollision();
+					posB = bullet->GetWorldPos();
 
-					// ìGè¡ãé
-					mobEnemy->OnCollision();
+					// ãÖìØémÇÃåç∑îªíË
+					if (MyCollisions::CheckSphereToSphere(posA, posB, 6, 2))
+					{
+						// íeè¡ãé
+						bullet->OnCollision();
+
+						// ìGè¡ãé
+						mobEnemy->OnCollision();
+					}
 				}
 			}
 		}
@@ -253,19 +256,24 @@ void GameScence::CheckAllCollisions()
 
 		for (const std::unique_ptr<EnemyBullet>& bullet : enemyBullets)
 		{
-			posB = bullet->GetWorldPos();
-
-			// ãÖìØémÇÃåç∑îªíË
-			if (MyCollisions::CheckSphereToSphere(posA, posB, 3, 2))
+			if (bullet)
 			{
-				// íeè¡ãé
-				bullet->OnCollision();
+				posB = bullet->GetWorldPos();
 
-				// é©ã@îÌíeèàóù
-				player->OnCollision();
+				// ãÖìØémÇÃåç∑îªíË
+				if (MyCollisions::CheckSphereToSphere(posA, posB, 3, 2))
+				{
+					// íeè¡ãé
+					bullet->OnCollision();
+
+					// é©ã@îÌíeèàóù
+					player->OnCollision();
+				}
 			}
 		}
 	}
+
+	// 
 }
 
 void GameScence::LoadEnemyPopData()

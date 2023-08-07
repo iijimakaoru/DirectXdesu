@@ -40,6 +40,14 @@ struct WorldTransfom
 class KObject3d
 {
 public:
+	static void StaticInit();
+
+	/// <summary>
+	/// ê∂ê¨
+	/// </summary>
+	/// <param name="model"></param>
+	/// <param name="pipeline_"></param>
+	/// <returns></returns>
 	static KObject3d* Create(KModel* model, KGPlin* pipeline_);
 
 public:

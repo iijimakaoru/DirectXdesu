@@ -1,6 +1,10 @@
 #include "KObject3d.h"
 #include "KDirectXCommon.h"
 
+void KObject3d::StaticInit()
+{
+}
+
 KObject3d* KObject3d::Create(KModel* model, KGPlin* pipeline_)
 {
 	// インスタンス生成

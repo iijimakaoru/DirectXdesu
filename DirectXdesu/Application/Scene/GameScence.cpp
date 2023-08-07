@@ -196,6 +196,11 @@ void GameScence::SpriteDraw()
 
 	player->UIDraw();
 
+	if (boss)
+	{
+		boss->UIDraw();
+	}
+
 	// ボス登場警告演出
 	if (bossWarning)
 	{
@@ -275,7 +280,7 @@ void GameScence::CheckAllCollisions()
 
 	// ボスと自弾の判定
 	{
-		if (boss)
+		if (boss && isBossBattle)
 		{
 			// ボスの座標
 			posA = boss->GetWorldPos();
@@ -286,7 +291,7 @@ void GameScence::CheckAllCollisions()
 				posB = bullet->GetWorldPos();
 
 				// 球同士の交差判定
-				if (MyCollisions::CheckSphereToSphere(posA, posB, 12, 2))
+				if (boss->CollisionCheck(posA,posB))
 				{
 					// 弾消去
 					bullet->OnCollision();
@@ -407,19 +412,31 @@ void GameScence::BossBattleStart()
 		// ボス登場警告作成
 		bossWarning = std::make_unique<Warning>();
 		bossWarning->Init();
+
+		if (!boss)
+		{
+			// ボス配置
+			const float bossDistance = 150;
+			const KMyMath::Vector3 bossBasePos = { 0.0f, 23.0f, bossBattleStartPos + bossDistance };
+			boss.reset(Blaster::Create(mobEnemysModel.get(), objPipeline.get(), bossBasePos,
+				100, spritePipeline.get()));
+		}
 	}
 	else
 	{
+		if (boss)
+		{
+			if (boss->GetIsHPE())
+			{
+				boss->HPGauge();
+			}
+		}
+
 		// 演出が終わってないときは抜ける
 		if (!bossWarning->GetIsDelete()) { return; }
 
 		// ボス登場警告解放
 		bossWarning.reset();
-
-		// ボス配置
-		const float bossDistance = 150;
-		const KMyMath::Vector3 bossBasePos = { 0.0f, 23.0f, bossBattleStartPos + bossDistance };
-		boss.reset(Blaster::Create(mobEnemysModel.get(), objPipeline.get(), bossBasePos, 100));
 
 		// ボスバトル開始
 		isBossBattle = true;

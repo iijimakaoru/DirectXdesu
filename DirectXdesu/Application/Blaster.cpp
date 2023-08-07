@@ -1,6 +1,6 @@
 #include "Blaster.h"
 
-Blaster* Blaster::Create(KModel* model_, KGPlin* pipeline_, const KMyMath::Vector3& pos)
+Blaster* Blaster::Create(KModel* model_, KGPlin* pipeline_, const KMyMath::Vector3& pos, const float HP)
 {
 	// インスタンス生成
 	Blaster* blaster = new Blaster();
@@ -10,12 +10,12 @@ Blaster* Blaster::Create(KModel* model_, KGPlin* pipeline_, const KMyMath::Vecto
 	}
 
 	// 初期化
-	blaster->Init(model_, pipeline_, pos);
+	blaster->Init(model_, pipeline_, pos, HP);
 
 	return blaster;
 }
 
-void Blaster::Init(KModel* model_, KGPlin* pipeline_, const KMyMath::Vector3& initPos)
+void Blaster::Init(KModel* model_, KGPlin* pipeline_, const KMyMath::Vector3& initPos, const float HP)
 {
 	input = KInput::GetInstance();
 
@@ -29,6 +29,9 @@ void Blaster::Init(KModel* model_, KGPlin* pipeline_, const KMyMath::Vector3& in
 	object3d.reset(KObject3d::Create(model, pipeline));
 	object3d->transform.scale = { 10.0f,10.0f,10.0f };
 	object3d->transform.pos = initPos;
+
+	// 体力セット
+	this->HP = HP;
 }
 
 void Blaster::Update(ViewProjection* viewPro)

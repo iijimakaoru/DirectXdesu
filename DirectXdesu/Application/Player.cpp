@@ -249,7 +249,7 @@ void Player::SetParent(const WorldTransfom* parent)
 	object3d->transform.parent = parent;
 }
 
-KMyMath::Vector3 Player::GetWorldPos()
+const KMyMath::Vector3 Player::GetWorldPos() const
 {
 	// ƒ[ƒ‹ƒhÀ•WŠi”[•Ï”
 	KMyMath::Vector3 result;

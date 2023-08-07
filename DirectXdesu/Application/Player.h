@@ -56,7 +56,7 @@ public:
 	}
 
 	// ワールドポジションゲッター
-	KMyMath::Vector3 GetWorldPos();
+	const KMyMath::Vector3 GetWorldPos() const;
 
 	// 回転ゲッター
 	const KMyMath::Vector3 GetRot() const

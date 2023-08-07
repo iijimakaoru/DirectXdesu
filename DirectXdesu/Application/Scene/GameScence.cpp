@@ -273,7 +273,30 @@ void GameScence::CheckAllCollisions()
 		}
 	}
 
-	// 
+	// ボスと自弾の判定
+	{
+		if (boss)
+		{
+			// ボスの座標
+			posA = boss->GetWorldPos();
+
+			for (const std::unique_ptr<PlayerBullet>& bullet : playerBullets)
+			{
+				// 弾の座標
+				posB = bullet->GetWorldPos();
+
+				// 球同士の交差判定
+				if (MyCollisions::CheckSphereToSphere(posA, posB, 12, 2))
+				{
+					// 弾消去
+					bullet->OnCollision();
+
+					// 敵消去
+					boss->OnCollision();
+				}
+			}
+		}
+	}
 }
 
 void GameScence::LoadEnemyPopData()
@@ -396,7 +419,7 @@ void GameScence::BossBattleStart()
 		// ボス配置
 		const float bossDistance = 150;
 		const KMyMath::Vector3 bossBasePos = { 0.0f, 23.0f, bossBattleStartPos + bossDistance };
-		boss.reset(Blaster::Create(mobEnemysModel.get(), objPipeline.get(), bossBasePos));
+		boss.reset(Blaster::Create(mobEnemysModel.get(), objPipeline.get(), bossBasePos, 100));
 
 		// ボスバトル開始
 		isBossBattle = true;

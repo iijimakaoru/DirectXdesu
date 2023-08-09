@@ -79,7 +79,7 @@ void GameScence::Init()
 	ground->Init();
 
 	// スカイボックス
-	skyBox.reset(SkyBox::Create(skyBoxModel.get(),objPipeline.get(),player->GetWorldPos().z));
+	skyBox.reset(SkyBox::Create(skyBoxModel.get(), objPipeline.get(), player->GetWorldPos().z));
 
 	bulletManager = BulletManager::GetInstance();
 	bulletManager->Init(playersBulletModel.get(), objPipeline.get());
@@ -99,11 +99,6 @@ void GameScence::Update()
 	ImGui::Text("Grand1Pos(%f,%f,%f)", ground->GetPos(0).x, ground->GetPos(0).y, ground->GetPos(0).z);
 	ImGui::Text("Grand2Pos(%f,%f,%f)", ground->GetPos(1).x, ground->GetPos(1).y, ground->GetPos(1).z);
 	ImGui::End();
-
-	if (input->IsTrigger(DIK_0))
-	{
-		player->OnCollision();
-	}
 
 	// ボスバトル開始判定
 	BossBattleStart();
@@ -282,22 +277,25 @@ void GameScence::CheckAllCollisions()
 	{
 		if (boss && isBossBattle)
 		{
-			// ボスの座標
-			posA = boss->GetWorldPos();
-
-			for (const std::unique_ptr<PlayerBullet>& bullet : playerBullets)
+			if (!boss->GetIsDead())
 			{
-				// 弾の座標
-				posB = bullet->GetWorldPos();
+				// ボスの座標
+				posA = boss->GetWorldPos();
 
-				// 球同士の交差判定
-				if (boss->CollisionCheck(posA,posB))
+				for (const std::unique_ptr<PlayerBullet>& bullet : playerBullets)
 				{
-					// 弾消去
-					bullet->OnCollision();
+					// 弾の座標
+					posB = bullet->GetWorldPos();
 
-					// 敵消去
-					boss->OnCollision();
+					// 球同士の交差判定
+					if (boss->CollisionCheck(posA, posB))
+					{
+						// 弾消去
+						bullet->OnCollision();
+
+						// 敵消去
+						boss->OnCollision();
+					}
 				}
 			}
 		}
@@ -419,7 +417,7 @@ void GameScence::BossBattleStart()
 			const float bossDistance = 150;
 			const KMyMath::Vector3 bossBasePos = { 0.0f, 23.0f, bossBattleStartPos + bossDistance };
 			boss.reset(Blaster::Create(mobEnemysModel.get(), objPipeline.get(), bossBasePos,
-				100, spritePipeline.get()));
+				10, spritePipeline.get()));
 		}
 	}
 	else

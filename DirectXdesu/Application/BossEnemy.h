@@ -22,7 +22,7 @@ public:
 	/// 更新
 	/// </summary>
 	/// <param name="viewPro"></param>
-	virtual void Update(ViewProjection* viewPro) = 0;
+	virtual void Update(ViewProjection* viewPro);
 
 	/// <summary>
 	/// 
@@ -49,6 +49,8 @@ public:
 
 	const bool GetIsHPE() const;
 
+	const bool GetIsDead() const;
+
 protected:
 	// トランスフォーム
 	std::unique_ptr<KObject3d> object3d = nullptr;
@@ -59,6 +61,9 @@ protected:
 	// パイプライン
 	KGPlin* pipeline = nullptr;
 	KGPlin* spritePipeline = nullptr;
+
+	// 死んでるか
+	bool isDead = false;
 
 #pragma region HP
 	// 最大体力

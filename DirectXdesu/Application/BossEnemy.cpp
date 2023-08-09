@@ -17,7 +17,7 @@ void BossEnemy::Init(KModel* model_, KGPlin* pipeline_, const KMyMath::Vector3& 
 
 	// ‘Ì—ÍƒZƒbƒg
 	maxHP = HP;
-	this->HP = 0;
+	this->HP = 1;
 
 	HPUI = std::make_unique<Sprite>();
 	HPUI->Init();
@@ -32,6 +32,22 @@ void BossEnemy::Init(KModel* model_, KGPlin* pipeline_, const KMyMath::Vector3& 
 	hpbarTex = TextureManager::Load("Resources/texture/PlayersHPBar.png");
 
 	isHPE = true;
+
+	isDead = false;
+}
+
+void BossEnemy::Update(ViewProjection* viewPro)
+{
+	if (!isDead)
+	{
+		if (HP <= min(HP, 0))
+		{
+			ParticleManager::GetInstance()->CallExp(GetWorldPos());
+			isDead = true;
+		}
+	}
+
+	object3d->Update(viewPro);
 }
 
 void BossEnemy::HPGauge()
@@ -47,7 +63,10 @@ void BossEnemy::HPGauge()
 
 void BossEnemy::Draw()
 {
-	object3d->Draw();
+	if (!isDead)
+	{
+		object3d->Draw();
+	}
 }
 
 void BossEnemy::UIDraw()
@@ -79,4 +98,9 @@ void BossEnemy::OnCollision()
 const bool BossEnemy::GetIsHPE() const
 {
 	return isHPE;
+}
+
+const bool BossEnemy::GetIsDead() const
+{
+	return isDead;
 }

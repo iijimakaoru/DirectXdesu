@@ -14,19 +14,19 @@ public:
 	enum EnemysKind
 	{
 		None,
-		Battery,
-		Fall,
+		Fly,
+		Canon,
 		Appear
 	};
 
 	// 初期化
-	virtual void Init(KModel* model_, KGPlin* pipeline_) = 0;
+	virtual void Init(KModel* model_, KGPlin* pipeline_);
 
 	/// <summary>
 	/// 更新
 	/// </summary>
 	/// <param name="viewPro"></param>
-	virtual void Update(ViewProjection* viewPro,const KMyMath::Vector3& cameraPos) = 0;
+	virtual void Update(ViewProjection* viewPro,const KMyMath::Vector3& cameraPos);
 
 	// 描画
 	virtual void Draw();
@@ -40,6 +40,11 @@ public:
 		return isDead;
 	}
 
+	/// <summary>
+	/// 攻撃
+	/// </summary>
+	virtual void Attack();
+
 	// ワールドポジションゲッター
 	virtual const KMyMath::Vector3 GetWorldPos() const;
 
@@ -50,18 +55,20 @@ protected:
 	// オブジェクト
 	std::unique_ptr<KObject3d> object3d;
 
-	// モデル
-	KModel* model = nullptr;
-
 	// 死亡フラグ
 	bool isDead = false;
 
-	// パイプライン
-	KGPlin* pipeline;
-
-	// 弾クールタイム
-	float coolTimer;
+	// クールタイム
+	float coolTimer = 0;
+	const float coolTime = 120;
 
 	// 自キャラ
 	Player* player = nullptr;
+
+private:
+	// モデル
+	KModel* model = nullptr;
+
+	// パイプライン
+	KGPlin* pipeline;
 };

@@ -1,36 +1,28 @@
 #include "AppearEnemy.h"
-#include "Player.h"
 #include "BulletManager.h"
 #include "Ease.h"
 
 AppearEnemy* AppearEnemy::Create(KModel* model_, KGPlin* pipeline_, const KMyMath::Vector3& pos)
 {
 	// インスタンス生成
-	AppearEnemy* appearEnemy = new AppearEnemy();
-	if (appearEnemy == nullptr)
+	AppearEnemy* newEnemy = new AppearEnemy();
+	if (newEnemy == nullptr)
 	{
 		return nullptr;
 	}
 
 	// 初期化
-	appearEnemy->Init(model_, pipeline_);
+	newEnemy->Init(model_, pipeline_);
 
 	// 初期位置セット
-	appearEnemy->object3d->SetPos(pos);
+	newEnemy->object3d->SetPos(pos);
 
-	return appearEnemy;
+	return newEnemy;
 }
 
 void AppearEnemy::Init(KModel* model_, KGPlin* pipeline_)
 {
-	// モデル生成
-	model = model_;
-
-	// パイプライン
-	pipeline = pipeline_;
-
-	// オブジェクト生成
-	object3d.reset(KObject3d::Create(model, pipeline));
+	MobEnemy::Init(model_, pipeline_);
 
 	startScale = { 0,0,0 };
 
@@ -41,8 +33,6 @@ void AppearEnemy::Init(KModel* model_, KGPlin* pipeline_)
 	isAppear = true;
 
 	easeTimer = 0;
-
-	isDead = false;
 }
 
 void AppearEnemy::Update(ViewProjection* viewPro, const KMyMath::Vector3& cameraPos)
@@ -53,46 +43,12 @@ void AppearEnemy::Update(ViewProjection* viewPro, const KMyMath::Vector3& camera
 		Appear();
 	}
 
-	if (!isDead)
-	{
-		Attack();
-
-		if (object3d->transform.pos.z <= min(object3d->transform.pos.z, cameraPos.z))
-		{
-			isDead = true;
-		}
-	}
-
-	object3d->Update(viewPro);
+	MobEnemy::Update(viewPro, cameraPos);
 }
 
 void AppearEnemy::Attack()
 {
-	assert(player);
-
-	// クールタイム経過
-	coolTimer++;
-
-	if (coolTimer >= max(coolTimer, coolTime))
-	{
-		// 弾の速度
-		const float kBulletSpeed = 1.0f;
-
-		// 自キャラのワールド座標
-		KMyMath::Vector3 pPos = player->GetWorldPos();
-
-		// ワールド座標
-		KMyMath::Vector3 ePos = GetWorldPos();
-
-		// 差分ベクトル
-		KMyMath::Vector3 vec = pPos - ePos;
-
-		// 弾生成
-		BulletManager::GetInstance()->EnemyBulletShot(ePos, vec, { 1,1,1 }, kBulletSpeed);
-
-		// クールタイム初期化
-		coolTimer = 0;
-	}
+	MobEnemy::Attack();
 }
 
 void AppearEnemy::Appear()

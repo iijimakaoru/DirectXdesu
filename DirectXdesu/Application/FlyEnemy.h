@@ -1,16 +1,9 @@
 #pragma once
 #include "MobEnemy.h"
-
-class AppearEnemy : public MobEnemy
+class FlyEnemy : public MobEnemy
 {
 public:
-	/// <summary>
-	/// 生成
-	/// </summary>
-	/// <param name="model_">使用するモデル</param>
-	/// <param name="pos">初期位置</param>
-	/// <returns></returns>
-	static AppearEnemy* Create(KModel* model_,KGPlin* pipeline_, const KMyMath::Vector3& pos);
+	static FlyEnemy* Create(KModel* model_, KGPlin* pipeline_, const KMyMath::Vector3& startPos, const KMyMath::Vector2& endPos);
 
 public:
 	/// <summary>
@@ -29,7 +22,7 @@ public:
 	/// <summary>
 	/// 攻撃
 	/// </summary>
-	void Attack() override;
+	void Attack();
 
 	/// <summary>
 	/// 出現

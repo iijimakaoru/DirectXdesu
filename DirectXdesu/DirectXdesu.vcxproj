@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|x64">
@@ -136,6 +136,7 @@
     <ClCompile Include="Engine\Base\Pipeline\KShader.cpp" />
     <ClCompile Include="Engine\2D\Vertex\KVertex.cpp" />
     <ClCompile Include="Engine\Level\LevelLoader.cpp" />
+    <ClCompile Include="Application\FlyEnemy.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Engine\Base\Window\KWinApp.cpp" />
     <ClCompile Include="Engine\3D\Object3D\KObject3d.cpp" />
@@ -218,6 +219,7 @@
     <ClInclude Include="Application\Warning.h" />
     <ClInclude Include="Application\SkyBox.h" />
     <ClInclude Include="Engine\Particle\ParticleManager.h" />
+    <ClInclude Include="Application\FlyEnemy.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DirectXdesu.rc" />

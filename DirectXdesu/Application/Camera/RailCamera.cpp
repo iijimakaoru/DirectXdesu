@@ -69,3 +69,8 @@ void RailCamera::SetRot(const KMyMath::Vector3& playersRot)
 	cameraObject->transform.rot.y = playersRot.y / PlayerRotDivNum.y;
 	cameraObject->transform.rot.z = -playersRot.y / PlayerRotDivNum.z;
 }
+
+const float RailCamera::GetSpeed() const
+{
+	return advanceSpeed * 0.5f;
+}

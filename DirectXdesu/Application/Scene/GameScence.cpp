@@ -17,6 +17,7 @@
 #include "Blaster.h"
 
 #include "AppearEnemy.h"
+#include "FlyEnemy.h"
 
 GameScence::~GameScence()
 {
@@ -353,6 +354,10 @@ void GameScence::UpdateEnemyPopCommands()
 		// POP
 		if (word.find("POP") == 0)
 		{
+			// “G‚Ìí—Ş
+			getline(line_stream, word, ',');
+			size_t enemyType = static_cast<size_t>(std::atof(word.c_str()));
+
 			// xÀ•W
 			getline(line_stream, word, ',');
 			float x = static_cast<float>(std::atof(word.c_str()));
@@ -365,13 +370,38 @@ void GameScence::UpdateEnemyPopCommands()
 			getline(line_stream, word, ',');
 			float z = static_cast<float>(std::atof(word.c_str()));
 
-			/// “G‚ğ”­¶‚³‚¹‚é
-			// ¶¬
-			std::unique_ptr<MobEnemy> newMEnemy;
-			newMEnemy.reset(AppearEnemy::Create(mobEnemysModel.get(), objPipeline.get(), { x,y,z }));
-			newMEnemy->SetPlayer(player.get());
-			// “o˜^
-			mobEnemys.push_back(std::move(newMEnemy));
+			if (enemyType == MobEnemy::EnemysType::Fly)
+			{
+				// xÀ•W
+				getline(line_stream, word, ',');
+				float _x = static_cast<float>(std::atof(word.c_str()));
+
+				// yÀ•W
+				getline(line_stream, word, ',');
+				float _y = static_cast<float>(std::atof(word.c_str()));
+
+				/// “G‚ğ”­¶‚³‚¹‚é
+				// ¶¬
+				std::unique_ptr<MobEnemy> newMEnemy;
+				newMEnemy.reset(FlyEnemy::Create(mobEnemysModel.get(), objPipeline.get(), { x,y,z }, { _x,_y }, camera->GetSpeed()));
+				newMEnemy->SetPlayer(player.get());
+				// “o˜^
+				mobEnemys.push_back(std::move(newMEnemy));
+			}
+			else if (enemyType == MobEnemy::EnemysType::Canon)
+			{
+
+			}
+			else if (enemyType == MobEnemy::EnemysType::Appear)
+			{
+				/// “G‚ğ”­¶‚³‚¹‚é
+				// ¶¬
+				std::unique_ptr<MobEnemy> newMEnemy;
+				newMEnemy.reset(AppearEnemy::Create(mobEnemysModel.get(), objPipeline.get(), { x,y,z }));
+				newMEnemy->SetPlayer(player.get());
+				// “o˜^
+				mobEnemys.push_back(std::move(newMEnemy));
+			}
 		}
 		// WAITƒRƒ}ƒ“ƒh
 		else if (word.find("WAIT") == 0)

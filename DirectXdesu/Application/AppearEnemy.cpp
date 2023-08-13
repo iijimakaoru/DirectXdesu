@@ -46,6 +46,11 @@ void AppearEnemy::Update(ViewProjection* viewPro, const KMyMath::Vector3& camera
 	MobEnemy::Update(viewPro, cameraPos);
 }
 
+void AppearEnemy::Draw()
+{
+	MobEnemy::Draw();
+}
+
 void AppearEnemy::Attack()
 {
 	MobEnemy::Attack();
@@ -53,12 +58,12 @@ void AppearEnemy::Attack()
 
 void AppearEnemy::Appear()
 {
-	easeTimer += 0.05f;
+	easeTimer += 1.0f;
 
-	object3d->transform.scale = MyEase::OutQuadVec3(startScale, endScale, easeTimer);
-	object3d->transform.rot.y = MyEase::OutQuadFloat(0.0f, 360.0f * 2.0f, easeTimer);
+	object3d->transform.scale = MyEase::OutQuadVec3(startScale, endScale, easeTimer / easeTime);
+	object3d->transform.rot.y = MyEase::OutQuadFloat(0.0f, 360.0f * 2.0f, easeTimer / easeTime);
 
-	if (easeTimer >= max(easeTimer, 1))
+	if (easeTimer >= max(easeTimer, easeTime))
 	{
 		isAppear = false;
 	}

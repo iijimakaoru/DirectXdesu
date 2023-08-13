@@ -11,7 +11,7 @@ class Player;
 class MobEnemy
 {
 public:
-	enum EnemysKind
+	enum EnemysType
 	{
 		None,
 		Fly,

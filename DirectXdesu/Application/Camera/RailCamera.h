@@ -38,6 +38,12 @@ public:
 		isAdvance = isAdvance_;
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <returns></returns>
+	const float GetSpeed() const;
+
 private:
 	float angle = 0;
 

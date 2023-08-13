@@ -27,6 +27,11 @@ public:
 	void Update(ViewProjection* viewPro, const KMyMath::Vector3& cameraPos) override;
 
 	/// <summary>
+	/// ï`âÊ
+	/// </summary>
+	void Draw() override;
+
+	/// <summary>
 	/// çUåÇ
 	/// </summary>
 	void Attack() override;

@@ -20,16 +20,6 @@ void MobEnemy::Init(KModel* model_, KGPlin* pipeline_)
 
 void MobEnemy::Update(ViewProjection* viewPro, const KMyMath::Vector3& cameraPos)
 {
-	if (!isDead)
-	{
-		Attack();
-
-		if (object3d->transform.pos.z <= min(object3d->transform.pos.z, cameraPos.z))
-		{
-			isDead = true;
-		}
-	}
-
 	object3d->Update(viewPro);
 }
 

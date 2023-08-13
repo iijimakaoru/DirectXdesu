@@ -31,6 +31,8 @@ void FlyEnemy::Init(KModel* model_, KGPlin* pipeline_)
 	isAppear = true;
 
 	easeTimer = 0;
+
+	coolTime = 120;
 }
 
 void FlyEnemy::Update(ViewProjection* viewPro, const KMyMath::Vector3& cameraPos)
@@ -39,6 +41,18 @@ void FlyEnemy::Update(ViewProjection* viewPro, const KMyMath::Vector3& cameraPos
 	if (isAppear)
 	{
 		Appear();
+	}
+	else
+	{
+		if (!isDead)
+		{
+			Attack();
+
+			if (object3d->transform.pos.z <= min(object3d->transform.pos.z, cameraPos.z))
+			{
+				isDead = true;
+			}
+		}
 	}
 
 	object3d->transform.pos.z += moveSpeed;

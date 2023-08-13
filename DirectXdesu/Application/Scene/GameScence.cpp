@@ -18,6 +18,7 @@
 
 #include "AppearEnemy.h"
 #include "FlyEnemy.h"
+#include "CanonEnemy.h"
 
 GameScence::~GameScence()
 {
@@ -370,6 +371,11 @@ void GameScence::UpdateEnemyPopCommands()
 			getline(line_stream, word, ',');
 			float z = static_cast<float>(std::atof(word.c_str()));
 
+			/// “G‚ğ”­¶‚³‚¹‚é
+			// ¶¬
+			std::unique_ptr<MobEnemy> newMEnemy;
+
+			// ŠY“–‚·‚éƒ^ƒCƒv‚Ì“G¶¬
 			if (enemyType == MobEnemy::EnemysType::Fly)
 			{
 				// xÀ•W
@@ -380,9 +386,6 @@ void GameScence::UpdateEnemyPopCommands()
 				getline(line_stream, word, ',');
 				float _y = static_cast<float>(std::atof(word.c_str()));
 
-				/// “G‚ğ”­¶‚³‚¹‚é
-				// ¶¬
-				std::unique_ptr<MobEnemy> newMEnemy;
 				newMEnemy.reset(FlyEnemy::Create(mobEnemysModel.get(), objPipeline.get(), { x,y,z }, { _x,_y }, camera->GetSpeed()));
 				newMEnemy->SetPlayer(player.get());
 				// “o˜^
@@ -390,13 +393,13 @@ void GameScence::UpdateEnemyPopCommands()
 			}
 			else if (enemyType == MobEnemy::EnemysType::Canon)
 			{
-
+				newMEnemy.reset(CanonEnemy::Create(mobEnemysModel.get(), objPipeline.get(), { x,y,z }));
+				newMEnemy->SetPlayer(player.get());
+				// “o˜^
+				mobEnemys.push_back(std::move(newMEnemy));
 			}
 			else if (enemyType == MobEnemy::EnemysType::Appear)
 			{
-				/// “G‚ğ”­¶‚³‚¹‚é
-				// ¶¬
-				std::unique_ptr<MobEnemy> newMEnemy;
 				newMEnemy.reset(AppearEnemy::Create(mobEnemysModel.get(), objPipeline.get(), { x,y,z }));
 				newMEnemy->SetPlayer(player.get());
 				// “o˜^

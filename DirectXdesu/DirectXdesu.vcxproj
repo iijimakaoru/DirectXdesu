@@ -108,6 +108,7 @@
     <ClCompile Include="Application\BossEnemy.cpp" />
     <ClCompile Include="Application\Blaster.cpp" />
     <ClCompile Include="Application\BulletManager.cpp" />
+    <ClCompile Include="Application\CanonEnemy.cpp" />
     <ClCompile Include="Engine\Base\BaseScene\ASceneFactory.cpp" />
     <ClCompile Include="Engine\Base\BaseScene\BaseScene.cpp" />
     <ClCompile Include="Engine\Base\BaseCamera\Camera.cpp" />
@@ -172,6 +173,7 @@
     <ClInclude Include="Application\BossEnemy.h" />
     <ClInclude Include="Application\Blaster.h" />
     <ClInclude Include="Application\BulletManager.h" />
+    <ClInclude Include="Application\CanonEnemy.h" />
     <ClInclude Include="Engine\Base\BaseScene\ASceneFactory.h" />
     <ClInclude Include="Engine\Base\BaseScene\BaseScene.h" />
     <ClInclude Include="Engine\Base\BaseCamera\Camera.h" />

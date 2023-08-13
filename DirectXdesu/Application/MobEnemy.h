@@ -60,7 +60,7 @@ protected:
 
 	// クールタイム
 	float coolTimer = 0;
-	const float coolTime = 120;
+	float coolTime = 120;
 
 	// 自キャラ
 	Player* player = nullptr;

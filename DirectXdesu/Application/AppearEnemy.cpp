@@ -33,6 +33,8 @@ void AppearEnemy::Init(KModel* model_, KGPlin* pipeline_)
 	isAppear = true;
 
 	easeTimer = 0;
+
+	coolTime = 60;
 }
 
 void AppearEnemy::Update(ViewProjection* viewPro, const KMyMath::Vector3& cameraPos)
@@ -41,6 +43,18 @@ void AppearEnemy::Update(ViewProjection* viewPro, const KMyMath::Vector3& camera
 	if (isAppear)
 	{
 		Appear();
+	}
+	else
+	{
+		if (!isDead)
+		{
+			Attack();
+
+			if (object3d->transform.pos.z <= min(object3d->transform.pos.z, cameraPos.z))
+			{
+				isDead = true;
+			}
+		}
 	}
 
 	MobEnemy::Update(viewPro, cameraPos);

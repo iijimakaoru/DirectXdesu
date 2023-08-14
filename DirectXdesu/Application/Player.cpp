@@ -60,6 +60,8 @@ void Player::Init(KModel* model_, KGPlin* objPipeline_, const float playerHP, KG
 	HPBarUI->SetPipeline(spritePipeline);
 
 	hpbarTex = TextureManager::Load("Resources/texture/PlayersHPBar.png");
+
+	isDead = false;
 }
 
 void Player::Update(ViewProjection* viewPro)
@@ -72,6 +74,11 @@ void Player::Update(ViewProjection* viewPro)
 
 	// 攻撃
 	Attack();
+
+	if (HP <= min(HP, 0))
+	{
+		isDead = true;
+	}
 
 	// 3Dレティクルの更新
 	reticle3d->Update(object3d->transform.matWorld, GetWorldPos());
@@ -260,6 +267,11 @@ const KMyMath::Vector3 Player::GetWorldPos() const
 	result.z = object3d->transform.matWorld.m[3][2];
 
 	return result;
+}
+
+const bool Player::GetIsDead() const
+{
+	return isDead;
 }
 
 void Player::OnCollision()

@@ -139,6 +139,7 @@
     <ClCompile Include="Engine\2D\Vertex\KVertex.cpp" />
     <ClCompile Include="Engine\Level\LevelLoader.cpp" />
     <ClCompile Include="Application\FlyEnemy.cpp" />
+    <ClCompile Include="Application\Scene\GameOverScene.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Engine\Base\Window\KWinApp.cpp" />
     <ClCompile Include="Engine\3D\Object3D\KObject3d.cpp" />
@@ -226,6 +227,7 @@
     <ClInclude Include="Engine\Particle\ParticleManager.h" />
     <ClInclude Include="Application\FlyEnemy.h" />
     <ClInclude Include="Application\Camera\TitleCamera.h" />
+    <ClInclude Include="Application\Scene\GameOverScene.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DirectXdesu.rc" />

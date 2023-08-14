@@ -64,6 +64,9 @@ public:
 		return object3d->transform.rot;
 	}
 
+	// €‚ñ‚Å‚é‚©
+	const bool GetIsDead() const;
+
 	// Õ“Ë‚ÉŒÄ‚Ño‚µ
 	void OnCollision();
 
@@ -134,6 +137,9 @@ private:
 
 	// Œ»‘Ì—Í
 	float HP;
+
+	// €–S‚µ‚Ä‚¢‚é‚©
+	bool isDead;
 
 	// HP
 	std::unique_ptr<Sprite> HPUI = nullptr;

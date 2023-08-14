@@ -120,6 +120,15 @@ void GameScence::Update()
 		}
 	}
 
+	// ゲームオーバーへの移動
+	if (player)
+	{
+		if (player->GetIsDead())
+		{
+			sceneManager->ChangeScene("OVER");
+		}
+	}
+
 	// 敵消去
 	mobEnemys.remove_if([](std::unique_ptr<MobEnemy>& MobEnemy)
 		{

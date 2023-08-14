@@ -7,11 +7,11 @@
 
 #include "Sprite.h"
 
-class ClearScene : public BaseScene
+class GameOverScene : public BaseScene
 {
 public:
-	ClearScene() {};
-	~ClearScene();
+	GameOverScene() {};
+	~GameOverScene();
 	void LoadResources() override;
 	void Init() override;
 	void Update() override;
@@ -33,8 +33,8 @@ private:
 	KShader spriteShader;
 
 	// クリアスプライト
-	std::unique_ptr<Sprite> clear = nullptr;
-	TextureData clearTex;
+	std::unique_ptr<Sprite> over = nullptr;
+	TextureData overTex;
 
 	// 次のシーンへのキー
 	std::unique_ptr<Sprite> pushA = nullptr;

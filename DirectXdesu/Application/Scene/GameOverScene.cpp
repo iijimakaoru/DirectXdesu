@@ -1,4 +1,4 @@
-#include "ClearScene.h"
+#include "GameOverScene.h"
 
 #include "DebugCamera.h"
 
@@ -6,26 +6,26 @@
 
 #include <imgui.h>
 
-ClearScene::~ClearScene()
+GameOverScene::~GameOverScene()
 {
 	Final();
 }
 
-void ClearScene::LoadResources()
+void GameOverScene::LoadResources()
 {
 	// パイプライン
 	spriteShader.Init(L"Resources/Shader/SpriteVS.hlsl", L"Resources/Shader/SpritePS.hlsl");
 	spritePipeline = std::make_unique<KGPlin>();
 	spritePipeline->CreatePipelineAll(spriteShader, "Sprite");
 
-	// タイトル名テクスチャ
-	clearTex = TextureManager::Load("Resources/texture/kariResult.png");
+	// ゲームオーバーテクスチャ
+	overTex = TextureManager::Load("Resources/texture/kariGameOver.png");
 
 	// プッシュAテクスチャ
 	pushATex = TextureManager::Load("Resources/texture/kariNextScene.png");
 }
 
-void ClearScene::Init()
+void GameOverScene::Init()
 {
 	input = KInput::GetInstance();
 
@@ -34,9 +34,9 @@ void ClearScene::Init()
 	sceneManager = SceneManager::GetInstance();
 
 	// タイトル名
-	clear = std::make_unique<Sprite>();
-	clear->Init();
-	clear->SetPipeline(spritePipeline.get());
+	over = std::make_unique<Sprite>();
+	over->Init();
+	over->SetPipeline(spritePipeline.get());
 
 	// プッシュA
 	pushA = std::make_unique<Sprite>();
@@ -44,7 +44,7 @@ void ClearScene::Init()
 	pushA->SetPipeline(spritePipeline.get());
 }
 
-void ClearScene::Update()
+void GameOverScene::Update()
 {
 	camera->Update();
 
@@ -56,20 +56,20 @@ void ClearScene::Update()
 	}
 }
 
-void ClearScene::ObjDraw()
+void GameOverScene::ObjDraw()
 {
 }
 
-void ClearScene::SpriteDraw()
+void GameOverScene::SpriteDraw()
 {
 	const float width = static_cast<float>(KWinApp::GetInstance()->GetWindowSizeW());
 	const float height = static_cast<float>(KWinApp::GetInstance()->GetWindowSizeH());
 
-	clear->Draw(clearTex, { width / 2, height * 1 / 3 }, { 1,1 });
+	over->Draw(overTex, { width / 2, height * 1 / 3 }, { 1,1 });
 
 	pushA->Draw(pushATex, { width / 2, height * 2 / 3 }, { 1,1 });
 }
 
-void ClearScene::Final()
+void GameOverScene::Final()
 {
 }

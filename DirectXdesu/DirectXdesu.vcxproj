@@ -159,6 +159,7 @@
     <ClCompile Include="Application\Warning.cpp" />
     <ClCompile Include="Application\SkyBox.cpp" />
     <ClCompile Include="Engine\Particle\ParticleManager.cpp" />
+    <ClCompile Include="Application\Camera\TitleCamera.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\AppearEnemy.h" />
@@ -224,6 +225,7 @@
     <ClInclude Include="Application\SkyBox.h" />
     <ClInclude Include="Engine\Particle\ParticleManager.h" />
     <ClInclude Include="Application\FlyEnemy.h" />
+    <ClInclude Include="Application\Camera\TitleCamera.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DirectXdesu.rc" />

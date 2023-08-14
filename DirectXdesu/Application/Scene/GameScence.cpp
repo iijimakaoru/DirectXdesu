@@ -111,9 +111,13 @@ void GameScence::Update()
 	// 当たり判定
 	CheckAllCollisions();
 
-	if (input->IsTrigger(DIK_SPACE))
+	// ゲームクリアシーンへの移動
+	if (boss)
 	{
-		sceneManager->ChangeScene("TITLE");
+		if (boss->GetIsDead())
+		{
+			sceneManager->ChangeScene("CLEAR");
+		}
 	}
 
 	// 敵消去

@@ -38,5 +38,9 @@ private:
 	// クリアスプライト
 	std::unique_ptr<Sprite> clear = nullptr;
 	TextureData clearTex;
+
+	// 次のシーンへのキー
+	std::unique_ptr<Sprite> pushA = nullptr;
+	TextureData pushATex;
 };
 

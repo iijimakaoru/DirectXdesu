@@ -1,6 +1,6 @@
 #pragma once
-#include "Camera.h"
-#include "KGPlin.h"
+#include "BaseScene.h"
+
 
 #include "BaseScene.h"
 
@@ -10,12 +10,12 @@
 
 #include "Sprite.h"
 
-class TitleScene : public BaseScene
+class ClearScene : public BaseScene
 {
 public:
-	TitleScene(){};
-	~TitleScene();
-	void LoadResources()override;
+	ClearScene() {};
+	~ClearScene();
+	void LoadResources() override;
 	void Init() override;
 	void Update() override;
 	void ObjDraw() override;
@@ -35,12 +35,8 @@ private:
 	// シェーダー
 	KShader spriteShader;
 
-	// タイトルスプライト
-	std::unique_ptr<Sprite> titleName = nullptr;
-	TextureData titleTex;
-
-	// 次のシーンへのキー
-	std::unique_ptr<Sprite> pushA = nullptr;
-	TextureData pushATex;
+	// クリアスプライト
+	std::unique_ptr<Sprite> clear = nullptr;
+	TextureData clearTex;
 };
 

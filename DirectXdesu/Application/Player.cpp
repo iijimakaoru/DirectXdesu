@@ -66,25 +66,33 @@ void Player::Init(KModel* model_, KGPlin* objPipeline_, const float playerHP, KG
 
 void Player::Update(ViewProjection* viewPro)
 {
-	// 移動
-	Move();
-
-	// 回転
-	Rot();
-
-	// 攻撃
-	Attack();
-
+	// 死亡条件
 	if (HP <= min(HP, 0))
 	{
 		isDead = true;
+	}
+
+	if (!isDead)
+	{
+		// 移動
+		Move();
+
+		// 回転
+		Rot();
+
+		// 攻撃
+		Attack();
+	}
+	else
+	{
+		DeadEffect();
 	}
 
 	// 3Dレティクルの更新
 	reticle3d->Update(object3d->transform.matWorld, GetWorldPos());
 
 	// 2Dレティクルの更新
-	reticle2d->Update(viewPro,reticle3d->GetWorldPos());
+	reticle2d->Update(viewPro, reticle3d->GetWorldPos());
 
 	// オブジェクトの更新
 	object3d->Update(viewPro);
@@ -185,19 +193,19 @@ void Player::Rot()
 		const float rotZspeed = 0.01f;
 		const float rotZLimit = 1.0f;
 		//右回転
-		if (isRotZRight) 
+		if (isRotZRight)
 		{
 			swayZ += rotZspeed;
-			if (swayZ >= rotZLimit) 
+			if (swayZ >= rotZLimit)
 			{
 				isRotZRight = false;
 			}
 		}
 		//左回転
-		else 
+		else
 		{
 			swayZ -= rotZspeed;
-			if (swayZ <= -rotZLimit) 
+			if (swayZ <= -rotZLimit)
 			{
 				isRotZRight = true;
 			}
@@ -210,9 +218,9 @@ void Player::Rot()
 
 	// 角度制限
 	object3d->transform.rot.y = max(object3d->transform.rot.y, -rotLimit.y);
-	object3d->transform.rot.y = min(object3d->transform.rot.y,  rotLimit.y);
+	object3d->transform.rot.y = min(object3d->transform.rot.y, rotLimit.y);
 	object3d->transform.rot.x = max(object3d->transform.rot.x, -rotLimit.x);
-	object3d->transform.rot.x = min(object3d->transform.rot.x,  rotLimit.x);
+	object3d->transform.rot.x = min(object3d->transform.rot.x, rotLimit.x);
 }
 
 void Player::Attack()
@@ -234,14 +242,56 @@ void Player::Attack()
 	}
 }
 
+void Player::DeadEffect()
+{
+	if (!isFallEffectEnd)
+	{
+		// 姿勢制御
+		object3d->transform.rot.x = 25.0f;
+		object3d->transform.rot.y = 0;
+
+		// 回転
+		object3d->transform.rot.z += 10.0f;
+
+		// 落下
+		object3d->transform.pos.y -= 0.1f;
+
+		// 時間経過
+		fallEffectTimer++;
+
+		// 
+		expTimer++;
+
+		if (expTimer >= max(expTimer, expTime))
+		{
+			ParticleManager::GetInstance()->CallSmallExp({ GetWorldPos().x + MyMathUtility::GetRand(-1.0f,1.0f),
+			GetWorldPos().y + MyMathUtility::GetRand(-1.0f,1.0f),GetWorldPos().z + MyMathUtility::GetRand(-1.0f,1.0f) });
+			expTimer = 0;
+		}
+
+		// 演出終わり
+		if (fallEffectTimer >= max(fallEffectTimer, fallEffectTime))
+		{
+			ParticleManager::GetInstance()->CallExp(GetWorldPos());
+			isFallEffectEnd = true;
+		}
+	}
+}
+
 void Player::ObjDraw()
 {
-	object3d->Draw();
+	if (!isFallEffectEnd)
+	{
+		object3d->Draw();
+	}
 }
 
 void Player::SpriteDraw()
 {
-	reticle2d->Draw();
+	if (!isDead)
+	{
+		reticle2d->Draw();
+	}
 }
 
 void Player::UIDraw()
@@ -254,6 +304,11 @@ void Player::UIDraw()
 void Player::SetParent(const WorldTransfom* parent)
 {
 	object3d->transform.parent = parent;
+}
+
+const KMyMath::Vector3& Player::GetPosition() const
+{
+	return object3d->transform.pos;
 }
 
 const KMyMath::Vector3 Player::GetWorldPos() const
@@ -269,9 +324,19 @@ const KMyMath::Vector3 Player::GetWorldPos() const
 	return result;
 }
 
+const KMyMath::Vector3 Player::GetRot() const
+{
+	return object3d->transform.rot;
+}
+
 const bool Player::GetIsDead() const
 {
 	return isDead;
+}
+
+const bool Player::GetIsFallEffectEnd() const
+{
+	return isFallEffectEnd;
 }
 
 void Player::OnCollision()

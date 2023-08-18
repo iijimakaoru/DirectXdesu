@@ -43,6 +43,9 @@ public:
 	// UI
 	void UIDraw();
 
+	// 衝突時に呼び出し
+	void OnCollision();
+
 	/// <summary>
 	/// 親子セッター
 	/// </summary>
@@ -50,31 +53,42 @@ public:
 	void SetParent(const WorldTransfom* parent);
 
 	// ポジションゲッター
-	const KMyMath::Vector3& GetPosition() const
-	{
-		return object3d->transform.pos;
-	}
+	const KMyMath::Vector3& GetPosition() const;
 
 	// ワールドポジションゲッター
 	const KMyMath::Vector3 GetWorldPos() const;
 
 	// 回転ゲッター
-	const KMyMath::Vector3 GetRot() const
-	{
-		return object3d->transform.rot;
-	}
+	const KMyMath::Vector3 GetRot() const;
 
 	// 死んでるか
 	const bool GetIsDead() const;
 
-	// 衝突時に呼び出し
-	void OnCollision();
+	// 死亡演出が終わったか
+	const bool GetIsFallEffectEnd() const;
 
+public:
 	// ゲッター
-	static const KMyMath::Vector2& GetRotLimit() { return rotLimit; }
-	static const float GetMoveSpeed() { return moveSpeed; }
-	static const KMyMath::Vector2& GetPosLimitMax() { return posLimitMax; }
-	static const KMyMath::Vector2& GetPosLimitMin() { return posLimitMin; }
+	static const KMyMath::Vector2& GetRotLimit() 
+	{ 
+		return rotLimit;
+	}
+
+	static const float GetMoveSpeed() 
+	{ 
+		return moveSpeed; 
+	}
+
+	static const KMyMath::Vector2& GetPosLimitMax() 
+	{ 
+		return posLimitMax; 
+	}
+
+	static const KMyMath::Vector2& GetPosLimitMin() 
+	{ 
+		return posLimitMin; 
+	}
+
 private:
 	// 移動
 	void Move();
@@ -84,6 +98,9 @@ private:
 
 	// 攻撃
 	void Attack();
+
+	// 死亡演出
+	void DeadEffect();
 
 private:
 #pragma region 大元の変数
@@ -149,4 +166,17 @@ private:
 	std::unique_ptr<Sprite> HPBarUI = nullptr;
 	TextureData hpbarTex;
 #pragma endregion
+
+#pragma region 墜落用変数
+	// 演出時間
+	float fallEffectTime = 90;
+	float fallEffectTimer = 0;
+
+	// 爆発クールタイム
+	float expTime = 5;
+	float expTimer = 0;
+
+	bool isFallEffectEnd = false;
+#pragma endregion
+
 };

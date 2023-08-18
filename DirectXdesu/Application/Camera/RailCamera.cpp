@@ -25,7 +25,10 @@ void RailCamera::Update(Player* player)
 
 	Move();
 
-	SetRot(player->GetRot());
+	if (!player->GetIsDead())
+	{
+		SetRot(player->GetRot());
+	}
 
 	cameraObject->TransUpdate();
 

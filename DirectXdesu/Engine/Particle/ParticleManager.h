@@ -162,6 +162,11 @@ public:
 	/// </summary>
 	void CallExp(const KMyMath::Vector3& pos);
 
+	/// <summary>
+	/// 小爆発
+	/// </summary>
+	void CallSmallExp(const KMyMath::Vector3& pos);
+
 private:
 	// インスタンス
 	static ParticleManager* parthicleManager;

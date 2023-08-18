@@ -62,6 +62,19 @@ BulletManager* BulletManager::GetInstance()
 	return &instance;
 }
 
+void BulletManager::AllBulletDelete()
+{
+	for (std::unique_ptr<PlayerBullet>& playerBullet : playerBullets)
+	{
+		playerBullet->SetIsDead(true);
+	}
+
+	for (std::unique_ptr<EnemyBullet>& enemyBullet : enemyBullets)
+	{
+		enemyBullet->SetIsDead(true);
+	}
+}
+
 void BulletManager::Delete()
 {
 	delete bulletManager;

@@ -264,6 +264,24 @@ void ParticleManager::CallExp(const KMyMath::Vector3& pos)
 	}
 }
 
+void ParticleManager::CallSmallExp(const KMyMath::Vector3& pos)
+{
+	for (int i = 0; i < 20; i++)
+	{
+		const float md_vel = 1.0f;
+		KMyMath::Vector3 vel{};
+		vel.x = (float)rand() / RAND_MAX * md_vel - md_vel / 2.0f;
+		vel.y = (float)rand() / RAND_MAX * md_vel - md_vel / 2.0f;
+		vel.z = (float)rand() / RAND_MAX * md_vel - md_vel / 2.0f;
+
+		KMyMath::Vector3 acc{};
+		const float rnd_acc = 0.001f;
+		acc.y = -(float)rand() / RAND_MAX * rnd_acc;
+
+		particles2->Add(10, pos, vel, acc, 2, 0);
+	}
+}
+
 ParticleManager* ParticleManager::GetInstance()
 {
 	static ParticleManager instance;

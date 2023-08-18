@@ -34,6 +34,12 @@ public:
 		return isDead;
 	}
 
+	// セッター
+	virtual void SetIsDead(bool isDead_)
+	{
+		isDead = isDead_;
+	}
+
 	// 衝突時に呼び出し
 	virtual void OnCollision();
 

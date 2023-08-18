@@ -129,5 +129,9 @@ private:
 
 	// パーティクル
 	ParticleManager* particleManager = nullptr;
+
+	// 別のシーンへの移行タイマー
+	float goOverSceneTime = 120;
+	float goOverSceneTimer = 0;
 };
 

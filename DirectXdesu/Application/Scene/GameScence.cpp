@@ -117,15 +117,21 @@ void GameScence::Update()
 		if (boss->GetIsDead())
 		{
 			sceneManager->ChangeScene("CLEAR");
+			bulletManager->AllBulletDelete();
 		}
 	}
 
 	// ゲームオーバーへの移動
 	if (player)
 	{
-		if (player->GetIsDead())
+		if (player->GetIsFallEffectEnd())
 		{
-			sceneManager->ChangeScene("OVER");
+			goOverSceneTimer++;
+			if (goOverSceneTimer >= max(goOverSceneTimer, goOverSceneTime))
+			{
+				sceneManager->ChangeScene("OVER");
+				bulletManager->AllBulletDelete();
+			}
 		}
 	}
 
@@ -248,6 +254,7 @@ void GameScence::CheckAllCollisions()
 
 				for (const std::unique_ptr<PlayerBullet>& bullet : playerBullets)
 				{
+					// 弾の座標
 					posB = bullet->GetWorldPos();
 
 					// 球同士の交差判定
@@ -265,6 +272,7 @@ void GameScence::CheckAllCollisions()
 	}
 
 	// 敵弾と自機の当たり判定
+	if (!player->GetIsDead())
 	{
 		// 自機の座標
 		posA = player->GetWorldPos();
@@ -273,6 +281,7 @@ void GameScence::CheckAllCollisions()
 		{
 			if (bullet)
 			{
+				// 弾の座標
 				posB = bullet->GetWorldPos();
 
 				// 球同士の交差判定

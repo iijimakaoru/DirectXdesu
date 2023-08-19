@@ -47,9 +47,14 @@ public:
 	// 当たり判定範囲
 	virtual bool CollisionCheck(const KMyMath::Vector3& posA, const KMyMath::Vector3& posB) = 0;
 
+	// 死亡演出
+	virtual void DeadEffect();
+
 	const bool GetIsHPE() const;
 
 	const bool GetIsDead() const;
+
+	const bool GetIsFallEffectEnd() const;
 
 protected:
 	// トランスフォーム
@@ -83,5 +88,18 @@ protected:
 	float easeTimer = 0;
 	bool isHPE = false;
 #pragma endregion
+
+#pragma region 撃破演出用
+	// 演出時間
+	float fallEffectTime = 90;
+	float fallEffectTimer = 0;
+
+	// 爆発クールタイム
+	float expTime = 5;
+	float expTimer = 0;
+
+	bool isFallEffectEnd = false;
+#pragma endregion
+
 };
 

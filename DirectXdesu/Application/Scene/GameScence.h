@@ -131,6 +131,11 @@ private:
 	ParticleManager* particleManager = nullptr;
 
 	// 別のシーンへの移行タイマー
+	// ゲームクリア
+	float goClearSceneTime = 120;
+	float goClearSceneTimer = 0;
+
+	// ゲームオーバー
 	float goOverSceneTime = 120;
 	float goOverSceneTimer = 0;
 };

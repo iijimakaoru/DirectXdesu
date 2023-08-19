@@ -46,6 +46,10 @@ void BossEnemy::Update(ViewProjection* viewPro)
 			isDead = true;
 		}
 	}
+	else
+	{
+		DeadEffect();
+	}
 
 	object3d->Update(viewPro);
 }
@@ -63,7 +67,7 @@ void BossEnemy::HPGauge()
 
 void BossEnemy::Draw()
 {
-	if (!isDead)
+	if (!isFallEffectEnd)
 	{
 		object3d->Draw();
 	}
@@ -95,6 +99,42 @@ void BossEnemy::OnCollision()
 	HP--;
 }
 
+void BossEnemy::DeadEffect()
+{
+	if (!isFallEffectEnd)
+	{
+		// Žp¨§Œä
+		object3d->transform.rot.x = 0;
+		object3d->transform.rot.y = 0;
+
+		// ‰ñ“]
+		object3d->transform.rot.z += 10.0f;
+
+		// —Ž‰º
+		object3d->transform.pos.y -= 0.1f;
+
+		// ŽžŠÔŒo‰ß
+		fallEffectTimer++;
+
+		// 
+		expTimer++;
+
+		if (expTimer >= max(expTimer, expTime))
+		{
+			ParticleManager::GetInstance()->CallSmallExp({ GetWorldPos().x + MyMathUtility::GetRand(-3.0f,3.0f),
+			GetWorldPos().y + MyMathUtility::GetRand(-3.0f,3.0f),GetWorldPos().z + MyMathUtility::GetRand(-3.0f,3.0f) });
+			expTimer = 0;
+		}
+
+		// ‰‰oI‚í‚è
+		if (fallEffectTimer >= max(fallEffectTimer, fallEffectTime))
+		{
+			ParticleManager::GetInstance()->CallExp(GetWorldPos());
+			isFallEffectEnd = true;
+		}
+	}
+}
+
 const bool BossEnemy::GetIsHPE() const
 {
 	return isHPE;
@@ -103,4 +143,9 @@ const bool BossEnemy::GetIsHPE() const
 const bool BossEnemy::GetIsDead() const
 {
 	return isDead;
+}
+
+const bool BossEnemy::GetIsFallEffectEnd() const
+{
+	return isFallEffectEnd;
 }

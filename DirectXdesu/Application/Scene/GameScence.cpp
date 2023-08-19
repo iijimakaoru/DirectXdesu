@@ -114,10 +114,14 @@ void GameScence::Update()
 	// ゲームクリアシーンへの移動
 	if (boss)
 	{
-		if (boss->GetIsDead())
+		if (boss->GetIsFallEffectEnd())
 		{
-			sceneManager->ChangeScene("CLEAR");
-			bulletManager->AllBulletDelete();
+			goClearSceneTimer++;
+			if (goClearSceneTimer >= max(goClearSceneTimer, goClearSceneTime))
+			{
+				sceneManager->ChangeScene("CLEAR");
+				bulletManager->AllBulletDelete();
+			}
 		}
 	}
 

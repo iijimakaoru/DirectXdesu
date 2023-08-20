@@ -212,8 +212,6 @@ void GameScence::ObjDraw()
 
 void GameScence::SpriteDraw()
 {
-	player->SpriteDraw();
-
 	player->UIDraw();
 
 	if (boss)
@@ -226,6 +224,8 @@ void GameScence::SpriteDraw()
 	{
 		bossWarning->Draw();
 	}
+
+	player->SpriteDraw();
 }
 
 void GameScence::Final()
@@ -456,7 +456,7 @@ void GameScence::BossBattleStart()
 	if (isBossBattle) { return; }
 
 	// ボスバトル開始座標
-	const float bossBattleStartPos = 3200;
+	const float bossBattleStartPos = 500;
 
 	if (!bossWarning)
 	{
@@ -485,7 +485,7 @@ void GameScence::BossBattleStart()
 		{
 			if (boss->GetIsHPE())
 			{
-				boss->HPGauge();
+				boss->HPGauge(bossWarning->GetTime());
 			}
 		}
 

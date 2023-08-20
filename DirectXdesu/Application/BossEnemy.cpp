@@ -54,10 +54,10 @@ void BossEnemy::Update(ViewProjection* viewPro)
 	object3d->Update(viewPro);
 }
 
-void BossEnemy::HPGauge()
+void BossEnemy::HPGauge(const uint32_t& easeTime)
 {
-	easeTimer += 0.05f;
-	HP = MyEase::OutQuadFloat(0, maxHP, easeTimer);
+	easeTimer ++;
+	HP = MyEase::OutQuadFloat(1, maxHP, (float)easeTimer / easeTime);
 
 	if (HP >= max(HP, maxHP))
 	{

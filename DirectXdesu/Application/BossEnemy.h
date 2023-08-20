@@ -27,7 +27,7 @@ public:
 	/// <summary>
 	/// 
 	/// </summary>
-	void HPGauge();
+	void HPGauge(const uint32_t& easeTime);
 
 	/// <summary>
 	/// •`‰æ
@@ -85,7 +85,7 @@ protected:
 	std::unique_ptr<Sprite> HPBarUI = nullptr;
 	TextureData hpbarTex;
 
-	float easeTimer = 0;
+	uint32_t easeTimer = 0;
 	bool isHPE = false;
 #pragma endregion
 

@@ -12,6 +12,8 @@ public:
 
 	bool GetIsDelete() { return isDelete; }
 
+	int32_t GetTime() { return warningTime; }
+
 private:
 	// スプライト
 	std::unique_ptr<Sprite> warning = nullptr;

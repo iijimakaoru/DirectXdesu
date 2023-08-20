@@ -161,6 +161,7 @@
     <ClCompile Include="Application\SkyBox.cpp" />
     <ClCompile Include="Engine\Particle\ParticleManager.cpp" />
     <ClCompile Include="Application\Camera\TitleCamera.cpp" />
+    <ClCompile Include="Engine\Base\BaseScene\SceneChange.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\AppearEnemy.h" />
@@ -228,6 +229,7 @@
     <ClInclude Include="Application\FlyEnemy.h" />
     <ClInclude Include="Application\Camera\TitleCamera.h" />
     <ClInclude Include="Application\Scene\GameOverScene.h" />
+    <ClInclude Include="Engine\Base\BaseScene\SceneChange.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DirectXdesu.rc" />

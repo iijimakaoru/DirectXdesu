@@ -62,6 +62,8 @@ void GameScence::LoadResources()
 
 void GameScence::Init()
 {
+	BaseScene::Init();
+
 	// インスタンス
 	input = KInput::GetInstance();
 
@@ -117,7 +119,13 @@ void GameScence::Update()
 		if (boss->GetIsFallEffectEnd())
 		{
 			goClearSceneTimer++;
-			if (goClearSceneTimer >= max(goClearSceneTimer, goClearSceneTime))
+			if (goClearSceneTimer == goClearSceneTime)
+			{
+				sceneChange->Start();
+				goClearSceneTimer = goClearSceneTime + 1.0f;
+			}
+
+			if (sceneChange->GetIsChange())
 			{
 				sceneManager->ChangeScene("CLEAR");
 				bulletManager->AllBulletDelete();
@@ -131,7 +139,13 @@ void GameScence::Update()
 		if (player->GetIsFallEffectEnd())
 		{
 			goOverSceneTimer++;
-			if (goOverSceneTimer >= max(goOverSceneTimer, goOverSceneTime))
+			if (goOverSceneTimer == goOverSceneTime)
+			{
+				sceneChange->Start();
+				goOverSceneTimer = goOverSceneTime + 1.0f;
+			}
+
+			if (sceneChange->GetIsChange())
 			{
 				sceneManager->ChangeScene("OVER");
 				bulletManager->AllBulletDelete();

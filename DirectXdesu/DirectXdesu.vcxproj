@@ -140,7 +140,7 @@
     <ClCompile Include="Engine\Level\LevelLoader.cpp" />
     <ClCompile Include="Application\FlyEnemy.cpp" />
     <ClCompile Include="Application\Scene\GameOverScene.cpp" />
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Engine\Base\RunGame\main.cpp" />
     <ClCompile Include="Engine\Base\Window\KWinApp.cpp" />
     <ClCompile Include="Engine\3D\Object3D\KObject3d.cpp" />
     <ClCompile Include="Engine\Math\Matrix4\Matrix4.cpp" />

@@ -10,10 +10,19 @@ public:
 
 	void Draw();
 
+	void Start();
+
+	void End();
+
 public:
 	static SceneChange* GetInstance();
 
 	void Delete();
+
+public:
+	const bool GetIsChange() const;
+
+	const bool GetIsEffect() const;
 
 private:
 	SceneChange() = default;
@@ -36,13 +45,17 @@ private:
 
 	// 暗転時間
 	int32_t inTimer = 0;
-	int32_t inTime = 30;
+	int32_t inTime = 15;
 	bool isIn = false;
 
 	// 解除時間
 	int32_t outTimer = 0;
-	int32_t outTime = 30;
+	int32_t outTime = 15;
 	bool isOut = false;
+
+	bool isStart = false;
+
+	bool isEffect = false;
 
 	// アルファ値
 	float alpha = 0.0f;

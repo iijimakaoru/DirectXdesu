@@ -1,5 +1,6 @@
 #include "SceneManager.h"
 #include "SceneFactory.h"
+#include "SceneChange.h"
 
 void SceneManager::Update()
 {
@@ -13,6 +14,8 @@ void SceneManager::Update()
 			scene = nullptr;
 
 			delete scene;
+
+			SceneChange::GetInstance()->End();
 		}
 
 		// シーン切り替え
@@ -31,6 +34,8 @@ void SceneManager::Update()
 
 	// 実行中のシーン更新
 	scene->Update();
+
+	SceneChange::GetInstance()->Update();
 }
 
 void SceneManager::Draw()
@@ -38,6 +43,8 @@ void SceneManager::Draw()
 	scene->ObjDraw();
 
 	scene->SpriteDraw();
+
+	SceneChange::GetInstance()->Draw();
 }
 
 void SceneManager::Final()

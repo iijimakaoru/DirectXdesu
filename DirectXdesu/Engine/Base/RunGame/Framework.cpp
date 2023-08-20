@@ -49,6 +49,9 @@ void Framework::Init()
 	postEffect = std::make_unique<PostEffect>();
 	postEffect->Init();
 	postEffect->SetPipeline(spritePipeline.get());
+
+	sceneChange = SceneChange::GetInstance();
+	sceneChange->Init();
 }
 
 void Framework::Final()
@@ -64,6 +67,8 @@ void Framework::Final()
 
 	// シーンファクトリー解放
 	delete sceneFactory;
+
+	sceneChange->Delete();
 
 	dx->Destroy();
 

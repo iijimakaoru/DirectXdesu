@@ -11,6 +11,7 @@
 #include "KShader.h"
 #include "Sound.h"
 #include "TextureManager.h"
+#include "SceneChange.h"
 
 class Framework
 {
@@ -65,5 +66,7 @@ protected:
 
 	// ポストエフェクト
 	std::unique_ptr<PostEffect> postEffect = nullptr;
+
+	SceneChange* sceneChange = nullptr;
 };
 

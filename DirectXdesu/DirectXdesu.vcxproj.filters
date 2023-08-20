@@ -333,9 +333,6 @@
     <ClCompile Include="Application\EnemyBullet.cpp">
       <Filter>ソース ファイル\Application</Filter>
     </ClCompile>
-    <ClCompile Include="main.cpp">
-      <Filter>ソース ファイル\Application</Filter>
-    </ClCompile>
     <ClCompile Include="Application\PlayerBullet.cpp">
       <Filter>ソース ファイル\Application</Filter>
     </ClCompile>
@@ -368,6 +365,9 @@
     </ClCompile>
     <ClCompile Include="Engine\Base\BaseScene\SceneChange.cpp">
       <Filter>ソース ファイル\Application\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Base\RunGame\main.cpp">
+      <Filter>ソース ファイル\Engine\Base\RunGame</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -19,16 +19,25 @@ void SceneChange::Init()
 
 void SceneChange::Update()
 {
+	if (isStart)
+	{
+		isIn = true;
+		isEffect = true;
+		isStart = false;
+	}
+
 	if (isIn)
 	{
 		inTimer++;
 
 		alpha = MyEase::InCubicFloat(0.0f, 1.0f, (float)inTimer / inTime);
 
-		if (inTimer >= inTime)
+		if (inTimer > inTime)
 		{
 			isIn = false;
 			isChange = true;
+			isOut = true;
+			inTimer = 0;
 		}
 	}
 
@@ -36,11 +45,13 @@ void SceneChange::Update()
 	{
 		outTimer++;
 
-		alpha = MyEase::InCubicFloat(0.0f, 1.0f, (float)outTimer / outTime);
+		alpha = MyEase::InCubicFloat(1.0f, 0.0f, (float)outTimer / outTime);
 
-		if (outTimer >= outTime)
+		if (outTimer > outTime)
 		{
 			isOut = false;
+			isEffect = false;
+			outTimer = 0;
 		}
 	}
 }
@@ -48,6 +59,16 @@ void SceneChange::Update()
 void SceneChange::Draw()
 {
 	black->Draw(blackTex, { 1280 / 2, 720 / 2 }, { 1280 ,720 }, 0.0f, { 0,0,0,alpha });
+}
+
+void SceneChange::Start()
+{
+	isStart = true;
+}
+
+void SceneChange::End()
+{
+	isChange = false;
 }
 
 SceneChange* SceneChange::GetInstance()
@@ -59,4 +80,14 @@ SceneChange* SceneChange::GetInstance()
 void SceneChange::Delete()
 {
 	delete sceneChange;
+}
+
+const bool SceneChange::GetIsChange() const
+{
+	return isChange;
+}
+
+const bool SceneChange::GetIsEffect() const
+{
+	return isEffect;
 }

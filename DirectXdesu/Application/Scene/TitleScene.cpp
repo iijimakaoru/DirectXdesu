@@ -28,6 +28,8 @@ void TitleScene::LoadResources()
 
 void TitleScene::Init()
 {
+	BaseScene::Init();
+
 	input = KInput::GetInstance();
 
 	camera = std::make_unique<DebugCamera>();
@@ -50,7 +52,15 @@ void TitleScene::Update()
 	camera->Update();
 
 	// 次のシーンへ
-	if (input->IsTrigger(DIK_SPACE) || input->GetPadButtonDown(XINPUT_GAMEPAD_A))
+	if (!sceneChange->GetIsEffect())
+	{
+		if (input->IsTrigger(DIK_SPACE) || input->GetPadButtonDown(XINPUT_GAMEPAD_A))
+		{
+			sceneChange->Start();
+		}
+	}
+
+	if (sceneChange->GetIsChange())
 	{
 		// シーン切り替え依頼
 		SceneManager::GetInstance()->ChangeScene("GAME");

@@ -2,6 +2,7 @@
 #include "Camera.h"
 #include<memory>
 #include "TextureManager.h"
+#include "SceneChange.h"
 
 class SceneManager;
 
@@ -11,7 +12,7 @@ public: // メンバ関数
 	virtual ~BaseScene() = default;
 
 	// 初期化
-	virtual void Init() = 0;
+	virtual void Init();
 
 	// 更新
 	virtual void Update() = 0;
@@ -39,5 +40,7 @@ public: // メンバ関数
 protected:
 	// シーンマネージャーを借りてくる
 	SceneManager* sceneManager = nullptr;
+
+	SceneChange* sceneChange = nullptr;
 };
 

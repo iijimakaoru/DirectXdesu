@@ -45,12 +45,12 @@ private:
 
 	// ˆÃ“]ŠÔ
 	int32_t inTimer = 0;
-	int32_t inTime = 15;
+	int32_t inTime = 30;
 	bool isIn = false;
 
 	// ‰ğœŠÔ
 	int32_t outTimer = 0;
-	int32_t outTime = 15;
+	int32_t outTime = 30;
 	bool isOut = false;
 
 	bool isStart = false;

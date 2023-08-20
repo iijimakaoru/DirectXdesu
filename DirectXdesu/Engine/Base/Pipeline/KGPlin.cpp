@@ -91,41 +91,43 @@ void KGPlin::SetScreenRootSignature()
 {
 }
 
-void KGPlin::Blending(D3D12_RENDER_TARGET_BLEND_DESC& blendDesc, const int mord)
+void KGPlin::Blending(D3D12_BLEND_DESC& blenddesc, const int mord)
 {
 	//	共通設定
-	if (mord != NONE) {
-		piplineDesc.BlendState.AlphaToCoverageEnable = true;
-		blendDesc.BlendEnable = true;
-		blendDesc.BlendOpAlpha = D3D12_BLEND_OP_ADD;
-		blendDesc.SrcBlendAlpha = D3D12_BLEND_ONE;
-		blendDesc.DestBlendAlpha = D3D12_BLEND_ZERO;
+	if (mord != NONE) 
+	{
+		blenddesc.AlphaToCoverageEnable = true;
+		blenddesc.RenderTarget->BlendEnable = true;
+		blenddesc.RenderTarget->BlendOpAlpha = D3D12_BLEND_OP_ADD;
+		blenddesc.RenderTarget->SrcBlendAlpha = D3D12_BLEND_ONE;
+		blenddesc.RenderTarget->DestBlendAlpha = D3D12_BLEND_ZERO;
 	}
-	else {
-		piplineDesc.BlendState.AlphaToCoverageEnable = false;
+	else 
+	{
+		blenddesc.AlphaToCoverageEnable = false;
 	}
 
 	switch (mord)
 	{
 	case ADD:
-		blendDesc.BlendOp = D3D12_BLEND_OP_ADD;
-		blendDesc.SrcBlend = D3D12_BLEND_ONE;
-		blendDesc.DestBlend = D3D12_BLEND_ONE;
+		blenddesc.RenderTarget->BlendOp = D3D12_BLEND_OP_ADD;
+		blenddesc.RenderTarget->SrcBlend = D3D12_BLEND_ONE;
+		blenddesc.RenderTarget->DestBlend = D3D12_BLEND_ONE;
 		break;
 	case SUB:
-		blendDesc.BlendOp = D3D12_BLEND_OP_REV_SUBTRACT;
-		blendDesc.SrcBlend = D3D12_BLEND_ONE;
-		blendDesc.DestBlend = D3D12_BLEND_ONE;
+		blenddesc.RenderTarget->BlendOp = D3D12_BLEND_OP_REV_SUBTRACT;
+		blenddesc.RenderTarget->SrcBlend = D3D12_BLEND_ONE;
+		blenddesc.RenderTarget->DestBlend = D3D12_BLEND_ONE;
 		break;
 	case INV:
-		blendDesc.BlendOp = D3D12_BLEND_OP_ADD;
-		blendDesc.SrcBlend = D3D12_BLEND_INV_DEST_COLOR;
-		blendDesc.DestBlend = D3D12_BLEND_ZERO;
+		blenddesc.RenderTarget->BlendOp = D3D12_BLEND_OP_ADD;
+		blenddesc.RenderTarget->SrcBlend = D3D12_BLEND_INV_DEST_COLOR;
+		blenddesc.RenderTarget->DestBlend = D3D12_BLEND_ZERO;
 		break;
 	case ALPHA:
-		blendDesc.BlendOp = D3D12_BLEND_OP_ADD;
-		blendDesc.SrcBlend = D3D12_BLEND_SRC_ALPHA;
-		blendDesc.DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
+		blenddesc.RenderTarget->BlendOp = D3D12_BLEND_OP_ADD;
+		blenddesc.RenderTarget->SrcBlend = D3D12_BLEND_SRC_ALPHA;
+		blenddesc.RenderTarget->DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
 		break;
 	default:
 		break;
@@ -339,18 +341,11 @@ void KGPlin::CreatePipelineAll(KShader shader, std::string shaderName)
 		piplineDesc.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_LESS; // 小さければ合格
 		piplineDesc.DSVFormat = DXGI_FORMAT_D32_FLOAT; // 深度値フォーマット
 
-		// レンダーターゲットのブレンド設定
-		D3D12_RENDER_TARGET_BLEND_DESC& blenddesc = piplineDesc.BlendState.RenderTarget[0];
-		blenddesc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
-		blenddesc.BlendEnable = true;
-		blenddesc.BlendOpAlpha = D3D12_BLEND_OP_ADD;
-		blenddesc.SrcBlendAlpha = D3D12_BLEND_ONE;
-		blenddesc.DestBlendAlpha = D3D12_BLEND_ZERO;
+		// ブレンド設定
+		D3D12_BLEND_DESC blenddesc = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
+		Blending(blenddesc, ALPHA);
 
-		// 半透明合成
-		blenddesc.BlendOp = D3D12_BLEND_OP_ADD;
-		blenddesc.SrcBlend = D3D12_BLEND_SRC_ALPHA;
-		blenddesc.DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
+		piplineDesc.BlendState = blenddesc;
 
 		// デスクリプタレンジの設定
 		D3D12_DESCRIPTOR_RANGE descriptorRange{};
@@ -751,14 +746,4 @@ void KGPlin::Update(D3D12_PRIMITIVE_TOPOLOGY primitive)
 void KGPlin::Setting()
 {
 	KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootSignature(rootSignature.Get());
-}
-
-void KGPlin::SetBlending(int mord)
-{
-	HRESULT result;
-	D3D12_RENDER_TARGET_BLEND_DESC& blenddesc = piplineDesc.BlendState.RenderTarget[0];
-	blenddesc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
-	Blending(blenddesc, mord);
-	result = KDirectXCommon::GetInstance()->GetDev()->CreateGraphicsPipelineState(&piplineDesc, IID_PPV_ARGS(&pipelineState));
-	assert(SUCCEEDED(result));
 }

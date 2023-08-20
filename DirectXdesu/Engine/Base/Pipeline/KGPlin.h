@@ -35,7 +35,7 @@ private:
 		D3D12_SHADER_VISIBILITY shaderVisibility = D3D12_SHADER_VISIBILITY_ALL);
 	void SetRootSignature(UINT rootParamNum = 1);
 	void SetScreenRootSignature();
-	void Blending(D3D12_RENDER_TARGET_BLEND_DESC& blendDesc, const int mord = ALPHA);
+	void Blending(D3D12_BLEND_DESC& blenddesc, const int mord = ALPHA);
 
 public:
 	void CreatePipelineAll(KShader shader, std::string shaderName = "Null");
@@ -44,6 +44,5 @@ public:
 
 	void Update(D3D12_PRIMITIVE_TOPOLOGY primitive = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	void Setting();
-	void SetBlending(int mord);
 };
 

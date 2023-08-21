@@ -271,22 +271,22 @@ void Sprite::Draw(TextureData& texData, KMyMath::Vector2 pos, KMyMath::Vector2 s
 	};
 
 	// 全頂点に対して
-	std::copy(std::begin(vertices), std::end(vertices), vertMap);
+	memcpy(vertMap, vertices, sizeof(Vertex) * 4);
 
 	// 全インデックスに対して
-	std::copy(std::begin(indices), std::end(indices), indexMap);
+	memcpy(indexMap, indices, sizeof(uint16_t) * 6);
 
 	Update(pos, setSize_, rot, color);
 
 	// パイプラインセット
 	pipeline->Setting();
-	pipeline->Update(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP); // 三角形リスト
+	pipeline->Update(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST); // 三角形リスト
 
 	// 描画の条件
 	DrawCommand(texData);
 
 	// 描画コマンド
-	cmdList->DrawIndexedInstanced(_countof(indices), 1, 0, 0, 0);
+	cmdList->DrawIndexedInstanced(6, 1, 0, 0, 0);
 }
 
 void Sprite::Update(KMyMath::Vector2 pos, KMyMath::Vector2 scale, float rot, KMyMath::Vector4 color)

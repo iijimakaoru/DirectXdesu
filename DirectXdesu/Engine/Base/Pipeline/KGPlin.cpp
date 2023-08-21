@@ -96,11 +96,11 @@ void KGPlin::Blending(D3D12_BLEND_DESC& blenddesc, const int mord)
 	//	共通設定
 	if (mord != NONE) 
 	{
-		blenddesc.AlphaToCoverageEnable = true;
-		blenddesc.RenderTarget->BlendEnable = true;
-		blenddesc.RenderTarget->BlendOpAlpha = D3D12_BLEND_OP_ADD;
-		blenddesc.RenderTarget->SrcBlendAlpha = D3D12_BLEND_ONE;
-		blenddesc.RenderTarget->DestBlendAlpha = D3D12_BLEND_ZERO;
+		//blenddesc.AlphaToCoverageEnable = true;
+		blenddesc.RenderTarget[0].BlendEnable = true;
+		blenddesc.RenderTarget[0].BlendOpAlpha = D3D12_BLEND_OP_ADD;
+		blenddesc.RenderTarget[0].SrcBlendAlpha = D3D12_BLEND_ONE;
+		blenddesc.RenderTarget[0].DestBlendAlpha = D3D12_BLEND_ZERO;
 	}
 	else 
 	{
@@ -125,9 +125,9 @@ void KGPlin::Blending(D3D12_BLEND_DESC& blenddesc, const int mord)
 		blenddesc.RenderTarget->DestBlend = D3D12_BLEND_ZERO;
 		break;
 	case ALPHA:
-		blenddesc.RenderTarget->BlendOp = D3D12_BLEND_OP_ADD;
-		blenddesc.RenderTarget->SrcBlend = D3D12_BLEND_SRC_ALPHA;
-		blenddesc.RenderTarget->DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
+		blenddesc.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
+		blenddesc.RenderTarget[0].SrcBlend = D3D12_BLEND_SRC_ALPHA;
+		blenddesc.RenderTarget[0].DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
 		break;
 	default:
 		break;
@@ -321,7 +321,7 @@ void KGPlin::CreatePipelineAll(KShader shader, std::string shaderName)
 		piplineDesc.RasterizerState.DepthClipEnable = true;
 
 		// ブレンドステート
-		piplineDesc.BlendState.RenderTarget[0].RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
+		//piplineDesc.BlendState.RenderTarget[0].RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
 
 		// 頂点レイアウトの設定
 		piplineDesc.InputLayout.pInputElementDescs = inputLayout;
@@ -336,10 +336,7 @@ void KGPlin::CreatePipelineAll(KShader shader, std::string shaderName)
 		piplineDesc.SampleDesc.Count = 1;
 
 		// 深度ステンシルステート
-		piplineDesc.DepthStencilState.DepthEnable = true; // 深度テスト
-		piplineDesc.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL; // 書き込み許可
-		piplineDesc.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_LESS; // 小さければ合格
-		piplineDesc.DSVFormat = DXGI_FORMAT_D32_FLOAT; // 深度値フォーマット
+		piplineDesc.DepthStencilState.DepthEnable = false; // 深度テスト
 
 		// ブレンド設定
 		D3D12_BLEND_DESC blenddesc = CD3DX12_BLEND_DESC(D3D12_DEFAULT);

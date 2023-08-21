@@ -226,17 +226,17 @@ void GameScence::ObjDraw()
 
 void GameScence::SpriteDraw()
 {
+	// ƒ{ƒX“oêŒx‰‰o
+	if (bossWarning)
+	{
+		bossWarning->Draw();
+	}
+
 	player->UIDraw();
 
 	if (boss)
 	{
 		boss->UIDraw();
-	}
-
-	// ƒ{ƒX“oêŒx‰‰o
-	if (bossWarning)
-	{
-		bossWarning->Draw();
 	}
 
 	player->SpriteDraw();

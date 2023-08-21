@@ -75,9 +75,9 @@ void BossEnemy::Draw()
 
 void BossEnemy::UIDraw()
 {
-	HPUI->Draw(hpTex, { 901,11 }, { HP * (318 / maxHP),30 }, 0, { 1,0,0,1 }, false, false, { 0,0 });
-
 	HPBarUI->Draw(hpbarTex, { 900,10 }, { 1,1 }, 0, { 1,1,1,1 }, false, false, { 0,0 });
+
+	HPUI->Draw(hpTex, { 901,11 }, { HP * (318 / maxHP),30 }, 0, { 1,0,0,1 }, false, false, { 0,0 });
 }
 
 const KMyMath::Vector3 BossEnemy::GetWorldPos() const

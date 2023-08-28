@@ -96,7 +96,7 @@ void KGPlin::Blending(D3D12_BLEND_DESC& blenddesc, const int mord)
 	//	共通設定
 	if (mord != NONE) 
 	{
-		//blenddesc.AlphaToCoverageEnable = true;
+		blenddesc.RenderTarget[0].RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
 		blenddesc.RenderTarget[0].BlendEnable = true;
 		blenddesc.RenderTarget[0].BlendOpAlpha = D3D12_BLEND_OP_ADD;
 		blenddesc.RenderTarget[0].SrcBlendAlpha = D3D12_BLEND_ONE;
@@ -185,21 +185,11 @@ void KGPlin::CreatePipelineAll(KShader shader, std::string shaderName)
 		piplineDesc.RasterizerState.FillMode = D3D12_FILL_MODE_SOLID; // ポリゴン塗りつぶし
 		piplineDesc.RasterizerState.DepthClipEnable = true; // 深度クリッピング
 
-		// ブレンドステート
-		piplineDesc.BlendState.RenderTarget[0];
+		// ブレンド設定
+		D3D12_BLEND_DESC blenddesc = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
+		Blending(blenddesc, ALPHA);
 
-		// レンダーターゲットのブレンド設定
-		D3D12_RENDER_TARGET_BLEND_DESC& blenddesc = piplineDesc.BlendState.RenderTarget[0];
-		blenddesc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
-		blenddesc.BlendEnable = true;
-		blenddesc.BlendOpAlpha = D3D12_BLEND_OP_ADD;
-		blenddesc.SrcBlendAlpha = D3D12_BLEND_ONE;
-		blenddesc.DestBlendAlpha = D3D12_BLEND_ZERO;
-
-		// 半透明合成
-		blenddesc.BlendOp = D3D12_BLEND_OP_ADD;
-		blenddesc.SrcBlend = D3D12_BLEND_SRC_ALPHA;
-		blenddesc.DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
+		piplineDesc.BlendState = blenddesc;
 
 		// 頂点レイアウトの設定
 		piplineDesc.InputLayout.pInputElementDescs = inputLayout;
@@ -319,9 +309,6 @@ void KGPlin::CreatePipelineAll(KShader shader, std::string shaderName)
 		piplineDesc.RasterizerState.CullMode = D3D12_CULL_MODE_NONE; // 背面をカリングしない
 		piplineDesc.RasterizerState.FillMode = D3D12_FILL_MODE_SOLID;
 		piplineDesc.RasterizerState.DepthClipEnable = true;
-
-		// ブレンドステート
-		//piplineDesc.BlendState.RenderTarget[0].RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
 
 		// 頂点レイアウトの設定
 		piplineDesc.InputLayout.pInputElementDescs = inputLayout;

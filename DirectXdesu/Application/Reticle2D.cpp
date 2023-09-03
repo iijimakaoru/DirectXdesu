@@ -7,9 +7,8 @@ void Reticle2D::Init()
 	texData = TextureManager::Load("Resources/texture/reticle.png");
 
 	// パイプライン生成
-	pipeline = std::make_unique<KGPlin>();
 	shader.Init(L"Resources/Shader/SpriteVS.hlsl", L"Resources/Shader/SpritePS.hlsl");
-	pipeline->CreatePipelineAll(shader, "Sprite");
+	pipeline.reset(KGPlin::Create(shader, "Sprite"));
 
 	reticle = std::make_unique<Sprite>();
 	reticle->Init();
@@ -34,7 +33,9 @@ void Reticle2D::Update(ViewProjection* viewPro, KMyMath::Vector3 reticle3dPos)
 
 	// 
 	KMyMath::Matrix4 matViewProjectionViewport =
-		viewPro->matView * viewPro->matProjection * MyMathConvert::ChangeXMMATRIXtoMatrix4(matViewport);
+		viewPro->matView * 
+		viewPro->matProjection * 
+		MyMathConvert::ChangeXMMATRIXtoMatrix4(matViewport);
 
 	positionReticle = MyMathUtility::MatrixTransformWDivision(positionReticle, matViewProjectionViewport);
 

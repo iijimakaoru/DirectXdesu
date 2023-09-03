@@ -91,6 +91,9 @@ void GameScence::Init()
 	// パーティクル
 	particleManager = ParticleManager::GetInstance();
 	particleManager->Init();
+
+	billManager = std::make_unique<BillManager>();
+	billManager->Init();
 }
 
 void GameScence::Update()
@@ -173,6 +176,10 @@ void GameScence::Update()
 	{
 		boss->Update(camera->GetViewPro());
 	}
+	else
+	{
+		billManager->Set(camera->GetPos().z);
+	}
 
 	// 弾の更新
 	bulletManager->Update(camera->GetViewPro());
@@ -186,6 +193,9 @@ void GameScence::Update()
 
 	// パーティクルマネージャーの更新
 	particleManager->Update(camera->GetViewPro());
+
+	// ビルマネージャー
+	billManager->Update(camera->GetViewPro(), camera->GetPos().z);
 
 	// カメラの更新
 	camera->Update(player.get());
@@ -222,6 +232,8 @@ void GameScence::ObjDraw()
 	bulletManager->Draw();
 
 	particleManager->Draw();
+
+	billManager->Draw();
 }
 
 void GameScence::SpriteDraw()

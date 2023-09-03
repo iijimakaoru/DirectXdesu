@@ -41,6 +41,8 @@
 
 #include "ParticleManager.h"
 
+#include "BillManager.h"
+
 class GameScence : public BaseScene
 {
 public:
@@ -138,5 +140,8 @@ private:
 	// ゲームオーバー
 	float goOverSceneTime = 120;
 	float goOverSceneTimer = 0;
+
+	// ビルマネージャー
+	std::unique_ptr<BillManager> billManager;
 };
 

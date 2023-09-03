@@ -6,9 +6,7 @@ void Warning::Init()
 	warningTex = TextureManager::Load("Resources/texture/white1x1.png");
 
 	shader.Init(L"Resources/Shader/SpriteVS.hlsl", L"Resources/Shader/SpritePS.hlsl");
-
-	pipeline = std::make_unique<KGPlin>();
-	pipeline->CreatePipelineAll(shader, "Sprite");
+	pipeline.reset(KGPlin::Create(shader, "Sprite"));
 
 	warning = std::make_unique<Sprite>();
 	warning->Init();

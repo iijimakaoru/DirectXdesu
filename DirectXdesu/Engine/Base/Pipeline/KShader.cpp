@@ -57,11 +57,6 @@ void KShader::SpritePSLoadCompile()
 	Error();
 }
 
-KShader::KShader(LPCWSTR VSFileName, LPCWSTR PSFileName, LPCSTR pEntryPoint, LPCWSTR GSFileName, LPCWSTR DSFileName, LPCWSTR HSFileName)
-{
-	Init(VSFileName, PSFileName, pEntryPoint, GSFileName, DSFileName, HSFileName);
-}
-
 void KShader::Init(LPCWSTR VSFileName, LPCWSTR PSFileName, LPCSTR pEntryPoint, LPCWSTR GSFileName, LPCWSTR DSFileName, LPCWSTR HSFileName)
 {
 #pragma region VertexShader

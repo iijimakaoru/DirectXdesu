@@ -154,6 +154,15 @@ private:
 
 	// Œ»‘Ì—Í
 	float HP;
+	float oldHP;
+	float startHpEase;
+
+	uint32_t oldHpTimer = 0;
+	const uint32_t oldHpTime = 60;
+
+	bool hpEase = false;
+	float hpEaseTimer = 0;
+	const float hpEaseTime = 15;
 
 	// €–S‚µ‚Ä‚¢‚é‚©
 	bool isDead;
@@ -161,6 +170,7 @@ private:
 	// HP
 	std::unique_ptr<Sprite> HPUI = nullptr;
 	TextureData hpTex;
+	std::unique_ptr<Sprite> HPrectUI = nullptr;
 
 	// HPƒo[
 	std::unique_ptr<Sprite> HPBarUI = nullptr;

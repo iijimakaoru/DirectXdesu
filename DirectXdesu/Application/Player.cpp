@@ -53,6 +53,10 @@ void Player::Init(KModel* model_, KGPlin* objPipeline_, const float playerHP, KG
 	HPUI->Init();
 	HPUI->SetPipeline(spritePipeline);
 
+	HPrectUI = std::make_unique<Sprite>();
+	HPrectUI->Init();
+	HPrectUI->SetPipeline(spritePipeline);
+
 	hpTex = TextureManager::Load("Resources/texture/white1x1.png");
 
 	HPBarUI = std::make_unique<Sprite>();
@@ -74,6 +78,32 @@ void Player::Update(ViewProjection* viewPro)
 
 	if (!isDead)
 	{
+		if (hpEase)
+		{
+			if (oldHpTimer < oldHpTime)
+			{
+				oldHpTimer++;
+			}
+			else
+			{
+				hpEaseTimer++;
+
+				oldHP = MyEase::OutCubicFloat(startHpEase, HP, hpEaseTimer / hpEaseTime);
+
+				if (hpEaseTimer > hpEaseTime)
+				{
+					hpEase = false;
+				}
+			}
+		}
+		else
+		{
+			oldHP = HP;
+			startHpEase = oldHP;
+			oldHpTimer = 0;
+			hpEaseTimer = 0;
+		}
+
 		// ˆÚ“®
 		Move();
 
@@ -298,6 +328,8 @@ void Player::UIDraw()
 {
 	HPBarUI->Draw(hpbarTex, { 10,10 }, { 1,1 }, 0, { 1,1,1,1 }, false, false, { 0,0 });
 
+	HPrectUI->Draw(hpTex, { 11,11 }, { oldHP * (318 / maxHP),30 }, 0, { 0,1,0,0.3f }, false, false, { 0,0 });
+
 	HPUI->Draw(hpTex, { 11,11 }, { HP * (318 / maxHP),30 }, 0, { 0,1,0,1 }, false, false, { 0,0 });
 }
 
@@ -343,4 +375,7 @@ void Player::OnCollision()
 {
 	ParticleManager::GetInstance()->CallExp(GetWorldPos());
 	HP--;
+	hpEase = true;
+	oldHpTimer = 0;
+	hpEaseTimer = 0;
 }

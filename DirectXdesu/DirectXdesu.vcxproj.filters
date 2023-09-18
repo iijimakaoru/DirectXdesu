@@ -369,11 +369,11 @@
     <ClCompile Include="Engine\Base\RunGame\main.cpp">
       <Filter>ソース ファイル\Engine\Base\RunGame</Filter>
     </ClCompile>
-    <ClCompile Include="Application\BillManager.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Application\Bill1.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\Application</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\BillManager.cpp">
+      <Filter>ソース ファイル\Application</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -575,11 +575,11 @@
     <ClInclude Include="Engine\Base\BaseScene\SceneChange.h">
       <Filter>ヘッダー ファイル\Application\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="Application\BillManager.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Application\Bill1.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\Application</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\BillManager.h">
+      <Filter>ヘッダー ファイル\Application</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

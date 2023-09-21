@@ -66,6 +66,16 @@ void Player::Init(KModel* model_, KGPlin* objPipeline_, const float playerHP, KG
 	hpbarTex = TextureManager::Load("Resources/texture/PlayersHPBar.png");
 
 	isDead = false;
+
+	isDamageEffect = false;
+
+	damage = std::make_unique<Sprite>();
+	damage->Init();
+	damage->SetPipeline(spritePipeline);
+
+	damageTex = TextureManager::Load("Resources/texture/damage.png");
+
+	dAlpha = 0;
 }
 
 void Player::Update(ViewProjection* viewPro)
@@ -78,32 +88,6 @@ void Player::Update(ViewProjection* viewPro)
 
 	if (!isDead)
 	{
-		if (hpEase)
-		{
-			if (oldHpTimer < oldHpTime)
-			{
-				oldHpTimer++;
-			}
-			else
-			{
-				hpEaseTimer++;
-
-				oldHP = MyEase::OutCubicFloat(startHpEase, HP, hpEaseTimer / hpEaseTime);
-
-				if (hpEaseTimer > hpEaseTime)
-				{
-					hpEase = false;
-				}
-			}
-		}
-		else
-		{
-			oldHP = HP;
-			startHpEase = oldHP;
-			oldHpTimer = 0;
-			hpEaseTimer = 0;
-		}
-
 		// 移動
 		Move();
 
@@ -117,6 +101,12 @@ void Player::Update(ViewProjection* viewPro)
 	{
 		DeadEffect();
 	}
+
+	// HP演出
+	HPEffect();
+
+	// ダメージ演出
+	DamageEffect();
 
 	// 3Dレティクルの更新
 	reticle3d->Update(object3d->transform.matWorld, GetWorldPos());
@@ -308,6 +298,48 @@ void Player::DeadEffect()
 	}
 }
 
+void Player::HPEffect()
+{
+	if (hpEase)
+	{
+		if (oldHpTimer < oldHpTime)
+		{
+			oldHpTimer++;
+		}
+		else
+		{
+			hpEaseTimer++;
+
+			oldHP = MyEase::OutCubicFloat(startHpEase, HP, hpEaseTimer / hpEaseTime);
+
+			if (hpEaseTimer > hpEaseTime)
+			{
+				hpEase = false;
+			}
+		}
+	}
+	else
+	{
+		oldHP = HP;
+		startHpEase = oldHP;
+		oldHpTimer = 0;
+		hpEaseTimer = 0;
+	}
+}
+
+void Player::DamageEffect()
+{
+	if (isDamageEffect)
+	{
+		dAlpha -= 0.1f;
+
+		if (dAlpha < 0)
+		{
+			isDamageEffect = false;
+		}
+	}
+}
+
 void Player::ObjDraw()
 {
 	if (!isFallEffectEnd)
@@ -331,6 +363,11 @@ void Player::UIDraw()
 	HPrectUI->Draw(hpTex, { 11,11 }, { oldHP * (318 / maxHP),30 }, 0, { 0,1,0,0.3f }, false, false, { 0,0 });
 
 	HPUI->Draw(hpTex, { 11,11 }, { HP * (318 / maxHP),30 }, 0, { 0,1,0,1 }, false, false, { 0,0 });
+
+	if (isDamageEffect)
+	{
+		damage->Draw(damageTex, { 1280 / 2, 720 / 2 }, { 1 ,1 }, 0.0f, { 1,0,0,dAlpha });
+	}
 }
 
 void Player::SetParent(const WorldTransfom* parent)
@@ -378,4 +415,6 @@ void Player::OnCollision()
 	hpEase = true;
 	oldHpTimer = 0;
 	hpEaseTimer = 0;
+	isDamageEffect = true;
+	dAlpha = 1;
 }

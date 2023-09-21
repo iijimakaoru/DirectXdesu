@@ -44,32 +44,6 @@ void BossEnemy::Update(ViewProjection* viewPro)
 {
 	if (!isDead)
 	{
-		if (hpEase)
-		{
-			if (oldHpTimer < oldHpTime)
-			{
-				oldHpTimer++;
-			}
-			else
-			{
-				hpEaseTimer++;
-
-				oldHP = MyEase::OutCubicFloat(startHpEase, HP, hpEaseTimer / hpEaseTime);
-
-				if (hpEaseTimer > hpEaseTime)
-				{
-					hpEase = false;
-				}
-			}
-		}
-		else
-		{
-			oldHP = HP;
-			startHpEase = oldHP;
-			oldHpTimer = 0;
-			hpEaseTimer = 0;
-		}
-
 		if (HP <= min(HP, 0))
 		{
 			ParticleManager::GetInstance()->CallExp(GetWorldPos());
@@ -80,6 +54,9 @@ void BossEnemy::Update(ViewProjection* viewPro)
 	{
 		DeadEffect();
 	}
+
+	// HP‰‰o
+	HPEffect();
 
 	object3d->Update(viewPro);
 }
@@ -167,6 +144,35 @@ void BossEnemy::DeadEffect()
 			ParticleManager::GetInstance()->CallExp(GetWorldPos());
 			isFallEffectEnd = true;
 		}
+	}
+}
+
+void BossEnemy::HPEffect()
+{
+	if (hpEase)
+	{
+		if (oldHpTimer < oldHpTime)
+		{
+			oldHpTimer++;
+		}
+		else
+		{
+			hpEaseTimer++;
+
+			oldHP = MyEase::OutCubicFloat(startHpEase, HP, hpEaseTimer / hpEaseTime);
+
+			if (hpEaseTimer > hpEaseTime)
+			{
+				hpEase = false;
+			}
+		}
+	}
+	else
+	{
+		oldHP = HP;
+		startHpEase = oldHP;
+		oldHpTimer = 0;
+		hpEaseTimer = 0;
 	}
 }
 

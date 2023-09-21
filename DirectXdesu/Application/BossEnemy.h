@@ -50,6 +50,9 @@ public:
 	// €–S‰‰o
 	virtual void DeadEffect();
 
+	// HP‰‰o
+	void HPEffect();
+
 	const bool GetIsHPE() const;
 
 	const bool GetIsDead() const;

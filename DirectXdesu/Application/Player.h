@@ -102,6 +102,12 @@ private:
 	// 死亡演出
 	void DeadEffect();
 
+	// HP演出
+	void HPEffect();
+
+	// ダメージエフェクト
+	void DamageEffect();
+
 private:
 #pragma region 大元の変数
 	// Input
@@ -175,6 +181,13 @@ private:
 	// HPバー
 	std::unique_ptr<Sprite> HPBarUI = nullptr;
 	TextureData hpbarTex;
+#pragma endregion
+
+#pragma region 被弾演出
+	bool isDamageEffect = false;
+	std::unique_ptr<Sprite> damage = nullptr;
+	TextureData damageTex;
+	float dAlpha = 0;
 #pragma endregion
 
 #pragma region 墜落用変数

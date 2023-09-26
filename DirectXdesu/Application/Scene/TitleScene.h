@@ -39,9 +39,13 @@ private:
 	std::unique_ptr<Sprite> titleName = nullptr;
 	TextureData titleTex;
 
+	KMyMath::Vector2 titlePos = { 0,0 };
+
 	// 次のシーンへのキー
 	std::unique_ptr<Sprite> pushA = nullptr;
 	TextureData pushATex;
+
+	KMyMath::Vector2 pushAPos = { 0,0 };
 
 	// オブジェクト
 	std::unique_ptr<KObject3d> object3d;
@@ -57,8 +61,21 @@ private:
 
 	float easeTimer = 0;
 
-	float easeTime = 30;
+	const float easeTime = 30;
 
 	bool goGame = false;
+
+	float texEaseTimer = 0;
+
+	const float texEaseTime = 10;
+
+	float objEaseTimer = 0;
+
+	const float objEaseTime = 15;
+
+	uint32_t phase = 0;
+
+	const float width = static_cast<float>(KWinApp::GetInstance()->GetWindowSizeW());
+	const float height = static_cast<float>(KWinApp::GetInstance()->GetWindowSizeH());
 };
 

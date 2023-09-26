@@ -8,6 +8,8 @@
 
 #include <imgui.h>
 
+#include "Ease.h"
+
 TitleScene::~TitleScene()
 {
 	Final();
@@ -48,34 +50,104 @@ void TitleScene::Init()
 	titleName->Init();
 	titleName->SetPipeline(spritePipeline.get());
 
+	titlePos = { width / 2 ,height * 1 / 3 };
+
 	// プッシュA
 	pushA = std::make_unique<Sprite>();
 	pushA->Init();
 	pushA->SetPipeline(spritePipeline.get());
 
+	pushAPos = { width / 2, height * 2 / 3 };
+
 	object3d.reset(KObject3d::Create(model.get(), objPipeline.get()));
 
 	goGame = false;
+
+	phase = 0;
+
+	texEaseTimer = 0;
+
+	easeTimer = 0;
+
+	objEaseTimer = 0;
 }
 
 void TitleScene::Update()
 {
-	object3d->transform.rot.y += 0.5f;
+	if (goGame)
+	{
+		if (phase == 0)
+		{
+			if (texEaseTimer < texEaseTime)
+			{
+				texEaseTimer++;
 
-	nowAngle = object3d->GetRot().y;
+				titlePos.y = MyEase::InQuadFloat(height * 1 / 3, (height * 1 / 3) - 300,
+					texEaseTimer / texEaseTime);
+
+				pushAPos.y = MyEase::InQuadFloat(height * 2 / 3, (height * 2 / 3) + 300,
+					texEaseTimer / texEaseTime);
+			}
+
+			if (easeTimer < easeTime)
+			{
+				easeTimer++;
+
+				object3d->transform.rot.y = MyEase::InOutCubicFloat(nowAngle, 360, easeTimer / easeTime);
+			}
+			else
+			{
+				phase++;
+			}
+		}
+		else if (phase == 1)
+		{
+			if (objEaseTimer < objEaseTime)
+			{
+				objEaseTimer++;
+
+				object3d->transform.scale = { 
+					MyEase::OutCubicFloat(1, 0, objEaseTimer / objEaseTime),
+					MyEase::OutCubicFloat(1, 0, objEaseTimer / objEaseTime),
+					MyEase::OutCubicFloat(1, 0, objEaseTimer / objEaseTime) 
+				};
+				object3d->transform.pos.z = MyEase::OutCubicFloat(0, 150, objEaseTimer / objEaseTime);
+			}
+			else
+			{
+				phase++;
+			}
+		}
+		else if (phase == 2)
+		{
+			sceneChange->Start();
+			phase++;
+		}
+	}
+	else
+	{
+		// 次のシーンへ
+		if (!sceneChange->GetIsEffect())
+		{
+			if (input->IsTrigger(DIK_SPACE) || input->GetPadButtonDown(XINPUT_GAMEPAD_A))
+			{
+				goGame = true;
+			}
+		}
+
+		object3d->transform.rot.y += 0.5f;
+
+		if (object3d->transform.rot.y > 360)
+		{
+			object3d->transform.rot.y = 0;
+		}
+
+		nowAngle = object3d->GetRot().y;
+	}
 
 	object3d->Update(camera->GetViewPro());
 
 	camera->Update();
-
-	// 次のシーンへ
-	if (!sceneChange->GetIsEffect())
-	{
-		if (input->IsTrigger(DIK_SPACE) || input->GetPadButtonDown(XINPUT_GAMEPAD_A))
-		{
-			sceneChange->Start();
-		}
-	}
 
 	if (sceneChange->GetIsChange())
 	{
@@ -91,12 +163,9 @@ void TitleScene::ObjDraw()
 
 void TitleScene::SpriteDraw()
 {
-	const float width = static_cast<float>(KWinApp::GetInstance()->GetWindowSizeW());
-	const float height = static_cast<float>(KWinApp::GetInstance()->GetWindowSizeH());
+	titleName->Draw(titleTex, titlePos, { 1,1 });
 
-	titleName->Draw(titleTex, { width / 2, height * 1 / 3 }, { 1,1 });
-
-	pushA->Draw(pushATex, { width / 2, height * 2 / 3 }, { 1,1 });
+	pushA->Draw(pushATex, pushAPos, { 1,1 });
 }
 
 void TitleScene::Final()

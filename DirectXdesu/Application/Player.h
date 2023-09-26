@@ -181,6 +181,8 @@ private:
 	// HPƒo[
 	std::unique_ptr<Sprite> HPBarUI = nullptr;
 	TextureData hpbarTex;
+
+	KMyMath::Vector4 hpColor = { 0,0,0,1.0f };
 #pragma endregion
 
 #pragma region ”í’e‰‰o

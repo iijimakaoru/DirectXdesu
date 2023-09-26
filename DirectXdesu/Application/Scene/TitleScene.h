@@ -42,5 +42,23 @@ private:
 	// 次のシーンへのキー
 	std::unique_ptr<Sprite> pushA = nullptr;
 	TextureData pushATex;
+
+	// オブジェクト
+	std::unique_ptr<KObject3d> object3d;
+
+	// モデル
+	std::unique_ptr<KModel> model = nullptr;
+
+	// パイプライン
+	std::unique_ptr<KGPlin> objPipeline;
+	KShader objShader;
+
+	float nowAngle = 0;
+
+	float easeTimer = 0;
+
+	float easeTime = 30;
+
+	bool goGame = false;
 };
 

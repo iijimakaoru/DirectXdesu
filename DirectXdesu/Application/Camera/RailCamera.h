@@ -12,7 +12,7 @@ public:
 		Init();
 	};
 
-	void Init() override;
+	void Init();
 
 	void Update(Player* player);
 

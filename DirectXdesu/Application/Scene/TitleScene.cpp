@@ -2,6 +2,7 @@
 #include "FbxLoader.h"
 
 #include "DebugCamera.h"
+#include "TitleCamera.h"
 
 #include "SceneManager.h"
 
@@ -19,11 +20,17 @@ void TitleScene::LoadResources()
 	spritePipeline = std::make_unique<KGPlin>();
 	spritePipeline->CreatePipelineAll(spriteShader, "Sprite");
 
+	objShader.Init(L"Resources/Shader/ObjVS.hlsl", L"Resources/Shader/ObjPS.hlsl");
+	objPipeline.reset(KGPlin::Create(objShader, "Obj"));
+
 	// タイトル名テクスチャ
 	titleTex = TextureManager::Load("Resources/texture/kariTitle.png");
 
 	// プッシュAテクスチャ
 	pushATex = TextureManager::Load("Resources/texture/kariNextScene.png");
+
+	model = std::make_unique<MtlObj>("BattleShip");
+	model->CreateModel();
 }
 
 void TitleScene::Init()
@@ -32,7 +39,7 @@ void TitleScene::Init()
 
 	input = KInput::GetInstance();
 
-	camera = std::make_unique<DebugCamera>();
+	camera = std::make_unique<TitleCamera>();
 
 	sceneManager = SceneManager::GetInstance();
 
@@ -45,10 +52,20 @@ void TitleScene::Init()
 	pushA = std::make_unique<Sprite>();
 	pushA->Init();
 	pushA->SetPipeline(spritePipeline.get());
+
+	object3d.reset(KObject3d::Create(model.get(), objPipeline.get()));
+
+	goGame = false;
 }
 
 void TitleScene::Update()
 {
+	object3d->transform.rot.y += 0.5f;
+
+	nowAngle = object3d->GetRot().y;
+
+	object3d->Update(camera->GetViewPro());
+
 	camera->Update();
 
 	// 次のシーンへ
@@ -69,7 +86,7 @@ void TitleScene::Update()
 
 void TitleScene::ObjDraw()
 {
-	
+	object3d->Draw();
 }
 
 void TitleScene::SpriteDraw()

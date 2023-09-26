@@ -8,14 +8,16 @@ const float RailCamera::advanceSpeed = 1.0f;
 
 void RailCamera::Init()
 {
-	cameraObject = std::make_unique<KObject3d>();
+	Camera::Init();
+
 	cameraObject->transform.pos = { 0,0,-200 };
-	cameraObject->transform.scale = { 1.0f,1.0f,1.0f };
 	cameraObject->transform.rot = { 0,0,0 };
 
-	viewProjection = std::make_unique<ViewProjection>();
-	viewProjection->Initialize();
-	viewProjection->aspect = (float)KWinApp::GetWindowSizeW() / KWinApp::GetWindowSizeH();
+	cameraObject->TransUpdate();
+
+	viewProjection->matView = MyMathUtility::MakeInverse(cameraObject->transform.matWorld);
+
+	Camera::Update();
 }
 
 void RailCamera::Update(Player* player)

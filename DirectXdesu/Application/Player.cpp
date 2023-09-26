@@ -325,6 +325,15 @@ void Player::HPEffect()
 		oldHpTimer = 0;
 		hpEaseTimer = 0;
 	}
+
+	if (HP < maxHP * 1 / 4)
+	{
+		hpColor = { 1,0,0,1 };
+	}
+	else
+	{
+		hpColor = { 0,1,0,1 };
+	}
 }
 
 void Player::DamageEffect()
@@ -360,9 +369,9 @@ void Player::UIDraw()
 {
 	HPBarUI->Draw(hpbarTex, { 10,10 }, { 1,1 }, 0, { 1,1,1,1 }, false, false, { 0,0 });
 
-	HPrectUI->Draw(hpTex, { 11,11 }, { oldHP * (318 / maxHP),30 }, 0, { 0,1,0,0.3f }, false, false, { 0,0 });
+	HPrectUI->Draw(hpTex, { 11,11 }, { oldHP * (318 / maxHP),30 }, 0, { hpColor.x,hpColor.y,hpColor.z,0.3f }, false, false, { 0,0 });
 
-	HPUI->Draw(hpTex, { 11,11 }, { HP * (318 / maxHP),30 }, 0, { 0,1,0,1 }, false, false, { 0,0 });
+	HPUI->Draw(hpTex, { 11,11 }, { HP * (318 / maxHP),30 }, 0, { hpColor.x,hpColor.y,hpColor.z,1 }, false, false, { 0,0 });
 
 	if (isDamageEffect)
 	{

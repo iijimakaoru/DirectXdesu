@@ -1,5 +1,16 @@
 #pragma once
-class TitleCamera
+#include "Camera.h"
+
+class TitleCamera : public Camera
 {
+public:
+	TitleCamera()
+	{
+		Init();
+	}
+
+	void Init();
+
+	void Update()override;
 };
 

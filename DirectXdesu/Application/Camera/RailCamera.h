@@ -16,11 +16,9 @@ public:
 
 	void Update(Player* player);
 
-	void SetRadian(float angle_)
-	{
-		angle = angle_;
-	}
-
+	/// <summary>
+	/// カメラ動かす
+	/// </summary>
 	void Move();
 
 	/// <summary>
@@ -39,14 +37,17 @@ public:
 	}
 
 	/// <summary>
-	/// 
+	/// カメラ速度セッター
 	/// </summary>
 	/// <returns></returns>
 	const float GetSpeed() const;
 
-private:
-	float angle = 0;
+	/// <summary>
+	/// 死んだときに呼ぼう
+	/// </summary>
+	void CallCrash();
 
+private:
 	// 前進するか
 	bool isAdvance = true;
 
@@ -59,4 +60,10 @@ private:
 	// 移動上限
 	KMyMath::Vector2 moveLimitMin = {};
 	KMyMath::Vector2 moveLimitMax = {};
+
+	// プレイヤーが壊れたら呼ぶ
+	bool isCrash = false;
+
+	// ゲームクリアで呼ぶ
+	bool isStageClear = false;
 };

@@ -302,7 +302,7 @@ void GameScence::CheckAllCollisions()
 	}
 
 	// “G’e‚ÆŽ©‹@‚Ì“–‚½‚è”»’è
-	if (!player->GetIsDead())
+	if (!player->GetIsDead() && !player->GetIsInvisible())
 	{
 		// Ž©‹@‚ÌÀ•W
 		posA = player->GetWorldPos();

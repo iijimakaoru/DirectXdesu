@@ -17,6 +17,10 @@ void RailCamera::Init()
 
 	viewProjection->matView = MyMathUtility::MakeInverse(cameraObject->transform.matWorld);
 
+	isCrash = false;
+
+	isStageClear = false;
+
 	Camera::Update();
 }
 
@@ -25,7 +29,18 @@ void RailCamera::Update(Player* player)
 	moveLimitMax = Player::GetPosLimitMax();
 	moveLimitMin = Player::GetPosLimitMin();
 
-	Move();
+	if (isCrash)
+	{
+
+	}
+	else if (isStageClear)
+	{
+
+	}
+	else
+	{
+		Move();
+	}
 
 	if (!player->GetIsDead())
 	{
@@ -78,4 +93,10 @@ void RailCamera::SetRot(const KMyMath::Vector3& playersRot)
 const float RailCamera::GetSpeed() const
 {
 	return advanceSpeed * 0.5f;
+}
+
+void RailCamera::CallCrash()
+{
+	// ’Ä—ó‘Ô‚É‚·‚é
+	isCrash = true;
 }

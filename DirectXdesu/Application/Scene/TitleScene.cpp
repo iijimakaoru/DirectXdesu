@@ -106,11 +106,13 @@ void TitleScene::Update()
 			{
 				objEaseTimer++;
 
-				object3d->transform.scale = { 
+				object3d->transform.scale = 
+				{ 
 					MyEase::OutCubicFloat(1, 0, objEaseTimer / objEaseTime),
 					MyEase::OutCubicFloat(1, 0, objEaseTimer / objEaseTime),
-					MyEase::OutCubicFloat(1, 0, objEaseTimer / objEaseTime) 
+					MyEase::OutCubicFloat(1, 0, objEaseTimer / objEaseTime)
 				};
+
 				object3d->transform.pos.z = MyEase::OutCubicFloat(0, 150, objEaseTimer / objEaseTime);
 			}
 			else

@@ -69,7 +69,7 @@ public:
 
 public:
 	// ゲッター
-	static const KMyMath::Vector2& GetRotLimit() 
+	static const KMyMath::Vector2& GetRotLimit()
 	{ 
 		return rotLimit;
 	}
@@ -87,6 +87,11 @@ public:
 	static const KMyMath::Vector2& GetPosLimitMin() 
 	{ 
 		return posLimitMin; 
+	}
+
+	const bool GetIsInvisible() const
+	{
+		return isInvisible;
 	}
 
 private:
@@ -181,6 +186,11 @@ private:
 	// HPバー
 	std::unique_ptr<Sprite> HPBarUI = nullptr;
 	TextureData hpbarTex;
+
+	// 無敵時間
+	uint32_t invisibleTimer = 0;
+	const uint32_t invisibleTime = 30;
+	bool isInvisible = false;
 
 	KMyMath::Vector4 hpColor = { 0,0,0,1.0f };
 #pragma endregion

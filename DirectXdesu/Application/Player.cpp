@@ -347,6 +347,19 @@ void Player::DamageEffect()
 			isDamageEffect = false;
 		}
 	}
+
+	if (isInvisible)
+	{
+		if (invisibleTimer < invisibleTime)
+		{
+			invisibleTimer++;
+		}
+		else
+		{
+			invisibleTimer = 0;
+			isInvisible = false;
+		}
+	}
 }
 
 void Player::ObjDraw()
@@ -426,4 +439,5 @@ void Player::OnCollision()
 	hpEaseTimer = 0;
 	isDamageEffect = true;
 	dAlpha = 1;
+	isInvisible = true;
 }

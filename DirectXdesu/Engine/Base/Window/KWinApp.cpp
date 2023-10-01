@@ -27,8 +27,8 @@ void KWinApp::InitInternal()
 
 	window.cbSize = sizeof(WNDCLASSEX);
 	window.lpfnWndProc = (WNDPROC)WindowProc;
-	window.lpszClassName = L"DirectX12";
-	window.lpszMenuName = L"DirectX12";
+	window.lpszClassName = L"MesiShooter";
+	window.lpszMenuName = L"MesiShooter";
 	window.hInstance = GetModuleHandle(nullptr);
 	window.hCursor = LoadCursor(NULL, IDC_ARROW);
 

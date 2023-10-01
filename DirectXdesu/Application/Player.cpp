@@ -96,6 +96,8 @@ void Player::Update(ViewProjection* viewPro)
 
 		// UŒ‚
 		Attack();
+
+		Debug();
 	}
 	else
 	{
@@ -364,6 +366,14 @@ void Player::DamageEffect()
 			invisibleTimer = 0;
 			isInvisible = false;
 		}
+	}
+}
+
+void Player::Debug()
+{
+	if (input->IsTrigger(DIK_P))
+	{
+		HP = 0;
 	}
 }
 

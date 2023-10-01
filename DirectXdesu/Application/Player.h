@@ -115,6 +115,9 @@ private:
 	// ダメージエフェクト
 	void DamageEffect();
 
+	// デバッグ用
+	void Debug();
+
 private:
 #pragma region 大元の変数
 	// Input

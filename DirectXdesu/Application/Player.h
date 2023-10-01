@@ -94,6 +94,8 @@ public:
 		return isInvisible;
 	}
 
+	void SetPos(const KMyMath::Vector3 pos_);
+
 private:
 	// ˆÚ“®
 	void Move();

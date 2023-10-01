@@ -67,12 +67,18 @@ void GameScence::Init()
 	// インスタンス
 	input = KInput::GetInstance();
 
+	// プレイヤー生成
+	player.reset(Player::Create(playerModel.get(), objPipeline.get(), 10, spritePipeline.get()));
+
+	// カメラ生成
 	camera = std::make_unique<RailCamera>();
 
 	sceneManager = SceneManager::GetInstance();
 
-	// プレイヤー
-	player.reset(Player::Create(playerModel.get(), objPipeline.get(), 10, spritePipeline.get()));
+	// カメラ初期化
+	camera->Init(player.get());
+
+	// 親子関係
 	player->SetParent(&camera->GetTransform());
 
 	// 雑魚敵出現パターン読み込み
@@ -94,6 +100,8 @@ void GameScence::Init()
 
 	billManager = std::make_unique<BillManager>();
 	billManager->Init();
+
+	isCallDeadCamera = false;
 }
 
 void GameScence::Update()
@@ -162,6 +170,14 @@ void GameScence::Update()
 			return MobEnemy->GetIsDead();
 		});
 
+	if (player->GetIsDead() && !isCallDeadCamera)
+	{
+		camera->CallCrash();
+		isCallDeadCamera = true;
+		player->SetParent(nullptr);
+		player->SetPos(player->GetWorldPos());
+	}
+
 	// プレイヤーの更新
 	player->Update(camera->GetViewPro());
 
@@ -198,7 +214,7 @@ void GameScence::Update()
 	billManager->Update(camera->GetViewPro(), camera->GetPos().z);
 
 	// カメラの更新
-	camera->Update(player.get());
+	camera->Update();
 
 	// ボス登場警告
 	if (bossWarning)

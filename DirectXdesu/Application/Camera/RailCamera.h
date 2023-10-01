@@ -9,12 +9,12 @@ class RailCamera : public Camera
 public:
 	RailCamera() 
 	{
-		Init();
+		
 	};
 
-	void Init();
+	void Init(Player* player_);
 
-	void Update(Player* player);
+	void Update();
 
 	/// <summary>
 	/// カメラ動かす
@@ -22,10 +22,15 @@ public:
 	void Move();
 
 	/// <summary>
+	/// 壊れた時の処理
+	/// </summary>
+	void Crash();
+
+	/// <summary>
 	/// プレイヤーの角度と連動させる
 	/// </summary>
 	/// <param name="playersRot"></param>
-	void SetRot(const KMyMath::Vector3& playersRot);
+	void SetRot();
 
 	/// <summary>
 	/// 前進フラグ
@@ -66,4 +71,7 @@ private:
 
 	// ゲームクリアで呼ぶ
 	bool isStageClear = false;
+
+	// プレイヤーの型
+	Player* player = nullptr;
 };

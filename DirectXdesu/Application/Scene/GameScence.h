@@ -143,5 +143,8 @@ private:
 
 	// ビルマネージャー
 	std::unique_ptr<BillManager> billManager;
+
+	// 死亡カメラ呼び出しフラグ
+	bool isCallDeadCamera = false;
 };
 

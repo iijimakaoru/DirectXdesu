@@ -118,6 +118,11 @@ void Player::Update(ViewProjection* viewPro)
 	object3d->Update(viewPro);
 }
 
+void Player::SetPos(const KMyMath::Vector3 pos_)
+{
+	object3d->transform.pos = pos_;
+}
+
 void Player::Move()
 {
 	//Ž©‹@‚ªŒX‚¢‚Ä‚¢‚éŠp“x‚ÉˆÚ“®‚³‚¹‚é

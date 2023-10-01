@@ -1,12 +1,13 @@
 #include "RailCamera.h"
 #include "MyMath.h"
 #include "Player.h"
+#include "Ease.h"
 
 const float RailCamera::moveSpeedPlayerMagnification = 8.0f;
 
 const float RailCamera::advanceSpeed = 1.0f;
 
-void RailCamera::Init()
+void RailCamera::Init(Player* player_)
 {
 	Camera::Init();
 
@@ -21,17 +22,19 @@ void RailCamera::Init()
 
 	isStageClear = false;
 
+	player = player_;
+
 	Camera::Update();
 }
 
-void RailCamera::Update(Player* player)
+void RailCamera::Update()
 {
 	moveLimitMax = Player::GetPosLimitMax();
 	moveLimitMin = Player::GetPosLimitMin();
 
 	if (isCrash)
 	{
-
+		Crash();
 	}
 	else if (isStageClear)
 	{
@@ -39,12 +42,9 @@ void RailCamera::Update(Player* player)
 	}
 	else
 	{
-		Move();
-	}
+		SetRot();
 
-	if (!player->GetIsDead())
-	{
-		SetRot(player->GetRot());
+		Move();
 	}
 
 	cameraObject->TransUpdate();
@@ -81,13 +81,27 @@ void RailCamera::Move()
 	cameraObject->transform.pos.y = min(cameraObject->transform.pos.y, moveLimitMax.y);
 }
 
-void RailCamera::SetRot(const KMyMath::Vector3& playersRot)
+void RailCamera::Crash()
+{
+	const KMyMath::Vector3 playerDistance = { 40.0f, 0.0f, 40.0f }; //自機とカメラの距離
+
+	// カメラの場所
+	const KMyMath::Vector3 crashCameraPos = player->GetWorldPos() + playerDistance;
+
+	// 角度
+	cameraObject->transform.rot.y = -135.0f;
+
+	// カメラ動け
+	cameraObject->transform.pos = crashCameraPos;
+}
+
+void RailCamera::SetRot()
 {
 	// 回転
 	const KMyMath::Vector3 PlayerRotDivNum = { 5,5,8 };
-	cameraObject->transform.rot.x = playersRot.x / PlayerRotDivNum.x;
-	cameraObject->transform.rot.y = playersRot.y / PlayerRotDivNum.y;
-	cameraObject->transform.rot.z = -playersRot.y / PlayerRotDivNum.z;
+	cameraObject->transform.rot.x = player->GetRot().x / PlayerRotDivNum.x;
+	cameraObject->transform.rot.y = player->GetRot().y / PlayerRotDivNum.y;
+	cameraObject->transform.rot.z = -player->GetRot().y / PlayerRotDivNum.z;
 }
 
 const float RailCamera::GetSpeed() const

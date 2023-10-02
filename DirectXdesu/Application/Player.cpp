@@ -291,15 +291,15 @@ void Player::DeadEffect()
 
 		if (expTimer >= max(expTimer, expTime))
 		{
-			ParticleManager::GetInstance()->CallSmallExp({ GetWorldPos().x + MyMathUtility::GetRand(-1.0f,1.0f),
-			GetWorldPos().y + MyMathUtility::GetRand(-1.0f,1.0f),GetWorldPos().z + MyMathUtility::GetRand(-1.0f,1.0f) });
+			ObjParticleManager::GetInstance()->SetSmallExp({ GetWorldPos().x + MyMathUtility::GetRand(-1.0f,1.0f),
+			 GetWorldPos().y + MyMathUtility::GetRand(-1.0f,1.0f), GetWorldPos().z + MyMathUtility::GetRand(-1.0f,1.0f) });
 			expTimer = 0;
 		}
 
 		// ‰‰oI‚í‚è
 		if (fallEffectTimer >= max(fallEffectTimer, fallEffectTime))
 		{
-			ParticleManager::GetInstance()->CallExp(GetWorldPos());
+			ObjParticleManager::GetInstance()->SetExp(GetWorldPos());
 			isFallEffectEnd = true;
 		}
 	}
@@ -371,15 +371,7 @@ void Player::DamageEffect()
 
 void Player::Debug()
 {
-	if (input->IsTrigger(DIK_P))
-	{
-		HP = 0;
-	}
-
-	if (input->IsTrigger(DIK_O))
-	{
-		ObjParticleManager::GetInstance()->SetExp(GetWorldPos());
-	}
+	
 }
 
 void Player::ObjDraw()
@@ -452,7 +444,7 @@ const bool Player::GetIsFallEffectEnd() const
 
 void Player::OnCollision()
 {
-	ParticleManager::GetInstance()->CallExp(GetWorldPos());
+	ObjParticleManager::GetInstance()->SetSmallExp(GetWorldPos());
 	HP--;
 	hpEase = true;
 	oldHpTimer = 0;

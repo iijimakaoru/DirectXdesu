@@ -5,6 +5,8 @@
 
 #pragma comment(lib, "d3dcompiler.lib")
 
+#include "Ease.h"
+
 using namespace DirectX;
 using namespace Microsoft::WRL;
 
@@ -322,6 +324,8 @@ void ObjParticle::Init(const KMyMath::Vector3& pos_,
 
 	object3d->transform.pos = pos_;
 
+	object3d->transform.scale = { 0.5f,0.5f,0.5f };
+
 	velocity = velocity_;
 
 	lifeTimer = 0;
@@ -331,11 +335,22 @@ void ObjParticle::Init(const KMyMath::Vector3& pos_,
 
 void ObjParticle::Update(ViewProjection* viewPro)
 {
-	object3d->transform.pos += velocity;
-
 	if (lifeTimer < lifeTime)
 	{
 		lifeTimer++;
+
+		object3d->transform.pos += velocity;
+
+		object3d->transform.rot += {30, 30, 30};
+
+		if (lifeTimer > 40)
+		{
+			if (easeTimer < easeTime)
+			{
+				easeTimer++;
+				object3d->transform.scale = MyEase::OutQuadVec3({ 0.5f,0.5f,0.5f }, { 0,0,0 }, easeTimer / easeTime);
+			}
+		}
 	}
 	else
 	{
@@ -387,13 +402,30 @@ void ObjParticleManager::Draw()
 void ObjParticleManager::SetExp(const KMyMath::Vector3& pos_)
 {
 	std::unique_ptr<ObjParticle> newParticle;
-	for (size_t i = 0; i < 4; i++)
+	for (size_t i = 0; i < 40; i++)
 	{
 		// ¶¬
 		newParticle.reset(ObjParticle::Create(pos_,
 			model.get(),
 			pipeline.get(),
-			{ MyMathUtility::GetRand(-1,1),MyMathUtility::GetRand(-1,1),MyMathUtility::GetRand(-1,1) }, textureData1));
+			{ MyMathUtility::GetRand(-1.0f,1.0f),MyMathUtility::GetRand(-1.0f,1.0f),MyMathUtility::GetRand(-1.0f,1.0f) }, 
+			textureData1));
+		// o—Í
+		objParticles.push_back(std::move(newParticle));
+	}
+}
+
+void ObjParticleManager::SetSmallExp(const KMyMath::Vector3& pos_)
+{
+	std::unique_ptr<ObjParticle> newParticle;
+	for (size_t i = 0; i < 10; i++)
+	{
+		// ¶¬
+		newParticle.reset(ObjParticle::Create(pos_,
+			model.get(),
+			pipeline.get(),
+			{ MyMathUtility::GetRand(-0.25f,0.25f),MyMathUtility::GetRand(-0.25f,0.25f),MyMathUtility::GetRand(-0.25f,0.25f) },
+			textureData1));
 		// o—Í
 		objParticles.push_back(std::move(newParticle));
 	}

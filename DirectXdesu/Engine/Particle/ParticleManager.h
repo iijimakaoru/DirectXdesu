@@ -243,6 +243,9 @@ private:
 	uint32_t lifeTimer = 0;
 	const uint32_t lifeTime = 60;
 
+	float easeTimer = 0;
+	const float easeTime = 20;
+
 	// 死んだかどうか
 	bool isDead = false;
 
@@ -269,7 +272,17 @@ public:
 	/// </summary>
 	void Draw();
 
+	/// <summary>
+	/// 爆発演出
+	/// </summary>
+	/// <param name="pos_"></param>
 	void SetExp(const KMyMath::Vector3& pos_);
+
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="pos_"></param>
+	void SetSmallExp(const KMyMath::Vector3& pos_);
 
 public:
 	// インスタンス

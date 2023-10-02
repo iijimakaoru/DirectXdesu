@@ -300,7 +300,7 @@ void ParticleManager::Delete()
 }
 
 ObjParticle* ObjParticle::Create(const KMyMath::Vector3& pos_, 
-	KModel* model_, KGPlin* pipeline_, const KMyMath::Vector3& velocity_)
+	KModel* model_, KGPlin* pipeline_, const KMyMath::Vector3& velocity_, TextureData& tex)
 {
 	// インスタンス
 	ObjParticle* instance = new ObjParticle();
@@ -310,34 +310,47 @@ ObjParticle* ObjParticle::Create(const KMyMath::Vector3& pos_,
 	}
 
 	// 初期化
-	instance->Init(pos_, model_, pipeline_, velocity_);
+	instance->Init(pos_, model_, pipeline_, velocity_, tex);
 
 	return instance;
 }
 
 void ObjParticle::Init(const KMyMath::Vector3& pos_, 
-	KModel* model_, KGPlin* pipeline_, const KMyMath::Vector3& velocity_)
+	KModel* model_, KGPlin* pipeline_, const KMyMath::Vector3& velocity_, TextureData& tex)
 {
-	object3d->SetPipeline(pipeline_);
-
-	object3d->LoadModel(model_);
+	object3d.reset(KObject3d::Create(model_, pipeline_));
 
 	object3d->transform.pos = pos_;
 
 	velocity = velocity_;
+
+	lifeTimer = 0;
+
+	texture = tex;
 }
 
 void ObjParticle::Update(ViewProjection* viewPro)
 {
 	object3d->transform.pos += velocity;
 
+	if (lifeTimer < lifeTime)
+	{
+		lifeTimer++;
+	}
+	else
+	{
+		isDead = true;
+	}
+
 	object3d->Update(viewPro);
 }
 
 void ObjParticle::Draw()
 {
-	object3d->Draw();
+	object3d->Draw(texture);
 }
+
+ObjParticleManager* ObjParticleManager::objParticleManager = nullptr;
 
 void ObjParticleManager::Init()
 {
@@ -348,14 +361,42 @@ void ObjParticleManager::Init()
 	// キューブ生成
 	model = std::make_unique<Cube>();
 	model->CreateModel();
+
+	// テクスチャ
+	textureData1 = TextureManager::Load("Resources/texture/kariPlayerColor.png");
 }
 
 void ObjParticleManager::Update(ViewProjection* viewPro)
 {
+	objParticles.remove_if([](std::unique_ptr<ObjParticle>& objParticle) {return objParticle->GetIsDead(); });
+
+	for (std::unique_ptr<ObjParticle>& objParticle : objParticles)
+	{
+		objParticle->Update(viewPro);
+	}
 }
 
 void ObjParticleManager::Draw()
 {
+	for (std::unique_ptr<ObjParticle>& objParticle : objParticles)
+	{
+		objParticle->Draw();
+	}
+}
+
+void ObjParticleManager::SetExp(const KMyMath::Vector3& pos_)
+{
+	std::unique_ptr<ObjParticle> newParticle;
+	for (size_t i = 0; i < 4; i++)
+	{
+		// 生成
+		newParticle.reset(ObjParticle::Create(pos_,
+			model.get(),
+			pipeline.get(),
+			{ MyMathUtility::GetRand(-1,1),MyMathUtility::GetRand(-1,1),MyMathUtility::GetRand(-1,1) }, textureData1));
+		// 出力
+		objParticles.push_back(std::move(newParticle));
+	}
 }
 
 ObjParticleManager* ObjParticleManager::GetInstance()

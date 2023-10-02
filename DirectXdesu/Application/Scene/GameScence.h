@@ -131,6 +131,7 @@ private:
 
 	// パーティクル
 	ParticleManager* particleManager = nullptr;
+	ObjParticleManager* objParticleManager = nullptr;
 
 	// 別のシーンへの移行タイマー
 	// ゲームクリア

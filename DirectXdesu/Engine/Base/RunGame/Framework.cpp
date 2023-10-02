@@ -64,6 +64,7 @@ void Framework::Final()
 
 	// パーティクルマネージャー解放
 	ParticleManager::GetInstance()->Delete();
+	ObjParticleManager::GetInstance()->Delete();
 
 	// シーンファクトリー解放
 	delete sceneFactory;

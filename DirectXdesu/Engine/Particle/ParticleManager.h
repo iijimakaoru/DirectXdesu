@@ -201,7 +201,7 @@ public:
 	/// </summary>
 	/// <returns></returns>
 	static ObjParticle* Create(const KMyMath::Vector3& pos_, 
-		KModel* model_, KGPlin* pipeline_, const KMyMath::Vector3& velocity);
+		KModel* model_, KGPlin* pipeline_, const KMyMath::Vector3& velocity, TextureData& tex);
 
 	/// <summary>
 	/// 初期化
@@ -210,7 +210,7 @@ public:
 	/// <param name="model_"></param>
 	/// <param name="pipeline_"></param>
 	void Init(const KMyMath::Vector3& pos_, 
-		KModel* model_, KGPlin* pipeline_, const KMyMath::Vector3& velocity);
+		KModel* model_, KGPlin* pipeline_, const KMyMath::Vector3& velocity, TextureData& tex);
 
 	/// <summary>
 	/// 更新
@@ -223,12 +223,31 @@ public:
 	/// </summary>
 	void Draw();
 
+	/// <summary>
+	/// 死んだかゲッター
+	/// </summary>
+	/// <returns></returns>
+	const bool GetIsDead() const
+	{
+		return isDead;
+	}
+
 private:
 	// オブジェクト
 	std::unique_ptr<KObject3d> object3d = nullptr;
 
 	// 速度
 	KMyMath::Vector3 velocity = { 0,0,0 };
+
+	// 生存時間
+	uint32_t lifeTimer = 0;
+	const uint32_t lifeTime = 60;
+
+	// 死んだかどうか
+	bool isDead = false;
+
+	// テクスチャ
+	TextureData texture;
 };
 
 class ObjParticleManager
@@ -250,6 +269,8 @@ public:
 	/// </summary>
 	void Draw();
 
+	void SetExp(const KMyMath::Vector3& pos_);
+
 public:
 	// インスタンス
 	static ObjParticleManager* GetInstance();
@@ -270,6 +291,9 @@ private:
 
 	// パーティクルズ
 	std::list<std::unique_ptr<ObjParticle>> objParticles;
+
+	// テクスチャ
+	TextureData textureData1;
 
 private:
 	ObjParticleManager() = default;

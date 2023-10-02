@@ -375,6 +375,11 @@ void Player::Debug()
 	{
 		HP = 0;
 	}
+
+	if (input->IsTrigger(DIK_O))
+	{
+		ObjParticleManager::GetInstance()->SetExp(GetWorldPos());
+	}
 }
 
 void Player::ObjDraw()

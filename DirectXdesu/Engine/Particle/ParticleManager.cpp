@@ -298,3 +298,73 @@ void ParticleManager::Delete()
 {
 	delete parthicleManager;
 }
+
+ObjParticle* ObjParticle::Create(const KMyMath::Vector3& pos_, 
+	KModel* model_, KGPlin* pipeline_, const KMyMath::Vector3& velocity_)
+{
+	// インスタンス
+	ObjParticle* instance = new ObjParticle();
+	if (instance == nullptr)
+	{
+		return nullptr;
+	}
+
+	// 初期化
+	instance->Init(pos_, model_, pipeline_, velocity_);
+
+	return instance;
+}
+
+void ObjParticle::Init(const KMyMath::Vector3& pos_, 
+	KModel* model_, KGPlin* pipeline_, const KMyMath::Vector3& velocity_)
+{
+	object3d->SetPipeline(pipeline_);
+
+	object3d->LoadModel(model_);
+
+	object3d->transform.pos = pos_;
+
+	velocity = velocity_;
+}
+
+void ObjParticle::Update(ViewProjection* viewPro)
+{
+	object3d->transform.pos += velocity;
+
+	object3d->Update(viewPro);
+}
+
+void ObjParticle::Draw()
+{
+	object3d->Draw();
+}
+
+void ObjParticleManager::Init()
+{
+	// Obj
+	shader.Init(L"Resources/Shader/ObjVS.hlsl", L"Resources/Shader/ObjPS.hlsl");
+	pipeline.reset(KGPlin::Create(shader, "Obj"));
+
+	// キューブ生成
+	model = std::make_unique<Cube>();
+	model->CreateModel();
+}
+
+void ObjParticleManager::Update(ViewProjection* viewPro)
+{
+}
+
+void ObjParticleManager::Draw()
+{
+}
+
+ObjParticleManager* ObjParticleManager::GetInstance()
+{
+	static ObjParticleManager instance;
+	return &instance;
+}
+
+void ObjParticleManager::Delete()
+{
+	delete objParticleManager;
+}

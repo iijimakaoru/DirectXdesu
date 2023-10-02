@@ -192,3 +192,88 @@ private:
 	ParticleManager(const ParticleManager&) = default;
 	const ParticleManager& operator=(const ParticleManager&) = delete;
 };
+
+class ObjParticle
+{
+public:
+	/// <summary>
+	/// 作成
+	/// </summary>
+	/// <returns></returns>
+	static ObjParticle* Create(const KMyMath::Vector3& pos_, 
+		KModel* model_, KGPlin* pipeline_, const KMyMath::Vector3& velocity);
+
+	/// <summary>
+	/// 初期化
+	/// </summary>
+	/// <param name="pos_"></param>
+	/// <param name="model_"></param>
+	/// <param name="pipeline_"></param>
+	void Init(const KMyMath::Vector3& pos_, 
+		KModel* model_, KGPlin* pipeline_, const KMyMath::Vector3& velocity);
+
+	/// <summary>
+	/// 更新
+	/// </summary>
+	/// <param name="viewPro"></param>
+	void Update(ViewProjection* viewPro);
+
+	/// <summary>
+	/// 描画
+	/// </summary>
+	void Draw();
+
+private:
+	// オブジェクト
+	std::unique_ptr<KObject3d> object3d = nullptr;
+
+	// 速度
+	KMyMath::Vector3 velocity = { 0,0,0 };
+};
+
+class ObjParticleManager
+{
+public:
+	/// <summary>
+	/// 初期化
+	/// </summary>
+	void Init();
+
+	/// <summary>
+	/// 更新
+	/// </summary>
+	/// <param name="viewPro"></param>
+	void Update(ViewProjection* viewPro);
+
+	/// <summary>
+	/// 描画
+	/// </summary>
+	void Draw();
+
+public:
+	// インスタンス
+	static ObjParticleManager* GetInstance();
+
+	// 解放
+	void Delete();
+
+private:
+	// インスタンス
+	static ObjParticleManager* objParticleManager;
+
+	// パイプライン
+	KShader shader;
+	std::unique_ptr<KGPlin> pipeline = nullptr;
+
+	// モデル
+	std::unique_ptr<KModel> model = nullptr;
+
+	// パーティクルズ
+	std::list<std::unique_ptr<ObjParticle>> objParticles;
+
+private:
+	ObjParticleManager() = default;
+	~ObjParticleManager() = default;
+	ObjParticleManager(const ObjParticleManager&) = default;
+	const ObjParticleManager& operator=(const ObjParticleManager&) = delete;
+};

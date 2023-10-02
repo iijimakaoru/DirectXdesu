@@ -46,7 +46,6 @@ void BossEnemy::Update(ViewProjection* viewPro)
 	{
 		if (HP <= min(HP, 0))
 		{
-			ParticleManager::GetInstance()->CallExp(GetWorldPos());
 			isDead = true;
 		}
 	}
@@ -104,7 +103,7 @@ const KMyMath::Vector3 BossEnemy::GetWorldPos() const
 
 void BossEnemy::OnCollision()
 {
-	ParticleManager::GetInstance()->CallExp(GetWorldPos());
+	ObjParticleManager::GetInstance()->SetExp(GetWorldPos());
 	HP--;
 	hpEase = true;
 	oldHpTimer = 0;
@@ -133,7 +132,7 @@ void BossEnemy::DeadEffect()
 
 		if (expTimer >= max(expTimer, expTime))
 		{
-			ParticleManager::GetInstance()->CallSmallExp({ GetWorldPos().x + MyMathUtility::GetRand(-3.0f,3.0f),
+			ObjParticleManager::GetInstance()->SetSmallExp({ GetWorldPos().x + MyMathUtility::GetRand(-3.0f,3.0f),
 			GetWorldPos().y + MyMathUtility::GetRand(-3.0f,3.0f),GetWorldPos().z + MyMathUtility::GetRand(-3.0f,3.0f) });
 			expTimer = 0;
 		}
@@ -141,7 +140,7 @@ void BossEnemy::DeadEffect()
 		// ‰‰oI‚í‚è
 		if (fallEffectTimer >= max(fallEffectTimer, fallEffectTime))
 		{
-			ParticleManager::GetInstance()->CallExp(GetWorldPos());
+			ObjParticleManager::GetInstance()->SetExp(GetWorldPos());
 			isFallEffectEnd = true;
 		}
 	}

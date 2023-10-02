@@ -33,7 +33,7 @@ void MobEnemy::Draw()
 
 void MobEnemy::OnCollision()
 {
-	ParticleManager::GetInstance()->CallExp(GetWorldPos());
+	ObjParticleManager::GetInstance()->SetSmallExp(GetWorldPos());
 	isDead = true;
 }
 

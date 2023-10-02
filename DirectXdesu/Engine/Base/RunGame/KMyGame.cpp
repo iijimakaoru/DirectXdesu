@@ -36,7 +36,9 @@ void KMyGame::Draw()
 	postEffect->Draw();
 
 	// Imgui•`‰æ
+#ifdef DEBUG
 	imguiMane.Draw();
+#endif // DEBUG
 
 	dx->PostDraw();
 }

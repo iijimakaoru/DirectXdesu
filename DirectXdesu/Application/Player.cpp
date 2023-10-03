@@ -25,6 +25,7 @@ Player* Player::Create(KModel* model_, KGPlin* objPipeline_, const float playerH
 
 void Player::Init(KModel* model_, KGPlin* objPipeline_, const float playerHP, KGPlin* spritePipeline_)
 {
+	// 入力インスタンス
 	input = KInput::GetInstance();
 
 	// モデル生成
@@ -49,32 +50,42 @@ void Player::Init(KModel* model_, KGPlin* objPipeline_, const float playerHP, KG
 	maxHP = playerHP;
 	HP = maxHP;
 
+	// HPバー
 	HPUI = std::make_unique<Sprite>();
 	HPUI->Init();
 	HPUI->SetPipeline(spritePipeline);
 
+	// HP減少値バー
 	HPrectUI = std::make_unique<Sprite>();
 	HPrectUI->Init();
 	HPrectUI->SetPipeline(spritePipeline);
 
+	// HPテクスチャ読み込み
 	hpTex = TextureManager::Load("Resources/texture/white1x1.png");
 
+	// HPゲージ
 	HPBarUI = std::make_unique<Sprite>();
 	HPBarUI->Init();
 	HPBarUI->SetPipeline(spritePipeline);
 
+	// HPゲージテクスチャ読み込み
 	hpbarTex = TextureManager::Load("Resources/texture/PlayersHPBar.png");
 
+	// 死亡フラグ
 	isDead = false;
 
+	// ダメージ演出フラグ
 	isDamageEffect = false;
 
+	// ダメージエフェクト
 	damage = std::make_unique<Sprite>();
 	damage->Init();
 	damage->SetPipeline(spritePipeline);
 
+	// ダメージエフェクトテクスチャ読み込み
 	damageTex = TextureManager::Load("Resources/texture/damage.png");
 
+	// ダメージエフェクトの透過値
 	dAlpha = 0;
 }
 
@@ -97,10 +108,13 @@ void Player::Update(ViewProjection* viewPro)
 		// 攻撃
 		Attack();
 
+#ifdef _DEBUG
 		Debug();
+#endif // _DEBUG
 	}
 	else
 	{
+		// 死亡演出
 		DeadEffect();
 	}
 
@@ -132,9 +146,11 @@ void Player::Move()
 	velocity.x = (object3d->transform.rot.y / rotLimit.y);
 	velocity.y = -(object3d->transform.rot.x / rotLimit.x);
 
+	// 動け～
 	object3d->transform.pos.x += velocity.x * moveSpeed;
 	object3d->transform.pos.y += velocity.y * moveSpeed;
 
+	// 移動制限
 	object3d->transform.pos.x = max(object3d->transform.pos.x, posLimitMin.x);
 	object3d->transform.pos.x = min(object3d->transform.pos.x, posLimitMax.x);
 	object3d->transform.pos.y = max(object3d->transform.pos.y, posLimitMin.y);
@@ -286,9 +302,10 @@ void Player::DeadEffect()
 		// 時間経過
 		fallEffectTimer++;
 
-		// 
+		// 爆発間隔タイマー
 		expTimer++;
 
+		// 堕ちてる間の爆発
 		if (expTimer >= max(expTimer, expTime))
 		{
 			ObjParticleManager::GetInstance()->SetSmallExp({ GetWorldPos().x + MyMathUtility::GetRand(-1.0f,1.0f),
@@ -307,6 +324,7 @@ void Player::DeadEffect()
 
 void Player::HPEffect()
 {
+	// HP減少演出処理
 	if (hpEase)
 	{
 		if (oldHpTimer < oldHpTime)
@@ -333,6 +351,7 @@ void Player::HPEffect()
 		hpEaseTimer = 0;
 	}
 
+	// ピンチ状態のHP演出
 	if (HP < maxHP * 1 / 4)
 	{
 		hpColor = { 1,0,0,1 };
@@ -345,6 +364,7 @@ void Player::HPEffect()
 
 void Player::DamageEffect()
 {
+	// ダメージエフェクト処理
 	if (isDamageEffect)
 	{
 		dAlpha -= 0.1f;
@@ -355,6 +375,7 @@ void Player::DamageEffect()
 		}
 	}
 
+	// 無敵時間処理
 	if (isInvisible)
 	{
 		if (invisibleTimer < invisibleTime)
@@ -371,11 +392,12 @@ void Player::DamageEffect()
 
 void Player::Debug()
 {
-	
+
 }
 
 void Player::ObjDraw()
 {
+	// 機体描画
 	if (!isFallEffectEnd)
 	{
 		object3d->Draw();
@@ -384,6 +406,7 @@ void Player::ObjDraw()
 
 void Player::SpriteDraw()
 {
+	// レティクル描画
 	if (!isDead)
 	{
 		reticle2d->Draw();
@@ -392,12 +415,16 @@ void Player::SpriteDraw()
 
 void Player::UIDraw()
 {
+	// HPバー描画
 	HPBarUI->Draw(hpbarTex, { 10,10 }, { 1,1 }, 0, { 1,1,1,1 }, false, false, { 0,0 });
 
+	// HP減少値描画
 	HPrectUI->Draw(hpTex, { 11,11 }, { oldHP * (318 / maxHP),30 }, 0, { hpColor.x,hpColor.y,hpColor.z,0.3f }, false, false, { 0,0 });
 
+	// HP描画
 	HPUI->Draw(hpTex, { 11,11 }, { HP * (318 / maxHP),30 }, 0, { hpColor.x,hpColor.y,hpColor.z,1 }, false, false, { 0,0 });
 
+	// ダメージエフェクト描画
 	if (isDamageEffect)
 	{
 		damage->Draw(damageTex, { 1280 / 2, 720 / 2 }, { 1 ,1 }, 0.0f, { 1,0,0,dAlpha });

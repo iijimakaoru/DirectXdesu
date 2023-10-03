@@ -1,4 +1,5 @@
 #include "TitleCamera.h"
+#include "KInput.h"
 
 void TitleCamera::Init()
 {
@@ -16,6 +17,24 @@ void TitleCamera::Init()
 
 void TitleCamera::Update()
 {
+	if (KInput::GetInstance()->IsPush(DIK_RIGHT))
+	{
+		eye.x += 1.0f;
+	}
+	else if (KInput::GetInstance()->IsPush(DIK_LEFT))
+	{
+		eye.x -= 1.0f;
+	}
+
+	if (KInput::GetInstance()->IsPush(DIK_UP))
+	{
+		eye.z += 1.0f;
+	}
+	else if (KInput::GetInstance()->IsPush(DIK_DOWN))
+	{
+		eye.z -= 1.0f;
+	}
+
 	viewProjection->SetMatView(MyMathUtility::MakeLockAt(eye, target, up));
 
 	Camera::Update();

@@ -11,7 +11,7 @@ void ViewProjection::Initialize()
 	nearZ = 0.1f;
 	farZ = 1000.0f;
 
-	aspect = static_cast<float>(KWinApp::GetWindowSizeW() / KWinApp::GetWindowSizeH());
+	aspect = static_cast<float>(KWinApp::GetWindowSizeW()) / static_cast<float>(KWinApp::GetWindowSizeH());
 
 	matView = MyMathUtility::MakeLockAt(eye, target, up);
 

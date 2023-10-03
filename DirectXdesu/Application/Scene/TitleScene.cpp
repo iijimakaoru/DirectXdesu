@@ -166,6 +166,7 @@ void TitleScene::Update()
 		else
 		{
 			startScene = false;
+			camera->StartRound();
 		}
 	}
 	else

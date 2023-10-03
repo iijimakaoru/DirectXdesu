@@ -5,37 +5,53 @@ void TitleCamera::Init()
 {
 	Camera::Init();
 
-	viewProjection->SetEye({ 0,0,-40 });
-	viewProjection->SetTarget({ 0,0,0 });
+	cameraObject->transform.pos = { 0,0,-40 };
+	cameraObject->transform.rot = { 0,0,0 };
 
-	eye = viewProjection->GetEye();
-	target = viewProjection->GetTarget();
-	up = viewProjection->GetUp();
+	cameraObject->TransUpdate();
+
+	viewProjection->SetMatView(MyMathUtility::MakeInverse(cameraObject->transform.matWorld));
+
+	isRound = false;
 
 	Camera::Update();
 }
 
 void TitleCamera::Update()
 {
-	if (KInput::GetInstance()->IsPush(DIK_RIGHT))
+	if (isRound)
 	{
-		eye.x += 1.0f;
-	}
-	else if (KInput::GetInstance()->IsPush(DIK_LEFT))
-	{
-		eye.x -= 1.0f;
+		RoundCamera();
 	}
 
-	if (KInput::GetInstance()->IsPush(DIK_UP))
-	{
-		eye.z += 1.0f;
-	}
-	else if (KInput::GetInstance()->IsPush(DIK_DOWN))
-	{
-		eye.z -= 1.0f;
-	}
+	cameraObject->TransUpdate();
 
-	viewProjection->SetMatView(MyMathUtility::MakeLockAt(eye, target, up));
+	viewProjection->SetMatView(MyMathUtility::MakeInverse(cameraObject->transform.matWorld));
 
 	Camera::Update();
+}
+
+void TitleCamera::RoundCamera()
+{
+	// Šp“x‚ð•ÏX
+	const float rotSpeed = 0.5f;
+	rotAngle += rotSpeed;
+
+	// 360‚ð’´‚¦‚½‚ç
+	if (rotAngle >= 360)
+	{
+		rotAngle = 0;
+	}
+
+	const float radian = XMConvertToRadians(rotAngle);
+	const float distance = -40;
+	cameraObject->transform.pos.z = distance * cosf(radian);
+	cameraObject->transform.pos.x = distance * sinf(radian);
+
+	cameraObject->transform.rot.y = rotAngle;
+}
+
+void TitleCamera::StartRound()
+{
+	isRound = true;
 }

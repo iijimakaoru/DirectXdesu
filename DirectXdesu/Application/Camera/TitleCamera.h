@@ -13,9 +13,17 @@ public:
 
 	void Update();
 
+	void RoundCamera();
+
+	void StartRound();
+
 private:
 	KMyMath::Vector3 eye;
 	KMyMath::Vector3 target;
 	KMyMath::Vector3 up;
+
+	float rotAngle = 0;
+
+	bool isRound = false;
 };
 

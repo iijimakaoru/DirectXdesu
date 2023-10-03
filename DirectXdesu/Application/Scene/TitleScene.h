@@ -22,6 +22,8 @@ public:
 	void SpriteDraw() override;
 	void Final()override;
 
+	// 次のシーンへ
+	void GoNextScene();
 private:
 	// インプット
 	KInput* input = nullptr;
@@ -57,25 +59,44 @@ private:
 	std::unique_ptr<KGPlin> objPipeline;
 	KShader objShader;
 
-	float nowAngle = 0;
-
-	float easeTimer = 0;
-
-	const float easeTime = 30;
-
-	bool goGame = false;
-
-	float texEaseTimer = 0;
-
-	const float texEaseTime = 10;
-
-	float objEaseTimer = 0;
-
-	const float objEaseTime = 15;
-
-	uint32_t phase = 0;
-
+	// 画面サイズ
 	const float width = static_cast<float>(KWinApp::GetInstance()->GetWindowSizeW());
 	const float height = static_cast<float>(KWinApp::GetInstance()->GetWindowSizeH());
+
+#pragma region タイトル始めの演出変数
+	// シーン始まったフラグ
+	bool startScene = false;
+
+	// 演出のフェーズ
+	uint32_t startScenePhase = 0;
+
+	// フェーズ時間
+	float phaseTimer = 0;
+
+	float phaseTime = 0;
+#pragma endregion
+
+#pragma region 次のシーンへの移行演出変数
+	// 次のシーンへいくフラグ
+	bool goGame = false;
+
+	// 演出のフェーズ
+	uint32_t goGamePhase = 0;
+
+	// 機体の今の角度
+	float nowAngle = 0;
+
+	// 角度補正イージングタイマー
+	float easeTimer = 0;
+	const float easeTime = 30;
+
+	// テキスト吹き飛ばしタイマー
+	float texEaseTimer = 0;
+	const float texEaseTime = 10;
+
+	// 機体飛び出しタイマー
+	float objEaseTimer = 0;
+	const float objEaseTime = 15;
+#pragma endregion
 };
 

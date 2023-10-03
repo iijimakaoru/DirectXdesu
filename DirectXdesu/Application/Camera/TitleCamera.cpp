@@ -4,8 +4,8 @@ void TitleCamera::Init()
 {
 	Camera::Init();
 
-	cameraObject->transform.pos = { 0,10,-40 };
-	cameraObject->transform.rot = { 15,0,0 };
+	cameraObject->transform.pos = { 0,0,-40 };
+	cameraObject->transform.rot = { 0,0,0 };
 
 	cameraObject->TransUpdate();
 

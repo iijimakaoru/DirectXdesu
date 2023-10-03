@@ -6,7 +6,6 @@ void Camera::Init()
 
 	viewProjection = std::make_unique<ViewProjection>();
 	viewProjection->Initialize();
-	viewProjection->aspect = (float)KWinApp::GetWindowSizeW() / KWinApp::GetWindowSizeH();
 }
 
 void Camera::Update()

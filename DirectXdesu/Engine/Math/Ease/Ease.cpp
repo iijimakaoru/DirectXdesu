@@ -2,65 +2,19 @@
 
 namespace MyEase
 {
-	float Lerp(const float start, const float end, const float time)
+	const float Lerp(const float start, const float end, const float time)
 	{
 		return start + time * (end - start);
 	}
 
-	float EaseIn(const float start, const float end, const float time, const float power)
+	const KMyMath::Vector2 Lerp2D(const KMyMath::Vector2& start, const KMyMath::Vector2& end, const float time)
 	{
-		return Lerp(start, end, powf(time, power));
+		return start * (1.0f - time) + end * time;
 	}
 
-	KMyMath::Vector3 EaseInVec3(const KMyMath::Vector3 start, const KMyMath::Vector3 end, const float time, const float power)
+	const KMyMath::Vector3 Lerp3D(const KMyMath::Vector3& start, const KMyMath::Vector3& end, const float time)
 	{
-		KMyMath::Vector3 result;
-
-		result.x = EaseIn(start.x, end.x, time, power);
-		result.y = EaseIn(start.y, end.y, time, power);
-		result.z = EaseIn(start.z, end.z, time, power);
-		return result;
-	}
-
-	float EaseOut(const float start, const float end, const float time, const float power)
-	{
-		return Lerp(start, end, 1 - powf(1 - time, power));
-	}
-
-	float EaseInSine(const float startPoint, const float endPoint, float nowFlame, float endFlame)
-	{
-		float len = startPoint - endPoint;
-
-		return static_cast<float>(endPoint + len * cos(((nowFlame / endFlame) * MyMathUtility::PI) / 2));
-	}
-
-	float EaseOutSine(const float startPoint, const float endPoint, float nowFlame, float endFlame)
-	{
-		float len = endPoint - startPoint;
-
-		return static_cast<float>(startPoint + len * sin(((nowFlame / endFlame) * MyMathUtility::PI) / 2));
-	}
-
-	KMyMath::Vector3 EaseInSine3D(const KMyMath::Vector3 startPoint, const KMyMath::Vector3 endPoint, float nowFlame, float endFlame)
-	{
-		KMyMath::Vector3 result;
-
-		result.x = EaseInSine(startPoint.x, endPoint.x, nowFlame, endFlame);
-		result.y = EaseInSine(startPoint.y, endPoint.y, nowFlame, endFlame);
-		result.z = EaseInSine(startPoint.z, endPoint.z, nowFlame, endFlame);
-
-		return result;
-	}
-
-	KMyMath::Vector3 EaseOutSine3D(const KMyMath::Vector3 startPoint, const KMyMath::Vector3 endPoint, float nowFlame, float endFlame)
-	{
-		KMyMath::Vector3 result;
-
-		result.x = EaseOutSine(startPoint.x, endPoint.x, nowFlame, endFlame);
-		result.y = EaseOutSine(startPoint.y, endPoint.y, nowFlame, endFlame);
-		result.z = EaseOutSine(startPoint.z, endPoint.z, nowFlame, endFlame);
-
-		return result;
+		return start * (1.0f - time) + end * time;
 	}
 
 	float InQuadFloat(const float start, const float end, const float time)

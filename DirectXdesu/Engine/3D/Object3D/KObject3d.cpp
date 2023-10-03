@@ -118,7 +118,7 @@ void KObject3d::MatUpdate(ViewProjection* viewProjection)
 	// B0
 	ConstBufferDataB0* constMap0 = nullptr;
 	result = constBuffB0->Map(0, nullptr, (void**)&constMap0);
-	constMap0->mat = transform.matWorld * viewProjection->matView * viewProjection->matProjection;
+	constMap0->mat = transform.matWorld * viewProjection->GetMatView() * viewProjection->GetMatPro();
 	constBuffB0->Unmap(0, nullptr);
 	assert(SUCCEEDED(result));
 }

@@ -198,7 +198,7 @@ void Particles::Update(ViewProjection* viewProjection)
 	// 定数バッファへデータ転送
 	PConstBufferData* constMap = nullptr;
 	result = constBuff->Map(0, nullptr, (void**)&constMap);
-	constMap->mat = viewProjection->matView * viewProjection->matProjection;	// 行列の合成
+	constMap->mat = viewProjection->GetMatView() * viewProjection->GetMatPro();	// 行列の合成
 	constMap->matBillboard = MyMathConvert::ChangeXMMATRIXtoMatrix4(matBillboard);	// 行列の合成
 	constBuff->Unmap(0, nullptr);
 }

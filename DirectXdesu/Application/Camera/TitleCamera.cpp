@@ -4,21 +4,19 @@ void TitleCamera::Init()
 {
 	Camera::Init();
 
-	cameraObject->transform.pos = { 0,0,-40 };
-	cameraObject->transform.rot = { 0,0,0 };
+	viewProjection->SetEye({ 0,0,-40 });
+	viewProjection->SetTarget({ 0,0,0 });
 
-	cameraObject->TransUpdate();
-
-	viewProjection->matView = MyMathUtility::MakeInverse(cameraObject->transform.matWorld);
+	eye = viewProjection->GetEye();
+	target = viewProjection->GetTarget();
+	up = viewProjection->GetUp();
 
 	Camera::Update();
 }
 
 void TitleCamera::Update()
 {
-	cameraObject->TransUpdate();
-
-	viewProjection->matView = MyMathUtility::MakeInverse(cameraObject->transform.matWorld);
+	viewProjection->SetMatView(MyMathUtility::MakeLockAt(eye, target, up));
 
 	Camera::Update();
 }

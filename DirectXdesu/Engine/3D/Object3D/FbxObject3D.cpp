@@ -66,11 +66,11 @@ void FbxObject3D::Update(ViewProjection* viewProjection)
 	matWorld *= matRot;
 	matWorld *= matTrans;
 
-	const KMyMath::Matrix4& matViewProjection = viewProjection->matView * viewProjection->matProjection;
+	const KMyMath::Matrix4& matViewProjection = viewProjection->GetMatView() * viewProjection->GetMatPro();
 
 	const KMyMath::Matrix4& modelTransform = model->GetModelTransform();
 
-	const KMyMath::Vector3& cameraPos = viewProjection->eye;
+	const KMyMath::Vector3& cameraPos = viewProjection->GetEye();
 
 	ConstBufferDataTransform* constMap = nullptr;
 	result = constBuffTransform->Map(0, nullptr, (void**)&constMap);

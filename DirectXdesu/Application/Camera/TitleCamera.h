@@ -6,11 +6,16 @@ class TitleCamera : public Camera
 public:
 	TitleCamera()
 	{
-		Init();
+		
 	}
 
 	void Init();
 
-	void Update()override;
+	void Update();
+
+private:
+	KMyMath::Vector3 eye;
+	KMyMath::Vector3 target;
+	KMyMath::Vector3 up;
 };
 

@@ -9,6 +9,7 @@
 #include "PostEffect.h"
 
 #include "Sprite.h"
+#include "TitleCamera.h"
 
 class TitleScene : public BaseScene
 {
@@ -29,7 +30,7 @@ private:
 	KInput* input = nullptr;
 
 	// カメラ
-	std::unique_ptr<Camera> camera = nullptr;
+	std::unique_ptr<TitleCamera> camera = nullptr;
 
 	// パイプライン
 	std::unique_ptr<KGPlin> spritePipeline = nullptr;
@@ -49,11 +50,22 @@ private:
 
 	KMyMath::Vector2 pushAPos = { 0,0 };
 
+#pragma region プレイヤー機体
 	// オブジェクト
-	std::unique_ptr<KObject3d> object3d;
+	std::unique_ptr<KObject3d> object3d = nullptr;
 
 	// モデル
 	std::unique_ptr<KModel> model = nullptr;
+#pragma endregion
+
+#pragma region 天球
+	// オブジェクト
+	std::unique_ptr<KObject3d> skyDome = nullptr;
+
+	// モデル
+	std::unique_ptr<KModel> skyDomeModel = nullptr;
+#pragma endregion
+
 
 	// パイプライン
 	std::unique_ptr<KGPlin> objPipeline;
@@ -72,8 +84,13 @@ private:
 
 	// フェーズ時間
 	float phaseTimer = 0;
-
 	float phaseTime = 0;
+
+	// ベジエ曲線１
+	KMyMath::Vector3 start = { 0,-30,180 };
+	KMyMath::Vector3 p1 = { 0,-30,20 };
+	KMyMath::Vector3 p2 = { 0,-30,-40 };
+	KMyMath::Vector3 end = { 0,60,-60 };
 #pragma endregion
 
 #pragma region 次のシーンへの移行演出変数

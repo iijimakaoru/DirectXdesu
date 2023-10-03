@@ -33,8 +33,8 @@ void Reticle2D::Update(ViewProjection* viewPro, KMyMath::Vector3 reticle3dPos)
 
 	// 
 	KMyMath::Matrix4 matViewProjectionViewport =
-		viewPro->matView * 
-		viewPro->matProjection * 
+		viewPro->GetMatView() * 
+		viewPro->GetMatPro() * 
 		MyMathConvert::ChangeXMMATRIXtoMatrix4(matViewport);
 
 	positionReticle = MyMathUtility::MatrixTransformWDivision(positionReticle, matViewProjectionViewport);

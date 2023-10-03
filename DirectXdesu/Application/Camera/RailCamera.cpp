@@ -16,7 +16,7 @@ void RailCamera::Init(Player* player_)
 
 	cameraObject->TransUpdate();
 
-	viewProjection->matView = MyMathUtility::MakeInverse(cameraObject->transform.matWorld);
+	viewProjection->SetMatView(MyMathUtility::MakeInverse(cameraObject->transform.matWorld));
 
 	isCrash = false;
 
@@ -49,7 +49,7 @@ void RailCamera::Update()
 
 	cameraObject->TransUpdate();
 
-	viewProjection->matView = MyMathUtility::MakeInverse(cameraObject->transform.matWorld);
+	viewProjection->SetMatView(MyMathUtility::MakeInverse(cameraObject->transform.matWorld));
 
 	Camera::Update();
 }

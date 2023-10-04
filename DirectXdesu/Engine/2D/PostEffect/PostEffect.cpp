@@ -2,8 +2,8 @@
 
 // Ã“Iƒƒ“ƒo•Ï”‚ÌÀ‘Ì
 KGPlin* PostEffect::pipeline = nullptr;
-ComPtr<ID3D12Device> PostEffect::device;
-ComPtr<ID3D12GraphicsCommandList> PostEffect::cmdList;
+Microsoft::WRL::ComPtr<ID3D12Device> PostEffect::device;
+Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> PostEffect::cmdList;
 KWinApp* PostEffect::window = nullptr;
 const float PostEffect::clearColor[4] = { 0.5f, 0.5f, 0.5f, 0.0f };
 

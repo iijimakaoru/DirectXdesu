@@ -60,15 +60,15 @@ Cube::Cube() {
 
 Triangle::Triangle() 
 {
-	ifstream file;
+	std::ifstream file;
 
 	file.open("Resources/obj/triangle_tex.obj");
 
 	assert(!file.fail());
 
-	vector<KMyMath::Vector3> positions;
-	vector<KMyMath::Vector3> normals;
-	vector<KMyMath::Vector2> texcoords;
+	std::vector<KMyMath::Vector3> positions;
+	std::vector<KMyMath::Vector3> normals;
+	std::vector<KMyMath::Vector2> texcoords;
 
 	std::string line;
 	while (getline(file, line))
@@ -76,8 +76,8 @@ Triangle::Triangle()
 
 		std::istringstream line_stream(line);
 
-		string key;
-		getline(line_stream, key, ' ');
+		std::string key;
+		std::getline(line_stream, key, ' ');
 
 		if (key == "v")
 		{
@@ -112,17 +112,17 @@ Triangle::Triangle()
 
 		if (key == "f")
 		{
-			string index_string;
-			while (getline(line_stream, index_string, ' '))
+			std::string index_string;
+			while (std::getline(line_stream, index_string, ' '))
 			{
 				std::istringstream index_stream(index_string);
 
 				unsigned short indexPosition, indexNormal, indexTexcoord;
 
 				index_stream >> indexPosition;
-				index_stream.seekg(1, ios_base::cur);
+				index_stream.seekg(1, std::ios_base::cur);
 				index_stream >> indexTexcoord;
-				index_stream.seekg(1, ios_base::cur);
+				index_stream.seekg(1, std::ios_base::cur);
 				index_stream >> indexNormal;
 
 				VertexPosNormalUV vertex{};
@@ -306,19 +306,19 @@ void KModel::Draw(TextureData texData)
 	KDirectXCommon::GetInstance()->GetCmdlist()->DrawIndexedInstanced(static_cast<UINT>(indices.size()), 1, 0, 0, 0);
 }
 
-MtlObj::MtlObj(const string modelname)
+MtlObj::MtlObj(const std::string modelname)
 {
-	ifstream file;
+	std::ifstream file;
 
-	const string filename = modelname + ".obj";
-	const string directoryPath = "Resources/obj/" + modelname + "/";
+	const std::string filename = modelname + ".obj";
+	const std::string directoryPath = "Resources/obj/" + modelname + "/";
 	file.open(directoryPath + filename);
 
 	assert(!file.fail());
 
-	vector<KMyMath::Vector3> positions;
-	vector<KMyMath::Vector3> normals;
-	vector<KMyMath::Vector2> texcoords;
+	std::vector<KMyMath::Vector3> positions;
+	std::vector<KMyMath::Vector3> normals;
+	std::vector<KMyMath::Vector2> texcoords;
 
 	std::string line;
 	while (getline(file, line))
@@ -326,13 +326,13 @@ MtlObj::MtlObj(const string modelname)
 
 		std::istringstream line_stream(line);
 
-		string key;
-		getline(line_stream, key, ' ');
+		std::string key;
+		std::getline(line_stream, key, ' ');
 
 		if (key == "mtllib")
 		{
 			// 
-			string filename;
+			std::string filename;
 			line_stream >> filename;
 			// 
 			LoadMaterial(directoryPath, filename);
@@ -371,17 +371,17 @@ MtlObj::MtlObj(const string modelname)
 
 		if (key == "f")
 		{
-			string index_string;
-			while (getline(line_stream, index_string, ' '))
+			std::string index_string;
+			while (std::getline(line_stream, index_string, ' '))
 			{
 				std::istringstream index_stream(index_string);
 
 				unsigned short indexPosition, indexNormal, indexTexcoord;
 
 				index_stream >> indexPosition;
-				index_stream.seekg(1, ios_base::cur);
+				index_stream.seekg(1, std::ios_base::cur);
 				index_stream >> indexTexcoord;
-				index_stream.seekg(1, ios_base::cur);
+				index_stream.seekg(1, std::ios_base::cur);
 				index_stream >> indexNormal;
 
 				VertexPosNormalUV vertex{};

@@ -15,12 +15,12 @@ void ViewProjection::Initialize()
 
 	matView = MyMathUtility::MakeLockAt(eye, target, up);
 
-	matProjection = MyMathUtility::MakePerspective(XMConvertToRadians(45.0f), aspect, nearZ, farZ);
+	matProjection = MyMathUtility::MakePerspective(DirectX::XMConvertToRadians(45.0f), aspect, nearZ, farZ);
 }
 
 void ViewProjection::Update() 
 {
-	matProjection = MyMathUtility::MakePerspective(XMConvertToRadians(45.0f), aspect, nearZ, farZ);
+	matProjection = MyMathUtility::MakePerspective(DirectX::XMConvertToRadians(45.0f), aspect, nearZ, farZ);
 }
 
 const KMyMath::Matrix4& ViewProjection::GetMatView() const

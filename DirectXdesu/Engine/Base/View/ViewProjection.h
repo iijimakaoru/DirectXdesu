@@ -3,8 +3,6 @@
 #include "KWinApp.h"
 #include "MyMath.h"
 
-using namespace DirectX;
-
 class ViewProjection
 {
 public:

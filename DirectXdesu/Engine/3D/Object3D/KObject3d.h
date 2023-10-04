@@ -4,8 +4,6 @@
 #include "ViewProjection.h"
 #include "KGPlin.h"
 
-using namespace DirectX;
-
 struct ConstBufferDataB1
 {
 	KMyMath::Vector3 ambient;
@@ -124,8 +122,8 @@ public:
 	WorldTransfom transform;
 
 private:
-	ComPtr<ID3D12Resource> constBuffB0;
-	ComPtr<ID3D12Resource> constBuffB1;
+	Microsoft::WRL::ComPtr<ID3D12Resource> constBuffB0;
+	Microsoft::WRL::ComPtr<ID3D12Resource> constBuffB1;
 
 	HRESULT result;
 

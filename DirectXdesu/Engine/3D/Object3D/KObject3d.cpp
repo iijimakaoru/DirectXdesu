@@ -88,8 +88,8 @@ void KObject3d::TransUpdate()
 
 	// 親オブジェクト要素
 	matScale = MyMathUtility::MakeScaling(transform.scale);
-	matRot = MyMathUtility::MakeRotation({ XMConvertToRadians(transform.rot.x),
-		XMConvertToRadians(transform.rot.y),XMConvertToRadians(transform.rot.z) });
+	matRot = MyMathUtility::MakeRotation({ DirectX::XMConvertToRadians(transform.rot.x),
+		DirectX::XMConvertToRadians(transform.rot.y),DirectX::XMConvertToRadians(transform.rot.z) });
 	matTrans = MyMathUtility::MakeTranslation(transform.pos);
 
 	// 行列初期化

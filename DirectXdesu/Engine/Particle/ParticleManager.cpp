@@ -7,9 +7,6 @@
 
 #include "Ease.h"
 
-using namespace DirectX;
-using namespace Microsoft::WRL;
-
 /// <summary>
 /// 静的メンバ変数の実体
 /// </summary>
@@ -18,8 +15,8 @@ ID3D12GraphicsCommandList* Particles::cmdList = nullptr;
 std::unique_ptr<KGPlin> Particles::pipeline = nullptr;
 KShader Particles::shader;
 
-XMMATRIX Particles::matBillboard = XMMatrixIdentity();
-XMMATRIX Particles::matBillboardY = XMMatrixIdentity();
+DirectX::XMMATRIX Particles::matBillboard = DirectX::XMMatrixIdentity();
+DirectX::XMMATRIX Particles::matBillboardY = DirectX::XMMatrixIdentity();
 
 // ビルボードパーティクル
 const DirectX::XMFLOAT3 operator+(const DirectX::XMFLOAT3& lhs, const DirectX::XMFLOAT3& rhs)

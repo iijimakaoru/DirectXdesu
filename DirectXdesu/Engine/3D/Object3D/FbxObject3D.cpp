@@ -4,8 +4,6 @@
 
 KGPlin* FbxObject3D::pipeline = nullptr;
 
-using namespace DirectX;
-
 void FbxObject3D::Init()
 {
 	// ÉqÅ[Évê›íË
@@ -56,8 +54,8 @@ void FbxObject3D::Update(ViewProjection* viewProjection)
 	matScale = MyMathUtility::MakeIdentity();
 	matScale = MyMathUtility::MakeScaling(scale);
 	matRot = MyMathUtility::MakeIdentity();
-	matRot = MyMathUtility::MakeRotation({ XMConvertToRadians(rotation.x),
-		XMConvertToRadians(rotation.y),XMConvertToRadians(rotation.z) });
+	matRot = MyMathUtility::MakeRotation({ DirectX::XMConvertToRadians(rotation.x),
+		DirectX::XMConvertToRadians(rotation.y),DirectX::XMConvertToRadians(rotation.z) });
 	matTrans = MyMathUtility::MakeIdentity();
 	matTrans = MyMathUtility::MakeTranslation(position);
 

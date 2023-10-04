@@ -10,8 +10,6 @@
 #pragma comment(lib, "dxguid.lib")
 #pragma comment(lib, "xinput.lib")
 
-using namespace Microsoft::WRL;
-
 class KInput
 {
 public:

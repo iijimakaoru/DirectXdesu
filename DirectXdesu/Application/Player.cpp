@@ -174,7 +174,7 @@ void Player::Rot()
 	{
 		//自機はスティックを倒した方向に動く
 		const float stickRota = input->GetLStickAngle();
-		const float moveAngle = XMConvertToRadians(stickRota);
+		const float moveAngle = DirectX::XMConvertToRadians(stickRota);
 		const float padStickIncline = input->GetLStickInline().x;
 		rot.y = rotSpeed * cosf(moveAngle) * fabsf(padStickIncline);
 	}
@@ -205,7 +205,7 @@ void Player::Rot()
 	{
 		//自機はスティックを倒した方向に動く
 		const float stickRota = -input->GetLStickAngle();
-		const float moveAngle = XMConvertToRadians(stickRota);
+		const float moveAngle = DirectX::XMConvertToRadians(stickRota);
 		const float padStickIncline = input->GetLStickInline().y;
 		rot.x = rotSpeed * sinf(moveAngle) * fabsf(padStickIncline);
 	}

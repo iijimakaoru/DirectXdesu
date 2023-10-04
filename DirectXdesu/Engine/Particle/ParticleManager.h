@@ -74,9 +74,9 @@ private: // 静的メンバ変数
 	static KShader shader;
 
 	// ビルボード行列
-	static XMMATRIX matBillboard;
+	static DirectX::XMMATRIX matBillboard;
 	// Y軸回りビルボード行列
-	static XMMATRIX matBillboardY;
+	static DirectX::XMMATRIX matBillboardY;
 
 private:// 静的メンバ関数
 	/// <summary>
@@ -118,13 +118,13 @@ private:
 	VertexPos vertices[vertexCount];
 
 	// 頂点バッファ
-	ComPtr<ID3D12Resource> vertBuff;
+	Microsoft::WRL::ComPtr<ID3D12Resource> vertBuff;
 
 	// 頂点バッファビュー
 	D3D12_VERTEX_BUFFER_VIEW vbView;
 
 private: // メンバ変数
-	ComPtr<ID3D12Resource> constBuff; // 定数バッファ
+	Microsoft::WRL::ComPtr<ID3D12Resource> constBuff; // 定数バッファ
 
 	TextureData textureData;
 

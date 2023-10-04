@@ -85,14 +85,14 @@ void FbxLoader::ParseNodeRecursive(FbxModel* model, FbxNode* fbxNode, Node* pare
 	node.scaling = { (float)scaling[0],(float)scaling[1],(float)scaling[2],0.0f };
 	node.translation = { (float)translation[0],(float)translation[1],(float)translation[2],1.0f };
 	// 回転角をDegree(度)からラジアンに変換
-	node.rotation.x = XMConvertToRadians(node.rotation.x);
-	node.rotation.y = XMConvertToRadians(node.rotation.y);
-	node.rotation.z = XMConvertToRadians(node.rotation.z);
+	node.rotation.x = DirectX::XMConvertToRadians(node.rotation.x);
+	node.rotation.y = DirectX::XMConvertToRadians(node.rotation.y);
+	node.rotation.z = DirectX::XMConvertToRadians(node.rotation.z);
 	// スケール、回転、平行移動行列の計算
-	XMMATRIX matScaling, matRotation, matTransition;
-	matScaling = XMMatrixScalingFromVector(MyMathConvert::ChangeVector4toXMVECTOR(node.scaling));
-	matRotation = XMMatrixRotationRollPitchYawFromVector(MyMathConvert::ChangeVector4toXMVECTOR(node.rotation));
-	matTransition = XMMatrixTranslationFromVector(MyMathConvert::ChangeVector4toXMVECTOR(node.translation));
+	DirectX::XMMATRIX matScaling, matRotation, matTransition;
+	matScaling = DirectX::XMMatrixScalingFromVector(MyMathConvert::ChangeVector4toXMVECTOR(node.scaling));
+	matRotation = DirectX::XMMatrixRotationRollPitchYawFromVector(MyMathConvert::ChangeVector4toXMVECTOR(node.rotation));
+	matTransition = DirectX::XMMatrixTranslationFromVector(MyMathConvert::ChangeVector4toXMVECTOR(node.translation));
 	// ローカル変形行列の計算
 	node.transform = MyMathUtility::MakeIdentity();
 	node.transform *= MyMathConvert::ChangeXMMATRIXtoMatrix4(matScaling); // スケーリング
@@ -300,12 +300,12 @@ void FbxLoader::LoadTexture(FbxModel* model, const std::string& fullpath)
 {
 	HRESULT result = S_FALSE;
 	// WICテクスチャロード
-	TexMetadata& metadata = model->metadata;
-	ScratchImage& scratchImage = model->scratchImg;
+	DirectX::TexMetadata& metadata = model->metadata;
+	DirectX::ScratchImage& scratchImage = model->scratchImg;
 	// ユニコード文字列に変換
 	wchar_t wfilepath[128];
 	MultiByteToWideChar(CP_ACP, 0, fullpath.c_str(), -1, wfilepath, _countof(wfilepath));
-	result = LoadFromWICFile(wfilepath, WIC_FLAGS_NONE, &metadata, scratchImage);
+	result = LoadFromWICFile(wfilepath, DirectX::WIC_FLAGS_NONE, &metadata, scratchImage);
 	if (FAILED(result))
 	{
 		assert(0);

@@ -3,8 +3,8 @@
 #include "KWinApp.h"
 
 KMyMath::Matrix4 Sprite::matPro;
-ComPtr<ID3D12Device> Sprite::device;
-ComPtr<ID3D12GraphicsCommandList> Sprite::cmdList;
+Microsoft::WRL::ComPtr<ID3D12Device> Sprite::device;
+Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> Sprite::cmdList;
 
 void Sprite::StaticInit()
 {

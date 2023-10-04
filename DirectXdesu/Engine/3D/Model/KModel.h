@@ -5,10 +5,8 @@
 #include <string>
 #include "TextureManager.h"
 
-using namespace DirectX;
-using namespace std;
-
-class KModel {
+class KModel 
+{
 public:
 	struct ObjMaterialInfo
 	{
@@ -39,7 +37,7 @@ public:
 	// インデックスデータ
 	std::vector<unsigned short> indices;
 
-	std::unique_ptr<KVertex> vertexs = make_unique<KVertex>();
+	std::unique_ptr<KVertex> vertexs =std::make_unique<KVertex>();
 
 	TextureData texData;
 
@@ -75,6 +73,6 @@ public:
 class MtlObj : public KModel
 {
 public:
-	MtlObj(const string modelname);
+	MtlObj(const std::string modelname);
 	~MtlObj() {};
 };

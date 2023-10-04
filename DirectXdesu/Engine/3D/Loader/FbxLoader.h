@@ -2,8 +2,6 @@
 #include "fbxsdk.h"
 #include "FbxModel.h"
 
-using namespace DirectX;
-
 class FbxLoader
 {
 private:// エイリアス

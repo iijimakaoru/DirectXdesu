@@ -3,7 +3,6 @@
 #include <xaudio2.h>
 #pragma comment(lib,"xaudio2.lib")
 #include <fstream>
-//#include <combaseapi.h>
 
 struct ChunkHeader
 {

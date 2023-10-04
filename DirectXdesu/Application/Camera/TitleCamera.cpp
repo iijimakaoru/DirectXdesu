@@ -61,7 +61,7 @@ void TitleCamera::RoundCamera()
 
 	nowAngle = rotAngle;
 
-	const float radian = XMConvertToRadians(rotAngle);
+	const float radian = DirectX::XMConvertToRadians(rotAngle);
 	const float distance = -40;
 	cameraObject->transform.pos.z = distance * cosf(radian);
 	cameraObject->transform.pos.x = distance * sinf(radian);
@@ -93,15 +93,15 @@ void TitleCamera::SortieCamera()
 		cameraObject->transform.pos.y = MyEase::OutCubicFloat(3, 0, sortiePhaseTimer / sortiePhaseTime);
 
 		float radian = 
-			MyEase::OutCubicFloat(XMConvertToRadians(nowAngle),
-				XMConvertToRadians(360 * 2),
+			MyEase::OutCubicFloat(DirectX::XMConvertToRadians(nowAngle),
+				DirectX::XMConvertToRadians(360 * 2),
 				sortiePhaseTimer / sortiePhaseTime);
 		float distance = MyEase::OutCubicFloat(-40, -30, sortiePhaseTimer / sortiePhaseTime);
 
 		cameraObject->transform.pos.z = distance * cosf(radian);
 		cameraObject->transform.pos.x = distance * sinf(radian);
 
-		cameraObject->transform.rot.y = XMConvertToDegrees(radian);
+		cameraObject->transform.rot.y = DirectX::XMConvertToDegrees(radian);
 		cameraObject->transform.rot.x = MyEase::OutCubicFloat(2, 0, sortiePhaseTimer / sortiePhaseTime);
 	}
 	else

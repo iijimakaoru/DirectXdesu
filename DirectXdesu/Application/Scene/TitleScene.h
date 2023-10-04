@@ -23,6 +23,9 @@ public:
 	void SpriteDraw() override;
 	void Final()override;
 
+	// タイトル導入演出
+	void StartScene();
+
 	// 次のシーンへ
 	void GoNextScene();
 private:
@@ -66,7 +69,6 @@ private:
 	std::unique_ptr<KModel> skyDomeModel = nullptr;
 #pragma endregion
 
-
 	// パイプライン
 	std::unique_ptr<KGPlin> objPipeline;
 	KShader objShader;
@@ -82,15 +84,21 @@ private:
 	// 演出のフェーズ
 	uint32_t startScenePhase = 0;
 
-	// フェーズ時間
-	float phaseTimer = 0;
-	float phaseTime = 0;
-
 	// ベジエ曲線１
 	KMyMath::Vector3 start = { 0,-30,180 };
 	KMyMath::Vector3 p1 = { 0,-30,20 };
 	KMyMath::Vector3 p2 = { 0,-30,-40 };
 	KMyMath::Vector3 end = { 0,60,-60 };
+
+	// オブジェクト拡大タイマー
+	float objEaseTimer = 0;
+	const float objEaseTime = 20;
+
+	// フラッシュ
+	std::unique_ptr<Sprite> flash = nullptr;
+	TextureData flashTex;
+
+	float flashAlpha = 0;
 #pragma endregion
 
 #pragma region 次のシーンへの移行演出変数
@@ -100,20 +108,13 @@ private:
 	// 演出のフェーズ
 	uint32_t goGamePhase = 0;
 
-	// 機体の今の角度
-	float nowAngle = 0;
-
-	// 角度補正イージングタイマー
-	float easeTimer = 0;
-	const float easeTime = 30;
-
 	// テキスト吹き飛ばしタイマー
 	float texEaseTimer = 0;
 	const float texEaseTime = 10;
-
-	// 機体飛び出しタイマー
-	float objEaseTimer = 0;
-	const float objEaseTime = 15;
 #pragma endregion
+
+	// フェーズ時間
+	float phaseTimer = 0;
+	float phaseTime = 0;
 };
 

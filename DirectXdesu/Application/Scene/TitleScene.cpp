@@ -30,11 +30,16 @@ void TitleScene::LoadResources()
 	// プッシュAテクスチャ
 	pushATex = TextureManager::Load("Resources/texture/kariNextScene.png");
 
+	// 機体モデル
 	model = std::make_unique<MtlObj>("BattleShip");
 	model->CreateModel();
 
+	// 天球モデル
 	skyDomeModel = std::make_unique<MtlObj>("Hosizora");
 	skyDomeModel->CreateModel();
+
+	// フラッシュテクスチャ
+	flashTex = TextureManager::Load("Resources/texture/white1x1.png");
 }
 
 void TitleScene::Init()
@@ -70,6 +75,13 @@ void TitleScene::Init()
 
 	skyDome->transform.scale = { 200,200,200 };
 
+	// フラッシュ
+	flash = std::make_unique<Sprite>();
+	flash->Init();
+	flash->SetPipeline(spritePipeline.get());
+
+	flashAlpha = 0;
+
 	startScene = true;
 
 	startScenePhase = 0;
@@ -84,8 +96,6 @@ void TitleScene::Init()
 
 	texEaseTimer = 0;
 
-	easeTimer = 0;
-
 	objEaseTimer = 0;
 }
 
@@ -93,81 +103,7 @@ void TitleScene::Update()
 {
 	if (startScene)
 	{
-		if (startScenePhase == 0)
-		{
-			phaseTime = 30;
-
-			phaseTimer++;
-
-			if (phaseTimer > phaseTime)
-			{
-				startScenePhase++;
-				phaseTimer = 0;
-			}
-		}
-		else if (startScenePhase == 1)
-		{
-			start = { 0,-30,180 };
-			p1 = { 0,-30,20 };
-			p2 = { 0,-30,-40 };
-			end = { 0,60,-60 };
-
-			phaseTime = 60;
-
-			phaseTimer++;
-
-			// ポイント１の制御点
-			KMyMath::Vector3 point1_1 = MyEase::Lerp3D(start, p1, phaseTimer / phaseTime);
-			KMyMath::Vector3 point1_2 = MyEase::Lerp3D(p1, end, phaseTimer / phaseTime);
-			KMyMath::Vector3 point1 = MyEase::Lerp3D(point1_1, point1_2, phaseTimer / phaseTime);
-
-			// ポイント２の制御点
-			KMyMath::Vector3 point2_1 = MyEase::Lerp3D(start, p2, phaseTimer / phaseTime);
-			KMyMath::Vector3 point2_2 = MyEase::Lerp3D(p2, end, phaseTimer / phaseTime);
-			KMyMath::Vector3 point2 = MyEase::Lerp3D(point2_1, point2_2, phaseTimer / phaseTime);
-
-			object3d->transform.pos = MyEase::Lerp3D(point1, point2, phaseTimer / phaseTime);
-
-			if (phaseTimer > phaseTime)
-			{
-				startScenePhase++;
-				phaseTimer = 0;
-			}
-		}
-		else if (startScenePhase == 2)
-		{
-			start = { 0,60,60 };
-			p1 = { 0,40,60 };
-			p2 = { 0,0,40 };
-			end = { 0,0,0 };
-
-			phaseTime = 60;
-
-			phaseTimer++;
-
-			// ポイント１の制御点
-			KMyMath::Vector3 point1_1 = MyEase::Lerp3D(start, p1, phaseTimer / phaseTime);
-			KMyMath::Vector3 point1_2 = MyEase::Lerp3D(p1, end, phaseTimer / phaseTime);
-			KMyMath::Vector3 point1 = MyEase::Lerp3D(point1_1, point1_2, phaseTimer / phaseTime);
-
-			// ポイント２の制御点
-			KMyMath::Vector3 point2_1 = MyEase::Lerp3D(start, p2, phaseTimer / phaseTime);
-			KMyMath::Vector3 point2_2 = MyEase::Lerp3D(p2, end, phaseTimer / phaseTime);
-			KMyMath::Vector3 point2 = MyEase::Lerp3D(point2_1, point2_2, phaseTimer / phaseTime);
-
-			object3d->transform.pos = MyEase::Lerp3D(point1, point2, phaseTimer / phaseTime);
-
-			if (phaseTimer > phaseTime)
-			{
-				startScenePhase++;
-				phaseTimer = 0;
-			}
-		}
-		else
-		{
-			startScene = false;
-			camera->StartRound();
-		}
+		StartScene();
 	}
 	else
 	{
@@ -177,12 +113,18 @@ void TitleScene::Update()
 		}
 		else
 		{
+			if (flashAlpha > 0)
+			{
+				flashAlpha -= 0.1f;
+			}
+
 			// 次のシーンへ
 			if (!sceneChange->GetIsEffect())
 			{
 				if (input->IsTrigger(DIK_SPACE) || input->GetPadButtonDown(XINPUT_GAMEPAD_A))
 				{
 					goGame = true;
+					camera->StartSortie();
 				}
 			}
 
@@ -218,6 +160,8 @@ void TitleScene::SpriteDraw()
 
 		pushA->Draw(pushATex, pushAPos, { 0.5f,0.5f });
 	}
+
+	flash->Draw(flashTex, { width / 2,height / 2 }, { width,height }, 0, { 1,1,1,flashAlpha });
 }
 
 void TitleScene::Final()
@@ -225,10 +169,109 @@ void TitleScene::Final()
 	
 }
 
+void TitleScene::StartScene()
+{
+	// シーン遷移待ち
+	if (startScenePhase == 0)
+	{
+		phaseTime = 30;
+
+		phaseTimer++;
+
+		if (phaseTimer > phaseTime)
+		{
+			startScenePhase++;
+			phaseTimer = 0;
+		}
+	}
+	// こっちに飛んできて上に行く
+	else if (startScenePhase == 1)
+	{
+		start = { 0,-30,180 };
+		p1 = { 0,-30,20 };
+		p2 = { 0,-30,-40 };
+		end = { 0,60,-60 };
+
+		phaseTime = 60;
+
+		phaseTimer++;
+
+		// ポイント１の制御点
+		KMyMath::Vector3 point1_1 = MyEase::Lerp3D(start, p1, phaseTimer / phaseTime);
+		KMyMath::Vector3 point1_2 = MyEase::Lerp3D(p1, end, phaseTimer / phaseTime);
+		KMyMath::Vector3 point1 = MyEase::Lerp3D(point1_1, point1_2, phaseTimer / phaseTime);
+
+		// ポイント２の制御点
+		KMyMath::Vector3 point2_1 = MyEase::Lerp3D(start, p2, phaseTimer / phaseTime);
+		KMyMath::Vector3 point2_2 = MyEase::Lerp3D(p2, end, phaseTimer / phaseTime);
+		KMyMath::Vector3 point2 = MyEase::Lerp3D(point2_1, point2_2, phaseTimer / phaseTime);
+
+		object3d->transform.pos = MyEase::Lerp3D(point1, point2, phaseTimer / phaseTime);
+
+		if (objEaseTimer < objEaseTime)
+		{
+			objEaseTimer++;
+
+			object3d->transform.scale =
+			{
+				MyEase::OutCubicFloat(0, 1, objEaseTimer / objEaseTime),
+				MyEase::OutCubicFloat(0, 1, objEaseTimer / objEaseTime),
+				MyEase::OutCubicFloat(0, 1, objEaseTimer / objEaseTime)
+			};
+		}
+
+		if (phaseTimer > phaseTime)
+		{
+			startScenePhase++;
+			phaseTimer = 0;
+		}
+	}
+	// 上から帰ってくる
+	else if (startScenePhase == 2)
+	{
+		start = { 0,60,60 };
+		p1 = { 0,40,60 };
+		p2 = { 0,0,40 };
+		end = { 0,0,0 };
+
+		phaseTime = 60;
+
+		phaseTimer++;
+
+		// ポイント１の制御点
+		KMyMath::Vector3 point1_1 = MyEase::Lerp3D(start, p1, phaseTimer / phaseTime);
+		KMyMath::Vector3 point1_2 = MyEase::Lerp3D(p1, end, phaseTimer / phaseTime);
+		KMyMath::Vector3 point1 = MyEase::Lerp3D(point1_1, point1_2, phaseTimer / phaseTime);
+
+		// ポイント２の制御点
+		KMyMath::Vector3 point2_1 = MyEase::Lerp3D(start, p2, phaseTimer / phaseTime);
+		KMyMath::Vector3 point2_2 = MyEase::Lerp3D(p2, end, phaseTimer / phaseTime);
+		KMyMath::Vector3 point2 = MyEase::Lerp3D(point2_1, point2_2, phaseTimer / phaseTime);
+
+		object3d->transform.pos = MyEase::Lerp3D(point1, point2, phaseTimer / phaseTime);
+
+		if (phaseTimer > phaseTime)
+		{
+			startScenePhase++;
+			phaseTimer = 0;
+		}
+	}
+	// スタート画面
+	else
+	{
+		startScene = false;
+		camera->StartRound();
+		flashAlpha = 1.0f;
+	}
+}
+
 void TitleScene::GoNextScene()
 {
+	// カメラ遷移待ち
 	if (goGamePhase == 0)
 	{
+		phaseTime = 45;
+
 		if (texEaseTimer < texEaseTime)
 		{
 			texEaseTimer++;
@@ -240,36 +283,69 @@ void TitleScene::GoNextScene()
 				texEaseTimer / texEaseTime);
 		}
 
-		if (easeTimer < easeTime)
+		if (phaseTimer < phaseTime)
 		{
-			easeTimer++;
+			phaseTimer++;
 		}
 		else
 		{
 			goGamePhase++;
+			phaseTimer = 0;
 		}
 	}
 	else if (goGamePhase == 1)
 	{
-		if (objEaseTimer < objEaseTime)
+		phaseTime = 30;
+
+		if (phaseTimer < phaseTime)
 		{
-			objEaseTimer++;
-
-			object3d->transform.scale =
-			{
-				MyEase::OutCubicFloat(1, 0, objEaseTimer / objEaseTime),
-				MyEase::OutCubicFloat(1, 0, objEaseTimer / objEaseTime),
-				MyEase::OutCubicFloat(1, 0, objEaseTimer / objEaseTime)
-			};
-
-			object3d->transform.pos.z = MyEase::OutCubicFloat(0, 150, objEaseTimer / objEaseTime);
+			phaseTimer++;
 		}
 		else
 		{
 			goGamePhase++;
+			phaseTimer = 0;
 		}
 	}
 	else if (goGamePhase == 2)
+	{
+		phaseTime = 15;
+
+		start = { 0,0,0 };
+		p1 = { 0,0,100 };
+		p2 = { 0,0,150 };
+		end = { 0,60,180 };
+
+		if (phaseTimer < phaseTime)
+		{
+			phaseTimer++;
+
+			object3d->transform.scale =
+			{
+				MyEase::OutCubicFloat(1, 0, phaseTimer / phaseTime),
+				MyEase::OutCubicFloat(1, 0, phaseTimer / phaseTime),
+				MyEase::OutCubicFloat(1, 0, phaseTimer / phaseTime)
+			};
+
+			// ポイント１の制御点
+			KMyMath::Vector3 point1_1 = MyEase::Lerp3D(start, p1, phaseTimer / phaseTime);
+			KMyMath::Vector3 point1_2 = MyEase::Lerp3D(p1, end, phaseTimer / phaseTime);
+			KMyMath::Vector3 point1 = MyEase::Lerp3D(point1_1, point1_2, phaseTimer / phaseTime);
+
+			// ポイント２の制御点
+			KMyMath::Vector3 point2_1 = MyEase::Lerp3D(start, p2, phaseTimer / phaseTime);
+			KMyMath::Vector3 point2_2 = MyEase::Lerp3D(p2, end, phaseTimer / phaseTime);
+			KMyMath::Vector3 point2 = MyEase::Lerp3D(point2_1, point2_2, phaseTimer / phaseTime);
+
+			object3d->transform.pos = MyEase::Lerp3D(point1, point2, phaseTimer / phaseTime);
+		}
+		else
+		{
+			goGamePhase++;
+			phaseTimer = 0;
+		}
+	}
+	else if (goGamePhase == 3)
 	{
 		sceneChange->Start();
 		goGamePhase++;

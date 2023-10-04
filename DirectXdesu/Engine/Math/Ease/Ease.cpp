@@ -4,7 +4,7 @@ namespace MyEase
 {
 	const float Lerp(const float start, const float end, const float time)
 	{
-		return start + time * (end - start);
+		return start * (1.0f - time) + end * time;
 	}
 
 	const KMyMath::Vector2 Lerp2D(const KMyMath::Vector2& start, const KMyMath::Vector2& end, const float time)

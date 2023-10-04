@@ -71,6 +71,9 @@ void TitleScene::Init()
 
 	// オブジェクト生成
 	object3d.reset(KObject3d::Create(model.get(), objPipeline.get()));
+
+	object3d->transform.scale = { 0,0,0 };
+
 	skyDome.reset(KObject3d::Create(skyDomeModel.get(), objPipeline.get()));
 
 	skyDome->transform.scale = { 200,200,200 };
@@ -129,6 +132,8 @@ void TitleScene::Update()
 			}
 
 			object3d->transform.pos = { 0,0,0 };
+
+			object3d->transform.rot = { 0,0,0 };
 		}
 
 		if (sceneChange->GetIsChange())
@@ -208,6 +213,10 @@ void TitleScene::StartScene()
 
 		object3d->transform.pos = MyEase::Lerp3D(point1, point2, phaseTimer / phaseTime);
 
+		object3d->transform.rot.y = 180;
+
+		object3d->transform.rot.x = MyEase::Lerp(0, -45.0f, phaseTimer / phaseTime);
+
 		if (objEaseTimer < objEaseTime)
 		{
 			objEaseTimer++;
@@ -249,6 +258,10 @@ void TitleScene::StartScene()
 		KMyMath::Vector3 point2 = MyEase::Lerp3D(point2_1, point2_2, phaseTimer / phaseTime);
 
 		object3d->transform.pos = MyEase::Lerp3D(point1, point2, phaseTimer / phaseTime);
+
+		object3d->transform.rot.y = 180;
+
+		object3d->transform.rot.x = MyEase::Lerp(45.0f, 0.0f, phaseTimer / phaseTime);
 
 		if (phaseTimer > phaseTime)
 		{

@@ -40,7 +40,7 @@ private:
 	// シーンファクトリー
 	ASceneFactory* sceneFactory = nullptr;
 
-	SceneManager() = default;
+	SceneManager(){};
 	~SceneManager() = default;
 	SceneManager(const SceneManager&) = delete;
 	const SceneManager& operator=(const SceneManager&) = delete;

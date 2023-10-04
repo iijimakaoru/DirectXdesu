@@ -6,8 +6,8 @@ class KWinApp
 private:
 	KWinApp() {};
 	~KWinApp() = default;
-	KWinApp(const KWinApp& win) {};
-	KWinApp& operator=(const KWinApp&) = default;
+	KWinApp(const KWinApp&) = delete;
+	KWinApp& operator=(const KWinApp&) = delete;
 	static LRESULT WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
 
 	void InitInternal();

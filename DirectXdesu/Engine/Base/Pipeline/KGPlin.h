@@ -1,8 +1,6 @@
 #pragma once
-#include <d3d12.h>
 #include "KShader.h"
 #include "KVertex.h"
-#include <string>
 
 class KGPlin
 {

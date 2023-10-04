@@ -1,19 +1,13 @@
 #pragma once
-#include <DirectXMath.h>
 #include "KDirectXCommon.h"
 #include "Vector3.h"
 #include "Vector2.h"
-#include <vector>
-#include <wrl.h>
 
 using namespace Microsoft::WRL;
 
-using namespace DirectX;
-
-//std::vector<int>;
-
 // 頂点データ構造体
-struct VertexPosNormalUV {
+struct VertexPosNormalUV 
+{
 	KMyMath::Vector3 pos;	 // xyz座標
 	KMyMath::Vector3 normal; // 法線ベクトル
 	KMyMath::Vector2 uv;	 // uv座標

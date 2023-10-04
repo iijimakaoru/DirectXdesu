@@ -1,6 +1,4 @@
 #pragma once
-#include "Vector3.h"
-#include <DirectXMath.h>
 #include <array>
 
 namespace KMyMath

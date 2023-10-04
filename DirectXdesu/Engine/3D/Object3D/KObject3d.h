@@ -1,6 +1,4 @@
 #pragma once
-#include <d3d12.h>
-#include <DirectXMath.h>
 #include "Vector3.h"
 #include "KModel.h"
 #include "ViewProjection.h"

@@ -1,13 +1,6 @@
 #pragma once
-#include <DirectXMath.h>
-#include <vector>
-#include <memory>
-#include <d3dx12.h>
 #include "KGPlin.h"
-#include <wrl.h>
-
 #include "MyMath.h"
-
 #include "TextureManager.h"
 
 class Sprite

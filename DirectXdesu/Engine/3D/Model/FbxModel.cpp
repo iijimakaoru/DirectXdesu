@@ -1,4 +1,5 @@
 #include "FbxModel.h"
+#include <DirectXTex.h>
 
 void FbxModel::CreateBuffer()
 {
@@ -58,10 +59,8 @@ void FbxModel::CreateBuffer()
 	ibView.Format = DXGI_FORMAT_R16_UINT;
 	ibView.SizeInBytes = sizeIB;
 
-	//vertexs.reset(new KVertex(KDirectXCommon::GetInstance()->GetDev(), vertices, indices));
-
 	// テクスチャ画像データ
-	const Image* img = scratchImg.GetImage(0, 0, 0);
+	const DirectX::Image* img = scratchImg.GetImage(0, 0, 0);
 	assert(img);
 
 	// ヒープ設定

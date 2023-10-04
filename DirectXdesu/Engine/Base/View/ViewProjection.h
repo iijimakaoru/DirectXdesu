@@ -1,6 +1,4 @@
 #pragma once
-#include <DirectXMath.h>
-#include <DirectXTex.h>
 #include "Vector3.h"
 #include "KWinApp.h"
 #include "MyMath.h"

@@ -1,11 +1,8 @@
 #pragma once
-#include <vector>
 #include "KVertex.h"
-#include <memory>
 #include <fstream>
 #include <sstream>
 #include <string>
-#include <DirectXTex.h>
 #include "TextureManager.h"
 
 using namespace DirectX;

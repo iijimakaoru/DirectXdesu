@@ -296,7 +296,7 @@ void Sprite::Update(KMyMath::Vector2 pos, KMyMath::Vector2 scale, float rot, KMy
 	// ˆÚ“®s—ñ
 	matTrans = MyMathUtility::MakeTranslation({ pos.x,pos.y,0.0f });
 	// ‰ñ“]s—ñ
-	matRot = MyMathUtility::MakeRotation({ 0.0f,0.0f,XMConvertToRadians(rot) });
+	matRot = MyMathUtility::MakeRotation({ 0.0f,0.0f,DirectX::XMConvertToRadians(rot) });
 
 	// ‘S‚Ä‡‘Ì
 	matWorld = matRot * matTrans;

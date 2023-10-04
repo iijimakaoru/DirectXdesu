@@ -1,6 +1,4 @@
-#pragma 
-#include <math.h>
-#include "Vector3.h"
+#pragma
 #include "MyMath.h"
 
 namespace MyEase

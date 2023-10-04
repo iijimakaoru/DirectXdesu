@@ -1,5 +1,4 @@
 ﻿#include "FbxLoader.h"
-#include <cassert>
 #include "MyMath.h"
 
 /// <summary>

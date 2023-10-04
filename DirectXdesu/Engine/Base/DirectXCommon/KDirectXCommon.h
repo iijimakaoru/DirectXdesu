@@ -5,7 +5,6 @@
 #include <cassert>
 #include <wrl.h>
 #include <vector>
-#include "KDepth.h"
 #include <chrono>
 
 #include "KRtvDescriptorHeap.h"

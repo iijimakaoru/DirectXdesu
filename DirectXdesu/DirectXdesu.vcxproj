@@ -55,7 +55,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <WarningLevel>EnableAllWarnings</WarningLevel>
+      <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
@@ -73,7 +73,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <WarningLevel>EnableAllWarnings</WarningLevel>
+      <WarningLevel>Level3</WarningLevel>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
@@ -130,7 +130,6 @@
     <ClCompile Include="Engine\Base\Descriptor\KDescriptorHeap.cpp" />
     <ClCompile Include="Engine\Base\Descriptor\KDsvDescriptorHeap.cpp" />
     <ClCompile Include="Engine\Base\Pipeline\KGPlin.cpp" />
-    <ClCompile Include="Engine\Base\Depth\KDepth.cpp" />
     <ClCompile Include="Engine\Base\DirectXCommon\KDirectXCommon.cpp" />
     <ClCompile Include="Engine\Input\KInput.cpp" />
     <ClCompile Include="Engine\3D\Model\KModel.cpp" />
@@ -201,7 +200,6 @@
     <ClInclude Include="Engine\Base\Descriptor\KDescriptorHeap.h" />
     <ClInclude Include="Engine\Base\Descriptor\KDsvDescriptorHeap.h" />
     <ClInclude Include="Engine\Base\Pipeline\KGPlin.h" />
-    <ClInclude Include="Engine\Base\Depth\KDepth.h" />
     <ClInclude Include="Engine\Base\DirectXCommon\KDirectXCommon.h" />
     <ClInclude Include="Engine\Input\KInput.h" />
     <ClInclude Include="Engine\3D\Model\KModel.h" />

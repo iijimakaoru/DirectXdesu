@@ -1,17 +1,6 @@
 #pragma once
-#include <string>
-#include <DirectXMath.h>
-#include <DirectXTex.h>
-#include <vector>
-#include <Windows.h>
-#include <wrl.h>
-#include <d3d12.h>
-#include <d3dx12.h>
-
 #include "KVertex.h"
-
 #include <fbxsdk.h>
-
 #include "TextureManager.h"
 
 // ノード
@@ -115,8 +104,6 @@ private:
 
 	// 設定を元にSRV用デスクリプタヒープを生成
 	ComPtr<ID3D12DescriptorHeap> srvHeap = nullptr;
-
-	//KTexture texture;
 
 	std::vector<Bone> bones;
 

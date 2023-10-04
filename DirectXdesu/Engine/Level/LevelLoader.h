@@ -3,9 +3,10 @@
 #include <DirectXMath.h>
 
 // レベルデータ
-struct LevelData {
-
-	struct ObjectData {
+struct LevelData 
+{
+	struct ObjectData 
+	{
 		// ファイル名
 		std::string fileName;
 		// 平行移動
@@ -21,8 +22,8 @@ struct LevelData {
 };
 
 // レベルデータのローダー
-class LevelLoader {
-
+class LevelLoader 
+{
 public:// 定数
 	// デフォルトの読み込みディレクトリ
 	static const std::string kDefaultBaseDirectory;

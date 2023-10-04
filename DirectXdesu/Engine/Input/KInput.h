@@ -1,14 +1,13 @@
 #pragma once
 #include <dinput.h>
-#pragma comment(lib, "dinput8.lib")
-#pragma comment(lib, "dxguid.lib")
 #include <wrl.h>
-#include <Windows.h>
-#include "KWinApp.h"
 #include <Xinput.h>
+#include "KWinApp.h"
 #include "Vector2.h"
 #include "Vector3.h"
 
+#pragma comment(lib, "dinput8.lib")
+#pragma comment(lib, "dxguid.lib")
 #pragma comment(lib, "xinput.lib")
 
 using namespace Microsoft::WRL;

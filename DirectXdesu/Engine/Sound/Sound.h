@@ -3,7 +3,7 @@
 #include <xaudio2.h>
 #pragma comment(lib,"xaudio2.lib")
 #include <fstream>
-#include <combaseapi.h>
+//#include <combaseapi.h>
 
 struct ChunkHeader
 {
@@ -32,6 +32,9 @@ struct SoundData
 
 class Sound
 {
+private:
+	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
+
 public:
 	// ‰Šú‰»
 	void Init();

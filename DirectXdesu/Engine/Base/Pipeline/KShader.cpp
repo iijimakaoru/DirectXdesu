@@ -2,9 +2,11 @@
 #include <string>
 #include <assert.h>
 
-void KShader::Error() {
+void KShader::Error() 
+{
 	// エラーがでたら
-	if (FAILED(result)) {
+	if (FAILED(result)) 
+	{
 		// erroeBlobからエラー内容をstring型にコピー
 		std::string error;
 		error.resize(errorBlob->GetBufferSize());
@@ -78,7 +80,8 @@ void KShader::Init(LPCWSTR VSFileName, LPCWSTR PSFileName, LPCSTR pEntryPoint, L
 #pragma endregion
 
 #pragma region HS
-	if (HSFileName != nullptr) {
+	if (HSFileName != nullptr) 
+	{
 		//	頂点シェーダファイル読み込み＆コンパイル
 		result = D3DCompileFromFile(
 			HSFileName,									// シェーダファイル名
@@ -98,7 +101,8 @@ void KShader::Init(LPCWSTR VSFileName, LPCWSTR PSFileName, LPCSTR pEntryPoint, L
 #pragma endregion
 
 #pragma region DS
-	if (DSFileName != nullptr) {
+	if (DSFileName != nullptr) 
+	{
 		//	頂点シェーダファイル読み込み＆コンパイル
 		result = D3DCompileFromFile(
 			DSFileName,									// シェーダファイル名
@@ -118,7 +122,8 @@ void KShader::Init(LPCWSTR VSFileName, LPCWSTR PSFileName, LPCSTR pEntryPoint, L
 #pragma endregion
 
 #pragma region GS
-	if (GSFileName != nullptr) {
+	if (GSFileName != nullptr) 
+	{
 		//	頂点シェーダファイル読み込み＆コンパイル
 		result = D3DCompileFromFile(
 			GSFileName,									// シェーダファイル名

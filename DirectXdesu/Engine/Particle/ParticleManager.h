@@ -4,7 +4,10 @@
 #include "KDirectXCommon.h"
 #include "KObject3d.h"
 
+#pragma warning(push)
+#pragma warning(disable: 4820)
 #include <forward_list>
+#pragma warning(pop)
 
 class Particles
 {

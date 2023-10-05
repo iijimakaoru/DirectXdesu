@@ -21,6 +21,56 @@ void KShader::Error()
 	}
 }
 
+const ID3D10Blob* KShader::GetVSBlob() const
+{
+	return vsBlob.Get();
+}
+
+const ID3D10Blob* KShader::GetHSBlob() const
+{
+	return hsBlob.Get();
+}
+
+const ID3D10Blob* KShader::GetDSBlob() const
+{
+	return dsBlob.Get();
+}
+
+const ID3D10Blob* KShader::GetGSBlob() const
+{
+	return gsBlob.Get();
+}
+
+const ID3D10Blob* KShader::GetPSBlob() const
+{
+	return psBlob.Get();
+}
+
+const D3D12_SHADER_BYTECODE* KShader::GetVSBytecode() const
+{
+	return &vsBytecode;
+}
+
+const D3D12_SHADER_BYTECODE* KShader::GetHSBytecode() const
+{
+	return &hsBytecode;
+}
+
+const D3D12_SHADER_BYTECODE* KShader::GetDSBytecode() const
+{
+	return &dsBytecode;
+}
+
+const D3D12_SHADER_BYTECODE* KShader::GetGSBytecode() const
+{
+	return &gsBytecode;
+}
+
+const D3D12_SHADER_BYTECODE* KShader::GetPSBytecode() const
+{
+	return &psBytecode;
+}
+
 void KShader::SpritePSNormal()
 {
 	// ピクセルシェーダの読み込みとコンパイル
@@ -57,6 +107,10 @@ void KShader::SpritePSLoadCompile()
 {
 	SpritePSNormal();
 	Error();
+}
+
+KShader::KShader()
+{
 }
 
 void KShader::Init(LPCWSTR VSFileName, LPCWSTR PSFileName, LPCSTR pEntryPoint, LPCWSTR GSFileName, LPCWSTR DSFileName, LPCWSTR HSFileName)

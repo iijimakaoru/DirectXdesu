@@ -1,12 +1,17 @@
 #pragma once
-#include <string>
-#include <vector>
-#include <stdexcept>
 #include "Matrix4.h"
 #include "Vector3.h"
 #include "Vector2.h"
 #include "Vector4.h"
+
+#pragma warning(push)
+#pragma warning(disable: 4514)
+#pragma warning(disable: 4668)
 #include <DirectXMath.h>
+#include <string>
+#include <vector>
+#include <stdexcept>
+#pragma warning(pop)
 
 namespace MyMathUtility
 {

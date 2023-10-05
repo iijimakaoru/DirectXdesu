@@ -1,5 +1,9 @@
 #pragma once
+#pragma warning(push)
+#pragma warning(disable: 4514)
+#pragma warning(disable: 4668)
 #include <DirectXMath.h>
+#pragma warning(pop)
 
 struct Sphere
 {

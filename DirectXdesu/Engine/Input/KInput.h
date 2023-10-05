@@ -1,5 +1,8 @@
 #pragma once
+#pragma warning(push)
+#pragma warning(disable: 4820)
 #include <dinput.h>
+#pragma warning(pop)
 #include <wrl.h>
 #include <Xinput.h>
 #include "KWinApp.h"

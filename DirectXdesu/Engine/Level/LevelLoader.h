@@ -1,6 +1,15 @@
 #pragma once
+#pragma warning(push)
+#pragma warning(disable: 4820)
+#pragma warning(disable: 4626)
+#pragma warning(disable: 5027)
+#pragma warning(disable: 4623)
+#pragma warning(disable: 4668)
+#pragma warning(disable: 4625)
+#pragma warning(disable: 4514)
 #include "json.hpp"
 #include <DirectXMath.h>
+#pragma warning(pop)
 
 // レベルデータ
 struct LevelData 

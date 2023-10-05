@@ -617,6 +617,9 @@
     <ClInclude Include="Application\Reticle3D.h">
       <Filter>ヘッダー ファイル\Application\Reticle</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Base\WarrningIgnore.h">
+      <Filter>ヘッダー ファイル\Engine\Base</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DirectXdesu.rc">

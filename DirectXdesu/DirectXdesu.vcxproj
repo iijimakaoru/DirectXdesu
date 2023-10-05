@@ -55,11 +55,11 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>EnableAllWarnings</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)Engine\2D\PostEffect;$(ProjectDir)Engine\2D\Sprite;$(ProjectDir)Engine\2D\Texture;$(ProjectDir)Engine\2D\Vertex;$(ProjectDir)Engine\3D\Loader;$(ProjectDir)Engine\3D\Model;$(ProjectDir)Engine\3D\Object3D;$(ProjectDir)Engine\Base\BaseCamera;$(ProjectDir)Engine\Base\BaseScene;$(ProjectDir)Engine\Base\Depth;$(ProjectDir)Engine\Base\Descriptor;$(ProjectDir)Engine\Base\DirectXCommon;$(ProjectDir)Engine\Base\Pipeline;$(ProjectDir)Engine\Base\RenderTarget;$(ProjectDir)Engine\Base\RunGame;$(ProjectDir)Engine\Base\View;$(ProjectDir)Engine\Base\Window;$(ProjectDir)Engine\Collision;$(ProjectDir)Engine\Imgui;$(ProjectDir)Engine\Input;$(ProjectDir)Engine\Level;$(ProjectDir)Engine\Math\Ease;$(ProjectDir)Engine\Sound;$(ProjectDir)Application\Camera;$(ProjectDir)Application\Scene;$(ProjectDir)Engine\Math\Matrix4;$(ProjectDir)Engine\Math\MyMath;$(ProjectDir)Engine\Math\Quaternion;$(ProjectDir)Engine\Math\Vector2;$(ProjectDir)Engine\Math\Vector3;$(ProjectDir)Engine\Math\Vector4;$(ProjectDir)DirectXdesu;$(ProjectDir)Application;$(ProjectDir)Engine\Particle;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Engine\2D\PostEffect;$(ProjectDir)Engine\2D\Sprite;$(ProjectDir)Engine\2D\Texture;$(ProjectDir)Engine\2D\Vertex;$(ProjectDir)Engine\3D\Loader;$(ProjectDir)Engine\3D\Model;$(ProjectDir)Engine\3D\Object3D;$(ProjectDir)Engine\Base\BaseCamera;$(ProjectDir)Engine\Base\BaseScene;$(ProjectDir)Engine\Base\Depth;$(ProjectDir)Engine\Base\Descriptor;$(ProjectDir)Engine\Base\DirectXCommon;$(ProjectDir)Engine\Base\Pipeline;$(ProjectDir)Engine\Base\RenderTarget;$(ProjectDir)Engine\Base\RunGame;$(ProjectDir)Engine\Base\View;$(ProjectDir)Engine\Base\Window;$(ProjectDir)Engine\Collision;$(ProjectDir)Engine\Imgui;$(ProjectDir)Engine\Input;$(ProjectDir)Engine\Level;$(ProjectDir)Engine\Math\Ease;$(ProjectDir)Engine\Sound;$(ProjectDir)Application\Camera;$(ProjectDir)Application\Scene;$(ProjectDir)Engine\Math\Matrix4;$(ProjectDir)Engine\Math\MyMath;$(ProjectDir)Engine\Math\Quaternion;$(ProjectDir)Engine\Math\Vector2;$(ProjectDir)Engine\Math\Vector3;$(ProjectDir)Engine\Math\Vector4;$(ProjectDir)DirectXdesu;$(ProjectDir)Application;$(ProjectDir)Engine\Particle;$(ProjectDir)Engine\Base;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <AdditionalOptions>/ignore:4049 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
@@ -73,14 +73,14 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>EnableAllWarnings</WarningLevel>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <AdditionalIncludeDirectories>$(ProjectDir)Engine\2D\PostEffect;$(ProjectDir)Engine\2D\Sprite;$(ProjectDir)Engine\2D\Texture;$(ProjectDir)Engine\2D\Vertex;$(ProjectDir)Engine\3D\Loader;$(ProjectDir)Engine\3D\Model;$(ProjectDir)Engine\3D\Object3D;$(ProjectDir)Engine\Base\BaseCamera;$(ProjectDir)Engine\Base\BaseScene;$(ProjectDir)Engine\Base\Depth;$(ProjectDir)Engine\Base\Descriptor;$(ProjectDir)Engine\Base\DirectXCommon;$(ProjectDir)Engine\Base\Pipeline;$(ProjectDir)Engine\Base\RenderTarget;$(ProjectDir)Engine\Base\RunGame;$(ProjectDir)Engine\Base\View;$(ProjectDir)Engine\Base\Window;$(ProjectDir)Engine\Collision;$(ProjectDir)Engine\Imgui;$(ProjectDir)Engine\Input;$(ProjectDir)Engine\Level;$(ProjectDir)Engine\Math\Ease;$(ProjectDir)Engine\Sound;$(ProjectDir)Application\Camera;$(ProjectDir)Application\Scene;$(ProjectDir)Engine\Math\Matrix4;$(ProjectDir)Engine\Math\MyMath;$(ProjectDir)Engine\Math\Quaternion;$(ProjectDir)Engine\Math\Vector2;$(ProjectDir)Engine\Math\Vector3;$(ProjectDir)Engine\Math\Vector4;$(ProjectDir)DirectXdesu;$(ProjectDir)Application;$(ProjectDir)Engine\Particle;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Engine\2D\PostEffect;$(ProjectDir)Engine\2D\Sprite;$(ProjectDir)Engine\2D\Texture;$(ProjectDir)Engine\2D\Vertex;$(ProjectDir)Engine\3D\Loader;$(ProjectDir)Engine\3D\Model;$(ProjectDir)Engine\3D\Object3D;$(ProjectDir)Engine\Base\BaseCamera;$(ProjectDir)Engine\Base\BaseScene;$(ProjectDir)Engine\Base\Depth;$(ProjectDir)Engine\Base\Descriptor;$(ProjectDir)Engine\Base\DirectXCommon;$(ProjectDir)Engine\Base\Pipeline;$(ProjectDir)Engine\Base\RenderTarget;$(ProjectDir)Engine\Base\RunGame;$(ProjectDir)Engine\Base\View;$(ProjectDir)Engine\Base\Window;$(ProjectDir)Engine\Collision;$(ProjectDir)Engine\Imgui;$(ProjectDir)Engine\Input;$(ProjectDir)Engine\Level;$(ProjectDir)Engine\Math\Ease;$(ProjectDir)Engine\Sound;$(ProjectDir)Application\Camera;$(ProjectDir)Application\Scene;$(ProjectDir)Engine\Math\Matrix4;$(ProjectDir)Engine\Math\MyMath;$(ProjectDir)Engine\Math\Quaternion;$(ProjectDir)Engine\Math\Vector2;$(ProjectDir)Engine\Math\Vector3;$(ProjectDir)Engine\Math\Vector4;$(ProjectDir)DirectXdesu;$(ProjectDir)Application;$(ProjectDir)Engine\Particle;$(ProjectDir)Engine\Base;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <AdditionalOptions>/ignore:4049 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
@@ -185,6 +185,7 @@
     <ClInclude Include="Engine\Base\BaseScene\ASceneFactory.h" />
     <ClInclude Include="Engine\Base\BaseScene\BaseScene.h" />
     <ClInclude Include="Engine\Base\BaseCamera\Camera.h" />
+    <ClInclude Include="Engine\Base\WarrningIgnore.h" />
     <ClInclude Include="Engine\Collision\Collision.h" />
     <ClInclude Include="Engine\Collision\CollisionPrimitive.h" />
     <ClInclude Include="Application\Camera\DebugCamera.h" />

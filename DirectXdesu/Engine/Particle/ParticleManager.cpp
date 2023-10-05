@@ -1,7 +1,10 @@
 #include "ParticleManager.h"
-#include <d3dcompiler.h>
-#include <DirectXTex.h>
 #include "KInput.h"
+
+#pragma warning(push)
+#pragma warning(disable: 4820)
+#include <d3dcompiler.h>
+#pragma warning(pop)
 
 #pragma comment(lib, "d3dcompiler.lib")
 

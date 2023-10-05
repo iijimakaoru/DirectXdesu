@@ -1,5 +1,13 @@
 #include "KDepthStencilBuffer.h"
+
+#pragma warning(push)
+#pragma warning(disable: 4061)
+#pragma warning(disable: 4820)
+#pragma warning(disable: 5038)
+#pragma warning(disable: 4514)
+#pragma warning(disable: 4365)
 #include <d3dx12.h>
+#pragma warning(pop)
 
 bool KDepthStencilBuffer::Create(UINT w, UINT h, DXGI_FORMAT format)
 {

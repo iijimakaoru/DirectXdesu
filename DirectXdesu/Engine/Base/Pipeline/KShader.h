@@ -1,9 +1,23 @@
 #pragma once
+#pragma warning(push)
+#pragma warning(disable: 5039)
+#pragma warning(disable: 4668)
+#pragma warning(disable: 5024)
+#pragma warning(disable: 4820)
+#pragma warning(disable: 4265)
+#pragma warning(disable: 4365)
+#pragma warning(disable: 5220)
+#pragma warning(disable: 4625)
+#pragma warning(disable: 4626)
+#pragma warning(disable: 4265)
+#pragma warning(disable: 5204)
+#include <wrl.h>
 #include <d3d12.h>
 #include <d3dcompiler.h>
-#include <wrl.h>
+#include <xmemory>
+#pragma warning(pop)
 
-//#pragma comment(lib, "dxgi.lib")
+#pragma comment(lib, "dxgi.lib")
 
 class KShader
 {
@@ -17,7 +31,7 @@ public:
 	void SpritePSLoadCompile();
 
 	// シェーダー
-	KShader() {};
+	KShader();
 	void Init(LPCWSTR VSFileName, LPCWSTR PSFileName, LPCSTR pEntryPoint = "main", 
 		LPCWSTR GSFileName = nullptr, LPCWSTR DSFileName = nullptr, LPCWSTR HSFileName = nullptr);
 	// エラー
@@ -42,16 +56,16 @@ private:
 	HRESULT result;
 
 public:
-	ID3D10Blob* GetVSBlob() { return vsBlob.Get(); }
-	ID3D10Blob* GetHSBlob() { return hsBlob.Get(); }
-	ID3D10Blob* GetDSBlob() { return dsBlob.Get(); }
-	ID3D10Blob* GetGSBlob() { return gsBlob.Get(); }
-	ID3D10Blob* GetPSBlob() { return psBlob.Get(); }
+	const ID3D10Blob* GetVSBlob() const;
+	const ID3D10Blob* GetHSBlob() const;
+	const ID3D10Blob* GetDSBlob() const;
+	const ID3D10Blob* GetGSBlob() const;
+	const ID3D10Blob* GetPSBlob() const;
 
-	D3D12_SHADER_BYTECODE* GetVSBytecode() { return &vsBytecode; }
-	D3D12_SHADER_BYTECODE* GetHSBytecode() { return &hsBytecode; }
-	D3D12_SHADER_BYTECODE* GetDSBytecode() { return &dsBytecode; }
-	D3D12_SHADER_BYTECODE* GetGSBytecode() { return &gsBytecode; }
-	D3D12_SHADER_BYTECODE* GetPSBytecode() { return &psBytecode; }
+	const D3D12_SHADER_BYTECODE* GetVSBytecode() const;
+	const D3D12_SHADER_BYTECODE* GetHSBytecode() const;
+	const D3D12_SHADER_BYTECODE* GetDSBytecode() const;
+	const D3D12_SHADER_BYTECODE* GetGSBytecode() const;
+	const D3D12_SHADER_BYTECODE* GetPSBytecode() const;
 };
 

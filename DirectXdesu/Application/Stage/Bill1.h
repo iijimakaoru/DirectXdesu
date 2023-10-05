@@ -10,7 +10,7 @@ class Bill1
 {
 public:
 	/// <summary>
-	/// ¶¬
+	/// ç”Ÿæˆ
 	/// </summary>
 	/// <param name="model_"></param>
 	/// <param name="objPipeline_"></param>
@@ -19,32 +19,32 @@ public:
 
 public:
 	/// <summary>
-	/// ‰Šú‰»
+	/// åˆæœŸåŒ–
 	/// </summary>
 	/// <param name="model_"></param>
 	/// <param name="objPipeline_"></param>
 	void Init(KModel* model_, KGPlin* objPipeline_, const KMyMath::Vector2 pos);
 
 	/// <summary>
-	/// XV
+	/// æ›´æ–°
 	/// </summary>
 	/// <param name="viewPro"></param>
 	void Update(ViewProjection* viewPro, const float& cameraZ);
 
-	// •`‰æ
+	// æç”»
 	void Draw();
 
 	// 
 	const bool GetIsDead() const;
 
 private:
-	// ƒIƒuƒWƒFƒNƒg
+	// ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
 	std::unique_ptr<KObject3d> object;
 
-	// ƒ‚ƒfƒ‹
+	// ãƒ¢ãƒ‡ãƒ«
 	KModel* model = nullptr;
 
-	// ƒpƒCƒvƒ‰ƒCƒ“
+	// ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³
 	KGPlin* objPipeline;
 
 	bool isDead = false;

@@ -16,27 +16,27 @@
 class Framework
 {
 public:
-	// ‰Šú‰»
+	// åˆæœŸåŒ–
 	virtual void Init();
-	// I—¹
+	// çµ‚äº†
 	virtual void Final();
-	// XV
+	// æ›´æ–°
 	virtual void Update();
-	// •`‰æ
+	// æç”»
 	virtual void Draw() = 0;
-	// I—¹ƒ`ƒFƒbƒN
+	// çµ‚äº†ãƒã‚§ãƒƒã‚¯
 	virtual bool IsEndRwquest();
 
 	virtual ~Framework() = default;
 
-	// Às
+	// å®Ÿè¡Œ
 	void Run();
 
 protected:
-	// FBXƒ[ƒ_[
+	// FBXãƒ­ãƒ¼ãƒ€ãƒ¼
 	FbxLoader* fbxLoader = nullptr;
 
-	// ƒEƒBƒ“ƒhƒE
+	// ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦
 	KWinApp* win = nullptr;
 
 	// DirectX
@@ -45,26 +45,26 @@ protected:
 	// Input
 	KInput* input = nullptr;
 
-	// ƒV[ƒ“ƒ}ƒl[ƒWƒƒ[
+	// ã‚·ãƒ¼ãƒ³ãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼
 	SceneManager* sceneManager = nullptr;
 
-	// ƒeƒNƒXƒ`ƒƒƒ}ƒl[ƒWƒƒ[
+	// ãƒ†ã‚¯ã‚¹ãƒãƒ£ãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼
 	TextureManager* textureManager = nullptr;
 
-	// ƒV[ƒ“ƒtƒ@ƒNƒgƒŠ[
+	// ã‚·ãƒ¼ãƒ³ãƒ•ã‚¡ã‚¯ãƒˆãƒªãƒ¼
 	ASceneFactory* sceneFactory = nullptr;
 
 	Sound* sound = nullptr;
 
 	ImguiManager imguiMane;
 
-	// ƒpƒCƒvƒ‰ƒCƒ“
+	// ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³
 	std::unique_ptr<KGPlin> spritePipeline;
 
-	// ƒVƒF[ƒ_[
+	// ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼
 	KShader spriteShader;
 
-	// ƒ|ƒXƒgƒGƒtƒFƒNƒg
+	// ãƒã‚¹ãƒˆã‚¨ãƒ•ã‚§ã‚¯ãƒˆ
 	std::unique_ptr<PostEffect> postEffect = nullptr;
 
 	SceneChange* sceneChange = nullptr;

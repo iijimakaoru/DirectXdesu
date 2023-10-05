@@ -9,15 +9,15 @@ LRESULT KWinApp::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 	{
 		return true;
 	}
-	// ƒƒbƒZ[ƒW‚É‰‚¶‚ÄƒQ[ƒ€ŒÅ—L‚Ìˆ—‚ğs‚¤ 
+	// ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã«å¿œã˜ã¦ã‚²ãƒ¼ãƒ å›ºæœ‰ã®å‡¦ç†ã‚’è¡Œã† 
 	switch (msg) {
-		// ƒEƒBƒ“ƒhƒE‚ª”jŠü‚³‚ê‚½ 
+		// ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ãŒç ´æ£„ã•ã‚ŒãŸ 
 	case WM_DESTROY:
-		// OS‚É‘Î‚µ‚ÄAƒAƒvƒŠ‚ÌI—¹‚ğ“`‚¦‚é 
+		// OSã«å¯¾ã—ã¦ã€ã‚¢ãƒ—ãƒªã®çµ‚äº†ã‚’ä¼ãˆã‚‹ 
 		PostQuitMessage(0);
 		return 0;
 	}
-	// •W€‚ÌƒƒbƒZ[ƒWˆ—‚ğs‚¤ 
+	// æ¨™æº–ã®ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸å‡¦ç†ã‚’è¡Œã† 
 	return DefWindowProc(hwnd, msg, wparam, lparam);
 }
 
@@ -32,15 +32,15 @@ void KWinApp::InitInternal()
 	window.hInstance = GetModuleHandle(nullptr);
 	window.hCursor = LoadCursor(NULL, IDC_ARROW);
 
-	// ƒEƒBƒ“ƒhƒEƒNƒ‰ƒX‚ğOS‚É“o˜^‚·‚é
+	// ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚¯ãƒ©ã‚¹ã‚’OSã«ç™»éŒ²ã™ã‚‹
 	RegisterClassEx(&window);
 
-	// ©•ª‚ÅƒTƒCƒY‚ğ’²®‚·‚é
-	// ƒEƒBƒ“ƒhƒEƒTƒCƒY
+	// è‡ªåˆ†ã§ã‚µã‚¤ã‚ºã‚’èª¿æ•´ã™ã‚‹
+	// ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚µã‚¤ã‚º
 	RECT rect = { 0,0,window_width,window_height };
 	AdjustWindowRect(&rect, WS_OVERLAPPEDWINDOW, false);
 
-	// ƒEƒBƒ“ƒhƒEì¬
+	// ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ä½œæˆ
 	hwnd = CreateWindow(
 		window.lpszClassName,
 		window.lpszMenuName,
@@ -54,7 +54,7 @@ void KWinApp::InitInternal()
 		window.hInstance,
 		nullptr);
 
-	// ƒEƒBƒ“ƒhƒE‚ğ•\¦ó‘Ô‚É‚·‚é
+	// ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚’è¡¨ç¤ºçŠ¶æ…‹ã«ã™ã‚‹
 	ShowWindow(hwnd, SW_SHOW);
 }
 
@@ -85,7 +85,7 @@ int KWinApp::GetWindowSizeH()
 }
 
 bool KWinApp::ProcessMessage() {
-	// ƒƒbƒZ[ƒWŠi”[—p\‘¢‘Ì
+	// ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸æ ¼ç´ç”¨æ§‹é€ ä½“
 	MSG msg{};
 	if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
 	{

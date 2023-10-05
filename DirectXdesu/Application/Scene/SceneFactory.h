@@ -1,12 +1,12 @@
 #pragma once
 #include "ASceneFactory.h"
 
-// シーン工場
+// 繧ｷ繝ｼ繝ｳ蟾･蝣ｴ
 class SceneFactory : public ASceneFactory
 {
 public:
 	/// <summary>
-	/// シーンの生成
+	/// 繧ｷ繝ｼ繝ｳ縺ｮ逕滓��
 	/// </summary>
 	/// <param name="sceneName"></param>
 	/// <returns></returns>

@@ -13,15 +13,15 @@ ClearScene::~ClearScene()
 
 void ClearScene::LoadResources()
 {
-	// ƒpƒCƒvƒ‰ƒCƒ“
+	// ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³
 	spriteShader.Init(L"Resources/Shader/SpriteVS.hlsl", L"Resources/Shader/SpritePS.hlsl");
 	spritePipeline = std::make_unique<KGPlin>();
 	spritePipeline->CreatePipelineAll(spriteShader, "Sprite");
 
-	// ƒ^ƒCƒgƒ‹–¼ƒeƒNƒXƒ`ƒƒ
+	// ã‚¿ã‚¤ãƒˆãƒ«åãƒ†ã‚¯ã‚¹ãƒãƒ£
 	clearTex = TextureManager::Load("Resources/texture/kariResult.png");
 
-	// ƒvƒbƒVƒ…AƒeƒNƒXƒ`ƒƒ
+	// ãƒ—ãƒƒã‚·ãƒ¥Aãƒ†ã‚¯ã‚¹ãƒãƒ£
 	pushATex = TextureManager::Load("Resources/texture/kariNextScene.png");
 }
 
@@ -35,12 +35,12 @@ void ClearScene::Init()
 
 	sceneManager = SceneManager::GetInstance();
 
-	// ƒ^ƒCƒgƒ‹–¼
+	// ã‚¿ã‚¤ãƒˆãƒ«å
 	clear = std::make_unique<Sprite>();
 	clear->Init();
 	clear->SetPipeline(spritePipeline.get());
 
-	// ƒvƒbƒVƒ…A
+	// ãƒ—ãƒƒã‚·ãƒ¥A
 	pushA = std::make_unique<Sprite>();
 	pushA->Init();
 	pushA->SetPipeline(spritePipeline.get());
@@ -50,7 +50,7 @@ void ClearScene::Update()
 {
 	camera->Update();
 
-	// Ÿ‚ÌƒV[ƒ“‚Ö
+	// æ¬¡ã®ã‚·ãƒ¼ãƒ³ã¸
 	if (!sceneChange->GetIsEffect())
 	{
 		if (input->IsTrigger(DIK_SPACE) || input->GetPadButtonDown(XINPUT_GAMEPAD_A))
@@ -61,7 +61,7 @@ void ClearScene::Update()
 
 	if (sceneChange->GetIsChange())
 	{
-		// ƒV[ƒ“Ø‚è‘Ö‚¦ˆË—Š
+		// ã‚·ãƒ¼ãƒ³åˆ‡ã‚Šæ›¿ãˆä¾é ¼
 		SceneManager::GetInstance()->ChangeScene("TITLE");
 	}
 }

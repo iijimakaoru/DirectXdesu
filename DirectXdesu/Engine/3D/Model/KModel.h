@@ -10,19 +10,19 @@ class KModel
 public:
 	struct ObjMaterialInfo
 	{
-		// ƒ}ƒeƒŠƒAƒ‹–¼
+		// ãƒãƒ†ãƒªã‚¢ãƒ«å
 		std::string name;
-		// ƒAƒ“ƒrƒGƒ“ƒg‰e‹¿“x
+		// ã‚¢ãƒ³ãƒ“ã‚¨ãƒ³ãƒˆå½±éŸ¿åº¦
 		KMyMath::Vector3 ambient;
-		// ƒfƒBƒqƒ…[ƒY‰e‹¿“x
+		// ãƒ‡ã‚£ãƒ’ãƒ¥ãƒ¼ã‚ºå½±éŸ¿åº¦
 		KMyMath::Vector3 diffuse;
-		// ƒXƒyƒLƒ…ƒ‰[‰e‹¿“x
+		// ã‚¹ãƒšã‚­ãƒ¥ãƒ©ãƒ¼å½±éŸ¿åº¦
 		KMyMath::Vector3 specular;
-		// ƒAƒ‹ƒtƒ@
+		// ã‚¢ãƒ«ãƒ•ã‚¡
 		float alpha;
-		// ƒeƒNƒXƒ`ƒƒƒtƒ@ƒCƒ‹–¼
+		// ãƒ†ã‚¯ã‚¹ãƒãƒ£ãƒ•ã‚¡ã‚¤ãƒ«å
 		std::string textureFilename;
-		// ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+		// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 		ObjMaterialInfo()
 		{
 			ambient = { 0.3f,0.3f,0.3f };
@@ -32,9 +32,9 @@ public:
 		}
 	};
 
-	// ’¸“_ƒf[ƒ^
+	// é ‚ç‚¹ãƒ‡ãƒ¼ã‚¿
 	std::vector<VertexPosNormalUV> vertices;
-	// ƒCƒ“ƒfƒbƒNƒXƒf[ƒ^
+	// ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ãƒ‡ãƒ¼ã‚¿
 	std::vector<unsigned short> indices;
 
 	std::unique_ptr<KVertex> vertexs =std::make_unique<KVertex>();

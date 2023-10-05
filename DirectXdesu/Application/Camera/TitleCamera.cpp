@@ -49,11 +49,11 @@ void TitleCamera::RoundCamera()
 {
 	cameraObject->transform.pos.y = 3;
 
-	// Šp“x‚ð•ÏX
+	// è§’åº¦ã‚’å¤‰æ›´
 	const float rotSpeed = 0.5f;
 	rotAngle += rotSpeed;
 
-	// 360‚ð’´‚¦‚½‚ç
+	// 360ã‚’è¶…ãˆãŸã‚‰
 	if (rotAngle >= 360)
 	{
 		rotAngle = 0;

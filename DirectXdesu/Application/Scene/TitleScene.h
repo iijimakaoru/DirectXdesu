@@ -23,97 +23,97 @@ public:
 	void SpriteDraw() override;
 	void Final()override;
 
-	// ƒ^ƒCƒgƒ‹“±“ü‰‰o
+	// ã‚¿ã‚¤ãƒˆãƒ«å°å…¥æ¼”å‡º
 	void StartScene();
 
-	// Ÿ‚ÌƒV[ƒ“‚Ö
+	// æ¬¡ã®ã‚·ãƒ¼ãƒ³ã¸
 	void GoNextScene();
 private:
-	// ƒCƒ“ƒvƒbƒg
+	// ã‚¤ãƒ³ãƒ—ãƒƒãƒˆ
 	KInput* input = nullptr;
 
-	// ƒJƒƒ‰
+	// ã‚«ãƒ¡ãƒ©
 	std::unique_ptr<TitleCamera> camera = nullptr;
 
-	// ƒpƒCƒvƒ‰ƒCƒ“
+	// ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³
 	std::unique_ptr<KGPlin> spritePipeline = nullptr;
 
-	// ƒVƒF[ƒ_[
+	// ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼
 	KShader spriteShader;
 
-	// ƒ^ƒCƒgƒ‹ƒXƒvƒ‰ƒCƒg
+	// ã‚¿ã‚¤ãƒˆãƒ«ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ
 	std::unique_ptr<Sprite> titleName = nullptr;
 	TextureData titleTex;
 
 	KMyMath::Vector2 titlePos = { 0,0 };
 
-	// Ÿ‚ÌƒV[ƒ“‚Ö‚ÌƒL[
+	// æ¬¡ã®ã‚·ãƒ¼ãƒ³ã¸ã®ã‚­ãƒ¼
 	std::unique_ptr<Sprite> pushA = nullptr;
 	TextureData pushATex;
 
 	KMyMath::Vector2 pushAPos = { 0,0 };
 
-#pragma region ƒvƒŒƒCƒ„[‹@‘Ì
-	// ƒIƒuƒWƒFƒNƒg
+#pragma region ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼æ©Ÿä½“
+	// ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
 	std::unique_ptr<KObject3d> object3d = nullptr;
 
-	// ƒ‚ƒfƒ‹
+	// ãƒ¢ãƒ‡ãƒ«
 	std::unique_ptr<KModel> model = nullptr;
 #pragma endregion
 
-#pragma region “V‹…
-	// ƒIƒuƒWƒFƒNƒg
+#pragma region å¤©çƒ
+	// ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
 	std::unique_ptr<KObject3d> skyDome = nullptr;
 
-	// ƒ‚ƒfƒ‹
+	// ãƒ¢ãƒ‡ãƒ«
 	std::unique_ptr<KModel> skyDomeModel = nullptr;
 #pragma endregion
 
-	// ƒpƒCƒvƒ‰ƒCƒ“
+	// ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³
 	std::unique_ptr<KGPlin> objPipeline;
 	KShader objShader;
 
-	// ‰æ–ÊƒTƒCƒY
+	// ç”»é¢ã‚µã‚¤ã‚º
 	const float width = static_cast<float>(KWinApp::GetInstance()->GetWindowSizeW());
 	const float height = static_cast<float>(KWinApp::GetInstance()->GetWindowSizeH());
 
-#pragma region ƒ^ƒCƒgƒ‹n‚ß‚Ì‰‰o•Ï”
-	// ƒV[ƒ“n‚Ü‚Á‚½ƒtƒ‰ƒO
+#pragma region ã‚¿ã‚¤ãƒˆãƒ«å§‹ã‚ã®æ¼”å‡ºå¤‰æ•°
+	// ã‚·ãƒ¼ãƒ³å§‹ã¾ã£ãŸãƒ•ãƒ©ã‚°
 	bool startScene = false;
 
-	// ‰‰o‚ÌƒtƒF[ƒY
+	// æ¼”å‡ºã®ãƒ•ã‚§ãƒ¼ã‚º
 	uint32_t startScenePhase = 0;
 
-	// ƒxƒWƒG‹Èü‚P
+	// ãƒ™ã‚¸ã‚¨æ›²ç·šï¼‘
 	KMyMath::Vector3 start = { 0,-30,180 };
 	KMyMath::Vector3 p1 = { 0,-30,20 };
 	KMyMath::Vector3 p2 = { 0,-30,-40 };
 	KMyMath::Vector3 end = { 0,60,-60 };
 
-	// ƒIƒuƒWƒFƒNƒgŠg‘åƒ^ƒCƒ}[
+	// ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆæ‹¡å¤§ã‚¿ã‚¤ãƒãƒ¼
 	float objEaseTimer = 0;
 	const float objEaseTime = 20;
 
-	// ƒtƒ‰ƒbƒVƒ…
+	// ãƒ•ãƒ©ãƒƒã‚·ãƒ¥
 	std::unique_ptr<Sprite> flash = nullptr;
 	TextureData flashTex;
 
 	float flashAlpha = 0;
 #pragma endregion
 
-#pragma region Ÿ‚ÌƒV[ƒ“‚Ö‚ÌˆÚs‰‰o•Ï”
-	// Ÿ‚ÌƒV[ƒ“‚Ö‚¢‚­ƒtƒ‰ƒO
+#pragma region æ¬¡ã®ã‚·ãƒ¼ãƒ³ã¸ã®ç§»è¡Œæ¼”å‡ºå¤‰æ•°
+	// æ¬¡ã®ã‚·ãƒ¼ãƒ³ã¸ã„ããƒ•ãƒ©ã‚°
 	bool goGame = false;
 
-	// ‰‰o‚ÌƒtƒF[ƒY
+	// æ¼”å‡ºã®ãƒ•ã‚§ãƒ¼ã‚º
 	uint32_t goGamePhase = 0;
 
-	// ƒeƒLƒXƒg‚«”ò‚Î‚µƒ^ƒCƒ}[
+	// ãƒ†ã‚­ã‚¹ãƒˆå¹ãé£›ã°ã—ã‚¿ã‚¤ãƒãƒ¼
 	float texEaseTimer = 0;
 	const float texEaseTime = 10;
 #pragma endregion
 
-	// ƒtƒF[ƒYŠÔ
+	// ãƒ•ã‚§ãƒ¼ã‚ºæ™‚é–“
 	float phaseTimer = 0;
 	float phaseTime = 0;
 };

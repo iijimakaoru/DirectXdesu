@@ -21,20 +21,20 @@ void KInput::Init()
 
 void KInput::InitInternal()
 {
-	// “ü—Í‰Šú‰»
+	// å…¥åŠ›åˆæœŸåŒ–
 	result = DirectInput8Create(KWinApp::GetWindow().hInstance, DIRECTINPUT_VERSION, IID_IDirectInput8,
 		(void**)&directInput, nullptr);
 	assert(SUCCEEDED(result));
 
-	// ƒL[ƒ{[ƒhƒfƒoƒCƒX‚Ì¶¬
+	// ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰ãƒ‡ãƒã‚¤ã‚¹ã®ç”Ÿæˆ
 	result = directInput->CreateDevice(GUID_SysKeyboard, &keyboard, NULL);
 	assert(SUCCEEDED(result));
 
-	// “ü—Íƒf[ƒ^Œ`®‚ÌƒZƒbƒg
+	// å…¥åŠ›ãƒ‡ãƒ¼ã‚¿å½¢å¼ã®ã‚»ãƒƒãƒˆ
 	result = keyboard->SetDataFormat(&c_dfDIKeyboard);
 	assert(SUCCEEDED(result));
 
-	// ”r‘¼§ŒäƒŒƒxƒ‹‚ÌƒZƒbƒg
+	// æ’ä»–åˆ¶å¾¡ãƒ¬ãƒ™ãƒ«ã®ã‚»ãƒƒãƒˆ
 	result = keyboard->SetCooperativeLevel(KWinApp::GetHWND(), DISCL_FOREGROUND | DISCL_NONEXCLUSIVE | DISCL_NOWINKEY);
 	assert(SUCCEEDED(result));
 
@@ -56,10 +56,10 @@ void KInput::Update()
 {
 	KInput* instance = GetInstance();
 
-	// ƒL[ƒ{[ƒh‚Ìî•ñæ“¾
+	// ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰ã®æƒ…å ±å–å¾—
 	instance->keyboard->Acquire();
 
-	// ‘SƒL[“ü—Íî•ñ‚ğæ“¾
+	// å…¨ã‚­ãƒ¼å…¥åŠ›æƒ…å ±ã‚’å–å¾—
 	for (int i = 0; i < 256; i++)
 	{
 		instance->oldkey[i] = instance->key[i];
@@ -235,51 +235,51 @@ bool KInput::GetLStickDown()
 
 bool KInput::LStickTiltX(float incline)
 {
-	//‰º‚É“|‚µ‚½‚Ì”»’è
+	//ä¸‹ã«å€’ã—ãŸæ™‚ã®åˆ¤å®š
 	if (incline > 0)
 	{
-		//ƒXƒeƒBƒbƒN‚ÌŒXÎ‚ªw’è‚µ‚½”’l‚æ‚è‘å‚«‚¯‚ê‚Îtrue‚ğ•Ô‚·
+		//ã‚¹ãƒ†ã‚£ãƒƒã‚¯ã®å‚¾æ–œãŒæŒ‡å®šã—ãŸæ•°å€¤ã‚ˆã‚Šå¤§ãã‘ã‚Œã°trueã‚’è¿”ã™
 		if (xInputState.Gamepad.sThumbLX >= incline)
 		{
 			return true;
 		}
 	}
-	//ã‚É“|‚µ‚½‚Ì”»’è
+	//ä¸Šã«å€’ã—ãŸæ™‚ã®åˆ¤å®š
 	else if (incline < 0)
 	{
-		//ƒXƒeƒBƒbƒN‚ÌŒXÎ‚ªw’è‚µ‚½”’l‚æ‚è¬‚³‚¯‚ê‚Îtrue‚ğ•Ô‚·
+		//ã‚¹ãƒ†ã‚£ãƒƒã‚¯ã®å‚¾æ–œãŒæŒ‡å®šã—ãŸæ•°å€¤ã‚ˆã‚Šå°ã•ã‘ã‚Œã°trueã‚’è¿”ã™
 		if (xInputState.Gamepad.sThumbLX <= incline)
 		{
 			return true;
 		}
 	}
 
-	//‚Ç‚¿‚ç‚Å‚àtrue‚ª‚È‚¯‚ê‚Îfalse‚ğ•Ô‚·
+	//ã©ã¡ã‚‰ã§ã‚‚trueãŒãªã‘ã‚Œã°falseã‚’è¿”ã™
 	return false;
 }
 
 bool KInput::LStickTiltY(float incline)
 {
-	//‰º‚É“|‚µ‚½‚Ì”»’è
+	//ä¸‹ã«å€’ã—ãŸæ™‚ã®åˆ¤å®š
 	if (incline > 0) 
 	{
-		//ƒXƒeƒBƒbƒN‚ÌŒXÎ‚ªw’è‚µ‚½”’l‚æ‚è‘å‚«‚¯‚ê‚Îtrue‚ğ•Ô‚·
+		//ã‚¹ãƒ†ã‚£ãƒƒã‚¯ã®å‚¾æ–œãŒæŒ‡å®šã—ãŸæ•°å€¤ã‚ˆã‚Šå¤§ãã‘ã‚Œã°trueã‚’è¿”ã™
 		if (xInputState.Gamepad.sThumbLY >= incline) 
 		{
 			return true;
 		}
 	}
-	//ã‚É“|‚µ‚½‚Ì”»’è
+	//ä¸Šã«å€’ã—ãŸæ™‚ã®åˆ¤å®š
 	else if (incline < 0) 
 	{
-		//ƒXƒeƒBƒbƒN‚ÌŒXÎ‚ªw’è‚µ‚½”’l‚æ‚è¬‚³‚¯‚ê‚Îtrue‚ğ•Ô‚·
+		//ã‚¹ãƒ†ã‚£ãƒƒã‚¯ã®å‚¾æ–œãŒæŒ‡å®šã—ãŸæ•°å€¤ã‚ˆã‚Šå°ã•ã‘ã‚Œã°trueã‚’è¿”ã™
 		if (xInputState.Gamepad.sThumbLY <= incline) 
 		{
 			return true;
 		}
 	}
 
-	//‚Ç‚¿‚ç‚Å‚àtrue‚ª‚È‚¯‚ê‚Îfalse‚ğ•Ô‚·
+	//ã©ã¡ã‚‰ã§ã‚‚trueãŒãªã‘ã‚Œã°falseã‚’è¿”ã™
 	return false;
 }
 
@@ -296,7 +296,7 @@ float KInput::GetLStickAngle()
 
 	float radians = atan2f(y, x) * 360 / MyMathUtility::PIDouble;
 
-	// ƒ}ƒCƒiƒX‚¾‚Á‚½ê‡‚ÌC³
+	// ãƒã‚¤ãƒŠã‚¹ã ã£ãŸå ´åˆã®ä¿®æ­£
 	if (radians < 0)
 	{
 		radians += 360;

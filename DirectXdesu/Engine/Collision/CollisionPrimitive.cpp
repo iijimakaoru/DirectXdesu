@@ -4,10 +4,10 @@ using namespace DirectX;
 
 void ColTriangle::ConputeNormal()
 {
-	DirectX::XMVECTOR p0_p1 = p1 - p0; // p0‚©‚çp1‚Ü‚Å‚ÌƒxƒNƒgƒ‹
-	DirectX::XMVECTOR p0_p2 = p2 - p0; // p0‚©‚çp2‚Ü‚Å‚ÌƒxƒNƒgƒ‹
+	DirectX::XMVECTOR p0_p1 = p1 - p0; // p0ã‹ã‚‰p1ã¾ã§ã®ãƒ™ã‚¯ãƒˆãƒ«
+	DirectX::XMVECTOR p0_p2 = p2 - p0; // p0ã‹ã‚‰p2ã¾ã§ã®ãƒ™ã‚¯ãƒˆãƒ«
 
-	// ŠOÏ‚É‚æ‚èA2•Ó‚É‚’¼‚ÈƒxƒNƒgƒ‹‚ğZo‚·‚é
+	// å¤–ç©ã«ã‚ˆã‚Šã€2è¾ºã«å‚ç›´ãªãƒ™ã‚¯ãƒˆãƒ«ã‚’ç®—å‡ºã™ã‚‹
 	normal = DirectX::XMVector3Cross(p0_p1, p0_p2);
 	normal = DirectX::XMVector3Normalize(normal);
 }

@@ -4,14 +4,14 @@
 
 namespace KMyMath
 {
-	// ƒ[ƒƒxƒNƒgƒ‹
+	// ã‚¼ãƒ­ãƒ™ã‚¯ãƒˆãƒ«
 	Vector2::Vector2() :x(0), y(0) {}
 
 	Vector2::Vector2(float x, float y) : x(x), y(y) {}
 
 	Vector2::~Vector2() {}
 
-	// ƒxƒNƒgƒ‹‚Ì’·‚³
+	// ãƒ™ã‚¯ãƒˆãƒ«ã®é•·ã•
 	float Vector2::Length()const {
 		return sqrtf(LengthSq());
 	}
@@ -21,7 +21,7 @@ namespace KMyMath
 		return this->x * this->x + this->y * this->y;
 	}
 
-	// ³‹K‰»
+	// æ­£è¦åŒ–
 	Vector2& Vector2::normalize() {
 		float length = this->Length();
 		if (length != 0) {

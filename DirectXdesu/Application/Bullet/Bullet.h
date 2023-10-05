@@ -10,56 +10,56 @@
 class Bullet
 {
 public:
-	// ‰Šú‰»
+	// åˆæœŸåŒ–
 	virtual void Init(KModel* model_, KGPlin* pipeline_) = 0;
 
 	/// <summary>
-	/// ŒÄ‚Ño‚µ
+	/// å‘¼ã³å‡ºã—
 	/// </summary>
 	/// <param name="pos"></param>
 	virtual void Set(const KMyMath::Vector3& pos, const KMyMath::Vector3& vec_, const KMyMath::Vector3& rot_, const float bulletSpeed);
 
 	/// <summary>
-	/// XV
+	/// æ›´æ–°
 	/// </summary>
 	/// <param name="viewPro"></param>
 	virtual void Update(ViewProjection* viewPro);
 
-	// •`‰æ
+	// æç”»
 	virtual void Draw();
 
-	// ƒQƒbƒ^[
+	// ã‚²ãƒƒã‚¿ãƒ¼
 	virtual bool GetIsDead() const
 	{
 		return isDead;
 	}
 
-	// ƒZƒbƒ^[
+	// ã‚»ãƒƒã‚¿ãƒ¼
 	virtual void SetIsDead(bool isDead_)
 	{
 		isDead = isDead_;
 	}
 
-	// Õ“Ë‚ÉŒÄ‚Ño‚µ
+	// è¡çªæ™‚ã«å‘¼ã³å‡ºã—
 	virtual void OnCollision();
 
-	// ƒ[ƒ‹ƒhƒ|ƒWƒVƒ‡ƒ“ƒQƒbƒ^[
+	// ãƒ¯ãƒ¼ãƒ«ãƒ‰ãƒã‚¸ã‚·ãƒ§ãƒ³ã‚²ãƒƒã‚¿ãƒ¼
 	virtual KMyMath::Vector3 GetWorldPos();
 
 protected:
-	// ƒIƒuƒWƒFƒNƒg
+	// ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
 	std::unique_ptr<KObject3d> object3d;
 
-	// ƒ‚ƒfƒ‹
+	// ãƒ¢ãƒ‡ãƒ«
 	KModel* model;
 
-	// ƒpƒCƒvƒ‰ƒCƒ“
+	// ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³
 	KGPlin* pipeline;
 
-	// ƒVƒF[ƒ_[
+	// ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼
 	KShader shader;
 
-	// ƒXƒs[ƒh
+	// ã‚¹ãƒ”ãƒ¼ãƒ‰
 	float speed = 1.0f;
 
 	bool isDead = false;

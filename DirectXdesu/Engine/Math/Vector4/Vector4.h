@@ -10,34 +10,34 @@ namespace KMyMath
 		float z;
 		float w;
 
-		// ƒ[ƒƒxƒNƒgƒ‹
+		// ã‚¼ãƒ­ãƒ™ã‚¯ãƒˆãƒ«
 		Vector4();
 		Vector4(float x, float y, float z, float w);
 		Vector4(KMyMath::Vector3 v3d, float w);
 
-		// ƒmƒ‹ƒ€
+		// ãƒãƒ«ãƒ 
 		float Length() const;
-		// ³‹K‰»
+		// æ­£è¦åŒ–
 		Vector4& Normalize();
 
-		// “àÏ
+		// å†…ç©
 		float dot(const Vector4& v) const;
 
-		// ŠOÏ
+		// å¤–ç©
 		Vector4 cross(const Vector4& v) const;
 
-		// ’P€‰‰ZqƒI[ƒo[ƒ[ƒh
+		// å˜é …æ¼”ç®—å­ã‚ªãƒ¼ãƒãƒ¼ãƒ­ãƒ¼ãƒ‰
 		Vector4 operator+() const;
 		Vector4 operator-() const;
 
-		// ‘ã“ü‰‰ZqƒI[ƒo[ƒ[ƒh
+		// ä»£å…¥æ¼”ç®—å­ã‚ªãƒ¼ãƒãƒ¼ãƒ­ãƒ¼ãƒ‰
 		Vector4& operator+=(const Vector4& v);
 		Vector4& operator-=(const Vector4& v);
 		Vector4& operator/=(float s);
 		Vector4& operator*=(float s);
 	};
 
-	// 2€‰‰ZqƒI[ƒo[ƒ[ƒh
+	// 2é …æ¼”ç®—å­ã‚ªãƒ¼ãƒãƒ¼ãƒ­ãƒ¼ãƒ‰
 	const Vector4 operator+(const Vector4& v1, const Vector4& v2);
 	const Vector4 operator-(const Vector4& v1, const Vector4& v2);
 	const Vector4 operator*(const Vector4& v, float s);

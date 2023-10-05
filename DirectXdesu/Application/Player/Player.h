@@ -11,64 +11,64 @@
 #include "Reticle2D.h"
 
 /// <summary>
-/// ©ƒLƒƒƒ‰
+/// è‡ªã‚­ãƒ£ãƒ©
 /// </summary>
 class Player
 {
 public:
 	/// <summary>
-	/// ¶¬
+	/// ç”Ÿæˆ
 	/// </summary>
 	/// <param name="model_"></param>
 	/// <returns></returns>
 	static Player* Create(KModel* model_,KGPlin* objPipeline_, const float playerHP, KGPlin* spritePipeline_);
 
 public:
-	// ‰Šú‰»
+	// åˆæœŸåŒ–
 	void Init(KModel* model_, KGPlin* objPipeline_, const float playerHP, KGPlin* spritePipeline_);
 
 	/// <summary>
-	/// XV
+	/// æ›´æ–°
 	/// </summary>
 	/// <param name="camera_"></param>
 	void Update(ViewProjection* viewPro);
 
-	// •`‰æ
-	// ƒIƒuƒWƒFƒNƒg
+	// æç”»
+	// ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
 	void ObjDraw();
 
-	// ƒQ[ƒ€ƒXƒvƒ‰ƒCƒg
+	// ã‚²ãƒ¼ãƒ ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ
 	void SpriteDraw();
 
 	// UI
 	void UIDraw();
 
-	// Õ“Ë‚ÉŒÄ‚Ño‚µ
+	// è¡çªæ™‚ã«å‘¼ã³å‡ºã—
 	void OnCollision();
 
 	/// <summary>
-	/// eqƒZƒbƒ^[
+	/// è¦ªå­ã‚»ãƒƒã‚¿ãƒ¼
 	/// </summary>
 	/// <param name="parent"></param>
 	void SetParent(const WorldTransfom* parent);
 
-	// ƒ|ƒWƒVƒ‡ƒ“ƒQƒbƒ^[
+	// ãƒã‚¸ã‚·ãƒ§ãƒ³ã‚²ãƒƒã‚¿ãƒ¼
 	const KMyMath::Vector3& GetPosition() const;
 
-	// ƒ[ƒ‹ƒhƒ|ƒWƒVƒ‡ƒ“ƒQƒbƒ^[
+	// ãƒ¯ãƒ¼ãƒ«ãƒ‰ãƒã‚¸ã‚·ãƒ§ãƒ³ã‚²ãƒƒã‚¿ãƒ¼
 	const KMyMath::Vector3 GetWorldPos() const;
 
-	// ‰ñ“]ƒQƒbƒ^[
+	// å›è»¢ã‚²ãƒƒã‚¿ãƒ¼
 	const KMyMath::Vector3 GetRot() const;
 
-	// €‚ñ‚Å‚é‚©
+	// æ­»ã‚“ã§ã‚‹ã‹
 	const bool GetIsDead() const;
 
-	// €–S‰‰o‚ªI‚í‚Á‚½‚©
+	// æ­»äº¡æ¼”å‡ºãŒçµ‚ã‚ã£ãŸã‹
 	const bool GetIsFallEffectEnd() const;
 
 public:
-	// ƒQƒbƒ^[
+	// ã‚²ãƒƒã‚¿ãƒ¼
 	static const KMyMath::Vector2& GetRotLimit()
 	{ 
 		return rotLimit;
@@ -97,78 +97,78 @@ public:
 	void SetPos(const KMyMath::Vector3 pos_);
 
 private:
-	// ˆÚ“®
+	// ç§»å‹•
 	void Move();
 
-	// ‰ñ“]
+	// å›è»¢
 	void Rot();
 
-	// UŒ‚
+	// æ”»æ’ƒ
 	void Attack();
 
-	// €–S‰‰o
+	// æ­»äº¡æ¼”å‡º
 	void DeadEffect();
 
-	// HP‰‰o
+	// HPæ¼”å‡º
 	void HPEffect();
 
-	// ƒ_ƒ[ƒWƒGƒtƒFƒNƒg
+	// ãƒ€ãƒ¡ãƒ¼ã‚¸ã‚¨ãƒ•ã‚§ã‚¯ãƒˆ
 	void DamageEffect();
 
-	// ƒfƒoƒbƒO—p
+	// ãƒ‡ãƒãƒƒã‚°ç”¨
 	void Debug();
 
 private:
-#pragma region ‘åŒ³‚Ì•Ï”
+#pragma region å¤§å…ƒã®å¤‰æ•°
 	// Input
 	KInput* input = nullptr;
 
-	// ƒIƒuƒWƒFƒNƒg
+	// ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
 	std::unique_ptr<KObject3d> object3d;
 
-	// ƒ‚ƒfƒ‹
+	// ãƒ¢ãƒ‡ãƒ«
 	KModel* model = nullptr;
 
-	// ƒpƒCƒvƒ‰ƒCƒ“
+	// ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³
 	KGPlin* objPipeline;
 	KGPlin* spritePipeline;
 #pragma endregion
 
-#pragma region ‰ñ“]—p•Ï”
-	// ‰ñ“]–ß‚·ƒC[ƒWƒ“ƒO—p
+#pragma region å›è»¢ç”¨å¤‰æ•°
+	// å›è»¢æˆ»ã™ã‚¤ãƒ¼ã‚¸ãƒ³ã‚°ç”¨
 	KMyMath::Vector2 oldRot;
 	float rotEaseTimer = 0;
 	bool isRotEase = false;
 
-	// Z²
+	// Zè»¸
 	bool isRotZRight = false;
 	float swayZ = 0.0f;
 #pragma endregion
 
-#pragma region ƒŒƒeƒBƒNƒ‹
-	// 2D‚É•ÏŠ·‚·‚é‚½‚ß‚Ì3DƒŒƒeƒBƒNƒ‹
+#pragma region ãƒ¬ãƒ†ã‚£ã‚¯ãƒ«
+	// 2Dã«å¤‰æ›ã™ã‚‹ãŸã‚ã®3Dãƒ¬ãƒ†ã‚£ã‚¯ãƒ«
 	std::unique_ptr<Reticle3D> reticle3d = nullptr;
-	// ÅI“I‚ÈƒŒƒeƒBƒNƒ‹
+	// æœ€çµ‚çš„ãªãƒ¬ãƒ†ã‚£ã‚¯ãƒ«
 	std::unique_ptr<Reticle2D> reticle2d = nullptr;
 #pragma endregion
 
-#pragma region §ŒÀ
-	// “®‚­ƒXƒs[ƒh
+#pragma region åˆ¶é™
+	// å‹•ãã‚¹ãƒ”ãƒ¼ãƒ‰
 	static const float moveSpeed;
 
-	// Šp“xãŒÀ
+	// è§’åº¦ä¸Šé™
 	static const KMyMath::Vector2 rotLimit;
 
-	// ˆÚ“®ãŒÀ
+	// ç§»å‹•ä¸Šé™
 	static const KMyMath::Vector2 posLimitMax;
 	static const KMyMath::Vector2 posLimitMin;
 #pragma endregion
 
-#pragma region HPŠÖ˜A
-	// Å‘å‘Ì—Í
+#pragma region HPé–¢é€£
+	// æœ€å¤§ä½“åŠ›
 	float maxHP;
 
-	// Œ»‘Ì—Í
+	// ç¾ä½“åŠ›
 	float HP;
 	float oldHP;
 	float startHpEase;
@@ -180,7 +180,7 @@ private:
 	float hpEaseTimer = 0;
 	const float hpEaseTime = 15;
 
-	// €–S‚µ‚Ä‚¢‚é‚©
+	// æ­»äº¡ã—ã¦ã„ã‚‹ã‹
 	bool isDead;
 
 	// HP
@@ -188,11 +188,11 @@ private:
 	TextureData hpTex;
 	std::unique_ptr<Sprite> HPrectUI = nullptr;
 
-	// HPƒo[
+	// HPãƒãƒ¼
 	std::unique_ptr<Sprite> HPBarUI = nullptr;
 	TextureData hpbarTex;
 
-	// –³“GŠÔ
+	// ç„¡æ•µæ™‚é–“
 	uint32_t invisibleTimer = 0;
 	const uint32_t invisibleTime = 30;
 	bool isInvisible = false;
@@ -200,19 +200,19 @@ private:
 	KMyMath::Vector4 hpColor = { 0,0,0,1.0f };
 #pragma endregion
 
-#pragma region ”í’e‰‰o
+#pragma region è¢«å¼¾æ¼”å‡º
 	bool isDamageEffect = false;
 	std::unique_ptr<Sprite> damage = nullptr;
 	TextureData damageTex;
 	float dAlpha = 0;
 #pragma endregion
 
-#pragma region ’Ä——p•Ï”
-	// ‰‰oŠÔ
+#pragma region å¢œè½ç”¨å¤‰æ•°
+	// æ¼”å‡ºæ™‚é–“
 	float fallEffectTime = 90;
 	float fallEffectTimer = 0;
 
-	// ”š”­ƒN[ƒ‹ƒ^ƒCƒ€
+	// çˆ†ç™ºã‚¯ãƒ¼ãƒ«ã‚¿ã‚¤ãƒ 
 	float expTime = 10;
 	float expTimer = 0;
 

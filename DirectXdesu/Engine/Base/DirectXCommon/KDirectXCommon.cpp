@@ -4,7 +4,7 @@
 
 KDirectXCommon* KDirectXCommon::directXCommon_ = nullptr;
 
-// ‘Î‰ƒŒƒxƒ‹‚Ì”z—ñ
+// å¯¾å¿œãƒ¬ãƒ™ãƒ«ã®é…åˆ—
 D3D_FEATURE_LEVEL levels[] =
 {
 	D3D_FEATURE_LEVEL_12_1,
@@ -15,14 +15,14 @@ D3D_FEATURE_LEVEL levels[] =
 
 void KDirectXCommon::Init()
 {
-	// FPSŒÅ’è‰Šú‰»
+	// FPSå›ºå®šåˆæœŸåŒ–
 	InitFixFPS();
 
 #ifdef _DEBUG
 	EnbleDebugLayer();
 #endif
 
-	//DirectX12ŠÖ˜A‰Šú‰»
+	//DirectX12é–¢é€£åˆæœŸåŒ–
 	if (FAILED(InitDXGIDevice()))
 	{
 		assert(0);
@@ -59,25 +59,25 @@ void KDirectXCommon::Init()
 		return;
 	}
 
-	//ƒfƒXƒNƒvƒŠƒ^ƒq[ƒv¶¬
+	//ãƒ‡ã‚¹ã‚¯ãƒ—ãƒªã‚¿ãƒ’ãƒ¼ãƒ—ç”Ÿæˆ
 	srvHeap = std::make_unique<KDescriptorHeap>();
 	srvHeap->Initialize();
 }
 
 void KDirectXCommon::PreDraw()
 {
-	//1ƒoƒbƒNƒoƒbƒtƒ@”Ô†‚ğæ“¾
+	//1ãƒãƒƒã‚¯ãƒãƒƒãƒ•ã‚¡ç•ªå·ã‚’å–å¾—
 	bbIndex = swapChain->GetCurrentBackBufferIndex();
-	//‘‚«‚İ‰Â”\‚É•ÏX
+	//æ›¸ãè¾¼ã¿å¯èƒ½ã«å¤‰æ›´
 
 	backBuffers[bbIndex]->Transition(D3D12_RESOURCE_STATE_RENDER_TARGET, cmdList.Get());
 
 	cmdList->OMSetRenderTargets(1, &backBuffers[bbIndex]->GetHandle(), false, &depthBuff->GetHandle());
 
-	//3‰æ–ÊƒNƒŠƒA
+	//3ç”»é¢ã‚¯ãƒªã‚¢
 	cmdList->ClearRenderTargetView(backBuffers[bbIndex]->GetHandle(), clearColor, 0, nullptr);
 	cmdList->ClearDepthStencilView(depthBuff->GetHandle(), D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
-	//ƒrƒ…[ƒ|[ƒgİ’è
+	//ãƒ“ãƒ¥ãƒ¼ãƒãƒ¼ãƒˆè¨­å®š
 	viewport.Width = (FLOAT)KWinApp::GetInstance()->GetWindowSizeW();
 	viewport.Height = (FLOAT)KWinApp::GetInstance()->GetWindowSizeH();
 	viewport.TopLeftX = 0;
@@ -85,43 +85,43 @@ void KDirectXCommon::PreDraw()
 	viewport.MinDepth = 0.0f;
 	viewport.MaxDepth = 1.0f;
 
-	// ƒrƒ…[ƒ|[ƒgİ’èƒRƒ}ƒ“ƒh‚ğAƒRƒ}ƒ“ƒhƒŠƒXƒg‚ÉÏ‚Ş
+	// ãƒ“ãƒ¥ãƒ¼ãƒãƒ¼ãƒˆè¨­å®šã‚³ãƒãƒ³ãƒ‰ã‚’ã€ã‚³ãƒãƒ³ãƒ‰ãƒªã‚¹ãƒˆã«ç©ã‚€
 	cmdList->RSSetViewports(1, &viewport);
 
-	// ƒVƒU[‹éŒ`İ’è
-	scissorRect.left = 0; // Ø‚è”²‚«À•W¶
-	scissorRect.right = scissorRect.left + KWinApp::GetInstance()->GetWindowSizeW(); // Ø‚è”²‚«À•W‰E
-	scissorRect.top = 0; // Ø‚è”²‚«À•Wã
-	scissorRect.bottom = scissorRect.top + KWinApp::GetInstance()->GetWindowSizeH(); // Ø‚è”²‚«À•W‰º
+	// ã‚·ã‚¶ãƒ¼çŸ©å½¢è¨­å®š
+	scissorRect.left = 0; // åˆ‡ã‚ŠæŠœãåº§æ¨™å·¦
+	scissorRect.right = scissorRect.left + KWinApp::GetInstance()->GetWindowSizeW(); // åˆ‡ã‚ŠæŠœãåº§æ¨™å³
+	scissorRect.top = 0; // åˆ‡ã‚ŠæŠœãåº§æ¨™ä¸Š
+	scissorRect.bottom = scissorRect.top + KWinApp::GetInstance()->GetWindowSizeH(); // åˆ‡ã‚ŠæŠœãåº§æ¨™ä¸‹
 
-	// ƒVƒU[‹éŒ`İ’èƒRƒ}ƒ“ƒh‚ğAƒRƒ}ƒ“ƒhƒŠƒXƒg‚ÉÏ‚Ş
+	// ã‚·ã‚¶ãƒ¼çŸ©å½¢è¨­å®šã‚³ãƒãƒ³ãƒ‰ã‚’ã€ã‚³ãƒãƒ³ãƒ‰ãƒªã‚¹ãƒˆã«ç©ã‚€
 	cmdList->RSSetScissorRects(1, &scissorRect);
 }
 
 void KDirectXCommon::PostDraw()
 {
-	//5Œ³‚É–ß‚·
+	//5å…ƒã«æˆ»ã™
 	backBuffers[bbIndex]->Transition(D3D12_RESOURCE_STATE_PRESENT, cmdList.Get());
 
 	DeleteCommand();
-	// FPSŒÅ’è
+	// FPSå›ºå®š
 	UpdateFixFPS();
 }
 
 void KDirectXCommon::DeleteCommand()
 {
-	//–½—ß‚ÌƒNƒ[ƒY
+	//å‘½ä»¤ã®ã‚¯ãƒ­ãƒ¼ã‚º
 	result = cmdList->Close();
 	assert(SUCCEEDED(result));
-	//ƒRƒ}ƒ“ƒhƒŠƒXƒg‚ÌÀs
+	//ã‚³ãƒãƒ³ãƒ‰ãƒªã‚¹ãƒˆã®å®Ÿè¡Œ
 	ID3D12CommandList* commandListts[] = { cmdList.Get() };
 	cmdQueue->ExecuteCommandLists(1, commandListts);
 
-	//ƒtƒŠƒbƒv
+	//ãƒ•ãƒªãƒƒãƒ—
 	result = swapChain->Present(1, 0);
 	assert(SUCCEEDED(result));
 
-	//ƒRƒ}ƒ“ƒhÀsŠ®—¹‚ğ‘Ò‚Â
+	//ã‚³ãƒãƒ³ãƒ‰å®Ÿè¡Œå®Œäº†ã‚’å¾…ã¤
 	cmdQueue->Signal(fence.Get(), ++fenceVal);
 	if (fence->GetCompletedValue() != fenceVal)
 	{
@@ -134,10 +134,10 @@ void KDirectXCommon::DeleteCommand()
 		}
 	}
 
-	//ƒLƒ…[‚ğƒNƒŠƒA
+	//ã‚­ãƒ¥ãƒ¼ã‚’ã‚¯ãƒªã‚¢
 	result = cmdAllocater->Reset();
 	assert(SUCCEEDED(result));
-	//ƒRƒ}ƒ“ƒhƒŠƒXƒg‚ğ’™‚ß‚é€”õ
+	//ã‚³ãƒãƒ³ãƒ‰ãƒªã‚¹ãƒˆã‚’è²¯ã‚ã‚‹æº–å‚™
 	if (cmdList != 0)
 	{
 		result = cmdList->Reset(cmdAllocater.Get(), nullptr);
@@ -190,46 +190,46 @@ size_t KDirectXCommon::GetBackBufferCount() const
 
 HRESULT KDirectXCommon::InitDXGIDevice()
 {
-	//DXGIƒtƒ@ƒNƒgƒŠ[
+	//DXGIãƒ•ã‚¡ã‚¯ãƒˆãƒªãƒ¼
 	result = CreateDXGIFactory(IID_PPV_ARGS(dxgiFactory.ReleaseAndGetAddressOf()));
 	if (FAILED(result))
 	{
 		return result;
 	}
 
-	//ƒAƒ_ƒvƒ^[—ñ‹“—p
+	//ã‚¢ãƒ€ãƒ—ã‚¿ãƒ¼åˆ—æŒ™ç”¨
 	std::vector<Microsoft::WRL::ComPtr<IDXGIAdapter4>> adapters;
-	//‚±‚±‚É“Á’è‚Ì–¼‘O‚ğ‚ÂƒAƒ_ƒvƒ^[ƒIƒuƒWƒFƒNƒg‚ª“ü‚é
+	//ã“ã“ã«ç‰¹å®šã®åå‰ã‚’æŒã¤ã‚¢ãƒ€ãƒ—ã‚¿ãƒ¼ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆãŒå…¥ã‚‹
 	Microsoft::WRL::ComPtr<IDXGIAdapter4> tmpAdapter;
 
-	//ƒpƒtƒH[ƒ}ƒ“ƒX‚ª‚‚¢‚Ì‚à‚©‚ç‘S‚Ä—ñ‹“
+	//ãƒ‘ãƒ•ã‚©ãƒ¼ãƒãƒ³ã‚¹ãŒé«˜ã„ã®ã‚‚ã‹ã‚‰å…¨ã¦åˆ—æŒ™
 	for (UINT i = 0; dxgiFactory->EnumAdapterByGpuPreference(i, DXGI_GPU_PREFERENCE_HIGH_PERFORMANCE, IID_PPV_ARGS(tmpAdapter.ReleaseAndGetAddressOf())) != DXGI_ERROR_NOT_FOUND; i++)
 	{
 		adapters.push_back(tmpAdapter);
 	}
 
-	// ‘Ã“–‚ÈƒAƒ_ƒvƒ^‚ğ‘I•Ê‚·‚é
+	// å¦¥å½“ãªã‚¢ãƒ€ãƒ—ã‚¿ã‚’é¸åˆ¥ã™ã‚‹
 	for (size_t i = 0; i < adapters.size(); i++) {
 		DXGI_ADAPTER_DESC3 adapterDesc;
-		// ƒAƒ_ƒvƒ^[‚Ìî•ñ‚ğæ“¾‚·‚é
+		// ã‚¢ãƒ€ãƒ—ã‚¿ãƒ¼ã®æƒ…å ±ã‚’å–å¾—ã™ã‚‹
 		adapters[i]->GetDesc3(&adapterDesc);
 
-		// ƒ\ƒtƒgƒEƒFƒAƒfƒoƒCƒX‚ğ‰ñ”ğ
+		// ã‚½ãƒ•ãƒˆã‚¦ã‚§ã‚¢ãƒ‡ãƒã‚¤ã‚¹ã‚’å›é¿
 		if (!(adapterDesc.Flags & DXGI_ADAPTER_FLAG3_SOFTWARE)) {
-			// ƒfƒoƒCƒX‚ğÌ—p‚µ‚Äƒ‹[ƒv‚ğ”²‚¯‚é
+			// ãƒ‡ãƒã‚¤ã‚¹ã‚’æ¡ç”¨ã—ã¦ãƒ«ãƒ¼ãƒ—ã‚’æŠœã‘ã‚‹
 			tmpAdapter = adapters[i];
 			break;
 		}
 	}
 
-	//Direct3DƒfƒoƒCƒX‚Ì‰Šú‰»
+	//Direct3Dãƒ‡ãƒã‚¤ã‚¹ã®åˆæœŸåŒ–
 	D3D_FEATURE_LEVEL featureLevel;
 
 	for (size_t i = 0; i < _countof(levels); i++) {
-		// Ì—p‚µ‚½ƒAƒ_ƒvƒ^[‚ÅƒfƒoƒCƒX‚ğ¶¬
+		// æ¡ç”¨ã—ãŸã‚¢ãƒ€ãƒ—ã‚¿ãƒ¼ã§ãƒ‡ãƒã‚¤ã‚¹ã‚’ç”Ÿæˆ
 		result = D3D12CreateDevice(tmpAdapter.Get(), levels[i], IID_PPV_ARGS(dev.GetAddressOf()));
 		if (result == S_OK) {
-			// ƒfƒoƒCƒX‚ğ¶¬‚Å‚«‚½“_‚Åƒ‹[ƒv‚ğ”²‚¯‚é
+			// ãƒ‡ãƒã‚¤ã‚¹ã‚’ç”Ÿæˆã§ããŸæ™‚ç‚¹ã§ãƒ«ãƒ¼ãƒ—ã‚’æŠœã‘ã‚‹
 			featureLevel = levels[i];
 			break;
 		}
@@ -240,19 +240,19 @@ HRESULT KDirectXCommon::InitDXGIDevice()
 
 HRESULT KDirectXCommon::CreateFinalRenderTarget()
 {
-	//ƒfƒXƒNƒŠƒvƒ^ƒq[ƒv‚Ì¶¬
+	//ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿ãƒ’ãƒ¼ãƒ—ã®ç”Ÿæˆ
 	rtvHeap = std::make_unique<KRtvDescriptorHeap>();
 	rtvHeap->Initialize();
 
-	//ƒoƒbƒNƒoƒbƒtƒ@
+	//ãƒãƒƒã‚¯ãƒãƒƒãƒ•ã‚¡
 	backBuffers.resize(swapChainDesc.BufferCount);
 
-	//ƒXƒƒbƒvƒ`ƒF[ƒ“‚Ìƒoƒbƒtƒ@‚ğˆ—
+	//ã‚¹ãƒ¯ãƒƒãƒ—ãƒã‚§ãƒ¼ãƒ³ã®ãƒãƒƒãƒ•ã‚¡ã‚’å‡¦ç†
 	for (size_t i = 0; i < backBuffers.size(); i++)
 	{
 		backBuffers[i] = std::make_unique<KRenderTargetBuffer>(dev.Get(), rtvHeap.get());
 
-		//¶¬
+		//ç”Ÿæˆ
 		backBuffers[i]->Create(swapChain.Get(), static_cast<UINT>(i));
 	}
 
@@ -261,16 +261,16 @@ HRESULT KDirectXCommon::CreateFinalRenderTarget()
 
 HRESULT KDirectXCommon::CreateSwapChain()
 {
-	swapChainDesc.Width = KWinApp::GetInstance()->GetWindowSizeW();//‰¡•
-	swapChainDesc.Height = KWinApp::GetInstance()->GetWindowSizeH();//c•
-	swapChainDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;//Fî•ñ‚Ì‘®
-	swapChainDesc.SampleDesc.Count = 1;//ƒ}ƒ‹ƒ`ƒTƒ“ƒvƒ‹‚È‚µ
-	swapChainDesc.BufferUsage = DXGI_USAGE_BACK_BUFFER;//ƒoƒbƒNƒoƒbƒtƒ@—p
-	swapChainDesc.BufferCount = 2;//ƒoƒbƒtƒ@”2
-	swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;//ƒtƒŠƒbƒvŒã‚Í”jŠü
+	swapChainDesc.Width = KWinApp::GetInstance()->GetWindowSizeW();//æ¨ªå¹…
+	swapChainDesc.Height = KWinApp::GetInstance()->GetWindowSizeH();//ç¸¦å¹…
+	swapChainDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;//è‰²æƒ…å ±ã®æ›¸å¼
+	swapChainDesc.SampleDesc.Count = 1;//ãƒãƒ«ãƒã‚µãƒ³ãƒ—ãƒ«ãªã—
+	swapChainDesc.BufferUsage = DXGI_USAGE_BACK_BUFFER;//ãƒãƒƒã‚¯ãƒãƒƒãƒ•ã‚¡ç”¨
+	swapChainDesc.BufferCount = 2;//ãƒãƒƒãƒ•ã‚¡æ•°2
+	swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;//ãƒ•ãƒªãƒƒãƒ—å¾Œã¯ç ´æ£„
 	swapChainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 
-	//¶¬
+	//ç”Ÿæˆ
 	if (cmdQueue != 0)
 	{
 		Microsoft::WRL::ComPtr<IDXGISwapChain1> tmpSwapChain;
@@ -292,14 +292,14 @@ HRESULT KDirectXCommon::CreateSwapChain()
 
 HRESULT KDirectXCommon::InitCommand()
 {
-	//ƒRƒ}ƒ“ƒhƒAƒƒP[ƒ^‚ğ¶¬
+	//ã‚³ãƒãƒ³ãƒ‰ã‚¢ãƒ­ã‚±ãƒ¼ã‚¿ã‚’ç”Ÿæˆ
 	result = dev->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(cmdAllocater.ReleaseAndGetAddressOf()));
 	if (FAILED(result))
 	{
 		return result;
 	}
 
-	//ƒRƒ}ƒ“ƒhƒŠƒXƒg‚ğ¶¬
+	//ã‚³ãƒãƒ³ãƒ‰ãƒªã‚¹ãƒˆã‚’ç”Ÿæˆ
 	if (cmdAllocater != 0)
 	{
 		result = dev->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, cmdAllocater.Get(), nullptr, IID_PPV_ARGS(cmdList.ReleaseAndGetAddressOf()));
@@ -313,7 +313,7 @@ HRESULT KDirectXCommon::InitCommand()
 		assert(SUCCEEDED(0));
 	}
 
-	//ƒRƒ}ƒ“ƒhƒLƒ…[‚Ìİ’è•¶¬
+	//ã‚³ãƒãƒ³ãƒ‰ã‚­ãƒ¥ãƒ¼ã®è¨­å®šï¼†ç”Ÿæˆ
 	D3D12_COMMAND_QUEUE_DESC commandQueueDesc{};
 	result = dev->CreateCommandQueue(&commandQueueDesc, IID_PPV_ARGS(cmdQueue.ReleaseAndGetAddressOf()));
 
@@ -327,7 +327,7 @@ HRESULT KDirectXCommon::InitCommand()
 
 HRESULT KDirectXCommon::CreateFence()
 {
-	//ƒtƒFƒ“ƒX‚Ì¶¬
+	//ãƒ•ã‚§ãƒ³ã‚¹ã®ç”Ÿæˆ
 	result = dev->CreateFence(fenceVal, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(fence.ReleaseAndGetAddressOf()));
 
 	return result;
@@ -335,11 +335,11 @@ HRESULT KDirectXCommon::CreateFence()
 
 HRESULT KDirectXCommon::CreateDepthBuffer()
 {
-	//ƒfƒXƒNƒvƒŠƒ^ƒq[ƒv¶¬
+	//ãƒ‡ã‚¹ã‚¯ãƒ—ãƒªã‚¿ãƒ’ãƒ¼ãƒ—ç”Ÿæˆ
 	dsvHeap = std::make_unique<KDsvDescriptorHeap>();
 	dsvHeap->Initialize();
 
-	//[“xƒoƒbƒtƒ@¶¬
+	//æ·±åº¦ãƒãƒƒãƒ•ã‚¡ç”Ÿæˆ
 	depthBuff = std::make_unique<KDepthStencilBuffer>(dev.Get(), dsvHeap.get());
 	depthBuff->Create(KWinApp::GetInstance()->GetWindowSizeW(), KWinApp::GetInstance()->GetWindowSizeH(), DXGI_FORMAT_D32_FLOAT);
 
@@ -362,58 +362,58 @@ void KDirectXCommon::EnbleInfoQueue()
 	result = dev->QueryInterface(IID_PPV_ARGS(&infoQueue));
 	if (SUCCEEDED(result))
 	{
-		// ƒ„ƒo‚¢
+		// ãƒ¤ãƒã„
 		infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_CORRUPTION, true);
-		// •’Ê
+		// æ™®é€š
 		infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_ERROR, true);
-		// Œx
+		// è­¦å‘Š
 		infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_WARNING, true);
 
-		//—}§‚·‚éƒGƒ‰[
+		//æŠ‘åˆ¶ã™ã‚‹ã‚¨ãƒ©ãƒ¼
 		D3D12_MESSAGE_ID denyIds[] =
 		{
 			/*
-			*windows11‚Å‚ÌDXGIƒfƒoƒbƒOƒŒƒCƒ„[‚ÆDX12ƒfƒoƒbƒOƒŒƒCƒ„[
-			*‘ŠŒİì—pƒoƒO‚É‚æ‚éƒGƒ‰[ƒƒbƒZ[ƒW
+			*windows11ã§ã®DXGIãƒ‡ãƒãƒƒã‚°ãƒ¬ã‚¤ãƒ¤ãƒ¼ã¨DX12ãƒ‡ãƒãƒƒã‚°ãƒ¬ã‚¤ãƒ¤ãƒ¼
+			*ç›¸äº’ä½œç”¨ãƒã‚°ã«ã‚ˆã‚‹ã‚¨ãƒ©ãƒ¼ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸
 			*/
 			D3D12_MESSAGE_ID_RESOURCE_BARRIER_MISMATCHING_COMMAND_LIST_TYPE
 
 		};
-		//—}§‚·‚é•\¦ƒŒƒxƒ‹
+		//æŠ‘åˆ¶ã™ã‚‹è¡¨ç¤ºãƒ¬ãƒ™ãƒ«
 		D3D12_MESSAGE_SEVERITY severities[] = { D3D12_MESSAGE_SEVERITY_INFO };
 		D3D12_INFO_QUEUE_FILTER filter{};
 		filter.DenyList.NumIDs = _countof(denyIds);
 		filter.DenyList.pIDList = denyIds;
 		filter.DenyList.NumSeverities = _countof(severities);
 		filter.DenyList.pSeverityList = severities;
-		//w’è‚µ‚½ƒGƒ‰[‚Ì•\¦‚ğ—}§‚·‚é
+		//æŒ‡å®šã—ãŸã‚¨ãƒ©ãƒ¼ã®è¡¨ç¤ºã‚’æŠ‘åˆ¶ã™ã‚‹
 		infoQueue->PushStorageFilter(&filter);
 	}
 }
 
 void KDirectXCommon::InitFixFPS()
 {
-	// Œ»İŠÔ‚Ì‹L˜^
+	// ç¾åœ¨æ™‚é–“ã®è¨˜éŒ²
 	reference_ = std::chrono::steady_clock::now();
 }
 
 void KDirectXCommon::UpdateFixFPS()
 {
-	// 1/60•b‚Ì‚Ò‚Á‚½‚è‚ÌŠÔ
+	// 1/60ç§’ã®ã´ã£ãŸã‚Šã®æ™‚é–“
 	const std::chrono::microseconds kMinTime(uint64_t(1000000.0f / 60.0f));
-	// 1/60•b‚æ‚è‚í‚¸‚©‚É’Z‚¢ŠÔ 
+	// 1/60ç§’ã‚ˆã‚Šã‚ãšã‹ã«çŸ­ã„æ™‚é–“ 
 	const std::chrono::microseconds kMinCheckTime(uint64_t(1000000.0f / 65.0f));
-	// Œ»İŠÔ‚ğæ“¾‚·‚é
+	// ç¾åœ¨æ™‚é–“ã‚’å–å¾—ã™ã‚‹
 	std::chrono::steady_clock::time_point now = std::chrono::steady_clock::now();
-	// ‘O‰ñ‹L˜^‚©‚ç‚ÌŒo‰ßŠÔ‚ğæ“¾‚·‚é
+	// å‰å›è¨˜éŒ²ã‹ã‚‰ã®çµŒéæ™‚é–“ã‚’å–å¾—ã™ã‚‹
 	std::chrono::microseconds elapsed = std::chrono::duration_cast<std::chrono::microseconds>(now - reference_);
-	// 1/60•b(‚æ‚è‚í‚¸‚©‚É’Z‚¢ŠÔ)Œo‚Á‚Ä‚È‚¢ê‡
+	// 1/60ç§’(ã‚ˆã‚Šã‚ãšã‹ã«çŸ­ã„æ™‚é–“)çµŒã£ã¦ãªã„å ´åˆ
 	if (elapsed < kMinTime)
 	{
-		// 1/60•bŒo‰ß‚·‚é‚Ü‚Å”÷¬‚ÈƒXƒŠ[ƒv‚ğŒJ‚è•Ô‚·
+		// 1/60ç§’çµŒéã™ã‚‹ã¾ã§å¾®å°ãªã‚¹ãƒªãƒ¼ãƒ—ã‚’ç¹°ã‚Šè¿”ã™
 		while (std::chrono::steady_clock::now() - reference_ < kMinTime)
 		{
-			// 1ƒ}ƒCƒNƒ•bƒXƒŠ[ƒv
+			// 1ãƒã‚¤ã‚¯ãƒ­ç§’ã‚¹ãƒªãƒ¼ãƒ—
 			std::this_thread::sleep_for(std::chrono::microseconds(1));
 		}
 	}
@@ -425,7 +425,7 @@ void KDirectXCommon::UpdateFixFPS()
 	{
 		fps = (fps * 0.99f) + (0.01f / nowTime);
 	}
-	// Œ»İ‚ÌŠÔ‚ğ‹L˜^‚·‚é
+	// ç¾åœ¨ã®æ™‚é–“ã‚’è¨˜éŒ²ã™ã‚‹
 	reference_ = std::chrono::steady_clock::now();
 }
 

@@ -5,23 +5,23 @@
 class Collision
 {
 public:
-	// ‹…‚Æ•½–Ê‚Ì“–‚½‚è”»’è
+	// çƒã¨å¹³é¢ã®å½“ãŸã‚Šåˆ¤å®š
 	static bool CheckSphere2Plane(const Sphere& sphere, const Plane& plane, DirectX::XMVECTOR* inter = nullptr);
 	static void ClosestPtPoint2Triangle(const DirectX::XMVECTOR& point, const ColTriangle& triangle, DirectX::XMVECTOR* closet);
-	// ‹…‚ÆOŠpŒ`‚Ì“–‚½‚è”»’è
+	// çƒã¨ä¸‰è§’å½¢ã®å½“ãŸã‚Šåˆ¤å®š
 	static bool CheckSphere2Triangle(const Sphere& sphere, const ColTriangle& triangle, DirectX::XMVECTOR* inter = nullptr);
-	// ƒŒƒC‚Æ•½–Ê‚Ì“–‚½‚è”»’è
+	// ãƒ¬ã‚¤ã¨å¹³é¢ã®å½“ãŸã‚Šåˆ¤å®š
 	static bool CheckRay2Plane(const Ray& ray, const Plane& plane, float* distance = nullptr, DirectX::XMVECTOR* inter = nullptr);
-	// ƒŒƒC‚ÆOŠpŒ`‚Ì“–‚½‚è”»’è
+	// ãƒ¬ã‚¤ã¨ä¸‰è§’å½¢ã®å½“ãŸã‚Šåˆ¤å®š
 	static bool CheckRay2Triangle(const Ray& ray, const ColTriangle& triangle, float* distance = nullptr, DirectX::XMVECTOR* inter = nullptr);
-	// ƒŒƒC‚Æ‹…‚Ì“–‚½‚è”»’è
+	// ãƒ¬ã‚¤ã¨çƒã®å½“ãŸã‚Šåˆ¤å®š
 	static bool CheckRay2Sphere(const Ray& ray, const Sphere& sphere, float* distance = nullptr, DirectX::XMVECTOR* inter = nullptr);
 };
 
 namespace MyCollisions
 {
 	/// <summary>
-	/// ‹…‚Æ‹…
+	/// çƒã¨çƒ
 	/// </summary>
 	/// <param name="posA"></param>
 	/// <param name="posB"></param>

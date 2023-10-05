@@ -293,16 +293,16 @@ Quaternion Slerp(const Quaternion& q1, const Quaternion& q2, float time)
 
 Quaternion DirectionToDirection(const KMyMath::Vector3& v1, const KMyMath::Vector3& v2)
 {
-	// v1��v2�𐳋K�����ē��ς����߂�Bv1��v2��P�ʃx�N�g���O��Ƃ���Ȃ琳�K���͕s�v
+	// v1とv2を正規化して内積を求める。v1とv2を単位ベクトル前提とするなら正規化は不要
 	float dot = v1.Dot(v2);
-	// v1,v2�̊O��
+	// v1,v2の外積
 	KMyMath::Vector3 cross = v1.Cross(v2);
-	// ���͒P�ʃx�N�g���ł���K�v������̂Ő��K��
-	// v1��v2���P�ʃx�N�g���ł����Ă��A�O�ς��P�ʃx�N�g���Ƃ͌���Ȃ��̂ł����̐��K���͕K�{
+	// 軸は単位ベクトルである必要があるので正規化
+	// v1とv2が単位ベクトルであっても、外積が単位ベクトルとは限らないのでここの正規化は必須
 	KMyMath::Vector3 axis = axis.Normalize();
-	// �P�ʃx�N�g���œ��ς��Ƃ��Ă���̂�acos�Ŋp�x�����߂�
+	// 単位ベクトルで内積をとっているのでacosで角度を求める
 	float theta = std::acos(dot);
-	// axis��theta�ŔC�ӎ���]������ĕԂ�
+	// axisとthetaで任意軸回転を作って返す
 	MakeAxisAngle(axis, theta);
 
 	return  MakeAxisAngle(axis, theta);

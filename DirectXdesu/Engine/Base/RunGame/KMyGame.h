@@ -4,13 +4,13 @@
 class KMyGame : public Framework
 {
 public:
-	// ‰Šú‰»
+	// åˆæœŸåŒ–
 	void Init() override;
-	// XV
+	// æ›´æ–°
 	void Update() override;
-	// •`‰æ
+	// æç”»
 	void Draw() override;
-	// I—¹
+	// çµ‚äº†
 	void Final() override;
 
 private:

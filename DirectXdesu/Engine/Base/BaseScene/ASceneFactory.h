@@ -5,9 +5,9 @@
 class ASceneFactory
 {
 public:
-	// ‰¼‘zƒfƒXƒgƒ‰ƒNƒ^
+	// ä»®æƒ³ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	virtual ~ASceneFactory() = default;
-	// ƒV[ƒ“¶¬
+	// ã‚·ãƒ¼ãƒ³ç”Ÿæˆ
 	virtual BaseScene* CreateScene(const std::string& sceneName) = 0;
 };
 

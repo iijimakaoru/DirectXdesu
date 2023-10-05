@@ -5,56 +5,56 @@ class AppearEnemy : public MobEnemy
 {
 public:
 	/// <summary>
-	/// ¶¬
+	/// ç”Ÿæˆ
 	/// </summary>
-	/// <param name="model_">g—p‚·‚éƒ‚ƒfƒ‹</param>
-	/// <param name="pos">‰ŠúˆÊ’u</param>
+	/// <param name="model_">ä½¿ç”¨ã™ã‚‹ãƒ¢ãƒ‡ãƒ«</param>
+	/// <param name="pos">åˆæœŸä½ç½®</param>
 	/// <returns></returns>
 	static AppearEnemy* Create(KModel* model_,KGPlin* pipeline_, const KMyMath::Vector3& pos);
 
 public:
 	/// <summary>
-	/// ‰Šú‰»
+	/// åˆæœŸåŒ–
 	/// </summary>
 	/// <param name="model_"></param>
 	void Init(KModel* model_, KGPlin* pipeline_) override;
 
 	/// <summary>
-	/// XV
+	/// æ›´æ–°
 	/// </summary>
 	/// <param name="viewPro"></param>
 	/// <param name="cameraPos"></param>
 	void Update(ViewProjection* viewPro, const KMyMath::Vector3& cameraPos) override;
 
 	/// <summary>
-	/// •`‰æ
+	/// æç”»
 	/// </summary>
 	void Draw() override;
 
 	/// <summary>
-	/// UŒ‚
+	/// æ”»æ’ƒ
 	/// </summary>
 	void Attack() override;
 
 	/// <summary>
-	/// oŒ»
+	/// å‡ºç¾
 	/// </summary>
 	void Appear();
 
 private:
-	// ƒC[ƒWƒ“ƒOƒ^ƒCƒ}[
+	// ã‚¤ãƒ¼ã‚¸ãƒ³ã‚°ã‚¿ã‚¤ãƒãƒ¼
 	float easeTimer = 0;
 
-	// ãŒÀ
+	// ä¸Šé™
 	const float easeTime = 30;
 
-	// Å‰‚ÌƒXƒP[ƒ‹
+	// æœ€åˆã®ã‚¹ã‚±ãƒ¼ãƒ«
 	KMyMath::Vector3 startScale;
 
-	// ÅIƒXƒP[ƒ‹
+	// æœ€çµ‚ã‚¹ã‚±ãƒ¼ãƒ«
 	KMyMath::Vector3 endScale;
 
-	// oŒ»‰‰o’†‚©‚Ç‚¤‚©
+	// å‡ºç¾æ¼”å‡ºä¸­ã‹ã©ã†ã‹
 	bool isAppear = false;
 };
 

@@ -11,18 +11,18 @@
 
 class Particles
 {
-public:// ƒTƒuƒNƒ‰ƒX
-	// ’¸“_ƒf[ƒ^\‘¢‘Ì
+public:// ã‚µãƒ–ã‚¯ãƒ©ã‚¹
+	// é ‚ç‚¹ãƒ‡ãƒ¼ã‚¿æ§‹é€ ä½“
 	struct VertexPos
 	{
-		KMyMath::Vector3 pos; // xyzÀ•W
+		KMyMath::Vector3 pos; // xyzåº§æ¨™
 		float scale;
 	};
 
-	// ’è”ƒoƒbƒtƒ@—pƒf[ƒ^\‘¢‘Ì
+	// å®šæ•°ãƒãƒƒãƒ•ã‚¡ç”¨ãƒ‡ãƒ¼ã‚¿æ§‹é€ ä½“
 	struct PConstBufferData
 	{
-		KMyMath::Matrix4 mat;	// ‚R‚c•ÏŠ·s—ñ
+		KMyMath::Matrix4 mat;	// ï¼“ï¼¤å¤‰æ›è¡Œåˆ—
 		KMyMath::Matrix4 matBillboard;
 	};
 
@@ -45,63 +45,63 @@ public:// ƒTƒuƒNƒ‰ƒX
 		float e_scale = 0.0f;
 	};
 
-private: // ’è”
-	static const int vertexCount = 1024;		// ’¸“_”
+private: // å®šæ•°
+	static const int vertexCount = 1024;		// é ‚ç‚¹æ•°
 
-public: // Ã“Iƒƒ“ƒoŠÖ”
+public: // é™çš„ãƒ¡ãƒ³ãƒé–¢æ•°
 	/// <summary>
-	/// Ã“I‰Šú‰»
+	/// é™çš„åˆæœŸåŒ–
 	/// </summary>
-	/// <param name="device">ƒfƒoƒCƒX</param>
-	/// <param name="window_width">‰æ–Ê•</param>
-	/// <param name="window_height">‰æ–Ê‚‚³</param>
+	/// <param name="device">ãƒ‡ãƒã‚¤ã‚¹</param>
+	/// <param name="window_width">ç”»é¢å¹…</param>
+	/// <param name="window_height">ç”»é¢é«˜ã•</param>
 	static void StaticInitialize();
 
 	/// <summary>
-	/// 3DƒIƒuƒWƒFƒNƒg¶¬
+	/// 3Dã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆç”Ÿæˆ
 	/// </summary>
 	/// <returns></returns>
 	static Particles* Create(TextureData& textureData_);
 
-private: // Ã“Iƒƒ“ƒo•Ï”
-	// ƒfƒoƒCƒX
+private: // é™çš„ãƒ¡ãƒ³ãƒå¤‰æ•°
+	// ãƒ‡ãƒã‚¤ã‚¹
 	static ID3D12Device* device;
 
-	// ƒRƒ}ƒ“ƒhƒŠƒXƒg
+	// ã‚³ãƒãƒ³ãƒ‰ãƒªã‚¹ãƒˆ
 	static ID3D12GraphicsCommandList* cmdList;
 
-	// ƒpƒCƒvƒ‰ƒCƒ“
+	// ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³
 	static std::unique_ptr<KGPlin> pipeline;
 
-	// ƒVƒF[ƒ_[
+	// ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼
 	static KShader shader;
 
-	// ƒrƒ‹ƒ{[ƒhs—ñ
+	// ãƒ“ãƒ«ãƒœãƒ¼ãƒ‰è¡Œåˆ—
 	static DirectX::XMMATRIX matBillboard;
-	// Y²‰ñ‚èƒrƒ‹ƒ{[ƒhs—ñ
+	// Yè»¸å›ã‚Šãƒ“ãƒ«ãƒœãƒ¼ãƒ‰è¡Œåˆ—
 	static DirectX::XMMATRIX matBillboardY;
 
-private:// Ã“Iƒƒ“ƒoŠÖ”
+private:// é™çš„ãƒ¡ãƒ³ãƒé–¢æ•°
 	/// <summary>
-	/// ƒOƒ‰ƒtƒBƒbƒNƒpƒCƒvƒ‰ƒCƒ“¶¬
+	/// ã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³ç”Ÿæˆ
 	/// </summary>
-	/// <returns>¬”Û</returns>
+	/// <returns>æˆå¦</returns>
 	static void InitializeGraphicsPipeline();
 
-public: // ƒƒ“ƒoŠÖ”
+public: // ãƒ¡ãƒ³ãƒé–¢æ•°
 	bool Initialize(TextureData textureData_);
 	/// <summary>
-	/// –ˆƒtƒŒ[ƒ€ˆ—
+	/// æ¯ãƒ•ãƒ¬ãƒ¼ãƒ å‡¦ç†
 	/// </summary>
 	void Update(ViewProjection* viewProjection);
 
 	/// <summary>
-	/// •`‰æ
+	/// æç”»
 	/// </summary>
 	void Draw();
 
 	/// <summary>
-	/// ƒp[ƒeƒBƒNƒ‹’Ç‰Á
+	/// ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«è¿½åŠ 
 	/// </summary>
 	/// <param name="life"></param>
 	/// <param name="pos"></param>
@@ -112,22 +112,22 @@ public: // ƒƒ“ƒoŠÖ”
 	void Add(int life, KMyMath::Vector3 pos, KMyMath::Vector3 vel, KMyMath::Vector3 accel, float start_scale, float end_scale);
 
 	/// <summary>
-	/// ƒ‚ƒfƒ‹ì¬
+	/// ãƒ¢ãƒ‡ãƒ«ä½œæˆ
 	/// </summary>
 	void CreateModel();
 
 private:
-	// ’¸“_ƒf[ƒ^”z—ñ
+	// é ‚ç‚¹ãƒ‡ãƒ¼ã‚¿é…åˆ—
 	VertexPos vertices[vertexCount];
 
-	// ’¸“_ƒoƒbƒtƒ@
+	// é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡
 	Microsoft::WRL::ComPtr<ID3D12Resource> vertBuff;
 
-	// ’¸“_ƒoƒbƒtƒ@ƒrƒ…[
+	// é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ãƒ“ãƒ¥ãƒ¼
 	D3D12_VERTEX_BUFFER_VIEW vbView;
 
-private: // ƒƒ“ƒo•Ï”
-	Microsoft::WRL::ComPtr<ID3D12Resource> constBuff; // ’è”ƒoƒbƒtƒ@
+private: // ãƒ¡ãƒ³ãƒå¤‰æ•°
+	Microsoft::WRL::ComPtr<ID3D12Resource> constBuff; // å®šæ•°ãƒãƒƒãƒ•ã‚¡
 
 	TextureData textureData;
 
@@ -138,48 +138,48 @@ class ParticleManager
 {
 public:
 	/// <summary>
-	/// ‰Šú‰»
+	/// åˆæœŸåŒ–
 	/// </summary>
 	void Init();
 
 	/// <summary>
-	/// XV
+	/// æ›´æ–°
 	/// </summary>
 	/// <param name="viewPro"></param>
 	void Update(ViewProjection* viewPro);
 
 	/// <summary>
-	/// •`‰æ
+	/// æç”»
 	/// </summary>
 	void Draw();
 
 	/// <summary>
-	/// ”š”­
+	/// çˆ†ç™º
 	/// </summary>
 	void CallExp(const KMyMath::Vector3& pos);
 
 	/// <summary>
-	/// ¬”š”­
+	/// å°çˆ†ç™º
 	/// </summary>
 	void CallSmallExp(const KMyMath::Vector3& pos);
 
 private:
-	// ƒCƒ“ƒXƒ^ƒ“ƒX
+	// ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹
 	static ParticleManager* parthicleManager;
 
-	// ƒeƒNƒXƒ`ƒƒ
+	// ãƒ†ã‚¯ã‚¹ãƒãƒ£
 	TextureData textureData1;
 	TextureData textureData2;
 
-	// ƒp[ƒeƒBƒNƒ‹
+	// ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«
 	std::unique_ptr<Particles> particles1;
 	std::unique_ptr<Particles> particles2;
 
 public:
-	// ƒCƒ“ƒXƒ^ƒ“ƒX
+	// ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹
 	static ParticleManager* GetInstance();
 
-	// ‰ğ•ú
+	// è§£æ”¾
 	void Delete();
 
 private:
@@ -193,14 +193,14 @@ class ObjParticle
 {
 public:
 	/// <summary>
-	/// ì¬
+	/// ä½œæˆ
 	/// </summary>
 	/// <returns></returns>
 	static ObjParticle* Create(const KMyMath::Vector3& pos_, 
 		KModel* model_, KGPlin* pipeline_, const KMyMath::Vector3& velocity, TextureData& tex);
 
 	/// <summary>
-	/// ‰Šú‰»
+	/// åˆæœŸåŒ–
 	/// </summary>
 	/// <param name="pos_"></param>
 	/// <param name="model_"></param>
@@ -209,18 +209,18 @@ public:
 		KModel* model_, KGPlin* pipeline_, const KMyMath::Vector3& velocity, TextureData& tex);
 
 	/// <summary>
-	/// XV
+	/// æ›´æ–°
 	/// </summary>
 	/// <param name="viewPro"></param>
 	void Update(ViewProjection* viewPro);
 
 	/// <summary>
-	/// •`‰æ
+	/// æç”»
 	/// </summary>
 	void Draw();
 
 	/// <summary>
-	/// €‚ñ‚¾‚©ƒQƒbƒ^[
+	/// æ­»ã‚“ã ã‹ã‚²ãƒƒã‚¿ãƒ¼
 	/// </summary>
 	/// <returns></returns>
 	const bool GetIsDead() const
@@ -229,23 +229,23 @@ public:
 	}
 
 private:
-	// ƒIƒuƒWƒFƒNƒg
+	// ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
 	std::unique_ptr<KObject3d> object3d = nullptr;
 
-	// ‘¬“x
+	// é€Ÿåº¦
 	KMyMath::Vector3 velocity = { 0,0,0 };
 
-	// ¶‘¶ŠÔ
+	// ç”Ÿå­˜æ™‚é–“
 	uint32_t lifeTimer = 0;
 	const uint32_t lifeTime = 60;
 
 	float easeTimer = 0;
 	const float easeTime = 20;
 
-	// €‚ñ‚¾‚©‚Ç‚¤‚©
+	// æ­»ã‚“ã ã‹ã©ã†ã‹
 	bool isDead = false;
 
-	// ƒeƒNƒXƒ`ƒƒ
+	// ãƒ†ã‚¯ã‚¹ãƒãƒ£
 	TextureData texture;
 };
 
@@ -253,23 +253,23 @@ class ObjParticleManager
 {
 public:
 	/// <summary>
-	/// ‰Šú‰»
+	/// åˆæœŸåŒ–
 	/// </summary>
 	void Init();
 
 	/// <summary>
-	/// XV
+	/// æ›´æ–°
 	/// </summary>
 	/// <param name="viewPro"></param>
 	void Update(ViewProjection* viewPro);
 
 	/// <summary>
-	/// •`‰æ
+	/// æç”»
 	/// </summary>
 	void Draw();
 
 	/// <summary>
-	/// ”š”­‰‰o
+	/// çˆ†ç™ºæ¼”å‡º
 	/// </summary>
 	/// <param name="pos_"></param>
 	void SetExp(const KMyMath::Vector3& pos_);
@@ -281,27 +281,27 @@ public:
 	void SetSmallExp(const KMyMath::Vector3& pos_);
 
 public:
-	// ƒCƒ“ƒXƒ^ƒ“ƒX
+	// ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹
 	static ObjParticleManager* GetInstance();
 
-	// ‰ğ•ú
+	// è§£æ”¾
 	void Delete();
 
 private:
-	// ƒCƒ“ƒXƒ^ƒ“ƒX
+	// ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹
 	static ObjParticleManager* objParticleManager;
 
-	// ƒpƒCƒvƒ‰ƒCƒ“
+	// ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³
 	KShader shader;
 	std::unique_ptr<KGPlin> pipeline = nullptr;
 
-	// ƒ‚ƒfƒ‹
+	// ãƒ¢ãƒ‡ãƒ«
 	std::unique_ptr<KModel> model = nullptr;
 
-	// ƒp[ƒeƒBƒNƒ‹ƒY
+	// ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«ã‚º
 	std::list<std::unique_ptr<ObjParticle>> objParticles;
 
-	// ƒeƒNƒXƒ`ƒƒ
+	// ãƒ†ã‚¯ã‚¹ãƒãƒ£
 	TextureData textureData1;
 
 private:

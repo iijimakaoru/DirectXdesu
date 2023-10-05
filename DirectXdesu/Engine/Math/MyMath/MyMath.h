@@ -15,61 +15,61 @@
 
 namespace MyMathUtility
 {
-	// “x‚©‚çƒ‰ƒWƒAƒ“‚Ñ•ÏŠ·‚·‚é’è”
+	// åº¦ã‹ã‚‰ãƒ©ã‚¸ã‚¢ãƒ³ã³å¤‰æ›ã™ã‚‹å®šæ•°
 	const float PI = 3.141592654f;
 	const float PIDouble = 3.141592654f * 2.0f;
 	constexpr float degree2Radius = 3.141592654f / 180.0f;
 	constexpr float PIHalf = 3.141592654f / 2.0f;
 
-	// ƒCƒvƒVƒƒ“
+	// ã‚¤ãƒ—ã‚·ãƒ­ãƒ³
 	constexpr float EPSILON = 2.2204460492503131E-16f;
 	
 	/// <summary>
-	/// ’·‚³‚ğ‹‚ß‚é(2d)
+	/// é•·ã•ã‚’æ±‚ã‚ã‚‹(2d)
 	/// </summary>
 	/// <param name="v"></param>
 	/// <returns></returns>
 	float Vector2Length(const KMyMath::Vector2& v);
 	/// <summary>
-	/// ’·‚³‚ğ‹‚ß‚é(3d)
+	/// é•·ã•ã‚’æ±‚ã‚ã‚‹(3d)
 	/// </summary>
 	/// <param name="v"></param>
 	/// <returns></returns>
 	float Vector3Length(const KMyMath::Vector3& v);
 
 	/// <summary>
-	/// Vector3³‹K‰»
+	/// Vector3æ­£è¦åŒ–
 	/// </summary>
 	/// <param name="v"></param>
 	/// <returns></returns>
 	KMyMath::Vector3 MakeNormalize(KMyMath::Vector3 v);
 
-	// ’PˆÊs—ñ
+	// å˜ä½è¡Œåˆ—
 	KMyMath::Matrix4 MakeIdentity();
 
 	/// <summary>
-	/// Šg‘ås—ñ
+	/// æ‹¡å¤§è¡Œåˆ—
 	/// </summary>
 	/// <param name="scale"></param>
 	/// <returns></returns>
 	KMyMath::Matrix4 MakeScaling(const KMyMath::Vector3& scale);
 
 	/// <summary>
-	/// ‰ñ“]s—ñ
+	/// å›è»¢è¡Œåˆ—
 	/// </summary>
 	/// <param name="rotation"></param>
 	/// <returns></returns>
 	KMyMath::Matrix4 MakeRotation(const KMyMath::Vector3& rotation);
 
 	/// <summary>
-	/// •½ss—ñ
+	/// å¹³è¡Œè¡Œåˆ—
 	/// </summary>
 	/// <param name="trans"></param>
 	/// <returns></returns>
 	KMyMath::Matrix4 MakeTranslation(const KMyMath::Vector3& trans);
 
 	/// <summary>
-	/// ƒ[ƒ‹ƒhs—ñ
+	/// ãƒ¯ãƒ¼ãƒ«ãƒ‰è¡Œåˆ—
 	/// </summary>
 	/// <param name="translation"></param>
 	/// <param name="scaling"></param>
@@ -78,7 +78,7 @@ namespace MyMathUtility
 	KMyMath::Matrix4 MakeWorld(KMyMath::Matrix4 translation, KMyMath::Matrix4 scaling, KMyMath::Matrix4 rotation);
 
 	/// <summary>
-	/// ƒTƒCƒ“‚ÆƒRƒTƒCƒ“
+	/// ã‚µã‚¤ãƒ³ã¨ã‚³ã‚µã‚¤ãƒ³
 	/// </summary>
 	/// <param name="sin_"></param>
 	/// <param name="cos_"></param>
@@ -86,7 +86,7 @@ namespace MyMathUtility
 	void SinCos(float& sin_, float& cos_, float angle);
 
 	/// <summary>
-	/// ƒxƒNƒgƒ‹‚Æs—ñ‚ÌŠ|‚¯Z
+	/// ãƒ™ã‚¯ãƒˆãƒ«ã¨è¡Œåˆ—ã®æ›ã‘ç®—
 	/// </summary>
 	/// <param name="m"></param>
 	/// <param name="v"></param>
@@ -94,7 +94,7 @@ namespace MyMathUtility
 	KMyMath::Matrix4 MatMulVector(KMyMath::Matrix4 m, KMyMath::Vector3 v);
 
 	/// <summary>
-	/// •½s“Š‰e•ÏŠ·(¶è)
+	/// å¹³è¡ŒæŠ•å½±å¤‰æ›(å·¦æ‰‹)
 	/// </summary>
 	/// <param name="left"></param>
 	/// <param name="right"></param>
@@ -106,7 +106,7 @@ namespace MyMathUtility
 	KMyMath::Matrix4 MakeOrthogonalL(float left, float right, float bottom, float top, float near_, float far_);
 
 	/// <summary>
-	/// •½s“Š‰e•ÏŠ·(‰Eè)
+	/// å¹³è¡ŒæŠ•å½±å¤‰æ›(å³æ‰‹)
 	/// </summary>
 	/// <param name="left"></param>
 	/// <param name="right"></param>
@@ -118,7 +118,7 @@ namespace MyMathUtility
 	KMyMath::Matrix4 MakeOrthogonalR(float left, float right, float bottom, float top, float near_, float far_);
 
 	/// <summary>
-	/// ƒrƒ…[s—ñ‚Ìì¬
+	/// ãƒ“ãƒ¥ãƒ¼è¡Œåˆ—ã®ä½œæˆ
 	/// </summary>
 	/// <param name="eye"></param>
 	/// <param name="target"></param>
@@ -127,7 +127,7 @@ namespace MyMathUtility
 	KMyMath::Matrix4 MakeLockAt(KMyMath::Vector3& eye, KMyMath::Vector3& target, KMyMath::Vector3& up);
 
 	/// <summary>
-	/// “§‹“Š‰eì¬
+	/// é€è¦–æŠ•å½±ä½œæˆ
 	/// </summary>
 	/// <param name="forAngleY"></param>
 	/// <param name="aspectRatio"></param>
@@ -137,13 +137,13 @@ namespace MyMathUtility
 	KMyMath::Matrix4 MakePerspective(float fogAngleY, float aspectRatio, float nearZ, float farZ);
 
 	/// <summary>
-	/// ‹ts—ñ
+	/// é€†è¡Œåˆ—
 	/// </summary>
 	/// <param name="mat"></param>
 	/// <returns></returns>
 	KMyMath::Matrix4 MakeInverse(KMyMath::Matrix4& mat);
 
-	// Sin,Cos,TanŠÖ”
+	// Sin,Cos,Tané–¢æ•°
 	float Sin(float sin);
 	float Cos(float cos);
 	float Tan(float tan);
@@ -159,7 +159,7 @@ namespace MyMathUtility
 	float Clamp0To1(float val);
 
 	/// <summary>
-	/// ’l‚ª“™‚µ‚¢‚©
+	/// å€¤ãŒç­‰ã—ã„ã‹
 	/// </summary>
 	/// <param name="a"></param>
 	/// <param name="b"></param>
@@ -169,7 +169,7 @@ namespace MyMathUtility
 	KMyMath::Vector3 HermiteGetPoint(KMyMath::Vector3 p0, KMyMath::Vector3 p1, KMyMath::Vector3 v0, KMyMath::Vector3 v1, float t);
 
 	/// <summary>
-	/// ƒ‰ƒ“ƒ_ƒ€‚È’l‚ğæ“¾
+	/// ãƒ©ãƒ³ãƒ€ãƒ ãªå€¤ã‚’å–å¾—
 	/// </summary>
 	/// <param name="min"></param>
 	/// <param name="max"></param>
@@ -177,7 +177,7 @@ namespace MyMathUtility
 	float GetRand(float min, float max);
 
 	/// <summary>
-	/// ƒxƒNƒgƒ‹•ÏŠ·
+	/// ãƒ™ã‚¯ãƒˆãƒ«å¤‰æ›
 	/// </summary>
 	/// <param name="v"></param>
 	/// <param name="m"></param>
@@ -185,7 +185,7 @@ namespace MyMathUtility
 	KMyMath::Vector3 TransforNormal(const KMyMath::Vector3& v, const KMyMath::Matrix4& m);
 
 	/// <summary>
-	/// •ÏŠ·
+	/// å¤‰æ›
 	/// </summary>
 	/// <param name="v"></param>
 	/// <param name="m"></param>
@@ -196,7 +196,7 @@ namespace MyMathUtility
 namespace KMyMath
 {
 	/// <summary>
-	/// ƒxƒNƒgƒ‹‚Æs—ñ‚ÌŠ|‚¯Z
+	/// ãƒ™ã‚¯ãƒˆãƒ«ã¨è¡Œåˆ—ã®æ›ã‘ç®—
 	/// </summary>
 	/// <param name="vec"></param>
 	/// <param name="mat"></param>
@@ -204,7 +204,7 @@ namespace KMyMath
 	Vector3 Vec3Mat4Mul(Vector3& vec, Matrix4& mat);
 
 	/// <summary>
-	/// ƒLƒƒƒbƒgƒ[ƒ€ƒXƒvƒ‰ƒCƒ“‹Èü
+	/// ã‚­ãƒ£ãƒƒãƒˆãƒ­ãƒ¼ãƒ ã‚¹ãƒ—ãƒ©ã‚¤ãƒ³æ›²ç·š
 	/// </summary>
 	/// <param name="points"></param>
 	/// <param name="t"></param>
@@ -212,7 +212,7 @@ namespace KMyMath
 	Vector3 CatMullRomSprine(std::vector<Vector3>& points, float t);
 
 	/// <summary>
-	/// •ª—£²‚É“Š‰e‚³‚ê‚½²¬•ª‚©‚ç“Š‰eü•ª’·‚ğZo
+	/// åˆ†é›¢è»¸ã«æŠ•å½±ã•ã‚ŒãŸè»¸æˆåˆ†ã‹ã‚‰æŠ•å½±ç·šåˆ†é•·ã‚’ç®—å‡º
 	/// </summary>
 	/// <param name="sep"></param>
 	/// <param name="e1"></param>
@@ -225,42 +225,42 @@ namespace KMyMath
 namespace MyMathConvert
 {
 	/// <summary>
-	/// Vector4‚©‚çXMVECTOR‚Ö•ÏŠ·
+	/// Vector4ã‹ã‚‰XMVECTORã¸å¤‰æ›
 	/// </summary>
 	/// <param name="vector4"></param>
 	/// <returns></returns>
 	DirectX::XMVECTOR ChangeVector4toXMVECTOR(KMyMath::Vector4 vector4);
 
 	/// <summary>
-	/// XMVECTOR‚©‚çVector4‚Ö•ÏŠ·
+	/// XMVECTORã‹ã‚‰Vector4ã¸å¤‰æ›
 	/// </summary>
 	/// <param name=""></param>
 	/// <returns></returns>
 	KMyMath::Vector4 ChangeXMVECTORtoVector4(DirectX::XMVECTOR vector);
 
 	/// <summary>
-	/// XMMATRIX‚©‚çMatrix4‚Ö•ÏŠ·
+	/// XMMATRIXã‹ã‚‰Matrix4ã¸å¤‰æ›
 	/// </summary>
 	/// <param name="matrix"></param>
 	/// <returns></returns>
 	KMyMath::Matrix4 ChangeXMMATRIXtoMatrix4(DirectX::XMMATRIX matrix);
 
 	/// <summary>
-	/// Matrix4‚©‚çXMMATRIX‚Ö•ÏŠ·
+	/// Matrix4ã‹ã‚‰XMMATRIXã¸å¤‰æ›
 	/// </summary>
 	/// <param name="matrix"></param>
 	/// <returns></returns>
 	DirectX::XMMATRIX ChangeMatrix4toXMVECTOR(KMyMath::Matrix4 matrix);
 
 	/// <summary>
-	/// XMFloat3‚©‚çVector3‚Ö•ÏŠ·
+	/// XMFloat3ã‹ã‚‰Vector3ã¸å¤‰æ›
 	/// </summary>
 	/// <param name="float3"></param>
 	/// <returns></returns>
 	KMyMath::Vector3 ChangeXMFloat3toVector3(DirectX::XMFLOAT3 float3);
 
 	/// <summary>
-	/// Vector3‚©‚çXMFloat3‚Ö•ÏŠ·
+	/// Vector3ã‹ã‚‰XMFloat3ã¸å¤‰æ›
 	/// </summary>
 	/// <param name="vector3"></param>
 	/// <returns></returns>

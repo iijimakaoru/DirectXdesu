@@ -9,40 +9,40 @@ public:
 		
 	}
 
-	// ‰Šú‰»
+	// åˆæœŸåŒ–
 	void Init();
 
-	// XV
+	// æ›´æ–°
 	void Update();
 
-	// ƒ^ƒCƒgƒ‹ƒJƒƒ‰ƒ[ƒN
+	// ã‚¿ã‚¤ãƒˆãƒ«ã‚«ãƒ¡ãƒ©ãƒ¯ãƒ¼ã‚¯
 	void RoundCamera();
 
-	// ‰ñ“]ƒXƒ^[ƒg
+	// å›è»¢ã‚¹ã‚¿ãƒ¼ãƒˆ
 	void StartRound();
 
-	// oŒ‚ƒJƒƒ‰ƒ[ƒN
+	// å‡ºæ’ƒã‚«ãƒ¡ãƒ©ãƒ¯ãƒ¼ã‚¯
 	void SortieCamera();
 
-	// oŒ‚ƒXƒ^[ƒg
+	// å‡ºæ’ƒã‚¹ã‚¿ãƒ¼ãƒˆ
 	void StartSortie();
 
 private:
-	// Šp“x
+	// è§’åº¦
 	float rotAngle = 0;
 
-	// ‰ñ“]ƒJƒƒ‰ƒtƒ‰ƒO
+	// å›è»¢ã‚«ãƒ¡ãƒ©ãƒ•ãƒ©ã‚°
 	bool isRound = false;
 
-	// oŒ‚ƒJƒƒ‰ƒtƒ‰ƒO
+	// å‡ºæ’ƒã‚«ãƒ¡ãƒ©ãƒ•ãƒ©ã‚°
 	bool isSortie = false;
 
-	// oŒ‚ƒJƒƒ‰‰‰o
+	// å‡ºæ’ƒã‚«ãƒ¡ãƒ©æ¼”å‡º
 	uint32_t sortiePhase = 0;
 	float sortiePhaseTimer = 0;
 	float sortiePhaseTime = 0;
 
-	// ¡‚ÌŠp“x
+	// ä»Šã®è§’åº¦
 	float nowAngle = 0;
 };
 

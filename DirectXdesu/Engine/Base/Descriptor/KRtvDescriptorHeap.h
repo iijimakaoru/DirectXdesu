@@ -18,9 +18,9 @@
 class KRtvDescriptorHeap
 {
 private:
-	//ƒfƒoƒCƒX
+	//ãƒ‡ãƒã‚¤ã‚¹
 	ID3D12Device* device;
-	//ƒfƒXƒNƒvƒŠƒ^ƒq[ƒv
+	//ãƒ‡ã‚¹ã‚¯ãƒ—ãƒªã‚¿ãƒ’ãƒ¼ãƒ—
 	Microsoft::WRL::ComPtr <ID3D12DescriptorHeap> descriptorHeap;
 
 	size_t maxRTV = 2048;
@@ -37,20 +37,20 @@ private:
 public:
 
 	/// <summary>
-	/// ‰Šú‰»
+	/// åˆæœŸåŒ–
 	/// </summary>
 	void Initialize();
 
 	/// <summary>
-	/// ƒŒƒ“ƒ_[ƒ^[ƒQƒbƒgƒrƒ…[¶¬
+	/// ãƒ¬ãƒ³ãƒ€ãƒ¼ã‚¿ãƒ¼ã‚²ãƒƒãƒˆãƒ“ãƒ¥ãƒ¼ç”Ÿæˆ
 	/// </summary>
-	/// <param name="desc">ƒŒƒ“ƒ_[ƒ^[ƒQƒbƒgƒrƒ…[ƒfƒXƒN</param>
-	/// <param name="resource">ƒoƒbƒtƒ@</param>
-	/// <returns>GPUƒnƒ“ƒhƒ‹(UINT64)</returns>
+	/// <param name="desc">ãƒ¬ãƒ³ãƒ€ãƒ¼ã‚¿ãƒ¼ã‚²ãƒƒãƒˆãƒ“ãƒ¥ãƒ¼ãƒ‡ã‚¹ã‚¯</param>
+	/// <param name="resource">ãƒãƒƒãƒ•ã‚¡</param>
+	/// <returns>GPUãƒãƒ³ãƒ‰ãƒ«(UINT64)</returns>
 	UINT64 CreateRTV(D3D12_RENDER_TARGET_VIEW_DESC& desc, ID3D12Resource* resource);
 
 	/// <summary>
-	/// ƒfƒXƒNƒvƒŠƒ^ƒq[ƒv‚ðŽæ“¾
+	/// ãƒ‡ã‚¹ã‚¯ãƒ—ãƒªã‚¿ãƒ’ãƒ¼ãƒ—ã‚’å–å¾—
 	/// </summary>
 	ID3D12DescriptorHeap* GetHeap();
 

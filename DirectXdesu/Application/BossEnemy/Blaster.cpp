@@ -4,14 +4,14 @@
 Blaster* Blaster::Create(KModel* model_, KGPlin* pipeline_, const KMyMath::Vector3& pos,
 	const float HP, KGPlin* spritePipeline_)
 {
-	// ƒCƒ“ƒXƒ^ƒ“ƒX¶¬
+	// ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ç”Ÿæˆ
 	Blaster* blaster = new Blaster();
 	if (blaster == nullptr)
 	{
 		return nullptr;
 	}
 
-	// ‰Šú‰»
+	// åˆæœŸåŒ–
 	blaster->Init(model_, pipeline_, pos, HP, spritePipeline_);
 
 	return blaster;

@@ -5,58 +5,58 @@
 
 class PostEffect
 {
-public:// Ã“Iƒƒ“ƒoŠÖ”
-	//@Ã“I‰Šú‰»
+public:// é™çš„ãƒ¡ãƒ³ãƒé–¢æ•°
+	//ã€€é™çš„åˆæœŸåŒ–
 	static void StaticInit();
 
 public:
 	/// <summary>
-	/// ‰Šú‰»
+	/// åˆæœŸåŒ–
 	/// </summary>
 	void Init();
 
 	/// <summary>
-	/// •`‰æî•ñ
+	/// æç”»æƒ…å ±
 	/// </summary>
 	void DrawCommand();
 
-	// ƒV[ƒ“•`‰æ‘Oˆ—
+	// ã‚·ãƒ¼ãƒ³æç”»å‰å‡¦ç†
 	void PreDrawScene();
 
-	// ƒV[ƒ“•`‰æŒãˆ—
+	// ã‚·ãƒ¼ãƒ³æç”»å¾Œå‡¦ç†
 	void PostDrawScene();
 
 	/// <summary>
-	/// •`‰æ
+	/// æç”»
 	/// </summary>
 	void Draw();
 
 	/// <summary>
-	/// ƒpƒCƒvƒ‰ƒCƒ“ƒZƒbƒ^[
+	/// ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³ã‚»ãƒƒã‚¿ãƒ¼
 	/// </summary>
 	/// <param name="pipeline_"></param>
 	void SetPipeline(KGPlin* pipeline_);
 
-private:// ƒNƒ‰ƒX“à‚Å‚µ‚©g‚í‚È‚¢ŠÖ”
-	// ’è”ƒoƒbƒtƒ@ƒ}ƒeƒŠƒAƒ‹
+private:// ã‚¯ãƒ©ã‚¹å†…ã§ã—ã‹ä½¿ã‚ãªã„é–¢æ•°
+	// å®šæ•°ãƒãƒƒãƒ•ã‚¡ãƒãƒ†ãƒªã‚¢ãƒ«
 	void CreateCBMaterial();
 
-	// ’¸“_¶¬
+	// é ‚ç‚¹ç”Ÿæˆ
 	void CreateVertex();
 
-	// ’è”ƒoƒbƒtƒ@ƒgƒ‰ƒ“ƒXƒtƒH[ƒ€
+	// å®šæ•°ãƒãƒƒãƒ•ã‚¡ãƒˆãƒ©ãƒ³ã‚¹ãƒ•ã‚©ãƒ¼ãƒ 
 	void CreateCBTransform();
 
-	// ƒeƒNƒXƒ`ƒƒƒoƒbƒtƒ@
+	// ãƒ†ã‚¯ã‚¹ãƒãƒ£ãƒãƒƒãƒ•ã‚¡
 	void CreateTextureBuff();
 
-	// [“xƒoƒbƒtƒ@
+	// æ·±åº¦ãƒãƒƒãƒ•ã‚¡
 	void CreateDepthBuff();
 
-	// DSV—pƒfƒXƒNƒŠƒvƒ^ƒq[ƒv
+	// DSVç”¨ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿ãƒ’ãƒ¼ãƒ—
 	void CreateDSVDescHeap();
 
-	// RTV—pƒfƒXƒNƒŠƒvƒ^ƒq[ƒv
+	// RTVç”¨ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿ãƒ’ãƒ¼ãƒ—
 	void CreateRTVDescHeap();
 
 private:
@@ -68,66 +68,66 @@ private:
 
 	enum VertexNumber
 	{
-		LB, // ¶‰º
-		LT, // ¶ã
-		RB, // ‰E‰º
-		RT, // ‰Eã
+		LB, // å·¦ä¸‹
+		LT, // å·¦ä¸Š
+		RB, // å³ä¸‹
+		RT, // å³ä¸Š
 	};
 
 	HRESULT result;
 
-	// ’¸“_ƒoƒbƒtƒ@
+	// é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡
 	Microsoft::WRL::ComPtr<ID3D12Resource> vertBuff = nullptr;
 
-	// ’¸“_ƒoƒbƒtƒ@ƒrƒ…[
+	// é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ãƒ“ãƒ¥ãƒ¼
 	D3D12_VERTEX_BUFFER_VIEW vbView{};
 
-	// ƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@
+	// ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ãƒãƒƒãƒ•ã‚¡
 	Microsoft::WRL::ComPtr<ID3D12Resource> indexBuff = nullptr;
 
-	// ’è”ƒoƒbƒtƒ@
+	// å®šæ•°ãƒãƒƒãƒ•ã‚¡
 	Microsoft::WRL::ComPtr<ID3D12Resource> constBuffMaterial = nullptr;
 
-	// ’è”ƒoƒbƒtƒ@‚Ìƒ}ƒbƒv
+	// å®šæ•°ãƒãƒƒãƒ•ã‚¡ã®ãƒãƒƒãƒ—
 	KMyMath::Vector4* constMapMaterial = nullptr;
 
-	// ’è”ƒoƒbƒtƒ@
+	// å®šæ•°ãƒãƒƒãƒ•ã‚¡
 	Microsoft::WRL::ComPtr<ID3D12Resource> constBuffTransform = nullptr;
 
-	// ’è”ƒoƒbƒtƒ@‚Ìƒ}ƒbƒv
+	// å®šæ•°ãƒãƒƒãƒ•ã‚¡ã®ãƒãƒƒãƒ—
 	KMyMath::Matrix4* constMapTransform = nullptr;
 
-	// ƒeƒNƒXƒ`ƒƒƒoƒbƒtƒ@
+	// ãƒ†ã‚¯ã‚¹ãƒãƒ£ãƒãƒƒãƒ•ã‚¡
 	Microsoft::WRL::ComPtr<ID3D12Resource> texBuff = nullptr;
 
-	// ƒfƒXƒNƒŠƒvƒ^ƒq[ƒv
+	// ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿ãƒ’ãƒ¼ãƒ—
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> descHeapSRV;
 
-	// [“xƒoƒbƒtƒ@
+	// æ·±åº¦ãƒãƒƒãƒ•ã‚¡
 	Microsoft::WRL::ComPtr<ID3D12Resource> depthBuff = nullptr;
 
-	// RTV—pƒfƒXƒNƒŠƒvƒ^ƒq[ƒv
+	// RTVç”¨ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿ãƒ’ãƒ¼ãƒ—
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> descHeapRTV;
 
-	// DSV—pƒfƒXƒNƒŠƒvƒ^ƒq[ƒv
+	// DSVç”¨ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿ãƒ’ãƒ¼ãƒ—
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> descHeapDSV;
 
 	Vertex vertices_[4];
 
-private:// Ã“Iƒƒ“ƒo•Ï”
-	// ƒfƒoƒCƒX
+private:// é™çš„ãƒ¡ãƒ³ãƒå¤‰æ•°
+	// ãƒ‡ãƒã‚¤ã‚¹
 	static Microsoft::WRL::ComPtr<ID3D12Device> device;
 
-	// ƒRƒ}ƒ“ƒhƒŠƒXƒg
+	// ã‚³ãƒãƒ³ãƒ‰ãƒªã‚¹ãƒˆ
 	static Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> cmdList;
 
-	// ƒpƒCƒvƒ‰ƒCƒ“
+	// ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³
 	static KGPlin* pipeline;
 
-	// ƒEƒBƒ“ƒhƒE
+	// ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦
 	static KWinApp* window;
 
-	// ‰æ–ÊƒNƒŠƒAƒJƒ‰[
+	// ç”»é¢ã‚¯ãƒªã‚¢ã‚«ãƒ©ãƒ¼
 	static const float clearColor[4];
 };
 

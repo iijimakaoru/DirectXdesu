@@ -8,8 +8,8 @@ KVertex::KVertex(ID3D12Device* dev, std::vector<VertexPosNormalUV>& vertices, st
 
 void KVertex::KVertexInit(ID3D12Device* dev, std::vector<VertexPosNormalUV>& vertices, std::vector<unsigned short>& indices) 
 {
-#pragma region ’¸“_
-	// ’¸“_ƒf[ƒ^‘S‘Ì‚ÌƒTƒCƒY = ’¸“_ƒf[ƒ^ˆê‚Â•ª‚ÌƒTƒCƒY * ’¸“_ƒf[ƒ^‚Ì—v‘f”
+#pragma region é ‚ç‚¹
+	// é ‚ç‚¹ãƒ‡ãƒ¼ã‚¿å…¨ä½“ã®ã‚µã‚¤ã‚º = é ‚ç‚¹ãƒ‡ãƒ¼ã‚¿ä¸€ã¤åˆ†ã®ã‚µã‚¤ã‚º * é ‚ç‚¹ãƒ‡ãƒ¼ã‚¿ã®è¦ç´ æ•°
 	UINT sizeVB = static_cast<UINT>(sizeof(VertexPosNormalUV) * vertices.size());
 
 	CD3DX12_HEAP_PROPERTIES heap1 = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
@@ -25,25 +25,25 @@ void KVertex::KVertexInit(ID3D12Device* dev, std::vector<VertexPosNormalUV>& ver
 	);
 	assert(SUCCEEDED(result));
 
-	// GPUã‚Ìƒoƒbƒtƒ@‚É‘Î‰‚µ‚½‰¼‘zƒƒ‚ƒŠ‚ğæ“¾
+	// GPUä¸Šã®ãƒãƒƒãƒ•ã‚¡ã«å¯¾å¿œã—ãŸä»®æƒ³ãƒ¡ãƒ¢ãƒªã‚’å–å¾—
 	VertexPosNormalUV* vertMap = nullptr;
 	result = vertBuff->Map(0, nullptr, (void**)&vertMap);
 	assert(SUCCEEDED(result));
-	// ‘S’¸“_‚É‘Î‚µ‚Ä
+	// å…¨é ‚ç‚¹ã«å¯¾ã—ã¦
 	std::copy(vertices.begin(), vertices.end(), vertMap);
-	// Œq‚ª‚è‚ğ‰ğœ
+	// ç¹‹ãŒã‚Šã‚’è§£é™¤
 	vertBuff->Unmap(0, nullptr);
 
-	// GPU‰¼‘zƒAƒhƒŒƒX
+	// GPUä»®æƒ³ã‚¢ãƒ‰ãƒ¬ã‚¹
 	vbView.BufferLocation = vertBuff->GetGPUVirtualAddress();
-	// ’¸“_ƒoƒbƒtƒ@‚ÌƒTƒCƒY
+	// é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ã®ã‚µã‚¤ã‚º
 	vbView.SizeInBytes = sizeVB;
-	// ’¸“_ˆê‚Â•ª‚Ìƒf[ƒ^ƒTƒCƒY
+	// é ‚ç‚¹ä¸€ã¤åˆ†ã®ãƒ‡ãƒ¼ã‚¿ã‚µã‚¤ã‚º
 	vbView.StrideInBytes = sizeof(vertices[0]);
 #pragma endregion
 
-#pragma region ƒCƒ“ƒfƒbƒNƒX
-	// ƒCƒ“ƒfƒbƒNƒXƒf[ƒ^‘S‘Ì‚ÌƒTƒCƒY
+#pragma region ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹
+	// ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ãƒ‡ãƒ¼ã‚¿å…¨ä½“ã®ã‚µã‚¤ã‚º
 	UINT sizeIB = static_cast<UINT>(sizeof(unsigned short) * indices.size());
 
 	CD3DX12_RESOURCE_DESC iB = CD3DX12_RESOURCE_DESC::Buffer(sizeIB);
@@ -55,12 +55,12 @@ void KVertex::KVertexInit(ID3D12Device* dev, std::vector<VertexPosNormalUV>& ver
 		nullptr,
 		IID_PPV_ARGS(&indexBuff));
 
-	// ƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@‚ğƒ}ƒbƒsƒ“ƒO
+	// ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ãƒãƒƒãƒ•ã‚¡ã‚’ãƒãƒƒãƒ”ãƒ³ã‚°
 	uint16_t* indexMap = nullptr;
 	result = indexBuff->Map(0, nullptr, (void**)&indexMap);
-	// ‘SƒCƒ“ƒfƒbƒNƒX‚É‘Î‚µ‚Ä
+	// å…¨ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã«å¯¾ã—ã¦
 	std::copy(indices.begin(), indices.end(), indexMap);
-	// ƒ}ƒbƒsƒ“ƒO‰ğœ
+	// ãƒãƒƒãƒ”ãƒ³ã‚°è§£é™¤
 	indexBuff->Unmap(0, nullptr);
 
 	ibView.BufferLocation = indexBuff->GetGPUVirtualAddress();
@@ -68,28 +68,28 @@ void KVertex::KVertexInit(ID3D12Device* dev, std::vector<VertexPosNormalUV>& ver
 	ibView.SizeInBytes = sizeIB;
 #pragma endregion
 
-#pragma region –@ü‚ÌŒvZ
+#pragma region æ³•ç·šã®è¨ˆç®—
 	for (int i = 0; i < indices.size() / 3; i++) 
 	{
-		// OŠpŒ`‚P‚Â‚²‚Æ‚ÉŒvZ
+		// ä¸‰è§’å½¢ï¼‘ã¤ã”ã¨ã«è¨ˆç®—
 		unsigned short indices0 = indices[i * 3 + 0];
 		unsigned short indices1 = indices[i * 3 + 1];
 		unsigned short indices2 = indices[i * 3 + 2];
-		// OŠpŒ`‚ğ\¬‚·‚é’¸“_À•W‚ğƒxƒNƒgƒ‹‚É‘ã“ü
+		// ä¸‰è§’å½¢ã‚’æ§‹æˆã™ã‚‹é ‚ç‚¹åº§æ¨™ã‚’ãƒ™ã‚¯ãƒˆãƒ«ã«ä»£å…¥
 		DirectX::XMFLOAT3 pV0 = MyMathConvert::ChangeVector3toXMfloat3(vertices[indices0].pos);
 		DirectX::XMVECTOR p0 = XMLoadFloat3(&pV0);
 		DirectX::XMFLOAT3 pV1 = MyMathConvert::ChangeVector3toXMfloat3(vertices[indices1].pos);
 		DirectX::XMVECTOR p1 = XMLoadFloat3(&pV1);
 		DirectX::XMFLOAT3 pV2 = MyMathConvert::ChangeVector3toXMfloat3(vertices[indices2].pos);
 		DirectX::XMVECTOR p2 = XMLoadFloat3(&pV2);
-		// p0 ¨ p1ƒxƒNƒgƒ‹Ap0 ¨ p2ƒxƒNƒgƒ‹‚ğŒvZ (ƒxƒNƒgƒ‹‚ÌŒ¸Z)
+		// p0 â†’ p1ãƒ™ã‚¯ãƒˆãƒ«ã€p0 â†’ p2ãƒ™ã‚¯ãƒˆãƒ«ã‚’è¨ˆç®— (ãƒ™ã‚¯ãƒˆãƒ«ã®æ¸›ç®—)
 		DirectX::XMVECTOR v1 = DirectX::XMVectorSubtract(p1, p0);
 		DirectX::XMVECTOR v2 = DirectX::XMVectorSubtract(p2, p0);
-		// ŠOÏ‚Í—¼•û‚©‚ç‚’¼‚ÈƒxƒNƒgƒ‹
+		// å¤–ç©ã¯ä¸¡æ–¹ã‹ã‚‰å‚ç›´ãªãƒ™ã‚¯ãƒˆãƒ«
 		DirectX::XMVECTOR normal = DirectX::XMVector3Cross(v1, v2);
-		// ³‹K‰»(’·‚³‚ğ‚P‚É‚·‚é)
+		// æ­£è¦åŒ–(é•·ã•ã‚’ï¼‘ã«ã™ã‚‹)
 		normal = DirectX::XMVector3Normalize(normal);
-		// ‹‚ß‚½–@ü‚ğ’¸“_ƒf[ƒ^‚É‘ã“ü
+		// æ±‚ã‚ãŸæ³•ç·šã‚’é ‚ç‚¹ãƒ‡ãƒ¼ã‚¿ã«ä»£å…¥
 		DirectX::XMFLOAT3 nV0 = MyMathConvert::ChangeVector3toXMfloat3(vertices[indices0].normal);
 		DirectX::XMStoreFloat3(&nV0, normal);
 		DirectX::XMFLOAT3 nV1 = MyMathConvert::ChangeVector3toXMfloat3(vertices[indices1].normal);

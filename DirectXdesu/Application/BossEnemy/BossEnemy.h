@@ -9,7 +9,7 @@ class BossEnemy
 {
 public:
 	/// <summary>
-	/// ‰Šú‰»
+	/// åˆæœŸåŒ–
 	/// </summary>
 	/// <param name="model_"></param>
 	/// <param name="pipeline_"></param>
@@ -19,7 +19,7 @@ public:
 		const float HP, KGPlin* spritePipeline_);
 
 	/// <summary>
-	/// XV
+	/// æ›´æ–°
 	/// </summary>
 	/// <param name="viewPro"></param>
 	virtual void Update(ViewProjection* viewPro);
@@ -30,27 +30,27 @@ public:
 	void HPGauge(const uint32_t& easeTime);
 
 	/// <summary>
-	/// •`‰æ
+	/// æç”»
 	/// </summary>
 	virtual void Draw();
 	virtual void UIDraw();
 
 	/// <summary>
-	/// ƒ[ƒ‹ƒhÀ•WƒQƒbƒ^[
+	/// ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™ã‚²ãƒƒã‚¿ãƒ¼
 	/// </summary>
 	/// <returns></returns>
 	virtual const KMyMath::Vector3 GetWorldPos() const;
 
-	// “–‚½‚Á‚½‚Ìˆ—
+	// å½“ãŸã£ãŸæ™‚ã®å‡¦ç†
 	virtual void OnCollision();
 
-	// “–‚½‚è”»’è”ÍˆÍ
+	// å½“ãŸã‚Šåˆ¤å®šç¯„å›²
 	virtual bool CollisionCheck(const KMyMath::Vector3& posA, const KMyMath::Vector3& posB) = 0;
 
-	// €–S‰‰o
+	// æ­»äº¡æ¼”å‡º
 	virtual void DeadEffect();
 
-	// HP‰‰o
+	// HPæ¼”å‡º
 	void HPEffect();
 
 	const bool GetIsHPE() const;
@@ -60,24 +60,24 @@ public:
 	const bool GetIsFallEffectEnd() const;
 
 protected:
-	// ƒgƒ‰ƒ“ƒXƒtƒH[ƒ€
+	// ãƒˆãƒ©ãƒ³ã‚¹ãƒ•ã‚©ãƒ¼ãƒ 
 	std::unique_ptr<KObject3d> object3d = nullptr;
 
-	// ƒ‚ƒfƒ‹
+	// ãƒ¢ãƒ‡ãƒ«
 	KModel* model = nullptr;
 
-	// ƒpƒCƒvƒ‰ƒCƒ“
+	// ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³
 	KGPlin* pipeline = nullptr;
 	KGPlin* spritePipeline = nullptr;
 
-	// €‚ñ‚Å‚é‚©
+	// æ­»ã‚“ã§ã‚‹ã‹
 	bool isDead = false;
 
 #pragma region HP
-	// Å‘å‘Ì—Í
+	// æœ€å¤§ä½“åŠ›
 	float maxHP;
 
-	// Œ»‘Ì—Í
+	// ç¾ä½“åŠ›
 	float HP;
 	float oldHP;
 	float startHpEase;
@@ -94,7 +94,7 @@ protected:
 	TextureData hpTex;
 	std::unique_ptr<Sprite> HPrectUI = nullptr;
 
-	// HPƒo[
+	// HPãƒãƒ¼
 	std::unique_ptr<Sprite> HPBarUI = nullptr;
 	TextureData hpbarTex;
 
@@ -102,12 +102,12 @@ protected:
 	bool isHPE = false;
 #pragma endregion
 
-#pragma region Œ‚”j‰‰o—p
-	// ‰‰oŠÔ
+#pragma region æ’ƒç ´æ¼”å‡ºç”¨
+	// æ¼”å‡ºæ™‚é–“
 	float fallEffectTime = 90;
 	float fallEffectTimer = 0;
 
-	// ”š”­ƒN[ƒ‹ƒ^ƒCƒ€
+	// çˆ†ç™ºã‚¯ãƒ¼ãƒ«ã‚¿ã‚¤ãƒ 
 	float expTime = 5;
 	float expTimer = 0;
 

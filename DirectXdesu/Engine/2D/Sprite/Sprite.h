@@ -9,22 +9,22 @@ public:
 	static void StaticInit();
 
 	/// <summary>
-	/// ‰Šú‰»
+	/// åˆæœŸåŒ–
 	/// </summary>
 	/// <param name="spriteCommon"></param>
 	void Init();
 
-	// XV
+	// æ›´æ–°
 	void Update(KMyMath::Vector2 pos, KMyMath::Vector2 scale, float rot, KMyMath::Vector4 color);
 
 	/// <summary>
-	/// •`‰æî•ñ
+	/// æç”»æƒ…å ±
 	/// </summary>
 	/// <param name="texture"></param>
 	void DrawCommand(TextureData texData);
 
 	/// <summary>
-	/// •`‰æ
+	/// æç”»
 	/// </summary>
 	/// <param name="texture"></param>
 	/// <param name="pos"></param>
@@ -38,22 +38,22 @@ public:
 		KMyMath::Vector4 color = {1.0f,1.0f,1.0f,1.0f}, bool isFlipX_ = false, bool isFlipY_ = false, KMyMath::Vector2 anchorPoint_ = { 0.5f,0.5f });
 
 	/// <summary>
-	/// ƒpƒCƒvƒ‰ƒCƒ“ƒZƒbƒ^[
+	/// ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³ã‚»ãƒƒã‚¿ãƒ¼
 	/// </summary>
 	/// <param name="pipeline_"></param>
 	void SetPipeline(KGPlin* pipeline_);
 
-	// ƒ|ƒWƒVƒ‡ƒ“ƒQƒbƒ^[
+	// ãƒã‚¸ã‚·ãƒ§ãƒ³ã‚²ãƒƒã‚¿ãƒ¼
 	const KMyMath::Vector2 GetPos() const;
 
 private:
-	// ’è”ƒoƒbƒtƒ@ƒ}ƒeƒŠƒAƒ‹
+	// å®šæ•°ãƒãƒƒãƒ•ã‚¡ãƒãƒ†ãƒªã‚¢ãƒ«
 	void CreateCBMaterial();
 
-	// ’¸“_AƒCƒ“ƒfƒbƒNƒX¶¬
+	// é ‚ç‚¹ã€ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ç”Ÿæˆ
 	void CreateVertexIndex();
 
-	// ’è”ƒoƒbƒtƒ@ƒgƒ‰ƒ“ƒXƒtƒH[ƒ€
+	// å®šæ•°ãƒãƒƒãƒ•ã‚¡ãƒˆãƒ©ãƒ³ã‚¹ãƒ•ã‚©ãƒ¼ãƒ 
 	void CreateCBTransform();
 
 private:
@@ -65,65 +65,65 @@ private:
 
 	enum VertexNumber
 	{
-		LB, // ¶‰º
-		LT, // ¶ã
-		RB, // ‰E‰º
-		RT, // ‰Eã
+		LB, // å·¦ä¸‹
+		LT, // å·¦ä¸Š
+		RB, // å³ä¸‹
+		RT, // å³ä¸Š
 	};
 
 	HRESULT result;
 
-	// ’¸“_ƒoƒbƒtƒ@
+	// é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡
 	Microsoft::WRL::ComPtr<ID3D12Resource> vertBuff = nullptr;
 
-	// ’¸“_ƒ}ƒbƒv
+	// é ‚ç‚¹ãƒãƒƒãƒ—
 	Vertex* vertMap = nullptr;
 
-	// ’¸“_ƒoƒbƒtƒ@ƒrƒ…[
+	// é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ãƒ“ãƒ¥ãƒ¼
 	D3D12_VERTEX_BUFFER_VIEW vbView{};
 
-	// ƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@
+	// ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ãƒãƒƒãƒ•ã‚¡
 	Microsoft::WRL::ComPtr<ID3D12Resource> indexBuff = nullptr;
 
-	// ƒCƒ“ƒfƒbƒNƒXƒ}ƒbƒv
+	// ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ãƒãƒƒãƒ—
 	uint16_t* indexMap = nullptr;
 
-	// ƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@ƒrƒ…[
+	// ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ãƒãƒƒãƒ•ã‚¡ãƒ“ãƒ¥ãƒ¼
 	D3D12_INDEX_BUFFER_VIEW ibView{};
 
-	// ’è”ƒoƒbƒtƒ@
+	// å®šæ•°ãƒãƒƒãƒ•ã‚¡
 	Microsoft::WRL::ComPtr<ID3D12Resource> constBuffMaterial = nullptr;
 
-	// ’è”ƒoƒbƒtƒ@‚Ìƒ}ƒbƒv
+	// å®šæ•°ãƒãƒƒãƒ•ã‚¡ã®ãƒãƒƒãƒ—
 	KMyMath::Vector4* constMapMaterial = nullptr;
 
-	// ’è”ƒoƒbƒtƒ@
+	// å®šæ•°ãƒãƒƒãƒ•ã‚¡
 	Microsoft::WRL::ComPtr<ID3D12Resource> constBuffTransform = nullptr;
 
-	// ’è”ƒoƒbƒtƒ@‚Ìƒ}ƒbƒv
+	// å®šæ•°ãƒãƒƒãƒ•ã‚¡ã®ãƒãƒƒãƒ—
 	KMyMath::Matrix4* constMapTransform = nullptr;
 
-	// ˆÊ’u
+	// ä½ç½®
 	KMyMath::Vector2 position = { 0.0f,0.0f };
-	// ‰ñ“]
+	// å›è»¢
 	float rotation = 0.0f;
-	// F
+	// è‰²
 	KMyMath::Vector4 color = { 1.0f,1.0f,1.0f,1.0f };
-	// •\¦ƒTƒCƒY
+	// è¡¨ç¤ºã‚µã‚¤ã‚º
 	KMyMath::Vector2 size_ = { 100.0f,100.0f };
-	// ƒAƒ“ƒJ[ƒ|ƒCƒ“ƒg
+	// ã‚¢ãƒ³ã‚«ãƒ¼ãƒã‚¤ãƒ³ãƒˆ
 	KMyMath::Vector2 anchorPoint = { 0.5f,0.5f };
-	// ¶‰EƒtƒŠƒbƒv
+	// å·¦å³ãƒ•ãƒªãƒƒãƒ—
 	int flipX = 1;
-	// ã‰ºƒtƒŠƒbƒv
+	// ä¸Šä¸‹ãƒ•ãƒªãƒƒãƒ—
 	int flipY = 1;
-	// ”ñ•\¦
+	// éè¡¨ç¤º
 	bool isInvisible = false;
 
-	// ƒfƒoƒCƒX
+	// ãƒ‡ãƒã‚¤ã‚¹
 	static Microsoft::WRL::ComPtr<ID3D12Device> device;
 
-	// ƒRƒ}ƒ“ƒhƒŠƒXƒg
+	// ã‚³ãƒãƒ³ãƒ‰ãƒªã‚¹ãƒˆ
 	static Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> cmdList;
 
 	KGPlin* pipeline;

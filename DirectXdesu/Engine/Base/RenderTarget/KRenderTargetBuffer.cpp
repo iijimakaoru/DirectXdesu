@@ -16,7 +16,7 @@ bool KRenderTargetBuffer::Create(UINT w, UINT h, D3D12_RESOURCE_STATES resourceS
 	float col[4] = { clearColor.x,clearColor.y, clearColor.z, clearColor.w };
 	CD3DX12_CLEAR_VALUE cleaVal = CD3DX12_CLEAR_VALUE(DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, col);
 
-	//ƒŠƒ\[ƒX‚ğì¬B
+	//ãƒªã‚½ãƒ¼ã‚¹ã‚’ä½œæˆã€‚
 	CD3DX12_HEAP_PROPERTIES heapProp = CD3DX12_HEAP_PROPERTIES(D3D12_CPU_PAGE_PROPERTY_WRITE_BACK, D3D12_MEMORY_POOL_L0);;
 
 	HRESULT hr = device->CreateCommittedResource(
@@ -30,13 +30,13 @@ bool KRenderTargetBuffer::Create(UINT w, UINT h, D3D12_RESOURCE_STATES resourceS
 
 	if (FAILED(hr))
 	{
-		MessageBoxA(nullptr, "ƒŒƒ“ƒ_[ƒ^[ƒQƒbƒgƒoƒbƒtƒ@‚Ìì¬‚É¸”s", "ƒGƒ‰[", MB_OK);
+		MessageBoxA(nullptr, "ãƒ¬ãƒ³ãƒ€ãƒ¼ã‚¿ãƒ¼ã‚²ãƒƒãƒˆãƒãƒƒãƒ•ã‚¡ã®ä½œæˆã«å¤±æ•—", "ã‚¨ãƒ©ãƒ¼", MB_OK);
 		return false;
 	}
 
-	//ƒ^[ƒQƒbƒgƒrƒ…[‚Ìİ’è
+	//ã‚¿ãƒ¼ã‚²ãƒƒãƒˆãƒ“ãƒ¥ãƒ¼ã®è¨­å®š
 	D3D12_RENDER_TARGET_VIEW_DESC rtvDesc{};
-	//ŒvZŒ‹‰Ê‚ğSRGB‚É•ÏŠ·
+	//è¨ˆç®—çµæœã‚’SRGBã«å¤‰æ›
 	rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
 	rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
 
@@ -47,12 +47,12 @@ bool KRenderTargetBuffer::Create(UINT w, UINT h, D3D12_RESOURCE_STATES resourceS
 
 bool KRenderTargetBuffer::Create(IDXGISwapChain4* swapChain, UINT index)
 {
-	//ƒoƒbƒtƒ@‚ğæ“¾
+	//ãƒãƒƒãƒ•ã‚¡ã‚’å–å¾—
 	swapChain->GetBuffer(index, IID_PPV_ARGS(texture.ReleaseAndGetAddressOf()));
 
-	//ƒ^[ƒQƒbƒgƒrƒ…[‚Ìİ’è
+	//ã‚¿ãƒ¼ã‚²ãƒƒãƒˆãƒ“ãƒ¥ãƒ¼ã®è¨­å®š
 	D3D12_RENDER_TARGET_VIEW_DESC rtvDesc{};
-	//ŒvZŒ‹‰Ê‚ğSRGB‚É•ÏŠ·
+	//è¨ˆç®—çµæœã‚’SRGBã«å¤‰æ›
 	rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
 	rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
 

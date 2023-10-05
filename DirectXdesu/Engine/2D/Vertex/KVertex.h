@@ -3,12 +3,12 @@
 #include "Vector3.h"
 #include "Vector2.h"
 
-// ’¸“_ƒf[ƒ^\‘¢‘Ì
+// é ‚ç‚¹ãƒ‡ãƒ¼ã‚¿æ§‹é€ ä½“
 struct VertexPosNormalUV 
 {
-	KMyMath::Vector3 pos;	 // xyzÀ•W
-	KMyMath::Vector3 normal; // –@üƒxƒNƒgƒ‹
-	KMyMath::Vector2 uv;	 // uvÀ•W
+	KMyMath::Vector3 pos;	 // xyzåº§æ¨™
+	KMyMath::Vector3 normal; // æ³•ç·šãƒ™ã‚¯ãƒˆãƒ«
+	KMyMath::Vector2 uv;	 // uvåº§æ¨™
 };
 
 class KVertex
@@ -18,14 +18,14 @@ public:
 	KVertex(ID3D12Device* dev, std::vector<VertexPosNormalUV>& vertices, std::vector<unsigned short>& indices);
 	void KVertexInit(ID3D12Device* dev, std::vector<VertexPosNormalUV>& vertices, std::vector<unsigned short>& indices);
 	
-	// ’¸“_ƒoƒbƒtƒ@‚Ì¶¬
+	// é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ã®ç”Ÿæˆ
 	Microsoft::WRL::ComPtr<ID3D12Resource> vertBuff;
 	
-	// ƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@‚Ì¶¬
+	// ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ãƒãƒƒãƒ•ã‚¡ã®ç”Ÿæˆ
 	Microsoft::WRL::ComPtr<ID3D12Resource> indexBuff;
-	// ƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@ƒrƒ…[
+	// ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ãƒãƒƒãƒ•ã‚¡ãƒ“ãƒ¥ãƒ¼
 	D3D12_INDEX_BUFFER_VIEW ibView{};
-	// ’¸“_ƒoƒbƒtƒ@ƒrƒ…[‚Ìì¬
+	// é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ãƒ“ãƒ¥ãƒ¼ã®ä½œæˆ
 	D3D12_VERTEX_BUFFER_VIEW vbView{};
 
 	HREFTYPE result;

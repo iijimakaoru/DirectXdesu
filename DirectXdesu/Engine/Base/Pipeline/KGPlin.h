@@ -20,10 +20,10 @@ private:
 private:
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC piplineDesc;
 
-	// ƒpƒCƒvƒ‰ƒCƒ“ƒXƒe[ƒg
+	// ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³ã‚¹ãƒ†ãƒ¼ãƒˆ
 	ComPtr<ID3D12PipelineState> pipelineState;
 
-	// ƒ‹[ƒgƒVƒOƒlƒ`ƒƒ
+	// ãƒ«ãƒ¼ãƒˆã‚·ã‚°ãƒãƒãƒ£
 	ComPtr<ID3D12RootSignature> rootSignature;
 
 	void SetShader(KShader shader);

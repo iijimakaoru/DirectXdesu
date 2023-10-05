@@ -56,9 +56,9 @@ void RailCamera::Update()
 
 void RailCamera::Move()
 {
-	// ˆÚ“®‘¬“x
+	// ç§»å‹•é€Ÿåº¦
 	KMyMath::Vector3 velocity;
-	// ƒJƒƒ‰‚ªŒX‚¢‚Ä‚éŠp“x‚ÖˆÚ“®
+	// ã‚«ãƒ¡ãƒ©ãŒå‚¾ã„ã¦ã‚‹è§’åº¦ã¸ç§»å‹•
 	const float moveSpeed = Player::GetMoveSpeed() * moveSpeedPlayerMagnification;
 	const KMyMath::Vector2 rotLimit = Player::GetRotLimit();
 	velocity.x = moveSpeed * (cameraObject->transform.rot.y / rotLimit.y);
@@ -71,10 +71,10 @@ void RailCamera::Move()
 		velocity.z = advanceSpeed * moveSpeedPhaseSpeed;
 	}
 
-	// ˆÚ“®
+	// ç§»å‹•
 	cameraObject->transform.pos += velocity;
 
-	// ˆÚ“®ŒÀŠE‚©‚ç“®‚­‚È
+	// ç§»å‹•é™ç•Œã‹ã‚‰å‹•ããª
 	cameraObject->transform.pos.x = max(cameraObject->transform.pos.x, moveLimitMin.x);
 	cameraObject->transform.pos.x = min(cameraObject->transform.pos.x, moveLimitMax.x);
 	cameraObject->transform.pos.y = max(cameraObject->transform.pos.y, moveLimitMin.y);
@@ -83,21 +83,21 @@ void RailCamera::Move()
 
 void RailCamera::Crash()
 {
-	const KMyMath::Vector3 playerDistance = { 40.0f, 0.0f, 40.0f }; //©‹@‚ÆƒJƒƒ‰‚Ì‹——£
+	const KMyMath::Vector3 playerDistance = { 40.0f, 0.0f, 40.0f }; //è‡ªæ©Ÿã¨ã‚«ãƒ¡ãƒ©ã®è·é›¢
 
-	// ƒJƒƒ‰‚ÌêŠ
+	// ã‚«ãƒ¡ãƒ©ã®å ´æ‰€
 	const KMyMath::Vector3 crashCameraPos = player->GetWorldPos() + playerDistance;
 
-	// Šp“x
+	// è§’åº¦
 	cameraObject->transform.rot.y = -135.0f;
 
-	// ƒJƒƒ‰“®‚¯
+	// ã‚«ãƒ¡ãƒ©å‹•ã‘
 	cameraObject->transform.pos = crashCameraPos;
 }
 
 void RailCamera::SetRot()
 {
-	// ‰ñ“]
+	// å›è»¢
 	const KMyMath::Vector3 PlayerRotDivNum = { 5,5,8 };
 	cameraObject->transform.rot.x = player->GetRot().x / PlayerRotDivNum.x;
 	cameraObject->transform.rot.y = player->GetRot().y / PlayerRotDivNum.y;
@@ -111,6 +111,6 @@ const float RailCamera::GetSpeed() const
 
 void RailCamera::CallCrash()
 {
-	// ’Ä—ó‘Ô‚É‚·‚é
+	// å¢œè½çŠ¶æ…‹ã«ã™ã‚‹
 	isCrash = true;
 }

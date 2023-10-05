@@ -3,14 +3,14 @@
 EnemyBullet* EnemyBullet::Create(KModel* model, KGPlin* pipeline_,
 	const KMyMath::Vector3& pos, const KMyMath::Vector3& vec_, const KMyMath::Vector3& rot_, const float bulletSpeed)
 {
-	// ƒCƒ“ƒXƒ^ƒ“ƒX¶¬
+	// ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ç”Ÿæˆ
 	EnemyBullet* enemyBullet = new EnemyBullet();
 	if (enemyBullet == nullptr)
 	{
 		return nullptr;
 	}
 
-	// ‰Šú‰»
+	// åˆæœŸåŒ–
 	enemyBullet->Init(model, pipeline_);
 	enemyBullet->Set(pos, vec_, rot_, bulletSpeed);
 
@@ -19,13 +19,13 @@ EnemyBullet* EnemyBullet::Create(KModel* model, KGPlin* pipeline_,
 
 void EnemyBullet::Init(KModel* model_, KGPlin* pipeline_)
 {
-	// ƒ‚ƒfƒ‹¶¬
+	// ãƒ¢ãƒ‡ãƒ«ç”Ÿæˆ
 	model = model_;
 
-	// ƒpƒCƒvƒ‰ƒCƒ“¶¬
+	// ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³ç”Ÿæˆ
 	pipeline = pipeline_;
 
-	// ƒIƒuƒWƒFƒNƒg¶¬
+	// ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆç”Ÿæˆ
 	object3d = std::make_unique<KObject3d>();
 	object3d->Initialize();
 	object3d->SetPipeline(pipeline);

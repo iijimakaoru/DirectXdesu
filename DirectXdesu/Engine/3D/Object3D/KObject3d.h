@@ -21,15 +21,15 @@ struct ConstBufferDataB0
 
 struct WorldTransfom 
 {
-	// ƒAƒtƒBƒ“•ÏŠ·
+	// ã‚¢ãƒ•ã‚£ãƒ³å¤‰æ›
 	KMyMath::Vector3 scale = { 1,1,1 };
 	KMyMath::Vector3 rot = { 0,0,0 };
 	KMyMath::Vector3 pos = { 0,0,0 };
 
-	// ƒ[ƒ‹ƒh•ÏŠ·s—ñ
+	// ãƒ¯ãƒ¼ãƒ«ãƒ‰å¤‰æ›è¡Œåˆ—
 	KMyMath::Matrix4 matWorld = {};
 
-	// eƒIƒuƒWƒFƒNƒg‚Ö‚Ìƒ|ƒCƒ“ƒ^
+	// è¦ªã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã¸ã®ãƒã‚¤ãƒ³ã‚¿
 	const WorldTransfom* parent = nullptr;
 };
 
@@ -39,7 +39,7 @@ public:
 	static void StaticInit();
 
 	/// <summary>
-	/// ¶¬
+	/// ç”Ÿæˆ
 	/// </summary>
 	/// <param name="model"></param>
 	/// <param name="pipeline_"></param>
@@ -47,51 +47,51 @@ public:
 	static KObject3d* Create(KModel* model, KGPlin* pipeline_);
 
 public:
-	// ‰Šú‰»
+	// åˆæœŸåŒ–
 	void Initialize();
 
 	/// <summary>
-	/// ƒ‚ƒfƒ‹“Ç‚İ‚İ(ƒZƒbƒ^[)
+	/// ãƒ¢ãƒ‡ãƒ«èª­ã¿è¾¼ã¿(ã‚»ãƒƒã‚¿ãƒ¼)
 	/// </summary>
 	/// <param name="model"></param>
 	void LoadModel(KModel* model);
 
 	/// <summary>
-	/// ƒpƒCƒvƒ‰ƒCƒ“ƒZƒbƒ^[
+	/// ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³ã‚»ãƒƒã‚¿ãƒ¼
 	/// </summary>
 	/// <param name="pipeline_"></param>
 	void SetPipeline(KGPlin* pipeline_);
 
 	/// <summary>
-	/// ƒgƒ‰ƒ“ƒXƒtƒH[ƒ€XV
+	/// ãƒˆãƒ©ãƒ³ã‚¹ãƒ•ã‚©ãƒ¼ãƒ æ›´æ–°
 	/// </summary>
 	void TransUpdate();
 
 	/// <summary>
-	/// s—ñXV
+	/// è¡Œåˆ—æ›´æ–°
 	/// </summary>
 	/// <param name="viewProjection"></param>
 	void MatUpdate(ViewProjection* viewProjection);
 
 	/// <summary>
-	/// ã‚Ì•¡‡
+	/// ä¸Šã®è¤‡åˆ
 	/// </summary>
 	/// <param name="viewProjection"></param>
 	void Update(ViewProjection* viewProjection);
 
 	/// <summary>
-	/// ƒfƒtƒHƒ‹ƒgƒeƒNƒXƒ`ƒƒ•`‰æ
+	/// ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆãƒ†ã‚¯ã‚¹ãƒãƒ£æç”»
 	/// </summary>
 	void Draw();
 
 	/// <summary>
-	/// ƒeƒNƒXƒ`ƒƒØ‚è‘Ö‚¦•`‰æ
+	/// ãƒ†ã‚¯ã‚¹ãƒãƒ£åˆ‡ã‚Šæ›¿ãˆæç”»
 	/// </summary>
 	/// <param name="texture"></param>
 	void Draw(TextureData& texData);
 
 	/// <summary>
-	/// eqƒZƒbƒ^[
+	/// è¦ªå­ã‚»ãƒƒã‚¿ãƒ¼
 	/// </summary>
 	/// <param name="parent_"></param>
 	void SetParent(WorldTransfom* parent_);
@@ -103,13 +103,13 @@ public:
 
 	void Finalize();
 
-	// ƒQƒbƒ^[
+	// ã‚²ãƒƒã‚¿ãƒ¼
 	const KMyMath::Vector3& GetPos() const;
 	const KMyMath::Vector3& GetRot() const;
 	const KMyMath::Vector3& GetScale() const;
 	const KMyMath::Matrix4& GetMatWorld() const;
 
-	// ƒZƒbƒ^[
+	// ã‚»ãƒƒã‚¿ãƒ¼
 	void SetPos(const KMyMath::Vector3& pos);
 	void SetRot(const KMyMath::Vector3& rot);
 	void SetScale(const KMyMath::Vector3& scale);
@@ -118,7 +118,7 @@ private:
 	KGPlin* pipeline;
 
 public:
-	// 3DƒIƒuƒWƒFƒNƒg‚Ì”z—ñ
+	// 3Dã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®é…åˆ—
 	WorldTransfom transform;
 
 private:

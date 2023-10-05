@@ -33,7 +33,7 @@ void CanonEnemy::Init(KModel* model_, KGPlin* pipeline_)
 
 void CanonEnemy::Update(ViewProjection* viewPro, const KMyMath::Vector3& cameraPos)
 {
-	// oŒ»‰‰o
+	// å‡ºç¾æ¼”å‡º
 	if (isAppear)
 	{
 		Appear();

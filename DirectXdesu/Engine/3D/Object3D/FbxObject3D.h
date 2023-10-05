@@ -5,45 +5,45 @@
 
 class FbxObject3D
 {
-protected: // ƒGƒCƒŠƒAƒX
-	// È—ªˆ—
+protected: // ã‚¨ã‚¤ãƒªã‚¢ã‚¹
+	// çœç•¥å‡¦ç†
 	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
 	using XMFLOAT2 = DirectX::XMFLOAT2;
 	using XMFLOAT3 = DirectX::XMFLOAT3;
 	using XMFLOAT4 = DirectX::XMFLOAT4;
 	using XMMATRIX = DirectX::XMMATRIX;
 
-public: // Ã“Iƒƒ“ƒoŠÖ”
-	// ƒZƒbƒ^[
+public: // é™çš„ãƒ¡ãƒ³ãƒé–¢æ•°
+	// ã‚»ãƒƒã‚¿ãƒ¼
 
-public: // ƒGƒCƒŠƒAƒX
-	// ’è”ƒoƒbƒtƒ@ƒf[ƒ^\‘¢‘Ì
+public: // ã‚¨ã‚¤ãƒªã‚¢ã‚¹
+	// å®šæ•°ãƒãƒƒãƒ•ã‚¡ãƒ‡ãƒ¼ã‚¿æ§‹é€ ä½“
 	struct ConstBufferDataTransform
 	{
-		KMyMath::Matrix4 viewproj; // ƒrƒ…[ƒvƒƒWƒFƒNƒVƒ‡ƒ“
-		KMyMath::Matrix4 world;	   // ƒ[ƒ‹ƒhs—ñ
-		KMyMath::Vector3 cameraPos;// ƒJƒƒ‰À•W
+		KMyMath::Matrix4 viewproj; // ãƒ“ãƒ¥ãƒ¼ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ã‚·ãƒ§ãƒ³
+		KMyMath::Matrix4 world;	   // ãƒ¯ãƒ¼ãƒ«ãƒ‰è¡Œåˆ—
+		KMyMath::Vector3 cameraPos;// ã‚«ãƒ¡ãƒ©åº§æ¨™
 	};
 
 public:
 	/// <summary>
-	/// ‰Šú‰»
+	/// åˆæœŸåŒ–
 	/// </summary>
 	void Init();
 
 	/// <summary>
-	/// XV
+	/// æ›´æ–°
 	/// </summary>
 	/// <param name="viewProjection"></param>
 	void Update(ViewProjection* viewProjection);
 
 	/// <summary>
-	/// •`‰æ
+	/// æç”»
 	/// </summary>
 	void Draw();
 
 	/// <summary>
-	/// ƒpƒCƒvƒ‰ƒCƒ“ƒZƒbƒ^[
+	/// ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³ã‚»ãƒƒã‚¿ãƒ¼
 	/// </summary>
 	/// <param name="pipeline_"></param>
 	void SetPipline(KGPlin* pipeline_)
@@ -52,7 +52,7 @@ public:
 	}
 
 	/// <summary>
-	/// ƒ‚ƒfƒ‹ƒZƒbƒ^[
+	/// ãƒ¢ãƒ‡ãƒ«ã‚»ãƒƒã‚¿ãƒ¼
 	/// </summary>
 	/// <param name="model_"></param>
 	void SetModel(FbxModel* model_) 
@@ -61,7 +61,7 @@ public:
 	}
 
 	/// <summary>
-	/// ƒ|ƒWƒVƒ‡ƒ“ƒZƒbƒ^[
+	/// ãƒã‚¸ã‚·ãƒ§ãƒ³ã‚»ãƒƒã‚¿ãƒ¼
 	/// </summary>
 	/// <param name="pos_"></param>
 	void SetPosition(KMyMath::Vector3 pos_)
@@ -70,7 +70,7 @@ public:
 	}
 
 	/// <summary>
-	/// ƒ|ƒWƒVƒ‡ƒ“ƒQƒbƒ^[
+	/// ãƒã‚¸ã‚·ãƒ§ãƒ³ã‚²ãƒƒã‚¿ãƒ¼
 	/// </summary>
 	/// <returns></returns>
 	KMyMath::Vector3 GetPosition()
@@ -79,12 +79,12 @@ public:
 	}
 
 	/// <summary>
-	/// ƒAƒjƒ[ƒVƒ‡ƒ“ŠJn
+	/// ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³é–‹å§‹
 	/// </summary>
 	void PlayAnimation();
 
-public:// ’è”
-	// ƒ{[ƒ“‚ÌÅ‘å’l
+public:// å®šæ•°
+	// ãƒœãƒ¼ãƒ³ã®æœ€å¤§å€¤
 	static const int MAX_BONES = 32;
 
 	struct ConstBufferDataSkin
@@ -96,28 +96,28 @@ protected:
 	ComPtr<ID3D12Resource> constBuffTransform;
 	HRESULT result;
 
-	// ƒ[ƒJƒ‹ƒXƒP[ƒ‹
+	// ãƒ­ãƒ¼ã‚«ãƒ«ã‚¹ã‚±ãƒ¼ãƒ«
 	KMyMath::Vector3 scale = { 1,1,1 };
-	// ƒ[ƒJƒ‹‰ñ“]Šp
+	// ãƒ­ãƒ¼ã‚«ãƒ«å›è»¢è§’
 	KMyMath::Vector3 rotation = { 0,0,0 };
-	// ƒ[ƒJƒ‹À•W
+	// ãƒ­ãƒ¼ã‚«ãƒ«åº§æ¨™
 	KMyMath::Vector3 position = { 0,0,0 };
-	// ƒ[ƒJƒ‹ƒ[ƒ‹ƒh•ÏŠ·s—ñ
+	// ãƒ­ãƒ¼ã‚«ãƒ«ãƒ¯ãƒ¼ãƒ«ãƒ‰å¤‰æ›è¡Œåˆ—
 	KMyMath::Matrix4 matWorld;
-	// ƒ‚ƒfƒ‹
+	// ãƒ¢ãƒ‡ãƒ«
 	FbxModel* model = nullptr;
 
 	ComPtr<ID3D12Resource> constBuffSkin;
 
-	// 1ƒtƒŒ[ƒ€‚ÌŠÔ
+	// 1ãƒ•ãƒ¬ãƒ¼ãƒ ã®æ™‚é–“
 	FbxTime frameTime;
-	// ƒAƒjƒ[ƒVƒ‡ƒ“ŠJnŠÔ
+	// ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³é–‹å§‹æ™‚é–“
 	FbxTime startTime;
-	// ƒAƒjƒ[ƒVƒ‡ƒ“I—¹ŠÔ
+	// ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³çµ‚äº†æ™‚é–“
 	FbxTime endTime;
-	// ƒAƒjƒ[ƒVƒ‡ƒ“Œ»İŠÔ
+	// ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ç¾åœ¨æ™‚é–“
 	FbxTime currentTime;
-	// ƒAƒjƒ[ƒVƒ‡ƒ“Ä¶ƒtƒ‰ƒO
+	// ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³å†ç”Ÿãƒ•ãƒ©ã‚°
 	bool isPlay = false;
 
 	static KGPlin* pipeline;

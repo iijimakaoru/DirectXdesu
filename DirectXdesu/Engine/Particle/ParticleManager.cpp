@@ -11,7 +11,7 @@
 #include "Ease.h"
 
 /// <summary>
-/// Ã“Iƒƒ“ƒo•Ï”‚ÌÀ‘Ì
+/// é™çš„ãƒ¡ãƒ³ãƒå¤‰æ•°ã®å®Ÿä½“
 /// </summary>
 ID3D12Device* Particles::device = nullptr;
 ID3D12GraphicsCommandList* Particles::cmdList = nullptr;
@@ -21,7 +21,7 @@ KShader Particles::shader;
 DirectX::XMMATRIX Particles::matBillboard = DirectX::XMMatrixIdentity();
 DirectX::XMMATRIX Particles::matBillboardY = DirectX::XMMatrixIdentity();
 
-// ƒrƒ‹ƒ{[ƒhƒp[ƒeƒBƒNƒ‹
+// ãƒ“ãƒ«ãƒœãƒ¼ãƒ‰ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«
 const DirectX::XMFLOAT3 operator+(const DirectX::XMFLOAT3& lhs, const DirectX::XMFLOAT3& rhs)
 {
 	DirectX::XMFLOAT3 result;
@@ -47,26 +47,26 @@ void Particles::Add(int life, KMyMath::Vector3 pos, KMyMath::Vector3 vel, KMyMat
 
 void Particles::StaticInitialize()
 {
-	// ƒfƒoƒCƒXƒZƒbƒg
+	// ãƒ‡ãƒã‚¤ã‚¹ã‚»ãƒƒãƒˆ
 	Particles::device = KDirectXCommon::GetInstance()->GetDev();
 
-	// ƒRƒ}ƒ“ƒhƒŠƒXƒg‚ğƒZƒbƒg
+	// ã‚³ãƒãƒ³ãƒ‰ãƒªã‚¹ãƒˆã‚’ã‚»ãƒƒãƒˆ
 	Particles::cmdList = KDirectXCommon::GetInstance()->GetCmdlist();
 
-	// ƒpƒCƒvƒ‰ƒCƒ“‰Šú‰»
+	// ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³åˆæœŸåŒ–
 	InitializeGraphicsPipeline();
 }
 
 Particles* Particles::Create(TextureData& textureData_)
 {
-	// 3DƒIƒuƒWƒFƒNƒg‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚ğ¶¬
+	// 3Dã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’ç”Ÿæˆ
 	Particles* object3d = new Particles();
 	if (object3d == nullptr)
 	{
 		return nullptr;
 	}
 
-	// ‰Šú‰»
+	// åˆæœŸåŒ–
 	if (!object3d->Initialize(textureData_)) {
 		delete object3d;
 		assert(0);
@@ -92,26 +92,26 @@ void Particles::CreateModel()
 {
 	HRESULT result = S_FALSE;
 
-	// lŠpŒ`‚ÌƒCƒ“ƒfƒbƒNƒXƒf[ƒ^
+	// å››è§’å½¢ã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ãƒ‡ãƒ¼ã‚¿
 	unsigned short indicesSquare[] = {
-		0,1,2,// OŠpŒ`1
-		2,1,3,// OŠpŒ`2
+		0,1,2,// ä¸‰è§’å½¢1
+		2,1,3,// ä¸‰è§’å½¢2
 	};
 
 	UINT sizeVB = static_cast<UINT>(sizeof(vertices));
 
-	// ƒq[ƒvƒvƒƒpƒeƒB
+	// ãƒ’ãƒ¼ãƒ—ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£
 	CD3DX12_HEAP_PROPERTIES heapProps = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
-	// ƒŠƒ\[ƒXİ’è
+	// ãƒªã‚½ãƒ¼ã‚¹è¨­å®š
 	CD3DX12_RESOURCE_DESC resourceDesc = CD3DX12_RESOURCE_DESC::Buffer(sizeVB);
 
-	// ’¸“_ƒoƒbƒtƒ@¶¬
+	// é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ç”Ÿæˆ
 	result = device->CreateCommittedResource(
 		&heapProps, D3D12_HEAP_FLAG_NONE, &resourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
 		IID_PPV_ARGS(&vertBuff));
 	assert(SUCCEEDED(result));
 
-	// ’¸“_ƒoƒbƒtƒ@‚Ö‚Ìƒf[ƒ^“]‘—
+	// é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ã¸ã®ãƒ‡ãƒ¼ã‚¿è»¢é€
 	VertexPos* vertMap = nullptr;
 	result = vertBuff->Map(0, nullptr, (void**)&vertMap);
 	if (SUCCEEDED(result)) {
@@ -119,37 +119,37 @@ void Particles::CreateModel()
 		vertBuff->Unmap(0, nullptr);
 	}
 
-	// ’¸“_ƒoƒbƒtƒ@ƒrƒ…[‚Ìì¬
+	// é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ãƒ“ãƒ¥ãƒ¼ã®ä½œæˆ
 	vbView.BufferLocation = vertBuff->GetGPUVirtualAddress();
 	vbView.SizeInBytes = sizeof(vertices);
 	vbView.StrideInBytes = sizeof(vertices[0]);
 
-	// ƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@‚Ö‚Ìƒf[ƒ^“]‘—
+	// ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ãƒãƒƒãƒ•ã‚¡ã¸ã®ãƒ‡ãƒ¼ã‚¿è»¢é€
 	unsigned short* indexMap = nullptr;
 }
 
 bool Particles::Initialize(TextureData textureData_)
 {
-	// nullptrƒ`ƒFƒbƒN
+	// nullptrãƒã‚§ãƒƒã‚¯
 	assert(device);
 
-	// ƒeƒNƒXƒ`ƒƒƒf[ƒ^‘ã“ü
+	// ãƒ†ã‚¯ã‚¹ãƒãƒ£ãƒ‡ãƒ¼ã‚¿ä»£å…¥
 	textureData = textureData_;
 
-	// ƒ‚ƒfƒ‹¶¬
+	// ãƒ¢ãƒ‡ãƒ«ç”Ÿæˆ
 	CreateModel();
 
-	// ƒq[ƒvƒvƒƒpƒeƒB
+	// ãƒ’ãƒ¼ãƒ—ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£
 	CD3DX12_HEAP_PROPERTIES heapProps = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
-	// ƒŠƒ\[ƒXİ’è
+	// ãƒªã‚½ãƒ¼ã‚¹è¨­å®š
 	CD3DX12_RESOURCE_DESC resourceDesc =
 		CD3DX12_RESOURCE_DESC::Buffer((sizeof(PConstBufferData) + 0xff) & ~0xff);
 
 	HRESULT result;
 
-	// ’è”ƒoƒbƒtƒ@‚Ì¶¬
+	// å®šæ•°ãƒãƒƒãƒ•ã‚¡ã®ç”Ÿæˆ
 	result = device->CreateCommittedResource(
-		&heapProps, // ƒAƒbƒvƒ[ƒh‰Â”\
+		&heapProps, // ã‚¢ãƒƒãƒ—ãƒ­ãƒ¼ãƒ‰å¯èƒ½
 		D3D12_HEAP_FLAG_NONE, &resourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
 		IID_PPV_ARGS(&constBuff));
 	assert(SUCCEEDED(result));
@@ -161,10 +161,10 @@ void Particles::Update(ViewProjection* viewProjection)
 {
 	HRESULT result;
 
-	// ƒp[ƒeƒBƒNƒ‹‚Ìíœ
+	// ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«ã®å‰Šé™¤
 	particles.remove_if([](Particle& p) {return p.frame >= p.num_frame; });
 
-	// ‘Sƒp[ƒeƒBƒNƒ‹‚ÌXV
+	// å…¨ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«ã®æ›´æ–°
 	for (std::forward_list<Particle>::iterator it = particles.begin();
 		it != particles.end();
 		it++)
@@ -178,7 +178,7 @@ void Particles::Update(ViewProjection* viewProjection)
 		it->scale = (it->e_scale - it->s_scale) * f;
 		it->scale += it->s_scale;
 	}
-	// ’¸“_ƒoƒbƒtƒ@‚Öƒf[ƒ^“]‘—
+	// é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ã¸ãƒ‡ãƒ¼ã‚¿è»¢é€
 	VertexPos* vertMap = nullptr;
 	result = vertBuff->Map(0, nullptr, (void**)&vertMap);
 	if (SUCCEEDED(result))
@@ -195,37 +195,37 @@ void Particles::Update(ViewProjection* viewProjection)
 		}
 		vertBuff->Unmap(0, nullptr);
 	}
-	// ’è”ƒoƒbƒtƒ@‚Öƒf[ƒ^“]‘—
+	// å®šæ•°ãƒãƒƒãƒ•ã‚¡ã¸ãƒ‡ãƒ¼ã‚¿è»¢é€
 	PConstBufferData* constMap = nullptr;
 	result = constBuff->Map(0, nullptr, (void**)&constMap);
-	constMap->mat = viewProjection->GetMatView() * viewProjection->GetMatPro();	// s—ñ‚Ì‡¬
-	constMap->matBillboard = MyMathConvert::ChangeXMMATRIXtoMatrix4(matBillboard);	// s—ñ‚Ì‡¬
+	constMap->mat = viewProjection->GetMatView() * viewProjection->GetMatPro();	// è¡Œåˆ—ã®åˆæˆ
+	constMap->matBillboard = MyMathConvert::ChangeXMMATRIXtoMatrix4(matBillboard);	// è¡Œåˆ—ã®åˆæˆ
 	constBuff->Unmap(0, nullptr);
 }
 
 void Particles::Draw()
 {
-	// nullptrƒ`ƒFƒbƒN
+	// nullptrãƒã‚§ãƒƒã‚¯
 	assert(device);
 	assert(cmdList);
 
-	// ’¸“_ƒoƒbƒtƒ@‚Ìİ’è
+	// é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ã®è¨­å®š
 	cmdList->IASetVertexBuffers(0, 1, &vbView);
 
 	pipeline->Setting();
 	pipeline->Update(D3D_PRIMITIVE_TOPOLOGY_POINTLIST);
 
-	// ƒfƒXƒNƒŠƒvƒ^ƒq[ƒv‚Ì”z—ñ
+	// ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿ãƒ’ãƒ¼ãƒ—ã®é…åˆ—
 	ID3D12DescriptorHeap* ppHeaps[] = { textureData.srvHeap.Get()};
 	cmdList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 
-	// ’è”ƒoƒbƒtƒ@ƒrƒ…[‚ğƒZƒbƒg
+	// å®šæ•°ãƒãƒƒãƒ•ã‚¡ãƒ“ãƒ¥ãƒ¼ã‚’ã‚»ãƒƒãƒˆ
 	cmdList->SetGraphicsRootConstantBufferView(0, constBuff->GetGPUVirtualAddress());
 
-	// ƒVƒF[ƒ_ƒŠƒ\[ƒXƒrƒ…[‚ğƒZƒbƒg
+	// ã‚·ã‚§ãƒ¼ãƒ€ãƒªã‚½ãƒ¼ã‚¹ãƒ“ãƒ¥ãƒ¼ã‚’ã‚»ãƒƒãƒˆ
 	cmdList->SetGraphicsRootDescriptorTable(1, textureData.gpuHandle);
 
-	//•`‰æƒRƒ}ƒ“ƒh
+	//æç”»ã‚³ãƒãƒ³ãƒ‰
 	cmdList->DrawInstanced((UINT)std::distance(particles.begin(), particles.end()), 1, 0, 0);
 }
 
@@ -233,11 +233,11 @@ ParticleManager* ParticleManager::parthicleManager = nullptr;
 
 void ParticleManager::Init()
 {
-	// ƒeƒNƒXƒ`ƒƒ“Ç‚İ‚İ
+	// ãƒ†ã‚¯ã‚¹ãƒãƒ£èª­ã¿è¾¼ã¿
 	textureData1 = TextureManager::Load("Resources/texture/mario.jpg");
 	textureData2 = TextureManager::Load("Resources/texture/kariPlayerColor.png");
 
-	// ƒp[ƒeƒBƒNƒ‹
+	// ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«
 	particles1.reset(Particles::Create(textureData1));
 	particles2.reset(Particles::Create(textureData2));
 }
@@ -304,14 +304,14 @@ void ParticleManager::Delete()
 ObjParticle* ObjParticle::Create(const KMyMath::Vector3& pos_, 
 	KModel* model_, KGPlin* pipeline_, const KMyMath::Vector3& velocity_, TextureData& tex)
 {
-	// ƒCƒ“ƒXƒ^ƒ“ƒX
+	// ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹
 	ObjParticle* instance = new ObjParticle();
 	if (instance == nullptr)
 	{
 		return nullptr;
 	}
 
-	// ‰Šú‰»
+	// åˆæœŸåŒ–
 	instance->Init(pos_, model_, pipeline_, velocity_, tex);
 
 	return instance;
@@ -373,11 +373,11 @@ void ObjParticleManager::Init()
 	shader.Init(L"Resources/Shader/ObjVS.hlsl", L"Resources/Shader/ObjPS.hlsl");
 	pipeline.reset(KGPlin::Create(shader, "Obj"));
 
-	// ƒLƒ…[ƒu¶¬
+	// ã‚­ãƒ¥ãƒ¼ãƒ–ç”Ÿæˆ
 	model = std::make_unique<Cube>();
 	model->CreateModel();
 
-	// ƒeƒNƒXƒ`ƒƒ
+	// ãƒ†ã‚¯ã‚¹ãƒãƒ£
 	textureData1 = TextureManager::Load("Resources/texture/kariPlayerColor.png");
 }
 
@@ -404,13 +404,13 @@ void ObjParticleManager::SetExp(const KMyMath::Vector3& pos_)
 	std::unique_ptr<ObjParticle> newParticle;
 	for (size_t i = 0; i < 40; i++)
 	{
-		// ¶¬
+		// ç”Ÿæˆ
 		newParticle.reset(ObjParticle::Create(pos_,
 			model.get(),
 			pipeline.get(),
 			{ MyMathUtility::GetRand(-1.0f,1.0f),MyMathUtility::GetRand(-1.0f,1.0f),MyMathUtility::GetRand(-1.0f,1.0f) }, 
 			textureData1));
-		// o—Í
+		// å‡ºåŠ›
 		objParticles.push_back(std::move(newParticle));
 	}
 }
@@ -420,13 +420,13 @@ void ObjParticleManager::SetSmallExp(const KMyMath::Vector3& pos_)
 	std::unique_ptr<ObjParticle> newParticle;
 	for (size_t i = 0; i < 10; i++)
 	{
-		// ¶¬
+		// ç”Ÿæˆ
 		newParticle.reset(ObjParticle::Create(pos_,
 			model.get(),
 			pipeline.get(),
 			{ MyMathUtility::GetRand(-0.25f,0.25f),MyMathUtility::GetRand(-0.25f,0.25f),MyMathUtility::GetRand(-0.25f,0.25f) },
 			textureData1));
-		// o—Í
+		// å‡ºåŠ›
 		objParticles.push_back(std::move(newParticle));
 	}
 }

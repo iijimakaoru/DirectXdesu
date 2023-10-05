@@ -10,60 +10,60 @@
 
 struct TextureData
 {
-	// ƒeƒNƒXƒ`ƒƒƒoƒbƒtƒ@
+	// ãƒ†ã‚¯ã‚¹ãƒãƒ£ãƒãƒƒãƒ•ã‚¡
 	Microsoft::WRL::ComPtr<ID3D12Resource> texBuff;
 
-	// ƒfƒXƒNƒŠƒvƒ^ƒq[ƒv
+	// ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿ãƒ’ãƒ¼ãƒ—
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> srvHeap;
 
-	// GPUƒfƒXƒNƒŠƒvƒ^ƒnƒ“ƒhƒ‹
+	// GPUãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿ãƒãƒ³ãƒ‰ãƒ«
 	D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle{};
 
-	// ƒfƒXƒNƒŠƒvƒ^ƒŒƒ“ƒW
+	// ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿ãƒ¬ãƒ³ã‚¸
 	D3D12_DESCRIPTOR_RANGE descriptorRange{};
 
-	// ‰¡•
+	// æ¨ªå¹…
 	size_t width = 0;
 
-	// c•
+	// ç¸¦å¹…
 	size_t height = 0;
 };
 
 class TextureManager
 {
-public: // ’è”
+public: // å®šæ•°
 	static const size_t MaxSRVCount = 256;
 
 public:
-	// ‰Šú‰»
+	// åˆæœŸåŒ–
 	void Init();
 
 	/// <summary>
-	/// ƒeƒNƒXƒ`ƒƒ“Ç‚İ‚İ
+	/// ãƒ†ã‚¯ã‚¹ãƒãƒ£èª­ã¿è¾¼ã¿
 	/// </summary>
 	/// <param name="fileName"></param>
 	/// <returns></returns>
 	TextureData LoadTexture(const std::string& fileName);
 
 	/// <summary>
-	/// “Ç‚İ‚İ
+	/// èª­ã¿è¾¼ã¿
 	/// </summary>
 	/// <param name="fileName"></param>
 	/// <returns></returns>
 	static TextureData Load(const std::string& fileName);
 
-	// ‰ğ•ú
+	// è§£æ”¾
 	void Delete();
 
-	// ƒCƒ“ƒXƒ^ƒ“ƒX
+	// ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹
 	static TextureManager* GetInstance();
 
-	// ƒQƒbƒ^[
+	// ã‚²ãƒƒã‚¿ãƒ¼
 	ID3D12DescriptorHeap* GetSrvHeap() { return srvHeap.Get(); }
 
 private:
 	/// <summary>
-	/// ƒeƒNƒXƒ`ƒƒƒoƒbƒtƒ@‚Ì¶¬
+	/// ãƒ†ã‚¯ã‚¹ãƒãƒ£ãƒãƒƒãƒ•ã‚¡ã®ç”Ÿæˆ
 	/// </summary>
 	/// <param name="metadata"></param>
 	/// <param name="scratchImg"></param>
@@ -71,7 +71,7 @@ private:
 	Microsoft::WRL::ComPtr<ID3D12Resource> CreateTexBuff(DirectX::TexMetadata& metadata, DirectX::ScratchImage& scratchImg);
 
 	/// <summary>
-	/// ƒVƒF[ƒ_ƒŠƒ\[ƒXƒrƒ…[‚Ì¶¬
+	/// ã‚·ã‚§ãƒ¼ãƒ€ãƒªã‚½ãƒ¼ã‚¹ãƒ“ãƒ¥ãƒ¼ã®ç”Ÿæˆ
 	/// </summary>
 	/// <param name="texBuff"></param>
 	/// <param name="metadata"></param>
@@ -84,13 +84,13 @@ private:
 	D3D12_DESCRIPTOR_RANGE descriptorRange;
 	D3D12_HEAP_PROPERTIES textureHeapProp{};
 
-	// ƒeƒNƒXƒ`ƒƒƒoƒbƒtƒ@
+	// ãƒ†ã‚¯ã‚¹ãƒãƒ£ãƒãƒƒãƒ•ã‚¡
 	std::array<Microsoft::WRL::ComPtr<ID3D12Resource>, MaxSRVCount> texBuff_;
 
-	// ƒeƒNƒXƒ`ƒƒ”
+	// ãƒ†ã‚¯ã‚¹ãƒãƒ£æ•°
 	UINT texCount;
 
-	// ƒfƒtƒHƒ‹ƒgƒeƒNƒXƒ`ƒƒŠi”[ƒfƒBƒŒƒNƒgƒŠ
+	// ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆãƒ†ã‚¯ã‚¹ãƒãƒ£æ ¼ç´ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒª
 	static std::string DefaultTextureDirectoryPath;
 
 	static TextureManager* textureManager;

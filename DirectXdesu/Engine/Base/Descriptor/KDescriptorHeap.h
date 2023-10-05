@@ -18,11 +18,11 @@
 class KDescriptorHeap
 {
 private:
-	//ƒfƒoƒCƒX
+	//ãƒ‡ãƒã‚¤ã‚¹
 	Microsoft::WRL::ComPtr <ID3D12Device> device;
-	//ƒfƒXƒNƒvƒŠƒ^ƒq[ƒv
+	//ãƒ‡ã‚¹ã‚¯ãƒ—ãƒªã‚¿ãƒ’ãƒ¼ãƒ—
 	Microsoft::WRL::ComPtr <ID3D12DescriptorHeap> descriptorHeap;
-	//ƒfƒXƒNƒvƒŠƒ^ƒŒƒ“ƒW
+	//ãƒ‡ã‚¹ã‚¯ãƒ—ãƒªã‚¿ãƒ¬ãƒ³ã‚¸
 	D3D12_DESCRIPTOR_RANGE descriptorRange{};
 
 	char PADING1[4];
@@ -51,50 +51,50 @@ public:
 	};
 
 	/// <summary>
-	/// ‰Šú‰»
+	/// åˆæœŸåŒ–
 	/// </summary>
 	void Initialize();
 
 	/// <summary>
-	/// ƒVƒF[ƒ_[ƒŠƒ\[ƒXƒrƒ…[¶¬
+	/// ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ãƒªã‚½ãƒ¼ã‚¹ãƒ“ãƒ¥ãƒ¼ç”Ÿæˆ
 	/// </summary>
-	/// <param name="desc">ƒVƒF[ƒ_[ƒŠƒ\[ƒXƒrƒ…[ƒfƒXƒN</param>
-	/// <param name="resource">ƒoƒbƒtƒ@</param>
-	/// <returns>GPUƒnƒ“ƒhƒ‹(UINT64)</returns>
+	/// <param name="desc">ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ãƒªã‚½ãƒ¼ã‚¹ãƒ“ãƒ¥ãƒ¼ãƒ‡ã‚¹ã‚¯</param>
+	/// <param name="resource">ãƒãƒƒãƒ•ã‚¡</param>
+	/// <returns>GPUãƒãƒ³ãƒ‰ãƒ«(UINT64)</returns>
 	UINT64 CreateSRV(D3D12_SHADER_RESOURCE_VIEW_DESC& desc, ID3D12Resource* resource);
 
 	/// <summary>
-	/// ƒVƒF[ƒ_[ƒŠƒ\[ƒXƒrƒ…[’Ç‰Á
+	/// ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ãƒªã‚½ãƒ¼ã‚¹ãƒ“ãƒ¥ãƒ¼è¿½åŠ 
 	/// </summary>
 	DescriptorHeapViewHandle AddSRV();
 
 	/// <summary>
-	/// ƒAƒ“ƒI[ƒ_[ƒAƒNƒZƒXƒrƒ…[¶¬
+	/// ã‚¢ãƒ³ã‚ªãƒ¼ãƒ€ãƒ¼ã‚¢ã‚¯ã‚»ã‚¹ãƒ“ãƒ¥ãƒ¼ç”Ÿæˆ
 	/// </summary>
-	/// <param name="desc">ƒAƒ“ƒI[ƒ_[ƒAƒNƒZƒXƒrƒ…[ƒfƒXƒN</param>
-	/// <param name="resource">ƒoƒbƒtƒ@</param>
-	/// <returns>GPUƒnƒ“ƒhƒ‹(UINT64)</returns>
+	/// <param name="desc">ã‚¢ãƒ³ã‚ªãƒ¼ãƒ€ãƒ¼ã‚¢ã‚¯ã‚»ã‚¹ãƒ“ãƒ¥ãƒ¼ãƒ‡ã‚¹ã‚¯</param>
+	/// <param name="resource">ãƒãƒƒãƒ•ã‚¡</param>
+	/// <returns>GPUãƒãƒ³ãƒ‰ãƒ«(UINT64)</returns>
 	UINT64 CreateUAV(D3D12_UNORDERED_ACCESS_VIEW_DESC& desc, ID3D12Resource* resource);
 
 	/// <summary>
-	/// ƒAƒ“ƒI[ƒ_[ƒAƒNƒZƒXƒrƒ…[’Ç‰Á
+	/// ã‚¢ãƒ³ã‚ªãƒ¼ãƒ€ãƒ¼ã‚¢ã‚¯ã‚»ã‚¹ãƒ“ãƒ¥ãƒ¼è¿½åŠ 
 	/// </summary>
 	DescriptorHeapViewHandle AddUAV();
 
 	/// <summary>
-	/// ƒRƒ“ƒXƒgƒoƒbƒtƒ@ƒrƒ…[¶¬
+	/// ã‚³ãƒ³ã‚¹ãƒˆãƒãƒƒãƒ•ã‚¡ãƒ“ãƒ¥ãƒ¼ç”Ÿæˆ
 	/// </summary>
-	/// <param name="desc">ƒRƒ“ƒXƒgƒoƒbƒtƒ@ƒrƒ…[ƒfƒXƒN</param>
-	/// <returns>GPUƒnƒ“ƒhƒ‹(UINT64)</returns>
+	/// <param name="desc">ã‚³ãƒ³ã‚¹ãƒˆãƒãƒƒãƒ•ã‚¡ãƒ“ãƒ¥ãƒ¼ãƒ‡ã‚¹ã‚¯</param>
+	/// <returns>GPUãƒãƒ³ãƒ‰ãƒ«(UINT64)</returns>
 	UINT64 CreateCBV(D3D12_CONSTANT_BUFFER_VIEW_DESC& desc);
 
 	/// <summary>
-	/// ƒRƒ“ƒXƒgƒoƒbƒtƒ@ƒrƒ…[’Ç‰Á
+	/// ã‚³ãƒ³ã‚¹ãƒˆãƒãƒƒãƒ•ã‚¡ãƒ“ãƒ¥ãƒ¼è¿½åŠ 
 	/// </summary>
 	DescriptorHeapViewHandle AddCBV();
 
 	/// <summary>
-	/// ƒfƒXƒNƒvƒŠƒ^ƒq[ƒv‚ðŽæ“¾
+	/// ãƒ‡ã‚¹ã‚¯ãƒ—ãƒªã‚¿ãƒ’ãƒ¼ãƒ—ã‚’å–å¾—
 	/// </summary>
 	ID3D12DescriptorHeap* GetHeap();
 };

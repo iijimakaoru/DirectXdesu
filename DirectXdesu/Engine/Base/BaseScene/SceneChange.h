@@ -31,24 +31,24 @@ private:
 	const SceneChange& operator=(const SceneChange&) = delete;
 
 private:
-	// ƒXƒvƒ‰ƒCƒg
+	// ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ
 	std::unique_ptr<Sprite> black = nullptr;
 
-	// ƒeƒNƒXƒ`ƒƒ
+	// ãƒ†ã‚¯ã‚¹ãƒãƒ£
 	TextureData blackTex;
 
-	// ƒpƒCƒvƒ‰ƒCƒ“
+	// ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³
 	std::unique_ptr<KGPlin> pipeline = nullptr;
 
-	// ƒVƒF[ƒ_[
+	// ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼
 	KShader shader;
 
-	// ˆÃ“]ŠÔ
+	// æš—è»¢æ™‚é–“
 	int32_t inTimer = 0;
 	int32_t inTime = 30;
 	bool isIn = false;
 
-	// ‰ğœŠÔ
+	// è§£é™¤æ™‚é–“
 	int32_t outTimer = 0;
 	int32_t outTime = 30;
 	bool isOut = false;
@@ -57,10 +57,10 @@ private:
 
 	bool isEffect = false;
 
-	// ƒAƒ‹ƒtƒ@’l
+	// ã‚¢ãƒ«ãƒ•ã‚¡å€¤
 	float alpha = 0.0f;
 
-	// íœƒtƒ‰ƒO
+	// å‰Šé™¤ãƒ•ãƒ©ã‚°
 	bool isChange = false;
 
 private:

@@ -12,10 +12,10 @@ public:
 
 	KMyMath::Vector3 GetWorldPos()
 	{
-		// ƒ[ƒ‹ƒhÀ•WŠi”[•Ï”
+		// ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™æ ¼ç´å¤‰æ•°
 		KMyMath::Vector3 result;
 
-		// ƒ[ƒ‹ƒhs—ñ‚Ì•½sˆÚ“®¬•ªŽæ“¾
+		// ãƒ¯ãƒ¼ãƒ«ãƒ‰è¡Œåˆ—ã®å¹³è¡Œç§»å‹•æˆåˆ†å–å¾—
 		result.x = object->transform.matWorld.m[3][0];
 		result.y = object->transform.matWorld.m[3][1];
 		result.z = object->transform.matWorld.m[3][2];

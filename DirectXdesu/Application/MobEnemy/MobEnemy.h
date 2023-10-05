@@ -19,56 +19,56 @@ public:
 		Appear
 	};
 
-	// ‰Šú‰»
+	// åˆæœŸåŒ–
 	virtual void Init(KModel* model_, KGPlin* pipeline_);
 
 	/// <summary>
-	/// XV
+	/// æ›´æ–°
 	/// </summary>
 	/// <param name="viewPro"></param>
 	virtual void Update(ViewProjection* viewPro,const KMyMath::Vector3& cameraPos);
 
-	// •`‰æ
+	// æç”»
 	virtual void Draw();
 
-	// Õ“Ë‚ÉŒÄ‚Ño‚µ
+	// è¡çªæ™‚ã«å‘¼ã³å‡ºã—
 	virtual void OnCollision();
 
-	// €–S”»’è
+	// æ­»äº¡åˆ¤å®š
 	virtual const bool GetIsDead()const
 	{
 		return isDead;
 	}
 
 	/// <summary>
-	/// UŒ‚
+	/// æ”»æ’ƒ
 	/// </summary>
 	virtual void Attack();
 
-	// ƒ[ƒ‹ƒhƒ|ƒWƒVƒ‡ƒ“ƒQƒbƒ^[
+	// ãƒ¯ãƒ¼ãƒ«ãƒ‰ãƒã‚¸ã‚·ãƒ§ãƒ³ã‚²ãƒƒã‚¿ãƒ¼
 	virtual const KMyMath::Vector3 GetWorldPos() const;
 
-	// ƒvƒŒƒCƒ„[ƒ|ƒCƒ“ƒ^ƒZƒbƒ^[
+	// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãƒã‚¤ãƒ³ã‚¿ã‚»ãƒƒã‚¿ãƒ¼
 	virtual void SetPlayer(Player* player_) { player = player_; }
 
 protected:
-	// ƒIƒuƒWƒFƒNƒg
+	// ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
 	std::unique_ptr<KObject3d> object3d;
 
-	// €–Sƒtƒ‰ƒO
+	// æ­»äº¡ãƒ•ãƒ©ã‚°
 	bool isDead = false;
 
-	// ƒN[ƒ‹ƒ^ƒCƒ€
+	// ã‚¯ãƒ¼ãƒ«ã‚¿ã‚¤ãƒ 
 	float coolTimer = 0;
 	float coolTime = 120;
 
-	// ©ƒLƒƒƒ‰
+	// è‡ªã‚­ãƒ£ãƒ©
 	Player* player = nullptr;
 
 private:
-	// ƒ‚ƒfƒ‹
+	// ãƒ¢ãƒ‡ãƒ«
 	KModel* model = nullptr;
 
-	// ƒpƒCƒvƒ‰ƒCƒ“
+	// ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³
 	KGPlin* pipeline;
 };

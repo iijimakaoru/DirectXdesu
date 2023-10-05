@@ -3,17 +3,17 @@
 
 FlyEnemy* FlyEnemy::Create(KModel* model_, KGPlin* pipeline_, const KMyMath::Vector3& startPos_, const KMyMath::Vector2& endPos_, const float& speed_)
 {
-	// ƒCƒ“ƒXƒ^ƒ“ƒX¶¬
+	// ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ç”Ÿæˆ
 	FlyEnemy* newEnemy = new FlyEnemy();
 	if (newEnemy == nullptr)
 	{
 		return nullptr;
 	}
 
-	// ‰Šú‰»
+	// åˆæœŸåŒ–
 	newEnemy->Init(model_, pipeline_);
 
-	// ‰ŠúˆÊ’uƒZƒbƒg
+	// åˆæœŸä½ç½®ã‚»ãƒƒãƒˆ
 	newEnemy->SetStartPos(startPos_);
 	newEnemy->SetEndPos(endPos_);
 	newEnemy->SetSpeed(speed_);
@@ -37,7 +37,7 @@ void FlyEnemy::Init(KModel* model_, KGPlin* pipeline_)
 
 void FlyEnemy::Update(ViewProjection* viewPro, const KMyMath::Vector3& cameraPos)
 {
-	// oŒ»‰‰o
+	// å‡ºç¾æ¼”å‡º
 	if (isAppear)
 	{
 		Appear();

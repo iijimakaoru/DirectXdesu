@@ -2,19 +2,19 @@
 
 void Ground::Init()
 {
-	// ƒ‚ƒfƒ‹¶¬
+	// ãƒ¢ãƒ‡ãƒ«ç”Ÿæˆ
 	model = std::make_unique<MtlObj>("Grand");
 	model->CreateModel();
 
-	// ƒeƒNƒXƒ`ƒƒ¶¬
+	// ãƒ†ã‚¯ã‚¹ãƒãƒ£ç”Ÿæˆ
 	texData = TextureManager::Load("Resources/texture/haikei.jpg");
 
-	// ƒpƒCƒvƒ‰ƒCƒ“¶¬
+	// ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³ç”Ÿæˆ
 	pipeline = std::make_unique<KGPlin>();
 	shader.Init(L"Resources/Shader/ObjVS.hlsl", L"Resources/Shader/ObjPS.hlsl");
 	pipeline->CreatePipelineAll(shader, "Obj");
 
-	// ƒIƒuƒWƒFƒNƒg¶¬
+	// ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆç”Ÿæˆ
 	for (size_t i = 0; i < 2; i++)
 	{
 		object3d[i] = std::make_unique<KObject3d>();

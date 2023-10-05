@@ -6,13 +6,13 @@ KGPlin* FbxObject3D::pipeline = nullptr;
 
 void FbxObject3D::Init()
 {
-	// ƒq[ƒvİ’è
+	// ãƒ’ãƒ¼ãƒ—è¨­å®š
 	CD3DX12_HEAP_PROPERTIES heapProp = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
 
-	// ’è”ƒoƒbƒtƒ@B1
+	// å®šæ•°ãƒãƒƒãƒ•ã‚¡B1
 	CD3DX12_RESOURCE_DESC buff = CD3DX12_RESOURCE_DESC::Buffer((sizeof(ConstBufferDataTransform) + 0xff) & ~0xff);
 
-	// ’è”ƒoƒbƒtƒ@‚Ì¶¬
+	// å®šæ•°ãƒãƒƒãƒ•ã‚¡ã®ç”Ÿæˆ
 	result = KDirectXCommon::GetInstance()->GetDev()->CreateCommittedResource(
 		&heapProp,
 		D3D12_HEAP_FLAG_NONE,
@@ -35,7 +35,7 @@ void FbxObject3D::Init()
 
 	frameTime.SetTime(0, 0, 0, 1, 0, FbxTime::EMode::eFrames60);
 
-	// ’è”ƒoƒbƒtƒ@ƒf[ƒ^“]‘—
+	// å®šæ•°ãƒãƒƒãƒ•ã‚¡ãƒ‡ãƒ¼ã‚¿è»¢é€
 	ConstBufferDataSkin* constMapSkin = nullptr;
 	result = constBuffSkin->Map(0, nullptr, (void**)&constMapSkin);
 	for (int i = 0; i < MAX_BONES; i++)
@@ -47,10 +47,10 @@ void FbxObject3D::Init()
 
 void FbxObject3D::Update(ViewProjection* viewProjection)
 {
-	// ƒ}ƒgƒŠƒbƒNƒX
+	// ãƒãƒˆãƒªãƒƒã‚¯ã‚¹
 	KMyMath::Matrix4 matScale, matRot, matTrans;
 
-	// eƒIƒuƒWƒFƒNƒg—v‘f
+	// è¦ªã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆè¦ç´ 
 	matScale = MyMathUtility::MakeIdentity();
 	matScale = MyMathUtility::MakeScaling(scale);
 	matRot = MyMathUtility::MakeIdentity();
@@ -77,13 +77,13 @@ void FbxObject3D::Update(ViewProjection* viewProjection)
 	constMap->cameraPos = cameraPos;
 	constBuffTransform->Unmap(0, nullptr);
 
-	// ƒ{[ƒ“”z—ñ
+	// ãƒœãƒ¼ãƒ³é…åˆ—
 	std::vector<FbxModel::Bone>& bones = model->GetBones();
 
-	// ƒAƒjƒ[ƒVƒ‡ƒ“
+	// ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³
 	if (isPlay)
 	{
-		// 1ƒtƒŒ[ƒ€i‚ß‚é
+		// 1ãƒ•ãƒ¬ãƒ¼ãƒ é€²ã‚ã‚‹
 		currentTime += frameTime;
 		if (currentTime > endTime)
 		{
@@ -91,18 +91,18 @@ void FbxObject3D::Update(ViewProjection* viewProjection)
 		}
 	}
 
-	// ’è”ƒoƒbƒtƒ@ƒf[ƒ^“]‘—
+	// å®šæ•°ãƒãƒƒãƒ•ã‚¡ãƒ‡ãƒ¼ã‚¿è»¢é€
 	ConstBufferDataSkin* constMapSkin = nullptr;
 	result = constBuffSkin->Map(0, nullptr, (void**)&constMapSkin);
 	for (int i = 0; i < bones.size(); i++)
 	{
-		// ¡‚Ìp¨s—ñ
+		// ä»Šã®å§¿å‹¢è¡Œåˆ—
 		KMyMath::Matrix4 matCurrentPose;
-		// ¡‚Ìp¨s—ñ‚ğæ“¾
+		// ä»Šã®å§¿å‹¢è¡Œåˆ—ã‚’å–å¾—
 		FbxAMatrix fbxCurrentPose = bones[i].fbxCluster->GetLink()->EvaluateGlobalTransform(currentTime);
-		// XMMATRIX‚É•ÏŠ·
+		// XMMATRIXã«å¤‰æ›
 		FbxLoader::ConvertMatrixFromFbx(&matCurrentPose, fbxCurrentPose);
-		// ‡¬‚µ‚ÄƒXƒLƒjƒ“ƒOs—ñ‚É
+		// åˆæˆã—ã¦ã‚¹ã‚­ãƒ‹ãƒ³ã‚°è¡Œåˆ—ã«
 		constMapSkin->bones[i] = bones[i].invInitialPose * matCurrentPose;
 	}
 	constBuffSkin->Unmap(0, nullptr);
@@ -119,7 +119,7 @@ void FbxObject3D::Draw()
 	pipeline->Setting();
 	pipeline->Update(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-	// ’è”ƒoƒbƒtƒ@ƒrƒ…[‚ğƒZƒbƒg
+	// å®šæ•°ãƒãƒƒãƒ•ã‚¡ãƒ“ãƒ¥ãƒ¼ã‚’ã‚»ãƒƒãƒˆ
 	cmdList->SetGraphicsRootConstantBufferView(0, constBuffTransform->GetGPUVirtualAddress());
 	cmdList->SetGraphicsRootConstantBufferView(2, constBuffSkin->GetGPUVirtualAddress());
 
@@ -128,22 +128,22 @@ void FbxObject3D::Draw()
 
 void FbxObject3D::PlayAnimation()
 {
-	// FbxƒV[ƒ“æ“¾
+	// Fbxã‚·ãƒ¼ãƒ³å–å¾—
 	FbxScene* fbxScene = model->GetFbxScene();
-	// 0”Ô‚ÌƒAƒjƒ[ƒVƒ‡ƒ“æ“¾
+	// 0ç•ªã®ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³å–å¾—
 	FbxAnimStack* animstack = fbxScene->GetSrcObject<FbxAnimStack>(0);
 
 	fbxScene->SetCurrentAnimationStack(animstack);
-	// ƒAƒjƒ[ƒVƒ‡ƒ“‚Ì–¼‘Oæ“¾
+	// ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã®åå‰å–å¾—
 	const char* animStackName = animstack->GetName();
-	// ƒAƒjƒ[ƒVƒ‡ƒ“‚ÌŠÔæ“¾
+	// ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã®æ™‚é–“å–å¾—
 	FbxTakeInfo* takeInfo = fbxScene->GetTakeInfo(animStackName);
-	// ŠJnŠÔæ“¾
+	// é–‹å§‹æ™‚é–“å–å¾—
 	startTime = takeInfo->mLocalTimeSpan.GetStart();
-	// I—¹ŠÔæ“¾
+	// çµ‚äº†æ™‚é–“å–å¾—
 	endTime = takeInfo->mLocalTimeSpan.GetStop();
-	// ŠJnŠÔ‚É‡‚í‚¹‚é
+	// é–‹å§‹æ™‚é–“ã«åˆã‚ã›ã‚‹
 	currentTime = startTime;
-	// Ä¶’†ó‘Ô‚É‚·‚é
+	// å†ç”Ÿä¸­çŠ¶æ…‹ã«ã™ã‚‹
 	isPlay = true;
 }

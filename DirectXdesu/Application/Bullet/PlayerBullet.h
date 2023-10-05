@@ -5,19 +5,19 @@ class PlayerBullet : public Bullet
 {
 public:
 	/// <summary>
-	/// ¶¬
+	/// ç”Ÿæˆ
 	/// </summary>
-	/// <param name="model">ƒ‚ƒfƒ‹</param>
-	/// <param name="pipeline_">ƒpƒCƒvƒ‰ƒCƒ“</param>
-	/// <param name="pos">‰ŠúˆÊ’u</param>
-	/// <param name="vec_">“®‚­Œü‚«</param>
-	/// <param name="rot_">‰ñ“]Šp</param>
-	/// <param name="bulletSpeed">’e‘¬</param>
+	/// <param name="model">ãƒ¢ãƒ‡ãƒ«</param>
+	/// <param name="pipeline_">ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³</param>
+	/// <param name="pos">åˆæœŸä½ç½®</param>
+	/// <param name="vec_">å‹•ãå‘ã</param>
+	/// <param name="rot_">å›è»¢è§’</param>
+	/// <param name="bulletSpeed">å¼¾é€Ÿ</param>
 	/// <returns></returns>
 	static PlayerBullet* Create(KModel* model, KGPlin* pipeline_,
 		const KMyMath::Vector3& pos, const KMyMath::Vector3& vec_, const KMyMath::Vector3& rot_, const float bulletSpeed);
 
 public:
-	// ‰Šú‰»
+	// åˆæœŸåŒ–
 	void Init(KModel* model_, KGPlin* pipeline_) override;
 };

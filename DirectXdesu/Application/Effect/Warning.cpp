@@ -19,14 +19,14 @@ void Warning::Update()
 {
 	warningTimer++;
 
-	// アルファ値変更
+	// 繧｢繝ｫ繝輔ぃ蛟､螟画峩
 	if (alpha >= max(alpha, 0.5f) || alpha <= min(alpha,0.0f))
 	{
 		alphaSpeed *= -1;
 	}
 	alpha += alphaSpeed;
 
-	// 時間で削除
+	// 譎る俣縺ｧ蜑企勁
 	if (warningTimer >= warningTime)
 	{
 		isDelete = true;

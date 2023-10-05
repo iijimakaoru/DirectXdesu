@@ -24,34 +24,34 @@ class KShader
 public:
 	template<class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
 
-	// SpriteƒVƒF[ƒ_[
+	// Spriteã‚·ã‚§ãƒ¼ãƒ€ãƒ¼
 	void SpriteVSNormal();
 	void SpriteVSLoadCompile();
 	void SpritePSNormal();
 	void SpritePSLoadCompile();
 
-	// ƒVƒF[ƒ_[
+	// ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼
 	KShader();
 	void Init(LPCWSTR VSFileName, LPCWSTR PSFileName, LPCSTR pEntryPoint = "main", 
 		LPCWSTR GSFileName = nullptr, LPCWSTR DSFileName = nullptr, LPCWSTR HSFileName = nullptr);
-	// ƒGƒ‰[
+	// ã‚¨ãƒ©ãƒ¼
 	void Error();
 
 private:
-	// ƒVƒF[ƒ_[ƒIƒuƒWƒFƒNƒg
-	ComPtr<ID3D10Blob> vsBlob = nullptr; // ’¸“_ƒVƒF[ƒ_[ƒIƒuƒWƒFƒNƒg
-	ComPtr<ID3D10Blob> hsBlob = nullptr; // ƒnƒ‹ƒVƒF[ƒ_[ƒIƒuƒWƒFƒNƒg
-	ComPtr<ID3D10Blob> dsBlob = nullptr; // ƒhƒƒCƒ“ƒVƒF[ƒ_[ƒIƒuƒWƒFƒNƒg
-	ComPtr<ID3D10Blob> gsBlob = nullptr; // ƒWƒIƒƒgƒŠƒVƒF[ƒ_[ƒIƒuƒWƒFƒNƒg
-	ComPtr<ID3D10Blob> psBlob = nullptr; // ƒsƒNƒZƒ‹ƒVƒF[ƒ_[ƒIƒuƒWƒFƒNƒg
-	ComPtr<ID3D10Blob> errorBlob = nullptr; // ƒGƒ‰[ƒIƒuƒWƒFƒNƒg
+	// ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
+	ComPtr<ID3D10Blob> vsBlob = nullptr; // é ‚ç‚¹ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
+	ComPtr<ID3D10Blob> hsBlob = nullptr; // ãƒãƒ«ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
+	ComPtr<ID3D10Blob> dsBlob = nullptr; // ãƒ‰ãƒ¡ã‚¤ãƒ³ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
+	ComPtr<ID3D10Blob> gsBlob = nullptr; // ã‚¸ã‚ªãƒ¡ãƒˆãƒªã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
+	ComPtr<ID3D10Blob> psBlob = nullptr; // ãƒ”ã‚¯ã‚»ãƒ«ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
+	ComPtr<ID3D10Blob> errorBlob = nullptr; // ã‚¨ãƒ©ãƒ¼ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
 
-	// ƒVƒF[ƒ_[ƒoƒCƒgƒR[ƒh
-	D3D12_SHADER_BYTECODE vsBytecode{}; // ’¸“_ƒVƒF[ƒ_[ƒoƒCƒgƒR[ƒh
-	D3D12_SHADER_BYTECODE hsBytecode{}; // ƒnƒ‹ƒVƒF[ƒ_[ƒoƒCƒgƒR[ƒh
-	D3D12_SHADER_BYTECODE dsBytecode{}; // ƒhƒƒCƒ“ƒVƒF[ƒ_[ƒoƒCƒgƒR[ƒh
-	D3D12_SHADER_BYTECODE gsBytecode{}; // ƒWƒIƒƒgƒŠƒVƒF[ƒ_[ƒoƒCƒgƒR[ƒh
-	D3D12_SHADER_BYTECODE psBytecode{}; // ƒsƒNƒZƒ‹ƒVƒF[ƒ_[ƒoƒCƒgƒR[ƒh
+	// ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ãƒã‚¤ãƒˆã‚³ãƒ¼ãƒ‰
+	D3D12_SHADER_BYTECODE vsBytecode{}; // é ‚ç‚¹ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ãƒã‚¤ãƒˆã‚³ãƒ¼ãƒ‰
+	D3D12_SHADER_BYTECODE hsBytecode{}; // ãƒãƒ«ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ãƒã‚¤ãƒˆã‚³ãƒ¼ãƒ‰
+	D3D12_SHADER_BYTECODE dsBytecode{}; // ãƒ‰ãƒ¡ã‚¤ãƒ³ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ãƒã‚¤ãƒˆã‚³ãƒ¼ãƒ‰
+	D3D12_SHADER_BYTECODE gsBytecode{}; // ã‚¸ã‚ªãƒ¡ãƒˆãƒªã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ãƒã‚¤ãƒˆã‚³ãƒ¼ãƒ‰
+	D3D12_SHADER_BYTECODE psBytecode{}; // ãƒ”ã‚¯ã‚»ãƒ«ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ãƒã‚¤ãƒˆã‚³ãƒ¼ãƒ‰
 
 	HRESULT result;
 

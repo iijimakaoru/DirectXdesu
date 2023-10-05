@@ -9,33 +9,33 @@
 class Ground
 {
 public:
-	// ‰Šú‰»
+	// åˆæœŸåŒ–
 	void Init();
 
 	/// <summary>
-	/// XV
+	/// æ›´æ–°
 	/// </summary>
 	/// <param name="viewPro"></param>
 	void Update(ViewProjection* viewPro, const KMyMath::Vector3& cameraPos);
 
-	// •`‰æ
+	// æç”»
 	void Draw();
 
 	const KMyMath::Vector3 GetPos(size_t num) const;
 
 private:
-	// ƒIƒuƒWƒFƒNƒg
+	// ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
 	std::array<std::unique_ptr<KObject3d>,2> object3d;
 
-	// ƒ‚ƒfƒ‹
+	// ãƒ¢ãƒ‡ãƒ«
 	std::unique_ptr<KModel> model;
 
-	// ƒeƒNƒXƒ`ƒƒ
+	// ãƒ†ã‚¯ã‚¹ãƒãƒ£
 	TextureData texData;
 
-	// ƒpƒCƒvƒ‰ƒCƒ“
+	// ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³
 	std::unique_ptr<KGPlin> pipeline;
 
-	// ƒVƒF[ƒ_[
+	// ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼
 	KShader shader;
 };

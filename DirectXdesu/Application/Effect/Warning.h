@@ -15,29 +15,29 @@ public:
 	int32_t GetTime() { return warningTime; }
 
 private:
-	// ƒXƒvƒ‰ƒCƒg
+	// ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ
 	std::unique_ptr<Sprite> warning = nullptr;
 
-	// ƒeƒNƒXƒ`ƒƒ
+	// ãƒ†ã‚¯ã‚¹ãƒãƒ£
 	TextureData warningTex;
 
-	// ƒpƒCƒvƒ‰ƒCƒ“
+	// ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³
 	std::unique_ptr<KGPlin> pipeline = nullptr;
 
-	// ƒVƒF[ƒ_[
+	// ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼
 	KShader shader;
 
-	// ŒxŠÔ
+	// è­¦å‘Šæ™‚é–“
 	int32_t warningTimer = 0;
 	int32_t warningTime = 0;
 
-	// ƒAƒ‹ƒtƒ@’l
+	// ã‚¢ãƒ«ãƒ•ã‚¡å€¤
 	float alpha = 0.0f;
 
-	// ƒAƒ‹ƒtƒ@’l•ÏXƒXƒs[ƒh
+	// ã‚¢ãƒ«ãƒ•ã‚¡å€¤å¤‰æ›´ã‚¹ãƒ”ãƒ¼ãƒ‰
 	float alphaSpeed = -0.03f;
 
-	// íœƒtƒ‰ƒO
+	// å‰Šé™¤ãƒ•ãƒ©ã‚°
 	bool isDelete = false;
 };
 

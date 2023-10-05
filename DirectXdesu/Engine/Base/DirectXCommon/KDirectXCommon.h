@@ -38,51 +38,51 @@ private:
 	HRESULT result;
 	char PADING[4];
 
-	// DirectX12ƒfƒoƒCƒX
+	// DirectX12ãƒ‡ãƒã‚¤ã‚¹
 	ComPtr<ID3D12Device> dev;
 
 	// DXGI
 	ComPtr<IDXGIFactory6> dxgiFactory;
 
-	// ƒXƒƒbƒvƒ`ƒF[ƒ“
+	// ã‚¹ãƒ¯ãƒƒãƒ—ãƒã‚§ãƒ¼ãƒ³
 	ComPtr<IDXGISwapChain4> swapChain;
 
-	// ƒRƒ}ƒ“ƒh
+	// ã‚³ãƒãƒ³ãƒ‰
 	ComPtr<ID3D12CommandAllocator> cmdAllocater;
 	ComPtr<ID3D12GraphicsCommandList> cmdList;
 	ComPtr<ID3D12CommandQueue> cmdQueue;
 
-	// ƒtƒFƒ“ƒX‚Ì¶¬
+	// ãƒ•ã‚§ãƒ³ã‚¹ã®ç”Ÿæˆ
 	ComPtr<ID3D12Fence> fence;
 
-	// RTV—p‚ÌƒfƒXƒNƒŠƒvƒ^ƒq[ƒv
+	// RTVç”¨ã®ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿ãƒ’ãƒ¼ãƒ—
 	std::unique_ptr<KRtvDescriptorHeap> rtvHeap;
 
-	// SRV—p‚ÌƒfƒXƒNƒŠƒvƒ^ƒq[ƒv
+	// SRVç”¨ã®ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿ãƒ’ãƒ¼ãƒ—
 	std::unique_ptr<KDescriptorHeap> srvHeap;
 
-	// [“xƒoƒbƒtƒ@
+	// æ·±åº¦ãƒãƒƒãƒ•ã‚¡
 	std::unique_ptr<KDepthStencilBuffer> depthBuff{};
 
-	// DSV—p‚ÌƒfƒXƒNƒŠƒvƒ^ƒq[ƒv
+	// DSVç”¨ã®ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿ãƒ’ãƒ¼ãƒ—
 	std::unique_ptr<KDsvDescriptorHeap> dsvHeap{};
 
-	// ƒoƒbƒNƒoƒbƒtƒ@
+	// ãƒãƒƒã‚¯ãƒãƒƒãƒ•ã‚¡
 	std::vector<std::unique_ptr<KRenderTargetBuffer>> backBuffers;
 
-	// ƒtƒFƒ“ƒX‚Ì¶¬
+	// ãƒ•ã‚§ãƒ³ã‚¹ã®ç”Ÿæˆ
 	UINT64 fenceVal = 0;
 
-	// ƒXƒƒbƒvƒ`ƒF[ƒ“‚Ìİ’è
+	// ã‚¹ãƒ¯ãƒƒãƒ—ãƒã‚§ãƒ¼ãƒ³ã®è¨­å®š
 	DXGI_SWAP_CHAIN_DESC1 swapChainDesc{};
 
-	// ƒNƒŠƒAƒJƒ‰[
+	// ã‚¯ãƒªã‚¢ã‚«ãƒ©ãƒ¼
 	FLOAT clearColor[4] = { 0.1f,0.25f,0.5f,0.0f };
 
-	//ƒrƒ…[ƒ|[ƒg
+	//ãƒ“ãƒ¥ãƒ¼ãƒãƒ¼ãƒˆ
 	D3D12_VIEWPORT viewport{};
 
-	//ƒVƒU[‹éŒ`
+	//ã‚·ã‚¶ãƒ¼çŸ©å½¢
 	D3D12_RECT scissorRect{};
 
 	UINT bbIndex;
@@ -91,7 +91,7 @@ private:
 
 	static KDirectXCommon* directXCommon_;
 
-	// ƒfƒXƒNƒŠƒvƒ^ƒq[ƒv‚Ìİ’è
+	// ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿ãƒ’ãƒ¼ãƒ—ã®è¨­å®š
 	D3D12_DESCRIPTOR_HEAP_DESC rtvHeapDesc{};
 
 	ComPtr<ID3D12DescriptorHeap> tmpDsvHeap{};
@@ -102,90 +102,90 @@ private:
 
 	D3D_FEATURE_LEVEL featureLevel;
 
-	// ƒRƒ}ƒ“ƒhƒLƒ…[‚Ìİ’è
+	// ã‚³ãƒãƒ³ãƒ‰ã‚­ãƒ¥ãƒ¼ã®è¨­å®š
 	D3D12_COMMAND_QUEUE_DESC cmdQueueDesc{};
 
-	// 1.ƒŠƒ\[ƒXƒoƒŠƒA‚Å‘‚«‚İ‰Â”\‚É•ÏX
+	// 1.ãƒªã‚½ãƒ¼ã‚¹ãƒãƒªã‚¢ã§æ›¸ãè¾¼ã¿å¯èƒ½ã«å¤‰æ›´
 	D3D12_RESOURCE_BARRIER barrierDesc{};
 
 	std::chrono::steady_clock::time_point reference_;
 
-	// FPSŒÅ’è‰Šú‰»
+	// FPSå›ºå®šåˆæœŸåŒ–
 	void InitFixFPS();
-	// FPSŒÅ’è
+	// FPSå›ºå®š
 	void UpdateFixFPS();
 
 public:
-	// ƒVƒ“ƒOƒ‹ƒgƒ“ƒCƒ“ƒXƒ^ƒ“ƒX
+	// ã‚·ãƒ³ã‚°ãƒ«ãƒˆãƒ³ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹
 	static KDirectXCommon* GetInstance();
 
-	// ƒŠƒ\[ƒX‚Ìó‘Ô‚ğ•Ï‚¦‚é
+	// ãƒªã‚½ãƒ¼ã‚¹ã®çŠ¶æ…‹ã‚’å¤‰ãˆã‚‹
 	static void ResourceTransition(ID3D12Resource* resource, D3D12_RESOURCE_STATES beforeState, D3D12_RESOURCE_STATES afterState);
 
-	// ‰Šú‰»
+	// åˆæœŸåŒ–
 	void Init();
 
-	// •`‰æ€”õ
+	// æç”»æº–å‚™
 	void PreDraw();
 
-	// •`‰æI—¹
+	// æç”»çµ‚äº†
 	void PostDraw();
 
-	// ƒRƒ}ƒ“ƒhŒãn––
+	// ã‚³ãƒãƒ³ãƒ‰å¾Œå§‹æœ«
 	void DeleteCommand();
 
-	// ‰ğ•ú
+	// è§£æ”¾
 	void Destroy();
 
-	// ”wŒi‚ÌF•ÏX
+	// èƒŒæ™¯ã®è‰²å¤‰æ›´
 	void SetBackScreenColor(float R, float G, float B, float A);
 
-	// ƒfƒoƒCƒXæ“¾
+	// ãƒ‡ãƒã‚¤ã‚¹å–å¾—
 	ID3D12Device* GetDev() const { return dev.Get(); }
 
-	// ƒRƒ}ƒ“ƒhƒŠƒXƒgæ“¾
+	// ã‚³ãƒãƒ³ãƒ‰ãƒªã‚¹ãƒˆå–å¾—
 	ID3D12GraphicsCommandList* GetCmdlist() { return cmdList.Get(); }
 
 	float fps = 0;
 
-	// SRV,CBV,URV—p‚ÌƒfƒXƒNƒŠƒvƒ^ƒq[ƒvæ“¾
+	// SRV,CBV,URVç”¨ã®ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿ãƒ’ãƒ¼ãƒ—å–å¾—
 	KDescriptorHeap* GetSRVDescriptorHeap();
 
-	// RTV—p‚ÌƒfƒXƒNƒŠƒvƒ^ƒq[ƒvæ“¾
+	// RTVç”¨ã®ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿ãƒ’ãƒ¼ãƒ—å–å¾—
 	KRtvDescriptorHeap* GetRTVDescriptorHeap();
 
-	// DSV—p‚ÌƒfƒXƒNƒŠƒvƒ^ƒq[ƒvæ“¾
+	// DSVç”¨ã®ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿ãƒ’ãƒ¼ãƒ—å–å¾—
 	KDsvDescriptorHeap* GetDsvDescriptorHrap();
 
-	// ƒŠƒ\[ƒX‚Ìó‘Ô‚ğ•Ï‚¦‚é
+	// ãƒªã‚½ãƒ¼ã‚¹ã®çŠ¶æ…‹ã‚’å¤‰ãˆã‚‹
 	void Transition(ID3D12Resource* resource, D3D12_RESOURCE_STATES beforeState, D3D12_RESOURCE_STATES afterState);
 
-	// ƒoƒbƒNƒoƒbƒtƒ@‚Ì”‚ğæ“¾
+	// ãƒãƒƒã‚¯ãƒãƒƒãƒ•ã‚¡ã®æ•°ã‚’å–å¾—
 	size_t GetBackBufferCount() const;
 
 private:
-	// DXGI‰Šú‰»
+	// DXGIåˆæœŸåŒ–
 	HRESULT InitDXGIDevice();
 
-	// ÅI“I‚ÈƒŒƒ“ƒ_[ƒ^[ƒQƒbƒg‚Ì¶¬
+	// æœ€çµ‚çš„ãªãƒ¬ãƒ³ãƒ€ãƒ¼ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã®ç”Ÿæˆ
 	HRESULT CreateFinalRenderTarget();
 
-	// ƒXƒƒbƒvƒ`ƒF[ƒ“‚Ì¶¬
+	// ã‚¹ãƒ¯ãƒƒãƒ—ãƒã‚§ãƒ¼ãƒ³ã®ç”Ÿæˆ
 	HRESULT CreateSwapChain();
 
-	// ƒRƒ}ƒ“ƒh‰Šú‰»
+	// ã‚³ãƒãƒ³ãƒ‰åˆæœŸåŒ–
 	HRESULT InitCommand();
 
-	// ƒtƒFƒ“ƒX¶¬
+	// ãƒ•ã‚§ãƒ³ã‚¹ç”Ÿæˆ
 	HRESULT CreateFence();
 
-	// [“xŠÖŒW¶¬
+	// æ·±åº¦é–¢ä¿‚ç”Ÿæˆ
 	HRESULT CreateDepthBuffer();
 
-	// ƒfƒoƒbƒOƒŒƒCƒ„[‚ğ—LŒø‰»
+	// ãƒ‡ãƒãƒƒã‚°ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚’æœ‰åŠ¹åŒ–
 	void EnbleDebugLayer();
 
-	// ƒCƒ“ƒtƒHƒLƒ…[‚ğ—LŒø‰»
+	// ã‚¤ãƒ³ãƒ•ã‚©ã‚­ãƒ¥ãƒ¼ã‚’æœ‰åŠ¹åŒ–
 	void EnbleInfoQueue();
 
 	KDirectXCommon() = default;

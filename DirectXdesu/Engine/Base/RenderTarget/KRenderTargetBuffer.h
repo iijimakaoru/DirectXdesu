@@ -5,32 +5,32 @@
 
 class KRenderTargetBuffer
 {
-	//ƒeƒNƒXƒ`ƒƒ
+	//ãƒ†ã‚¯ã‚¹ãƒãƒ£
 	Microsoft::WRL::ComPtr<ID3D12Resource> texture;
-	//ƒfƒBƒXƒNƒŠƒvƒ^ƒq[ƒv
+	//ãƒ‡ã‚£ã‚¹ã‚¯ãƒªãƒ—ã‚¿ãƒ’ãƒ¼ãƒ—
 	KRtvDescriptorHeap* rtvHeap = nullptr;
-	//•
+	//å¹…
 	UINT width = 0;
-	//‚‚³
+	//é«˜ã•
 	UINT height = 0;
-	//ƒfƒoƒCƒX
+	//ãƒ‡ãƒã‚¤ã‚¹
 	ID3D12Device* device = nullptr;
-	//ƒnƒ“ƒhƒ‹
+	//ãƒãƒ³ãƒ‰ãƒ«
 	D3D12_CPU_DESCRIPTOR_HANDLE handle{};
-	//ƒXƒe[ƒ^ƒX
+	//ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹
 	D3D12_RESOURCE_STATES states;
 public:
 
 	/// <summary>
-	/// ¶¬
+	/// ç”Ÿæˆ
 	/// </summary>
-	/// <param name="w">‰¡•</param>
-	/// <param name="h">c•</param>
-	/// <param name="resourceStates">ƒXƒe[ƒ^ƒX</param>
-	/// <param name="mipLevel">ƒ~ƒbƒvƒŒƒxƒ‹</param>
-	/// <param name="arraySize">”z—ñ‚ÌƒTƒCƒY</param>
-	/// <param name="format">ƒtƒH[ƒ}ƒbƒg</param>
-	/// <param name="clearColor">ƒJƒ‰[</param>
+	/// <param name="w">æ¨ªå¹…</param>
+	/// <param name="h">ç¸¦å¹…</param>
+	/// <param name="resourceStates">ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹</param>
+	/// <param name="mipLevel">ãƒŸãƒƒãƒ—ãƒ¬ãƒ™ãƒ«</param>
+	/// <param name="arraySize">é…åˆ—ã®ã‚µã‚¤ã‚º</param>
+	/// <param name="format">ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆ</param>
+	/// <param name="clearColor">ã‚«ãƒ©ãƒ¼</param>
 	bool Create(UINT w,
 		UINT h,
 		D3D12_RESOURCE_STATES resourceStates,
@@ -40,26 +40,26 @@ public:
 		const KMyMath::Vector4& clearColor = { 1.0f,1.0f,1.0f,1.0f });
 
 	/// <summary>
-	/// ¶¬
+	/// ç”Ÿæˆ
 	/// </summary>
 	/// <param name="swapChain4"></param>
 	/// <returns></returns>
 	bool Create(IDXGISwapChain4* swapChain, UINT index);
 
 	/// <summary>
-	/// ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	/// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	/// </summary>
-	/// <param name="d3dDevice">ƒfƒoƒCƒX</param>
-	/// <param name="descriptorHeap">ƒŒƒ“ƒ_[ƒ^[ƒQƒbƒg—p‚ÌƒfƒXƒNƒvƒŠƒ^ƒq[ƒv</param>
+	/// <param name="d3dDevice">ãƒ‡ãƒã‚¤ã‚¹</param>
+	/// <param name="descriptorHeap">ãƒ¬ãƒ³ãƒ€ãƒ¼ã‚¿ãƒ¼ã‚²ãƒƒãƒˆç”¨ã®ãƒ‡ã‚¹ã‚¯ãƒ—ãƒªã‚¿ãƒ’ãƒ¼ãƒ—</param>
 	KRenderTargetBuffer(ID3D12Device* d3dDevice, KRtvDescriptorHeap* descriptorHeap);
 
 	/// <summary>
-	/// ƒŠƒ\[ƒX‚ğæ“¾
+	/// ãƒªã‚½ãƒ¼ã‚¹ã‚’å–å¾—
 	/// </summary>
 	ID3D12Resource* GetTexture() const;
 
 	/// <summary>
-	/// ƒ|ƒCƒ“ƒ^”Ô†‚ğæ“¾
+	/// ãƒã‚¤ãƒ³ã‚¿ç•ªå·ã‚’å–å¾—
 	/// </summary>
 	const D3D12_CPU_DESCRIPTOR_HANDLE& GetHandle();
 

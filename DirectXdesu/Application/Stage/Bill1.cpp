@@ -2,14 +2,14 @@
 
 Bill1* Bill1::Create(KModel* model_, KGPlin* objPipeline_, const KMyMath::Vector2& pos)
 {
-    // ƒCƒ“ƒXƒ^ƒ“ƒX
+    // ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹
     Bill1* instance = new Bill1();
     if (instance == nullptr)
     {
         return nullptr;
     }
 
-    // ‰Šú‰»ŒÄ‚Ño‚µ
+    // åˆæœŸåŒ–å‘¼ã³å‡ºã—
     instance->Init(model_, objPipeline_, pos);
 
     return instance;
@@ -17,13 +17,13 @@ Bill1* Bill1::Create(KModel* model_, KGPlin* objPipeline_, const KMyMath::Vector
 
 void Bill1::Init(KModel* model_, KGPlin* objPipeline_, const KMyMath::Vector2 pos)
 {
-    // ƒ‚ƒfƒ‹¶¬
+    // ãƒ¢ãƒ‡ãƒ«ç”Ÿæˆ
     model = model_;
 
-    // ƒpƒCƒvƒ‰ƒCƒ“¶¬
+    // ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³ç”Ÿæˆ
     objPipeline = objPipeline_;
 
-    // ƒIƒuƒWƒFƒNƒg¶¬
+    // ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆç”Ÿæˆ
     object.reset(KObject3d::Create(model, objPipeline));
     object->transform.pos = { pos.x,-20 ,pos.y };
 

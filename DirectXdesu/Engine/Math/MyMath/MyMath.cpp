@@ -188,7 +188,7 @@ namespace MyMathUtility
 
 	KMyMath::Matrix4 MakePerspective(float fogAngleY, float aspectRatio, float nearZ, float farZ)
 	{
-		// ƒAƒXƒyƒNƒg”ä‚ğì¬
+		// ã‚¢ã‚¹ãƒšã‚¯ãƒˆæ¯”ã‚’ä½œæˆ
 		KMyMath::Matrix4 matrix;
 		float sinFov = 0.0f;
 		float cosFov = 0.0f;
@@ -216,35 +216,35 @@ namespace MyMathUtility
 
 	KMyMath::Matrix4 MakeInverse(KMyMath::Matrix4& mat)
 	{
-		//‘|‚«o‚µ–@‚ğs‚¤s—ñ
+		//æƒãå‡ºã—æ³•ã‚’è¡Œã†è¡Œåˆ—
 		float sweep[4][8]{};
-		//’è””{—p
+		//å®šæ•°å€ç”¨
 		float constTimes = 0.0f;
-		//‹–—e‚·‚éŒë·
+		//è¨±å®¹ã™ã‚‹èª¤å·®
 		float MAX_ERR = 1e-10f;
-		//–ß‚è’l—p
+		//æˆ»ã‚Šå€¤ç”¨
 		KMyMath::Matrix4 retMat;
 
 		for (int i = 0; i < 4; i++)
 		{
 			for (int j = 0; j < 4; j++)
 			{
-				//weep‚Ì¶‘¤‚É‹ts—ñ‚ğ‹‚ß‚és—ñ‚ğƒZƒbƒg
+				//weepã®å·¦å´ã«é€†è¡Œåˆ—ã‚’æ±‚ã‚ã‚‹è¡Œåˆ—ã‚’ã‚»ãƒƒãƒˆ
 				sweep[i][j] = mat.m[i][j];
 
-				//sweep‚Ì‰E‘¤‚É’PˆÊs—ñ‚ğƒZƒbƒg
+				//sweepã®å³å´ã«å˜ä½è¡Œåˆ—ã‚’ã‚»ãƒƒãƒˆ
 				sweep[i][4 + j] = MakeIdentity().m[i][j];
 			}
 		}
 
-		//‘S‚Ä‚Ì—ñ‚Ì‘ÎŠp¬•ª‚É‘Î‚·‚éŒJ‚è•Ô‚µ
+		//å…¨ã¦ã®åˆ—ã®å¯¾è§’æˆåˆ†ã«å¯¾ã™ã‚‹ç¹°ã‚Šè¿”ã—
 		for (int i = 0; i < 4; i++)
 		{
-			//Å‘å‚Ìâ‘Î’l‚ğ’–Ú‘ÎŠp¬•ª‚Ìâ‘Î’l‚Æ‰¼’è
+			//æœ€å¤§ã®çµ¶å¯¾å€¤ã‚’æ³¨ç›®å¯¾è§’æˆåˆ†ã®çµ¶å¯¾å€¤ã¨ä»®å®š
 			float max = std::fabs(sweep[i][i]);
 			int maxIndex = i;
 
-			//i—ñ–Ú‚ªÅ‘å‚Ìâ‘Î’l‚Æ‚È‚és‚ğ’T‚·
+			//iåˆ—ç›®ãŒæœ€å¤§ã®çµ¶å¯¾å€¤ã¨ãªã‚‹è¡Œã‚’æ¢ã™
 			for (int j = i + 1; j < 4; j++)
 			{
 				if (std::fabs(sweep[j][i]) > max)
@@ -256,11 +256,11 @@ namespace MyMathUtility
 
 			if (fabs(sweep[maxIndex][i]) <= MAX_ERR)
 			{
-				//‹ts—ñ‚Í‹‚ß‚ç‚ê‚È‚¢
+				//é€†è¡Œåˆ—ã¯æ±‚ã‚ã‚‰ã‚Œãªã„
 				return MakeIdentity();
 			}
 
-			//‘€ì(1):is–Ú‚ÆmaxIndexs–Ú‚ğ“ü‚ê‘Ö‚¦‚é
+			//æ“ä½œ(1):iè¡Œç›®ã¨maxIndexè¡Œç›®ã‚’å…¥ã‚Œæ›¿ãˆã‚‹
 			if (i != maxIndex)
 			{
 				for (int j = 0; j < 8; j++)
@@ -271,38 +271,38 @@ namespace MyMathUtility
 				}
 			}
 
-			//sweep[i][i]‚ÉŠ|‚¯‚é‚Æ1‚É‚È‚é’l‚ğ‹‚ß‚é
+			//sweep[i][i]ã«æ›ã‘ã‚‹ã¨1ã«ãªã‚‹å€¤ã‚’æ±‚ã‚ã‚‹
 			constTimes = 1 / sweep[i][i];
 
-			//‘€ì(2):ps–Ú‚ğa”{‚·‚é
+			//æ“ä½œ(2):pè¡Œç›®ã‚’aå€ã™ã‚‹
 			for (int j = 0; j < 8; j++)
 			{
-				//‚±‚ê‚É‚æ‚èsweep[i][i]‚ª1‚É‚È‚é
+				//ã“ã‚Œã«ã‚ˆã‚Šsweep[i][i]ãŒ1ã«ãªã‚‹
 				sweep[i][j] *= constTimes;
 			}
 
-			//‘€ì(3)‚É‚æ‚èis–ÚˆÈŠO‚Ìs‚Ìi—ñ–Ú‚ğ0‚É‚·‚é
+			//æ“ä½œ(3)ã«ã‚ˆã‚Šiè¡Œç›®ä»¥å¤–ã®è¡Œã®iåˆ—ç›®ã‚’0ã«ã™ã‚‹
 			for (int j = 0; j < 4; j++)
 			{
 				if (j == i)
 				{
-					//is–Ú‚Í‚»‚Ì‚Ü‚Ü
+					//iè¡Œç›®ã¯ãã®ã¾ã¾
 					continue;
 				}
 
-				//is–Ú‚ÉŠ|‚¯‚é’l‚ğ‹‚ß‚é
+				//iè¡Œç›®ã«æ›ã‘ã‚‹å€¤ã‚’æ±‚ã‚ã‚‹
 				constTimes = -sweep[j][i];
 
 				for (int k = 0; k < 8; k++)
 				{
-					//js–Ú‚Éis–Ú‚ğa”{‚µ‚½s‚ğ‘«‚·
-					//‚±‚ê‚É‚æ‚èsweep[j][i]‚ª0‚É‚È‚é
+					//jè¡Œç›®ã«iè¡Œç›®ã‚’aå€ã—ãŸè¡Œã‚’è¶³ã™
+					//ã“ã‚Œã«ã‚ˆã‚Šsweep[j][i]ãŒ0ã«ãªã‚‹
 					sweep[j][k] += sweep[i][k] * constTimes;
 				}
 			}
 		}
 
-		//sweep‚Ì‰E”¼•ª‚ªmat‚Ì‹ts—ñ
+		//sweepã®å³åŠåˆ†ãŒmatã®é€†è¡Œåˆ—
 		for (int i = 0; i < 4; i++)
 		{
 			for (int j = 0; j < 4; j++)
@@ -351,12 +351,12 @@ namespace MyMathUtility
 
 	void Complement(float& x1, float x2, float flame)
 	{
-		//‹——£‚ğo‚·
+		//è·é›¢ã‚’å‡ºã™
 		float distanceX = x2 - x1;
-		//‹——£‚ğflame‚ÅŠ„‚Á‚½’l
+		//è·é›¢ã‚’flameã§å‰²ã£ãŸå€¤
 		float dividedDistanceX = distanceX / flame;
 
-		//‹——£‚ğflame‚ÅŠ„‚Á‚½’l‚ğ‘«‚·
+		//è·é›¢ã‚’flameã§å‰²ã£ãŸå€¤ã‚’è¶³ã™
 		x1 += dividedDistanceX;
 	}
 
@@ -417,14 +417,14 @@ namespace MyMathUtility
 
 	float GetRand(float min, float max)
 	{
-		// —”¶¬Ší
+		// ä¹±æ•°ç”Ÿæˆå™¨
 		static std::random_device rd;
 		static std::default_random_engine eng(rd());
 
-		// •ª•z¶¬Ší
+		// åˆ†å¸ƒç”Ÿæˆå™¨
 		std::uniform_real_distribution<float> get_rand_uni_real(min, max);
 
-		// —”‚ğ¶¬
+		// ä¹±æ•°ã‚’ç”Ÿæˆ
 		return get_rand_uni_real(eng);
 	}
 
@@ -511,7 +511,7 @@ namespace KMyMath
 
 	float LenSegLineOfSeparateAxis(Vector3* sep, Vector3* e1, Vector3* e2, Vector3* e3)
 	{
-		// 3‚Â‚Ì“àÏ‚Ìâ‘Î’l‚Ì˜a‚Å“Š‰eü•ª’·‚ğŒvZ
+		// 3ã¤ã®å†…ç©ã®çµ¶å¯¾å€¤ã®å’Œã§æŠ•å½±ç·šåˆ†é•·ã‚’è¨ˆç®—
 		float r1 = fabs(sep->Dot(*e1));
 		float r2 = fabs(sep->Dot(*e2));
 		float r3 = e3 ? (fabs(sep->Dot(*e3))) : 0;

@@ -9,27 +9,27 @@ namespace KMyMath
 		float y;
 		float z;
 
-		// ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-		// ƒ[ƒƒxƒNƒgƒ‹
+		// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+		// ã‚¼ãƒ­ãƒ™ã‚¯ãƒˆãƒ«
 		Vector3();
 		Vector3(float x, float y, float z);
 
-		// ƒƒ“ƒoŠÖ”
-		// ƒmƒ‹ƒ€
+		// ãƒ¡ãƒ³ãƒé–¢æ•°
+		// ãƒãƒ«ãƒ 
 		float Length()const;
 		float LengthSq()const;
-		// ³‹K‰»
+		// æ­£è¦åŒ–
 		Vector3& Normalize();
-		// “àÏ
+		// å†…ç©
 		float Dot(const Vector3& v)const;
-		// ŠOÏ
+		// å¤–ç©
 		Vector3 Cross(const Vector3& v)const;
 
-		// ’P€‰‰ZqƒI[ƒo[ƒ[ƒh
+		// å˜é …æ¼”ç®—å­ã‚ªãƒ¼ãƒãƒ¼ãƒ­ãƒ¼ãƒ‰
 		Vector3 operator+()const;
 		Vector3 operator-()const;
 
-		// ‘ã“ü‰‰ZqƒI[ƒo[ƒ[ƒh
+		// ä»£å…¥æ¼”ç®—å­ã‚ªãƒ¼ãƒãƒ¼ãƒ­ãƒ¼ãƒ‰
 		Vector3& operator+=(const Vector3& v);
 		Vector3& operator-=(const Vector3& v);
 		Vector3& operator*=(const Vector3& v);

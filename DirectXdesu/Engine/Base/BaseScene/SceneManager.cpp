@@ -4,10 +4,10 @@
 
 void SceneManager::Update()
 {
-	// ƒV[ƒ“Ø‚è‘Ö‚¦
+	// ã‚·ãƒ¼ãƒ³åˆ‡ã‚Šæ›¿ãˆ
 	if (nextScene)
 	{
-		// ‹ŒƒV[ƒ“I—¹
+		// æ—§ã‚·ãƒ¼ãƒ³çµ‚äº†
 		if (scene)
 		{
 			scene->Final();
@@ -18,21 +18,21 @@ void SceneManager::Update()
 			SceneChange::GetInstance()->End();
 		}
 
-		// ƒV[ƒ“Ø‚è‘Ö‚¦
+		// ã‚·ãƒ¼ãƒ³åˆ‡ã‚Šæ›¿ãˆ
 		scene = nextScene;
 		nextScene = nullptr;
 
-		// ƒV[ƒ“ƒ}ƒl[ƒWƒƒ[‚ðƒZƒbƒg
+		// ã‚·ãƒ¼ãƒ³ãƒžãƒãƒ¼ã‚¸ãƒ£ãƒ¼ã‚’ã‚»ãƒƒãƒˆ
 		scene->SetSceneManager(this);
 
-		// ƒŠƒ\[ƒX“Ç‚Ýž‚Ý
+		// ãƒªã‚½ãƒ¼ã‚¹èª­ã¿è¾¼ã¿
 		scene->LoadResources();
 
-		// ƒV[ƒ“‰Šú‰»
+		// ã‚·ãƒ¼ãƒ³åˆæœŸåŒ–
 		scene->Init();
 	}
 
-	// ŽÀs’†‚ÌƒV[ƒ“XV
+	// å®Ÿè¡Œä¸­ã®ã‚·ãƒ¼ãƒ³æ›´æ–°
 	scene->Update();
 
 	SceneChange::GetInstance()->Update();
@@ -60,7 +60,7 @@ void SceneManager::ChangeScene(const std::string& sceneName)
 	assert(sceneFactory);
 	assert(nextScene == nullptr);
 
-	// ŽŸ‚ÌƒV[ƒ“‚ð¶¬
+	// æ¬¡ã®ã‚·ãƒ¼ãƒ³ã‚’ç”Ÿæˆ
 	nextScene = sceneFactory->CreateScene(sceneName);
 }
 

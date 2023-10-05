@@ -20,23 +20,23 @@ public:
 	void Final()override;
 
 private:
-	// ƒCƒ“ƒvƒbƒg
+	// ã‚¤ãƒ³ãƒ—ãƒƒãƒˆ
 	KInput* input = nullptr;
 
-	// ƒJƒƒ‰
+	// ã‚«ãƒ¡ãƒ©
 	std::unique_ptr<Camera> camera = nullptr;
 
-	// ƒpƒCƒvƒ‰ƒCƒ“
+	// ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³
 	std::unique_ptr<KGPlin> spritePipeline = nullptr;
 
-	// ƒVƒF[ƒ_[
+	// ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼
 	KShader spriteShader;
 
-	// ƒNƒŠƒAƒXƒvƒ‰ƒCƒg
+	// ã‚¯ãƒªã‚¢ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ
 	std::unique_ptr<Sprite> over = nullptr;
 	TextureData overTex;
 
-	// Ÿ‚ÌƒV[ƒ“‚Ö‚ÌƒL[
+	// æ¬¡ã®ã‚·ãƒ¼ãƒ³ã¸ã®ã‚­ãƒ¼
 	std::unique_ptr<Sprite> pushA = nullptr;
 	TextureData pushATex;
 };

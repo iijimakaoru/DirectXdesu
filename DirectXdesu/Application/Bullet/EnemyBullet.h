@@ -8,7 +8,7 @@ public:
 		const KMyMath::Vector3& pos, const KMyMath::Vector3& vec_, const KMyMath::Vector3& rot_, const float bulletSpeed);
 
 public:
-	// ‰Šú‰»
+	// åˆæœŸåŒ–
 	void Init(KModel* model_, KGPlin* pipeline_) override;
 };
 

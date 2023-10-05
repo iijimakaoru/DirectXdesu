@@ -7,69 +7,69 @@ public:
 
 public:
 	/// <summary>
-	/// ‰Šú‰»
+	/// åˆæœŸåŒ–
 	/// </summary>
 	/// <param name="model_"></param>
 	void Init(KModel* model_, KGPlin* pipeline_) override;
 
 	/// <summary>
-	/// XV
+	/// æ›´æ–°
 	/// </summary>
 	/// <param name="viewPro"></param>
 	/// <param name="cameraPos"></param>
 	void Update(ViewProjection* viewPro, const KMyMath::Vector3& cameraPos) override;
 
 	/// <summary>
-	/// •`‰æ
+	/// æç”»
 	/// </summary>
 	void Draw() override;
 
 	/// <summary>
-	/// UŒ‚
+	/// æ”»æ’ƒ
 	/// </summary>
 	void Attack() override;
 
 	/// <summary>
-	/// oŒ»
+	/// å‡ºç¾
 	/// </summary>
 	void Appear();
 
 private:
 	/// <summary>
-	/// ƒXƒ^[ƒgƒ|ƒWƒVƒ‡ƒ“
+	/// ã‚¹ã‚¿ãƒ¼ãƒˆãƒã‚¸ã‚·ãƒ§ãƒ³
 	/// </summary>
 	/// <param name="startPos_"></param>
 	void SetStartPos(const KMyMath::Vector3& startPos_);
 
 	/// <summary>
-	/// ƒGƒ“ƒhƒ|ƒWƒVƒ‡ƒ“
+	/// ã‚¨ãƒ³ãƒ‰ãƒã‚¸ã‚·ãƒ§ãƒ³
 	/// </summary>
 	/// <param name="endPos_"></param>
 	void SetEndPos(const KMyMath::Vector2& endPos_);
 
 	/// <summary>
-	/// ƒXƒs[ƒhƒZƒbƒg
+	/// ã‚¹ãƒ”ãƒ¼ãƒ‰ã‚»ãƒƒãƒˆ
 	/// </summary>
 	/// <param name="speed"></param>
 	void SetSpeed(const float& speed);
 
 private:
-	// ƒC[ƒWƒ“ƒOƒ^ƒCƒ}[
+	// ã‚¤ãƒ¼ã‚¸ãƒ³ã‚°ã‚¿ã‚¤ãƒãƒ¼
 	float easeTimer = 0;
 
-	// ãŒÀ
+	// ä¸Šé™
 	const float easeTime = 30;
 
-	// Å‰‚ÌƒXƒP[ƒ‹
+	// æœ€åˆã®ã‚¹ã‚±ãƒ¼ãƒ«
 	KMyMath::Vector3 startPos;
 
-	// ÅIƒXƒP[ƒ‹
+	// æœ€çµ‚ã‚¹ã‚±ãƒ¼ãƒ«
 	KMyMath::Vector2 endPos;
 
-	// oŒ»‰‰o’†‚©‚Ç‚¤‚©
+	// å‡ºç¾æ¼”å‡ºä¸­ã‹ã©ã†ã‹
 	bool isAppear = false;
 
-	// ƒXƒs[ƒh
+	// ã‚¹ãƒ”ãƒ¼ãƒ‰
 	float moveSpeed = 0;
 };
 

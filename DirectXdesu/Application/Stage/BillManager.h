@@ -10,34 +10,34 @@
 class BillManager
 {
 public:
-	// ‰Šú‰»
+	// åˆæœŸåŒ–
 	void Init();
 
-	// XV
+	// æ›´æ–°
 	void Update(ViewProjection* viewPro, const float& cameraZ);
 
-	// •`‰æ
+	// æç”»
 	void Draw();
 
-	// ƒrƒ‹ƒZƒbƒg
+	// ãƒ“ãƒ«ã‚»ãƒƒãƒˆ
 	void Set(const float& cameraZ);
 	void RightSet(const float cameraZ);
 	void LeftSet(const float cameraZ);
 
 private:
-	// ƒ‚ƒfƒ‹
+	// ãƒ¢ãƒ‡ãƒ«
 	std::unique_ptr<KModel> model = nullptr;
 
-	// ƒpƒCƒvƒ‰ƒCƒ“
+	// ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³
 	std::unique_ptr<KGPlin> objPipeline;
 
-	// ƒVƒF[ƒ_[
+	// ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼
 	KShader objShader;
 
-	// ƒrƒ‹‚P
+	// ãƒ“ãƒ«ï¼‘
 	std::list<std::unique_ptr<Bill1>> bill1s;
 
-	// ƒ^ƒCƒ}[
+	// ã‚¿ã‚¤ãƒãƒ¼
 	int32_t billtimer = 0;
 	const int32_t billtime = 120;
 };

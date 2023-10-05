@@ -35,32 +35,32 @@ private:
 	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
 
 public:
-	// ‰Šú‰»
+	// åˆæœŸåŒ–
 	void Init();
 
 	/// <summary>
-	/// ‰¹“Ç‚İ‚İ
+	/// éŸ³èª­ã¿è¾¼ã¿
 	/// </summary>
 	/// <param name="filename"></param>
 	/// <returns></returns>
 	SoundData SoundLoadWave(const char* filename);
 
 	/// <summary>
-	/// ‰¹íœ
+	/// éŸ³å‰Šé™¤
 	/// </summary>
 	/// <param name="soundData"></param>
 	void SoundUnLoad(SoundData* soundData);
 
 	/// <summary>
-	/// Ä¶
+	/// å†ç”Ÿ
 	/// </summary>
 	/// <param name="soundData"></param>
 	void SoundPlayWave(const SoundData& soundData);
 
-	// ƒQƒbƒ^[
+	// ã‚²ãƒƒã‚¿ãƒ¼
 	ComPtr<IXAudio2> GetxAudio() { return xAudio2; }
 
-	// ƒCƒ“ƒXƒ^ƒ“ƒX
+	// ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹
 	static Sound* GetInstance();
 
 private:

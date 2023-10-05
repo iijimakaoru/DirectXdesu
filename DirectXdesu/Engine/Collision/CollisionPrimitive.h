@@ -7,28 +7,28 @@
 
 struct Sphere
 {
-	// ’†SÀ•W
+	// ä¸­å¿ƒåº§æ¨™
 	DirectX::XMVECTOR center = { 0,0,0,1 };
-	// ”¼Œa
+	// åŠå¾„
 	float radius = 1.0f;
 };
 
 struct Plane
 {
-	// –@üƒxƒNƒgƒ‹
+	// æ³•ç·šãƒ™ã‚¯ãƒˆãƒ«
 	DirectX::XMVECTOR normal = { 0,1,0,0 };
-	// Œ´“_(0,0,0)‚©‚ç‚Ì‹——£
+	// åŸç‚¹(0,0,0)ã‹ã‚‰ã®è·é›¢
 	float distance = 0.0f;
 };
 
 class ColTriangle
 {
 public:
-	// ’¸“_À•W3‚Â
+	// é ‚ç‚¹åº§æ¨™3ã¤
 	DirectX::XMVECTOR p0;
 	DirectX::XMVECTOR p1;
 	DirectX::XMVECTOR p2;
-	// –@üƒxƒNƒgƒ‹
+	// æ³•ç·šãƒ™ã‚¯ãƒˆãƒ«
 	DirectX::XMVECTOR normal;
 
 	void ConputeNormal();
@@ -36,9 +36,9 @@ public:
 
 struct Ray
 {
-	// ‹“_À•W
+	// è¦–ç‚¹åº§æ¨™
 	DirectX::XMVECTOR start = { 0,0,0,1 };
-	// •ûŒü
+	// æ–¹å‘
 	DirectX::XMVECTOR dir = { 1,0,0,0 };
 };
 

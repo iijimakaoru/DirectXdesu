@@ -3,10 +3,10 @@
 
 void ImguiManager::Init()
 {
-    //ImGui‚ÌƒRƒ“ƒeƒLƒXƒg‚ğ¶¬
+    //ImGuiã®ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆã‚’ç”Ÿæˆ
     ImGui::CreateContext();
 
-    //ImGui‚ÌƒXƒ^ƒCƒ‹‚ğİ’è
+    //ImGuiã®ã‚¹ã‚¿ã‚¤ãƒ«ã‚’è¨­å®š
     ImGui::StyleColorsDark();
 
     ImGui_ImplWin32_Init(win->GetHWND());
@@ -50,11 +50,11 @@ void ImguiManager::Draw()
 {
     ID3D12GraphicsCommandList* commandlist = dx->GetCmdlist();
 
-    //ƒfƒXƒNƒŠƒvƒ^ƒq[ƒv‚Ì”z—ñ‚ğƒZƒbƒg‚·‚éƒRƒ}ƒ“ƒh
+    //ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿ãƒ’ãƒ¼ãƒ—ã®é…åˆ—ã‚’ã‚»ãƒƒãƒˆã™ã‚‹ã‚³ãƒãƒ³ãƒ‰
     ID3D12DescriptorHeap* ppHeaps[] = { dx->GetSRVDescriptorHeap()->GetHeap() };
     commandlist->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 
-    //•`‰æƒRƒ}ƒ“ƒh‚ğ”­s
+    //æç”»ã‚³ãƒãƒ³ãƒ‰ã‚’ç™ºè¡Œ
     ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), commandlist);
 }
 

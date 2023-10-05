@@ -7,14 +7,14 @@ void KObject3d::StaticInit()
 
 KObject3d* KObject3d::Create(KModel* model, KGPlin* pipeline_)
 {
-	// ƒCƒ“ƒXƒ^ƒ“ƒX¶¬
+	// ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ç”Ÿæˆ
 	KObject3d* object3d = new KObject3d();
 	if (object3d == nullptr)
 	{
 		return nullptr;
 	}
 
-	// ‰Šú‰»
+	// åˆæœŸåŒ–
 	object3d->Initialize();
 	object3d->LoadModel(model);
 	object3d->SetPipeline(pipeline_);
@@ -23,12 +23,12 @@ KObject3d* KObject3d::Create(KModel* model, KGPlin* pipeline_)
 }
 
 void KObject3d::Initialize() {
-	// ƒq[ƒvÝ’è
+	// ãƒ’ãƒ¼ãƒ—è¨­å®š
 	D3D12_HEAP_PROPERTIES heapProp{};
 	heapProp.Type = D3D12_HEAP_TYPE_UPLOAD;
 
-	// ’è”ƒoƒbƒtƒ@B1
-	// ƒŠƒ\[ƒXÝ’è
+	// å®šæ•°ãƒãƒƒãƒ•ã‚¡B1
+	// ãƒªã‚½ãƒ¼ã‚¹è¨­å®š
 	D3D12_RESOURCE_DESC b1ResourceDesc{};
 	b1ResourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
 	b1ResourceDesc.Width = (sizeof(ConstBufferDataB1) + 0xff) & ~0xff;
@@ -38,7 +38,7 @@ void KObject3d::Initialize() {
 	b1ResourceDesc.SampleDesc.Count = 1;
 	b1ResourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 
-	// ’è”ƒoƒbƒtƒ@‚Ì¶¬
+	// å®šæ•°ãƒãƒƒãƒ•ã‚¡ã®ç”Ÿæˆ
 	result = KDirectXCommon::GetInstance()->GetDev()->CreateCommittedResource(
 		&heapProp,
 		D3D12_HEAP_FLAG_NONE,
@@ -48,8 +48,8 @@ void KObject3d::Initialize() {
 		IID_PPV_ARGS(&constBuffB1));
 	assert(SUCCEEDED(result));
 
-	// ’è”ƒoƒbƒtƒ@B0
-	// ƒŠƒ\[ƒXÝ’è
+	// å®šæ•°ãƒãƒƒãƒ•ã‚¡B0
+	// ãƒªã‚½ãƒ¼ã‚¹è¨­å®š
 	D3D12_RESOURCE_DESC b0ResourceDesc{};
 	b0ResourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
 	b0ResourceDesc.Width = (sizeof(ConstBufferDataB0) + 0xff) & ~0xff;
@@ -59,7 +59,7 @@ void KObject3d::Initialize() {
 	b0ResourceDesc.SampleDesc.Count = 1;
 	b0ResourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 
-	// ’è”ƒoƒbƒtƒ@‚Ì¶¬
+	// å®šæ•°ãƒãƒƒãƒ•ã‚¡ã®ç”Ÿæˆ
 	result = KDirectXCommon::GetInstance()->GetDev()->CreateCommittedResource(
 		&heapProp,
 		D3D12_HEAP_FLAG_NONE,
@@ -82,17 +82,17 @@ void KObject3d::SetPipeline(KGPlin* pipeline_)
 
 void KObject3d::TransUpdate()
 {
-	// ƒ}ƒgƒŠƒbƒNƒX
+	// ãƒžãƒˆãƒªãƒƒã‚¯ã‚¹
 	KMyMath::Matrix4 matScale, matRot, matTrans;
 	matScale = matRot = matTrans = MyMathUtility::MakeIdentity();
 
-	// eƒIƒuƒWƒFƒNƒg—v‘f
+	// è¦ªã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆè¦ç´ 
 	matScale = MyMathUtility::MakeScaling(transform.scale);
 	matRot = MyMathUtility::MakeRotation({ DirectX::XMConvertToRadians(transform.rot.x),
 		DirectX::XMConvertToRadians(transform.rot.y),DirectX::XMConvertToRadians(transform.rot.z) });
 	matTrans = MyMathUtility::MakeTranslation(transform.pos);
 
-	// s—ñ‰Šú‰»
+	// è¡Œåˆ—åˆæœŸåŒ–
 	transform.matWorld = MyMathUtility::MakeIdentity();
 	// 
 	transform.matWorld *= MyMathUtility::MakeWorld(matTrans, matScale, matRot);
@@ -105,7 +105,7 @@ void KObject3d::TransUpdate()
 
 void KObject3d::MatUpdate(ViewProjection* viewProjection)
 {
-	// ’è”ƒoƒbƒtƒ@‚Ìƒ}ƒbƒsƒ“ƒO
+	// å®šæ•°ãƒãƒƒãƒ•ã‚¡ã®ãƒžãƒƒãƒ”ãƒ³ã‚°
 	// B1
 	ConstBufferDataB1* constMap1 = nullptr;
 	result = constBuffB1->Map(0, nullptr, (void**)&constMap1);
@@ -135,7 +135,7 @@ void KObject3d::Draw()
 	pipeline->Setting();
 	pipeline->Update(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-	// ’è”ƒoƒbƒtƒ@ƒrƒ…[‚ðƒZƒbƒg
+	// å®šæ•°ãƒãƒƒãƒ•ã‚¡ãƒ“ãƒ¥ãƒ¼ã‚’ã‚»ãƒƒãƒˆ
 	KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootConstantBufferView(1, constBuffB0->GetGPUVirtualAddress());
 	KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootConstantBufferView(2, constBuffB1->GetGPUVirtualAddress());
 
@@ -147,7 +147,7 @@ void KObject3d::Draw(TextureData& texData)
 	pipeline->Setting();
 	pipeline->Update(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-	// ’è”ƒoƒbƒtƒ@ƒrƒ…[‚ðƒZƒbƒg
+	// å®šæ•°ãƒãƒƒãƒ•ã‚¡ãƒ“ãƒ¥ãƒ¼ã‚’ã‚»ãƒƒãƒˆ
 	KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootConstantBufferView(1, constBuffB0->GetGPUVirtualAddress());
 	KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootConstantBufferView(2, constBuffB1->GetGPUVirtualAddress());
 

@@ -8,28 +8,28 @@ class SceneManager;
 
 class BaseScene
 {
-public: // ƒƒ“ƒoŠÖ”
+public: // ãƒ¡ãƒ³ãƒé–¢æ•°
 	virtual ~BaseScene() = default;
 
-	// ‰Šú‰»
+	// åˆæœŸåŒ–
 	virtual void Init();
 
-	// XV
+	// æ›´æ–°
 	virtual void Update() = 0;
 
-	// •`‰æ
+	// æç”»
 	virtual void ObjDraw() = 0;
 
 	virtual void SpriteDraw() = 0;
 
-	// I—¹
+	// çµ‚äº†
 	virtual void Final() = 0;
 
-	// ƒŠƒ\[ƒX“Ç‚İ‚İ
+	// ãƒªã‚½ãƒ¼ã‚¹èª­ã¿è¾¼ã¿
 	virtual void LoadResources() = 0;
 	
 	/// <summary>
-	/// ƒV[ƒ“ƒ}ƒl[ƒWƒƒ[ƒZƒbƒg
+	/// ã‚·ãƒ¼ãƒ³ãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼ã‚»ãƒƒãƒˆ
 	/// </summary>
 	/// <param name="sceneManager_"></param>
 	virtual void SetSceneManager(SceneManager* sceneManager_)
@@ -38,7 +38,7 @@ public: // ƒƒ“ƒoŠÖ”
 	}
 
 protected:
-	// ƒV[ƒ“ƒ}ƒl[ƒWƒƒ[‚ğØ‚è‚Ä‚­‚é
+	// ã‚·ãƒ¼ãƒ³ãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼ã‚’å€Ÿã‚Šã¦ãã‚‹
 	SceneManager* sceneManager = nullptr;
 
 	SceneChange* sceneChange = nullptr;

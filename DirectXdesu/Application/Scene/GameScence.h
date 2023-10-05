@@ -56,58 +56,58 @@ public:
 	void Final()override;
 
 private:
-	// Õ“Ë”»’è
+	// è¡çªåˆ¤å®š
 	void CheckAllCollisions();
 
-	// “G”­¶ƒf[ƒ^‚Ì“Ç‚İ‚İ
+	// æ•µç™ºç”Ÿãƒ‡ãƒ¼ã‚¿ã®èª­ã¿è¾¼ã¿
 	void LoadEnemyPopData();
 
-	// “G”­¶ƒRƒ}ƒ“ƒh‚ÌXV
+	// æ•µç™ºç”Ÿã‚³ãƒãƒ³ãƒ‰ã®æ›´æ–°
 	void UpdateEnemyPopCommands();
 
-	// ƒ{ƒXƒoƒgƒ‹ŠJn
+	// ãƒœã‚¹ãƒãƒˆãƒ«é–‹å§‹
 	void BossBattleStart();
 
 private:
-	// ƒCƒ“ƒvƒbƒg
+	// ã‚¤ãƒ³ãƒ—ãƒƒãƒˆ
 	KInput* input = nullptr;
 
-	// ƒJƒƒ‰
+	// ã‚«ãƒ¡ãƒ©
 	std::unique_ptr<RailCamera> camera = nullptr;
 
-	// ƒpƒCƒvƒ‰ƒCƒ“
+	// ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³
 	std::unique_ptr<KGPlin> objPipeline;
 	std::unique_ptr<KGPlin> spritePipeline;
 	std::unique_ptr<KGPlin> fbxPipeline;
 
-	// ƒVƒF[ƒ_[
+	// ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼
 	KShader objShader;
 	KShader spriteShader;
 	KShader fbxShader;
 
-	// ƒTƒEƒ“ƒh
+	// ã‚µã‚¦ãƒ³ãƒ‰
 	SoundData soundData1;
 	SoundData soundData2;
 	SoundData soundData3;
 
-	// ƒvƒŒƒCƒ„[
+	// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼
 	std::unique_ptr<Player> player = nullptr;
 	std::unique_ptr<KModel> playerModel;
 
-	// ƒvƒŒƒCƒ„[‚Ì’eƒ‚ƒfƒ‹
+	// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®å¼¾ãƒ¢ãƒ‡ãƒ«
 	std::unique_ptr<KModel> playersBulletModel = nullptr;
 
-	// G‹›
+	// é›‘é­š
 	std::list<std::unique_ptr<MobEnemy>> mobEnemys;
 	std::unique_ptr<KModel> mobEnemysModel;
 
-	// “G‚Ì’eƒ‚ƒfƒ‹
+	// æ•µã®å¼¾ãƒ¢ãƒ‡ãƒ«
 	std::unique_ptr<KModel> enemysBulletModel = nullptr;
 
-	// ŠÈˆÕ’n–Ê
+	// ç°¡æ˜“åœ°é¢
 	std::unique_ptr<Ground> ground = nullptr;
 
-	// “G”­¶ƒRƒ}ƒ“ƒh
+	// æ•µç™ºç”Ÿã‚³ãƒãƒ³ãƒ‰
 	std::stringstream enemyPopCommands;
 	bool isStand = false;
 	int32_t waitTimer = 0;
@@ -115,37 +115,37 @@ private:
 	TextureData textureData;
 	TextureData textureData2;
 
-	// ƒ{ƒXƒoƒgƒ‹
+	// ãƒœã‚¹ãƒãƒˆãƒ«
 	std::unique_ptr<BossEnemy> boss = nullptr;
 
-	// “oêŒx
+	// ç™»å ´è­¦å‘Š
 	std::unique_ptr<Warning> bossWarning = nullptr;
 	bool isBossBattle = false;
 
-	// ƒoƒŒƒbƒgƒ}ƒl[ƒWƒƒ[
+	// ãƒãƒ¬ãƒƒãƒˆãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼
 	BulletManager* bulletManager = nullptr;
 
-	// ƒXƒJƒCƒ{ƒbƒNƒX
+	// ã‚¹ã‚«ã‚¤ãƒœãƒƒã‚¯ã‚¹
 	std::unique_ptr<SkyBox> skyBox = nullptr;
 	std::unique_ptr<KModel> skyBoxModel = nullptr;
 
-	// ƒp[ƒeƒBƒNƒ‹
+	// ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«
 	ParticleManager* particleManager = nullptr;
 	ObjParticleManager* objParticleManager = nullptr;
 
-	// •Ê‚ÌƒV[ƒ“‚Ö‚ÌˆÚsƒ^ƒCƒ}[
-	// ƒQ[ƒ€ƒNƒŠƒA
+	// åˆ¥ã®ã‚·ãƒ¼ãƒ³ã¸ã®ç§»è¡Œã‚¿ã‚¤ãƒãƒ¼
+	// ã‚²ãƒ¼ãƒ ã‚¯ãƒªã‚¢
 	float goClearSceneTime = 120;
 	float goClearSceneTimer = 0;
 
-	// ƒQ[ƒ€ƒI[ƒo[
+	// ã‚²ãƒ¼ãƒ ã‚ªãƒ¼ãƒãƒ¼
 	float goOverSceneTime = 120;
 	float goOverSceneTimer = 0;
 
-	// ƒrƒ‹ƒ}ƒl[ƒWƒƒ[
+	// ãƒ“ãƒ«ãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼
 	std::unique_ptr<BillManager> billManager;
 
-	// €–SƒJƒƒ‰ŒÄ‚Ño‚µƒtƒ‰ƒO
+	// æ­»äº¡ã‚«ãƒ¡ãƒ©å‘¼ã³å‡ºã—ãƒ•ãƒ©ã‚°
 	bool isCallDeadCamera = false;
 };
 

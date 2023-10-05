@@ -8,30 +8,30 @@ namespace KMyMath
 		float x;
 		float y;
 
-		// ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+		// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 		Vector2();
 		Vector2(float x, float y);
 		~Vector2();
 
-		// ƒƒ“ƒoŠÖ”
-		float Length()const; // ƒmƒ‹ƒ€
+		// ãƒ¡ãƒ³ãƒé–¢æ•°
+		float Length()const; // ãƒãƒ«ãƒ 
 		float LengthSq()const;
-		Vector2& normalize(); // ³‹K‰»
-		float dot(const Vector2& v)const; // “àÏ
-		float cross(const Vector2& v)const; // ŠOÏ
+		Vector2& normalize(); // æ­£è¦åŒ–
+		float dot(const Vector2& v)const; // å†…ç©
+		float cross(const Vector2& v)const; // å¤–ç©
 
-		// ’P€‰‰ZqƒI[ƒo[ƒ[ƒh
+		// å˜é …æ¼”ç®—å­ã‚ªãƒ¼ãƒãƒ¼ãƒ­ãƒ¼ãƒ‰
 		Vector2 operator+() const;
 		Vector2 operator-() const;
 
-		// ‘ã“ü‰‰ZqƒI[ƒo[ƒ[ƒh
+		// ä»£å…¥æ¼”ç®—å­ã‚ªãƒ¼ãƒãƒ¼ãƒ­ãƒ¼ãƒ‰
 		Vector2& operator+=(const Vector2& v);
 		Vector2& operator-=(const Vector2& v);
 		Vector2& operator*=(float s);
 		Vector2& operator/=(float s);
 	};
 
-	// 2€‰‰Zq
+	// 2é …æ¼”ç®—å­
 	const Vector2 operator+(const Vector2& v1, const Vector2& v2);
 	const Vector2 operator-(const Vector2& v1, const Vector2& v2);
 	const Vector2 operator*(const Vector2& v, float s);

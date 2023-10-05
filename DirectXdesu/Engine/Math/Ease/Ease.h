@@ -3,12 +3,12 @@
 
 namespace MyEase
 {
-	// ï‚ä‘
+	// Ë£úÈñì
 	const float Lerp(const float start, const float end, const float time);
 	const KMyMath::Vector2 Lerp2D(const KMyMath::Vector2& start, const KMyMath::Vector2& end, const float time);
 	const KMyMath::Vector3 Lerp3D(const KMyMath::Vector3& start, const KMyMath::Vector3& end, const float time);
 	
-	// ìÒèÊ
+	// ‰∫å‰πó
 	float InQuadFloat(const float start, const float end, const float time);
 	float OutQuadFloat(const float start, const float end, const float time);
 	float InOutQuadFloat(const float start, const float end, const float time);
@@ -23,7 +23,7 @@ namespace MyEase
 	KMyMath::Vector3 OutQuadVec3(const KMyMath::Vector3& start, const KMyMath::Vector3& end, const float time);
 	KMyMath::Vector3 InOutQuadVec3(const KMyMath::Vector3& start, const KMyMath::Vector3& end, const float time);
 
-	// éOèÊ
+	// ‰∏â‰πó
 	float InCubicFloat(const float start, const float end, const float time);
 	float OutCubicFloat(const float start, const float end, const float time);
 	float InOutCubicFloat(const float start, const float end, const float time);
@@ -38,7 +38,7 @@ namespace MyEase
 	KMyMath::Vector3 OutCubicVec3(const KMyMath::Vector3& start, const KMyMath::Vector3& end, const float time);
 	KMyMath::Vector3 InOutCubicVec3(const KMyMath::Vector3& start, const KMyMath::Vector3& end, const float time);
 
-	// élèÊ
+	// Âõõ‰πó
 	float InQuartFloat(const float start, const float end, const float time);
 	float OutQuartFloat(const float start, const float end, const float time);
 	float InOutQuartFloat(const float start, const float end, const float time);
@@ -53,7 +53,7 @@ namespace MyEase
 	KMyMath::Vector3 OutQuartVec3(const KMyMath::Vector3& start, const KMyMath::Vector3& end, const float time);
 	KMyMath::Vector3 InOutQuartVec3(const KMyMath::Vector3& start, const KMyMath::Vector3& end, const float time);
 
-	// å‹èÊ
+	// ‰∫î‰πó
 	float InQuintFloat(const float start, const float end, const float time);
 	float OutQuintFloat(const float start, const float end, const float time);
 	float InOutQuintFloat(const float start, const float end, const float time);

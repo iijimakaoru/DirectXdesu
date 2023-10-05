@@ -3,10 +3,10 @@
 
 void Reticle2D::Init()
 {
-	// ƒeƒNƒXƒ`ƒƒ¶¬
+	// ãƒ†ã‚¯ã‚¹ãƒãƒ£ç”Ÿæˆ
 	texData = TextureManager::Load("Resources/texture/reticle.png");
 
-	// ƒpƒCƒvƒ‰ƒCƒ“¶¬
+	// ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³ç”Ÿæˆ
 	shader.Init(L"Resources/Shader/SpriteVS.hlsl", L"Resources/Shader/SpritePS.hlsl");
 	pipeline.reset(KGPlin::Create(shader, "Sprite"));
 
@@ -22,7 +22,7 @@ void Reticle2D::Update(ViewProjection* viewPro, KMyMath::Vector3 reticle3dPos)
 	float width = static_cast<float>(KWinApp::GetInstance()->GetWindowSizeW());
 	float height = static_cast<float>(KWinApp::GetInstance()->GetWindowSizeH());
 
-	// ƒrƒ…[ƒ|[ƒgs—ñ
+	// ãƒ“ãƒ¥ãƒ¼ãƒãƒ¼ãƒˆè¡Œåˆ—
 	DirectX::XMMATRIX matViewport = 
 	{
 		{width / 2, 0, 0, 0 },

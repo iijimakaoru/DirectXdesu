@@ -3,29 +3,29 @@
 #include <fbxsdk.h>
 #include "TextureManager.h"
 
-// ƒm[ƒh
+// ãƒãƒ¼ãƒ‰
 struct Node
 {
-	// –¼‘O
+	// åå‰
 	std::string name;
-	// ƒ[ƒJƒ‹ƒXƒP[ƒ‹
+	// ãƒ­ãƒ¼ã‚«ãƒ«ã‚¹ã‚±ãƒ¼ãƒ«
 	KMyMath::Vector4 scaling = { 1,1,1,0 };
-	// ƒ[ƒJƒ‹‰ñ“]Šp
+	// ãƒ­ãƒ¼ã‚«ãƒ«å›è»¢è§’
 	KMyMath::Vector4 rotation = { 0,0,0,0 };
-	// ƒ[ƒJƒ‹ˆÚ“®
+	// ãƒ­ãƒ¼ã‚«ãƒ«ç§»å‹•
 	KMyMath::Vector4 translation = { 0,0,0,1 };
-	// ƒ[ƒJƒ‹•ÏŒ`s—ñ
+	// ãƒ­ãƒ¼ã‚«ãƒ«å¤‰å½¢è¡Œåˆ—
 	KMyMath::Matrix4 transform;
-	// ƒOƒ[ƒoƒ‹•ÏŒ`s—ñ
+	// ã‚°ãƒ­ãƒ¼ãƒãƒ«å¤‰å½¢è¡Œåˆ—
 	KMyMath::Matrix4 globalTransform;
-	// eƒm[ƒh
+	// è¦ªãƒãƒ¼ãƒ‰
 	Node* parent = nullptr;
 };
 
 class FbxModel
 {
 public:
-	// ƒtƒŒƒ“ƒhƒNƒ‰ƒX
+	// ãƒ•ãƒ¬ãƒ³ãƒ‰ã‚¯ãƒ©ã‚¹
 	friend class FbxLoader;
 
 	static const int MAX_BONE_INDICES = 4;
@@ -33,11 +33,11 @@ public:
 	struct Bone
 	{
 		std::string name;
-		// ‰Šúp¨‚Ì‹ts—ñ
+		// åˆæœŸå§¿å‹¢ã®é€†è¡Œåˆ—
 		KMyMath::Matrix4 invInitialPose;
-		// ƒNƒ‰ƒXƒ^[
+		// ã‚¯ãƒ©ã‚¹ã‚¿ãƒ¼
 		FbxCluster* fbxCluster;
-		// ƒRƒ“ƒgƒ‰ƒNƒ^
+		// ã‚³ãƒ³ãƒˆãƒ©ã‚¯ã‚¿
 		Bone(const std::string& name_)
 		{
 			name = name_;
@@ -46,41 +46,41 @@ public:
 
 	struct VertexPosNormalUVSkin
 	{
-		KMyMath::Vector3 pos;	 // xyzÀ•W
-		KMyMath::Vector3 normal; // –@üƒxƒNƒgƒ‹
-		KMyMath::Vector2 uv;	 // uvÀ•W
+		KMyMath::Vector3 pos;	 // xyzåº§æ¨™
+		KMyMath::Vector3 normal; // æ³•ç·šãƒ™ã‚¯ãƒˆãƒ«
+		KMyMath::Vector2 uv;	 // uvåº§æ¨™
 		UINT boneIndex[MAX_BONE_INDICES];
 		float boneWeight[MAX_BONE_INDICES];
 	};
 
-private: // ƒGƒCƒŠƒAƒX
-	// Microsoft::WRL::‚ğÈ—ª
+private: // ã‚¨ã‚¤ãƒªã‚¢ã‚¹
+	// Microsoft::WRL::ã‚’çœç•¥
 	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
-	// DirectX::È—ª
+	// DirectX::çœç•¥
 	using XMFLOAT2 = DirectX::XMFLOAT2;
 	using XMFLOAT3 = DirectX::XMFLOAT3;
 	using XMFLOAT4 = DirectX::XMFLOAT4;
 	using XMMATRIX = DirectX::XMMATRIX;
 	using TexMetadata = DirectX::TexMetadata;
 	using ScratchImage = DirectX::ScratchImage;
-	// std::È—ª
+	// std::çœç•¥
 	using string = std::string;
 	template <class T> using vector = std::vector<T>;
 
 private:
-	// ƒ‚ƒfƒ‹–¼
+	// ãƒ¢ãƒ‡ãƒ«å
 	std::string name;
-	// ƒm[ƒh”z—ñ
+	// ãƒãƒ¼ãƒ‰é…åˆ—
 	std::vector<Node> nodes;
-	// ƒƒbƒVƒ…‚ğ‚Âƒm[ƒh
+	// ãƒ¡ãƒƒã‚·ãƒ¥ã‚’æŒã¤ãƒãƒ¼ãƒ‰
 	Node* meshNode = nullptr;
-	// ’¸“_ƒf[ƒ^”z—ñ
+	// é ‚ç‚¹ãƒ‡ãƒ¼ã‚¿é…åˆ—
 	std::vector<VertexPosNormalUVSkin> vertices;
-	// ’¸“_ƒCƒ“ƒfƒbƒNƒX”z—ñ
+	// é ‚ç‚¹ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹é…åˆ—
 	std::vector<unsigned short> indices;
-	// ƒAƒ“ƒrƒGƒ“ƒgŒW”
+	// ã‚¢ãƒ³ãƒ“ã‚¨ãƒ³ãƒˆä¿‚æ•°
 	DirectX::XMFLOAT3 ambient = { 1,1,1 };
-	// ƒfƒBƒt[ƒYŒW”
+	// ãƒ‡ã‚£ãƒ•ãƒ¼ã‚ºä¿‚æ•°
 	DirectX::XMFLOAT3 diffuse = { 1,1,1 };
 
 	std::unique_ptr<KVertex> vertexs = std::make_unique<KVertex>();
@@ -94,24 +94,24 @@ private:
 
 	ComPtr<ID3D12Resource> indexBuff;
 
-	// ƒeƒNƒXƒ`ƒƒƒoƒbƒtƒ@‚Ì¶¬
+	// ãƒ†ã‚¯ã‚¹ãƒãƒ£ãƒãƒƒãƒ•ã‚¡ã®ç”Ÿæˆ
 	ComPtr<ID3D12Resource> texBuff;
 
-	// ƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@ƒrƒ…[
+	// ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ãƒãƒƒãƒ•ã‚¡ãƒ“ãƒ¥ãƒ¼
 	D3D12_INDEX_BUFFER_VIEW ibView{};
-	// ’¸“_ƒoƒbƒtƒ@ƒrƒ…[‚Ìì¬
+	// é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ãƒ“ãƒ¥ãƒ¼ã®ä½œæˆ
 	D3D12_VERTEX_BUFFER_VIEW vbView{};
 
-	// İ’è‚ğŒ³‚ÉSRV—pƒfƒXƒNƒŠƒvƒ^ƒq[ƒv‚ğ¶¬
+	// è¨­å®šã‚’å…ƒã«SRVç”¨ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿ãƒ’ãƒ¼ãƒ—ã‚’ç”Ÿæˆ
 	ComPtr<ID3D12DescriptorHeap> srvHeap = nullptr;
 
 	std::vector<Bone> bones;
 
-	// FBXƒV[ƒ“
+	// FBXã‚·ãƒ¼ãƒ³
 	FbxScene* fbxScene = nullptr;
 
-public: // ŠÖ”
-	// ƒƒ“ƒo
+public: // é–¢æ•°
+	// ãƒ¡ãƒ³ãƒ
 	void CreateBuffer();
 	void LoadTexture();
 	void Draw();
@@ -120,7 +120,7 @@ public: // ŠÖ”
 
 	FbxScene* GetFbxScene() { return fbxScene; }
 
-	// ƒQƒbƒ^[
+	// ã‚²ãƒƒã‚¿ãƒ¼
 	const KMyMath::Matrix4& GetModelTransform() { return meshNode->globalTransform; }
 	std::vector<Bone>& GetBones() { return bones; }
 };

@@ -6,13 +6,13 @@
 
 void MobEnemy::Init(KModel* model_, KGPlin* pipeline_)
 {
-	// ƒ‚ƒfƒ‹¶¬
+	// ãƒ¢ãƒ‡ãƒ«ç”Ÿæˆ
 	model = model_;
 
-	// ƒpƒCƒvƒ‰ƒCƒ“
+	// ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³
 	pipeline = pipeline_;
 
-	// ƒIƒuƒWƒFƒNƒg¶¬
+	// ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆç”Ÿæˆ
 	object3d.reset(KObject3d::Create(model, pipeline));
 
 	isDead = false;
@@ -41,37 +41,37 @@ void MobEnemy::Attack()
 {
 	assert(player);
 
-	// ƒN[ƒ‹ƒ^ƒCƒ€Œo‰ß
+	// ã‚¯ãƒ¼ãƒ«ã‚¿ã‚¤ãƒ çµŒéŽ
 	coolTimer++;
 
 	if (coolTimer >= max(coolTimer, coolTime))
 	{
-		// ’e‚Ì‘¬“x
+		// å¼¾ã®é€Ÿåº¦
 		const float kBulletSpeed = 1.0f;
 
-		// Ž©ƒLƒƒƒ‰‚Ìƒ[ƒ‹ƒhÀ•W
+		// è‡ªã‚­ãƒ£ãƒ©ã®ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™
 		KMyMath::Vector3 pPos = player->GetWorldPos();
 
-		// ƒ[ƒ‹ƒhÀ•W
+		// ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™
 		KMyMath::Vector3 ePos = GetWorldPos();
 
-		// ·•ªƒxƒNƒgƒ‹
+		// å·®åˆ†ãƒ™ã‚¯ãƒˆãƒ«
 		KMyMath::Vector3 vec = pPos - ePos;
 
-		// ’e¶¬
+		// å¼¾ç”Ÿæˆ
 		BulletManager::GetInstance()->EnemyBulletShot(ePos, vec, { 1,1,1 }, kBulletSpeed);
 
-		// ƒN[ƒ‹ƒ^ƒCƒ€‰Šú‰»
+		// ã‚¯ãƒ¼ãƒ«ã‚¿ã‚¤ãƒ åˆæœŸåŒ–
 		coolTimer = 0;
 	}
 }
 
 const KMyMath::Vector3 MobEnemy::GetWorldPos() const
 {
-	// ƒ[ƒ‹ƒhÀ•WŠi”[•Ï”
+	// ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™æ ¼ç´å¤‰æ•°
 	KMyMath::Vector3 result;
 
-	// ƒ[ƒ‹ƒhs—ñ‚Ì•½sˆÚ“®¬•ªŽæ“¾
+	// ãƒ¯ãƒ¼ãƒ«ãƒ‰è¡Œåˆ—ã®å¹³è¡Œç§»å‹•æˆåˆ†å–å¾—
 	result.x = object3d->transform.matWorld.m[3][0];
 	result.y = object3d->transform.matWorld.m[3][1];
 	result.z = object3d->transform.matWorld.m[3][2];

@@ -10,33 +10,33 @@ public:
 	static SkyBox* Create(KModel* model_, KGPlin* objPipeline_, const float posZ);
 
 public:
-	// ‰Šú‰»
+	// åˆæœŸåŒ–
 	void Init(KModel* model_, KGPlin* objPipeline_, const float posZ);
 
 	/// <summary>
-	/// XV
+	/// æ›´æ–°
 	/// </summary>
 	/// <param name="camera_"></param>
 	void Update(ViewProjection* viewPro);
 
-	// •`‰æ
-	// ƒIƒuƒWƒFƒNƒg
+	// æç”»
+	// ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
 	void ObjDraw();
 
 	/// <summary>
-	/// zÀ•WƒZƒbƒ^[
+	/// zåº§æ¨™ã‚»ãƒƒã‚¿ãƒ¼
 	/// </summary>
 	/// <param name="posZ"></param>
 	void SetPosZ(const float posZ);
 
 private:
-	// ƒIƒuƒWƒFƒNƒg
+	// ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
 	std::unique_ptr<KObject3d> object3d;
 
-	// ƒ‚ƒfƒ‹
+	// ãƒ¢ãƒ‡ãƒ«
 	KModel* model = nullptr;
 
-	// ƒpƒCƒvƒ‰ƒCƒ“
+	// ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³
 	KGPlin* objPipeline;
 };
 

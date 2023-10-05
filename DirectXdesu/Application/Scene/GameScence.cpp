@@ -27,11 +27,11 @@ GameScence::~GameScence()
 
 void GameScence::LoadResources()
 {
-	// ƒeƒNƒXƒ`ƒƒ
+	// ãƒ†ã‚¯ã‚¹ãƒãƒ£
 	textureData = TextureManager::Load("Resources/texture/mario.jpg");
 	textureData2 = TextureManager::Load("Resources/texture/kariPlayerColor.png");
 
-	// ƒ‚ƒfƒ‹
+	// ãƒ¢ãƒ‡ãƒ«
 	playerModel = std::make_unique<MtlObj>("BattleShip");
 	playerModel->CreateModel();
 	mobEnemysModel = std::make_unique<MtlObj>("boss_model");
@@ -41,12 +41,12 @@ void GameScence::LoadResources()
 	skyBoxModel = std::make_unique<MtlObj>("SkyBox");
 	skyBoxModel->CreateModel();
 
-	// ƒTƒEƒ“ƒh
+	// ã‚µã‚¦ãƒ³ãƒ‰
 	soundData1 = Sound::GetInstance()->SoundLoadWave("Resources/Sound/Alarm01.wav");
 	soundData2 = Sound::GetInstance()->SoundLoadWave("Resources/Sound/Alarm02.wav");
 	soundData3 = Sound::GetInstance()->SoundLoadWave("Resources/Sound/Alarm03.wav");
 
-	// ƒpƒCƒvƒ‰ƒCƒ“
+	// ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³
 	// Obj
 	objShader.Init(L"Resources/Shader/ObjVS.hlsl", L"Resources/Shader/ObjPS.hlsl");
 	objPipeline.reset(KGPlin::Create(objShader, "Obj"));
@@ -64,37 +64,37 @@ void GameScence::Init()
 {
 	BaseScene::Init();
 
-	// ƒCƒ“ƒXƒ^ƒ“ƒX
+	// ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹
 	input = KInput::GetInstance();
 
-	// ƒvƒŒƒCƒ„[¶¬
+	// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ç”Ÿæˆ
 	player.reset(Player::Create(playerModel.get(), objPipeline.get(), 10, spritePipeline.get()));
 
-	// ƒJƒƒ‰¶¬
+	// ã‚«ãƒ¡ãƒ©ç”Ÿæˆ
 	camera = std::make_unique<RailCamera>();
 
 	sceneManager = SceneManager::GetInstance();
 
-	// ƒJƒƒ‰‰Šú‰»
+	// ã‚«ãƒ¡ãƒ©åˆæœŸåŒ–
 	camera->Init(player.get());
 
-	// eqŠÖŒW
+	// è¦ªå­é–¢ä¿‚
 	player->SetParent(&camera->GetTransform());
 
-	// G‹›“GoŒ»ƒpƒ^[ƒ““Ç‚İ‚İ
+	// é›‘é­šæ•µå‡ºç¾ãƒ‘ã‚¿ãƒ¼ãƒ³èª­ã¿è¾¼ã¿
 	LoadEnemyPopData();
 
-	// ’n–Ê
+	// åœ°é¢
 	ground = std::make_unique<Ground>();
 	ground->Init();
 
-	// ƒXƒJƒCƒ{ƒbƒNƒX
+	// ã‚¹ã‚«ã‚¤ãƒœãƒƒã‚¯ã‚¹
 	skyBox.reset(SkyBox::Create(skyBoxModel.get(), objPipeline.get(), player->GetWorldPos().z));
 
 	bulletManager = BulletManager::GetInstance();
 	bulletManager->Init(playersBulletModel.get(), objPipeline.get());
 
-	// ƒp[ƒeƒBƒNƒ‹
+	// ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«
 	particleManager = ParticleManager::GetInstance();
 	particleManager->Init();
 
@@ -109,16 +109,16 @@ void GameScence::Init()
 
 void GameScence::Update()
 {
-	// ƒ{ƒXƒoƒgƒ‹ŠJn”»’è
+	// ãƒœã‚¹ãƒãƒˆãƒ«é–‹å§‹åˆ¤å®š
 	BossBattleStart();
 
-	// “GoŒ»
+	// æ•µå‡ºç¾
 	UpdateEnemyPopCommands();
 
-	// “–‚½‚è”»’è
+	// å½“ãŸã‚Šåˆ¤å®š
 	CheckAllCollisions();
 
-	// ƒQ[ƒ€ƒNƒŠƒAƒV[ƒ“‚Ö‚ÌˆÚ“®
+	// ã‚²ãƒ¼ãƒ ã‚¯ãƒªã‚¢ã‚·ãƒ¼ãƒ³ã¸ã®ç§»å‹•
 	if (boss)
 	{
 		if (boss->GetIsFallEffectEnd())
@@ -138,7 +138,7 @@ void GameScence::Update()
 		}
 	}
 
-	// ƒQ[ƒ€ƒI[ƒo[‚Ö‚ÌˆÚ“®
+	// ã‚²ãƒ¼ãƒ ã‚ªãƒ¼ãƒãƒ¼ã¸ã®ç§»å‹•
 	if (player)
 	{
 		if (player->GetIsFallEffectEnd())
@@ -158,7 +158,7 @@ void GameScence::Update()
 		}
 	}
 
-	// “GÁ‹
+	// æ•µæ¶ˆå»
 	mobEnemys.remove_if([](std::unique_ptr<MobEnemy>& MobEnemy)
 		{
 			return MobEnemy->GetIsDead();
@@ -172,16 +172,16 @@ void GameScence::Update()
 		player->SetPos(player->GetWorldPos());
 	}
 
-	// ƒvƒŒƒCƒ„[‚ÌXV
+	// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®æ›´æ–°
 	player->Update(camera->GetViewPro());
 
-	// G‹›“G‚ÌXV
+	// é›‘é­šæ•µã®æ›´æ–°
 	for (std::unique_ptr<MobEnemy>& mobEnemy : mobEnemys)
 	{
 		mobEnemy->Update(camera->GetViewPro(), camera->GetPos());
 	}
 
-	// ƒ{ƒX‚ÌXV
+	// ãƒœã‚¹ã®æ›´æ–°
 	if (boss)
 	{
 		boss->Update(camera->GetViewPro());
@@ -191,27 +191,27 @@ void GameScence::Update()
 		billManager->Set(camera->GetPos().z);
 	}
 
-	// ’e‚ÌXV
+	// å¼¾ã®æ›´æ–°
 	bulletManager->Update(camera->GetViewPro());
 
-	// ’n–Ê‚ÌXV
+	// åœ°é¢ã®æ›´æ–°
 	ground->Update(camera->GetViewPro(), camera->GetPos());
 
-	// ƒXƒJƒCƒ{ƒbƒNƒX‚ÌXV
+	// ã‚¹ã‚«ã‚¤ãƒœãƒƒã‚¯ã‚¹ã®æ›´æ–°
 	skyBox->SetPosZ(player->GetWorldPos().z);
 	skyBox->Update(camera->GetViewPro());
 
-	// ƒp[ƒeƒBƒNƒ‹ƒ}ƒl[ƒWƒƒ[‚ÌXV
+	// ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«ãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼ã®æ›´æ–°
 	particleManager->Update(camera->GetViewPro());
 	objParticleManager->Update(camera->GetViewPro());
 
-	// ƒrƒ‹ƒ}ƒl[ƒWƒƒ[
+	// ãƒ“ãƒ«ãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼
 	billManager->Update(camera->GetViewPro(), camera->GetPos().z);
 
-	// ƒJƒƒ‰‚ÌXV
+	// ã‚«ãƒ¡ãƒ©ã®æ›´æ–°
 	camera->Update();
 
-	// ƒ{ƒX“oêŒx
+	// ãƒœã‚¹ç™»å ´è­¦å‘Š
 	if (bossWarning)
 	{
 		bossWarning->Update();
@@ -220,22 +220,22 @@ void GameScence::Update()
 
 void GameScence::ObjDraw()
 {
-	// ’n–Ê•`‰æ
+	// åœ°é¢æç”»
 	ground->Draw();
 
-	// G‹›“G•`‰æ
+	// é›‘é­šæ•µæç”»
 	for (std::unique_ptr<MobEnemy>& mobEnemy : mobEnemys)
 	{
 		mobEnemy->Draw();
 	}
 
-	// ƒ{ƒX•`‰æ
+	// ãƒœã‚¹æç”»
 	if (boss)
 	{
 		boss->Draw();
 	}
 
-	// ƒvƒŒƒCƒ„[•`‰æ
+	// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼æç”»
 	player->ObjDraw();
 
 	skyBox->ObjDraw();
@@ -250,7 +250,7 @@ void GameScence::ObjDraw()
 
 void GameScence::SpriteDraw()
 {
-	// ƒ{ƒX“oêŒx‰‰o
+	// ãƒœã‚¹ç™»å ´è­¦å‘Šæ¼”å‡º
 	if (bossWarning)
 	{
 		bossWarning->Draw();
@@ -276,36 +276,36 @@ void GameScence::Final()
 
 void GameScence::CheckAllCollisions()
 {
-	// ”»’è‘ÎÛA‚ÆB‚ÌÀ•W
+	// åˆ¤å®šå¯¾è±¡Aã¨Bã®åº§æ¨™
 	KMyMath::Vector3 posA, posB;
 
-	// ©‹@’e‚Ìæ“¾
+	// è‡ªæ©Ÿå¼¾ã®å–å¾—
 	const std::list<std::unique_ptr<PlayerBullet>>& playerBullets = bulletManager->GetPlayerBullets();
 
-	// “G’e‚Ìæ“¾
+	// æ•µå¼¾ã®å–å¾—
 	const std::list<std::unique_ptr<EnemyBullet>>& enemyBullets = bulletManager->GetEnemyBullets();
 
-	// ©’e‚Æ“G‚Ì“–‚½‚è”»’è
+	// è‡ªå¼¾ã¨æ•µã®å½“ãŸã‚Šåˆ¤å®š
 	{
 		for (std::unique_ptr<MobEnemy>& mobEnemy : mobEnemys)
 		{
 			if (mobEnemy)
 			{
-				// “G‚ÌÀ•W
+				// æ•µã®åº§æ¨™
 				posA = mobEnemy->GetWorldPos();
 
 				for (const std::unique_ptr<PlayerBullet>& bullet : playerBullets)
 				{
-					// ’e‚ÌÀ•W
+					// å¼¾ã®åº§æ¨™
 					posB = bullet->GetWorldPos();
 
-					// ‹…“¯m‚ÌŒğ·”»’è
+					// çƒåŒå£«ã®äº¤å·®åˆ¤å®š
 					if (MyCollisions::CheckSphereToSphere(posA, posB, 6, 2))
 					{
-						// ’eÁ‹
+						// å¼¾æ¶ˆå»
 						bullet->OnCollision();
 
-						// “GÁ‹
+						// æ•µæ¶ˆå»
 						mobEnemy->OnCollision();
 					}
 				}
@@ -313,53 +313,53 @@ void GameScence::CheckAllCollisions()
 		}
 	}
 
-	// “G’e‚Æ©‹@‚Ì“–‚½‚è”»’è
+	// æ•µå¼¾ã¨è‡ªæ©Ÿã®å½“ãŸã‚Šåˆ¤å®š
 	if (!player->GetIsDead() && !player->GetIsInvisible())
 	{
-		// ©‹@‚ÌÀ•W
+		// è‡ªæ©Ÿã®åº§æ¨™
 		posA = player->GetWorldPos();
 
 		for (const std::unique_ptr<EnemyBullet>& bullet : enemyBullets)
 		{
 			if (bullet)
 			{
-				// ’e‚ÌÀ•W
+				// å¼¾ã®åº§æ¨™
 				posB = bullet->GetWorldPos();
 
-				// ‹…“¯m‚ÌŒğ·”»’è
+				// çƒåŒå£«ã®äº¤å·®åˆ¤å®š
 				if (MyCollisions::CheckSphereToSphere(posA, posB, 3, 2))
 				{
-					// ’eÁ‹
+					// å¼¾æ¶ˆå»
 					bullet->OnCollision();
 
-					// ©‹@”í’eˆ—
+					// è‡ªæ©Ÿè¢«å¼¾å‡¦ç†
 					player->OnCollision();
 				}
 			}
 		}
 	}
 
-	// ƒ{ƒX‚Æ©’e‚Ì”»’è
+	// ãƒœã‚¹ã¨è‡ªå¼¾ã®åˆ¤å®š
 	{
 		if (boss && isBossBattle)
 		{
 			if (!boss->GetIsDead())
 			{
-				// ƒ{ƒX‚ÌÀ•W
+				// ãƒœã‚¹ã®åº§æ¨™
 				posA = boss->GetWorldPos();
 
 				for (const std::unique_ptr<PlayerBullet>& bullet : playerBullets)
 				{
-					// ’e‚ÌÀ•W
+					// å¼¾ã®åº§æ¨™
 					posB = bullet->GetWorldPos();
 
-					// ‹…“¯m‚ÌŒğ·”»’è
+					// çƒåŒå£«ã®äº¤å·®åˆ¤å®š
 					if (boss->CollisionCheck(posA, posB))
 					{
-						// ’eÁ‹
+						// å¼¾æ¶ˆå»
 						bullet->OnCollision();
 
-						// “GÁ‹
+						// æ•µæ¶ˆå»
 						boss->OnCollision();
 					}
 				}
@@ -370,119 +370,119 @@ void GameScence::CheckAllCollisions()
 
 void GameScence::LoadEnemyPopData()
 {
-	// ƒtƒ@ƒCƒ‹‚ğŠJ‚­
+	// ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‹ã
 	std::ifstream file;
 	file.open("Resources/csv/enemyPop.csv");
 	assert(file.is_open());
 
-	// ƒtƒ@ƒCƒ‹‚Ì“à—e‚ğ•¶šƒXƒgƒŠ[ƒ€‚ÉƒRƒs[
+	// ãƒ•ã‚¡ã‚¤ãƒ«ã®å†…å®¹ã‚’æ–‡å­—ã‚¹ãƒˆãƒªãƒ¼ãƒ ã«ã‚³ãƒ”ãƒ¼
 	enemyPopCommands << file.rdbuf();
 
-	// ƒtƒ@ƒCƒ‹‚ğ•Â‚¶‚é
+	// ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‰ã˜ã‚‹
 	file.close();
 }
 
 void GameScence::UpdateEnemyPopCommands()
 {
-	// ‘Ò‹@ˆ—
+	// å¾…æ©Ÿå‡¦ç†
 	if (isStand)
 	{
 		waitTimer--;
 		if (waitTimer <= 0)
 		{
-			// ‘Ò‹@I—¹
+			// å¾…æ©Ÿçµ‚äº†
 			isStand = false;
 		}
 		return;
 	}
 
-	// 1s•ª‚Ì•¶š—ñ‚ğ“ü‚ê‚é•Ï”
+	// 1è¡Œåˆ†ã®æ–‡å­—åˆ—ã‚’å…¥ã‚Œã‚‹å¤‰æ•°
 	std::string line;
 
-	// ƒRƒ}ƒ“ƒhÀsƒ‹[ƒv
+	// ã‚³ãƒãƒ³ãƒ‰å®Ÿè¡Œãƒ«ãƒ¼ãƒ—
 	while (getline(enemyPopCommands, line))
 	{
-		// 1s•ª‚Ì•¶š”‚ğƒXƒgƒŠ[ƒ€‚É•ÏŠ·‚µ‚Ä‰ğÍ‚µ‚â‚·‚­‚·‚é
+		// 1è¡Œåˆ†ã®æ–‡å­—æ•°ã‚’ã‚¹ãƒˆãƒªãƒ¼ãƒ ã«å¤‰æ›ã—ã¦è§£æã—ã‚„ã™ãã™ã‚‹
 		std::istringstream line_stream(line);
 
 		std::string word;
-		// ,‹æØ‚è‚Ås‚Ìæ“ª•¶š—ñ‚ğæ“¾
+		// ,åŒºåˆ‡ã‚Šã§è¡Œã®å…ˆé ­æ–‡å­—åˆ—ã‚’å–å¾—
 		getline(line_stream, word, ',');
 
-		// ƒRƒƒ“ƒg
+		// ã‚³ãƒ¡ãƒ³ãƒˆ
 		if (word.find("//") == 0)
 		{
-			// s‚ğ”ò‚Î‚·
+			// è¡Œã‚’é£›ã°ã™
 			continue;
 		}
 
 		// POP
 		if (word.find("POP") == 0)
 		{
-			// “G‚Ìí—Ş
+			// æ•µã®ç¨®é¡
 			getline(line_stream, word, ',');
 			size_t enemyType = static_cast<size_t>(std::atof(word.c_str()));
 
-			// xÀ•W
+			// xåº§æ¨™
 			getline(line_stream, word, ',');
 			float x = static_cast<float>(std::atof(word.c_str()));
 
-			// yÀ•W
+			// yåº§æ¨™
 			getline(line_stream, word, ',');
 			float y = static_cast<float>(std::atof(word.c_str()));
 
-			// zÀ•W
+			// zåº§æ¨™
 			getline(line_stream, word, ',');
 			float z = static_cast<float>(std::atof(word.c_str()));
 
-			/// “G‚ğ”­¶‚³‚¹‚é
-			// ¶¬
+			/// æ•µã‚’ç™ºç”Ÿã•ã›ã‚‹
+			// ç”Ÿæˆ
 			std::unique_ptr<MobEnemy> newMEnemy;
 
-			// ŠY“–‚·‚éƒ^ƒCƒv‚Ì“G¶¬
+			// è©²å½“ã™ã‚‹ã‚¿ã‚¤ãƒ—ã®æ•µç”Ÿæˆ
 			if (enemyType == MobEnemy::EnemysType::Fly)
 			{
-				// xÀ•W
+				// xåº§æ¨™
 				getline(line_stream, word, ',');
 				float _x = static_cast<float>(std::atof(word.c_str()));
 
-				// yÀ•W
+				// yåº§æ¨™
 				getline(line_stream, word, ',');
 				float _y = static_cast<float>(std::atof(word.c_str()));
 
 				newMEnemy.reset(FlyEnemy::Create(mobEnemysModel.get(), objPipeline.get(), { x,y,z }, { _x,_y }, camera->GetSpeed()));
 				newMEnemy->SetPlayer(player.get());
-				// “o˜^
+				// ç™»éŒ²
 				mobEnemys.push_back(std::move(newMEnemy));
 			}
 			else if (enemyType == MobEnemy::EnemysType::Canon)
 			{
 				newMEnemy.reset(CanonEnemy::Create(mobEnemysModel.get(), objPipeline.get(), { x,y,z }));
 				newMEnemy->SetPlayer(player.get());
-				// “o˜^
+				// ç™»éŒ²
 				mobEnemys.push_back(std::move(newMEnemy));
 			}
 			else if (enemyType == MobEnemy::EnemysType::Appear)
 			{
 				newMEnemy.reset(AppearEnemy::Create(mobEnemysModel.get(), objPipeline.get(), { x,y,z }));
 				newMEnemy->SetPlayer(player.get());
-				// “o˜^
+				// ç™»éŒ²
 				mobEnemys.push_back(std::move(newMEnemy));
 			}
 		}
-		// WAITƒRƒ}ƒ“ƒh
+		// WAITã‚³ãƒãƒ³ãƒ‰
 		else if (word.find("WAIT") == 0)
 		{
 			getline(line_stream, word, ',');
 
-			// ‘Ò‚¿ŠÔ
+			// å¾…ã¡æ™‚é–“
 			int32_t waitTime = atoi(word.c_str());
 
-			// ‘Ò‹@ŠJn
+			// å¾…æ©Ÿé–‹å§‹
 			isStand = true;
 			waitTimer = waitTime;
 
-			// ƒRƒ}ƒ“ƒhƒ‹[ƒv‚ğ”²‚¯‚é
+			// ã‚³ãƒãƒ³ãƒ‰ãƒ«ãƒ¼ãƒ—ã‚’æŠœã‘ã‚‹
 			break;
 		}
 	}
@@ -490,10 +490,10 @@ void GameScence::UpdateEnemyPopCommands()
 
 void GameScence::BossBattleStart()
 {
-	// ƒ{ƒXƒoƒgƒ‹‚ªn‚Ü‚Á‚Ä‚ê‚ÎƒXƒLƒbƒv
+	// ãƒœã‚¹ãƒãƒˆãƒ«ãŒå§‹ã¾ã£ã¦ã‚Œã°ã‚¹ã‚­ãƒƒãƒ—
 	if (isBossBattle) { return; }
 
-	// ƒ{ƒXƒoƒgƒ‹ŠJnÀ•W
+	// ãƒœã‚¹ãƒãƒˆãƒ«é–‹å§‹åº§æ¨™
 	const float bossBattleStartPos = 500;
 
 	if (!bossWarning)
@@ -501,16 +501,16 @@ void GameScence::BossBattleStart()
 		bool isBossBattleStart = camera->GetPos().z >= bossBattleStartPos;
 		if (!isBossBattleStart) { return; }
 
-		// ƒJƒƒ‰‘Oi~‚ß‚é
+		// ã‚«ãƒ¡ãƒ©å‰é€²æ­¢ã‚ã‚‹
 		camera->SetIsAdvance(false);
 
-		// ƒ{ƒX“oêŒxì¬
+		// ãƒœã‚¹ç™»å ´è­¦å‘Šä½œæˆ
 		bossWarning = std::make_unique<Warning>();
 		bossWarning->Init();
 
 		if (!boss)
 		{
-			// ƒ{ƒX”z’u
+			// ãƒœã‚¹é…ç½®
 			const float bossDistance = 150;
 			const KMyMath::Vector3 bossBasePos = { 0.0f, 23.0f, bossBattleStartPos + bossDistance };
 			boss.reset(Blaster::Create(mobEnemysModel.get(), objPipeline.get(), bossBasePos,
@@ -527,13 +527,13 @@ void GameScence::BossBattleStart()
 			}
 		}
 
-		// ‰‰o‚ªI‚í‚Á‚Ä‚È‚¢‚Æ‚«‚Í”²‚¯‚é
+		// æ¼”å‡ºãŒçµ‚ã‚ã£ã¦ãªã„ã¨ãã¯æŠœã‘ã‚‹
 		if (!bossWarning->GetIsDelete()) { return; }
 
-		// ƒ{ƒX“oêŒx‰ğ•ú
+		// ãƒœã‚¹ç™»å ´è­¦å‘Šè§£æ”¾
 		bossWarning.reset();
 
-		// ƒ{ƒXƒoƒgƒ‹ŠJn
+		// ãƒœã‚¹ãƒãƒˆãƒ«é–‹å§‹
 		isBossBattle = true;
 	}
 }

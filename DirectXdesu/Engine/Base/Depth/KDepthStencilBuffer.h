@@ -5,43 +5,43 @@ class KDepthStencilBuffer
 {
 private:
 
-	//ƒeƒNƒXƒ`ƒƒ
+	//ãƒ†ã‚¯ã‚¹ãƒãƒ£
 	Microsoft::WRL::ComPtr<ID3D12Resource> texture;
-	//ƒfƒBƒXƒNƒŠƒvƒ^ƒq[ƒv
+	//ãƒ‡ã‚£ã‚¹ã‚¯ãƒªãƒ—ã‚¿ãƒ’ãƒ¼ãƒ—
 	KDsvDescriptorHeap* dsvHeap = nullptr;
-	//•
+	//å¹…
 	UINT width = 0;
-	//‚‚³
+	//é«˜ã•
 	UINT height = 0;
-	//ƒfƒoƒCƒX
+	//ãƒ‡ãƒã‚¤ã‚¹
 	ID3D12Device* device = nullptr;
-	//ƒnƒ“ƒhƒ‹
+	//ãƒãƒ³ãƒ‰ãƒ«
 	D3D12_CPU_DESCRIPTOR_HANDLE handle{};
 
 public:
 
 	/// <summary>
-	/// ¶¬
+	/// ç”Ÿæˆ
 	/// </summary>
-	/// <param name="w">‰¡•</param>
-	/// <param name="h">c•</param>
-	/// <param name="format">ƒtƒH[ƒ}ƒbƒg</param>
+	/// <param name="w">æ¨ªå¹…</param>
+	/// <param name="h">ç¸¦å¹…</param>
+	/// <param name="format">ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆ</param>
 	bool Create(UINT w, UINT h, DXGI_FORMAT format);
 
 	/// <summary>
-	/// ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	/// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	/// </summary>
-	/// <param name="d3dDevice">ƒfƒoƒCƒX</param>
-	/// <param name="descriptorHeap">ƒfƒvƒXƒXƒeƒ“ƒVƒ‹—p‚ÌƒfƒXƒNƒvƒŠƒ^ƒq[ƒv</param>
+	/// <param name="d3dDevice">ãƒ‡ãƒã‚¤ã‚¹</param>
+	/// <param name="descriptorHeap">ãƒ‡ãƒ—ã‚¹ã‚¹ãƒ†ãƒ³ã‚·ãƒ«ç”¨ã®ãƒ‡ã‚¹ã‚¯ãƒ—ãƒªã‚¿ãƒ’ãƒ¼ãƒ—</param>
 	KDepthStencilBuffer(ID3D12Device* d3dDevice, KDsvDescriptorHeap* descriptorHeap);
 
 	/// <summary>
-	/// ƒŠƒ\[ƒX‚ğæ“¾
+	/// ãƒªã‚½ãƒ¼ã‚¹ã‚’å–å¾—
 	/// </summary>
 	ID3D12Resource* GetTexture() const;
 
 	/// <summary>
-	/// ƒ|ƒCƒ“ƒ^”Ô†‚ğæ“¾
+	/// ãƒã‚¤ãƒ³ã‚¿ç•ªå·ã‚’å–å¾—
 	/// </summary>
 	const D3D12_CPU_DESCRIPTOR_HANDLE& GetHandle();
 

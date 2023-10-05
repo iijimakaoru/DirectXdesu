@@ -3,14 +3,14 @@
 PlayerBullet* PlayerBullet::Create(KModel* model, KGPlin* pipeline_,
 	const KMyMath::Vector3& pos, const KMyMath::Vector3& vec_, const KMyMath::Vector3& rot_, const float bulletSpeed)
 {
-	// ƒCƒ“ƒXƒ^ƒ“ƒX¶¬
+	// ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ç”Ÿæˆ
 	PlayerBullet* playerBullet = new PlayerBullet();
 	if (playerBullet == nullptr)
 	{
 		return nullptr;
 	}
 
-	// ‰Šú‰»
+	// åˆæœŸåŒ–
 	playerBullet->Init(model, pipeline_);
 	playerBullet->Set(pos, vec_, rot_, bulletSpeed);
 
@@ -19,13 +19,13 @@ PlayerBullet* PlayerBullet::Create(KModel* model, KGPlin* pipeline_,
 
 void PlayerBullet::Init(KModel* model_, KGPlin* pipeline_)
 {
-	// ƒ‚ƒfƒ‹¶¬
+	// ãƒ¢ãƒ‡ãƒ«ç”Ÿæˆ
 	model = model_;
 
-	// ƒpƒCƒvƒ‰ƒCƒ“¶¬
+	// ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³ç”Ÿæˆ
 	pipeline = pipeline_;
 
-	// ƒIƒuƒWƒFƒNƒg¶¬
+	// ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆç”Ÿæˆ
 	object3d.reset(KObject3d::Create(model,pipeline));
 	object3d->transform.scale = { 10.0f,10.0f,10.0f };
 }

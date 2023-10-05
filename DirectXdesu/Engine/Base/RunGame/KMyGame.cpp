@@ -6,11 +6,11 @@ void KMyGame::Init()
 {
 	Framework::Init();
 
-	// ƒV[ƒ“ƒtƒ@ƒNƒgƒŠ[‚ğ¶¬
+	// ã‚·ãƒ¼ãƒ³ãƒ•ã‚¡ã‚¯ãƒˆãƒªãƒ¼ã‚’ç”Ÿæˆ
 	sceneFactory = new SceneFactory();
-	// ƒV[ƒ“ƒ}ƒl[ƒWƒƒ[‚ÉƒZƒbƒg
+	// ã‚·ãƒ¼ãƒ³ãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼ã«ã‚»ãƒƒãƒˆ
 	SceneManager::GetInstance()->SetSceneFactory(sceneFactory);
-	// Å‰‚ÌƒV[ƒ“
+	// æœ€åˆã®ã‚·ãƒ¼ãƒ³
 	SceneManager::GetInstance()->ChangeScene("TITLE");
 }
 
@@ -21,21 +21,21 @@ void KMyGame::Update()
 
 void KMyGame::Draw()
 {
-	// ƒŒƒ“ƒ_[ƒeƒNƒXƒ`ƒƒ‚Ö‚Ì•`‰æ
+	// ãƒ¬ãƒ³ãƒ€ãƒ¼ãƒ†ã‚¯ã‚¹ãƒãƒ£ã¸ã®æç”»
 	postEffect->PreDrawScene();
 
-	// ƒV[ƒ“ƒ}ƒl[ƒWƒƒ[‚Ì•`‰æ
+	// ã‚·ãƒ¼ãƒ³ãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼ã®æç”»
 	sceneManager->Draw();
 
 	postEffect->PostDrawScene();
 
-	// •`‰æŠJn
+	// æç”»é–‹å§‹
 	dx->PreDraw();
 
-	// ƒ|ƒXƒgƒGƒtƒFƒNƒg•`‰æ
+	// ãƒã‚¹ãƒˆã‚¨ãƒ•ã‚§ã‚¯ãƒˆæç”»
 	postEffect->Draw();
 
-	// Imgui•`‰æ
+	// Imguiæç”»
 #ifdef _DEBUG
 	imguiMane.Draw();
 #endif 

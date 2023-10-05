@@ -2,27 +2,27 @@
 
 void Reticle3D::Init()
 {
-	// ƒIƒuƒWƒFƒNƒg¶¬
+	// ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆç”Ÿæˆ
 	object = std::make_unique<KObject3d>();
 }
 
 void Reticle3D::Update(KMyMath::Matrix4& m, KMyMath::Vector3 pPos)
 {
-	// ©‹@‚©‚ç3D‚Ö‚ÌƒŒƒeƒBƒNƒ‹‚Ö‚Ì‹——£
+	// è‡ªæ©Ÿã‹ã‚‰3Dã¸ã®ãƒ¬ãƒ†ã‚£ã‚¯ãƒ«ã¸ã®è·é›¢
 	const float kDistancePlayerTo3DReticle = 50.0f;
 
-	// ©‹@‚©‚ç3DƒŒƒeƒBƒNƒ‹‚Ö‚ÌƒIƒtƒZƒbƒg(Z + Œü‚«)
+	// è‡ªæ©Ÿã‹ã‚‰3Dãƒ¬ãƒ†ã‚£ã‚¯ãƒ«ã¸ã®ã‚ªãƒ•ã‚»ãƒƒãƒˆ(Z + å‘ã)
 	KMyMath::Vector3 offset = { 0,0,1.0f };
 
-	// ©‹@‚©‚çƒ[ƒ‹ƒhs—ñ‚Ì‰ñ“]‚ğ”½‰f
+	// è‡ªæ©Ÿã‹ã‚‰ãƒ¯ãƒ¼ãƒ«ãƒ‰è¡Œåˆ—ã®å›è»¢ã‚’åæ˜ 
 	offset = KMyMath::Vec3Mat4Mul(offset, m);
 
-	// ƒxƒNƒgƒ‹‚Ì’·‚³‚ğ®‚¦‚é
+	// ãƒ™ã‚¯ãƒˆãƒ«ã®é•·ã•ã‚’æ•´ãˆã‚‹
 	offset = MyMathUtility::MakeNormalize(offset) * kDistancePlayerTo3DReticle;
 
-	// 3DƒŒƒeƒBƒNƒ‹‚ÌÀ•Wİ’è
+	// 3Dãƒ¬ãƒ†ã‚£ã‚¯ãƒ«ã®åº§æ¨™è¨­å®š
 	object->transform.pos = pPos + offset;
 
-	// À•WXV
+	// åº§æ¨™æ›´æ–°
 	object->TransUpdate();
 }

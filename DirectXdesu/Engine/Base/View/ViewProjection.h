@@ -11,19 +11,19 @@ public:
 	void Update();
 
 private:
-	// ƒJƒƒ‰‚Ì‹——£
+	// ã‚«ãƒ¡ãƒ©ã®è·é›¢
 	float lenZ = 0;
 	float nearZ = 0;
 	float farZ = 0;
-	// ƒrƒ…[•ÏŠ·s—ñ
+	// ãƒ“ãƒ¥ãƒ¼å¤‰æ›è¡Œåˆ—
 	KMyMath::Matrix4 matView{};
 	KMyMath::Vector3 eye{};
 	KMyMath::Vector3 target{};
 	KMyMath::Vector3 up{};
-	// Ë‰e•ÏŠ·s—ñ‚ÌŒvZ
+	// å°„å½±å¤‰æ›è¡Œåˆ—ã®è¨ˆç®—
 	KMyMath::Matrix4 matProjection{};
 
-	float aspect = 0; // ƒAƒXƒyƒNƒg”ä
+	float aspect = 0; // ã‚¢ã‚¹ãƒšã‚¯ãƒˆæ¯”
 
 public:
 	const KMyMath::Matrix4& GetMatView() const;

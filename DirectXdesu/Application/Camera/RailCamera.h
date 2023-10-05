@@ -17,23 +17,23 @@ public:
 	void Update();
 
 	/// <summary>
-	/// ƒJƒƒ‰“®‚©‚·
+	/// ã‚«ãƒ¡ãƒ©å‹•ã‹ã™
 	/// </summary>
 	void Move();
 
 	/// <summary>
-	/// ‰ó‚ê‚½‚Ìˆ—
+	/// å£Šã‚ŒãŸæ™‚ã®å‡¦ç†
 	/// </summary>
 	void Crash();
 
 	/// <summary>
-	/// ƒvƒŒƒCƒ„[‚ÌŠp“x‚Æ˜A“®‚³‚¹‚é
+	/// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®è§’åº¦ã¨é€£å‹•ã•ã›ã‚‹
 	/// </summary>
 	/// <param name="playersRot"></param>
 	void SetRot();
 
 	/// <summary>
-	/// ‘Oiƒtƒ‰ƒO
+	/// å‰é€²ãƒ•ãƒ©ã‚°
 	/// </summary>
 	/// <param name="isAdvance_"></param>
 	void SetIsAdvance(bool isAdvance_)
@@ -42,36 +42,36 @@ public:
 	}
 
 	/// <summary>
-	/// ƒJƒƒ‰‘¬“xƒZƒbƒ^[
+	/// ã‚«ãƒ¡ãƒ©é€Ÿåº¦ã‚»ãƒƒã‚¿ãƒ¼
 	/// </summary>
 	/// <returns></returns>
 	const float GetSpeed() const;
 
 	/// <summary>
-	/// €‚ñ‚¾‚Æ‚«‚ÉŒÄ‚Ú‚¤
+	/// æ­»ã‚“ã ã¨ãã«å‘¼ã¼ã†
 	/// </summary>
 	void CallCrash();
 
 private:
-	// ‘Oi‚·‚é‚©
+	// å‰é€²ã™ã‚‹ã‹
 	bool isAdvance = true;
 
-	// ‘OiƒXƒs[ƒh
+	// å‰é€²ã‚¹ãƒ”ãƒ¼ãƒ‰
 	static const float advanceSpeed;
 
-	// ã‰º¶‰E‚ÌƒJƒƒ‰‚Ì‘¬‚³(©‹@‚Ì‰½”{)
+	// ä¸Šä¸‹å·¦å³æ™‚ã®ã‚«ãƒ¡ãƒ©ã®é€Ÿã•(è‡ªæ©Ÿã®ä½•å€)
 	static const float moveSpeedPlayerMagnification;
 
-	// ˆÚ“®ãŒÀ
+	// ç§»å‹•ä¸Šé™
 	KMyMath::Vector2 moveLimitMin = {};
 	KMyMath::Vector2 moveLimitMax = {};
 
-	// ƒvƒŒƒCƒ„[‚ª‰ó‚ê‚½‚çŒÄ‚Ô
+	// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãŒå£Šã‚ŒãŸã‚‰å‘¼ã¶
 	bool isCrash = false;
 
-	// ƒQ[ƒ€ƒNƒŠƒA‚ÅŒÄ‚Ô
+	// ã‚²ãƒ¼ãƒ ã‚¯ãƒªã‚¢ã§å‘¼ã¶
 	bool isStageClear = false;
 
-	// ƒvƒŒƒCƒ„[‚ÌŒ^
+	// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®å‹
 	Player* player = nullptr;
 };

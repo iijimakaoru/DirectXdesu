@@ -34,31 +34,31 @@ const Quaternion& operator+(const Quaternion& q1, const Quaternion& q2);
 const Quaternion& operator*(const Quaternion& q1, float s);
 const Quaternion& operator*(float s, const Quaternion& q1);
 
-// Ï
+// ç©
 Quaternion Multiply(const Quaternion& q1, const Quaternion& q2);
 
-// ’PˆÊ
+// å˜ä½
 Quaternion IndentityQuaternion();
 
-// ‹¤–ğ
+// å…±å½¹
 Quaternion Conjugate(const Quaternion& q);
 
 // norm
 float Norm(const Quaternion& q);
 
-// ³‹K‰»
+// æ­£è¦åŒ–
 Quaternion Normalize(const Quaternion& q);
 
-// ‹t
+// é€†
 Quaternion Inverce(const Quaternion& q);
 
-// ”CˆÓ²‰ñ“]
+// ä»»æ„è»¸å›è»¢
 Quaternion MakeAxisAngle(const KMyMath::Vector3& axis, float angle);
 
-// ‰ñ“]‚ÌŒ‹‰Ê
+// å›è»¢ã®çµæœ
 KMyMath::Vector3 RotateVector(const KMyMath::Vector3& vec, const Quaternion& q);
 
-// ‰ñ“]s—ñ
+// å›è»¢è¡Œåˆ—
 KMyMath::Matrix4 MakeRotateMatrix(const Quaternion& q);
 
 float Dot(const Quaternion& q1, const Quaternion& q2);

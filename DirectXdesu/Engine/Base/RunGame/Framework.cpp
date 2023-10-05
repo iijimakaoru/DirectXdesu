@@ -5,47 +5,47 @@
 
 void Framework::Init()
 {
-	// FBX‰Šú‰»
+	// FBXåˆæœŸåŒ–
 	fbxLoader = FbxLoader::GetInstance();
 	fbxLoader->Init();
 
-	// ƒEƒBƒ“ƒhƒE‰Šú‰»
+	// ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦åˆæœŸåŒ–
 	win = KWinApp::GetInstance();
 	win->Init();
 
-	// DirectX‰Šú‰»
+	// DirectXåˆæœŸåŒ–
 	dx = KDirectXCommon::GetInstance();
 	dx->Init();
 
-	// Input‰Šú‰»
+	// InputåˆæœŸåŒ–
 	input = KInput::GetInstance();
 	input->Init();
 
 	sound = Sound::GetInstance();
 	sound->Init();
 
-	// Ã“I‰Šú‰»
+	// é™çš„åˆæœŸåŒ–
 	Sprite::StaticInit();
 	PostEffect::StaticInit();
 
-	// ƒV[ƒ“ƒ}ƒl[ƒWƒƒ[¶¬
+	// ã‚·ãƒ¼ãƒ³ãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼ç”Ÿæˆ
 	sceneManager = SceneManager::GetInstance();
 
-	// ƒeƒNƒXƒ`ƒƒƒ}ƒl[ƒWƒƒ[‰Šú‰»
+	// ãƒ†ã‚¯ã‚¹ãƒãƒ£ãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼åˆæœŸåŒ–
 	textureManager = TextureManager::GetInstance();
 	textureManager->Init();
 
 	Particles::StaticInitialize();
 
-	// Imgui‰Šú‰»
+	// ImguiåˆæœŸåŒ–
 	imguiMane.Init();
 
-	// SpriteƒpƒCƒvƒ‰ƒCƒ“
+	// Spriteãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³
 	spriteShader.Init(L"Resources/Shader/PostEffectVS.hlsl", L"Resources/Shader/PostEffectPS.hlsl");
 	spritePipeline = std::make_unique<KGPlin>();
 	spritePipeline->CreatePipelineAll(spriteShader, "PostEffect");
 
-	// ƒ|ƒXƒgƒGƒtƒFƒNƒgƒeƒXƒg
+	// ãƒã‚¹ãƒˆã‚¨ãƒ•ã‚§ã‚¯ãƒˆãƒ†ã‚¹ãƒˆ
 	postEffect = std::make_unique<PostEffect>();
 	postEffect->Init();
 	postEffect->SetPipeline(spritePipeline.get());
@@ -56,17 +56,17 @@ void Framework::Init()
 
 void Framework::Final()
 {
-	// ƒV[ƒ“ƒ}ƒl[ƒWƒƒ[‚Ì‰ğ•ú
+	// ã‚·ãƒ¼ãƒ³ãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼ã®è§£æ”¾
 	sceneManager->Final();
 
-	// ƒeƒNƒXƒ`ƒƒƒ}ƒl[ƒWƒƒ[‚Ì‰ğ•ú
+	// ãƒ†ã‚¯ã‚¹ãƒãƒ£ãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼ã®è§£æ”¾
 	textureManager->Delete();
 
-	// ƒp[ƒeƒBƒNƒ‹ƒ}ƒl[ƒWƒƒ[‰ğ•ú
+	// ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«ãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼è§£æ”¾
 	ParticleManager::GetInstance()->Delete();
 	ObjParticleManager::GetInstance()->Delete();
 
-	// ƒV[ƒ“ƒtƒ@ƒNƒgƒŠ[‰ğ•ú
+	// ã‚·ãƒ¼ãƒ³ãƒ•ã‚¡ã‚¯ãƒˆãƒªãƒ¼è§£æ”¾
 	delete sceneFactory;
 
 	sceneChange->Delete();
@@ -78,16 +78,16 @@ void Framework::Final()
 
 void Framework::Update()
 {
-	// XV
+	// æ›´æ–°
 	input->Update();
 
-	// ImguiXV‚Í‚¶‚ß
+	// Imguiæ›´æ–°ã¯ã˜ã‚
 	imguiMane.Begin();
 
-	// ƒV[ƒ“ƒ}ƒl[ƒWƒƒ[‚ÌXV
+	// ã‚·ãƒ¼ãƒ³ãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼ã®æ›´æ–°
 	sceneManager->Update();
 
-	// ImguiXVI—¹
+	// Imguiæ›´æ–°çµ‚äº†
 	imguiMane.End();
 }
 
@@ -107,17 +107,17 @@ void Framework::Run()
 
 	while (true)
 	{
-		// I—¹ƒŠƒNƒGƒXƒg
+		// çµ‚äº†ãƒªã‚¯ã‚¨ã‚¹ãƒˆ
 		if (IsEndRwquest())
 		{
 			break;
 		}
 
-		// XV
+		// æ›´æ–°
 		Update();
-		// •`‰æ
+		// æç”»
 		Draw();
 	}
-	// I—¹
+	// çµ‚äº†
 	Final();
 }

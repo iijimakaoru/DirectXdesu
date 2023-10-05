@@ -8,18 +8,18 @@ public:
 	void Init(KModel* playersBulletModel_, KGPlin* pipeline_);
 
 	/// <summary>
-	/// ’e‚ÌXV
+	/// å¼¾ã®æ›´æ–°
 	/// </summary>
 	/// <param name="viewPro"></param>
 	void Update(ViewProjection* viewPro);
 
 	/// <summary>
-	/// ’e‚Ì•`‰æ
+	/// å¼¾ã®æç”»
 	/// </summary>
 	void Draw();
 
 	/// <summary>
-	/// ƒvƒŒƒCƒ„[‚Ì’e”­Ë
+	/// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®å¼¾ç™ºå°„
 	/// </summary>
 	/// <param name="model"></param>
 	/// <param name="pipeline_"></param>
@@ -30,7 +30,7 @@ public:
 	void PlayerBulletShot(const KMyMath::Vector3& pos, const KMyMath::Vector3& vec_, const KMyMath::Vector3& rot_, const float bulletSpeed);
 
 	/// <summary>
-	/// “G‚Ì’e”­Ë
+	/// æ•µã®å¼¾ç™ºå°„
 	/// </summary>
 	/// <param name="pos"></param>
 	/// <param name="vec_"></param>
@@ -38,38 +38,38 @@ public:
 	/// <param name="bulletSpeed"></param>
 	void EnemyBulletShot(const KMyMath::Vector3& pos, const KMyMath::Vector3& vec_, const KMyMath::Vector3& rot_, const float bulletSpeed);
 
-	// ƒCƒ“ƒXƒ^ƒ“ƒXƒQƒbƒ^[
+	// ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚²ãƒƒã‚¿ãƒ¼
 	static BulletManager* GetInstance();
 
-	// ‘¶–½‚Ì’e‚ğ‘S•”íœ
+	// å­˜å‘½ã®å¼¾ã‚’å…¨éƒ¨å‰Šé™¤
 	void AllBulletDelete();
 
-	// ‰ğ•ú
+	// è§£æ”¾
 	void Delete();
 
 public:
-	// ©’e‚ÌƒŠƒXƒg‚ğæ“¾
+	// è‡ªå¼¾ã®ãƒªã‚¹ãƒˆã‚’å–å¾—
 	const std::list<std::unique_ptr<PlayerBullet>>& GetPlayerBullets() const;
 
-	// “G’e‚ÌƒŠƒXƒg‚ğæ“¾
+	// æ•µå¼¾ã®ãƒªã‚¹ãƒˆã‚’å–å¾—
 	const std::list<std::unique_ptr<EnemyBullet>>& GetEnemyBullets() const;
 
 private:
-	// ’e‚Ìíœ
+	// å¼¾ã®å‰Šé™¤
 	void DeleteBullet();
 
 private:
-	// ƒvƒŒƒCƒ„[‚Ì’e
+	// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®å¼¾
 	std::list<std::unique_ptr<PlayerBullet>> playerBullets;
 	KModel* playersBulletModel = nullptr;
 
-	// “G‚Ì’e
+	// æ•µã®å¼¾
 	std::list<std::unique_ptr<EnemyBullet>> enemyBullets;
 
-	// ƒpƒCƒvƒ‰ƒCƒ“
+	// ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³
 	KGPlin* pipeline = nullptr;
 
-	// ƒCƒ“ƒXƒ^ƒ“ƒX
+	// ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹
 	static BulletManager* bulletManager;
 
 private:

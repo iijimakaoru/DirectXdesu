@@ -4,18 +4,18 @@
 
 void BossEnemy::Init(KModel* model_, KGPlin* pipeline_, const KMyMath::Vector3& initPos, const float HP, KGPlin* spritePipeline_)
 {
-	// ƒ‚ƒfƒ‹¶¬
+	// ãƒ¢ãƒ‡ãƒ«ç”Ÿæˆ
 	model = model_;
 
-	// ƒpƒCƒvƒ‰ƒCƒ“¶¬
+	// ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³ç”Ÿæˆ
 	pipeline = pipeline_;
 	spritePipeline = spritePipeline_;
 
-	// ƒIƒuƒWƒFƒNƒg¶¬
+	// ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆç”Ÿæˆ
 	object3d.reset(KObject3d::Create(model, pipeline));
 	object3d->transform.pos = initPos;
 
-	// ‘Ì—ÍƒZƒbƒg
+	// ä½“åŠ›ã‚»ãƒƒãƒˆ
 	maxHP = HP;
 	this->HP = 1;
 
@@ -54,7 +54,7 @@ void BossEnemy::Update(ViewProjection* viewPro)
 		DeadEffect();
 	}
 
-	// HP‰‰o
+	// HPæ¼”å‡º
 	HPEffect();
 
 	object3d->Update(viewPro);
@@ -90,10 +90,10 @@ void BossEnemy::UIDraw()
 
 const KMyMath::Vector3 BossEnemy::GetWorldPos() const
 {
-	// ƒ[ƒ‹ƒhÀ•WŠi”[•Ï”
+	// ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™æ ¼ç´å¤‰æ•°
 	KMyMath::Vector3 result;
 
-	// ƒ[ƒ‹ƒhs—ñ‚Ì•½sˆÚ“®¬•ªŽæ“¾
+	// ãƒ¯ãƒ¼ãƒ«ãƒ‰è¡Œåˆ—ã®å¹³è¡Œç§»å‹•æˆåˆ†å–å¾—
 	result.x = object3d->transform.matWorld.m[3][0];
 	result.y = object3d->transform.matWorld.m[3][1];
 	result.z = object3d->transform.matWorld.m[3][2];
@@ -114,17 +114,17 @@ void BossEnemy::DeadEffect()
 {
 	if (!isFallEffectEnd)
 	{
-		// Žp¨§Œä
+		// å§¿å‹¢åˆ¶å¾¡
 		object3d->transform.rot.x = 0;
 		object3d->transform.rot.y = 0;
 
-		// ‰ñ“]
+		// å›žè»¢
 		object3d->transform.rot.z += 10.0f;
 
-		// —Ž‰º
+		// è½ä¸‹
 		object3d->transform.pos.y -= 0.1f;
 
-		// ŽžŠÔŒo‰ß
+		// æ™‚é–“çµŒéŽ
 		fallEffectTimer++;
 
 		// 
@@ -137,7 +137,7 @@ void BossEnemy::DeadEffect()
 			expTimer = 0;
 		}
 
-		// ‰‰oI‚í‚è
+		// æ¼”å‡ºçµ‚ã‚ã‚Š
 		if (fallEffectTimer >= max(fallEffectTimer, fallEffectTime))
 		{
 			ObjParticleManager::GetInstance()->SetExp(GetWorldPos());

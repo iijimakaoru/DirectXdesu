@@ -5,10 +5,10 @@ void BillManager::Init()
 	model = std::make_unique<MtlObj>("bill1");
 	model->CreateModel();
 
-	// シェーダー
+	// 繧ｷ繧ｧ繝ｼ繝繝ｼ
 	objShader.Init(L"Resources/Shader/ObjVS.hlsl", L"Resources/Shader/ObjPS.hlsl");
 
-	// パイプライン
+	// 繝代う繝励Λ繧､繝ｳ
 	objPipeline.reset(KGPlin::Create(objShader, "Obj"));
 
 	billtimer = 0;

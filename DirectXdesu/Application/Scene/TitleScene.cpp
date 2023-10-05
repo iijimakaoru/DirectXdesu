@@ -16,7 +16,7 @@ TitleScene::~TitleScene()
 
 void TitleScene::LoadResources()
 {
-	// ƒpƒCƒvƒ‰ƒCƒ“
+	// ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³
 	spriteShader.Init(L"Resources/Shader/SpriteVS.hlsl", L"Resources/Shader/SpritePS.hlsl");
 	spritePipeline = std::make_unique<KGPlin>();
 	spritePipeline->CreatePipelineAll(spriteShader, "Sprite");
@@ -24,21 +24,21 @@ void TitleScene::LoadResources()
 	objShader.Init(L"Resources/Shader/ObjVS.hlsl", L"Resources/Shader/ObjPS.hlsl");
 	objPipeline.reset(KGPlin::Create(objShader, "Obj"));
 
-	// ƒ^ƒCƒgƒ‹–¼ƒeƒNƒXƒ`ƒƒ
+	// ã‚¿ã‚¤ãƒˆãƒ«åãƒ†ã‚¯ã‚¹ãƒãƒ£
 	titleTex = TextureManager::Load("Resources/texture/kariTitle.png");
 
-	// ƒvƒbƒVƒ…AƒeƒNƒXƒ`ƒƒ
+	// ãƒ—ãƒƒã‚·ãƒ¥Aãƒ†ã‚¯ã‚¹ãƒãƒ£
 	pushATex = TextureManager::Load("Resources/texture/kariNextScene.png");
 
-	// ‹@‘Ìƒ‚ƒfƒ‹
+	// æ©Ÿä½“ãƒ¢ãƒ‡ãƒ«
 	model = std::make_unique<MtlObj>("BattleShip");
 	model->CreateModel();
 
-	// “V‹…ƒ‚ƒfƒ‹
+	// å¤©çƒãƒ¢ãƒ‡ãƒ«
 	skyDomeModel = std::make_unique<MtlObj>("Hosizora");
 	skyDomeModel->CreateModel();
 
-	// ƒtƒ‰ƒbƒVƒ…ƒeƒNƒXƒ`ƒƒ
+	// ãƒ•ãƒ©ãƒƒã‚·ãƒ¥ãƒ†ã‚¯ã‚¹ãƒãƒ£
 	flashTex = TextureManager::Load("Resources/texture/white1x1.png");
 }
 
@@ -46,30 +46,30 @@ void TitleScene::Init()
 {
 	BaseScene::Init();
 
-	// ƒCƒ“ƒXƒ^ƒ“ƒX
+	// ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹
 	input = KInput::GetInstance();
 
-	// ƒJƒƒ‰“Ç‚İ‚İ
+	// ã‚«ãƒ¡ãƒ©èª­ã¿è¾¼ã¿
 	camera = std::make_unique<TitleCamera>();
 	camera->Init();
 
 	sceneManager = SceneManager::GetInstance();
 
-	// ƒ^ƒCƒgƒ‹–¼
+	// ã‚¿ã‚¤ãƒˆãƒ«å
 	titleName = std::make_unique<Sprite>();
 	titleName->Init();
 	titleName->SetPipeline(spritePipeline.get());
 
 	titlePos = { width / 2 ,height * 1 / 3 };
 
-	// ƒvƒbƒVƒ…A
+	// ãƒ—ãƒƒã‚·ãƒ¥A
 	pushA = std::make_unique<Sprite>();
 	pushA->Init();
 	pushA->SetPipeline(spritePipeline.get());
 
 	pushAPos = { width / 2, height * 2 / 3 };
 
-	// ƒIƒuƒWƒFƒNƒg¶¬
+	// ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆç”Ÿæˆ
 	object3d.reset(KObject3d::Create(model.get(), objPipeline.get()));
 
 	object3d->transform.scale = { 0,0,0 };
@@ -78,7 +78,7 @@ void TitleScene::Init()
 
 	skyDome->transform.scale = { 200,200,200 };
 
-	// ƒtƒ‰ƒbƒVƒ…
+	// ãƒ•ãƒ©ãƒƒã‚·ãƒ¥
 	flash = std::make_unique<Sprite>();
 	flash->Init();
 	flash->SetPipeline(spritePipeline.get());
@@ -121,7 +121,7 @@ void TitleScene::Update()
 				flashAlpha -= 0.1f;
 			}
 
-			// Ÿ‚ÌƒV[ƒ“‚Ö
+			// æ¬¡ã®ã‚·ãƒ¼ãƒ³ã¸
 			if (!sceneChange->GetIsEffect())
 			{
 				if (input->IsTrigger(DIK_SPACE) || input->GetPadButtonDown(XINPUT_GAMEPAD_A))
@@ -138,7 +138,7 @@ void TitleScene::Update()
 
 		if (sceneChange->GetIsChange())
 		{
-			// ƒV[ƒ“Ø‚è‘Ö‚¦ˆË—Š
+			// ã‚·ãƒ¼ãƒ³åˆ‡ã‚Šæ›¿ãˆä¾é ¼
 			SceneManager::GetInstance()->ChangeScene("GAME");
 		}
 	}
@@ -176,7 +176,7 @@ void TitleScene::Final()
 
 void TitleScene::StartScene()
 {
-	// ƒV[ƒ“‘JˆÚ‘Ò‚¿
+	// ã‚·ãƒ¼ãƒ³é·ç§»å¾…ã¡
 	if (startScenePhase == 0)
 	{
 		phaseTime = 30;
@@ -189,7 +189,7 @@ void TitleScene::StartScene()
 			phaseTimer = 0;
 		}
 	}
-	// ‚±‚Á‚¿‚É”ò‚ñ‚Å‚«‚Äã‚És‚­
+	// ã“ã£ã¡ã«é£›ã‚“ã§ãã¦ä¸Šã«è¡Œã
 	else if (startScenePhase == 1)
 	{
 		start = { 0,-30,180 };
@@ -201,12 +201,12 @@ void TitleScene::StartScene()
 
 		phaseTimer++;
 
-		// ƒ|ƒCƒ“ƒg‚P‚Ì§Œä“_
+		// ãƒã‚¤ãƒ³ãƒˆï¼‘ã®åˆ¶å¾¡ç‚¹
 		KMyMath::Vector3 point1_1 = MyEase::Lerp3D(start, p1, phaseTimer / phaseTime);
 		KMyMath::Vector3 point1_2 = MyEase::Lerp3D(p1, end, phaseTimer / phaseTime);
 		KMyMath::Vector3 point1 = MyEase::Lerp3D(point1_1, point1_2, phaseTimer / phaseTime);
 
-		// ƒ|ƒCƒ“ƒg‚Q‚Ì§Œä“_
+		// ãƒã‚¤ãƒ³ãƒˆï¼’ã®åˆ¶å¾¡ç‚¹
 		KMyMath::Vector3 point2_1 = MyEase::Lerp3D(start, p2, phaseTimer / phaseTime);
 		KMyMath::Vector3 point2_2 = MyEase::Lerp3D(p2, end, phaseTimer / phaseTime);
 		KMyMath::Vector3 point2 = MyEase::Lerp3D(point2_1, point2_2, phaseTimer / phaseTime);
@@ -235,7 +235,7 @@ void TitleScene::StartScene()
 			phaseTimer = 0;
 		}
 	}
-	// ã‚©‚ç‹A‚Á‚Ä‚­‚é
+	// ä¸Šã‹ã‚‰å¸°ã£ã¦ãã‚‹
 	else if (startScenePhase == 2)
 	{
 		start = { 0,60,60 };
@@ -247,12 +247,12 @@ void TitleScene::StartScene()
 
 		phaseTimer++;
 
-		// ƒ|ƒCƒ“ƒg‚P‚Ì§Œä“_
+		// ãƒã‚¤ãƒ³ãƒˆï¼‘ã®åˆ¶å¾¡ç‚¹
 		KMyMath::Vector3 point1_1 = MyEase::Lerp3D(start, p1, phaseTimer / phaseTime);
 		KMyMath::Vector3 point1_2 = MyEase::Lerp3D(p1, end, phaseTimer / phaseTime);
 		KMyMath::Vector3 point1 = MyEase::Lerp3D(point1_1, point1_2, phaseTimer / phaseTime);
 
-		// ƒ|ƒCƒ“ƒg‚Q‚Ì§Œä“_
+		// ãƒã‚¤ãƒ³ãƒˆï¼’ã®åˆ¶å¾¡ç‚¹
 		KMyMath::Vector3 point2_1 = MyEase::Lerp3D(start, p2, phaseTimer / phaseTime);
 		KMyMath::Vector3 point2_2 = MyEase::Lerp3D(p2, end, phaseTimer / phaseTime);
 		KMyMath::Vector3 point2 = MyEase::Lerp3D(point2_1, point2_2, phaseTimer / phaseTime);
@@ -269,7 +269,7 @@ void TitleScene::StartScene()
 			phaseTimer = 0;
 		}
 	}
-	// ƒXƒ^[ƒg‰æ–Ê
+	// ã‚¹ã‚¿ãƒ¼ãƒˆç”»é¢
 	else
 	{
 		startScene = false;
@@ -280,7 +280,7 @@ void TitleScene::StartScene()
 
 void TitleScene::GoNextScene()
 {
-	// ƒJƒƒ‰‘JˆÚ‘Ò‚¿
+	// ã‚«ãƒ¡ãƒ©é·ç§»å¾…ã¡
 	if (goGamePhase == 0)
 	{
 		phaseTime = 45;
@@ -340,12 +340,12 @@ void TitleScene::GoNextScene()
 				MyEase::OutCubicFloat(1, 0, phaseTimer / phaseTime)
 			};
 
-			// ƒ|ƒCƒ“ƒg‚P‚Ì§Œä“_
+			// ãƒã‚¤ãƒ³ãƒˆï¼‘ã®åˆ¶å¾¡ç‚¹
 			KMyMath::Vector3 point1_1 = MyEase::Lerp3D(start, p1, phaseTimer / phaseTime);
 			KMyMath::Vector3 point1_2 = MyEase::Lerp3D(p1, end, phaseTimer / phaseTime);
 			KMyMath::Vector3 point1 = MyEase::Lerp3D(point1_1, point1_2, phaseTimer / phaseTime);
 
-			// ƒ|ƒCƒ“ƒg‚Q‚Ì§Œä“_
+			// ãƒã‚¤ãƒ³ãƒˆï¼’ã®åˆ¶å¾¡ç‚¹
 			KMyMath::Vector3 point2_1 = MyEase::Lerp3D(start, p2, phaseTimer / phaseTime);
 			KMyMath::Vector3 point2_2 = MyEase::Lerp3D(p2, end, phaseTimer / phaseTime);
 			KMyMath::Vector3 point2 = MyEase::Lerp3D(point2_1, point2_2, phaseTimer / phaseTime);

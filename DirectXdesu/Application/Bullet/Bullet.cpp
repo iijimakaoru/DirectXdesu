@@ -43,10 +43,10 @@ void Bullet::OnCollision()
 
 KMyMath::Vector3 Bullet::GetWorldPos()
 {
-	// ƒ[ƒ‹ƒhÀ•WŠi”[•Ï”
+	// ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™æ ¼ç´å¤‰æ•°
 	KMyMath::Vector3 result;
 
-	// ƒ[ƒ‹ƒhs—ñ‚Ì•½sˆÚ“®¬•ªŽæ“¾
+	// ãƒ¯ãƒ¼ãƒ«ãƒ‰è¡Œåˆ—ã®å¹³è¡Œç§»å‹•æˆåˆ†å–å¾—
 	result.x = object3d->transform.matWorld.m[3][0];
 	result.y = object3d->transform.matWorld.m[3][1];
 	result.z = object3d->transform.matWorld.m[3][2];

@@ -27,93 +27,93 @@ public:
 	static void Init();
 	static void Update();
 
-	// ƒL[ƒ{[ƒh
-	// ‰Ÿ‚µ‚Ä‚é‚©
+	// ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰
+	// æŠ¼ã—ã¦ã‚‹ã‹
 	bool IsPush(int keyNum);
-	// ‰Ÿ‚µ‚½‚Ü‚Ü
+	// æŠ¼ã—ãŸã¾ã¾
 	bool IsPress(int keyNum);
-	// ‰Ÿ‚µ‚½uŠÔ
+	// æŠ¼ã—ãŸç¬é–“
 	bool IsTrigger(int keyNum);
-	// —£‚µ‚½uŠÔ
+	// é›¢ã—ãŸç¬é–“
 	bool IsRelease(int keyNum);
 
-	//ƒ}ƒEƒX
-	//ƒ}ƒEƒX‚Ìó‘Ô‚ğ“¾‚é
+	//ãƒã‚¦ã‚¹
+	//ãƒã‚¦ã‚¹ã®çŠ¶æ…‹ã‚’å¾—ã‚‹
 	static inline DIMOUSESTATE2 GetMouseState()
 	{
 		return GetInstance()->mouseState;
 	}
-	// ‘O‰ñ‚Ìƒ}ƒEƒX‚Ìó‘Ô‚ğ“¾‚é
+	// å‰å›ã®ãƒã‚¦ã‚¹ã®çŠ¶æ…‹ã‚’å¾—ã‚‹
 	static inline DIMOUSESTATE2 GetOldMouseState()
 	{
 		return GetInstance()->oldMouseState;
 	}
-	// ƒ}ƒEƒXƒNƒŠƒbƒN‚³‚ê‚Ä‚é‚©
+	// ãƒã‚¦ã‚¹ã‚¯ãƒªãƒƒã‚¯ã•ã‚Œã¦ã‚‹ã‹
 	static bool GetMouseClick(int bottonNum);
-	// ƒ}ƒEƒXƒNƒŠƒbƒN‚ª—£‚ê‚½uŠÔ
+	// ãƒã‚¦ã‚¹ã‚¯ãƒªãƒƒã‚¯ãŒé›¢ã‚ŒãŸç¬é–“
 	static bool GetMouseClickRelease(int bottonNum);
-	// ƒ}ƒEƒXƒNƒŠƒbƒN‚ª‰Ÿ‚³‚ê‚½uŠÔ
+	// ãƒã‚¦ã‚¹ã‚¯ãƒªãƒƒã‚¯ãŒæŠ¼ã•ã‚ŒãŸç¬é–“
 	static bool GetMouseClickTrigger(int bottonNum);
-	// ƒzƒC[ƒ‹
+	// ãƒ›ã‚¤ãƒ¼ãƒ«
 	static LONG GetMouseWheel();
-	// ƒ}ƒEƒX‚ÌˆÊ’uæ“¾
+	// ãƒã‚¦ã‚¹ã®ä½ç½®å–å¾—
 	static KMyMath::Vector2 GetMousePos();
-	// ‘O‰ñ‚Ìƒ}ƒEƒX‚ÌˆÊ’u‚ğæ“¾
+	// å‰å›ã®ãƒã‚¦ã‚¹ã®ä½ç½®ã‚’å–å¾—
 	static KMyMath::Vector2 GetOldMousePos();
-	// ƒ}ƒEƒX‚ÌˆÚ“®—Ê‚ğæ“¾
+	// ãƒã‚¦ã‚¹ã®ç§»å‹•é‡ã‚’å–å¾—
 	static KMyMath::Vector3 GetMouseMove();
 
-	// ƒQ[ƒ€ƒpƒbƒh
-	//ƒpƒbƒh‚ÉÚ‘±‚³‚ê‚Ä‚é‚©
+	// ã‚²ãƒ¼ãƒ ãƒ‘ãƒƒãƒ‰
+	//ãƒ‘ãƒƒãƒ‰ã«æ¥ç¶šã•ã‚Œã¦ã‚‹ã‹
 	bool GetPadConnect();
-	//ƒpƒbƒh‚Ìƒ{ƒ^ƒ“‚ª‰Ÿ‚³‚ê‚Ä‚¢‚é‚©
+	//ãƒ‘ãƒƒãƒ‰ã®ãƒœã‚¿ãƒ³ãŒæŠ¼ã•ã‚Œã¦ã„ã‚‹ã‹
 	bool GetPadButton(UINT button);
-	//ƒpƒbƒh‚Ìƒ{ƒ^ƒ“‚ª—£‚ê‚½uŠÔ‚©
+	//ãƒ‘ãƒƒãƒ‰ã®ãƒœã‚¿ãƒ³ãŒé›¢ã‚ŒãŸç¬é–“ã‹
 	bool GetPadButtonUp(UINT button);
-	//ƒpƒbƒh‚Ìƒ{ƒ^ƒ“‚ª‰Ÿ‚³‚ê‚½uŠÔ‚©
+	//ãƒ‘ãƒƒãƒ‰ã®ãƒœã‚¿ãƒ³ãŒæŠ¼ã•ã‚ŒãŸç¬é–“ã‹
 	bool GetPadButtonDown(UINT button);
-	//ƒpƒbƒh‚Ì¶ƒXƒeƒBƒbƒN
+	//ãƒ‘ãƒƒãƒ‰ã®å·¦ã‚¹ãƒ†ã‚£ãƒƒã‚¯
 	KMyMath::Vector2 GetPadLStick();
-	//ƒpƒbƒh‚Ì‰EƒXƒeƒBƒbƒN
+	//ãƒ‘ãƒƒãƒ‰ã®å³ã‚¹ãƒ†ã‚£ãƒƒã‚¯
 	KMyMath::Vector2 GetPadRStick();
-	//¶ƒgƒŠƒK[‚ğ‰Ÿ‚µ‚ñ‚¾uŠÔ‚©
+	//å·¦ãƒˆãƒªã‚¬ãƒ¼ã‚’æŠ¼ã—è¾¼ã‚“ã ç¬é–“ã‹
 	bool GetLTriggerDown();
-	//‰EƒgƒŠƒK[‚ğ‰Ÿ‚µ‚ñ‚¾uŠÔ‚©
+	//å³ãƒˆãƒªã‚¬ãƒ¼ã‚’æŠ¼ã—è¾¼ã‚“ã ç¬é–“ã‹
 	bool GetRTriggerDown();
-	//¶ƒXƒeƒBƒbƒN‚ğã‚É“|‚µ‚½uŠÔ‚©
+	//å·¦ã‚¹ãƒ†ã‚£ãƒƒã‚¯ã‚’ä¸Šã«å€’ã—ãŸç¬é–“ã‹
 	bool GetLStickUp();
-	//¶ƒXƒeƒBƒbƒN‚ğ‰º‚É“|‚µ‚½uŠÔ‚©
+	//å·¦ã‚¹ãƒ†ã‚£ãƒƒã‚¯ã‚’ä¸‹ã«å€’ã—ãŸç¬é–“ã‹
 	bool GetLStickDown();
 
 	/// <summary>
-	/// ¶ƒXƒeƒBƒbƒNX‚Ìƒfƒbƒhƒ][ƒ“İ’è
+	/// å·¦ã‚¹ãƒ†ã‚£ãƒƒã‚¯Xã®ãƒ‡ãƒƒãƒ‰ã‚¾ãƒ¼ãƒ³è¨­å®š
 	/// </summary>
 	/// <param name="incline"></param>
 	/// <returns></returns>
 	bool LStickTiltX(float incline);
 
 	/// <summary>
-	/// ¶ƒXƒeƒBƒbƒNY‚Ìƒfƒbƒhƒ][ƒ“İ’è
+	/// å·¦ã‚¹ãƒ†ã‚£ãƒƒã‚¯Yã®ãƒ‡ãƒƒãƒ‰ã‚¾ãƒ¼ãƒ³è¨­å®š
 	/// </summary>
 	/// <param name="incline"></param>
 	/// <returns></returns>
 	bool LStickTiltY(float incline);
 
-	// ¶ƒXƒeƒBƒbƒN‚ÌŒX‚«
+	// å·¦ã‚¹ãƒ†ã‚£ãƒƒã‚¯ã®å‚¾ã
 	KMyMath::Vector2 GetLStickInline();
 
-	// ¶ƒXƒeƒBƒbƒN‚ÌŠp“xæ“¾
+	// å·¦ã‚¹ãƒ†ã‚£ãƒƒã‚¯ã®è§’åº¦å–å¾—
 	float GetLStickAngle();
 
 private:
-	// ‘SƒL[‚Ì“ü—Íó‘Ô‚ğŠ“¾
+	// å…¨ã‚­ãƒ¼ã®å…¥åŠ›çŠ¶æ…‹ã‚’æ‰€å¾—
 	BYTE key[256] = {};
 	BYTE oldkey[256] = {};
 
-	// “ü—Í¶¬
+	// å…¥åŠ›ç”Ÿæˆ
 	Microsoft::WRL::ComPtr<IDirectInput8> directInput = nullptr;
 
-	// ƒL[ƒ{[ƒhƒfƒoƒCƒX‚Ì¶¬
+	// ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰ãƒ‡ãƒã‚¤ã‚¹ã®ç”Ÿæˆ
 	Microsoft::WRL::ComPtr<IDirectInputDevice8> keyboard = nullptr;
 
 	Microsoft::WRL::ComPtr<IDirectInputDevice8> mouse = nullptr;
@@ -122,7 +122,7 @@ private:
 	KMyMath::Vector2 mousePos;
 	KMyMath::Vector2 oldMousePos;
 
-	// ƒpƒbƒh
+	// ãƒ‘ãƒƒãƒ‰
 	XINPUT_STATE xInputState;
 	XINPUT_STATE oldXInputState;
 	bool isConnectPad = false;

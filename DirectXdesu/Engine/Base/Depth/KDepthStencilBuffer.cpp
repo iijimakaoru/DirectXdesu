@@ -31,7 +31,7 @@ bool KDepthStencilBuffer::Create(UINT w, UINT h, DXGI_FORMAT format)
 
 	CD3DX12_HEAP_PROPERTIES prop = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
 
-	//[“xƒoƒbƒtƒ@ì¬
+	//æ·±åº¦ãƒãƒƒãƒ•ã‚¡ä½œæˆ
 	HRESULT hr = device->CreateCommittedResource(
 		&prop,
 		D3D12_HEAP_FLAG_NONE,
@@ -46,13 +46,13 @@ bool KDepthStencilBuffer::Create(UINT w, UINT h, DXGI_FORMAT format)
 	dsvDesc.Format = format;
 	dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
 
-	//DSV§ì
+	//DSVåˆ¶ä½œ
 	handle.ptr = dsvHeap->CreateDSV(dsvDesc, texture.Get());
 
 
 	if (FAILED(hr))
 	{
-		MessageBoxA(nullptr, "[“xƒXƒeƒ“ƒVƒ‹ƒoƒbƒtƒ@‚Ìì¬‚É¸”s", "ƒGƒ‰[", MB_OK);
+		MessageBoxA(nullptr, "æ·±åº¦ã‚¹ãƒ†ãƒ³ã‚·ãƒ«ãƒãƒƒãƒ•ã‚¡ã®ä½œæˆã«å¤±æ•—", "ã‚¨ãƒ©ãƒ¼", MB_OK);
 		return false;
 	}
 

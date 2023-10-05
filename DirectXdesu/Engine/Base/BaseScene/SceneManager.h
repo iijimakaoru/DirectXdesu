@@ -5,23 +5,23 @@
 class SceneManager
 {
 public:
-	// XV
+	// æ›´æ–°
 	void Update();
 
-	// •`‰æ
+	// æç”»
 	void Draw();
 
-	// I—¹
+	// çµ‚äº†
 	void Final();
 
 	/// <summary>
-	/// ŽŸ‚ÌƒV[ƒ“
+	/// æ¬¡ã®ã‚·ãƒ¼ãƒ³
 	/// </summary>
 	/// <param name="sceneName"></param>
 	void ChangeScene(const std::string& sceneName);
 
 	/// <summary>
-	/// ƒV[ƒ“ƒtƒ@ƒNƒgƒŠ[‚ÌƒZƒbƒ^[
+	/// ã‚·ãƒ¼ãƒ³ãƒ•ã‚¡ã‚¯ãƒˆãƒªãƒ¼ã®ã‚»ãƒƒã‚¿ãƒ¼
 	/// </summary>
 	/// <param name="sceneFactory_"></param>
 	void SetSceneFactory(ASceneFactory* sceneFactory_)
@@ -32,12 +32,12 @@ public:
 	static SceneManager* GetInstance();
 
 private:
-	// ¡‚ÌƒV[ƒ“
+	// ä»Šã®ã‚·ãƒ¼ãƒ³
 	BaseScene* scene = nullptr;
-	// ŽŸ‚ÌƒV[ƒ“
+	// æ¬¡ã®ã‚·ãƒ¼ãƒ³
 	BaseScene* nextScene = nullptr;
 
-	// ƒV[ƒ“ƒtƒ@ƒNƒgƒŠ[
+	// ã‚·ãƒ¼ãƒ³ãƒ•ã‚¡ã‚¯ãƒˆãƒªãƒ¼
 	ASceneFactory* sceneFactory = nullptr;
 
 	SceneManager(){};

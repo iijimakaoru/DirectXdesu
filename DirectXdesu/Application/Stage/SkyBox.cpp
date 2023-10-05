@@ -2,14 +2,14 @@
 
 SkyBox* SkyBox::Create(KModel* model_, KGPlin* objPipeline_, const float posZ)
 {
-	// ƒCƒ“ƒXƒ^ƒ“ƒX¶¬
+	// ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ç”Ÿæˆ
 	SkyBox* skyBox = new SkyBox();
 	if (skyBox == nullptr)
 	{
 		return nullptr;
 	}
 
-	// ‰Šú‰»
+	// åˆæœŸåŒ–
 	skyBox->Init(model_, objPipeline_, posZ);
 
 	return skyBox;
@@ -17,13 +17,13 @@ SkyBox* SkyBox::Create(KModel* model_, KGPlin* objPipeline_, const float posZ)
 
 void SkyBox::Init(KModel* model_, KGPlin* objPipeline_, const float posZ)
 {
-	// ƒ‚ƒfƒ‹¶¬
+	// ãƒ¢ãƒ‡ãƒ«ç”Ÿæˆ
 	model = model_;
 
-	// ƒpƒCƒvƒ‰ƒCƒ“¶¬
+	// ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³ç”Ÿæˆ
 	objPipeline = objPipeline_;
 
-	// ƒIƒuƒWƒFƒNƒg¶¬
+	// ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆç”Ÿæˆ
 	object3d.reset(KObject3d::Create(model, objPipeline));
 	object3d->transform.pos.z = posZ;
 	object3d->transform.scale = { 600.0f,600.0f,600.0f };

@@ -10,14 +10,14 @@ const KMyMath::Vector2 Player::posLimitMax = { 15.0f, Player::posLimitMin.y + 12
 
 Player* Player::Create(KModel* model_, KGPlin* objPipeline_, const float playerHP, KGPlin* spritePipeline_)
 {
-	// ƒCƒ“ƒXƒ^ƒ“ƒX¶¬
+	// ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ç”Ÿæˆ
 	Player* player = new Player();
 	if (player == nullptr)
 	{
 		return nullptr;
 	}
 
-	// ‰Šú‰»
+	// åˆæœŸåŒ–
 	player->Init(model_, objPipeline_, playerHP, spritePipeline_);
 
 	return player;
@@ -25,73 +25,73 @@ Player* Player::Create(KModel* model_, KGPlin* objPipeline_, const float playerH
 
 void Player::Init(KModel* model_, KGPlin* objPipeline_, const float playerHP, KGPlin* spritePipeline_)
 {
-	// “ü—ÍƒCƒ“ƒXƒ^ƒ“ƒX
+	// å…¥åŠ›ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹
 	input = KInput::GetInstance();
 
-	// ƒ‚ƒfƒ‹¶¬
+	// ãƒ¢ãƒ‡ãƒ«ç”Ÿæˆ
 	model = model_;
 
-	// ƒpƒCƒvƒ‰ƒCƒ“¶¬
+	// ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³ç”Ÿæˆ
 	objPipeline = objPipeline_;
 	spritePipeline = spritePipeline_;
 
-	// ƒIƒuƒWƒFƒNƒg¶¬
+	// ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆç”Ÿæˆ
 	object3d.reset(KObject3d::Create(model, objPipeline));
 	object3d->transform.pos.z = 50;
 	object3d->transform.scale = { 2.0f,2.0f,2.0f };
 
-	// ƒŒƒeƒBƒNƒ‹
+	// ãƒ¬ãƒ†ã‚£ã‚¯ãƒ«
 	reticle3d = std::make_unique<Reticle3D>();
 	reticle3d->Init();
 	reticle2d = std::make_unique<Reticle2D>();
 	reticle2d->Init();
 
-	// HPŠÖ˜A
+	// HPé–¢é€£
 	maxHP = playerHP;
 	HP = maxHP;
 
-	// HPƒo[
+	// HPãƒãƒ¼
 	HPUI = std::make_unique<Sprite>();
 	HPUI->Init();
 	HPUI->SetPipeline(spritePipeline);
 
-	// HPŒ¸­’lƒo[
+	// HPæ¸›å°‘å€¤ãƒãƒ¼
 	HPrectUI = std::make_unique<Sprite>();
 	HPrectUI->Init();
 	HPrectUI->SetPipeline(spritePipeline);
 
-	// HPƒeƒNƒXƒ`ƒƒ“Ç‚İ‚İ
+	// HPãƒ†ã‚¯ã‚¹ãƒãƒ£èª­ã¿è¾¼ã¿
 	hpTex = TextureManager::Load("Resources/texture/white1x1.png");
 
-	// HPƒQ[ƒW
+	// HPã‚²ãƒ¼ã‚¸
 	HPBarUI = std::make_unique<Sprite>();
 	HPBarUI->Init();
 	HPBarUI->SetPipeline(spritePipeline);
 
-	// HPƒQ[ƒWƒeƒNƒXƒ`ƒƒ“Ç‚İ‚İ
+	// HPã‚²ãƒ¼ã‚¸ãƒ†ã‚¯ã‚¹ãƒãƒ£èª­ã¿è¾¼ã¿
 	hpbarTex = TextureManager::Load("Resources/texture/PlayersHPBar.png");
 
-	// €–Sƒtƒ‰ƒO
+	// æ­»äº¡ãƒ•ãƒ©ã‚°
 	isDead = false;
 
-	// ƒ_ƒ[ƒW‰‰oƒtƒ‰ƒO
+	// ãƒ€ãƒ¡ãƒ¼ã‚¸æ¼”å‡ºãƒ•ãƒ©ã‚°
 	isDamageEffect = false;
 
-	// ƒ_ƒ[ƒWƒGƒtƒFƒNƒg
+	// ãƒ€ãƒ¡ãƒ¼ã‚¸ã‚¨ãƒ•ã‚§ã‚¯ãƒˆ
 	damage = std::make_unique<Sprite>();
 	damage->Init();
 	damage->SetPipeline(spritePipeline);
 
-	// ƒ_ƒ[ƒWƒGƒtƒFƒNƒgƒeƒNƒXƒ`ƒƒ“Ç‚İ‚İ
+	// ãƒ€ãƒ¡ãƒ¼ã‚¸ã‚¨ãƒ•ã‚§ã‚¯ãƒˆãƒ†ã‚¯ã‚¹ãƒãƒ£èª­ã¿è¾¼ã¿
 	damageTex = TextureManager::Load("Resources/texture/damage.png");
 
-	// ƒ_ƒ[ƒWƒGƒtƒFƒNƒg‚Ì“§‰ß’l
+	// ãƒ€ãƒ¡ãƒ¼ã‚¸ã‚¨ãƒ•ã‚§ã‚¯ãƒˆã®é€éå€¤
 	dAlpha = 0;
 }
 
 void Player::Update(ViewProjection* viewPro)
 {
-	// €–SğŒ
+	// æ­»äº¡æ¡ä»¶
 	if (HP <= min(HP, 0))
 	{
 		isDead = true;
@@ -99,13 +99,13 @@ void Player::Update(ViewProjection* viewPro)
 
 	if (!isDead)
 	{
-		// ˆÚ“®
+		// ç§»å‹•
 		Move();
 
-		// ‰ñ“]
+		// å›è»¢
 		Rot();
 
-		// UŒ‚
+		// æ”»æ’ƒ
 		Attack();
 
 #ifdef _DEBUG
@@ -114,23 +114,23 @@ void Player::Update(ViewProjection* viewPro)
 	}
 	else
 	{
-		// €–S‰‰o
+		// æ­»äº¡æ¼”å‡º
 		DeadEffect();
 	}
 
-	// HP‰‰o
+	// HPæ¼”å‡º
 	HPEffect();
 
-	// ƒ_ƒ[ƒW‰‰o
+	// ãƒ€ãƒ¡ãƒ¼ã‚¸æ¼”å‡º
 	DamageEffect();
 
-	// 3DƒŒƒeƒBƒNƒ‹‚ÌXV
+	// 3Dãƒ¬ãƒ†ã‚£ã‚¯ãƒ«ã®æ›´æ–°
 	reticle3d->Update(object3d->transform.matWorld, GetWorldPos());
 
-	// 2DƒŒƒeƒBƒNƒ‹‚ÌXV
+	// 2Dãƒ¬ãƒ†ã‚£ã‚¯ãƒ«ã®æ›´æ–°
 	reticle2d->Update(viewPro, reticle3d->GetWorldPos());
 
-	// ƒIƒuƒWƒFƒNƒg‚ÌXV
+	// ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®æ›´æ–°
 	object3d->Update(viewPro);
 }
 
@@ -141,16 +141,16 @@ void Player::SetPos(const KMyMath::Vector3 pos_)
 
 void Player::Move()
 {
-	//©‹@‚ªŒX‚¢‚Ä‚¢‚éŠp“x‚ÉˆÚ“®‚³‚¹‚é
+	//è‡ªæ©ŸãŒå‚¾ã„ã¦ã„ã‚‹è§’åº¦ã«ç§»å‹•ã•ã›ã‚‹
 	KMyMath::Vector3 velocity = { 0, 0, 0 };
 	velocity.x = (object3d->transform.rot.y / rotLimit.y);
 	velocity.y = -(object3d->transform.rot.x / rotLimit.x);
 
-	// “®‚¯`
+	// å‹•ã‘ï½
 	object3d->transform.pos.x += velocity.x * moveSpeed;
 	object3d->transform.pos.y += velocity.y * moveSpeed;
 
-	// ˆÚ“®§ŒÀ
+	// ç§»å‹•åˆ¶é™
 	object3d->transform.pos.x = max(object3d->transform.pos.x, posLimitMin.x);
 	object3d->transform.pos.x = min(object3d->transform.pos.x, posLimitMax.x);
 	object3d->transform.pos.y = max(object3d->transform.pos.y, posLimitMin.y);
@@ -159,20 +159,20 @@ void Player::Move()
 
 void Player::Rot()
 {
-	//‰ñ“]‘¬“x
+	//å›è»¢é€Ÿåº¦
 	const float rotSpeed = 0.025f;
 
-	//Šp“xC³Šî€‘¬“x
+	//è§’åº¦ä¿®æ­£åŸºæº–é€Ÿåº¦
 	const float correctionSpeed = (rotSpeed * 2.0f) / 0.1f;
 	KMyMath::Vector3 rot = { 0, 0, 0 };
 
-	//‚Ç‚±‚Ü‚ÅŒX‚¯‚½‚ç”»’è‚ğ‚Æ‚é‚©
+	//ã©ã“ã¾ã§å‚¾ã‘ãŸã‚‰åˆ¤å®šã‚’ã¨ã‚‹ã‹
 	const float stickNum = 100;
 
-	// Y²‰ñ“]
+	// Yè»¸å›è»¢
 	if (input->LStickTiltX(stickNum) || input->LStickTiltX(-stickNum))
 	{
-		//©‹@‚ÍƒXƒeƒBƒbƒN‚ğ“|‚µ‚½•ûŒü‚É“®‚­
+		//è‡ªæ©Ÿã¯ã‚¹ãƒ†ã‚£ãƒƒã‚¯ã‚’å€’ã—ãŸæ–¹å‘ã«å‹•ã
 		const float stickRota = input->GetLStickAngle();
 		const float moveAngle = DirectX::XMConvertToRadians(stickRota);
 		const float padStickIncline = input->GetLStickInline().x;
@@ -180,11 +180,11 @@ void Player::Rot()
 	}
 	else
 	{
-		//Šp“xC³‘¬“x”{—¦
+		//è§’åº¦ä¿®æ­£é€Ÿåº¦å€ç‡
 		float backSpeedRatio = fabsf(object3d->transform.rot.y / (rotLimit.y * 2)) + 0.5f;
-		//Šp“xC³‘¬“x
+		//è§’åº¦ä¿®æ­£é€Ÿåº¦
 		const float backSpeed = correctionSpeed * backSpeedRatio;
-		//y²‰ñ“]‚ÌŒX‚«‚ğC³‚·‚é
+		//yè»¸å›è»¢ã®å‚¾ãã‚’ä¿®æ­£ã™ã‚‹
 		const float rotMin = 0.5f;
 		if (object3d->transform.rot.y > rotMin)
 		{
@@ -200,10 +200,10 @@ void Player::Rot()
 		}
 	}
 
-	// X²‰ñ“]
+	// Xè»¸å›è»¢
 	if (input->LStickTiltY(stickNum) || input->LStickTiltY(-stickNum))
 	{
-		//©‹@‚ÍƒXƒeƒBƒbƒN‚ğ“|‚µ‚½•ûŒü‚É“®‚­
+		//è‡ªæ©Ÿã¯ã‚¹ãƒ†ã‚£ãƒƒã‚¯ã‚’å€’ã—ãŸæ–¹å‘ã«å‹•ã
 		const float stickRota = -input->GetLStickAngle();
 		const float moveAngle = DirectX::XMConvertToRadians(stickRota);
 		const float padStickIncline = input->GetLStickInline().y;
@@ -211,11 +211,11 @@ void Player::Rot()
 	}
 	else
 	{
-		//Šp“xC³‘¬“x”{—¦
+		//è§’åº¦ä¿®æ­£é€Ÿåº¦å€ç‡
 		float backSpeedRatio = fabsf(object3d->transform.rot.x / (rotLimit.x * 2)) + 0.5f;
-		//Šp“xC³‘¬“x
+		//è§’åº¦ä¿®æ­£é€Ÿåº¦
 		const float backSpeed = correctionSpeed * backSpeedRatio;
-		//y²‰ñ“]‚ÌŒX‚«‚ğC³‚·‚é
+		//yè»¸å›è»¢ã®å‚¾ãã‚’ä¿®æ­£ã™ã‚‹
 		const float rotMin = 0.5f;
 		if (object3d->transform.rot.x > rotMin)
 		{
@@ -231,11 +231,11 @@ void Player::Rot()
 		}
 	}
 
-	// Z²‰ñ“]
+	// Zè»¸å›è»¢
 	{
 		const float rotZspeed = 0.01f;
 		const float rotZLimit = 1.0f;
-		//‰E‰ñ“]
+		//å³å›è»¢
 		if (isRotZRight)
 		{
 			swayZ += rotZspeed;
@@ -244,7 +244,7 @@ void Player::Rot()
 				isRotZRight = false;
 			}
 		}
-		//¶‰ñ“]
+		//å·¦å›è»¢
 		else
 		{
 			swayZ -= rotZspeed;
@@ -259,7 +259,7 @@ void Player::Rot()
 
 	object3d->transform.rot += rot;
 
-	// Šp“x§ŒÀ
+	// è§’åº¦åˆ¶é™
 	object3d->transform.rot.y = max(object3d->transform.rot.y, -rotLimit.y);
 	object3d->transform.rot.y = min(object3d->transform.rot.y, rotLimit.y);
 	object3d->transform.rot.x = max(object3d->transform.rot.x, -rotLimit.x);
@@ -275,12 +275,12 @@ void Player::Attack()
 
 		const float distance = 20.0f;
 
-		// ‘¬“xƒxƒNƒgƒ‹‚ğ©‹@‚ÌŒü‚«‚É‡‚í‚¹‚Ä‰ñ“]
+		// é€Ÿåº¦ãƒ™ã‚¯ãƒˆãƒ«ã‚’è‡ªæ©Ÿã®å‘ãã«åˆã‚ã›ã¦å›è»¢
 		bulletVec = MyMathUtility::TransforNormal(bulletVec, object3d->transform.matWorld);
 
 		bulletVec = MyMathUtility::MakeNormalize(bulletVec);
 
-		// ’e”­Ë
+		// å¼¾ç™ºå°„
 		BulletManager::GetInstance()->PlayerBulletShot(GetWorldPos() + bulletVec * distance, bulletVec, object3d->transform.rot, bulletSpeed);
 	}
 }
@@ -289,23 +289,23 @@ void Player::DeadEffect()
 {
 	if (!isFallEffectEnd)
 	{
-		// p¨§Œä
+		// å§¿å‹¢åˆ¶å¾¡
 		object3d->transform.rot.x = 25.0f;
 		object3d->transform.rot.y = 0;
 
-		// ‰ñ“]
+		// å›è»¢
 		object3d->transform.rot.z += 10.0f;
 
-		// —‰º
+		// è½ä¸‹
 		object3d->transform.pos.y -= 0.1f;
 
-		// ŠÔŒo‰ß
+		// æ™‚é–“çµŒé
 		fallEffectTimer++;
 
-		// ”š”­ŠÔŠuƒ^ƒCƒ}[
+		// çˆ†ç™ºé–“éš”ã‚¿ã‚¤ãƒãƒ¼
 		expTimer++;
 
-		// ‘Â‚¿‚Ä‚éŠÔ‚Ì”š”­
+		// å •ã¡ã¦ã‚‹é–“ã®çˆ†ç™º
 		if (expTimer >= max(expTimer, expTime))
 		{
 			ObjParticleManager::GetInstance()->SetSmallExp({ GetWorldPos().x + MyMathUtility::GetRand(-1.0f,1.0f),
@@ -313,7 +313,7 @@ void Player::DeadEffect()
 			expTimer = 0;
 		}
 
-		// ‰‰oI‚í‚è
+		// æ¼”å‡ºçµ‚ã‚ã‚Š
 		if (fallEffectTimer >= max(fallEffectTimer, fallEffectTime))
 		{
 			ObjParticleManager::GetInstance()->SetExp(GetWorldPos());
@@ -324,7 +324,7 @@ void Player::DeadEffect()
 
 void Player::HPEffect()
 {
-	// HPŒ¸­‰‰oˆ—
+	// HPæ¸›å°‘æ¼”å‡ºå‡¦ç†
 	if (hpEase)
 	{
 		if (oldHpTimer < oldHpTime)
@@ -351,7 +351,7 @@ void Player::HPEffect()
 		hpEaseTimer = 0;
 	}
 
-	// ƒsƒ“ƒ`ó‘Ô‚ÌHP‰‰o
+	// ãƒ”ãƒ³ãƒçŠ¶æ…‹ã®HPæ¼”å‡º
 	if (HP < maxHP * 1 / 4)
 	{
 		hpColor = { 1,0,0,1 };
@@ -364,7 +364,7 @@ void Player::HPEffect()
 
 void Player::DamageEffect()
 {
-	// ƒ_ƒ[ƒWƒGƒtƒFƒNƒgˆ—
+	// ãƒ€ãƒ¡ãƒ¼ã‚¸ã‚¨ãƒ•ã‚§ã‚¯ãƒˆå‡¦ç†
 	if (isDamageEffect)
 	{
 		dAlpha -= 0.1f;
@@ -375,7 +375,7 @@ void Player::DamageEffect()
 		}
 	}
 
-	// –³“GŠÔˆ—
+	// ç„¡æ•µæ™‚é–“å‡¦ç†
 	if (isInvisible)
 	{
 		if (invisibleTimer < invisibleTime)
@@ -397,7 +397,7 @@ void Player::Debug()
 
 void Player::ObjDraw()
 {
-	// ‹@‘Ì•`‰æ
+	// æ©Ÿä½“æç”»
 	if (!isFallEffectEnd)
 	{
 		object3d->Draw();
@@ -406,7 +406,7 @@ void Player::ObjDraw()
 
 void Player::SpriteDraw()
 {
-	// ƒŒƒeƒBƒNƒ‹•`‰æ
+	// ãƒ¬ãƒ†ã‚£ã‚¯ãƒ«æç”»
 	if (!isDead)
 	{
 		reticle2d->Draw();
@@ -415,16 +415,16 @@ void Player::SpriteDraw()
 
 void Player::UIDraw()
 {
-	// HPƒo[•`‰æ
+	// HPãƒãƒ¼æç”»
 	HPBarUI->Draw(hpbarTex, { 10,10 }, { 1,1 }, 0, { 1,1,1,1 }, false, false, { 0,0 });
 
-	// HPŒ¸­’l•`‰æ
+	// HPæ¸›å°‘å€¤æç”»
 	HPrectUI->Draw(hpTex, { 11,11 }, { oldHP * (318 / maxHP),30 }, 0, { hpColor.x,hpColor.y,hpColor.z,0.3f }, false, false, { 0,0 });
 
-	// HP•`‰æ
+	// HPæç”»
 	HPUI->Draw(hpTex, { 11,11 }, { HP * (318 / maxHP),30 }, 0, { hpColor.x,hpColor.y,hpColor.z,1 }, false, false, { 0,0 });
 
-	// ƒ_ƒ[ƒWƒGƒtƒFƒNƒg•`‰æ
+	// ãƒ€ãƒ¡ãƒ¼ã‚¸ã‚¨ãƒ•ã‚§ã‚¯ãƒˆæç”»
 	if (isDamageEffect)
 	{
 		damage->Draw(damageTex, { 1280 / 2, 720 / 2 }, { 1 ,1 }, 0.0f, { 1,0,0,dAlpha });
@@ -443,10 +443,10 @@ const KMyMath::Vector3& Player::GetPosition() const
 
 const KMyMath::Vector3 Player::GetWorldPos() const
 {
-	// ƒ[ƒ‹ƒhÀ•WŠi”[•Ï”
+	// ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™æ ¼ç´å¤‰æ•°
 	KMyMath::Vector3 result;
 
-	// ƒ[ƒ‹ƒhs—ñ‚Ì•½sˆÚ“®¬•ªæ“¾
+	// ãƒ¯ãƒ¼ãƒ«ãƒ‰è¡Œåˆ—ã®å¹³è¡Œç§»å‹•æˆåˆ†å–å¾—
 	result.x = object3d->transform.matWorld.m[3][0];
 	result.y = object3d->transform.matWorld.m[3][1];
 	result.z = object3d->transform.matWorld.m[3][2];

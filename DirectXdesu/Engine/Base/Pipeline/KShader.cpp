@@ -21,52 +21,52 @@ void KShader::Error()
 	}
 }
 
-const ID3D10Blob* KShader::GetVSBlob() const
+ID3D10Blob* KShader::GetVSBlob()
 {
 	return vsBlob.Get();
 }
 
-const ID3D10Blob* KShader::GetHSBlob() const
+ID3D10Blob* KShader::GetHSBlob()
 {
 	return hsBlob.Get();
 }
 
-const ID3D10Blob* KShader::GetDSBlob() const
+ID3D10Blob* KShader::GetDSBlob()
 {
 	return dsBlob.Get();
 }
 
-const ID3D10Blob* KShader::GetGSBlob() const
+ID3D10Blob* KShader::GetGSBlob()
 {
 	return gsBlob.Get();
 }
 
-const ID3D10Blob* KShader::GetPSBlob() const
+ID3D10Blob* KShader::GetPSBlob()
 {
 	return psBlob.Get();
 }
 
-const D3D12_SHADER_BYTECODE* KShader::GetVSBytecode() const
+D3D12_SHADER_BYTECODE* KShader::GetVSBytecode()
 {
 	return &vsBytecode;
 }
 
-const D3D12_SHADER_BYTECODE* KShader::GetHSBytecode() const
+D3D12_SHADER_BYTECODE* KShader::GetHSBytecode()
 {
 	return &hsBytecode;
 }
 
-const D3D12_SHADER_BYTECODE* KShader::GetDSBytecode() const
+D3D12_SHADER_BYTECODE* KShader::GetDSBytecode()
 {
 	return &dsBytecode;
 }
 
-const D3D12_SHADER_BYTECODE* KShader::GetGSBytecode() const
+D3D12_SHADER_BYTECODE* KShader::GetGSBytecode()
 {
 	return &gsBytecode;
 }
 
-const D3D12_SHADER_BYTECODE* KShader::GetPSBytecode() const
+D3D12_SHADER_BYTECODE* KShader::GetPSBytecode()
 {
 	return &psBytecode;
 }

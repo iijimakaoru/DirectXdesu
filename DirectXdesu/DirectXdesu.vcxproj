@@ -55,11 +55,11 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <WarningLevel>EnableAllWarnings</WarningLevel>
+      <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)Engine\2D\PostEffect;$(ProjectDir)Engine\2D\Sprite;$(ProjectDir)Engine\2D\Texture;$(ProjectDir)Engine\2D\Vertex;$(ProjectDir)Engine\3D\Loader;$(ProjectDir)Engine\3D\Model;$(ProjectDir)Engine\3D\Object3D;$(ProjectDir)Engine\Base\BaseCamera;$(ProjectDir)Engine\Base\BaseScene;$(ProjectDir)Engine\Base\Depth;$(ProjectDir)Engine\Base\Descriptor;$(ProjectDir)Engine\Base\DirectXCommon;$(ProjectDir)Engine\Base\Pipeline;$(ProjectDir)Engine\Base\RenderTarget;$(ProjectDir)Engine\Base\RunGame;$(ProjectDir)Engine\Base\View;$(ProjectDir)Engine\Base\Window;$(ProjectDir)Engine\Collision;$(ProjectDir)Engine\Imgui;$(ProjectDir)Engine\Input;$(ProjectDir)Engine\Level;$(ProjectDir)Engine\Math\Ease;$(ProjectDir)Engine\Sound;$(ProjectDir)Application\Camera;$(ProjectDir)Application\Scene;$(ProjectDir)Engine\Math\Matrix4;$(ProjectDir)Engine\Math\MyMath;$(ProjectDir)Engine\Math\Quaternion;$(ProjectDir)Engine\Math\Vector2;$(ProjectDir)Engine\Math\Vector3;$(ProjectDir)Engine\Math\Vector4;$(ProjectDir)DirectXdesu;$(ProjectDir)Application;$(ProjectDir)Engine\Particle;$(ProjectDir)Engine\Base;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Engine\2D\PostEffect;$(ProjectDir)Engine\2D\Sprite;$(ProjectDir)Engine\2D\Texture;$(ProjectDir)Engine\2D\Vertex;$(ProjectDir)Engine\3D\Loader;$(ProjectDir)Engine\3D\Model;$(ProjectDir)Engine\3D\Object3D;$(ProjectDir)Engine\Base\BaseCamera;$(ProjectDir)Engine\Base\BaseScene;$(ProjectDir)Engine\Base\Depth;$(ProjectDir)Engine\Base\Descriptor;$(ProjectDir)Engine\Base\DirectXCommon;$(ProjectDir)Engine\Base\Pipeline;$(ProjectDir)Engine\Base\RenderTarget;$(ProjectDir)Engine\Base\RunGame;$(ProjectDir)Engine\Base\View;$(ProjectDir)Engine\Base\Window;$(ProjectDir)Engine\Collision;$(ProjectDir)Engine\Imgui;$(ProjectDir)Engine\Input;$(ProjectDir)Engine\Level;$(ProjectDir)Engine\Math\Ease;$(ProjectDir)Engine\Sound;$(ProjectDir)Application\Camera;$(ProjectDir)Application\Scene;$(ProjectDir)Engine\Math\Matrix4;$(ProjectDir)Engine\Math\MyMath;$(ProjectDir)Engine\Math\Quaternion;$(ProjectDir)Engine\Math\Vector2;$(ProjectDir)Engine\Math\Vector3;$(ProjectDir)Engine\Math\Vector4;$(ProjectDir)DirectXdesu;$(ProjectDir)Application;$(ProjectDir)Engine\Particle;$(ProjectDir)Engine\Base;$(ProjectDir)Application\Stage;$(ProjectDir)Application\Reticle;$(ProjectDir)Application\Player;$(ProjectDir)Application\MobEnemy;$(ProjectDir)Application\Effect;$(ProjectDir)Application\Bullet;$(ProjectDir)Application\BossEnemy;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <AdditionalOptions>/ignore:4049 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
@@ -73,14 +73,14 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <WarningLevel>EnableAllWarnings</WarningLevel>
+      <WarningLevel>Level3</WarningLevel>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <AdditionalIncludeDirectories>$(ProjectDir)Engine\2D\PostEffect;$(ProjectDir)Engine\2D\Sprite;$(ProjectDir)Engine\2D\Texture;$(ProjectDir)Engine\2D\Vertex;$(ProjectDir)Engine\3D\Loader;$(ProjectDir)Engine\3D\Model;$(ProjectDir)Engine\3D\Object3D;$(ProjectDir)Engine\Base\BaseCamera;$(ProjectDir)Engine\Base\BaseScene;$(ProjectDir)Engine\Base\Depth;$(ProjectDir)Engine\Base\Descriptor;$(ProjectDir)Engine\Base\DirectXCommon;$(ProjectDir)Engine\Base\Pipeline;$(ProjectDir)Engine\Base\RenderTarget;$(ProjectDir)Engine\Base\RunGame;$(ProjectDir)Engine\Base\View;$(ProjectDir)Engine\Base\Window;$(ProjectDir)Engine\Collision;$(ProjectDir)Engine\Imgui;$(ProjectDir)Engine\Input;$(ProjectDir)Engine\Level;$(ProjectDir)Engine\Math\Ease;$(ProjectDir)Engine\Sound;$(ProjectDir)Application\Camera;$(ProjectDir)Application\Scene;$(ProjectDir)Engine\Math\Matrix4;$(ProjectDir)Engine\Math\MyMath;$(ProjectDir)Engine\Math\Quaternion;$(ProjectDir)Engine\Math\Vector2;$(ProjectDir)Engine\Math\Vector3;$(ProjectDir)Engine\Math\Vector4;$(ProjectDir)DirectXdesu;$(ProjectDir)Application;$(ProjectDir)Engine\Particle;$(ProjectDir)Engine\Base;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Engine\2D\PostEffect;$(ProjectDir)Engine\2D\Sprite;$(ProjectDir)Engine\2D\Texture;$(ProjectDir)Engine\2D\Vertex;$(ProjectDir)Engine\3D\Loader;$(ProjectDir)Engine\3D\Model;$(ProjectDir)Engine\3D\Object3D;$(ProjectDir)Engine\Base\BaseCamera;$(ProjectDir)Engine\Base\BaseScene;$(ProjectDir)Engine\Base\Depth;$(ProjectDir)Engine\Base\Descriptor;$(ProjectDir)Engine\Base\DirectXCommon;$(ProjectDir)Engine\Base\Pipeline;$(ProjectDir)Engine\Base\RenderTarget;$(ProjectDir)Engine\Base\RunGame;$(ProjectDir)Engine\Base\View;$(ProjectDir)Engine\Base\Window;$(ProjectDir)Engine\Collision;$(ProjectDir)Engine\Imgui;$(ProjectDir)Engine\Input;$(ProjectDir)Engine\Level;$(ProjectDir)Engine\Math\Ease;$(ProjectDir)Engine\Sound;$(ProjectDir)Application\Camera;$(ProjectDir)Application\Scene;$(ProjectDir)Engine\Math\Matrix4;$(ProjectDir)Engine\Math\MyMath;$(ProjectDir)Engine\Math\Quaternion;$(ProjectDir)Engine\Math\Vector2;$(ProjectDir)Engine\Math\Vector3;$(ProjectDir)Engine\Math\Vector4;$(ProjectDir)DirectXdesu;$(ProjectDir)Application;$(ProjectDir)Engine\Particle;$(ProjectDir)Engine\Base;$(ProjectDir)Application\Stage;$(ProjectDir)Application\Reticle;$(ProjectDir)Application\Player;$(ProjectDir)Application\MobEnemy;$(ProjectDir)Application\Effect;$(ProjectDir)Application\Bullet;$(ProjectDir)Application\BossEnemy;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <AdditionalOptions>/ignore:4049 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
@@ -95,23 +95,23 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Application\AppearEnemy.cpp" />
-    <ClCompile Include="Application\Bullet.cpp" />
+    <ClCompile Include="Application\MobEnemy\AppearEnemy.cpp" />
+    <ClCompile Include="Application\Bullet\Bullet.cpp" />
     <ClCompile Include="Application\Camera\RailCamera.cpp" />
-    <ClCompile Include="Application\Ground.cpp" />
-    <ClCompile Include="Application\MobEnemy.cpp" />
-    <ClCompile Include="Application\Player.cpp" />
-    <ClCompile Include="Application\PlayerBullet.cpp" />
-    <ClCompile Include="Application\Reticle2D.cpp" />
-    <ClCompile Include="Application\Reticle3D.cpp" />
-    <ClCompile Include="Application\EnemyBullet.cpp" />
-    <ClCompile Include="Application\BossEnemy.cpp" />
-    <ClCompile Include="Application\Blaster.cpp" />
-    <ClCompile Include="Application\BulletManager.cpp" />
-    <ClCompile Include="Application\CanonEnemy.cpp" />
+    <ClCompile Include="Application\Stage\Ground.cpp" />
+    <ClCompile Include="Application\MobEnemy\MobEnemy.cpp" />
+    <ClCompile Include="Application\Player\Player.cpp" />
+    <ClCompile Include="Application\Bullet\PlayerBullet.cpp" />
+    <ClCompile Include="Application\Reticle\Reticle2D.cpp" />
+    <ClCompile Include="Application\Reticle\Reticle3D.cpp" />
+    <ClCompile Include="Application\Bullet\EnemyBullet.cpp" />
+    <ClCompile Include="Application\BossEnemy\BossEnemy.cpp" />
+    <ClCompile Include="Application\BossEnemy\Blaster.cpp" />
+    <ClCompile Include="Application\Bullet\BulletManager.cpp" />
+    <ClCompile Include="Application\MobEnemy\CanonEnemy.cpp" />
     <ClCompile Include="Application\Scene\ClearScene.cpp" />
-    <ClCompile Include="Application\BillManager.cpp" />
-    <ClCompile Include="Application\Bill1.cpp" />
+    <ClCompile Include="Application\Stage\BillManager.cpp" />
+    <ClCompile Include="Application\Stage\Bill1.cpp" />
     <ClCompile Include="Engine\Base\BaseScene\ASceneFactory.cpp" />
     <ClCompile Include="Engine\Base\BaseScene\BaseScene.cpp" />
     <ClCompile Include="Engine\Base\BaseCamera\Camera.cpp" />
@@ -139,7 +139,7 @@
     <ClCompile Include="Engine\Base\Pipeline\KShader.cpp" />
     <ClCompile Include="Engine\2D\Vertex\KVertex.cpp" />
     <ClCompile Include="Engine\Level\LevelLoader.cpp" />
-    <ClCompile Include="Application\FlyEnemy.cpp" />
+    <ClCompile Include="Application\MobEnemy\FlyEnemy.cpp" />
     <ClCompile Include="Application\Scene\GameOverScene.cpp" />
     <ClCompile Include="Engine\Base\RunGame\main.cpp" />
     <ClCompile Include="Engine\Base\Window\KWinApp.cpp" />
@@ -158,30 +158,30 @@
     <ClCompile Include="Engine\Math\Vector4\Vector4.cpp" />
     <ClCompile Include="Engine\Base\View\ViewProjection.cpp" />
     <ClCompile Include="Engine\2D\Texture\TextureManager.cpp" />
-    <ClCompile Include="Application\Warning.cpp" />
-    <ClCompile Include="Application\SkyBox.cpp" />
+    <ClCompile Include="Application\Effect\Warning.cpp" />
+    <ClCompile Include="Application\Stage\SkyBox.cpp" />
     <ClCompile Include="Engine\Particle\ParticleManager.cpp" />
     <ClCompile Include="Application\Camera\TitleCamera.cpp" />
     <ClCompile Include="Engine\Base\BaseScene\SceneChange.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Application\AppearEnemy.h" />
-    <ClInclude Include="Application\Bullet.h" />
+    <ClInclude Include="Application\MobEnemy\AppearEnemy.h" />
+    <ClInclude Include="Application\Bullet\Bullet.h" />
     <ClInclude Include="Application\Camera\RailCamera.h" />
-    <ClInclude Include="Application\Ground.h" />
-    <ClInclude Include="Application\MobEnemy.h" />
-    <ClInclude Include="Application\Player.h" />
-    <ClInclude Include="Application\PlayerBullet.h" />
-    <ClInclude Include="Application\Reticle2D.h" />
-    <ClInclude Include="Application\Reticle3D.h" />
-    <ClInclude Include="Application\EnemyBullet.h" />
-    <ClInclude Include="Application\BossEnemy.h" />
-    <ClInclude Include="Application\Blaster.h" />
-    <ClInclude Include="Application\BulletManager.h" />
-    <ClInclude Include="Application\CanonEnemy.h" />
+    <ClInclude Include="Application\Stage\Ground.h" />
+    <ClInclude Include="Application\MobEnemy\MobEnemy.h" />
+    <ClInclude Include="Application\Player\Player.h" />
+    <ClInclude Include="Application\Bullet\PlayerBullet.h" />
+    <ClInclude Include="Application\Reticle\Reticle2D.h" />
+    <ClInclude Include="Application\Reticle\Reticle3D.h" />
+    <ClInclude Include="Application\Bullet\EnemyBullet.h" />
+    <ClInclude Include="Application\BossEnemy\BossEnemy.h" />
+    <ClInclude Include="Application\BossEnemy\Blaster.h" />
+    <ClInclude Include="Application\Bullet\BulletManager.h" />
+    <ClInclude Include="Application\MobEnemy\CanonEnemy.h" />
     <ClInclude Include="Application\Scene\ClearScene.h" />
-    <ClInclude Include="Application\BillManager.h" />
-    <ClInclude Include="Application\Bill1.h" />
+    <ClInclude Include="Application\Stage\BillManager.h" />
+    <ClInclude Include="Application\Stage\Bill1.h" />
     <ClInclude Include="Engine\Base\BaseScene\ASceneFactory.h" />
     <ClInclude Include="Engine\Base\BaseScene\BaseScene.h" />
     <ClInclude Include="Engine\Base\BaseCamera\Camera.h" />
@@ -226,10 +226,10 @@
     <ClInclude Include="Engine\Math\Vector4\Vector4.h" />
     <ClInclude Include="Engine\Base\View\ViewProjection.h" />
     <ClInclude Include="Engine\2D\Texture\TextureManager.h" />
-    <ClInclude Include="Application\Warning.h" />
-    <ClInclude Include="Application\SkyBox.h" />
+    <ClInclude Include="Application\Effect\Warning.h" />
+    <ClInclude Include="Application\Stage\SkyBox.h" />
     <ClInclude Include="Engine\Particle\ParticleManager.h" />
-    <ClInclude Include="Application\FlyEnemy.h" />
+    <ClInclude Include="Application\MobEnemy\FlyEnemy.h" />
     <ClInclude Include="Application\Camera\TitleCamera.h" />
     <ClInclude Include="Application\Scene\GameOverScene.h" />
     <ClInclude Include="Engine\Base\BaseScene\SceneChange.h" />

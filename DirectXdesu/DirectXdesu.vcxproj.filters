@@ -360,58 +360,58 @@
     <ClCompile Include="Engine\Base\RunGame\main.cpp">
       <Filter>ソース ファイル\Engine\Base\RunGame</Filter>
     </ClCompile>
-    <ClCompile Include="Application\AppearEnemy.cpp">
+    <ClCompile Include="Application\MobEnemy\AppearEnemy.cpp">
       <Filter>ソース ファイル\Application\MobEnemy</Filter>
     </ClCompile>
-    <ClCompile Include="Application\MobEnemy.cpp">
+    <ClCompile Include="Application\MobEnemy\MobEnemy.cpp">
       <Filter>ソース ファイル\Application\MobEnemy</Filter>
     </ClCompile>
-    <ClCompile Include="Application\CanonEnemy.cpp">
+    <ClCompile Include="Application\MobEnemy\CanonEnemy.cpp">
       <Filter>ソース ファイル\Application\MobEnemy</Filter>
     </ClCompile>
-    <ClCompile Include="Application\FlyEnemy.cpp">
+    <ClCompile Include="Application\MobEnemy\FlyEnemy.cpp">
       <Filter>ソース ファイル\Application\MobEnemy</Filter>
     </ClCompile>
-    <ClCompile Include="Application\BulletManager.cpp">
+    <ClCompile Include="Application\Bullet\BulletManager.cpp">
       <Filter>ソース ファイル\Application\Bullet</Filter>
     </ClCompile>
-    <ClCompile Include="Application\Bullet.cpp">
+    <ClCompile Include="Application\Bullet\Bullet.cpp">
       <Filter>ソース ファイル\Application\Bullet</Filter>
     </ClCompile>
-    <ClCompile Include="Application\PlayerBullet.cpp">
+    <ClCompile Include="Application\Bullet\PlayerBullet.cpp">
       <Filter>ソース ファイル\Application\Bullet</Filter>
     </ClCompile>
-    <ClCompile Include="Application\Warning.cpp">
+    <ClCompile Include="Application\Effect\Warning.cpp">
       <Filter>ソース ファイル\Application\Effect</Filter>
     </ClCompile>
-    <ClCompile Include="Application\Blaster.cpp">
+    <ClCompile Include="Application\BossEnemy\Blaster.cpp">
       <Filter>ソース ファイル\Application\BossEnemy</Filter>
     </ClCompile>
-    <ClCompile Include="Application\BossEnemy.cpp">
+    <ClCompile Include="Application\BossEnemy\BossEnemy.cpp">
       <Filter>ソース ファイル\Application\BossEnemy</Filter>
     </ClCompile>
-    <ClCompile Include="Application\EnemyBullet.cpp">
+    <ClCompile Include="Application\Bullet\EnemyBullet.cpp">
       <Filter>ソース ファイル\Application\Bullet</Filter>
     </ClCompile>
-    <ClCompile Include="Application\Reticle2D.cpp">
+    <ClCompile Include="Application\Reticle\Reticle2D.cpp">
       <Filter>ソース ファイル\Application\Reticle</Filter>
     </ClCompile>
-    <ClCompile Include="Application\Reticle3D.cpp">
+    <ClCompile Include="Application\Reticle\Reticle3D.cpp">
       <Filter>ソース ファイル\Application\Reticle</Filter>
     </ClCompile>
-    <ClCompile Include="Application\Ground.cpp">
+    <ClCompile Include="Application\Stage\Ground.cpp">
       <Filter>ソース ファイル\Application\Stage</Filter>
     </ClCompile>
-    <ClCompile Include="Application\BillManager.cpp">
+    <ClCompile Include="Application\Stage\BillManager.cpp">
       <Filter>ソース ファイル\Application\Stage</Filter>
     </ClCompile>
-    <ClCompile Include="Application\Bill1.cpp">
+    <ClCompile Include="Application\Stage\Bill1.cpp">
       <Filter>ソース ファイル\Application\Stage</Filter>
     </ClCompile>
-    <ClCompile Include="Application\SkyBox.cpp">
+    <ClCompile Include="Application\Stage\SkyBox.cpp">
       <Filter>ソース ファイル\Application\Stage</Filter>
     </ClCompile>
-    <ClCompile Include="Application\Player.cpp">
+    <ClCompile Include="Application\Player\Player.cpp">
       <Filter>ソース ファイル\Application\Player</Filter>
     </ClCompile>
   </ItemGroup>
@@ -563,58 +563,58 @@
     <ClInclude Include="Engine\Base\BaseScene\SceneChange.h">
       <Filter>ヘッダー ファイル\Application\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="Application\MobEnemy.h">
+    <ClInclude Include="Application\MobEnemy\MobEnemy.h">
       <Filter>ヘッダー ファイル\Application\MobEnemy</Filter>
     </ClInclude>
-    <ClInclude Include="Application\FlyEnemy.h">
+    <ClInclude Include="Application\MobEnemy\FlyEnemy.h">
       <Filter>ヘッダー ファイル\Application\MobEnemy</Filter>
     </ClInclude>
-    <ClInclude Include="Application\AppearEnemy.h">
+    <ClInclude Include="Application\MobEnemy\AppearEnemy.h">
       <Filter>ヘッダー ファイル\Application\MobEnemy</Filter>
     </ClInclude>
-    <ClInclude Include="Application\CanonEnemy.h">
+    <ClInclude Include="Application\MobEnemy\CanonEnemy.h">
       <Filter>ヘッダー ファイル\Application\MobEnemy</Filter>
     </ClInclude>
-    <ClInclude Include="Application\Bullet.h">
+    <ClInclude Include="Application\Bullet\Bullet.h">
       <Filter>ヘッダー ファイル\Application\Bullet</Filter>
     </ClInclude>
-    <ClInclude Include="Application\BulletManager.h">
+    <ClInclude Include="Application\Bullet\BulletManager.h">
       <Filter>ヘッダー ファイル\Application\Bullet</Filter>
     </ClInclude>
-    <ClInclude Include="Application\PlayerBullet.h">
+    <ClInclude Include="Application\Bullet\PlayerBullet.h">
       <Filter>ヘッダー ファイル\Application\Bullet</Filter>
     </ClInclude>
-    <ClInclude Include="Application\EnemyBullet.h">
+    <ClInclude Include="Application\Bullet\EnemyBullet.h">
       <Filter>ヘッダー ファイル\Application\Bullet</Filter>
     </ClInclude>
-    <ClInclude Include="Application\Warning.h">
+    <ClInclude Include="Application\Effect\Warning.h">
       <Filter>ヘッダー ファイル\Application\Effect</Filter>
     </ClInclude>
-    <ClInclude Include="Application\Blaster.h">
+    <ClInclude Include="Application\BossEnemy\Blaster.h">
       <Filter>ヘッダー ファイル\Application\BossEnemy</Filter>
     </ClInclude>
-    <ClInclude Include="Application\BossEnemy.h">
+    <ClInclude Include="Application\BossEnemy\BossEnemy.h">
       <Filter>ヘッダー ファイル\Application\BossEnemy</Filter>
     </ClInclude>
-    <ClInclude Include="Application\Player.h">
+    <ClInclude Include="Application\Player\Player.h">
       <Filter>ヘッダー ファイル\Application\Player</Filter>
     </ClInclude>
-    <ClInclude Include="Application\Bill1.h">
+    <ClInclude Include="Application\Stage\Bill1.h">
       <Filter>ヘッダー ファイル\Application\Stage</Filter>
     </ClInclude>
-    <ClInclude Include="Application\BillManager.h">
+    <ClInclude Include="Application\Stage\BillManager.h">
       <Filter>ヘッダー ファイル\Application\Stage</Filter>
     </ClInclude>
-    <ClInclude Include="Application\Ground.h">
+    <ClInclude Include="Application\Stage\Ground.h">
       <Filter>ヘッダー ファイル\Application\Stage</Filter>
     </ClInclude>
-    <ClInclude Include="Application\SkyBox.h">
+    <ClInclude Include="Application\Stage\SkyBox.h">
       <Filter>ヘッダー ファイル\Application\Stage</Filter>
     </ClInclude>
-    <ClInclude Include="Application\Reticle2D.h">
+    <ClInclude Include="Application\Reticle\Reticle2D.h">
       <Filter>ヘッダー ファイル\Application\Reticle</Filter>
     </ClInclude>
-    <ClInclude Include="Application\Reticle3D.h">
+    <ClInclude Include="Application\Reticle\Reticle3D.h">
       <Filter>ヘッダー ファイル\Application\Reticle</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Base\WarrningIgnore.h">

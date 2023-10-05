@@ -56,16 +56,16 @@ private:
 	HRESULT result;
 
 public:
-	const ID3D10Blob* GetVSBlob() const;
-	const ID3D10Blob* GetHSBlob() const;
-	const ID3D10Blob* GetDSBlob() const;
-	const ID3D10Blob* GetGSBlob() const;
-	const ID3D10Blob* GetPSBlob() const;
+	ID3D10Blob* GetVSBlob();
+	ID3D10Blob* GetHSBlob();
+	ID3D10Blob* GetDSBlob();
+	ID3D10Blob* GetGSBlob();
+	ID3D10Blob* GetPSBlob();
 
-	const D3D12_SHADER_BYTECODE* GetVSBytecode() const;
-	const D3D12_SHADER_BYTECODE* GetHSBytecode() const;
-	const D3D12_SHADER_BYTECODE* GetDSBytecode() const;
-	const D3D12_SHADER_BYTECODE* GetGSBytecode() const;
-	const D3D12_SHADER_BYTECODE* GetPSBytecode() const;
+	D3D12_SHADER_BYTECODE* GetVSBytecode();
+	D3D12_SHADER_BYTECODE* GetHSBytecode();
+	D3D12_SHADER_BYTECODE* GetDSBytecode();
+	D3D12_SHADER_BYTECODE* GetGSBytecode();
+	D3D12_SHADER_BYTECODE* GetPSBytecode();
 };
 

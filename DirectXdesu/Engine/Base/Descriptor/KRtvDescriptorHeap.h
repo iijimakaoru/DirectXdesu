@@ -11,6 +11,7 @@
 #pragma warning(disable: 4626)
 #pragma warning(disable: 4265)
 #pragma warning(disable: 5204)
+#pragma warning(disable: 4514)
 #include <wrl.h>
 #include <d3d12.h>
 #pragma warning(pop)

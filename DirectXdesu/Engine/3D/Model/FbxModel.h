@@ -1,7 +1,21 @@
 #pragma once
 #include "KVertex.h"
-#include <fbxsdk.h>
 #include "TextureManager.h"
+
+#pragma warning(push)
+#pragma warning(disable: 4061)
+#pragma warning(disable: 4365)
+#pragma warning(disable: 4266)
+#pragma warning(disable: 4514)
+#pragma warning(disable: 4820)
+#pragma warning(disable: 4625)
+#pragma warning(disable: 4626)
+#pragma warning(disable: 5027)
+#pragma warning(disable: 5026)
+#pragma warning(disable: 5267)
+#pragma warning(disable: 4619)
+#include <fbxsdk.h>
+#pragma warning(pop)
 
 // ノード
 struct Node
@@ -38,10 +52,7 @@ public:
 		// クラスター
 		FbxCluster* fbxCluster;
 		// コントラクタ
-		Bone(const std::string& name_)
-		{
-			name = name_;
-		}
+		Bone(const std::string& name_);
 	};
 
 	struct VertexPosNormalUVSkin
@@ -116,12 +127,13 @@ public: // 関数
 	void LoadTexture();
 	void Draw();
 
+	FbxModel();
 	~FbxModel();
 
-	FbxScene* GetFbxScene() { return fbxScene; }
+	FbxScene* GetFbxScene();
 
 	// ゲッター
-	const KMyMath::Matrix4& GetModelTransform() { return meshNode->globalTransform; }
-	std::vector<Bone>& GetBones() { return bones; }
+	const KMyMath::Matrix4& GetModelTransform();
+	std::vector<Bone>& GetBones();
 };
 

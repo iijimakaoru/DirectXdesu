@@ -1,10 +1,14 @@
 #pragma once
+#pragma warning(push)
+#pragma warning(disable: 5039)
+#pragma warning(disable: 4668)
 #include <Windows.h>
+#pragma warning(pop)
 
 class KWinApp
 {
 private:
-	KWinApp() {};
+	KWinApp() = default;
 	~KWinApp() = default;
 	KWinApp(const KWinApp&) = delete;
 	KWinApp& operator=(const KWinApp&) = delete;

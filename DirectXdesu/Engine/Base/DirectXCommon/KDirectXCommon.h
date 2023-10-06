@@ -34,9 +34,91 @@ class KDirectXCommon
 private:
 	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
 
+	// FPS固定初期化
+	void InitFixFPS();
+	// FPS固定
+	void UpdateFixFPS();
+
+public:
+	// シングルトンインスタンス
+	static KDirectXCommon* GetInstance();
+
+	// リソースの状態を変える
+	static void ResourceTransition(ID3D12Resource* resource, D3D12_RESOURCE_STATES beforeState, D3D12_RESOURCE_STATES afterState);
+
+	// 初期化
+	void Init();
+
+	// 描画準備
+	void PreDraw();
+
+	// 描画終了
+	void PostDraw();
+
+	// コマンド後始末
+	void DeleteCommand();
+
+	// 解放
+	void Destroy();
+
+	// 背景の色変更
+	void SetBackScreenColor(float R, float G, float B, float A);
+
+	// デバイス取得
+	ID3D12Device* GetDev() const;
+
+	// コマンドリスト取得
+	ID3D12GraphicsCommandList* GetCmdlist();
+
+	float fps = 0;
+
+	// SRV,CBV,URV用のデスクリプタヒープ取得
+	KDescriptorHeap* GetSRVDescriptorHeap();
+
+	// RTV用のデスクリプタヒープ取得
+	KRtvDescriptorHeap* GetRTVDescriptorHeap();
+
+	// DSV用のデスクリプタヒープ取得
+	KDsvDescriptorHeap* GetDsvDescriptorHrap();
+
+	// リソースの状態を変える
+	void Transition(ID3D12Resource* resource, D3D12_RESOURCE_STATES beforeState, D3D12_RESOURCE_STATES afterState);
+
+	// バックバッファの数を取得
+	size_t GetBackBufferCount() const;
+
+private:
+	// DXGI初期化
+	HRESULT InitDXGIDevice();
+
+	// 最終的なレンダーターゲットの生成
+	HRESULT CreateFinalRenderTarget();
+
+	// スワップチェーンの生成
+	HRESULT CreateSwapChain();
+
+	// コマンド初期化
+	HRESULT InitCommand();
+
+	// フェンス生成
+	HRESULT CreateFence();
+
+	// 深度関係生成
+	HRESULT CreateDepthBuffer();
+
+	// デバッグレイヤーを有効化
+	void EnbleDebugLayer();
+
+	// インフォキューを有効化
+	void EnbleInfoQueue();
+
+	KDirectXCommon() = default;
+	~KDirectXCommon() = default;
+	KDirectXCommon(const KDirectXCommon&) = default;
+	const KDirectXCommon& operator=(const KDirectXCommon&) = delete;
+
 private:
 	HRESULT result;
-	char PADING[4];
 
 	// DirectX12デバイス
 	ComPtr<ID3D12Device> dev;
@@ -100,97 +182,12 @@ private:
 
 	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle;
 
-	D3D_FEATURE_LEVEL featureLevel;
-
-	// コマンドキューの設定
-	D3D12_COMMAND_QUEUE_DESC cmdQueueDesc{};
-
 	// 1.リソースバリアで書き込み可能に変更
 	D3D12_RESOURCE_BARRIER barrierDesc{};
 
 	std::chrono::steady_clock::time_point reference_;
 
-	// FPS固定初期化
-	void InitFixFPS();
-	// FPS固定
-	void UpdateFixFPS();
-
-public:
-	// シングルトンインスタンス
-	static KDirectXCommon* GetInstance();
-
-	// リソースの状態を変える
-	static void ResourceTransition(ID3D12Resource* resource, D3D12_RESOURCE_STATES beforeState, D3D12_RESOURCE_STATES afterState);
-
-	// 初期化
-	void Init();
-
-	// 描画準備
-	void PreDraw();
-
-	// 描画終了
-	void PostDraw();
-
-	// コマンド後始末
-	void DeleteCommand();
-
-	// 解放
-	void Destroy();
-
-	// 背景の色変更
-	void SetBackScreenColor(float R, float G, float B, float A);
-
-	// デバイス取得
-	ID3D12Device* GetDev() const { return dev.Get(); }
-
-	// コマンドリスト取得
-	ID3D12GraphicsCommandList* GetCmdlist() { return cmdList.Get(); }
-
-	float fps = 0;
-
-	// SRV,CBV,URV用のデスクリプタヒープ取得
-	KDescriptorHeap* GetSRVDescriptorHeap();
-
-	// RTV用のデスクリプタヒープ取得
-	KRtvDescriptorHeap* GetRTVDescriptorHeap();
-
-	// DSV用のデスクリプタヒープ取得
-	KDsvDescriptorHeap* GetDsvDescriptorHrap();
-
-	// リソースの状態を変える
-	void Transition(ID3D12Resource* resource, D3D12_RESOURCE_STATES beforeState, D3D12_RESOURCE_STATES afterState);
-
-	// バックバッファの数を取得
-	size_t GetBackBufferCount() const;
-
-private:
-	// DXGI初期化
-	HRESULT InitDXGIDevice();
-
-	// 最終的なレンダーターゲットの生成
-	HRESULT CreateFinalRenderTarget();
-
-	// スワップチェーンの生成
-	HRESULT CreateSwapChain();
-
-	// コマンド初期化
-	HRESULT InitCommand();
-
-	// フェンス生成
-	HRESULT CreateFence();
-
-	// 深度関係生成
-	HRESULT CreateDepthBuffer();
-
-	// デバッグレイヤーを有効化
-	void EnbleDebugLayer();
-
-	// インフォキューを有効化
-	void EnbleInfoQueue();
-
-	KDirectXCommon() = default;
-	~KDirectXCommon() = default;
-	KDirectXCommon(const KDirectXCommon&) = default;
-	const KDirectXCommon& operator=(const KDirectXCommon&) = delete;
+	// コマンドキューの設定
+	D3D12_COMMAND_QUEUE_DESC cmdQueueDesc{};
 };
 

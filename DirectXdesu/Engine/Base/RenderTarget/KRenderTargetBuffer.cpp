@@ -61,10 +61,6 @@ bool KRenderTargetBuffer::Create(IDXGISwapChain4* swapChain, UINT index)
 	return true;
 }
 
-KRenderTargetBuffer::KRenderTargetBuffer(ID3D12Device* d3dDevice, KRtvDescriptorHeap* descriptorHeap) : device(d3dDevice), rtvHeap(descriptorHeap)
-{
-}
-
 ID3D12Resource* KRenderTargetBuffer::GetTexture() const
 {
     return texture.Get();

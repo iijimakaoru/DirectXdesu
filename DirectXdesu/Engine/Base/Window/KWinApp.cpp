@@ -1,16 +1,23 @@
 #include "KWinApp.h"
 #pragma comment(lib, "winmm.lib")
+
+#pragma warning(push)
+#pragma warning(disable: 4820)
+#pragma warning(disable: 4514)
 #include <imgui_impl_win32.h>
+#pragma warning(pop)
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
-LRESULT KWinApp::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
+LRESULT KWinApp::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) 
+{
 	if (ImGui_ImplWin32_WndProcHandler(hwnd, msg, wparam, lparam))
 	{
 		return true;
 	}
 	// メッセージに応じてゲーム固有の処理を行う 
-	switch (msg) {
+	switch (msg) 
+	{
 		// ウィンドウが破棄された 
 	case WM_DESTROY:
 		// OSに対して、アプリの終了を伝える 
@@ -37,7 +44,10 @@ void KWinApp::InitInternal()
 
 	// 自分でサイズを調整する
 	// ウィンドウサイズ
-	RECT rect = { 0,0,window_width,window_height };
+	RECT rect = 
+	{ 
+		0,0,window_width,window_height 
+	};
 	AdjustWindowRect(&rect, WS_OVERLAPPEDWINDOW, false);
 
 	// ウィンドウ作成
@@ -84,7 +94,8 @@ int KWinApp::GetWindowSizeH()
 	return GetInstance()->window_height;
 }
 
-bool KWinApp::ProcessMessage() {
+bool KWinApp::ProcessMessage() 
+{
 	// メッセージ格納用構造体
 	MSG msg{};
 	if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))

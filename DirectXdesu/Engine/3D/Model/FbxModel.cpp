@@ -159,8 +159,32 @@ void FbxModel::Draw()
 	cmdList->DrawIndexedInstanced((UINT)indices.size(), 1, 0, 0, 0);
 }
 
+FbxModel::FbxModel()
+{
+}
+
 FbxModel::~FbxModel()
 {
 	// Fbxシーンの解放
 	fbxScene->Destroy();
+}
+
+FbxScene* FbxModel::GetFbxScene() 
+{
+	return fbxScene;
+}
+
+const KMyMath::Matrix4& FbxModel::GetModelTransform() 
+{ 
+	return meshNode->globalTransform; 
+}
+
+std::vector<FbxModel::Bone>& FbxModel::GetBones() 
+{ 
+	return bones;
+}
+
+FbxModel::Bone::Bone(const std::string& name_)
+{
+	name = name_;
 }

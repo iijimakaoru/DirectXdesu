@@ -60,7 +60,7 @@ SoundData Sound::SoundLoadWave(const char* filename)
 		assert(0);
 	}
 	// Dataチャンクのデータ部(波形データ)の読み込み 
-	char* pBuffer = new char[data.size];
+	char* pBuffer = new char[static_cast<size_t>(data.size)];
 	file.read(pBuffer, data.size);
 #pragma endregion
 #pragma region ファイルクローズ
@@ -72,7 +72,7 @@ SoundData Sound::SoundLoadWave(const char* filename)
 
 	soundData.wfex = format.fmt;
 	soundData.pBuffer = reinterpret_cast<BYTE*>(pBuffer);
-	soundData.bufferSize = data.size;
+	soundData.bufferSize = static_cast<unsigned int>(data.size);
 
 	return soundData;
 #pragma endregion
@@ -103,6 +103,11 @@ void Sound::SoundPlayWave(const SoundData& soundData)
 	// 波形データの再生
 	result = pSourceVoice->SubmitSourceBuffer(&buf);
 	result = pSourceVoice->Start();
+}
+
+Microsoft::WRL::ComPtr<IXAudio2> Sound::GetxAudio() 
+{ 
+	return xAudio2; 
 }
 
 Sound* Sound::GetInstance()

@@ -58,6 +58,10 @@ Cube::Cube() {
 	};
 }
 
+Cube::~Cube()
+{
+}
+
 Triangle::Triangle() 
 {
 	std::ifstream file;
@@ -138,6 +142,10 @@ Triangle::Triangle()
 	file.close();
 }
 
+Triangle::~Triangle()
+{
+}
+
 Line::Line() {
 	vertices = {
 		// 前
@@ -192,6 +200,10 @@ Line::Line() {
 		 20,21,22,
 		 22,21,23
 	};
+}
+
+Line::~Line()
+{
 }
 
 void KModel::LoadMaterial(const std::string& directoryPath, const std::string& filename)
@@ -395,4 +407,16 @@ MtlObj::MtlObj(const std::string modelname)
 		}
 	}
 	file.close();
+}
+
+MtlObj::~MtlObj()
+{
+}
+
+KModel::ObjMaterialInfo::ObjMaterialInfo()
+{
+	ambient = { 0.3f,0.3f,0.3f };
+	diffuse = { 0.0f,0.0f,0.0f };
+	specular = { 0.0f,0.0f,0.0f };
+	alpha = 1.0f;
 }

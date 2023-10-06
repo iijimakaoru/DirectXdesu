@@ -1,8 +1,13 @@
 #pragma once
 #include "KDirectXCommon.h"
+
+#pragma warning(push)
+#pragma warning(disable: 4668)
 #include <xaudio2.h>
-#pragma comment(lib,"xaudio2.lib")
 #include <fstream>
+#pragma warning(pop)
+
+#pragma comment(lib,"xaudio2.lib")
 
 struct ChunkHeader
 {
@@ -16,17 +21,17 @@ struct RiffHeader
 	char type[4];
 };
 
+struct SoundData
+{
+	BYTE* pBuffer;
+	unsigned int bufferSize;
+	WAVEFORMATEX wfex;
+};
+
 struct FormatChunk
 {
 	ChunkHeader chunk;
 	WAVEFORMATEX fmt;
-};
-
-struct SoundData
-{
-	WAVEFORMATEX wfex;
-	BYTE* pBuffer;
-	unsigned int bufferSize;
 };
 
 class Sound
@@ -58,7 +63,7 @@ public:
 	void SoundPlayWave(const SoundData& soundData);
 
 	// ゲッター
-	ComPtr<IXAudio2> GetxAudio() { return xAudio2; }
+	ComPtr<IXAudio2> GetxAudio();
 
 	// インスタンス
 	static Sound* GetInstance();

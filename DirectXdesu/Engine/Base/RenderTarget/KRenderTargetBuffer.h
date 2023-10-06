@@ -1,26 +1,22 @@
 #pragma once
+
+#pragma warning(push)
+#pragma warning(disable: 4820)
+#pragma warning(disable: 4514)
+#pragma warning(disable: 4668)
+#pragma warning(disable: 5039)
 #include <dxgi1_6.h>
+#include <roapi.h>
+#include <winioctl.h>
+#include <intsafe.h>
+#include <WinBase.h>
+#pragma warning(pop)
 #include "KRtvDescriptorHeap.h"
 #include "Vector4.h"
 
 class KRenderTargetBuffer
 {
-	//テクスチャ
-	Microsoft::WRL::ComPtr<ID3D12Resource> texture;
-	//ディスクリプタヒープ
-	KRtvDescriptorHeap* rtvHeap = nullptr;
-	//幅
-	UINT width = 0;
-	//高さ
-	UINT height = 0;
-	//デバイス
-	ID3D12Device* device = nullptr;
-	//ハンドル
-	D3D12_CPU_DESCRIPTOR_HANDLE handle{};
-	//ステータス
-	D3D12_RESOURCE_STATES states;
 public:
-
 	/// <summary>
 	/// 生成
 	/// </summary>
@@ -47,13 +43,6 @@ public:
 	bool Create(IDXGISwapChain4* swapChain, UINT index);
 
 	/// <summary>
-	/// コンストラクタ
-	/// </summary>
-	/// <param name="d3dDevice">デバイス</param>
-	/// <param name="descriptorHeap">レンダーターゲット用のデスクプリタヒープ</param>
-	KRenderTargetBuffer(ID3D12Device* d3dDevice, KRtvDescriptorHeap* descriptorHeap);
-
-	/// <summary>
 	/// リソースを取得
 	/// </summary>
 	ID3D12Resource* GetTexture() const;
@@ -68,8 +57,22 @@ public:
 	~KRenderTargetBuffer() = default;
 
 private:
-
 	KRenderTargetBuffer() = delete;
 
+private:
+	//テクスチャ
+	Microsoft::WRL::ComPtr<ID3D12Resource> texture;
+	//ディスクリプタヒープ
+	KRtvDescriptorHeap* rtvHeap = nullptr;
+	//デバイス
+	ID3D12Device* device = nullptr;
+	//ハンドル
+	D3D12_CPU_DESCRIPTOR_HANDLE handle{};
+	//ステータス
+	D3D12_RESOURCE_STATES states;
+	//高さ
+	UINT height = 0;
+	//幅
+	UINT width = 0;
 };
 

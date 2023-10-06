@@ -162,6 +162,16 @@ void KDirectXCommon::SetBackScreenColor(float R, float G, float B, float A)
 	clearColor[3] = A;
 }
 
+ID3D12Device* KDirectXCommon::GetDev() const
+{
+	return dev.Get();
+}
+
+ID3D12GraphicsCommandList* KDirectXCommon::GetCmdlist()
+{
+	return cmdList.Get();
+}
+
 KDescriptorHeap* KDirectXCommon::GetSRVDescriptorHeap()
 {
 	return srvHeap.get();
@@ -261,8 +271,8 @@ HRESULT KDirectXCommon::CreateFinalRenderTarget()
 
 HRESULT KDirectXCommon::CreateSwapChain()
 {
-	swapChainDesc.Width = KWinApp::GetInstance()->GetWindowSizeW();//横幅
-	swapChainDesc.Height = KWinApp::GetInstance()->GetWindowSizeH();//縦幅
+	swapChainDesc.Width = static_cast<UINT>(KWinApp::GetInstance()->GetWindowSizeW());//横幅
+	swapChainDesc.Height = static_cast<UINT>(KWinApp::GetInstance()->GetWindowSizeH());//縦幅
 	swapChainDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;//色情報の書式
 	swapChainDesc.SampleDesc.Count = 1;//マルチサンプルなし
 	swapChainDesc.BufferUsage = DXGI_USAGE_BACK_BUFFER;//バックバッファ用
@@ -341,7 +351,9 @@ HRESULT KDirectXCommon::CreateDepthBuffer()
 
 	//深度バッファ生成
 	depthBuff = std::make_unique<KDepthStencilBuffer>(dev.Get(), dsvHeap.get());
-	depthBuff->Create(KWinApp::GetInstance()->GetWindowSizeW(), KWinApp::GetInstance()->GetWindowSizeH(), DXGI_FORMAT_D32_FLOAT);
+	depthBuff->Create(static_cast<UINT>(KWinApp::GetInstance()->GetWindowSizeW()),
+		static_cast<UINT>(KWinApp::GetInstance()->GetWindowSizeH()),
+		DXGI_FORMAT_D32_FLOAT);
 
 	return result;
 }
@@ -418,8 +430,8 @@ void KDirectXCommon::UpdateFixFPS()
 		}
 	}
 
-	float nowTime = std::chrono::duration_cast<std::chrono::microseconds>
-		(std::chrono::steady_clock::now() - reference_).count() / 1000000.0f;
+	float nowTime = static_cast<float>(std::chrono::duration_cast<std::chrono::microseconds>
+		(std::chrono::steady_clock::now() - reference_).count()) / 1000000.0f;
 
 	if (nowTime > 0)
 	{

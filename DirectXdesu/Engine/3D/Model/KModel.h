@@ -23,13 +23,7 @@ public:
 		// テクスチャファイル名
 		std::string textureFilename;
 		// コンストラクタ
-		ObjMaterialInfo()
-		{
-			ambient = { 0.3f,0.3f,0.3f };
-			diffuse = { 0.0f,0.0f,0.0f };
-			specular = { 0.0f,0.0f,0.0f };
-			alpha = 1.0f;
-		}
+		ObjMaterialInfo();
 	};
 
 	// 頂点データ
@@ -52,27 +46,30 @@ public:
 	void Draw(TextureData texData);
 };
 
-class Cube : public KModel {
+class Cube : public KModel 
+{
 public:
 	Cube();
-	~Cube() {};
+	~Cube();
 };
 
-class Triangle : public KModel {
+class Triangle : public KModel 
+{
 public:
 	Triangle();
-	~Triangle(){}
+	~Triangle();
 };
 
-class Line : public KModel {
+class Line : public KModel 
+{
 public:
 	Line();
-	~Line(){}
+	~Line();
 };
 
 class MtlObj : public KModel
 {
 public:
 	MtlObj(const std::string modelname);
-	~MtlObj() {};
+	~MtlObj();
 };

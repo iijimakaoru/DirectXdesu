@@ -1,9 +1,9 @@
 #pragma once
 #include "KVertex.h"
+#include "TextureManager.h"
 #include <fstream>
 #include <sstream>
 #include <string>
-#include "TextureManager.h"
 
 class KModel 
 {
@@ -31,7 +31,7 @@ public:
 	// インデックスデータ
 	std::vector<unsigned short> indices;
 
-	std::unique_ptr<KVertex> vertexs =std::make_unique<KVertex>();
+	std::unique_ptr<KVertex> vertexs;
 
 	TextureData texData;
 

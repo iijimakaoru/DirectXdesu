@@ -114,7 +114,7 @@ private:
 
 	KDirectXCommon() = default;
 	~KDirectXCommon() = default;
-	KDirectXCommon(const KDirectXCommon&) = default;
+	KDirectXCommon(const KDirectXCommon&) = delete;
 	const KDirectXCommon& operator=(const KDirectXCommon&) = delete;
 
 private:

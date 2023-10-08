@@ -10,7 +10,7 @@ public:
 
 public:
 	void Init(KModel* model_, KGPlin* pipeline_, const KMyMath::Vector3& initPos,
-		const float HP, KGPlin* spritePipeline_) override;
+		const float HP_, KGPlin* spritePipeline_) override;
 
 	void Update(ViewProjection* viewPro) override;
 

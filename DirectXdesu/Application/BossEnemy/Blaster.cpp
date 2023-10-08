@@ -18,11 +18,11 @@ Blaster* Blaster::Create(KModel* model_, KGPlin* pipeline_, const KMyMath::Vecto
 }
 
 void Blaster::Init(KModel* model_, KGPlin* pipeline_, const KMyMath::Vector3& initPos,
-	const float HP, KGPlin* spritePipeline_)
+	const float HP_, KGPlin* spritePipeline_)
 {
 	input = KInput::GetInstance();
 
-	BossEnemy::Init(model_, pipeline_, initPos, HP, spritePipeline_);
+	BossEnemy::Init(model_, pipeline_, initPos, HP_, spritePipeline_);
 
 	object3d->transform.scale = { 10.0f,10.0f,10.0f };
 }

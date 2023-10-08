@@ -94,7 +94,7 @@ private:
 	// ディフーズ係数
 	DirectX::XMFLOAT3 diffuse = { 1,1,1 };
 
-	std::unique_ptr<KVertex> vertexs = std::make_unique<KVertex>();
+	std::unique_ptr<KVertex> vertexs;
 
 	ScratchImage scratchImg;
 

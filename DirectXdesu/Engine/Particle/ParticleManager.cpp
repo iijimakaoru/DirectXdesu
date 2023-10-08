@@ -123,9 +123,6 @@ void Particles::CreateModel()
 	vbView.BufferLocation = vertBuff->GetGPUVirtualAddress();
 	vbView.SizeInBytes = sizeof(vertices);
 	vbView.StrideInBytes = sizeof(vertices[0]);
-
-	// インデックスバッファへのデータ転送
-	unsigned short* indexMap = nullptr;
 }
 
 bool Particles::Initialize(TextureData textureData_)

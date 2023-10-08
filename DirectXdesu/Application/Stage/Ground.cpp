@@ -31,7 +31,6 @@ void Ground::Init()
 void Ground::Update(ViewProjection* viewPro, const KMyMath::Vector3& cameraPos)
 {
 	const float flontOfScreenDiffuse = 400;
-	const float swapPos = cameraPos.z + flontOfScreenDiffuse;
 
 	for (size_t i = 0; i < 2; i++)
 	{

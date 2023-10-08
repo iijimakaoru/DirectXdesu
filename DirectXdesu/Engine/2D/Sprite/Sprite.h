@@ -15,7 +15,7 @@ public:
 	void Init();
 
 	// 更新
-	void Update(KMyMath::Vector2 pos, KMyMath::Vector2 scale, float rot, KMyMath::Vector4 color);
+	void Update(KMyMath::Vector2 pos, KMyMath::Vector2 scale, float rot, KMyMath::Vector4 color_);
 
 	/// <summary>
 	/// 描画情報
@@ -35,7 +35,7 @@ public:
 	/// <param name="isFlipY_"></param>
 	/// <param name="anchorPoint_"></param>
 	void Draw(TextureData& texData, KMyMath::Vector2 pos = { 0.0f,0.0f }, KMyMath::Vector2 setSize_ = { 1.0f,1.0f }, float rot = 0.0f,
-		KMyMath::Vector4 color = {1.0f,1.0f,1.0f,1.0f}, bool isFlipX_ = false, bool isFlipY_ = false, KMyMath::Vector2 anchorPoint_ = { 0.5f,0.5f });
+		KMyMath::Vector4 color_ = {1.0f,1.0f,1.0f,1.0f}, bool isFlipX_ = false, bool isFlipY_ = false, KMyMath::Vector2 anchorPoint_ = { 0.5f,0.5f });
 
 	/// <summary>
 	/// パイプラインセッター
@@ -103,16 +103,6 @@ private:
 	// 定数バッファのマップ
 	KMyMath::Matrix4* constMapTransform = nullptr;
 
-	// 位置
-	KMyMath::Vector2 position = { 0.0f,0.0f };
-	// 回転
-	float rotation = 0.0f;
-	// 色
-	KMyMath::Vector4 color = { 1.0f,1.0f,1.0f,1.0f };
-	// 表示サイズ
-	KMyMath::Vector2 size_ = { 100.0f,100.0f };
-	// アンカーポイント
-	KMyMath::Vector2 anchorPoint = { 0.5f,0.5f };
 	// 左右フリップ
 	int flipX = 1;
 	// 上下フリップ

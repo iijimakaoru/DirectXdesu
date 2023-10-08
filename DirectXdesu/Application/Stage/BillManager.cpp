@@ -1,5 +1,13 @@
 #include "BillManager.h"
 
+BillManager::BillManager()
+{
+}
+
+BillManager::~BillManager()
+{
+}
+
 void BillManager::Init()
 {
 	model = std::make_unique<MtlObj>("bill1");

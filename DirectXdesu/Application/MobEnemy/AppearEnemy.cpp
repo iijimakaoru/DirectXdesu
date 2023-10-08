@@ -20,6 +20,14 @@ AppearEnemy* AppearEnemy::Create(KModel* model_, KGPlin* pipeline_, const KMyMat
 	return newEnemy;
 }
 
+AppearEnemy::AppearEnemy()
+{
+}
+
+AppearEnemy::~AppearEnemy()
+{
+}
+
 void AppearEnemy::Init(KModel* model_, KGPlin* pipeline_)
 {
 	MobEnemy::Init(model_, pipeline_);
@@ -37,7 +45,7 @@ void AppearEnemy::Init(KModel* model_, KGPlin* pipeline_)
 	coolTime = 60;
 }
 
-void AppearEnemy::Update(ViewProjection* viewPro, const KMyMath::Vector3& cameraPos)
+void AppearEnemy::Update(ViewProjection* viewPro, const KMyMath::Vector3& cameraPos_)
 {
 	// 出現演出
 	if (isAppear)
@@ -50,14 +58,14 @@ void AppearEnemy::Update(ViewProjection* viewPro, const KMyMath::Vector3& camera
 		{
 			Attack();
 
-			if (object3d->transform.pos.z <= min(object3d->transform.pos.z, cameraPos.z))
+			if (object3d->transform.pos.z <= min(object3d->transform.pos.z, cameraPos_.z))
 			{
 				isDead = true;
 			}
 		}
 	}
 
-	MobEnemy::Update(viewPro, cameraPos);
+	object3d->Update(viewPro);
 }
 
 void AppearEnemy::Draw()

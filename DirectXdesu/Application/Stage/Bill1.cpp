@@ -15,6 +15,14 @@ Bill1* Bill1::Create(KModel* model_, KGPlin* objPipeline_, const KMyMath::Vector
     return instance;
 }
 
+Bill1::Bill1()
+{
+}
+
+Bill1::~Bill1()
+{
+}
+
 void Bill1::Init(KModel* model_, KGPlin* objPipeline_, const KMyMath::Vector2 pos)
 {
     // モデル生成

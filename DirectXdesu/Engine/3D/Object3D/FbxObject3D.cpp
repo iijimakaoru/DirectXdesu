@@ -94,7 +94,7 @@ void FbxObject3D::Update(ViewProjection* viewProjection)
 	// 定数バッファデータ転送
 	ConstBufferDataSkin* constMapSkin = nullptr;
 	result = constBuffSkin->Map(0, nullptr, (void**)&constMapSkin);
-	for (int i = 0; i < bones.size(); i++)
+	for (size_t i = 0; i < bones.size(); i++)
 	{
 		// 今の姿勢行列
 		KMyMath::Matrix4 matCurrentPose;

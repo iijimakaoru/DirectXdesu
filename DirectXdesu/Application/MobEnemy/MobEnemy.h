@@ -19,6 +19,9 @@ public:
 		Appear
 	};
 
+	MobEnemy();
+	~MobEnemy();
+
 	// 初期化
 	virtual void Init(KModel* model_, KGPlin* pipeline_);
 
@@ -26,7 +29,7 @@ public:
 	/// 更新
 	/// </summary>
 	/// <param name="viewPro"></param>
-	virtual void Update(ViewProjection* viewPro,const KMyMath::Vector3& cameraPos);
+	virtual void Update(ViewProjection* viewPro, const KMyMath::Vector3& cameraPos_);
 
 	// 描画
 	virtual void Draw();
@@ -39,6 +42,8 @@ public:
 	{
 		return isDead;
 	}
+
+	void SetCameraPos(const KMyMath::Vector3& cameraPos_);
 
 	/// <summary>
 	/// 攻撃
@@ -64,6 +69,8 @@ protected:
 
 	// 自キャラ
 	Player* player = nullptr;
+
+	KMyMath::Vector3 cameraPos;
 
 private:
 	// モデル

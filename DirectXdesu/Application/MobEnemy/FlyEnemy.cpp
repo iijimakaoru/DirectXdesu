@@ -35,7 +35,7 @@ void FlyEnemy::Init(KModel* model_, KGPlin* pipeline_)
 	coolTime = 120;
 }
 
-void FlyEnemy::Update(ViewProjection* viewPro, const KMyMath::Vector3& cameraPos)
+void FlyEnemy::Update(ViewProjection* viewPro, const KMyMath::Vector3& cameraPos_)
 {
 	// 出現演出
 	if (isAppear)
@@ -48,7 +48,7 @@ void FlyEnemy::Update(ViewProjection* viewPro, const KMyMath::Vector3& cameraPos
 		{
 			Attack();
 
-			if (object3d->transform.pos.z <= min(object3d->transform.pos.z, cameraPos.z))
+			if (object3d->transform.pos.z <= min(object3d->transform.pos.z, cameraPos_.z))
 			{
 				isDead = true;
 			}
@@ -57,7 +57,7 @@ void FlyEnemy::Update(ViewProjection* viewPro, const KMyMath::Vector3& cameraPos
 
 	object3d->transform.pos.z += moveSpeed;
 
-	MobEnemy::Update(viewPro, cameraPos);
+	object3d->Update(viewPro);
 }
 
 void FlyEnemy::Draw()

@@ -21,6 +21,7 @@ class KRtvDescriptorHeap
 private:
 	//デバイス
 	ID3D12Device* device;
+
 	//デスクプリタヒープ
 	Microsoft::WRL::ComPtr <ID3D12DescriptorHeap> descriptorHeap;
 
@@ -31,7 +32,6 @@ private:
 	UINT incrementSize;
 
 	char PADING2[4];
-
 
 	D3D12_CPU_DESCRIPTOR_HANDLE	startCpuHandle;
 

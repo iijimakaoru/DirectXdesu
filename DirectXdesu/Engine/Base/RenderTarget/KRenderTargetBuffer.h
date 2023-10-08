@@ -11,8 +11,8 @@
 #include <intsafe.h>
 #include <WinBase.h>
 #pragma warning(pop)
-#include "KRtvDescriptorHeap.h"
 #include "Vector4.h"
+#include "KRtvDescriptorHeap.h"
 
 class KRenderTargetBuffer
 {
@@ -54,12 +54,17 @@ public:
 
 	void Transition(D3D12_RESOURCE_STATES resourceStates, ID3D12GraphicsCommandList* commandList);
 
+	KRenderTargetBuffer() = default;
+
 	~KRenderTargetBuffer() = default;
 
 private:
-	KRenderTargetBuffer() = delete;
-
-private:
+	//ステータス
+	D3D12_RESOURCE_STATES states;
+	//幅
+	UINT width = 0;
+	//高さ
+	UINT height = 0;
 	//テクスチャ
 	Microsoft::WRL::ComPtr<ID3D12Resource> texture;
 	//ディスクリプタヒープ
@@ -68,11 +73,5 @@ private:
 	ID3D12Device* device = nullptr;
 	//ハンドル
 	D3D12_CPU_DESCRIPTOR_HANDLE handle{};
-	//ステータス
-	D3D12_RESOURCE_STATES states;
-	//高さ
-	UINT height = 0;
-	//幅
-	UINT width = 0;
 };
 

@@ -1,8 +1,15 @@
 #include "KModel.h"
 #include "KDirectXCommon.h"
 
-Cube::Cube() {
-	vertices = {
+#pragma warning(push)
+#pragma warning(disable: 4244)
+#include <xutility>
+#pragma warning(pop)
+
+Cube::Cube() 
+{
+	vertices = 
+	{
 		//  x	  y	    z	 n    u	   v
 		// 前
 		{{-1.0f,-1.0f,-1.0f},{},{0.0f,1.0f}}, // 左下
@@ -36,7 +43,8 @@ Cube::Cube() {
 		{{ 1.0f, 1.0f, 1.0f},{},{1.0f,0.0f}}  // 右上
 	};
 
-	indices = {
+	indices = 
+	{
 		// 前
 		 0, 1, 2, // 三角形1つ目
 		 2, 1, 3, // 三角形2つ目
@@ -77,7 +85,6 @@ Triangle::Triangle()
 	std::string line;
 	while (getline(file, line))
 	{
-
 		std::istringstream line_stream(line);
 
 		std::string key;
@@ -135,7 +142,7 @@ Triangle::Triangle()
 				vertex.uv = texcoords[indexTexcoord - 1];
 				vertices.emplace_back(vertex);
 
-				indices.emplace_back(indexPosition - 1);
+				indices.emplace_back(static_cast<unsigned short>(indexPosition - 1));
 			}
 		}
 	}
@@ -146,8 +153,10 @@ Triangle::~Triangle()
 {
 }
 
-Line::Line() {
-	vertices = {
+Line::Line() 
+{
+	vertices = 
+	{
 		// 前
 		{{-0.1f,-0.1f,-40.0f},{},{0.0f,1.0f}}, // 左下
 		{{-0.1f, 0.1f,-40.0f},{},{0.0f,0.0f}}, // 左上
@@ -180,7 +189,8 @@ Line::Line() {
 		{{ 0.1f, 0.1f, 40.0f},{},{1.0f,0.0f}}  // 右上
 	};
 
-	indices = {
+	indices = 
+	{
 		// 前
 		 0, 1, 2, // 三角形1つ目
 		 2, 1, 3, // 三角形2つ目
@@ -279,10 +289,10 @@ void KModel::CreateModel()
 void KModel::Draw()
 {
 	// 頂点バッファビューの設定
-	KDirectXCommon::GetInstance()->GetCmdlist()->IASetVertexBuffers(0, 1, &vertexs->vbView);
+	KDirectXCommon::GetInstance()->GetCmdlist()->IASetVertexBuffers(0, 1, &vertexs->GetVertBuffView());
 
 	// インデックスバッファビューの設定
-	KDirectXCommon::GetInstance()->GetCmdlist()->IASetIndexBuffer(&vertexs->ibView);
+	KDirectXCommon::GetInstance()->GetCmdlist()->IASetIndexBuffer(&vertexs->GetIndexBuffView());
 
 	// デスクリプタヒープのセット
 	ID3D12DescriptorHeap* ppHeaps[] = { texData.srvHeap.Get() };
@@ -296,20 +306,20 @@ void KModel::Draw()
 		static_cast < UINT>(1), static_cast < UINT>(0), static_cast < UINT>(0), static_cast < UINT>(0));
 }
 
-void KModel::Draw(TextureData texData)
+void KModel::Draw(TextureData texData_)
 {
 	// 頂点バッファビューの設定
-	KDirectXCommon::GetInstance()->GetCmdlist()->IASetVertexBuffers(0, 1, &vertexs->vbView);
+	KDirectXCommon::GetInstance()->GetCmdlist()->IASetVertexBuffers(0, 1, &vertexs->GetVertBuffView());
 
 	// インデックスバッファビューの設定
-	KDirectXCommon::GetInstance()->GetCmdlist()->IASetIndexBuffer(&vertexs->ibView);
+	KDirectXCommon::GetInstance()->GetCmdlist()->IASetIndexBuffer(&vertexs->GetIndexBuffView());
 
 	// デスクリプタヒープのセット
-	ID3D12DescriptorHeap* ppHeaps[] = { texData.srvHeap.Get() };
+	ID3D12DescriptorHeap* ppHeaps[] = { texData_.srvHeap.Get() };
 	KDirectXCommon::GetInstance()->GetCmdlist()->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 
 	// 先頭ハンドルを取得
-	D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle = texData.gpuHandle;
+	D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle = texData_.gpuHandle;
 
 	// シェーダーリソースビューをセット
 	KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootDescriptorTable(0, srvGpuHandle);
@@ -344,10 +354,10 @@ MtlObj::MtlObj(const std::string modelname)
 		if (key == "mtllib")
 		{
 			// 
-			std::string filename;
-			line_stream >> filename;
+			std::string filename_;
+			line_stream >> filename_;
 			// 
-			LoadMaterial(directoryPath, filename);
+			LoadMaterial(directoryPath, filename_);
 		}
 
 		if (key == "v")

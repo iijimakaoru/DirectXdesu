@@ -23,11 +23,6 @@ void Sprite::SetPipeline(KGPlin* pipeline_)
 	pipeline = pipeline_;
 }
 
-const KMyMath::Vector2 Sprite::GetPos() const
-{
-	return position;
-}
-
 void Sprite::CreateCBMaterial()
 {
 	// 定数バッファ生成用
@@ -219,7 +214,7 @@ void Sprite::Init()
 	isInvisible = false;
 }
 
-void Sprite::Draw(TextureData& texData, KMyMath::Vector2 pos, KMyMath::Vector2 setSize_, float rot, KMyMath::Vector4 color,
+void Sprite::Draw(TextureData& texData, KMyMath::Vector2 pos, KMyMath::Vector2 setSize_, float rot, KMyMath::Vector4 color_,
 	bool isFlipX_, bool isFlipY_, KMyMath::Vector2 anchorPoint_)
 {
 	// 非表示処理
@@ -276,7 +271,7 @@ void Sprite::Draw(TextureData& texData, KMyMath::Vector2 pos, KMyMath::Vector2 s
 	// 全インデックスに対して
 	memcpy(indexMap, indices, sizeof(uint16_t) * 6);
 
-	Update(pos, setSize_, rot, color);
+	Update(pos, setSize_, rot, color_);
 
 	// パイプラインセット
 	pipeline->Setting();
@@ -289,7 +284,7 @@ void Sprite::Draw(TextureData& texData, KMyMath::Vector2 pos, KMyMath::Vector2 s
 	cmdList->DrawIndexedInstanced(6, 1, 0, 0, 0);
 }
 
-void Sprite::Update(KMyMath::Vector2 pos, KMyMath::Vector2 scale, float rot, KMyMath::Vector4 color)
+void Sprite::Update(KMyMath::Vector2 pos, KMyMath::Vector2 scale, float rot, KMyMath::Vector4 color_)
 {
 	// ワールド変換
 	KMyMath::Matrix4 matWorld, matTrans, matRot;
@@ -305,5 +300,5 @@ void Sprite::Update(KMyMath::Vector2 pos, KMyMath::Vector2 scale, float rot, KMy
 	*constMapTransform = matWorld * matPro;
 
 	// 色の代入
-	*constMapMaterial = color;
+	*constMapMaterial = color_;
 }

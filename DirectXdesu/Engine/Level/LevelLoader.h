@@ -7,6 +7,7 @@
 #pragma warning(disable: 4668)
 #pragma warning(disable: 4625)
 #pragma warning(disable: 4514)
+#pragma warning(disable: 4324)
 #include "json.hpp"
 #include <DirectXMath.h>
 #pragma warning(pop)
@@ -16,14 +17,14 @@ struct LevelData
 {
 	struct ObjectData 
 	{
-		// ファイル名
-		std::string fileName;
-		// 平行移動
-		DirectX::XMVECTOR translation;
 		// 回転角
 		DirectX::XMVECTOR rotation;
 		// スケーリング
 		DirectX::XMVECTOR scaling;
+		// 平行移動
+		DirectX::XMVECTOR translation;
+		// ファイル名
+		std::string fileName;
 	};
 
 	// オブジェクト配列

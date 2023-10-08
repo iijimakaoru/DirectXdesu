@@ -1,8 +1,9 @@
 #include "BossEnemy.h"
 #include "ParticleManager.h"
 #include "Ease.h"
+#include "Collision.h"
 
-void BossEnemy::Init(KModel* model_, KGPlin* pipeline_, const KMyMath::Vector3& initPos, const float HP, KGPlin* spritePipeline_)
+void BossEnemy::Init(KModel* model_, KGPlin* pipeline_, const KMyMath::Vector3& initPos, const float HP_, KGPlin* spritePipeline_)
 {
 	// モデル生成
 	model = model_;
@@ -16,8 +17,8 @@ void BossEnemy::Init(KModel* model_, KGPlin* pipeline_, const KMyMath::Vector3& 
 	object3d->transform.pos = initPos;
 
 	// 体力セット
-	maxHP = HP;
-	this->HP = 1;
+	maxHP = HP_;
+	HP = 1;
 
 	HPUI = std::make_unique<Sprite>();
 	HPUI->Init();
@@ -108,6 +109,16 @@ void BossEnemy::OnCollision()
 	hpEase = true;
 	oldHpTimer = 0;
 	hpEaseTimer = 0;
+}
+
+bool BossEnemy::CollisionCheck(const KMyMath::Vector3& posA, const KMyMath::Vector3& posB)
+{
+	if (MyCollisions::CheckSphereToSphere(posA, posB, 1, 1))
+	{
+		return true;
+	}
+
+	return false;
 }
 
 void BossEnemy::DeadEffect()

@@ -18,6 +18,9 @@ public:
 	static Bill1* Create(KModel* model_, KGPlin* objPipeline_, const KMyMath::Vector2& pos);
 
 public:
+	Bill1();
+	~Bill1();
+
 	/// <summary>
 	/// 初期化
 	/// </summary>

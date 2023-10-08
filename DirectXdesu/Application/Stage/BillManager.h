@@ -10,6 +10,9 @@
 class BillManager
 {
 public:
+	BillManager();
+	~BillManager();
+
 	// 初期化
 	void Init();
 

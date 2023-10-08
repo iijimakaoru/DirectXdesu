@@ -31,7 +31,7 @@ void CanonEnemy::Init(KModel* model_, KGPlin* pipeline_)
 	coolTime = 30;
 }
 
-void CanonEnemy::Update(ViewProjection* viewPro, const KMyMath::Vector3& cameraPos)
+void CanonEnemy::Update(ViewProjection* viewPro, const KMyMath::Vector3& cameraPos_)
 {
 	// 出現演出
 	if (isAppear)
@@ -44,14 +44,14 @@ void CanonEnemy::Update(ViewProjection* viewPro, const KMyMath::Vector3& cameraP
 		{
 			Attack();
 
-			if (object3d->transform.pos.z <= min(object3d->transform.pos.z, cameraPos.z))
+			if (object3d->transform.pos.z <= min(object3d->transform.pos.z, cameraPos_.z))
 			{
 				isDead = true;
 			}
 		}
 	}
-
-	MobEnemy::Update(viewPro, cameraPos);
+	
+	object3d->Update(viewPro);
 }
 
 void CanonEnemy::Draw()

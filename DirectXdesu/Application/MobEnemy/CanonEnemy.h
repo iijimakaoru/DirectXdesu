@@ -17,24 +17,24 @@ public:
 	/// 初期化
 	/// </summary>
 	/// <param name="model_"></param>
-	void Init(KModel* model_, KGPlin* pipeline_) override;
+	void Init(KModel* model_, KGPlin* pipeline_);
 
 	/// <summary>
 	/// 更新
 	/// </summary>
 	/// <param name="viewPro"></param>
 	/// <param name="cameraPos"></param>
-	void Update(ViewProjection* viewPro, const KMyMath::Vector3& cameraPos) override;
+	void Update(ViewProjection* viewPro, const KMyMath::Vector3& cameraPos_) override;
 
 	/// <summary>
 	/// 描画
 	/// </summary>
-	void Draw() override;
+	void Draw();
 
 	/// <summary>
 	/// 攻撃
 	/// </summary>
-	void Attack() override;
+	void Attack();
 
 	/// <summary>
 	/// 出現

@@ -4,6 +4,14 @@
 #include "BulletManager.h"
 #include "Player.h"
 
+MobEnemy::MobEnemy()
+{
+}
+
+MobEnemy::~MobEnemy()
+{
+}
+
 void MobEnemy::Init(KModel* model_, KGPlin* pipeline_)
 {
 	// モデル生成
@@ -18,8 +26,10 @@ void MobEnemy::Init(KModel* model_, KGPlin* pipeline_)
 	isDead = false;
 }
 
-void MobEnemy::Update(ViewProjection* viewPro, const KMyMath::Vector3& cameraPos)
+void MobEnemy::Update(ViewProjection* viewPro, const KMyMath::Vector3& cameraPos_)
 {
+	cameraPos = cameraPos_;
+
 	object3d->Update(viewPro);
 }
 
@@ -35,6 +45,11 @@ void MobEnemy::OnCollision()
 {
 	ObjParticleManager::GetInstance()->SetSmallExp(GetWorldPos());
 	isDead = true;
+}
+
+void MobEnemy::SetCameraPos(const KMyMath::Vector3& cameraPos_)
+{
+	cameraPos = cameraPos_;
 }
 
 void MobEnemy::Attack()

@@ -16,7 +16,7 @@ public:
 	/// <param name="initPos"></param>
 	/// <param name="HP"></param>
 	virtual void Init(KModel* model_, KGPlin* pipeline_,const KMyMath::Vector3& initPos,
-		const float HP, KGPlin* spritePipeline_);
+		const float HP_, KGPlin* spritePipeline_);
 
 	/// <summary>
 	/// 更新
@@ -45,7 +45,7 @@ public:
 	virtual void OnCollision();
 
 	// 当たり判定範囲
-	virtual bool CollisionCheck(const KMyMath::Vector3& posA, const KMyMath::Vector3& posB) = 0;
+	virtual bool CollisionCheck(const KMyMath::Vector3& posA, const KMyMath::Vector3& posB);
 
 	// 死亡演出
 	virtual void DeadEffect();

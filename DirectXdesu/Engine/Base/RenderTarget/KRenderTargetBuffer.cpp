@@ -84,3 +84,10 @@ void KRenderTargetBuffer::Transition(D3D12_RESOURCE_STATES resourceStates, ID3D1
 		assert(0);
 	}
 }
+
+KRenderTargetBuffer::KRenderTargetBuffer(ID3D12Device* device_, KRtvDescriptorHeap* rtvHeap_)
+{
+	device = device_;
+
+	rtvHeap = rtvHeap_;
+}

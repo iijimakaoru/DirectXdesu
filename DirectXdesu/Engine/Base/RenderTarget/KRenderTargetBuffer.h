@@ -54,7 +54,7 @@ public:
 
 	void Transition(D3D12_RESOURCE_STATES resourceStates, ID3D12GraphicsCommandList* commandList);
 
-	KRenderTargetBuffer() = default;
+	KRenderTargetBuffer(ID3D12Device* device_, KRtvDescriptorHeap* rtvHeap_);
 
 	~KRenderTargetBuffer() = default;
 

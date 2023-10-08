@@ -6,9 +6,6 @@ void KRtvDescriptorHeap::Initialize()
 	device = KDirectXCommon::GetInstance()->GetDev();
 	HRESULT result = 0;
 
-	maxRTV = 2048;
-	countRTV = 0;
-
 	// デスクリプタヒープの設定
 	D3D12_DESCRIPTOR_HEAP_DESC rtvHeapDesc = {};
 	rtvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;

@@ -86,14 +86,6 @@ namespace MyMathUtility
 	void SinCos(float& sin_, float& cos_, float angle);
 
 	/// <summary>
-	/// ベクトルと行列の掛け算
-	/// </summary>
-	/// <param name="m"></param>
-	/// <param name="v"></param>
-	/// <returns></returns>
-	KMyMath::Matrix4 MatMulVector(KMyMath::Matrix4 m, KMyMath::Vector3 v);
-
-	/// <summary>
 	/// 平行投影変換(左手)
 	/// </summary>
 	/// <param name="left"></param>

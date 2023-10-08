@@ -106,11 +106,6 @@ namespace MyMathUtility
 		cos_ = Cos(angle);
 	}
 
-	KMyMath::Matrix4 MatMulVector(KMyMath::Matrix4 m, KMyMath::Vector3 v)
-	{
-		return KMyMath::Matrix4();
-	}
-
 	KMyMath::Matrix4 MakeOrthogonalL(float left, float right, float bottom, float top, float near_, float far_)
 	{
 		float width = 1.0f / (right - left);

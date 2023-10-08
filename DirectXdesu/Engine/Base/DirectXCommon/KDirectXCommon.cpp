@@ -260,11 +260,9 @@ HRESULT KDirectXCommon::CreateFinalRenderTarget()
 	//スワップチェーンのバッファを処理
 	for (size_t i = 0; i < backBuffers.size(); i++)
 	{
-		// 生成
-		backBuffers[i] = std::make_unique<KRenderTargetBuffer>();
-		
+		backBuffers[i] = std::make_unique<KRenderTargetBuffer>(dev.Get(), rtvHeap.get());
 
-		// 生成
+		//生成
 		backBuffers[i]->Create(swapChain.Get(), static_cast<UINT>(i));
 	}
 

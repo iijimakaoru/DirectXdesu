@@ -26,6 +26,9 @@ void TitleScene::LoadResources()
 
 	// タイトル名テクスチャ
 	titleTex = TextureManager::Load("Resources/texture/kariTitle.png");
+	mesiTex = TextureManager::Load("Resources/texture/MESI.png");
+	shooterTex = TextureManager::Load("Resources/texture/SHOOTER.png");
+	moldTex = TextureManager::Load("Resources/texture/BattleShipMold.png");
 
 	// プッシュAテクスチャ
 	pushATex = TextureManager::Load("Resources/texture/kariNextScene.png");
@@ -59,23 +62,33 @@ void TitleScene::Init()
 	titleName = std::make_unique<Sprite>();
 	titleName->Init();
 	titleName->SetPipeline(spritePipeline.get());
-
 	titlePos = { width / 2 ,height * 1 / 3 };
+
+	mesi = std::make_unique<Sprite>();
+	mesi->Init();
+	mesi->SetPipeline(spritePipeline.get());
+	
+	shooter = std::make_unique<Sprite>();
+	shooter->Init();
+	shooter->SetPipeline(spritePipeline.get());
+	shooterScale = { 1.0f,1.0f };
+
+	mold = std::make_unique<Sprite>();
+	mold->Init();
+	mold->SetPipeline(spritePipeline.get());
+	moldScale = { 1.6f,1.6f };
 
 	// プッシュA
 	pushA = std::make_unique<Sprite>();
 	pushA->Init();
 	pushA->SetPipeline(spritePipeline.get());
-
-	pushAPos = { width / 2, height * 2 / 3 };
+	pushAPos = { width / 2, height * 4 / 5 };
 
 	// オブジェクト生成
 	object3d.reset(KObject3d::Create(model.get(), objPipeline.get()));
-
 	object3d->transform.scale = { 0,0,0 };
 
 	skyDome.reset(KObject3d::Create(skyDomeModel.get(), objPipeline.get()));
-
 	skyDome->transform.scale = { 200,200,200 };
 
 	// フラッシュ
@@ -130,10 +143,6 @@ void TitleScene::Update()
 					camera->StartSortie();
 				}
 			}
-
-			object3d->transform.pos = { 0,0,0 };
-
-			object3d->transform.rot = { 0,0,0 };
 		}
 
 		if (sceneChange->GetIsChange())
@@ -161,9 +170,21 @@ void TitleScene::SpriteDraw()
 {
 	if (!startScene)
 	{
-		titleName->Draw(titleTex, titlePos, { 1,1 });
+		mold->Draw(moldTex, titlePos + moldPos, moldScale);
+
+		mesi->Draw(mesiTex, titlePos + mesiPos, mesiScale);
+
+		shooter->Draw(shooterTex, titlePos + shooterPos, shooterScale);
 
 		pushA->Draw(pushATex, pushAPos, { 0.5f,0.5f });
+	}
+	else
+	{
+		mold->Draw(moldTex, titlePos + moldPos, moldScale);
+
+		shooter->Draw(shooterTex, titlePos + shooterPos, shooterScale);
+
+		mesi->Draw(mesiTex, titlePos + mesiPos, mesiScale);
 	}
 
 	flash->Draw(flashTex, { width / 2,height / 2 }, { width,height }, 0, { 1,1,1,flashAlpha });
@@ -176,6 +197,15 @@ void TitleScene::Final()
 
 void TitleScene::StartScene()
 {
+	// タイトル導入スキップ
+	if (startScenePhase < 4)
+	{
+		if (input->GetPadButtonDown(XINPUT_GAMEPAD_A))
+		{
+			startScenePhase = 4;
+		}
+	}
+
 	// シーン遷移待ち
 	if (startScenePhase == 0)
 	{
@@ -192,12 +222,12 @@ void TitleScene::StartScene()
 	// こっちに飛んできて上に行く
 	else if (startScenePhase == 1)
 	{
-		start = { 0,-30,180 };
-		p1 = { 0,-30,20 };
-		p2 = { 0,-30,-40 };
-		end = { 0,60,-60 };
+		start = { 0,-20,190 };
+		p1 = { 0,-20,20 };
+		p2 = { 0,-30,-30 };
+		end = { 0,50,-30 };
 
-		phaseTime = 60;
+		phaseTime = 90;
 
 		phaseTimer++;
 
@@ -238,24 +268,25 @@ void TitleScene::StartScene()
 	// 上から帰ってくる
 	else if (startScenePhase == 2)
 	{
-		start = { 0,60,60 };
-		p1 = { 0,40,60 };
-		p2 = { 0,0,40 };
-		end = { 0,0,0 };
+		start = { 0,80,80 };
+		p1 = { 0,50,80 };
+		p2 = { 0,0,60 };
+		end = { 0,-3,30 };
 
-		phaseTime = 60;
+		phaseTime = 45;
 
 		phaseTimer++;
 
+		// ベジエ曲線
 		// ポイント１の制御点
 		KMyMath::Vector3 point1_1 = MyEase::Lerp3D(start, p1, phaseTimer / phaseTime);
 		KMyMath::Vector3 point1_2 = MyEase::Lerp3D(p1, end, phaseTimer / phaseTime);
-		KMyMath::Vector3 point1 = MyEase::Lerp3D(point1_1, point1_2, phaseTimer / phaseTime);
+		KMyMath::Vector3 point1   = MyEase::Lerp3D(point1_1, point1_2, phaseTimer / phaseTime);
 
 		// ポイント２の制御点
 		KMyMath::Vector3 point2_1 = MyEase::Lerp3D(start, p2, phaseTimer / phaseTime);
 		KMyMath::Vector3 point2_2 = MyEase::Lerp3D(p2, end, phaseTimer / phaseTime);
-		KMyMath::Vector3 point2 = MyEase::Lerp3D(point2_1, point2_2, phaseTimer / phaseTime);
+		KMyMath::Vector3 point2   = MyEase::Lerp3D(point2_1, point2_2, phaseTimer / phaseTime);
 
 		object3d->transform.pos = MyEase::Lerp3D(point1, point2, phaseTimer / phaseTime);
 
@@ -263,18 +294,56 @@ void TitleScene::StartScene()
 
 		object3d->transform.rot.x = MyEase::Lerp(45.0f, 0.0f, phaseTimer / phaseTime);
 
+		isTitle = true;
+
 		if (phaseTimer > phaseTime)
 		{
 			startScenePhase++;
 			phaseTimer = 0;
 		}
 	}
+	// 余韻
+	else if (startScenePhase == 3)
+	{
+		phaseTime = 30;
+
+		phaseTimer++;
+
+		object3d->transform.pos.z = MyEase::OutCubicFloat(30, 0, phaseTimer / phaseTime);
+
+		object3d->transform.rot.z = MyEase::OutCubicFloat(0, 360, phaseTimer / phaseTime);
+
+		if (phaseTimer > phaseTime)
+		{
+			startScenePhase++;
+			phaseTimer = 0;
+		}
+	}
+	else if (startScenePhase == 4)
+	{
+		// フラッシュ！
+		flashAlpha = 1.0f;
+		// オブジェクト情報タイトルどうりに
+		object3d->transform.pos = { 0,0,0 };
+		object3d->transform.rot = { 0,0,0 };
+		// タイトル位置
+		shooterPos.x = 200;
+		moldPos.x = 0;
+		mesiPos = { -200,-30 };
+		mesiScale = { 1.0f,1.0f };
+
+		startScenePhase++;
+	}
 	// スタート画面
 	else
 	{
 		startScene = false;
 		camera->StartRound();
-		flashAlpha = 1.0f;
+	}
+
+	if (isTitle)
+	{
+		TitleCall();
 	}
 }
 
@@ -289,7 +358,7 @@ void TitleScene::GoNextScene()
 		{
 			texEaseTimer++;
 
-			titlePos.y = MyEase::InQuadFloat(height * 1 / 3, (height * 1 / 3) - 300,
+			titlePos.y = MyEase::InQuadFloat(height * 1 / 3, (height * 1 / 3) - 500,
 				texEaseTimer / texEaseTime);
 
 			pushAPos.y = MyEase::InQuadFloat(height * 2 / 3, (height * 2 / 3) + 300,
@@ -362,5 +431,47 @@ void TitleScene::GoNextScene()
 	{
 		sceneChange->Start();
 		goGamePhase++;
+	}
+}
+
+void TitleScene::TitleCall()
+{
+	if (titlePhase == 0)
+	{
+		titlePhaseTime = 30;
+
+		if (titlePhaseTimer < titlePhaseTime)
+		{
+			titlePhaseTimer++;
+
+			shooterPos.x = MyEase::OutCubicFloat(1200, 200, titlePhaseTimer / titlePhaseTime);
+			moldPos.x = MyEase::OutCubicFloat(-1200, 0, titlePhaseTimer / titlePhaseTime);
+		}
+		else
+		{
+			titlePhase++;
+			titlePhaseTimer = 0;
+		}
+	}
+	else if (titlePhase == 1)
+	{
+		titlePhaseTime = 45;
+
+		if (titlePhaseTimer < titlePhaseTime)
+		{
+			titlePhaseTimer++;
+
+			mesiPos = MyEase::InCubicVec2({ 0,0 }, { -200,-30 }, titlePhaseTimer / titlePhaseTime);
+			mesiScale = MyEase::InCubicVec2({ 2.5f,2.5f }, { 1.0f,1.0f }, titlePhaseTimer / titlePhaseTime);
+		}
+		else
+		{
+			titlePhase++;
+			titlePhaseTimer = 0;
+		}
+	}
+	else
+	{
+		isTitle = false;
 	}
 }

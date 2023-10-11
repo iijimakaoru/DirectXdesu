@@ -7,7 +7,7 @@ void TitleCamera::Init()
 {
 	Camera::Init();
 
-	cameraObject->transform.pos = { 0,0,-40 };
+	cameraObject->transform.pos = { 0,0,-20 };
 	cameraObject->transform.rot = { 0,0,0 };
 
 	cameraObject->TransUpdate();
@@ -47,7 +47,7 @@ void TitleCamera::Update()
 
 void TitleCamera::RoundCamera()
 {
-	cameraObject->transform.pos.y = 3;
+	cameraObject->transform.pos.y = 4;
 
 	// 角度を変更
 	const float rotSpeed = 0.5f;
@@ -62,7 +62,7 @@ void TitleCamera::RoundCamera()
 	nowAngle = rotAngle;
 
 	const float radian = DirectX::XMConvertToRadians(rotAngle);
-	const float distance = -40;
+	const float distance = -20;
 	cameraObject->transform.pos.z = distance * cosf(radian);
 	cameraObject->transform.pos.x = distance * sinf(radian);
 

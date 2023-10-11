@@ -28,6 +28,9 @@ public:
 
 	// 次のシーンへ
 	void GoNextScene();
+
+	// タイトルコール
+	void TitleCall();
 private:
 	// インプット
 	KInput* input = nullptr;
@@ -44,8 +47,22 @@ private:
 	// タイトルスプライト
 	std::unique_ptr<Sprite> titleName = nullptr;
 	TextureData titleTex;
-
 	KMyMath::Vector2 titlePos = { 0,0 };
+
+	std::unique_ptr<Sprite> mesi = nullptr;
+	TextureData mesiTex;
+	KMyMath::Vector2 mesiPos = { -150,-30 };
+	KMyMath::Vector2 mesiScale = { 0,0 };
+
+	std::unique_ptr<Sprite> shooter = nullptr;
+	TextureData shooterTex;
+	KMyMath::Vector2 shooterPos = { 1200,40 };
+	KMyMath::Vector2 shooterScale = { 1,1 };
+
+	std::unique_ptr<Sprite> mold = nullptr;
+	TextureData moldTex;
+	KMyMath::Vector2 moldPos = { -1200,0 };
+	KMyMath::Vector2 moldScale = { 1,1 };
 
 	// 次のシーンへのキー
 	std::unique_ptr<Sprite> pushA = nullptr;
@@ -99,6 +116,12 @@ private:
 	TextureData flashTex;
 
 	float flashAlpha = 0;
+
+	// タイトル文字の演出
+	uint32_t titlePhase = 0;
+	float titlePhaseTimer = 0;
+	float titlePhaseTime = 0;
+	bool isTitle = false;
 #pragma endregion
 
 #pragma region 次のシーンへの移行演出変数

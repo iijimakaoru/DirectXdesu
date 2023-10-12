@@ -16,6 +16,12 @@
 
 #include "FbxModel.h"
 
+/**
+ * @file FbxLoader.h
+ * @brief Fbxのローダー
+ * @author 飯島 薫
+ */
+
 class FbxLoader
 {
 private:// エイリアス

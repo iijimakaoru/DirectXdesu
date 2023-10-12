@@ -1,6 +1,12 @@
 #pragma once
 #include "KDsvDescriptorHeap.h"
 
+/**
+ * @file KDepthStencilBuffer.h
+ * @brief 深度ステンシルバッファ
+ * @author 飯島 薫
+ */
+
 class KDepthStencilBuffer
 {
 private:

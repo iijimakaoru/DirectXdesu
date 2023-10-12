@@ -5,6 +5,12 @@
 #include <sstream>
 #include <string>
 
+/**
+ * @file KModel.h
+ * @brief モデル
+ * @author 飯島 薫
+ */
+
 class KModel 
 {
 public:

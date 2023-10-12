@@ -9,6 +9,12 @@
 
 #pragma comment(lib,"xaudio2.lib")
 
+/**
+ * @file Sound.h
+ * @brief 音
+ * @author 飯島 薫
+ */
+
 struct ChunkHeader
 {
 	char id[4];

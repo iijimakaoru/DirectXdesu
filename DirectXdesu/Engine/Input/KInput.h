@@ -13,6 +13,12 @@
 #pragma comment(lib, "dxguid.lib")
 #pragma comment(lib, "xinput.lib")
 
+/**
+ * @file KInput.h
+ * @brief 入力
+ * @author 飯島 薫
+ */
+
 class KInput
 {
 public:

@@ -1,5 +1,11 @@
 #pragma once
 
+/**
+ * @file Vector3.h
+ * @brief 3D
+ * @author 飯島 薫
+ */
+
 namespace KMyMath
 {
 	class Vector3

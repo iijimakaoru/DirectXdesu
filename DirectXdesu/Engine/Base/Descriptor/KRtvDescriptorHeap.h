@@ -16,6 +16,12 @@
 #include <d3d12.h>
 #pragma warning(pop)
 
+/**
+ * @file KRtvDescriptorHeap.h
+ * @brief レンダーターゲットビューのデスクリプタヒープ
+ * @author 飯島 薫
+ */
+
 class KRtvDescriptorHeap
 {
 private:

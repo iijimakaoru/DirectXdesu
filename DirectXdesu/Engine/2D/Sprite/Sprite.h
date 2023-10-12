@@ -3,6 +3,12 @@
 #include "MyMath.h"
 #include "TextureManager.h"
 
+/**
+ * @file Sprite.h
+ * @brief スプライト
+ * @author 飯島 薫
+ */
+
 class Sprite
 {
 public:

@@ -3,6 +3,12 @@
 #include "KWinApp.h"
 #include "MyMath.h"
 
+/**
+ * @file ViewProjection.h
+ * @brief ビュープロジェクション
+ * @author 飯島 薫
+ */
+
 class ViewProjection
 {
 public:

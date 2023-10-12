@@ -14,6 +14,12 @@
 #include "Vector4.h"
 #include "KRtvDescriptorHeap.h"
 
+/**
+ * @file KRenderTargetBuffer.h
+ * @brief レンダーターゲットバッファ
+ * @author 飯島 薫
+ */
+
 class KRenderTargetBuffer
 {
 public:

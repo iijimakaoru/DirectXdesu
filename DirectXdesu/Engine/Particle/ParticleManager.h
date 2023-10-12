@@ -9,6 +9,12 @@
 #include <forward_list>
 #pragma warning(pop)
 
+/**
+ * @file ParticleManager.h
+ * @brief パーティクルのマネージャー
+ * @author 飯島 薫
+ */
+
 class Particles
 {
 public:// サブクラス

@@ -5,6 +5,12 @@
 #include "KWinApp.h"
 #include "KDirectXCommon.h"
 
+/**
+ * @file ImguiManager.h
+ * @brief Imguiのマネージャー
+ * @author 飯島 薫
+ */
+
 class ImguiManager
 {
 private:

@@ -13,6 +13,12 @@
 #include <stdexcept>
 #pragma warning(pop)
 
+/**
+ * @file MyMath.h
+ * @brief 数学関数
+ * @author 飯島 薫
+ */
+
 namespace MyMathUtility
 {
 	// 度からラジアンび変換する定数

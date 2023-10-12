@@ -1,6 +1,12 @@
 #pragma
 #include "MyMath.h"
 
+/**
+ * @file Ease.h
+ * @brief イージング
+ * @author 飯島 薫
+ */
+
 namespace MyEase
 {
 	// 補間

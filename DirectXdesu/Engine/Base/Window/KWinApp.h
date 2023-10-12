@@ -5,6 +5,12 @@
 #include <Windows.h>
 #pragma warning(pop)
 
+/**
+ * @file KWinnApp.h
+ * @brief ウィンドウ
+ * @author 飯島 薫
+ */
+
 class KWinApp
 {
 private:

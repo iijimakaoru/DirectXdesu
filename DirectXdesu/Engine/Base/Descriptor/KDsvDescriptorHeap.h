@@ -15,6 +15,12 @@
 #include <d3d12.h>
 #pragma warning(pop)
 
+/**
+ * @file KDsvDescripterHeap.h
+ * @brief 深度ステンシルビューデスクリプタヒープ
+ * @author 飯島 薫
+ */
+
 class KDsvDescriptorHeap
 {
 private:

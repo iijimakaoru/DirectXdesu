@@ -187,7 +187,6 @@
     <ClInclude Include="Engine\Base\BaseScene\ASceneFactory.h" />
     <ClInclude Include="Engine\Base\BaseScene\BaseScene.h" />
     <ClInclude Include="Engine\Base\BaseCamera\Camera.h" />
-    <ClInclude Include="Engine\Base\WarrningIgnore.h" />
     <ClInclude Include="Engine\Collision\Collision.h" />
     <ClInclude Include="Engine\Collision\CollisionPrimitive.h" />
     <ClInclude Include="Application\Camera\DebugCamera.h" />

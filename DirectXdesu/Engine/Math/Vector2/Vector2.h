@@ -1,5 +1,11 @@
 #pragma once
 
+/**
+ * @file Vector2.h
+ * @brief 2D
+ * @author 飯島 薫
+ */
+
 namespace KMyMath
 {
 	class Vector2

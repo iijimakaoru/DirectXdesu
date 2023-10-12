@@ -8,6 +8,12 @@
 #pragma warning(pop)
 #include "MyMath.h"
 
+/**
+ * @file TextureManager.h
+ * @brief テクスチャのマネージャー
+ * @author 飯島 薫
+ */
+
 struct TextureData
 {
 	// テクスチャバッファ

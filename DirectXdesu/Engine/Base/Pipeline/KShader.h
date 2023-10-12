@@ -19,6 +19,12 @@
 
 #pragma comment(lib, "dxgi.lib")
 
+/**
+ * @file KShader.h
+ * @brief シェーダー
+ * @author 飯島 薫
+ */
+
 class KShader
 {
 public:

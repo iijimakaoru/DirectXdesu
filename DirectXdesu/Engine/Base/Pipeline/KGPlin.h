@@ -2,6 +2,12 @@
 #include "KShader.h"
 #include "KVertex.h"
 
+/**
+ * @file KGPlin.h
+ * @brief グラフィックスパイプライン
+ * @author 飯島 薫
+ */
+
 class KGPlin
 {
 public:

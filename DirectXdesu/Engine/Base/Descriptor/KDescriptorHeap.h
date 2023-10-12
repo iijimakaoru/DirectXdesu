@@ -15,6 +15,12 @@
 #include <d3d12.h>
 #pragma warning(pop)
 
+/**
+ * @file KDescripterHeap.h
+ * @brief デスクリプタヒープ
+ * @author 飯島 薫
+ */
+
 class KDescriptorHeap
 {
 private:

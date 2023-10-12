@@ -5,6 +5,12 @@
 #include <DirectXMath.h>
 #pragma warning(pop)
 
+/**
+ * @file CollisionPrimitive.h
+ * @brief 当たり判定の元
+ * @author 飯島 薫
+ */
+
 struct Sphere
 {
 	// 中心座標

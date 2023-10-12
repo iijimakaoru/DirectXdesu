@@ -3,6 +3,12 @@
 #include "KGPlin.h"
 #include "KWinApp.h"
 
+/**
+ * @file PostEffect.h
+ * @brief ポストエフェクト
+ * @author 飯島 薫
+ */
+
 class PostEffect
 {
 public:// 静的メンバ関数

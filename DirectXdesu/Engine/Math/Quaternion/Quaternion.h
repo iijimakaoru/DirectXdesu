@@ -2,6 +2,12 @@
 #include "Vector3.h"
 #include "Matrix4.h"
 
+/**
+ * @file Quaternion.h
+ * @brief クォータニオン
+ * @author 飯島 薫
+ */
+
 class Quaternion
 {
 public:

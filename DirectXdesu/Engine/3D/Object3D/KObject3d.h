@@ -4,6 +4,12 @@
 #include "ViewProjection.h"
 #include "KGPlin.h"
 
+/**
+ * @file KObject3D.h
+ * @brief オブジェクト3D
+ * @author 飯島 薫
+ */
+
 struct ConstBufferDataB1
 {
 	KMyMath::Vector3 ambient;

@@ -29,6 +29,12 @@
 #pragma comment(lib, "d3d12.lib")
 #pragma comment(lib, "dxgi.lib")
 
+/**
+ * @file KDirectXCommon.h
+ * @brief DirectX12
+ * @author 飯島 薫
+ */
+
 class KDirectXCommon
 {
 private:

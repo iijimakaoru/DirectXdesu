@@ -12,6 +12,12 @@
 #include <DirectXMath.h>
 #pragma warning(pop)
 
+/**
+ * @file LevelLoader.h
+ * @brief レベルローダ
+ * @author 飯島 薫
+ */
+
 // レベルデータ
 struct LevelData 
 {

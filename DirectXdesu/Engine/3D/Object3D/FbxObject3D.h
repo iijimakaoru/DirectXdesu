@@ -3,6 +3,12 @@
 #include "Camera.h"
 #include "KGPlin.h"
 
+/**
+ * @file FbxObject3D.h
+ * @brief Fbxのオブジェクト3D
+ * @author 飯島 薫
+ */
+
 class FbxObject3D
 {
 protected: // エイリアス

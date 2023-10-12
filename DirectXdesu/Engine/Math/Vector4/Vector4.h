@@ -1,6 +1,12 @@
 #pragma once
 #include "Vector3.h"
 
+/**
+ * @file Vector4.h
+ * @brief 4D
+ * @author 飯島 薫
+ */
+
 namespace KMyMath
 {
 	class Vector4 {

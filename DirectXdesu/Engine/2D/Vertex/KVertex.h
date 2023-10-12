@@ -3,6 +3,12 @@
 #include "Vector3.h"
 #include "Vector2.h"
 
+/**
+ * @file KVertex.h
+ * @brief 頂点
+ * @author 飯島 薫
+ */
+
 // 頂点データ構造体
 struct VertexPosNormalUV 
 {

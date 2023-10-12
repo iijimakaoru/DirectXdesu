@@ -2,6 +2,12 @@
 #include "CollisionPrimitive.h"
 #include "MyMath.h"
 
+/**
+ * @file Collision.h
+ * @brief 当たり判定
+ * @author 飯島 薫
+ */
+
 class Collision
 {
 public:

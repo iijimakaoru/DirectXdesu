@@ -13,6 +13,12 @@
 #include "TextureManager.h"
 #include "SceneChange.h"
 
+/**
+ * @file Framework.h
+ * @brief フレームワーク
+ * @author 飯島 薫
+ */
+
 class Framework
 {
 public:

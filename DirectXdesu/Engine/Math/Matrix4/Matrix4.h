@@ -1,6 +1,12 @@
 #pragma once
 #include <array>
 
+/**
+ * @file Matrix4.h
+ * @brief 行列
+ * @author 飯島 薫
+ */
+
 namespace KMyMath
 {
 	class Matrix4

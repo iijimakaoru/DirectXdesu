@@ -17,6 +17,12 @@
 #include <fbxsdk.h>
 #pragma warning(pop)
 
+/**
+ * @file FbxModel.h
+ * @brief Fbxのモデル
+ * @author 飯島 薫
+ */
+
 // ノード
 struct Node
 {

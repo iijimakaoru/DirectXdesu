@@ -2,6 +2,12 @@
 #include "BaseScene.h"
 #include "ASceneFactory.h"
 
+/**
+ * @file SceneManager.h
+ * @brief シーンマネージャー
+ * @author 飯島 薫
+ */
+
 class SceneManager
 {
 public:

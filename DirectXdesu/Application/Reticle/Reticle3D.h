@@ -3,6 +3,12 @@
 #include "KGPlin.h"
 #include "KShader.h"
 
+/**
+ * @file Reticle3D.h
+ * @brief レティクル3D座標
+ * @author 飯島 薫
+ */
+
 class Reticle3D
 {
 public:

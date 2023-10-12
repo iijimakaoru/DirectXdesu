@@ -6,6 +6,12 @@
 #include "KGPlin.h"
 #include "KShader.h"
 
+/**
+ * @file Ground.h
+ * @brief 地面
+ * @author 飯島 薫
+ */
+
 class Ground
 {
 public:

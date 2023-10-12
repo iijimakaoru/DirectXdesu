@@ -7,6 +7,12 @@
 
 #include "Sprite.h"
 
+/**
+ * @file GameOverScene.h
+ * @brief ゲームオーバーシーン
+ * @author 飯島 薫
+ */
+
 class GameOverScene : public BaseScene
 {
 public:

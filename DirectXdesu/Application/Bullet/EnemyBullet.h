@@ -1,6 +1,12 @@
 #pragma once
 #include "Bullet.h"
 
+/**
+ * @file EnemyBullet.h
+ * @brief 敵の弾
+ * @author 飯島 薫
+ */
+
 class EnemyBullet : public Bullet
 {
 public:

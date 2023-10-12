@@ -7,6 +7,12 @@
 
 #include "Sprite.h"
 
+/**
+ * @file ClearScene.h
+ * @brief ゲームクリアシーン
+ * @author 飯島 薫
+ */
+
 class ClearScene : public BaseScene
 {
 public:

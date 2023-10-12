@@ -11,6 +11,12 @@
 #include "Sprite.h"
 #include "TitleCamera.h"
 
+/**
+ * @file TitleScene.h
+ * @brief タイトルシーン
+ * @author 飯島 薫
+ */
+
 class TitleScene : public BaseScene
 {
 public:

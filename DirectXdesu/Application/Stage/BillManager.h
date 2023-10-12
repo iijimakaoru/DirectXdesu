@@ -7,6 +7,12 @@
 #include "KShader.h"
 #include "Bill1.h"
 
+/**
+ * @file BillManager.h
+ * @brief 建物マネージャー
+ * @author 飯島 薫
+ */
+
 class BillManager
 {
 public:

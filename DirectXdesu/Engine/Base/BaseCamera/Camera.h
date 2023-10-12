@@ -4,6 +4,12 @@
 #include <memory>
 #include "KObject3d.h"
 
+/**
+ * @file Camera.h
+ * @brief カメラの基底クラス
+ * @author 飯島 薫
+ */
+
 class Camera
 {
 protected:

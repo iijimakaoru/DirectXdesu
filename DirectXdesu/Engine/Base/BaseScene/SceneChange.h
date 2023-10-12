@@ -1,6 +1,12 @@
 #pragma once
 #include "Sprite.h"
 
+/**
+ * @file SceneChange.h
+ * @brief シーンチェンジ演出
+ * @author 飯島 薫
+ */
+
 class SceneChange
 {
 public:

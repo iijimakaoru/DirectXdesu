@@ -1,6 +1,12 @@
 #pragma once
 #include "Camera.h"
 
+/**
+ * @file TitleCamera.h
+ * @brief タイトルのカメラ
+ * @author 飯島 薫
+ */
+
 class TitleCamera : public Camera
 {
 public:

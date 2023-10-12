@@ -1,6 +1,12 @@
 #pragma once
 #include "MobEnemy.h"
 
+/**
+ * @file AppearEnemy.h
+ * @brief その場で出現する敵
+ * @author 飯島 薫
+ */
+
 class AppearEnemy : public MobEnemy
 {
 public:

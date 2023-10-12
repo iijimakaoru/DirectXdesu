@@ -6,6 +6,12 @@
 #include "KGPlin.h"
 #include "KShader.h"
 
+/**
+ * @file Bill1.h
+ * @brief 建物(ビル)
+ * @author 飯島 薫
+ */
+
 class Bill1
 {
 public:

@@ -43,6 +43,12 @@
 
 #include "BillManager.h"
 
+/**
+ * @file GameScene.h
+ * @brief ゲームシーン
+ * @author 飯島 薫
+ */
+
 class GameScence : public BaseScene
 {
 public:

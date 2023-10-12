@@ -4,6 +4,12 @@
 #include "TextureManager.h"
 #include "SceneChange.h"
 
+/**
+ * @file BaseScene.h
+ * @brief シーンの基底クラス
+ * @author 飯島 薫
+ */
+
 class SceneManager;
 
 class BaseScene

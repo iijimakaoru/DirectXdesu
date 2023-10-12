@@ -10,6 +10,12 @@
 #include "Reticle3D.h"
 #include "Reticle2D.h"
 
+/**
+ * @file Player.h
+ * @brief 自機
+ * @author 飯島 薫
+ */
+
 /// <summary>
 /// 自キャラ
 /// </summary>

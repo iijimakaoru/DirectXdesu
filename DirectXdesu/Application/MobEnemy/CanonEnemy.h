@@ -1,6 +1,12 @@
 #pragma once
 #include "MobEnemy.h"
 
+/**
+ * @file CanonEnemy.h
+ * @brief 砲台敵
+ * @author 飯島 薫
+ */
+
 class CanonEnemy : public MobEnemy
 {
 public:

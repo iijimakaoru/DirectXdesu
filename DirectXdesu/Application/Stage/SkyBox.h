@@ -4,6 +4,12 @@
 #include "KModel.h"
 #include "KGPlin.h"
 
+/**
+ * @file SkyBox.h
+ * @brief 天箱
+ * @author 飯島 薫
+ */
+
 class SkyBox
 {
 public:

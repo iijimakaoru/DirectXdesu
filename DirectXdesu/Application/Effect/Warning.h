@@ -1,6 +1,12 @@
 #pragma once
 #include "Sprite.h"
 
+/**
+ * @file Warning.h
+ * @brief ボス戦導入の警告演出
+ * @author 飯島 薫
+ */
+
 class Warning
 {
 public:

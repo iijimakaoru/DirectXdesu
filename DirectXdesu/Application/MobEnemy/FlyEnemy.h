@@ -1,5 +1,12 @@
 #pragma once
 #include "MobEnemy.h"
+
+/**
+ * @file FlyEnemy.h
+ * @brief 前方に張り付く敵
+ * @author 飯島 薫
+ */
+
 class FlyEnemy : public MobEnemy
 {
 public:

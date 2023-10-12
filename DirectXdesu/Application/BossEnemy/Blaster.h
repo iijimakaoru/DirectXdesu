@@ -2,6 +2,12 @@
 #include "BossEnemy.h"
 #include "KInput.h"
 
+/**
+ * @file Blaster.h
+ * @brief ボス1:ブラスター
+ * @author 飯島 薫
+ */
+
 class Blaster : public BossEnemy
 {
 public:

@@ -5,6 +5,12 @@
 #include "TextureManager.h"
 #include "Sprite.h"
 
+/**
+ * @file BossEnemy.h
+ * @brief ボスの基底クラス
+ * @author 飯島 薫
+ */
+
 class BossEnemy
 {
 public:

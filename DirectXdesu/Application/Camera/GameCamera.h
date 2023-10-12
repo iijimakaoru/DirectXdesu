@@ -3,6 +3,12 @@
 #include "Vector2.h"
 #include "MyMath.h"
 
+/**
+ * @file GameCamera.h
+ * @brief ゲームカメラ
+ * @author 飯島 薫
+ */
+
 class GameCamera : public Camera
 {
 public:

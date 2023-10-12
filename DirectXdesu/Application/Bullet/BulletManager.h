@@ -2,6 +2,12 @@
 #include "PlayerBullet.h"
 #include "EnemyBullet.h"
 
+/**
+ * @file BulletManager.h
+ * @brief 弾のマネージャー
+ * @author 飯島 薫
+ */
+
 class BulletManager
 {
 public:

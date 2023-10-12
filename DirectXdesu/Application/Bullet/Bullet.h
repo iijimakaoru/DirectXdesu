@@ -7,6 +7,12 @@
 #include "KShader.h"
 #include "TextureManager.h"
 
+/**
+ * @file Bullet.h
+ * @brief 弾の基底クラス
+ * @author 飯島 薫
+ */
+
 class Bullet
 {
 public:

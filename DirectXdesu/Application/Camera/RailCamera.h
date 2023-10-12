@@ -2,6 +2,12 @@
 #include "Camera.h"
 #include "KObject3d.h"
 
+/**
+ * @file RailCamera.h
+ * @brief レールカメラ
+ * @author 飯島 薫
+ */
+
 class Player;
 
 class RailCamera : public Camera

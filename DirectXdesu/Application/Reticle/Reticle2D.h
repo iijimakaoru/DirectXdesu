@@ -2,6 +2,12 @@
 #include "Sprite.h"
 #include "ViewProjection.h"
 
+/**
+ * @file Reticle2D.h
+ * @brief 2Dレティクル
+ * @author 飯島 薫
+ */
+
 class Reticle2D
 {
 public:

@@ -6,6 +6,12 @@
 #include "KGPlin.h"
 #include "KShader.h"
 
+/**
+ * @file MobEnemy.h
+ * @brief 雑魚敵の基底クラス
+ * @author 飯島 薫
+ */
+
 class Player;
 
 class MobEnemy

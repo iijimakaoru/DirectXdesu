@@ -206,6 +206,11 @@ void TitleScene::StartScene()
 		}
 	}
 
+	if (isTitle)
+	{
+		TitleCall();
+	}
+
 	// シーン遷移待ち
 	if (startScenePhase == 0)
 	{
@@ -339,11 +344,6 @@ void TitleScene::StartScene()
 	{
 		startScene = false;
 		camera->StartRound();
-	}
-
-	if (isTitle)
-	{
-		TitleCall();
 	}
 }
 

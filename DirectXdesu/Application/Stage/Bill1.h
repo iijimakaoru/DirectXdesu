@@ -38,7 +38,7 @@ public:
 	/// 更新
 	/// </summary>
 	/// <param name="viewPro"></param>
-	void Update(ViewProjection* viewPro, const float& cameraZ);
+	void Update(ViewProjection* viewPro, const float& cameraZ, const bool& isAdvance_);
 
 	// 描画
 	void Draw();

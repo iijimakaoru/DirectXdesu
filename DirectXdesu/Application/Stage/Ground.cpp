@@ -1,5 +1,6 @@
 #include "Ground.h"
 #include "Player.h"
+#include "RailCamera.h"
 
 void Ground::Init(Player* player_)
 {
@@ -29,6 +30,8 @@ void Ground::Init(Player* player_)
 	object3d[1]->SetPos({ 0,-20,(object3d[0]->GetPos().z + 400.0f) });
 
 	player = player_;
+
+	isAdvance = false;
 }
 
 void Ground::Update(ViewProjection* viewPro, const KMyMath::Vector3& cameraPos)
@@ -52,6 +55,11 @@ void Ground::Update(ViewProjection* viewPro, const KMyMath::Vector3& cameraPos)
 			}
 		}
 
+		if (isAdvance)
+		{
+			object3d[i]->transform.pos.z -= RailCamera::GetSpeed();
+		}
+
 		object3d[i]->Update(viewPro);
 	}
 }
@@ -67,4 +75,9 @@ void Ground::Draw()
 const KMyMath::Vector3 Ground::GetPos(size_t num) const
 {
 	return object3d[num]->GetPos();
+}
+
+void Ground::SetIsAdvance(const bool isAdvance_)
+{
+	isAdvance = isAdvance_;
 }

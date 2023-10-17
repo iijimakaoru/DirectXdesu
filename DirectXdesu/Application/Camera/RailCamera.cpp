@@ -115,7 +115,7 @@ void RailCamera::SetIsAdvance(bool isAdvance_)
 	isAdvance = isAdvance_;
 }
 
-const float RailCamera::GetSpeed() const
+const float RailCamera::GetSpeed()
 {
 	return advanceSpeed;
 }

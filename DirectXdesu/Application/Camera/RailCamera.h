@@ -55,12 +55,6 @@ public:
 	void SetIsAdvance(bool isAdvance_);
 
 	/// <summary>
-	/// カメラ速度セッター
-	/// </summary>
-	/// <returns></returns>
-	const float GetSpeed() const;
-
-	/// <summary>
 	/// 死んだときに呼ぼう
 	/// </summary>
 	void CallCrash();
@@ -69,6 +63,12 @@ public:
 	/// ステージの始まりに呼ぼう
 	/// </summary>
 	void CallStart();
+
+	/// <summary>
+	/// カメラ速度セッター
+	/// </summary>
+	/// <returns></returns>
+	static const float GetSpeed();
 
 private:
 	// 前進するか

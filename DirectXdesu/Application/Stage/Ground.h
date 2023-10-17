@@ -29,7 +29,11 @@ public:
 	// 描画
 	void Draw();
 
+	// ゲッター
 	const KMyMath::Vector3 GetPos(size_t num) const;
+
+	// 前進セッター
+	void SetIsAdvance(const bool isAdvance_);
 
 private:
 	// オブジェクト
@@ -47,5 +51,9 @@ private:
 	// シェーダー
 	KShader shader;
 
+	// プレイヤーインスタンス格納
 	Player* player;
+
+	// そのまま動き続けろフラグ
+	bool isAdvance = false;
 };

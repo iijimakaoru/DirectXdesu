@@ -33,6 +33,12 @@ public:
 	void RightSet(const float cameraZ);
 	void LeftSet(const float cameraZ);
 
+	// 前進セッター
+	void SetIsAdvance(const bool isAdvance_);
+
+	// 生成止め
+	void SetIsStopCreate(const bool isStopCreate_);
+
 private:
 	// モデル
 	std::unique_ptr<KModel> model = nullptr;
@@ -49,5 +55,9 @@ private:
 	// タイマー
 	int32_t billtimer = 0;
 	const int32_t billtime = 120;
+
+	bool isAdvance = false;
+
+	bool isStopCreate = false;
 };
 

@@ -1,4 +1,5 @@
 #include "Bill1.h"
+#include "RailCamera.h"
 
 Bill1* Bill1::Create(KModel* model_, KGPlin* objPipeline_, const KMyMath::Vector2& pos)
 {
@@ -38,8 +39,13 @@ void Bill1::Init(KModel* model_, KGPlin* objPipeline_, const KMyMath::Vector2 po
     isDead = false;
 }
 
-void Bill1::Update(ViewProjection* viewPro, const float& cameraZ)
+void Bill1::Update(ViewProjection* viewPro, const float& cameraZ, const bool& isAdvance_)
 {
+    if (isAdvance_)
+    {
+        object->transform.pos.z -= RailCamera::GetSpeed();
+    }
+
     if (object->transform.pos.z <= cameraZ)
     {
         isDead = true;

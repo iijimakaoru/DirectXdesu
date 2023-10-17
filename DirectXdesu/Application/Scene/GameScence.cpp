@@ -147,10 +147,6 @@ void GameScence::Update()
 	{
 		boss->Update(camera->GetViewPro());
 	}
-	else
-	{
-		billManager->Set(camera->GetPos().z);
-	}
 
 	// 弾の更新
 	bulletManager->Update(camera->GetViewPro());
@@ -476,6 +472,9 @@ void GameScence::BossBattleStart()
 		// カメラ前進止める
 		camera->SetIsAdvance(false);
 
+		// ビル生成止め
+		billManager->SetIsStopCreate(true);
+
 		// ボス登場警告作成
 		bossWarning = std::make_unique<Warning>();
 		bossWarning->Init();
@@ -504,6 +503,15 @@ void GameScence::BossBattleStart()
 
 		// ボス登場警告解放
 		bossWarning.reset();
+
+		// ビル生成再開
+		billManager->SetIsStopCreate(false);
+
+		// ビルを全部動かす状態へ
+		billManager->SetIsAdvance(true);
+
+		// 地面を動かす状態へ
+		ground->SetIsAdvance(true);
 
 		// ボスバトル開始
 		isBossBattle = true;

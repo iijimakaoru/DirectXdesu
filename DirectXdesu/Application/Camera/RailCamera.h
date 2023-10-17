@@ -18,8 +18,13 @@ public:
 		
 	};
 
+	/// <summary>
+	/// 初期化
+	/// </summary>
+	/// <param name="player_"></param>
 	void Init(Player* player_);
 
+	// 更新
 	void Update();
 
 	/// <summary>

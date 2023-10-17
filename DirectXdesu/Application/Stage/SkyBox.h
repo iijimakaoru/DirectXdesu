@@ -13,6 +13,13 @@
 class SkyBox
 {
 public:
+	/// <summary>
+	/// 生成
+	/// </summary>
+	/// <param name="model_"></param>
+	/// <param name="objPipeline_"></param>
+	/// <param name="posZ"></param>
+	/// <returns></returns>
 	static SkyBox* Create(KModel* model_, KGPlin* objPipeline_, const float posZ);
 
 public:

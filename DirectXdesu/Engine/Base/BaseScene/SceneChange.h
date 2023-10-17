@@ -10,24 +10,31 @@
 class SceneChange
 {
 public:
+	// 初期化
 	void Init();
 
+	// 更新
 	void Update();
 
+	// 描画
 	void Draw();
 
+	// 演出始め
 	void Start();
 
+	// 演出終わり
 	void End();
 
 public:
+	// インスタンス
 	static SceneChange* GetInstance();
 
+	// 消去
 	void Delete();
 
 public:
+	// ゲッター
 	const bool GetIsChange() const;
-
 	const bool GetIsEffect() const;
 
 private:

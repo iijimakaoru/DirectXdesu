@@ -37,3 +37,13 @@ void Warning::Draw()
 {
 	warning->Draw(warningTex,{ 1280 / 2, 720 / 2 }, { 1280 ,720 }, 0.0f, { 1,0,0,alpha });
 }
+
+bool Warning::GetIsDelete()
+{
+	return isDelete;
+}
+
+int32_t Warning::GetTime()
+{
+	return warningTime;
+}

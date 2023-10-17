@@ -26,3 +26,16 @@ void Reticle3D::Update(KMyMath::Matrix4& m, KMyMath::Vector3 pPos)
 	// 座標更新
 	object->TransUpdate();
 }
+
+KMyMath::Vector3 Reticle3D::GetWorldPos()
+{
+	// ワールド座標格納変数
+	KMyMath::Vector3 result;
+
+	// ワールド行列の平行移動成分取得
+	result.x = object->transform.matWorld.m[3][0];
+	result.y = object->transform.matWorld.m[3][1];
+	result.z = object->transform.matWorld.m[3][2];
+
+	return result;
+}

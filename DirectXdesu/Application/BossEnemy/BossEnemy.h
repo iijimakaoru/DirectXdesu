@@ -59,10 +59,13 @@ public:
 	// HP演出
 	void HPEffect();
 
+	// HPゲッター
 	const bool GetIsHPE() const;
 
+	// 死亡ゲッター
 	const bool GetIsDead() const;
 
+	// 墜落エフェクト終わりゲッター
 	const bool GetIsFallEffectEnd() const;
 
 protected:

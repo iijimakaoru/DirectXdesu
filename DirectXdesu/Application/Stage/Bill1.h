@@ -43,7 +43,7 @@ public:
 	// 描画
 	void Draw();
 
-	// 
+	// ゲッター
 	const bool GetIsDead() const;
 
 private:

@@ -17,11 +17,22 @@ private:
 	template<class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
 
 public:
+	// 初期化
 	void Init();
+
+	// 最終処理
 	void Finalize();
+
+	// 更新
 	void Update();
+
+	// 処理の始め
 	void Begin();
+
+	// 描画
 	void Draw();
+
+	// 処理の終わり
 	void End();
 
 private:

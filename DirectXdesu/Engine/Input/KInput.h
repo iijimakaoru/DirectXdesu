@@ -30,7 +30,10 @@ public:
 	};
 
 public:
+	// 初期化
 	static void Init();
+
+	// 更新
 	static void Update();
 
 	// キーボード

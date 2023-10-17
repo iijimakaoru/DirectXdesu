@@ -10,6 +10,15 @@
 class FlyEnemy : public MobEnemy
 {
 public:
+	/// <summary>
+	/// 生成
+	/// </summary>
+	/// <param name="model_"></param>
+	/// <param name="pipeline_"></param>
+	/// <param name="startPos_"></param>
+	/// <param name="endPos_"></param>
+	/// <param name="speed_"></param>
+	/// <returns></returns>
 	static FlyEnemy* Create(KModel* model_, KGPlin* pipeline_, const KMyMath::Vector3& startPos_, const KMyMath::Vector2& endPos_, const float& speed_);
 
 public:

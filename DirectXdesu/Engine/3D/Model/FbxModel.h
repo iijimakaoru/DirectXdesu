@@ -129,13 +129,20 @@ private:
 
 public: // 関数
 	// メンバ
+
+	// バッファ生成
 	void CreateBuffer();
+
+	// テクスチャ読み込み
 	void LoadTexture();
+
+	// 描画
 	void Draw();
 
 	FbxModel();
 	~FbxModel();
 
+	// FbxSceneゲッター
 	FbxScene* GetFbxScene();
 
 	// ゲッター

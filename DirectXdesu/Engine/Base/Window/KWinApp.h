@@ -23,16 +23,27 @@ private:
 	void InitInternal();
 
 public:
+	// 初期化
 	static void Init();
+
+	// インスタンス
 	static KWinApp* GetInstance();
+
+	// 削除
 	static void DeleteInstance();
 
+	// ウィンドウ横幅
 	static int GetWindowSizeW();
+	// ウィンドウ縦幅
 	static int GetWindowSizeH();
 	
+	// プロセスメッセージ
 	bool ProcessMessage();
+
+	// 最終処理
 	void Finalize();
 	
+	// ゲッター
 	static HWND GetHWND();
 	static WNDCLASSEX GetWindow();
 

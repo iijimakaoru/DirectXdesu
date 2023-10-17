@@ -10,15 +10,18 @@
 class Warning
 {
 public:
+	// 初期化
 	void Init();
 
+	// 更新
 	void Update();
 
+	// 描画
 	void Draw();
 
-	bool GetIsDelete() { return isDelete; }
-
-	int32_t GetTime() { return warningTime; }
+	// ゲッター
+	bool GetIsDelete();
+	int32_t GetTime();
 
 private:
 	// スプライト

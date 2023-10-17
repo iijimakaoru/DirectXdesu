@@ -38,8 +38,19 @@ public:
 
 	// シェーダー
 	KShader();
+
+	/// <summary>
+	/// 初期化
+	/// </summary>
+	/// <param name="VSFileName"></param>
+	/// <param name="PSFileName"></param>
+	/// <param name="pEntryPoint"></param>
+	/// <param name="GSFileName"></param>
+	/// <param name="DSFileName"></param>
+	/// <param name="HSFileName"></param>
 	void Init(LPCWSTR VSFileName, LPCWSTR PSFileName, LPCSTR pEntryPoint = "main", 
 		LPCWSTR GSFileName = nullptr, LPCWSTR DSFileName = nullptr, LPCWSTR HSFileName = nullptr);
+
 	// エラー
 	void Error();
 
@@ -62,12 +73,12 @@ private:
 	HRESULT result;
 
 public:
+	// ゲッター
 	ID3D10Blob* GetVSBlob();
 	ID3D10Blob* GetHSBlob();
 	ID3D10Blob* GetDSBlob();
 	ID3D10Blob* GetGSBlob();
 	ID3D10Blob* GetPSBlob();
-
 	D3D12_SHADER_BYTECODE* GetVSBytecode();
 	D3D12_SHADER_BYTECODE* GetHSBytecode();
 	D3D12_SHADER_BYTECODE* GetDSBytecode();

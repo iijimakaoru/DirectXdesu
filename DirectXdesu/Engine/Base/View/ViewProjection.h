@@ -12,8 +12,13 @@
 class ViewProjection
 {
 public:
+	// コンストラクタ
 	ViewProjection();
+
+	// 初期化
 	void Initialize();
+
+	// 更新
 	void Update();
 
 private:
@@ -32,15 +37,15 @@ private:
 	float aspect = 0; // アスペクト比
 
 public:
+	// ゲッター
 	const KMyMath::Matrix4& GetMatView() const;
 	const KMyMath::Matrix4& GetMatPro() const;
-
 	const KMyMath::Vector3& GetEye() const;
 	const KMyMath::Vector3& GetTarget() const;
 	const KMyMath::Vector3& GetUp() const;
 
+	// セッター
 	void SetMatView(const KMyMath::Matrix4 mat_);
-
 	void SetEye(const KMyMath::Vector3& eye_);
 	void SetTarget(const KMyMath::Vector3& target_);
 	void SetUp(const KMyMath::Vector3& up_);

@@ -20,23 +20,23 @@ protected:
 public:
 	virtual ~Camera() {}
 
+	// 初期化
 	virtual void Init();
 
+	// 更新
 	virtual void Update();
 
+	// ビュープロジェクションゲッター
 	ViewProjection* GetViewPro();
 
+	// ゲッター
 	const WorldTransfom& GetTransform()const;
-
 	const KMyMath::Vector3& GetPos()const;
-
-	void SetPos(const KMyMath::Vector3 pos);
-
-	void SetWorldPosXY(const float x, const float y);
-
-	void SetPosXY(const float x, const float y);
-
-	void SetRotZ(const float rotZ);
-
 	const KMyMath::Vector3 GetWorldPos() const;
+
+	// セッター
+	void SetPos(const KMyMath::Vector3 pos);
+	void SetWorldPosXY(const float x, const float y);
+	void SetPosXY(const float x, const float y);
+	void SetRotZ(const float rotZ);
 };

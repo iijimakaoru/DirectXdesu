@@ -100,6 +100,7 @@ public:
 		return isInvisible;
 	}
 
+	// セッター
 	void SetPos(const KMyMath::Vector3 pos_);
 
 private:

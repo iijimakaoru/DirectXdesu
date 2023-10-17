@@ -43,12 +43,16 @@ public:
 
 	ObjMaterialInfo objMtl;
 
+	// マテリアル読み込み
 	void LoadMaterial(const std::string& directoryPath, const std::string& filename);
 
-	// modelusakusei
+	// モデル生成
 	void CreateModel();
 
+	// 描画
 	void Draw();
+
+	// 描画(テクスチャ指定)
 	void Draw(TextureData texData);
 };
 

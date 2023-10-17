@@ -1,6 +1,7 @@
 #include "Ground.h"
+#include "Player.h"
 
-void Ground::Init()
+void Ground::Init(Player* player_)
 {
 	// モデル生成
 	model = std::make_unique<MtlObj>("Grand");
@@ -26,6 +27,8 @@ void Ground::Init()
 	}
 
 	object3d[1]->SetPos({ 0,-20,(object3d[0]->GetPos().z + 400.0f) });
+
+	player = player_;
 }
 
 void Ground::Update(ViewProjection* viewPro, const KMyMath::Vector3& cameraPos)
@@ -34,15 +37,18 @@ void Ground::Update(ViewProjection* viewPro, const KMyMath::Vector3& cameraPos)
 
 	for (size_t i = 0; i < 2; i++)
 	{
-		if (object3d[i]->GetPos().z + (flontOfScreenDiffuse / 2) <= cameraPos.z)
+		if (!player->GetIsDead())
 		{
-			if (i == 0)
+			if (object3d[i]->GetPos().z + (flontOfScreenDiffuse / 2) <= cameraPos.z)
 			{
-				object3d[0]->SetPos({ 0,-20,object3d[1]->GetPos().z + flontOfScreenDiffuse });
-			}
-			else if (i == 1)
-			{
-				object3d[1]->SetPos({ 0,-20,object3d[0]->GetPos().z + flontOfScreenDiffuse });
+				if (i == 0)
+				{
+					object3d[0]->SetPos({ 0,-20,object3d[1]->GetPos().z + flontOfScreenDiffuse });
+				}
+				else if (i == 1)
+				{
+					object3d[1]->SetPos({ 0,-20,object3d[0]->GetPos().z + flontOfScreenDiffuse });
+				}
 			}
 		}
 

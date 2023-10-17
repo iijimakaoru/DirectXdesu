@@ -12,11 +12,13 @@
  * @author 飯島 薫
  */
 
+class Player;
+
 class Ground
 {
 public:
 	// 初期化
-	void Init();
+	void Init(Player* player_);
 
 	/// <summary>
 	/// 更新
@@ -44,4 +46,6 @@ private:
 
 	// シェーダー
 	KShader shader;
+
+	Player* player;
 };

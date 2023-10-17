@@ -5,13 +5,13 @@
 
 const float RailCamera::moveSpeedPlayerMagnification = 8.0f;
 
-const float RailCamera::advanceSpeed = 1.0f;
+const float RailCamera::advanceSpeed = 0.5f;
 
-void RailCamera::Init(Player* player_)
+void RailCamera::Init(Player* player_, const KMyMath::Vector3& startPos)
 {
 	Camera::Init();
 
-	cameraObject->transform.pos = { 0,0,-200 };
+	cameraObject->transform.pos = startPos;
 	cameraObject->transform.rot = { 0,0,0 };
 
 	cameraObject->TransUpdate();
@@ -64,11 +64,9 @@ void RailCamera::Move()
 	velocity.x = moveSpeed * (cameraObject->transform.rot.y / rotLimit.y);
 	velocity.y = moveSpeed * -(cameraObject->transform.rot.x / rotLimit.x);
 
-	float moveSpeedPhaseSpeed = 0.5f;
-
 	if (isAdvance)
 	{
-		velocity.z = advanceSpeed * moveSpeedPhaseSpeed;
+		velocity.z = advanceSpeed;
 	}
 
 	// 移動
@@ -106,7 +104,7 @@ void RailCamera::SetRot()
 
 const float RailCamera::GetSpeed() const
 {
-	return advanceSpeed * 0.5f;
+	return advanceSpeed;
 }
 
 void RailCamera::CallCrash()

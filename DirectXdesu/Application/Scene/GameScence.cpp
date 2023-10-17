@@ -76,7 +76,7 @@ void GameScence::Init()
 	sceneManager = SceneManager::GetInstance();
 
 	// カメラ初期化
-	camera->Init(player.get());
+	camera->Init(player.get(), { 0,0,-200 });
 
 	// 親子関係
 	player->SetParent(&camera->GetTransform());
@@ -86,7 +86,7 @@ void GameScence::Init()
 
 	// 地面
 	ground = std::make_unique<Ground>();
-	ground->Init();
+	ground->Init(player.get());
 
 	// スカイボックス
 	skyBox.reset(SkyBox::Create(skyBoxModel.get(), objPipeline.get(), player->GetWorldPos().z));
@@ -164,13 +164,8 @@ void GameScence::Update()
 			return MobEnemy->GetIsDead();
 		});
 
-	if (player->GetIsDead() && !isCallDeadCamera)
-	{
-		camera->CallCrash();
-		isCallDeadCamera = true;
-		player->SetParent(nullptr);
-		player->SetPos(player->GetWorldPos());
-	}
+	// 自機が死んだとき
+	PlayerDead();
 
 	// プレイヤーの更新
 	player->Update(camera->GetViewPro());
@@ -535,5 +530,16 @@ void GameScence::BossBattleStart()
 
 		// ボスバトル開始
 		isBossBattle = true;
+	}
+}
+
+void GameScence::PlayerDead()
+{
+	if (player->GetIsDead() && !isCallDeadCamera)
+	{
+		camera->CallCrash();
+		isCallDeadCamera = true;
+		player->SetParent(nullptr);
+		player->SetPos(player->GetWorldPos());
 	}
 }

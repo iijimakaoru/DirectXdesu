@@ -139,8 +139,8 @@ void TitleScene::Update()
 			{
 				if (input->IsTrigger(DIK_SPACE) || input->GetPadButtonDown(XINPUT_GAMEPAD_A))
 				{
-					goGame = true;
 					camera->StartSortie();
+					goGame = true;
 				}
 			}
 		}
@@ -328,22 +328,28 @@ void TitleScene::StartScene()
 	{
 		// フラッシュ！
 		flashAlpha = 1.0f;
+
 		// オブジェクト情報タイトルどうりに
 		object3d->transform.pos = { 0,0,0 };
 		object3d->transform.rot = { 0,0,0 };
+		object3d->transform.scale = { 1,1,1 };
+
 		// タイトル位置
 		shooterPos.x = 200;
 		moldPos.x = 0;
 		mesiPos = { -200,-30 };
 		mesiScale = { 1.0f,1.0f };
 
+		// タイマー初期化
+		phaseTimer = 0;
+
 		startScenePhase++;
 	}
 	// スタート画面
 	else
 	{
-		startScene = false;
 		camera->StartRound();
+		startScene = false;
 	}
 }
 

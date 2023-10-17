@@ -298,6 +298,7 @@ void Player::DeadEffect()
 
 		// 落下
 		object3d->transform.pos.y -= 0.1f;
+		object3d->transform.pos.z += 0.5f;
 
 		// 時間経過
 		fallEffectTimer++;

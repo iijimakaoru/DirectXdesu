@@ -74,6 +74,9 @@ private:
 	// ボスバトル開始
 	void BossBattleStart();
 
+	// 自機死亡
+	void PlayerDead();
+
 private:
 	// インプット
 	KInput* input = nullptr;

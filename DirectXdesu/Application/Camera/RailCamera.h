@@ -22,7 +22,7 @@ public:
 	/// 初期化
 	/// </summary>
 	/// <param name="player_"></param>
-	void Init(Player* player_);
+	void Init(Player* player_, const KMyMath::Vector3& startPos);
 
 	// 更新
 	void Update();

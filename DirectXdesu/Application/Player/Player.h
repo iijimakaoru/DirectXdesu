@@ -75,30 +75,11 @@ public:
 
 public:
 	// ゲッター
-	static const KMyMath::Vector2& GetRotLimit()
-	{ 
-		return rotLimit;
-	}
-
-	static const float GetMoveSpeed() 
-	{ 
-		return moveSpeed; 
-	}
-
-	static const KMyMath::Vector2& GetPosLimitMax() 
-	{ 
-		return posLimitMax; 
-	}
-
-	static const KMyMath::Vector2& GetPosLimitMin() 
-	{ 
-		return posLimitMin; 
-	}
-
-	const bool GetIsInvisible() const
-	{
-		return isInvisible;
-	}
+	static const KMyMath::Vector2& GetRotLimit();
+	static const float GetMoveSpeed();
+	static const KMyMath::Vector2& GetPosLimitMax();
+	static const KMyMath::Vector2& GetPosLimitMin();
+	const bool GetIsInvisible() const;
 
 	// セッター
 	void SetPos(const KMyMath::Vector3 pos_);

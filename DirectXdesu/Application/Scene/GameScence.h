@@ -77,6 +77,12 @@ private:
 	// 自機死亡
 	void PlayerDead();
 
+	// クリアシーンへ
+	void GoClearScene();
+
+	// ゲームオーバーシーンへ
+	void GoGameOverScene();
+
 private:
 	// インプット
 	KInput* input = nullptr;

@@ -40,7 +40,7 @@ void Blaster::Update(ViewProjection* viewPro)
 
 bool Blaster::CollisionCheck(const KMyMath::Vector3& posA, const KMyMath::Vector3& posB)
 {
-	if (MyCollisions::CheckSphereToSphere(posA, posB, 12, 2))
+	if (MyCollisions::CheckSphereToSphere(posA, posB, 2, 12))
 	{
 		return true;
 	}

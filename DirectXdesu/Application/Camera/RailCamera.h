@@ -33,9 +33,14 @@ public:
 	void Move();
 
 	/// <summary>
-	/// 壊れた時の処理
+	/// 壊れた時のカメラワーク
 	/// </summary>
 	void Crash();
+
+	/// <summary>
+	/// 始まりのカメラワーク
+	/// </summary>
+	void Start();
 
 	/// <summary>
 	/// プレイヤーの角度と連動させる
@@ -47,10 +52,7 @@ public:
 	/// 前進フラグ
 	/// </summary>
 	/// <param name="isAdvance_"></param>
-	void SetIsAdvance(bool isAdvance_)
-	{
-		isAdvance = isAdvance_;
-	}
+	void SetIsAdvance(bool isAdvance_);
 
 	/// <summary>
 	/// カメラ速度セッター
@@ -62,6 +64,11 @@ public:
 	/// 死んだときに呼ぼう
 	/// </summary>
 	void CallCrash();
+
+	/// <summary>
+	/// ステージの始まりに呼ぼう
+	/// </summary>
+	void CallStart();
 
 private:
 	// 前進するか
@@ -76,6 +83,9 @@ private:
 	// 移動上限
 	KMyMath::Vector2 moveLimitMin = {};
 	KMyMath::Vector2 moveLimitMax = {};
+
+	// ゲームスタートで呼ぶ
+	bool isStart = false;
 
 	// プレイヤーが壊れたら呼ぶ
 	bool isCrash = false;

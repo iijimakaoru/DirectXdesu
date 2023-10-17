@@ -119,44 +119,10 @@ void GameScence::Update()
 	CheckAllCollisions();
 
 	// ゲームクリアシーンへの移動
-	if (boss)
-	{
-		if (boss->GetIsFallEffectEnd())
-		{
-			goClearSceneTimer++;
-			if (goClearSceneTimer == goClearSceneTime)
-			{
-				sceneChange->Start();
-				goClearSceneTimer = goClearSceneTime + 1.0f;
-			}
-
-			if (sceneChange->GetIsChange())
-			{
-				sceneManager->ChangeScene("CLEAR");
-				bulletManager->AllBulletDelete();
-			}
-		}
-	}
+	GoClearScene();
 
 	// ゲームオーバーへの移動
-	if (player)
-	{
-		if (player->GetIsFallEffectEnd())
-		{
-			goOverSceneTimer++;
-			if (goOverSceneTimer == goOverSceneTime)
-			{
-				sceneChange->Start();
-				goOverSceneTimer = goOverSceneTime + 1.0f;
-			}
-
-			if (sceneChange->GetIsChange())
-			{
-				sceneManager->ChangeScene("OVER");
-				bulletManager->AllBulletDelete();
-			}
-		}
-	}
+	GoGameOverScene();
 
 	// 敵消去
 	mobEnemys.remove_if([](std::unique_ptr<MobEnemy>& MobEnemy)
@@ -284,80 +250,88 @@ void GameScence::CheckAllCollisions()
 	{
 		for (std::unique_ptr<MobEnemy>& mobEnemy : mobEnemys)
 		{
-			if (mobEnemy)
+			if (!mobEnemy)
 			{
-				// 敵の座標
-				posA = mobEnemy->GetWorldPos();
+				return;
+			}
 
-				for (const std::unique_ptr<PlayerBullet>& bullet : playerBullets)
+			// 敵の座標
+			posA = mobEnemy->GetWorldPos();
+
+			for (const std::unique_ptr<PlayerBullet>& bullet : playerBullets)
+			{
+				if (!bullet)
 				{
-					// 弾の座標
-					posB = bullet->GetWorldPos();
+					return;
+				}
 
-					// 球同士の交差判定
-					if (MyCollisions::CheckSphereToSphere(posA, posB, 6, 2))
-					{
-						// 弾消去
-						bullet->OnCollision();
+				// 弾の座標
+				posB = bullet->GetWorldPos();
 
-						// 敵消去
-						mobEnemy->OnCollision();
-					}
+				// 球同士の交差判定
+				if (MyCollisions::CheckSphereToSphere(posA, posB, 6, 2))
+				{
+					// 弾消去
+					bullet->OnCollision();
+
+					// 敵消去
+					mobEnemy->OnCollision();
 				}
 			}
 		}
 	}
 
 	// 敵弾と自機の当たり判定
-	if (!player->GetIsDead() && !player->GetIsInvisible())
 	{
-		// 自機の座標
-		posA = player->GetWorldPos();
-
 		for (const std::unique_ptr<EnemyBullet>& bullet : enemyBullets)
 		{
-			if (bullet)
+			// 弾がないor自機が死んでるor自機が無敵状態の時はスキップ
+			if (!bullet || player->GetIsDead() || player->GetIsInvisible())
 			{
-				// 弾の座標
-				posB = bullet->GetWorldPos();
+				return;
+			}
 
-				// 球同士の交差判定
-				if (MyCollisions::CheckSphereToSphere(posA, posB, 3, 2))
-				{
-					// 弾消去
-					bullet->OnCollision();
+			// 弾の座標
+			posA = bullet->GetWorldPos();
 
-					// 自機被弾処理
-					player->OnCollision();
-				}
+			posB = player->GetWorldPos();
+
+			// 球同士の交差判定
+			if (MyCollisions::CheckSphereToSphere(posA, posB, 2, 3))
+			{
+				// 弾消去
+				bullet->OnCollision();
+
+				// 自機被弾処理
+				player->OnCollision();
 			}
 		}
 	}
 
-	// ボスと自弾の判定
+	// 自弾とボスの判定
 	{
-		if (boss && isBossBattle)
+		for (const std::unique_ptr<PlayerBullet>& bullet : playerBullets)
 		{
-			if (!boss->GetIsDead())
+			// 弾が無いorボスがいないorボスが死んでるorボスバトルが始まってなかったらスキップ
+			if (!bullet || !boss || boss->GetIsDead() || !isBossBattle)
 			{
-				// ボスの座標
-				posA = boss->GetWorldPos();
+				return;
+			}
 
-				for (const std::unique_ptr<PlayerBullet>& bullet : playerBullets)
-				{
-					// 弾の座標
-					posB = bullet->GetWorldPos();
+			// 弾の座標
+			posA = bullet->GetWorldPos();
 
-					// 球同士の交差判定
-					if (boss->CollisionCheck(posA, posB))
-					{
-						// 弾消去
-						bullet->OnCollision();
+			// ボスの座標
+			posB = boss->GetWorldPos();
 
-						// 敵消去
-						boss->OnCollision();
-					}
-				}
+			// 球同士の交差判定
+			if (boss->CollisionCheck(posA, posB))
+			{
+				// 弾消去
+				bullet->OnCollision();
+
+				// 敵消去
+				boss->OnCollision();
 			}
 		}
 	}
@@ -486,7 +460,10 @@ void GameScence::UpdateEnemyPopCommands()
 void GameScence::BossBattleStart()
 {
 	// ボスバトルが始まってればスキップ
-	if (isBossBattle) { return; }
+	if (isBossBattle)
+	{
+		return;
+	}
 
 	// ボスバトル開始座標
 	const float bossBattleStartPos = 500;
@@ -541,5 +518,53 @@ void GameScence::PlayerDead()
 		isCallDeadCamera = true;
 		player->SetParent(nullptr);
 		player->SetPos(player->GetWorldPos());
+	}
+}
+
+void GameScence::GoClearScene()
+{
+	if (!boss)
+	{
+		return;
+	}
+
+	if (boss->GetIsFallEffectEnd())
+	{
+		goClearSceneTimer++;
+		if (goClearSceneTimer == goClearSceneTime)
+		{
+			sceneChange->Start();
+			goClearSceneTimer = goClearSceneTime + 1.0f;
+		}
+
+		if (sceneChange->GetIsChange())
+		{
+			sceneManager->ChangeScene("CLEAR");
+			bulletManager->AllBulletDelete();
+		}
+	}
+}
+
+void GameScence::GoGameOverScene()
+{
+	if (!player)
+	{
+		return;
+	}
+
+	if (player->GetIsFallEffectEnd())
+	{
+		goOverSceneTimer++;
+		if (goOverSceneTimer == goOverSceneTime)
+		{
+			sceneChange->Start();
+			goOverSceneTimer = goOverSceneTime + 1.0f;
+		}
+
+		if (sceneChange->GetIsChange())
+		{
+			sceneManager->ChangeScene("OVER");
+			bulletManager->AllBulletDelete();
+		}
 	}
 }

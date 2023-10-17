@@ -470,6 +470,31 @@ const bool Player::GetIsFallEffectEnd() const
 	return isFallEffectEnd;
 }
 
+const KMyMath::Vector2& Player::GetRotLimit()
+{
+	return rotLimit;
+}
+
+const float Player::GetMoveSpeed()
+{
+	return moveSpeed;
+}
+
+const KMyMath::Vector2& Player::GetPosLimitMax()
+{
+	return posLimitMax;
+}
+
+const KMyMath::Vector2& Player::GetPosLimitMin()
+{
+	return posLimitMin;
+}
+
+const bool Player::GetIsInvisible() const
+{
+	return isInvisible;
+}
+
 void Player::OnCollision()
 {
 	ObjParticleManager::GetInstance()->SetSmallExp(GetWorldPos());

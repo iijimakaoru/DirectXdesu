@@ -32,7 +32,11 @@ void RailCamera::Update()
 	moveLimitMax = Player::GetPosLimitMax();
 	moveLimitMin = Player::GetPosLimitMin();
 
-	if (isCrash)
+	if (isStart)
+	{
+		Start();
+	}
+	else if (isCrash)
 	{
 		Crash();
 	}
@@ -93,6 +97,10 @@ void RailCamera::Crash()
 	cameraObject->transform.pos = crashCameraPos;
 }
 
+void RailCamera::Start()
+{
+}
+
 void RailCamera::SetRot()
 {
 	// 回転
@@ -100,6 +108,11 @@ void RailCamera::SetRot()
 	cameraObject->transform.rot.x = player->GetRot().x / PlayerRotDivNum.x;
 	cameraObject->transform.rot.y = player->GetRot().y / PlayerRotDivNum.y;
 	cameraObject->transform.rot.z = -player->GetRot().y / PlayerRotDivNum.z;
+}
+
+void RailCamera::SetIsAdvance(bool isAdvance_)
+{
+	isAdvance = isAdvance_;
 }
 
 const float RailCamera::GetSpeed() const
@@ -111,4 +124,10 @@ void RailCamera::CallCrash()
 {
 	// 墜落状態にする
 	isCrash = true;
+}
+
+void RailCamera::CallStart()
+{
+	// スタート状態にする
+	isStart = true;
 }

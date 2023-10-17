@@ -1,3 +1,9 @@
+/**
+ * @file Bullet.cpp
+ * @brief 弾の基底
+ * @author 飯島 薫
+ */
+
 #include "Bullet.h"
 
 void Bullet::Set(const KMyMath::Vector3& pos, const KMyMath::Vector3& vec_, const KMyMath::Vector3& rot_, const float bulletSpeed)

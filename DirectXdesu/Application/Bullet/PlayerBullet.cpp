@@ -1,3 +1,9 @@
+/**
+ * @file PlayerBullet.cpp
+ * @brief 自機の弾
+ * @author 飯島 薫
+ */
+
 #include "PlayerBullet.h"
 
 PlayerBullet* PlayerBullet::Create(KModel* model, KGPlin* pipeline_,

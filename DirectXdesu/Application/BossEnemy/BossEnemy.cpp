@@ -1,3 +1,9 @@
+/**
+ * @file BossEnemy.cpp
+ * @brief ボスの基底
+ * @author 飯島 薫
+ */
+
 #include "BossEnemy.h"
 #include "ParticleManager.h"
 #include "Ease.h"

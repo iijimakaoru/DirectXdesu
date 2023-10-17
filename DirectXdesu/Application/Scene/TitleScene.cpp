@@ -176,7 +176,7 @@ void TitleScene::SpriteDraw()
 
 		shooter->Draw(shooterTex, titlePos + shooterPos, shooterScale);
 
-		pushA->Draw(pushATex, pushAPos, { 0.5f,0.5f });
+		pushA->Draw(pushATex, pushAPos, { 0.75f,0.75f });
 	}
 	else
 	{

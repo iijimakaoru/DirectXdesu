@@ -1,3 +1,9 @@
+/**
+ * @file BulletManager.cpp
+ * @brief 弾のマネージャー
+ * @author 飯島 薫
+ */
+
 #include "BulletManager.h"
 
 BulletManager* BulletManager::bulletManager = nullptr;

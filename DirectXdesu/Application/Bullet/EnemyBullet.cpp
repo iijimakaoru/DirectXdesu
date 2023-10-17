@@ -1,3 +1,9 @@
+/**
+ * @file EnemyBullet.cpp
+ * @brief 敵の弾
+ * @author 飯島 薫
+ */
+
 #include "EnemyBullet.h"
 
 EnemyBullet* EnemyBullet::Create(KModel* model, KGPlin* pipeline_,

@@ -1,3 +1,9 @@
+/**
+ * @file Blaster.cpp
+ * @brief ボス1 : ブラスター
+ * @author 飯島 薫
+ */
+
 #include "Blaster.h"
 #include "Collision.h"
 

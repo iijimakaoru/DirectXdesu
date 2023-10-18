@@ -103,6 +103,9 @@ private:
 	// ダメージエフェクト
 	void DamageEffect();
 
+	// スタート演出
+	void StartEffect();
+
 	// デバッグ用
 	void Debug();
 
@@ -207,4 +210,7 @@ private:
 	bool isFallEffectEnd = false;
 #pragma endregion
 
+#pragma region ステージスタート演出用
+	bool isStart = false;
+#pragma endregion
 };

@@ -24,6 +24,8 @@ void RailCamera::Init(Player* player_, const KMyMath::Vector3& startPos)
 
 	player = player_;
 
+	isStart = true;
+
 	Camera::Update();
 }
 
@@ -85,7 +87,8 @@ void RailCamera::Move()
 
 void RailCamera::Crash()
 {
-	const KMyMath::Vector3 playerDistance = { 40.0f, 0.0f, 40.0f }; //自機とカメラの距離
+	//自機とカメラの距離
+	const KMyMath::Vector3 playerDistance = { 40.0f, 0.0f, 40.0f };
 
 	// カメラの場所
 	const KMyMath::Vector3 crashCameraPos = player->GetWorldPos() + playerDistance;
@@ -99,7 +102,161 @@ void RailCamera::Crash()
 
 void RailCamera::Start()
 {
+	// カメラワーク一段階(上から見下ろし)
+	if (startPhase == 0)
+	{
+		startPhaseTime = 180.0f;
 
+		if (startPhaseTimer == 0)
+		{
+			//自機とカメラの距離
+			const KMyMath::Vector3 playerDistance = { 0.0f, 20.0f, 40.0f };
+
+			// カメラの場所
+			const KMyMath::Vector3 crashCameraPos = player->GetWorldPos() + playerDistance;
+
+			// 角度
+			cameraObject->transform.rot.x = 20.0f;
+			cameraObject->transform.rot.y = 180.0f;
+
+			// カメラ動け
+			cameraObject->transform.pos = crashCameraPos;
+		}
+
+		if (startPhaseTimer < startPhaseTime)
+		{
+			startPhaseTimer++;
+
+			cameraObject->transform.pos.y = MyEase::Lerp(player->GetWorldPos().y + 20.0f,
+				player->GetWorldPos().y + 10.0f,
+				startPhaseTimer / startPhaseTime);
+			cameraObject->transform.pos.z = MyEase::Lerp(player->GetWorldPos().z + 40.0f,
+				player->GetWorldPos().z + 45.0f,
+				startPhaseTimer / startPhaseTime);
+
+			cameraObject->transform.rot.x = MyEase::Lerp(20.0f,
+				10.0f,
+				startPhaseTimer / startPhaseTime);
+		}
+		else
+		{
+			startPhase++;
+			startPhaseTimer = 0;
+		}
+	}
+	// カメラワーク二段階(自機右上から至近距離)
+	else if (startPhase == 1)
+	{
+		startPhaseTime = 180.0f;
+
+		if (startPhaseTimer == 0)
+		{
+			//自機とカメラの距離
+			const KMyMath::Vector3 playerDistance = { 2.5f, 2.5f, 3.5f };
+
+			// カメラの場所
+			const KMyMath::Vector3 crashCameraPos = player->GetWorldPos() + playerDistance;
+
+			// 角度
+			cameraObject->transform.rot.x = 45.0f;
+			cameraObject->transform.rot.y = 250.0f;
+
+			// カメラ動け
+			cameraObject->transform.pos = crashCameraPos;
+		}
+
+		if (startPhaseTimer < startPhaseTime)
+		{
+			startPhaseTimer++;
+
+			cameraObject->transform.pos.z = MyEase::Lerp(player->GetWorldPos().z + 3.5f,
+				player->GetWorldPos().z + 1.5f,
+				startPhaseTimer / startPhaseTime);
+		}
+		else
+		{
+			startPhase++;
+			startPhaseTimer = 0;
+		}
+	}
+	// カメラワーク三段階(自機左したからブースター(ケツ)注視)
+	else if (startPhase == 2)
+	{
+		startPhaseTime = 180.0f;
+
+		if (startPhaseTimer == 0)
+		{
+			//自機とカメラの距離
+			const KMyMath::Vector3 playerDistance = { -2.0f, -1.8f, -3.5f };
+
+			// カメラの場所
+			const KMyMath::Vector3 crashCameraPos = player->GetWorldPos() + playerDistance;
+
+			// 角度
+			cameraObject->transform.rot.x = -35.0f;
+			cameraObject->transform.rot.y = 27.5f;
+
+			// カメラ動け
+			cameraObject->transform.pos = crashCameraPos;
+		}
+
+		if (startPhaseTimer < startPhaseTime)
+		{
+			startPhaseTimer++;
+
+			cameraObject->transform.pos.x = MyEase::Lerp(player->GetWorldPos().x - 2.0f,
+				player->GetWorldPos().x - 1.5f,
+				startPhaseTimer / startPhaseTime);
+
+			cameraObject->transform.rot.y = MyEase::Lerp(35.0f,
+				27.5f,
+				startPhaseTimer / startPhaseTime);;
+		}
+		else
+		{
+			startPhase++;
+			startPhaseTimer = 0;
+		}
+	}
+	// カメラワーク四段階(正面でカメラを引く)
+	else if (startPhase == 3)
+	{
+		startPhaseTime = 120.0f;
+
+		if (startPhaseTimer == 0)
+		{
+			//自機とカメラの距離
+			const KMyMath::Vector3 playerDistance = { 0.0f, 1.0f, 10.0f };
+
+			// カメラの場所
+			const KMyMath::Vector3 crashCameraPos = player->GetWorldPos() + playerDistance;
+
+			// 角度
+			cameraObject->transform.rot.x = 0;
+			cameraObject->transform.rot.y = 180.0f;
+
+			// カメラ動け
+			cameraObject->transform.pos = crashCameraPos;
+		}
+
+		if (startPhaseTimer < startPhaseTime)
+		{
+			startPhaseTimer++;
+
+			cameraObject->transform.pos.z = MyEase::OutCubicFloat(player->GetWorldPos().z + 10.0f,
+				player->GetWorldPos().z + 30.0f,
+				startPhaseTimer / startPhaseTime);
+		}
+		else
+		{
+			startPhase++;
+			startPhaseTimer = 0;
+		}
+	}
+	else
+	{
+
+	}
 }
 
 void RailCamera::SetRot()

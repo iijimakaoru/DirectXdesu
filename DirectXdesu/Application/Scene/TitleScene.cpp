@@ -197,20 +197,6 @@ void TitleScene::Final()
 
 void TitleScene::StartScene()
 {
-	// タイトル導入スキップ
-	if (startScenePhase < 4)
-	{
-		if (input->GetPadButtonDown(XINPUT_GAMEPAD_A))
-		{
-			startScenePhase = 4;
-		}
-	}
-
-	if (isTitle)
-	{
-		TitleCall();
-	}
-
 	// シーン遷移待ち
 	if (startScenePhase == 0)
 	{
@@ -350,6 +336,21 @@ void TitleScene::StartScene()
 	{
 		camera->StartRound();
 		startScene = false;
+	}
+
+	if (isTitle)
+	{
+		TitleCall();
+	}
+
+	// タイトル導入スキップ
+	if (startScenePhase < 4)
+	{
+		if (input->GetPadButtonDown(XINPUT_GAMEPAD_A))
+		{
+			startScenePhase = 4;
+			isTitle = false;
+		}
 	}
 }
 

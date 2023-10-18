@@ -84,9 +84,6 @@ private:
 	KMyMath::Vector2 moveLimitMin = {};
 	KMyMath::Vector2 moveLimitMax = {};
 
-	// ゲームスタートで呼ぶ
-	bool isStart = false;
-
 	// プレイヤーが壊れたら呼ぶ
 	bool isCrash = false;
 
@@ -95,4 +92,17 @@ private:
 
 	// プレイヤーの型
 	Player* player = nullptr;
+
+#pragma region スタートカメラワーク
+	// ゲームスタートで呼ぶ
+	bool isStart = false;
+
+	// フェーズ
+	uint32_t startPhase = 0;
+	float startPhaseTimer = 0;
+	float startPhaseTime = 0;
+#pragma endregion
+
+	// 角度
+	float rotAngle = 0;
 };

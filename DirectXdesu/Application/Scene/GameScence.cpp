@@ -84,7 +84,7 @@ void GameScence::Init()
 	camera->Init(player.get(), { 0,0,-200 });
 
 	// 親子関係
-	player->SetParent(&camera->GetTransform());
+	//player->SetParent(&camera->GetTransform());
 
 	// エネミーマネージャー生成
 	enemyManager.reset(EnemyManager::Create("Resources/csv/enemyPop.csv", // ステージのcsvを読み込む
@@ -124,32 +124,40 @@ void GameScence::Init()
 
 void GameScence::Update()
 {
-	// ボスバトル開始判定
-	BossBattleStart();
+	if (isStageStart)
+	{
+		
+		billManager->SetIsStopCreate(false);
+	}
+	else
+	{
+		// ボスバトル開始判定
+		BossBattleStart();
 
-	// 当たり判定
-	CheckAllCollisions();
+		// 当たり判定
+		CheckAllCollisions();
 
-	// ゲームクリアシーンへの移動
-	GoClearScene();
+		// ゲームクリアシーンへの移動
+		GoClearScene();
 
-	// ゲームオーバーへの移動
-	GoGameOverScene();
+		// ゲームオーバーへの移動
+		GoGameOverScene();
 
-	// 自機が死んだとき
-	PlayerDead();
+		// 自機が死んだとき
+		PlayerDead();
+
+		// エネミーマネージャーの更新
+		enemyManager->Update(camera->GetViewPro(), camera->GetPos());
+
+		// ボスの更新
+		if (boss)
+		{
+			boss->Update(camera->GetViewPro());
+		}
+	}
 
 	// プレイヤーの更新
 	player->Update(camera->GetViewPro());
-
-	// エネミーマネージャーの更新
-	enemyManager->Update(camera->GetViewPro(), camera->GetPos());
-
-	// ボスの更新
-	if (boss)
-	{
-		boss->Update(camera->GetViewPro());
-	}
 
 	// 弾の更新
 	bulletManager->Update(camera->GetViewPro());

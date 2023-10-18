@@ -87,42 +87,52 @@ void Player::Init(KModel* model_, KGPlin* objPipeline_, const float playerHP, KG
 
 	// ダメージエフェクトの透過値
 	dAlpha = 0;
+
+	isStart = true;
 }
 
 void Player::Update(ViewProjection* viewPro)
 {
-	// 死亡条件
-	if (HP <= min(HP, 0))
+	// スタート演出中の処理
+	if (isStart)
 	{
-		isDead = true;
-	}
-
-	if (!isDead)
-	{
-		// 移動
-		Move();
-
-		// 回転
-		Rot();
-
-		// 攻撃
-		Attack();
-
-#ifdef _DEBUG
-		Debug();
-#endif // _DEBUG
+		StartEffect();
 	}
 	else
 	{
-		// 死亡演出
-		DeadEffect();
+		// 死亡条件
+		if (HP <= min(HP, 0))
+		{
+			isDead = true;
+		}
+
+		if (!isDead)
+		{
+			// 移動
+			Move();
+
+			// 回転
+			Rot();
+
+			// 攻撃
+			Attack();
+
+#ifdef _DEBUG
+			Debug();
+#endif // _DEBUG
+		}
+		else
+		{
+			// 死亡演出
+			DeadEffect();
+		}
+
+		// HP演出
+		HPEffect();
+
+		// ダメージ演出
+		DamageEffect();
 	}
-
-	// HP演出
-	HPEffect();
-
-	// ダメージ演出
-	DamageEffect();
 
 	// 3Dレティクルの更新
 	reticle3d->Update(object3d->transform.matWorld, GetWorldPos());
@@ -391,6 +401,10 @@ void Player::DamageEffect()
 	}
 }
 
+void Player::StartEffect()
+{
+}
+
 void Player::Debug()
 {
 
@@ -408,14 +422,21 @@ void Player::ObjDraw()
 void Player::SpriteDraw()
 {
 	// レティクル描画
-	if (!isDead)
+	if (isDead || isStart)
 	{
-		reticle2d->Draw();
+		return;
 	}
+
+	reticle2d->Draw();
 }
 
 void Player::UIDraw()
 {
+	if (isStart)
+	{
+		return;
+	}
+
 	// HPバー描画
 	HPBarUI->Draw(hpbarTex, { 10,10 }, { 1,1 }, 0, { 1,1,1,1 }, false, false, { 0,0 });
 

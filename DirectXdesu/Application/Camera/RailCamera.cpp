@@ -99,6 +99,7 @@ void RailCamera::Crash()
 
 void RailCamera::Start()
 {
+
 }
 
 void RailCamera::SetRot()

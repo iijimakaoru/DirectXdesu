@@ -43,6 +43,8 @@
 
 #include "BillManager.h"
 
+#include "EnemyManager.h"
+
 /**
  * @file GameScene.h
  * @brief ゲームシーン
@@ -64,12 +66,6 @@ public:
 private:
 	// 衝突判定
 	void CheckAllCollisions();
-
-	// 敵発生データの読み込み
-	void LoadEnemyPopData();
-
-	// 敵発生コマンドの更新
-	void UpdateEnemyPopCommands();
 
 	// ボスバトル開始
 	void BossBattleStart();
@@ -112,8 +108,7 @@ private:
 	// プレイヤーの弾モデル
 	std::unique_ptr<KModel> playersBulletModel = nullptr;
 
-	// 雑魚
-	std::list<std::unique_ptr<MobEnemy>> mobEnemys;
+	// 雑魚モデル
 	std::unique_ptr<KModel> mobEnemysModel;
 
 	// 敵の弾モデル
@@ -121,11 +116,6 @@ private:
 
 	// 簡易地面
 	std::unique_ptr<Ground> ground = nullptr;
-
-	// 敵発生コマンド
-	std::stringstream enemyPopCommands;
-	bool isStand = false;
-	int32_t waitTimer = 0;
 
 	TextureData textureData;
 	TextureData textureData2;
@@ -162,5 +152,10 @@ private:
 
 	// 死亡カメラ呼び出しフラグ
 	bool isCallDeadCamera = false;
+
+	bool isStageStart = false;
+
+	// エネミーマネージャー
+	std::unique_ptr<EnemyManager> enemyManager = nullptr;
 };
 

@@ -73,6 +73,7 @@ void GameScence::Init()
 	// カメラ生成
 	camera = std::make_unique<RailCamera>();
 
+	// シーンマネージャーインスタンス
 	sceneManager = SceneManager::GetInstance();
 
 	// カメラ初期化
@@ -81,8 +82,12 @@ void GameScence::Init()
 	// 親子関係
 	player->SetParent(&camera->GetTransform());
 
-	// 雑魚敵出現パターン読み込み
-	LoadEnemyPopData();
+	// エネミーマネージャー生成
+	enemyManager.reset(EnemyManager::Create("Resources/csv/enemyPop.csv", // ステージのcsvを読み込む
+		player.get(), // プレイヤー情報
+		mobEnemysModel.get(), // モデル渡し(マネージャー内で作るか悩み中)
+		objPipeline.get() // パイプライン渡し
+	));
 
 	// 地面
 	ground = std::make_unique<Ground>();
@@ -105,15 +110,14 @@ void GameScence::Init()
 	billManager->Init();
 
 	isCallDeadCamera = false;
+
+	isStageStart = true;
 }
 
 void GameScence::Update()
 {
 	// ボスバトル開始判定
 	BossBattleStart();
-
-	// 敵出現
-	UpdateEnemyPopCommands();
 
 	// 当たり判定
 	CheckAllCollisions();
@@ -124,23 +128,14 @@ void GameScence::Update()
 	// ゲームオーバーへの移動
 	GoGameOverScene();
 
-	// 敵消去
-	mobEnemys.remove_if([](std::unique_ptr<MobEnemy>& MobEnemy)
-		{
-			return MobEnemy->GetIsDead();
-		});
-
 	// 自機が死んだとき
 	PlayerDead();
 
 	// プレイヤーの更新
 	player->Update(camera->GetViewPro());
 
-	// 雑魚敵の更新
-	for (std::unique_ptr<MobEnemy>& mobEnemy : mobEnemys)
-	{
-		mobEnemy->Update(camera->GetViewPro(), camera->GetPos());
-	}
+	// エネミーマネージャーの更新
+	enemyManager->Update(camera->GetViewPro(), camera->GetPos());
 
 	// ボスの更新
 	if (boss)
@@ -180,11 +175,8 @@ void GameScence::ObjDraw()
 	// 地面描画
 	ground->Draw();
 
-	// 雑魚敵描画
-	for (std::unique_ptr<MobEnemy>& mobEnemy : mobEnemys)
-	{
-		mobEnemy->Draw();
-	}
+	// エネミーマネージャー描画
+	enemyManager->Draw();
 
 	// ボス描画
 	if (boss)
@@ -242,9 +234,12 @@ void GameScence::CheckAllCollisions()
 	// 敵弾の取得
 	const std::list<std::unique_ptr<EnemyBullet>>& enemyBullets = bulletManager->GetEnemyBullets();
 
+	// 敵の取得
+	const std::list<std::unique_ptr<MobEnemy>>& mobEnemys = enemyManager->GetMobEnemys();
+
 	// 自弾と敵の当たり判定
 	{
-		for (std::unique_ptr<MobEnemy>& mobEnemy : mobEnemys)
+		for (const std::unique_ptr<MobEnemy>& mobEnemy : mobEnemys)
 		{
 			if (!mobEnemy)
 			{
@@ -329,126 +324,6 @@ void GameScence::CheckAllCollisions()
 				// 敵消去
 				boss->OnCollision();
 			}
-		}
-	}
-}
-
-void GameScence::LoadEnemyPopData()
-{
-	// ファイルを開く
-	std::ifstream file;
-	file.open("Resources/csv/enemyPop.csv");
-	assert(file.is_open());
-
-	// ファイルの内容を文字ストリームにコピー
-	enemyPopCommands << file.rdbuf();
-
-	// ファイルを閉じる
-	file.close();
-}
-
-void GameScence::UpdateEnemyPopCommands()
-{
-	// 待機処理
-	if (isStand)
-	{
-		waitTimer--;
-		if (waitTimer <= 0)
-		{
-			// 待機終了
-			isStand = false;
-		}
-		return;
-	}
-
-	// 1行分の文字列を入れる変数
-	std::string line;
-
-	// コマンド実行ループ
-	while (getline(enemyPopCommands, line))
-	{
-		// 1行分の文字数をストリームに変換して解析しやすくする
-		std::istringstream line_stream(line);
-
-		std::string word;
-		// ,区切りで行の先頭文字列を取得
-		getline(line_stream, word, ',');
-
-		// コメント
-		if (word.find("//") == 0)
-		{
-			// 行を飛ばす
-			continue;
-		}
-
-		// POP
-		if (word.find("POP") == 0)
-		{
-			// 敵の種類
-			getline(line_stream, word, ',');
-			size_t enemyType = static_cast<size_t>(std::atof(word.c_str()));
-
-			// x座標
-			getline(line_stream, word, ',');
-			float x = static_cast<float>(std::atof(word.c_str()));
-
-			// y座標
-			getline(line_stream, word, ',');
-			float y = static_cast<float>(std::atof(word.c_str()));
-
-			// z座標
-			getline(line_stream, word, ',');
-			float z = static_cast<float>(std::atof(word.c_str()));
-
-			/// 敵を発生させる
-			// 生成
-			std::unique_ptr<MobEnemy> newMEnemy;
-
-			// 該当するタイプの敵生成
-			if (enemyType == MobEnemy::EnemysType::Fly)
-			{
-				// x座標
-				getline(line_stream, word, ',');
-				float _x = static_cast<float>(std::atof(word.c_str()));
-
-				// y座標
-				getline(line_stream, word, ',');
-				float _y = static_cast<float>(std::atof(word.c_str()));
-
-				newMEnemy.reset(FlyEnemy::Create(mobEnemysModel.get(), objPipeline.get(), { x,y,z }, { _x,_y }, camera->GetSpeed()));
-				newMEnemy->SetPlayer(player.get());
-				// 登録
-				mobEnemys.push_back(std::move(newMEnemy));
-			}
-			else if (enemyType == MobEnemy::EnemysType::Canon)
-			{
-				newMEnemy.reset(CanonEnemy::Create(mobEnemysModel.get(), objPipeline.get(), { x,y,z }));
-				newMEnemy->SetPlayer(player.get());
-				// 登録
-				mobEnemys.push_back(std::move(newMEnemy));
-			}
-			else if (enemyType == MobEnemy::EnemysType::Appear)
-			{
-				newMEnemy.reset(AppearEnemy::Create(mobEnemysModel.get(), objPipeline.get(), { x,y,z }));
-				newMEnemy->SetPlayer(player.get());
-				// 登録
-				mobEnemys.push_back(std::move(newMEnemy));
-			}
-		}
-		// WAITコマンド
-		else if (word.find("WAIT") == 0)
-		{
-			getline(line_stream, word, ',');
-
-			// 待ち時間
-			int32_t waitTime = atoi(word.c_str());
-
-			// 待機開始
-			isStand = true;
-			waitTimer = waitTime;
-
-			// コマンドループを抜ける
-			break;
 		}
 	}
 }

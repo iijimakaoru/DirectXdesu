@@ -175,7 +175,7 @@ void GameScence::ObjDraw()
 	// 地面描画
 	ground->Draw();
 
-	// エネミーマネージャー描画
+	// モブエネミー描画
 	enemyManager->Draw();
 
 	// ボス描画
@@ -187,13 +187,17 @@ void GameScence::ObjDraw()
 	// プレイヤー描画
 	player->ObjDraw();
 
+	// スカイボックス描画
 	skyBox->ObjDraw();
 
+	// 弾の描画
 	bulletManager->Draw();
 
+	// パーティクルの描画
 	particleManager->Draw();
 	objParticleManager->Draw();
 
+	// 建物描画
 	billManager->Draw();
 }
 
@@ -205,13 +209,16 @@ void GameScence::SpriteDraw()
 		bossWarning->Draw();
 	}
 
+	// UI描画
 	player->UIDraw();
 
 	if (boss)
 	{
+		// ボスUI描画
 		boss->UIDraw();
 	}
 
+	// 2D情報描画
 	player->SpriteDraw();
 }
 

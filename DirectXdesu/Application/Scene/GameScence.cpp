@@ -68,7 +68,11 @@ void GameScence::Init()
 	input = KInput::GetInstance();
 
 	// プレイヤー生成
-	player.reset(Player::Create(playerModel.get(), objPipeline.get(), 10, spritePipeline.get()));
+	player.reset(Player::Create(playerModel.get(),
+		objPipeline.get(),
+		10,
+		spritePipeline.get()
+	));
 
 	// カメラ生成
 	camera = std::make_unique<RailCamera>();
@@ -94,10 +98,14 @@ void GameScence::Init()
 	ground->Init(player.get());
 
 	// スカイボックス
-	skyBox.reset(SkyBox::Create(skyBoxModel.get(), objPipeline.get(), player->GetWorldPos().z));
+	skyBox.reset(SkyBox::Create(skyBoxModel.get(),
+		objPipeline.get(),
+		player->GetWorldPos().z
+	));
 
 	bulletManager = BulletManager::GetInstance();
-	bulletManager->Init(playersBulletModel.get(), objPipeline.get());
+	bulletManager->Init(playersBulletModel.get(),
+		objPipeline.get());
 
 	// パーティクル
 	particleManager = ParticleManager::GetInstance();
@@ -365,9 +373,20 @@ void GameScence::BossBattleStart()
 		{
 			// ボス配置
 			const float bossDistance = 150;
-			const KMyMath::Vector3 bossBasePos = { 0.0f, 23.0f, bossBattleStartPos + bossDistance };
-			boss.reset(Blaster::Create(mobEnemysModel.get(), objPipeline.get(), bossBasePos,
-				10, spritePipeline.get()));
+			const KMyMath::Vector3 bossBasePos = 
+			{ 
+				0.0f,
+				23.0f,
+				bossBattleStartPos + bossDistance
+			};
+
+			// 生成
+			boss.reset(Blaster::Create(mobEnemysModel.get(),
+				objPipeline.get(),
+				bossBasePos,
+				10,
+				spritePipeline.get()
+			));
 		}
 	}
 	else

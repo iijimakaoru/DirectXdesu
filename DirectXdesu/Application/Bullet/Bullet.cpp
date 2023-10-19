@@ -6,12 +6,12 @@
 
 #include "Bullet.h"
 
-void Bullet::Set(const KMyMath::Vector3& pos, const KMyMath::Vector3& vec_, const KMyMath::Vector3& rot_, const float bulletSpeed)
+void Bullet::Set(const KMyMath::Vector3& pos_, const KMyMath::Vector3& vec_, const KMyMath::Vector3& rot_, const float bulletSpeed_)
 {
-	object3d->transform.pos = pos;
+	object3d->SetPos(pos_);
 	this->vec = vec_;
-	vec = MyMathUtility::MakeNormalize(vec) * bulletSpeed;
-	object3d->transform.rot = rot_;
+	vec = MyMathUtility::MakeNormalize(vec) * bulletSpeed_;
+	object3d->SetRot(rot_);
 
 	lifeTimer = 120;
 
@@ -23,7 +23,7 @@ void Bullet::Update(ViewProjection* viewPro)
 	if (!isDead)
 	{
 		lifeTimer--;
-		object3d->transform.pos += vec;
+		object3d->AddSetPos(vec);
 
 		if (lifeTimer <= 0)
 		{
@@ -53,9 +53,9 @@ KMyMath::Vector3 Bullet::GetWorldPos()
 	KMyMath::Vector3 result;
 
 	// ワールド行列の平行移動成分取得
-	result.x = object3d->transform.matWorld.m[3][0];
-	result.y = object3d->transform.matWorld.m[3][1];
-	result.z = object3d->transform.matWorld.m[3][2];
+	result.x = object3d->GetMatWorld().m[3][0];
+	result.y = object3d->GetMatWorld().m[3][1];
+	result.z = object3d->GetMatWorld().m[3][2];
 
 	return result;
 }

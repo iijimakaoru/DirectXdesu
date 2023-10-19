@@ -34,7 +34,7 @@ void Bill1::Init(KModel* model_, KGPlin* objPipeline_, const KMyMath::Vector2 po
 
     // オブジェクト生成
     object.reset(KObject3d::Create(model, objPipeline));
-    object->transform.pos = { pos.x,-20 ,pos.y };
+    object->SetPos({ pos.x,-20 ,pos.y });
 
     isDead = false;
 }
@@ -43,10 +43,10 @@ void Bill1::Update(ViewProjection* viewPro, const float& cameraZ, const bool& is
 {
     if (isAdvance_)
     {
-        object->transform.pos.z -= RailCamera::GetSpeed();
+        object->AddSetPos({ 0,0,-RailCamera::GetSpeed() });
     }
 
-    if (object->transform.pos.z <= cameraZ)
+    if (object->GetPos().z <= cameraZ)
     {
         isDead = true;
     }

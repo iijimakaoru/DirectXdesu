@@ -25,13 +25,13 @@ void SkyBox::Init(KModel* model_, KGPlin* objPipeline_, const float posZ)
 
 	// オブジェクト生成
 	object3d.reset(KObject3d::Create(model, objPipeline));
-	object3d->transform.pos.z = posZ;
-	object3d->transform.scale = { 600.0f,600.0f,600.0f };
+	object3d->SetPos({ object3d->GetPos().x,object3d->GetPos().y,posZ });
+	object3d->SetScale({ 600.0f,600.0f,600.0f });
 }
 
-void SkyBox::Update(ViewProjection* viewPro)
+void SkyBox::Update(ViewProjection* viewPro_)
 {
-	object3d->Update(viewPro);
+	object3d->Update(viewPro_);
 }
 
 void SkyBox::ObjDraw()
@@ -41,5 +41,5 @@ void SkyBox::ObjDraw()
 
 void SkyBox::SetPosZ(const float posZ)
 {
-	object3d->transform.pos.z = posZ;
+	object3d->SetPos({ object3d->GetPos().x,object3d->GetPos().y,posZ });
 }

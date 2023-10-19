@@ -26,7 +26,7 @@ void CanonEnemy::Init(KModel* model_, KGPlin* pipeline_)
 
 	easeTimer = 0;
 
-	object3d->transform.scale = { 6.0f,6.0f,6.0f };
+	object3d->SetScale({ 6.0f,6.0f,6.0f });
 
 	coolTime = 30;
 }
@@ -44,7 +44,7 @@ void CanonEnemy::Update(ViewProjection* viewPro, const KMyMath::Vector3& cameraP
 		{
 			Attack();
 
-			if (object3d->transform.pos.z <= min(object3d->transform.pos.z, cameraPos_.z))
+			if (object3d->GetPos().z <= min(object3d->GetPos().z, cameraPos_.z))
 			{
 				isDead = true;
 			}
@@ -68,8 +68,13 @@ void CanonEnemy::Appear()
 {
 	easeTimer += 1.0f;
 
-	object3d->transform.pos.y = MyEase::InOutCubicFloat(startPos.y, startPos.y + 20, easeTimer / easeTime);
-	object3d->transform.rot.y = MyEase::OutCubicFloat(0, 360 * 2, easeTimer / easeTime);
+	object3d->SetPos({ object3d->GetPos().x,
+		MyEase::InOutCubicFloat(startPos.y, startPos.y + 20, easeTimer / easeTime) ,
+		object3d->GetPos().z });
+
+	object3d->SetRot({ object3d->GetRot().x,
+		MyEase::OutCubicFloat(0, 360 * 2, easeTimer / easeTime) ,
+		object3d->GetRot().z });
 
 	if (easeTimer >= max(easeTimer, easeTime))
 	{

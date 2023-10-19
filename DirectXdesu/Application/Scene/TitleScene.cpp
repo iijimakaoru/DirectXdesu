@@ -86,10 +86,10 @@ void TitleScene::Init()
 
 	// オブジェクト生成
 	object3d.reset(KObject3d::Create(model.get(), objPipeline.get()));
-	object3d->transform.scale = { 0,0,0 };
+	object3d->SetScale({ 0.0f,0.0f,0.0f });
 
 	skyDome.reset(KObject3d::Create(skyDomeModel.get(), objPipeline.get()));
-	skyDome->transform.scale = { 200,200,200 };
+	skyDome->SetScale({ 200.0f,200.0f,200.0f });
 
 	// フラッシュ
 	flash = std::make_unique<Sprite>();
@@ -232,22 +232,19 @@ void TitleScene::StartScene()
 		KMyMath::Vector3 point2_2 = MyEase::Lerp3D(p2, end, phaseTimer / phaseTime);
 		KMyMath::Vector3 point2 = MyEase::Lerp3D(point2_1, point2_2, phaseTimer / phaseTime);
 
-		object3d->transform.pos = MyEase::Lerp3D(point1, point2, phaseTimer / phaseTime);
+		object3d->SetPos(MyEase::Lerp3D(point1, point2, phaseTimer / phaseTime));
 
-		object3d->transform.rot.y = 180;
-
-		object3d->transform.rot.x = MyEase::Lerp(0, -45.0f, phaseTimer / phaseTime);
+		object3d->SetRot({ MyEase::Lerp(0.0f, -45.0f, phaseTimer / phaseTime) ,180.0f ,object3d->GetRot().z });
 
 		if (objEaseTimer < objEaseTime)
 		{
 			objEaseTimer++;
 
-			object3d->transform.scale =
-			{
+			object3d->SetScale({
 				MyEase::OutCubicFloat(0, 1, objEaseTimer / objEaseTime),
 				MyEase::OutCubicFloat(0, 1, objEaseTimer / objEaseTime),
 				MyEase::OutCubicFloat(0, 1, objEaseTimer / objEaseTime)
-			};
+				});
 		}
 
 		if (phaseTimer > phaseTime)
@@ -279,11 +276,9 @@ void TitleScene::StartScene()
 		KMyMath::Vector3 point2_2 = MyEase::Lerp3D(p2, end, phaseTimer / phaseTime);
 		KMyMath::Vector3 point2   = MyEase::Lerp3D(point2_1, point2_2, phaseTimer / phaseTime);
 
-		object3d->transform.pos = MyEase::Lerp3D(point1, point2, phaseTimer / phaseTime);
+		object3d->SetPos(MyEase::Lerp3D(point1, point2, phaseTimer / phaseTime));
 
-		object3d->transform.rot.y = 180;
-
-		object3d->transform.rot.x = MyEase::Lerp(45.0f, 0.0f, phaseTimer / phaseTime);
+		object3d->SetRot({ MyEase::Lerp(45.0f, 0.0f, phaseTimer / phaseTime) ,180.0f ,object3d->GetRot().z });
 
 		isTitle = true;
 
@@ -300,9 +295,9 @@ void TitleScene::StartScene()
 
 		phaseTimer++;
 
-		object3d->transform.pos.z = MyEase::OutCubicFloat(30, 0, phaseTimer / phaseTime);
+		object3d->SetPos({ object3d->GetPos().x,object3d->GetPos().y, MyEase::OutCubicFloat(30, 0, phaseTimer / phaseTime) });
 
-		object3d->transform.rot.z = MyEase::OutCubicFloat(0, 360, phaseTimer / phaseTime);
+		object3d->SetRot({ object3d->GetRot().x, object3d->GetRot().y,MyEase::OutCubicFloat(0, 360, phaseTimer / phaseTime) });
 
 		if (phaseTimer > phaseTime)
 		{
@@ -316,9 +311,9 @@ void TitleScene::StartScene()
 		flashAlpha = 1.0f;
 
 		// オブジェクト情報タイトルどうりに
-		object3d->transform.pos = { 0,0,0 };
-		object3d->transform.rot = { 0,0,0 };
-		object3d->transform.scale = { 1,1,1 };
+		object3d->SetPos({ 0,0,0 });
+		object3d->SetRot({ 0,0,0 });
+		object3d->SetScale({ 1,1,1 });
 
 		// タイトル位置
 		shooterPos.x = 200;
@@ -409,12 +404,11 @@ void TitleScene::GoNextScene()
 		{
 			phaseTimer++;
 
-			object3d->transform.scale =
-			{
+			object3d->SetScale({
 				MyEase::OutCubicFloat(1, 0, phaseTimer / phaseTime),
 				MyEase::OutCubicFloat(1, 0, phaseTimer / phaseTime),
 				MyEase::OutCubicFloat(1, 0, phaseTimer / phaseTime)
-			};
+				});
 
 			// ポイント１の制御点
 			KMyMath::Vector3 point1_1 = MyEase::Lerp3D(start, p1, phaseTimer / phaseTime);
@@ -426,7 +420,7 @@ void TitleScene::GoNextScene()
 			KMyMath::Vector3 point2_2 = MyEase::Lerp3D(p2, end, phaseTimer / phaseTime);
 			KMyMath::Vector3 point2 = MyEase::Lerp3D(point2_1, point2_2, phaseTimer / phaseTime);
 
-			object3d->transform.pos = MyEase::Lerp3D(point1, point2, phaseTimer / phaseTime);
+			object3d->SetPos(MyEase::Lerp3D(point1, point2, phaseTimer / phaseTime));
 		}
 		else
 		{

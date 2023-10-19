@@ -37,8 +37,8 @@ void Player::Init(KModel* model_, KGPlin* objPipeline_, const float playerHP, KG
 
 	// オブジェクト生成
 	object3d.reset(KObject3d::Create(model, objPipeline));
-	object3d->transform.pos.z = 50;
-	object3d->transform.scale = { 2.0f,2.0f,2.0f };
+	object3d->SetPos({ 0,0,50 });
+	object3d->SetScale({ 2.0f,2.0f,2.0f });
 
 	// レティクル
 	reticle3d = std::make_unique<Reticle3D>();
@@ -135,7 +135,8 @@ void Player::Update(ViewProjection* viewPro)
 	}
 
 	// 3Dレティクルの更新
-	reticle3d->Update(object3d->transform.matWorld, GetWorldPos());
+	KMyMath::Matrix4 nowMatWorld = object3d->GetMatWorld();
+	reticle3d->Update(nowMatWorld, GetWorldPos());
 
 	// 2Dレティクルの更新
 	reticle2d->Update(viewPro, reticle3d->GetWorldPos());
@@ -146,25 +147,30 @@ void Player::Update(ViewProjection* viewPro)
 
 void Player::SetPos(const KMyMath::Vector3 pos_)
 {
-	object3d->transform.pos = pos_;
+	object3d->SetPos(pos_);
 }
 
 void Player::Move()
 {
 	//自機が傾いている角度に移動させる
 	KMyMath::Vector3 velocity = { 0, 0, 0 };
-	velocity.x = (object3d->transform.rot.y / rotLimit.y);
-	velocity.y = -(object3d->transform.rot.x / rotLimit.x);
+	velocity.x = (object3d->GetRot().y / rotLimit.y);
+	velocity.y = -(object3d->GetRot().x / rotLimit.x);
 
 	// 動け～
-	object3d->transform.pos.x += velocity.x * moveSpeed;
-	object3d->transform.pos.y += velocity.y * moveSpeed;
+	object3d->AddSetPos({ velocity.x * moveSpeed ,velocity.y * moveSpeed ,0 });
 
 	// 移動制限
-	object3d->transform.pos.x = max(object3d->transform.pos.x, posLimitMin.x);
+	object3d->SetPos({ max(object3d->GetPos().x, posLimitMin.x) ,
+		max(object3d->GetPos().y, posLimitMin.y) ,
+		object3d->GetPos().z });
+	object3d->SetPos({ min(object3d->GetPos().x, posLimitMin.x) ,
+		min(object3d->GetPos().y, posLimitMin.y) ,
+		object3d->GetPos().z });
+	/*object3d->transform.pos.x = max(object3d->transform.pos.x, posLimitMin.x);
 	object3d->transform.pos.x = min(object3d->transform.pos.x, posLimitMax.x);
 	object3d->transform.pos.y = max(object3d->transform.pos.y, posLimitMin.y);
-	object3d->transform.pos.y = min(object3d->transform.pos.y, posLimitMax.y);
+	object3d->transform.pos.y = min(object3d->transform.pos.y, posLimitMax.y);*/
 }
 
 void Player::Rot()
@@ -191,22 +197,22 @@ void Player::Rot()
 	else
 	{
 		//角度修正速度倍率
-		float backSpeedRatio = fabsf(object3d->transform.rot.y / (rotLimit.y * 2)) + 0.5f;
+		float backSpeedRatio = fabsf(object3d->GetRot().y / (rotLimit.y * 2)) + 0.5f;
 		//角度修正速度
 		const float backSpeed = correctionSpeed * backSpeedRatio;
 		//y軸回転の傾きを修正する
 		const float rotMin = 0.5f;
-		if (object3d->transform.rot.y > rotMin)
+		if (object3d->GetRot().y > rotMin)
 		{
 			rot.y -= backSpeed;
 		}
-		else if (object3d->transform.rot.y < -rotMin)
+		else if (object3d->GetRot().y < -rotMin)
 		{
 			rot.y += backSpeed;
 		}
 		else
 		{
-			object3d->transform.rot.y = 0;
+			object3d->SetRot({ object3d->GetRot().x,0,object3d->GetRot().z });
 		}
 	}
 
@@ -222,22 +228,22 @@ void Player::Rot()
 	else
 	{
 		//角度修正速度倍率
-		float backSpeedRatio = fabsf(object3d->transform.rot.x / (rotLimit.x * 2)) + 0.5f;
+		float backSpeedRatio = fabsf(object3d->GetRot().x / (rotLimit.x * 2)) + 0.5f;
 		//角度修正速度
 		const float backSpeed = correctionSpeed * backSpeedRatio;
 		//y軸回転の傾きを修正する
 		const float rotMin = 0.5f;
-		if (object3d->transform.rot.x > rotMin)
+		if (object3d->GetRot().x > rotMin)
 		{
 			rot.x -= backSpeed;
 		}
-		else if (object3d->transform.rot.x < -rotMin)
+		else if (object3d->GetRot().x < -rotMin)
 		{
 			rot.x += backSpeed;
 		}
 		else
 		{
-			object3d->transform.rot.x = 0;
+			object3d->SetRot({ 0,object3d->GetRot().y,object3d->GetRot().z });
 		}
 	}
 
@@ -264,16 +270,18 @@ void Player::Rot()
 			}
 		}
 
-		object3d->transform.rot.z = -object3d->transform.rot.y + swayZ;
+		object3d->AddSetRot({ 0,0,-object3d->GetRot().y + swayZ });
 	}
 
-	object3d->transform.rot += rot;
+	object3d->AddSetRot(rot);
 
 	// 角度制限
-	object3d->transform.rot.y = max(object3d->transform.rot.y, -rotLimit.y);
-	object3d->transform.rot.y = min(object3d->transform.rot.y, rotLimit.y);
-	object3d->transform.rot.x = max(object3d->transform.rot.x, -rotLimit.x);
-	object3d->transform.rot.x = min(object3d->transform.rot.x, rotLimit.x);
+	object3d->SetRot({ max(object3d->GetRot().x, -rotLimit.x),
+		max(object3d->GetRot().y, -rotLimit.y) ,
+		object3d->GetRot().z });
+	object3d->SetRot({ min(object3d->GetRot().x, rotLimit.x),
+		min(object3d->GetRot().y, rotLimit.y),
+		object3d->GetRot().z });
 }
 
 void Player::Attack()
@@ -286,12 +294,15 @@ void Player::Attack()
 		const float distance = 20.0f;
 
 		// 速度ベクトルを自機の向きに合わせて回転
-		bulletVec = MyMathUtility::TransforNormal(bulletVec, object3d->transform.matWorld);
+		bulletVec = MyMathUtility::TransforNormal(bulletVec, object3d->GetMatWorld());
 
 		bulletVec = MyMathUtility::MakeNormalize(bulletVec);
 
 		// 弾発射
-		BulletManager::GetInstance()->PlayerBulletShot(GetWorldPos() + bulletVec * distance, bulletVec, object3d->transform.rot, bulletSpeed);
+		BulletManager::GetInstance()->PlayerBulletShot(GetWorldPos() + bulletVec * distance,
+			bulletVec,
+			object3d->GetRot(),
+			bulletSpeed);
 	}
 }
 
@@ -300,15 +311,13 @@ void Player::DeadEffect()
 	if (!isFallEffectEnd)
 	{
 		// 姿勢制御
-		object3d->transform.rot.x = 25.0f;
-		object3d->transform.rot.y = 0;
+		object3d->SetRot({ 25.0f,0.0f,object3d->GetRot().z });
 
 		// 回転
-		object3d->transform.rot.z += 10.0f;
+		object3d->AddSetRot({ 0.0f,0.0f,10.0f });
 
 		// 落下
-		object3d->transform.pos.y -= 0.1f;
-		object3d->transform.pos.z += 0.5f;
+		object3d->AddSetPos({ 0.0f,-0.1f,0.5f });
 
 		// 時間経過
 		fallEffectTimer++;
@@ -453,14 +462,14 @@ void Player::UIDraw()
 	}
 }
 
-void Player::SetParent(const WorldTransfom* parent)
+void Player::SetParent(const WorldTransfom* parent_)
 {
-	object3d->transform.parent = parent;
+	object3d->SetParent(parent_);
 }
 
 const KMyMath::Vector3& Player::GetPosition() const
 {
-	return object3d->transform.pos;
+	return object3d->GetPos();
 }
 
 const KMyMath::Vector3 Player::GetWorldPos() const
@@ -469,16 +478,16 @@ const KMyMath::Vector3 Player::GetWorldPos() const
 	KMyMath::Vector3 result;
 
 	// ワールド行列の平行移動成分取得
-	result.x = object3d->transform.matWorld.m[3][0];
-	result.y = object3d->transform.matWorld.m[3][1];
-	result.z = object3d->transform.matWorld.m[3][2];
+	result.x = object3d->GetMatWorld().m[3][0];
+	result.y = object3d->GetMatWorld().m[3][1];
+	result.z = object3d->GetMatWorld().m[3][2];
 
 	return result;
 }
 
 const KMyMath::Vector3 Player::GetRot() const
 {
-	return object3d->transform.rot;
+	return object3d->GetRot();
 }
 
 const bool Player::GetIsDead() const

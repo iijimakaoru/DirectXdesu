@@ -36,7 +36,7 @@ void AppearEnemy::Init(KModel* model_, KGPlin* pipeline_)
 
 	endScale = { 4.0f,4.0f,4.0f };
 
-	object3d->transform.scale = startScale;
+	object3d->SetScale(startScale);
 
 	isAppear = true;
 
@@ -58,7 +58,7 @@ void AppearEnemy::Update(ViewProjection* viewPro, const KMyMath::Vector3& camera
 		{
 			Attack();
 
-			if (object3d->transform.pos.z <= min(object3d->transform.pos.z, cameraPos_.z))
+			if (object3d->GetPos().z <= min(object3d->GetPos().z, cameraPos_.z))
 			{
 				isDead = true;
 			}
@@ -82,8 +82,10 @@ void AppearEnemy::Appear()
 {
 	easeTimer += 1.0f;
 
-	object3d->transform.scale = MyEase::OutQuadVec3(startScale, endScale, easeTimer / easeTime);
-	object3d->transform.rot.y = MyEase::OutQuadFloat(0.0f, 360.0f * 2.0f, easeTimer / easeTime);
+	object3d->SetScale(MyEase::OutQuadVec3(startScale, endScale, easeTimer / easeTime));
+	object3d->SetRot({object3d->GetRot().x,
+		MyEase::OutQuadFloat(0.0f, 360.0f * 2.0f, easeTimer / easeTime) ,
+		object3d->GetRot().z});
 
 	if (easeTimer >= max(easeTimer, easeTime))
 	{

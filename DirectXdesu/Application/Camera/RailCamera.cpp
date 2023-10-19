@@ -7,16 +7,17 @@ const float RailCamera::moveSpeedPlayerMagnification = 8.0f;
 
 const float RailCamera::advanceSpeed = 0.5f;
 
-void RailCamera::Init(Player* player_, const KMyMath::Vector3& startPos)
+void RailCamera::Init(Player* player_, const KMyMath::Vector3& startPos_)
 {
 	Camera::Init();
 
-	cameraObject->transform.pos = startPos;
-	cameraObject->transform.rot = { 0,0,0 };
+	cameraObject->SetPos(startPos_);
+	cameraObject->SetRot({ 0,0,0 });
 
 	cameraObject->TransUpdate();
 
-	viewProjection->SetMatView(MyMathUtility::MakeInverse(cameraObject->transform.matWorld));
+	KMyMath::Matrix4 nowMatWorld = cameraObject->GetMatWorld();
+	viewProjection->SetMatView(MyMathUtility::MakeInverse(nowMatWorld));
 
 	isCrash = false;
 
@@ -55,7 +56,8 @@ void RailCamera::Update()
 
 	cameraObject->TransUpdate();
 
-	viewProjection->SetMatView(MyMathUtility::MakeInverse(cameraObject->transform.matWorld));
+	KMyMath::Matrix4 nowMatWorld = cameraObject->GetMatWorld();
+	viewProjection->SetMatView(MyMathUtility::MakeInverse(nowMatWorld));
 
 	Camera::Update();
 }
@@ -67,8 +69,8 @@ void RailCamera::Move()
 	// カメラが傾いてる角度へ移動
 	const float moveSpeed = Player::GetMoveSpeed() * moveSpeedPlayerMagnification;
 	const KMyMath::Vector2 rotLimit = Player::GetRotLimit();
-	velocity.x = moveSpeed * (cameraObject->transform.rot.y / rotLimit.y);
-	velocity.y = moveSpeed * -(cameraObject->transform.rot.x / rotLimit.x);
+	velocity.x = moveSpeed * (cameraObject->GetRot().y / rotLimit.y);
+	velocity.y = moveSpeed * -(cameraObject->GetRot().x / rotLimit.x);
 
 	if (isAdvance)
 	{
@@ -76,13 +78,15 @@ void RailCamera::Move()
 	}
 
 	// 移動
-	cameraObject->transform.pos += velocity;
+	cameraObject->AddSetPos(velocity);
 
 	// 移動限界から動くな
-	cameraObject->transform.pos.x = max(cameraObject->transform.pos.x, moveLimitMin.x);
-	cameraObject->transform.pos.x = min(cameraObject->transform.pos.x, moveLimitMax.x);
-	cameraObject->transform.pos.y = max(cameraObject->transform.pos.y, moveLimitMin.y);
-	cameraObject->transform.pos.y = min(cameraObject->transform.pos.y, moveLimitMax.y);
+	cameraObject->SetPos({ max(cameraObject->GetPos().x, moveLimitMin.x),
+		max(cameraObject->GetPos().y, moveLimitMin.y),
+		cameraObject->GetRot().z });
+	cameraObject->SetPos({ min(cameraObject->GetPos().x, moveLimitMax.x),
+		min(cameraObject->GetPos().y, moveLimitMax.y),
+		cameraObject->GetRot().z });
 }
 
 void RailCamera::Crash()
@@ -94,10 +98,10 @@ void RailCamera::Crash()
 	const KMyMath::Vector3 crashCameraPos = player->GetWorldPos() + playerDistance;
 
 	// 角度
-	cameraObject->transform.rot.y = -135.0f;
+	cameraObject->AddSetRot({ 0.0f,-135.0f ,0.0f });
 
 	// カメラ動け
-	cameraObject->transform.pos = crashCameraPos;
+	cameraObject->SetPos(crashCameraPos);
 }
 
 void RailCamera::Start()
@@ -116,27 +120,28 @@ void RailCamera::Start()
 			const KMyMath::Vector3 crashCameraPos = player->GetWorldPos() + playerDistance;
 
 			// 角度
-			cameraObject->transform.rot.x = 20.0f;
-			cameraObject->transform.rot.y = 180.0f;
+			cameraObject->SetRot({ 20.0f,180.0f,cameraObject->GetRot().z });
 
 			// カメラ動け
-			cameraObject->transform.pos = crashCameraPos;
+			cameraObject->SetPos(crashCameraPos);
 		}
 
 		if (startPhaseTimer < startPhaseTime)
 		{
 			startPhaseTimer++;
 
-			cameraObject->transform.pos.y = MyEase::Lerp(player->GetWorldPos().y + 20.0f,
-				player->GetWorldPos().y + 10.0f,
-				startPhaseTimer / startPhaseTime);
-			cameraObject->transform.pos.z = MyEase::Lerp(player->GetWorldPos().z + 40.0f,
-				player->GetWorldPos().z + 45.0f,
-				startPhaseTimer / startPhaseTime);
+			cameraObject->SetPos(
+				{ cameraObject->GetPos().x,
+				MyEase::Lerp(player->GetWorldPos().y + 20.0f,player->GetWorldPos().y + 10.0f,startPhaseTimer / startPhaseTime),
+				MyEase::Lerp(player->GetWorldPos().z + 40.0f,player->GetWorldPos().z + 45.0f,startPhaseTimer / startPhaseTime) }
+			);
 
-			cameraObject->transform.rot.x = MyEase::Lerp(20.0f,
-				10.0f,
-				startPhaseTimer / startPhaseTime);
+			cameraObject->SetRot(
+				{ MyEase::Lerp(20.0f,10.0f,startPhaseTimer / startPhaseTime) ,
+				cameraObject->GetRot().y,
+				cameraObject->GetRot().z
+				}
+			);
 		}
 		else
 		{
@@ -158,20 +163,21 @@ void RailCamera::Start()
 			const KMyMath::Vector3 crashCameraPos = player->GetWorldPos() + playerDistance;
 
 			// 角度
-			cameraObject->transform.rot.x = 45.0f;
-			cameraObject->transform.rot.y = 250.0f;
+			cameraObject->SetRot({ 45.0f,250.0f,cameraObject->GetRot().z });
 
 			// カメラ動け
-			cameraObject->transform.pos = crashCameraPos;
+			cameraObject->SetPos(crashCameraPos);
 		}
 
 		if (startPhaseTimer < startPhaseTime)
 		{
 			startPhaseTimer++;
 
-			cameraObject->transform.pos.z = MyEase::Lerp(player->GetWorldPos().z + 3.5f,
-				player->GetWorldPos().z + 1.5f,
-				startPhaseTimer / startPhaseTime);
+			cameraObject->SetPos(
+				{ cameraObject->GetPos().x,
+				cameraObject->GetPos().y,
+				MyEase::Lerp(player->GetWorldPos().z + 3.5f,player->GetWorldPos().z + 1.5f,startPhaseTimer / startPhaseTime) }
+			);
 		}
 		else
 		{
@@ -193,24 +199,27 @@ void RailCamera::Start()
 			const KMyMath::Vector3 crashCameraPos = player->GetWorldPos() + playerDistance;
 
 			// 角度
-			cameraObject->transform.rot.x = -35.0f;
-			cameraObject->transform.rot.y = 27.5f;
+			cameraObject->SetRot({ -35.0f,27.5f,cameraObject->GetRot().z });
 
 			// カメラ動け
-			cameraObject->transform.pos = crashCameraPos;
+			cameraObject->SetPos(crashCameraPos);
 		}
 
 		if (startPhaseTimer < startPhaseTime)
 		{
 			startPhaseTimer++;
 
-			cameraObject->transform.pos.x = MyEase::Lerp(player->GetWorldPos().x - 2.0f,
-				player->GetWorldPos().x - 1.5f,
-				startPhaseTimer / startPhaseTime);
+			cameraObject->SetPos(
+				{ MyEase::Lerp(player->GetWorldPos().x - 2.0f,player->GetWorldPos().x - 1.5f,startPhaseTimer / startPhaseTime),
+				cameraObject->GetPos().y,
+				cameraObject->GetPos().z }
+			);
 
-			cameraObject->transform.rot.y = MyEase::Lerp(35.0f,
-				27.5f,
-				startPhaseTimer / startPhaseTime);;
+			cameraObject->SetRot(
+				{ cameraObject->GetRot().x,
+				MyEase::Lerp(35.0f,27.5f,startPhaseTimer / startPhaseTime),
+				cameraObject->GetRot().z }
+			);
 		}
 		else
 		{
@@ -232,20 +241,21 @@ void RailCamera::Start()
 			const KMyMath::Vector3 crashCameraPos = player->GetWorldPos() + playerDistance;
 
 			// 角度
-			cameraObject->transform.rot.x = 0;
-			cameraObject->transform.rot.y = 180.0f;
+			cameraObject->SetRot({ 0.0f,180.0f,cameraObject->GetRot().z });
 
 			// カメラ動け
-			cameraObject->transform.pos = crashCameraPos;
+			cameraObject->SetPos(crashCameraPos);
 		}
 
 		if (startPhaseTimer < startPhaseTime)
 		{
 			startPhaseTimer++;
 
-			cameraObject->transform.pos.z = MyEase::OutCubicFloat(player->GetWorldPos().z + 10.0f,
-				player->GetWorldPos().z + 30.0f,
-				startPhaseTimer / startPhaseTime);
+			cameraObject->SetPos(
+				{ cameraObject->GetPos().x,
+				cameraObject->GetPos().y,
+				MyEase::OutCubicFloat(player->GetWorldPos().z + 10.0f,player->GetWorldPos().z + 30.0f,startPhaseTimer / startPhaseTime) }
+			);
 		}
 		else
 		{
@@ -263,9 +273,9 @@ void RailCamera::SetRot()
 {
 	// 回転
 	const KMyMath::Vector3 PlayerRotDivNum = { 5,5,8 };
-	cameraObject->transform.rot.x = player->GetRot().x / PlayerRotDivNum.x;
-	cameraObject->transform.rot.y = player->GetRot().y / PlayerRotDivNum.y;
-	cameraObject->transform.rot.z = -player->GetRot().y / PlayerRotDivNum.z;
+	cameraObject->SetRot({ player->GetRot().x / PlayerRotDivNum.x ,
+		player->GetRot().y / PlayerRotDivNum.y ,
+		-player->GetRot().y / PlayerRotDivNum.z });
 }
 
 void RailCamera::SetIsAdvance(bool isAdvance_)

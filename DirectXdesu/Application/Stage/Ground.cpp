@@ -23,8 +23,8 @@ void Ground::Init(Player* player_)
 		object3d[i]->Initialize();
 		object3d[i]->SetPipeline(pipeline.get());
 		object3d[i]->LoadModel(model.get());
-		object3d[i]->transform.pos = { 0,-20,0 };
-		object3d[i]->transform.scale = { 20.0f,1.0f,20.0f };
+		object3d[i]->SetPos({ 0.0f,-20.0f,0.0f });
+		object3d[i]->SetScale({ 20.0f,1.0f,20.0f });
 	}
 
 	object3d[1]->SetPos({ 0,-20,(object3d[0]->GetPos().z + 400.0f) });
@@ -57,7 +57,7 @@ void Ground::Update(ViewProjection* viewPro, const KMyMath::Vector3& cameraPos)
 
 		if (isAdvance)
 		{
-			object3d[i]->transform.pos.z -= RailCamera::GetSpeed();
+			object3d[i]->AddSetPos({ 0.0f,0.0f,-RailCamera::GetSpeed() });
 		}
 
 		object3d[i]->Update(viewPro);

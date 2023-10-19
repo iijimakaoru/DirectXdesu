@@ -315,37 +315,37 @@ ObjParticle* ObjParticle::Create(const KMyMath::Vector3& pos_,
 }
 
 void ObjParticle::Init(const KMyMath::Vector3& pos_, 
-	KModel* model_, KGPlin* pipeline_, const KMyMath::Vector3& velocity_, TextureData& tex)
+	KModel* model_, KGPlin* pipeline_, const KMyMath::Vector3& velocity_, TextureData& tex_)
 {
 	object3d.reset(KObject3d::Create(model_, pipeline_));
 
-	object3d->transform.pos = pos_;
+	object3d->SetPos(pos_);
 
-	object3d->transform.scale = { 0.5f,0.5f,0.5f };
+	object3d->SetScale({ 0.5f,0.5f,0.5f });
 
 	velocity = velocity_;
 
 	lifeTimer = 0;
 
-	texture = tex;
+	texture = tex_;
 }
 
-void ObjParticle::Update(ViewProjection* viewPro)
+void ObjParticle::Update(ViewProjection* viewPro_)
 {
 	if (lifeTimer < lifeTime)
 	{
 		lifeTimer++;
 
-		object3d->transform.pos += velocity;
+		object3d->AddSetPos(velocity);
 
-		object3d->transform.rot += {30, 30, 30};
+		object3d->AddSetRot({ 30.0f, 30.0f, 30.0f });
 
 		if (lifeTimer > 40)
 		{
 			if (easeTimer < easeTime)
 			{
 				easeTimer++;
-				object3d->transform.scale = MyEase::OutQuadVec3({ 0.5f,0.5f,0.5f }, { 0,0,0 }, easeTimer / easeTime);
+				object3d->SetScale(MyEase::OutQuadVec3({ 0.5f,0.5f,0.5f }, { 0.0f,0.0f,0.0f }, easeTimer / easeTime));
 			}
 		}
 	}
@@ -354,7 +354,7 @@ void ObjParticle::Update(ViewProjection* viewPro)
 		isDead = true;
 	}
 
-	object3d->Update(viewPro);
+	object3d->Update(viewPro_);
 }
 
 void ObjParticle::Draw()

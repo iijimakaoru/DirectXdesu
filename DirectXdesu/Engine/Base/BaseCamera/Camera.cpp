@@ -20,34 +20,17 @@ ViewProjection* Camera::GetViewPro()
 
 const WorldTransfom& Camera::GetTransform() const
 {
-	return cameraObject->transform;
+	return cameraObject->GetTransform();
 }
 
 const KMyMath::Vector3& Camera::GetPos() const
 {
-	return cameraObject->transform.pos;
+	return cameraObject->GetPos();
 }
 
-void Camera::SetPos(const KMyMath::Vector3 pos)
+void Camera::SetPos(const KMyMath::Vector3 pos_)
 {
-	cameraObject->transform.pos = pos;
-}
-
-void Camera::SetWorldPosXY(const float x, const float y)
-{
-	cameraObject->transform.matWorld.m[3][0] = x;
-	cameraObject->transform.matWorld.m[3][1] = y;
-}
-
-void Camera::SetPosXY(const float x, const float y)
-{
-	cameraObject->transform.pos.x = x;
-	cameraObject->transform.pos.y = y;
-}
-
-void Camera::SetRotZ(const float rotZ)
-{
-	cameraObject->transform.rot.z = rotZ;
+	cameraObject->SetPos(pos_);
 }
 
 const KMyMath::Vector3 Camera::GetWorldPos() const
@@ -56,9 +39,9 @@ const KMyMath::Vector3 Camera::GetWorldPos() const
 	KMyMath::Vector3 result;
 
 	// ワールド行列の平行移動成分取得
-	result.x = cameraObject->transform.matWorld.m[3][0];
-	result.y = cameraObject->transform.matWorld.m[3][1];
-	result.z = cameraObject->transform.matWorld.m[3][2];
+	result.x = cameraObject->GetMatWorld().m[3][0];
+	result.y = cameraObject->GetMatWorld().m[3][1];
+	result.z = cameraObject->GetMatWorld().m[3][2];
 
 	return result;
 }

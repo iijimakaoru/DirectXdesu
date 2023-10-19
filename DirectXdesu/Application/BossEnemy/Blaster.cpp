@@ -30,7 +30,7 @@ void Blaster::Init(KModel* model_, KGPlin* pipeline_, const KMyMath::Vector3& in
 
 	BossEnemy::Init(model_, pipeline_, initPos, HP_, spritePipeline_);
 
-	object3d->transform.scale = { 10.0f,10.0f,10.0f };
+	object3d->SetScale({ 10.0f,10.0f,10.0f });
 }
 
 void Blaster::Update(ViewProjection* viewPro)

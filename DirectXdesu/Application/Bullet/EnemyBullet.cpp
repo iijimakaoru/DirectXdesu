@@ -36,5 +36,5 @@ void EnemyBullet::Init(KModel* model_, KGPlin* pipeline_)
 	object3d->Initialize();
 	object3d->SetPipeline(pipeline);
 	object3d->LoadModel(model);
-	object3d->transform.scale = { 3.0f,3.0f,3.0f };
+	object3d->SetScale({ 3.0f,3.0f,3.0f });
 }

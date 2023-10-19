@@ -7,12 +7,13 @@ void TitleCamera::Init()
 {
 	Camera::Init();
 
-	cameraObject->transform.pos = { 0,0,-20 };
-	cameraObject->transform.rot = { 0,0,0 };
+	cameraObject->SetPos({ 0.0f,0.0f,-20.0f });
+	cameraObject->SetRot({ 0.0f,0.0f,0.0f });
 
 	cameraObject->TransUpdate();
 
-	viewProjection->SetMatView(MyMathUtility::MakeInverse(cameraObject->transform.matWorld));
+	KMyMath::Matrix4 nowMatWorld = cameraObject->GetMatWorld();
+	viewProjection->SetMatView(MyMathUtility::MakeInverse(nowMatWorld));
 
 	isRound = false;
 
@@ -40,14 +41,15 @@ void TitleCamera::Update()
 
 	cameraObject->TransUpdate();
 
-	viewProjection->SetMatView(MyMathUtility::MakeInverse(cameraObject->transform.matWorld));
+	KMyMath::Matrix4 nowMatWorld = cameraObject->GetMatWorld();
+	viewProjection->SetMatView(MyMathUtility::MakeInverse(nowMatWorld));
 
 	Camera::Update();
 }
 
 void TitleCamera::RoundCamera()
 {
-	cameraObject->transform.pos.y = 4;
+	cameraObject->SetPos({ cameraObject->GetPos().x, 4.0f,cameraObject->GetPos().z });
 
 	// 角度を変更
 	const float rotSpeed = 0.5f;
@@ -63,11 +65,9 @@ void TitleCamera::RoundCamera()
 
 	const float radian = DirectX::XMConvertToRadians(rotAngle);
 	const float distance = -20;
-	cameraObject->transform.pos.z = distance * cosf(radian);
-	cameraObject->transform.pos.x = distance * sinf(radian);
+	cameraObject->SetPos({ distance * sinf(radian) ,cameraObject->GetPos().y ,distance * cosf(radian) });
 
-	cameraObject->transform.rot.y = rotAngle;
-	cameraObject->transform.rot.x = 2.5f;
+	cameraObject->SetRot({ 2.5f ,rotAngle ,cameraObject->GetRot().z });
 }
 
 void TitleCamera::StartRound()
@@ -90,7 +90,9 @@ void TitleCamera::SortieCamera()
 			sortiePhase++;
 		}
 
-		cameraObject->transform.pos.y = MyEase::OutCubicFloat(3, 0, sortiePhaseTimer / sortiePhaseTime);
+		cameraObject->SetPos({ cameraObject->GetPos().x,
+			MyEase::OutCubicFloat(3, 0, sortiePhaseTimer / sortiePhaseTime) ,
+			cameraObject->GetPos().z });
 
 		float radian = 
 			MyEase::OutCubicFloat(DirectX::XMConvertToRadians(nowAngle),
@@ -98,11 +100,11 @@ void TitleCamera::SortieCamera()
 				sortiePhaseTimer / sortiePhaseTime);
 		float distance = MyEase::OutCubicFloat(-40, -30, sortiePhaseTimer / sortiePhaseTime);
 
-		cameraObject->transform.pos.z = distance * cosf(radian);
-		cameraObject->transform.pos.x = distance * sinf(radian);
+		cameraObject->SetPos({ distance * sinf(radian) ,cameraObject->GetPos().y ,distance * cosf(radian) });
 
-		cameraObject->transform.rot.y = DirectX::XMConvertToDegrees(radian);
-		cameraObject->transform.rot.x = MyEase::OutCubicFloat(2, 0, sortiePhaseTimer / sortiePhaseTime);
+		cameraObject->SetRot({ MyEase::OutCubicFloat(2, 0, sortiePhaseTimer / sortiePhaseTime) ,
+			DirectX::XMConvertToDegrees(radian),
+			cameraObject->GetRot().z });
 	}
 	else
 	{

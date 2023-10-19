@@ -36,7 +36,4 @@ public:
 
 	// セッター
 	void SetPos(const KMyMath::Vector3 pos);
-	void SetWorldPosXY(const float x, const float y);
-	void SetPosXY(const float x, const float y);
-	void SetRotZ(const float rotZ);
 };

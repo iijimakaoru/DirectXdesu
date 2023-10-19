@@ -87,9 +87,9 @@ const KMyMath::Vector3 MobEnemy::GetWorldPos() const
 	KMyMath::Vector3 result;
 
 	// ワールド行列の平行移動成分取得
-	result.x = object3d->transform.matWorld.m[3][0];
-	result.y = object3d->transform.matWorld.m[3][1];
-	result.z = object3d->transform.matWorld.m[3][2];
+	result.x = object3d->GetMatWorld().m[3][0];
+	result.y = object3d->GetMatWorld().m[3][1];
+	result.z = object3d->GetMatWorld().m[3][2];
 
 	return result;
 }

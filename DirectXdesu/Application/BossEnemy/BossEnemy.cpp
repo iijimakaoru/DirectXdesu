@@ -9,7 +9,7 @@
 #include "Ease.h"
 #include "Collision.h"
 
-void BossEnemy::Init(KModel* model_, KGPlin* pipeline_, const KMyMath::Vector3& initPos, const float HP_, KGPlin* spritePipeline_)
+void BossEnemy::Init(KModel* model_, KGPlin* pipeline_, const KMyMath::Vector3& initPos_, const float HP_, KGPlin* spritePipeline_)
 {
 	// モデル生成
 	model = model_;
@@ -20,7 +20,7 @@ void BossEnemy::Init(KModel* model_, KGPlin* pipeline_, const KMyMath::Vector3& 
 
 	// オブジェクト生成
 	object3d.reset(KObject3d::Create(model, pipeline));
-	object3d->transform.pos = initPos;
+	object3d->SetPos(initPos_);
 
 	// 体力セット
 	maxHP = HP_;
@@ -101,9 +101,9 @@ const KMyMath::Vector3 BossEnemy::GetWorldPos() const
 	KMyMath::Vector3 result;
 
 	// ワールド行列の平行移動成分取得
-	result.x = object3d->transform.matWorld.m[3][0];
-	result.y = object3d->transform.matWorld.m[3][1];
-	result.z = object3d->transform.matWorld.m[3][2];
+	result.x = object3d->GetMatWorld().m[3][0];
+	result.y = object3d->GetMatWorld().m[3][1];
+	result.z = object3d->GetMatWorld().m[3][2];
 
 	return result;
 }
@@ -132,14 +132,13 @@ void BossEnemy::DeadEffect()
 	if (!isFallEffectEnd)
 	{
 		// 姿勢制御
-		object3d->transform.rot.x = 0;
-		object3d->transform.rot.y = 0;
+		object3d->SetRot({ 0,0,object3d->GetRot().z });
 
 		// 回転
-		object3d->transform.rot.z += 10.0f;
+		object3d->AddSetRot({ 0.0f,0.0f,10.0f });
 
 		// 落下
-		object3d->transform.pos.y -= 0.1f;
+		object3d->AddSetPos({ 0.0f,0.0f,-0.1f });
 
 		// 時間経過
 		fallEffectTimer++;

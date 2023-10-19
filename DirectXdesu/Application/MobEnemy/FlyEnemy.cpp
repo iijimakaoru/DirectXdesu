@@ -26,7 +26,7 @@ void FlyEnemy::Init(KModel* model_, KGPlin* pipeline_)
 {
 	MobEnemy::Init(model_, pipeline_);
 
-	object3d->transform.scale = { 4,4,4 };
+	object3d->SetScale({ 4.0f,4.0f,4.0f });
 
 	isAppear = true;
 
@@ -48,14 +48,14 @@ void FlyEnemy::Update(ViewProjection* viewPro, const KMyMath::Vector3& cameraPos
 		{
 			Attack();
 
-			if (object3d->transform.pos.z <= min(object3d->transform.pos.z, cameraPos_.z))
+			if (object3d->GetPos().z <= min(object3d->GetPos().z, cameraPos_.z))
 			{
 				isDead = true;
 			}
 		}
 	}
 
-	object3d->transform.pos.z += moveSpeed;
+	object3d->AddSetPos({ 0,0,moveSpeed });
 
 	object3d->Update(viewPro);
 }
@@ -74,8 +74,9 @@ void FlyEnemy::Appear()
 {
 	easeTimer += 1.0f;
 
-	object3d->transform.pos.x = MyEase::InCubicFloat(startPos.x, endPos.x, easeTimer / easeTime);
-	object3d->transform.pos.y = MyEase::InCubicFloat(startPos.y, endPos.y, easeTimer / easeTime);
+	object3d->SetPos({ MyEase::InCubicFloat(startPos.x, endPos.x, easeTimer / easeTime) ,
+		MyEase::InCubicFloat(startPos.y, endPos.y, easeTimer / easeTime) ,
+		object3d->GetPos().z });
 
 	if (easeTimer >= max(easeTimer, easeTime))
 	{

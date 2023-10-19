@@ -21,7 +21,7 @@ void Reticle3D::Update(KMyMath::Matrix4& m, KMyMath::Vector3 pPos)
 	offset = MyMathUtility::MakeNormalize(offset) * kDistancePlayerTo3DReticle;
 
 	// 3Dレティクルの座標設定
-	object->transform.pos = pPos + offset;
+	object->SetPos(pPos + offset);
 
 	// 座標更新
 	object->TransUpdate();
@@ -33,9 +33,9 @@ KMyMath::Vector3 Reticle3D::GetWorldPos()
 	KMyMath::Vector3 result;
 
 	// ワールド行列の平行移動成分取得
-	result.x = object->transform.matWorld.m[3][0];
-	result.y = object->transform.matWorld.m[3][1];
-	result.z = object->transform.matWorld.m[3][2];
+	result.x = object->GetMatWorld().m[3][0];
+	result.y = object->GetMatWorld().m[3][1];
+	result.z = object->GetMatWorld().m[3][2];
 
 	return result;
 }

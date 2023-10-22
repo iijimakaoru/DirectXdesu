@@ -386,9 +386,6 @@ void GameScence::BossBattleStart()
 		// 地面を動かす状態へ
 		ground->SetIsAdvance(true);
 
-		// ビル生成止め
-		//billManager->SetIsStopCreate(true);
-
 		// ボス登場警告作成
 		bossWarning = std::make_unique<Warning>();
 		bossWarning->Init();

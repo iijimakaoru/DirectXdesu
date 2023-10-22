@@ -52,6 +52,12 @@ public:
 	// 衝突時に呼び出し
 	void OnCollision();
 
+	// スタートエフェクト終わり
+	void EndStart();
+
+	// 定位置へ
+	void StandStartPos();
+
 	/// <summary>
 	/// 親子セッター
 	/// </summary>
@@ -80,6 +86,7 @@ public:
 	static const KMyMath::Vector2& GetPosLimitMax();
 	static const KMyMath::Vector2& GetPosLimitMin();
 	const bool GetIsInvisible() const;
+	const bool GetIsStart() const;
 
 	// セッター
 	void SetPos(const KMyMath::Vector3 pos_);
@@ -108,6 +115,9 @@ private:
 
 	// デバッグ用
 	void Debug();
+
+public:
+	static bool isStartEase;
 
 private:
 #pragma region 大元の変数
@@ -212,5 +222,16 @@ private:
 
 #pragma region ステージスタート演出用
 	bool isStart = false;
+
+	uint32_t startPhase = 0;
+
+	float phaseTimer = 0;
+	float phaseTime = 0;
 #pragma endregion
+
+#pragma region ステージ始めのイージング
+	float startEaseTimer = 0;
+	float startEaseTime = 0;
+#pragma endregion
+
 };

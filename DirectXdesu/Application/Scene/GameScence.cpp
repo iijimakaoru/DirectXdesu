@@ -100,7 +100,7 @@ void GameScence::Init()
 	// スカイボックス
 	skyBox.reset(SkyBox::Create(skyBoxModel.get(),
 		objPipeline.get(),
-		player->GetWorldPos().z
+		50
 	));
 
 	bulletManager = BulletManager::GetInstance();
@@ -126,8 +126,19 @@ void GameScence::Update()
 {
 	if (isStageStart)
 	{
-		
+
 		billManager->SetIsStopCreate(false);
+
+		if (!player->GetIsStart())
+		{
+			billManager->SetIsStopCreate(true);
+			camera->SetIsStart(false);
+			camera->EndStart();
+			player->EndStart();
+			// 親子関係接続
+			player->SetParent(&camera->GetTransform());
+			isStageStart = false;
+		}
 	}
 	else
 	{
@@ -154,6 +165,9 @@ void GameScence::Update()
 		{
 			boss->Update(camera->GetViewPro());
 		}
+
+		// 天箱を自機に追従
+		skyBox->SetPosZ(player->GetWorldPos().z);
 	}
 
 	// プレイヤーの更新
@@ -166,7 +180,6 @@ void GameScence::Update()
 	ground->Update(camera->GetViewPro(), camera->GetPos());
 
 	// スカイボックスの更新
-	skyBox->SetPosZ(player->GetWorldPos().z);
 	skyBox->Update(camera->GetViewPro());
 
 	// パーティクルマネージャーの更新
@@ -381,8 +394,8 @@ void GameScence::BossBattleStart()
 		{
 			// ボス配置
 			const float bossDistance = 150;
-			const KMyMath::Vector3 bossBasePos = 
-			{ 
+			const KMyMath::Vector3 bossBasePos =
+			{
 				0.0f,
 				23.0f,
 				bossBattleStartPos + bossDistance

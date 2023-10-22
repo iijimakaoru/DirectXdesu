@@ -11,8 +11,7 @@ void RailCamera::Init(Player* player_, const KMyMath::Vector3& startPos_)
 {
 	Camera::Init();
 
-	cameraObject->SetPos(startPos_);
-	cameraObject->SetRot({ 0,0,0 });
+	startPos = startPos_;
 
 	cameraObject->TransUpdate();
 
@@ -26,6 +25,10 @@ void RailCamera::Init(Player* player_, const KMyMath::Vector3& startPos_)
 	player = player_;
 
 	isStart = true;
+
+	startPhase = 0;
+
+	startPhaseTimer = 0;
 
 	Camera::Update();
 }
@@ -49,7 +52,10 @@ void RailCamera::Update()
 	}
 	else
 	{
-		SetRot();
+		if (!Player::isStartEase)
+		{
+			SetRot();
+		}
 
 		Move();
 	}
@@ -83,10 +89,10 @@ void RailCamera::Move()
 	// 移動限界から動くな
 	cameraObject->SetPos({ max(cameraObject->GetPos().x, moveLimitMin.x),
 		max(cameraObject->GetPos().y, moveLimitMin.y),
-		cameraObject->GetRot().z });
+		cameraObject->GetPos().z });
 	cameraObject->SetPos({ min(cameraObject->GetPos().x, moveLimitMax.x),
 		min(cameraObject->GetPos().y, moveLimitMax.y),
-		cameraObject->GetRot().z });
+		cameraObject->GetPos().z });
 }
 
 void RailCamera::Crash()
@@ -265,7 +271,7 @@ void RailCamera::Start()
 	}
 	else
 	{
-
+		
 	}
 }
 
@@ -298,4 +304,15 @@ void RailCamera::CallStart()
 {
 	// スタート状態にする
 	isStart = true;
+}
+
+void RailCamera::EndStart()
+{
+	cameraObject->SetPos(startPos);
+	cameraObject->SetRot({ 0,0,0 });
+}
+
+void RailCamera::SetIsStart(bool isStart_)
+{
+	isStart = isStart_;
 }

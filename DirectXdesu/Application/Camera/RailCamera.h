@@ -65,6 +65,17 @@ public:
 	void CallStart();
 
 	/// <summary>
+	/// スタートカメラワークが終わった時の処理
+	/// </summary>
+	void EndStart();
+
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="isStart_"></param>
+	void SetIsStart(bool isStart_);
+
+	/// <summary>
 	/// カメラ速度セッター
 	/// </summary>
 	/// <returns></returns>
@@ -105,4 +116,7 @@ private:
 
 	// 角度
 	float rotAngle = 0;
+
+	// スタート位置
+	KMyMath::Vector3 startPos = { 0,0,0 };
 };

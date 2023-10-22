@@ -8,6 +8,8 @@ const KMyMath::Vector2 Player::rotLimit = { 35.0f, 25.0f };
 const KMyMath::Vector2 Player::posLimitMin = { -15.0f, -4.0f };
 const KMyMath::Vector2 Player::posLimitMax = { 15.0f, Player::posLimitMin.y + 12.0f };
 
+bool Player::isStartEase = false;
+
 Player* Player::Create(KModel* model_, KGPlin* objPipeline_, const float playerHP, KGPlin* spritePipeline_)
 {
 	// インスタンス生成
@@ -89,6 +91,8 @@ void Player::Init(KModel* model_, KGPlin* objPipeline_, const float playerHP, KG
 	dAlpha = 0;
 
 	isStart = true;
+
+	isStartEase = true;
 }
 
 void Player::Update(ViewProjection* viewPro)
@@ -97,6 +101,10 @@ void Player::Update(ViewProjection* viewPro)
 	if (isStart)
 	{
 		StartEffect();
+	}
+	else if (isStartEase)
+	{
+		StandStartPos();
 	}
 	else
 	{
@@ -164,13 +172,9 @@ void Player::Move()
 	object3d->SetPos({ max(object3d->GetPos().x, posLimitMin.x) ,
 		max(object3d->GetPos().y, posLimitMin.y) ,
 		object3d->GetPos().z });
-	object3d->SetPos({ min(object3d->GetPos().x, posLimitMin.x) ,
-		min(object3d->GetPos().y, posLimitMin.y) ,
+	object3d->SetPos({ min(object3d->GetPos().x, posLimitMax.x) ,
+		min(object3d->GetPos().y, posLimitMax.y) ,
 		object3d->GetPos().z });
-	/*object3d->transform.pos.x = max(object3d->transform.pos.x, posLimitMin.x);
-	object3d->transform.pos.x = min(object3d->transform.pos.x, posLimitMax.x);
-	object3d->transform.pos.y = max(object3d->transform.pos.y, posLimitMin.y);
-	object3d->transform.pos.y = min(object3d->transform.pos.y, posLimitMax.y);*/
 }
 
 void Player::Rot()
@@ -270,7 +274,7 @@ void Player::Rot()
 			}
 		}
 
-		object3d->AddSetRot({ 0,0,-object3d->GetRot().y + swayZ });
+		object3d->SetRot({ object3d->GetRot().x,object3d->GetRot().y,-object3d->GetRot().y + swayZ});
 	}
 
 	object3d->AddSetRot(rot);
@@ -412,6 +416,69 @@ void Player::DamageEffect()
 
 void Player::StartEffect()
 {
+	if (startPhase == 0)
+	{
+		phaseTime = 660;
+
+		if (phaseTimer < phaseTime)
+		{
+			phaseTimer++;
+		}
+		else
+		{
+			startPhase++;
+			phaseTimer = 0;
+		}
+	}
+	else if (startPhase == 1)
+	{
+		phaseTime = 60;
+
+		if (phaseTimer < phaseTime)
+		{
+			phaseTimer++;
+
+			object3d->SetPos({ object3d->GetPos().x,
+				object3d->GetPos().y,
+				MyEase::OutCubicFloat(50.0f,100.0f,phaseTimer / phaseTime) });
+		}
+		else
+		{
+			startPhase++;
+			phaseTimer = 0;
+		}
+	}
+	else
+	{
+		isStart = false;
+	}
+}
+
+void Player::EndStart()
+{
+	object3d->SetPos({ 0,0,50 });
+}
+
+void Player::StandStartPos()
+{
+	startEaseTime = 30;
+
+	if (startEaseTimer < startEaseTime)
+	{
+		startEaseTimer++;
+
+		object3d->SetPos({ object3d->GetPos().x,
+			object3d->GetPos().y,
+			MyEase::OutCubicFloat(-50.0f,50.0f,startEaseTimer / startEaseTime) });
+
+		object3d->SetRot({ 0.0f,
+			0.0f,
+			MyEase::InOutCubicFloat(0.0f,360.0f,startEaseTimer / startEaseTime) });
+	}
+	else
+	{
+		isStartEase = false;
+	}
 }
 
 void Player::Debug()
@@ -523,6 +590,11 @@ const KMyMath::Vector2& Player::GetPosLimitMin()
 const bool Player::GetIsInvisible() const
 {
 	return isInvisible;
+}
+
+const bool Player::GetIsStart() const
+{
+	return isStart;
 }
 
 void Player::OnCollision()

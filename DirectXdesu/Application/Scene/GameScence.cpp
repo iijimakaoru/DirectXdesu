@@ -83,9 +83,6 @@ void GameScence::Init()
 	// カメラ初期化
 	camera->Init(player.get(), { 0,0,-200 });
 
-	// 親子関係
-	//player->SetParent(&camera->GetTransform());
-
 	// エネミーマネージャー生成
 	enemyManager.reset(EnemyManager::Create("Resources/csv/enemyPop.csv", // ステージのcsvを読み込む
 		player.get(), // プレイヤー情報
@@ -127,11 +124,11 @@ void GameScence::Update()
 	if (isStageStart)
 	{
 
-		billManager->SetIsStopCreate(false);
+		billManager->SetIsStopCreate(true);
 
 		if (!player->GetIsStart())
 		{
-			billManager->SetIsStopCreate(true);
+			billManager->SetIsStopCreate(false);
 			camera->SetIsStart(false);
 			camera->EndStart();
 			player->EndStart();
@@ -390,7 +387,7 @@ void GameScence::BossBattleStart()
 		ground->SetIsAdvance(true);
 
 		// ビル生成止め
-		billManager->SetIsStopCreate(true);
+		//billManager->SetIsStopCreate(true);
 
 		// ボス登場警告作成
 		bossWarning = std::make_unique<Warning>();

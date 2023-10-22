@@ -24,10 +24,10 @@ void Ground::Init(Player* player_)
 		object3d[i]->SetPipeline(pipeline.get());
 		object3d[i]->LoadModel(model.get());
 		object3d[i]->SetPos({ 0.0f,-20.0f,0.0f });
-		object3d[i]->SetScale({ 20.0f,1.0f,20.0f });
+		object3d[i]->SetScale({ 1.0f,1.0f,1.0f });
 	}
 
-	object3d[1]->SetPos({ 0,-20,(object3d[0]->GetPos().z + 400.0f) });
+	object3d[1]->SetPos({ 0,-20,(object3d[0]->GetPos().z + 800.0f) });
 
 	player = player_;
 
@@ -36,13 +36,13 @@ void Ground::Init(Player* player_)
 
 void Ground::Update(ViewProjection* viewPro, const KMyMath::Vector3& cameraPos)
 {
-	const float flontOfScreenDiffuse = 400;
+	const float flontOfScreenDiffuse = 800;
 
 	for (size_t i = 0; i < 2; i++)
 	{
 		if (!player->GetIsDead())
 		{
-			if (object3d[i]->GetPos().z + (flontOfScreenDiffuse / 2) <= cameraPos.z)
+			if (object3d[i]->GetPos().z + (flontOfScreenDiffuse * 2/3) <= cameraPos.z)
 			{
 				if (i == 0)
 				{
@@ -56,6 +56,10 @@ void Ground::Update(ViewProjection* viewPro, const KMyMath::Vector3& cameraPos)
 		}
 
 		if (isAdvance)
+		{
+			object3d[i]->AddSetPos({ 0.0f,0.0f,-RailCamera::GetSpeed() * 2.0f });
+		}
+		else
 		{
 			object3d[i]->AddSetPos({ 0.0f,0.0f,-RailCamera::GetSpeed() });
 		}

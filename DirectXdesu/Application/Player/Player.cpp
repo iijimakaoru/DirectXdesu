@@ -498,7 +498,7 @@ void Player::ObjDraw()
 void Player::SpriteDraw()
 {
 	// レティクル描画
-	if (isDead || isStart)
+	if (isDead || isStart || isStartEase)
 	{
 		return;
 	}
@@ -508,7 +508,7 @@ void Player::SpriteDraw()
 
 void Player::UIDraw()
 {
-	if (isStart)
+	if (isStart || isStartEase)
 	{
 		return;
 	}

@@ -43,6 +43,10 @@ void Bill1::Update(ViewProjection* viewPro, const float& cameraZ, const bool& is
 {
     if (isAdvance_)
     {
+        object->AddSetPos({ 0,0,-RailCamera::GetSpeed() * 2.0f });
+    }
+    else
+    {
         object->AddSetPos({ 0,0,-RailCamera::GetSpeed() });
     }
 

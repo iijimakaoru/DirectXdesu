@@ -383,6 +383,12 @@ void GameScence::BossBattleStart()
 		// カメラ前進止める
 		camera->SetIsAdvance(false);
 
+		// ビルを全部動かす状態へ
+		billManager->SetIsAdvance(true);
+
+		// 地面を動かす状態へ
+		ground->SetIsAdvance(true);
+
 		// ビル生成止め
 		billManager->SetIsStopCreate(true);
 
@@ -428,12 +434,6 @@ void GameScence::BossBattleStart()
 
 		// ビル生成再開
 		billManager->SetIsStopCreate(false);
-
-		// ビルを全部動かす状態へ
-		billManager->SetIsAdvance(true);
-
-		// 地面を動かす状態へ
-		ground->SetIsAdvance(true);
 
 		// ボスバトル開始
 		isBossBattle = true;

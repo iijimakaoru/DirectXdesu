@@ -34,7 +34,7 @@ void Bill1::Init(KModel* model_, KGPlin* objPipeline_, const KMyMath::Vector2 po
 
     // オブジェクト生成
     object.reset(KObject3d::Create(model, objPipeline));
-    object->SetPos({ pos.x,-20 ,pos.y });
+    object->SetPos({ pos.x,-18 ,pos.y });
 
     isDead = false;
 }

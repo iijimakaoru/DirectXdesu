@@ -54,7 +54,7 @@ private:
 
 	// タイマー
 	int32_t billtimer = 0;
-	const int32_t billtime = 120;
+	const int32_t billtime = 15;
 
 	bool isAdvance = false;
 

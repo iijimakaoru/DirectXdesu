@@ -132,7 +132,6 @@ private:
 
 	KModel* model = nullptr;
 
-public:
 	// 3Dオブジェクトの配列
 	WorldTransfom transform;
 };

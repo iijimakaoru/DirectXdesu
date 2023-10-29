@@ -26,11 +26,11 @@ void MobEnemy::Init(KModel* model_, KGPlin* pipeline_)
 	isDead = false;
 }
 
-void MobEnemy::Update(ViewProjection* viewPro, const KMyMath::Vector3& cameraPos_)
+void MobEnemy::Update(ViewProjection* viewPro_, const KMyMath::Vector3& cameraPos_)
 {
 	cameraPos = cameraPos_;
 
-	object3d->Update(viewPro);
+	object3d->Update(viewPro_);
 }
 
 void MobEnemy::Draw()

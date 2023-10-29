@@ -34,7 +34,7 @@ void Ground::Init(Player* player_)
 	isAdvance = false;
 }
 
-void Ground::Update(ViewProjection* viewPro, const KMyMath::Vector3& cameraPos)
+void Ground::Update(ViewProjection* viewPro_, const KMyMath::Vector3& cameraPos_)
 {
 	const float flontOfScreenDiffuse = 800;
 
@@ -42,7 +42,7 @@ void Ground::Update(ViewProjection* viewPro, const KMyMath::Vector3& cameraPos)
 	{
 		if (!player->GetIsDead())
 		{
-			if (object3d[i]->GetPos().z + (flontOfScreenDiffuse * 2/3) <= cameraPos.z)
+			if (object3d[i]->GetPos().z + (flontOfScreenDiffuse * 2/3) <= cameraPos_.z)
 			{
 				if (i == 0)
 				{
@@ -64,7 +64,7 @@ void Ground::Update(ViewProjection* viewPro, const KMyMath::Vector3& cameraPos)
 			object3d[i]->AddSetPos({ 0.0f,0.0f,-RailCamera::GetSpeed() });
 		}
 
-		object3d[i]->Update(viewPro);
+		object3d[i]->Update(viewPro_);
 	}
 }
 
@@ -76,9 +76,9 @@ void Ground::Draw()
 	}
 }
 
-const KMyMath::Vector3 Ground::GetPos(size_t num) const
+const KMyMath::Vector3 Ground::GetPos(size_t num_) const
 {
-	return object3d[num]->GetPos();
+	return object3d[num_]->GetPos();
 }
 
 void Ground::SetIsAdvance(const bool isAdvance_)

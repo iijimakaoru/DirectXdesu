@@ -47,7 +47,7 @@ void BossEnemy::Init(KModel* model_, KGPlin* pipeline_, const KMyMath::Vector3& 
 	isDead = false;
 }
 
-void BossEnemy::Update(ViewProjection* viewPro)
+void BossEnemy::Update(ViewProjection* viewPro_)
 {
 	if (!isDead)
 	{
@@ -64,13 +64,13 @@ void BossEnemy::Update(ViewProjection* viewPro)
 	// HP演出
 	HPEffect();
 
-	object3d->Update(viewPro);
+	object3d->Update(viewPro_);
 }
 
-void BossEnemy::HPGauge(const uint32_t& easeTime)
+void BossEnemy::HPGauge(const uint32_t& easeTime_)
 {
 	easeTimer ++;
-	HP = MyEase::OutQuadFloat(1, maxHP, (float)easeTimer / easeTime);
+	HP = MyEase::OutQuadFloat(1, maxHP, (float)easeTimer / easeTime_);
 
 	if (HP >= max(HP, maxHP))
 	{
@@ -117,9 +117,9 @@ void BossEnemy::OnCollision()
 	hpEaseTimer = 0;
 }
 
-bool BossEnemy::CollisionCheck(const KMyMath::Vector3& posA, const KMyMath::Vector3& posB)
+bool BossEnemy::CollisionCheck(const KMyMath::Vector3& posA_, const KMyMath::Vector3& posB_)
 {
-	if (MyCollisions::CheckSphereToSphere(posA, posB, 1, 1))
+	if (MyCollisions::CheckSphereToSphere(posA_, posB_, 1, 1))
 	{
 		return true;
 	}

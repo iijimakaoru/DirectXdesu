@@ -48,8 +48,5 @@ public:
 	/// <param name="posB"></param>
 	/// <returns></returns>
 	bool CollisionCheck(const KMyMath::Vector3& posA, const KMyMath::Vector3& posB) override;
-
-private:
-	KInput* input = nullptr;
 };
 

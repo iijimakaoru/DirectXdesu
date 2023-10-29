@@ -15,9 +15,9 @@ void Reticle2D::Init()
 	reticle->SetPipeline(pipeline.get());
 }
 
-void Reticle2D::Update(ViewProjection* viewPro, KMyMath::Vector3 reticle3dPos)
+void Reticle2D::Update(ViewProjection* viewPro_, KMyMath::Vector3 reticle3dPos_)
 {
-	KMyMath::Vector3 positionReticle = reticle3dPos;
+	KMyMath::Vector3 positionReticle = reticle3dPos_;
 
 	float width = static_cast<float>(KWinApp::GetInstance()->GetWindowSizeW());
 	float height = static_cast<float>(KWinApp::GetInstance()->GetWindowSizeH());
@@ -33,8 +33,8 @@ void Reticle2D::Update(ViewProjection* viewPro, KMyMath::Vector3 reticle3dPos)
 
 	// 
 	KMyMath::Matrix4 matViewProjectionViewport =
-		viewPro->GetMatView() * 
-		viewPro->GetMatPro() * 
+		viewPro_->GetMatView() * 
+		viewPro_->GetMatPro() * 
 		MyMathConvert::ChangeXMMATRIXtoMatrix4(matViewport);
 
 	positionReticle = MyMathUtility::MatrixTransformWDivision(positionReticle, matViewProjectionViewport);

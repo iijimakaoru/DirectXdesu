@@ -6,8 +6,8 @@
 
 #include "PlayerBullet.h"
 
-PlayerBullet* PlayerBullet::Create(KModel* model, KGPlin* pipeline_,
-	const KMyMath::Vector3& pos, const KMyMath::Vector3& vec_, const KMyMath::Vector3& rot_, const float bulletSpeed)
+PlayerBullet* PlayerBullet::Create(KModel* model_, KGPlin* pipeline_,
+	const KMyMath::Vector3& pos_, const KMyMath::Vector3& vec_, const KMyMath::Vector3& rot_, const float bulletSpeed_)
 {
 	// インスタンス生成
 	PlayerBullet* playerBullet = new PlayerBullet();
@@ -17,8 +17,8 @@ PlayerBullet* PlayerBullet::Create(KModel* model, KGPlin* pipeline_,
 	}
 
 	// 初期化
-	playerBullet->Init(model, pipeline_);
-	playerBullet->Set(pos, vec_, rot_, bulletSpeed);
+	playerBullet->Init(model_, pipeline_);
+	playerBullet->Set(pos_, vec_, rot_, bulletSpeed_);
 
 	return playerBullet;
 }

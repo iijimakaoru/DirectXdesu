@@ -15,19 +15,19 @@ void BulletManager::Init(KModel* playersBulletModel_, KGPlin* pipeline_)
 	pipeline = pipeline_;
 }
 
-void BulletManager::Update(ViewProjection* viewPro)
+void BulletManager::Update(ViewProjection* viewPro_)
 {
 	// 弾の削除
 	DeleteBullet();
 
 	for (std::unique_ptr<PlayerBullet>& playerBullet : playerBullets)
 	{
-		playerBullet->Update(viewPro);
+		playerBullet->Update(viewPro_);
 	}
 
 	for (std::unique_ptr<EnemyBullet>& enemyBullet : enemyBullets)
 	{
-		enemyBullet->Update(viewPro);
+		enemyBullet->Update(viewPro_);
 	}
 }
 
@@ -44,20 +44,20 @@ void BulletManager::Draw()
 	}
 }
 
-void BulletManager::PlayerBulletShot(const KMyMath::Vector3& pos, const KMyMath::Vector3& vec_, const KMyMath::Vector3& rot_, const float bulletSpeed)
+void BulletManager::PlayerBulletShot(const KMyMath::Vector3& pos, const KMyMath::Vector3& vec_, const KMyMath::Vector3& rot_, const float bulletSpeed_)
 {
 	// 弾生成
 	std::unique_ptr<PlayerBullet> newBullet;
-	newBullet.reset(PlayerBullet::Create(playersBulletModel, pipeline, pos, vec_, rot_, bulletSpeed));
+	newBullet.reset(PlayerBullet::Create(playersBulletModel, pipeline, pos, vec_, rot_, bulletSpeed_));
 	// 登録
 	playerBullets.push_back(std::move(newBullet));
 }
 
-void BulletManager::EnemyBulletShot(const KMyMath::Vector3& pos, const KMyMath::Vector3& vec_, const KMyMath::Vector3& rot_, const float bulletSpeed)
+void BulletManager::EnemyBulletShot(const KMyMath::Vector3& pos, const KMyMath::Vector3& vec_, const KMyMath::Vector3& rot_, const float bulletSpeed_)
 {
 	// 弾生成
 	std::unique_ptr<EnemyBullet> newBullet;
-	newBullet.reset(EnemyBullet::Create(playersBulletModel, pipeline, pos, vec_, rot_, bulletSpeed));
+	newBullet.reset(EnemyBullet::Create(playersBulletModel, pipeline, pos, vec_, rot_, bulletSpeed_));
 	// 登録
 	enemyBullets.push_back(std::move(newBullet));
 }
@@ -99,8 +99,8 @@ const std::list<std::unique_ptr<EnemyBullet>>& BulletManager::GetEnemyBullets() 
 void BulletManager::DeleteBullet()
 {
 	// プレイヤーの弾
-	playerBullets.remove_if([](std::unique_ptr<PlayerBullet>& playerBullet) {return playerBullet->GetIsDead(); });
+	playerBullets.remove_if([](std::unique_ptr<PlayerBullet>& playerBullet_) {return playerBullet_->GetIsDead(); });
 
 	// 敵の弾
-	enemyBullets.remove_if([](std::unique_ptr<EnemyBullet>& enemyBullet) {return enemyBullet->GetIsDead(); });
+	enemyBullets.remove_if([](std::unique_ptr<EnemyBullet>& enemyBullet_) {return enemyBullet_->GetIsDead(); });
 }

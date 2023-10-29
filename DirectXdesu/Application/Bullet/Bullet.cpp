@@ -18,7 +18,7 @@ void Bullet::Set(const KMyMath::Vector3& pos_, const KMyMath::Vector3& vec_, con
 	isDead = false;
 }
 
-void Bullet::Update(ViewProjection* viewPro)
+void Bullet::Update(ViewProjection* viewPro_)
 {
 	if (!isDead)
 	{
@@ -31,7 +31,7 @@ void Bullet::Update(ViewProjection* viewPro)
 		}
 	}
 
-	object3d->Update(viewPro);
+	object3d->Update(viewPro_);
 }
 
 void Bullet::Draw()

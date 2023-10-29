@@ -1,7 +1,7 @@
 #include "CanonEnemy.h"
 #include "Ease.h"
 
-CanonEnemy* CanonEnemy::Create(KModel* model_, KGPlin* pipeline_, const KMyMath::Vector3& pos)
+CanonEnemy* CanonEnemy::Create(KModel* model_, KGPlin* pipeline_, const KMyMath::Vector3& pos_)
 {
 	CanonEnemy* newEnemy = new CanonEnemy();
 	if (newEnemy == nullptr)
@@ -11,9 +11,9 @@ CanonEnemy* CanonEnemy::Create(KModel* model_, KGPlin* pipeline_, const KMyMath:
 
 	newEnemy->Init(model_, pipeline_);
 
-	newEnemy->SetStartPos(pos);
+	newEnemy->SetStartPos(pos_);
 
-	newEnemy->object3d->SetPos(pos);
+	newEnemy->object3d->SetPos(pos_);
 
 	return newEnemy;
 }
@@ -31,7 +31,7 @@ void CanonEnemy::Init(KModel* model_, KGPlin* pipeline_)
 	coolTime = 30;
 }
 
-void CanonEnemy::Update(ViewProjection* viewPro, const KMyMath::Vector3& cameraPos_)
+void CanonEnemy::Update(ViewProjection* viewPro_, const KMyMath::Vector3& cameraPos_)
 {
 	// 出現演出
 	if (isAppear)
@@ -51,7 +51,7 @@ void CanonEnemy::Update(ViewProjection* viewPro, const KMyMath::Vector3& cameraP
 		}
 	}
 	
-	object3d->Update(viewPro);
+	object3d->Update(viewPro_);
 }
 
 void CanonEnemy::Draw()

@@ -2,7 +2,7 @@
 #include "BulletManager.h"
 #include "Ease.h"
 
-AppearEnemy* AppearEnemy::Create(KModel* model_, KGPlin* pipeline_, const KMyMath::Vector3& pos)
+AppearEnemy* AppearEnemy::Create(KModel* model_, KGPlin* pipeline_, const KMyMath::Vector3& pos_)
 {
 	// インスタンス生成
 	AppearEnemy* newEnemy = new AppearEnemy();
@@ -15,7 +15,7 @@ AppearEnemy* AppearEnemy::Create(KModel* model_, KGPlin* pipeline_, const KMyMat
 	newEnemy->Init(model_, pipeline_);
 
 	// 初期位置セット
-	newEnemy->object3d->SetPos(pos);
+	newEnemy->object3d->SetPos(pos_);
 
 	return newEnemy;
 }
@@ -45,7 +45,7 @@ void AppearEnemy::Init(KModel* model_, KGPlin* pipeline_)
 	coolTime = 60;
 }
 
-void AppearEnemy::Update(ViewProjection* viewPro, const KMyMath::Vector3& cameraPos_)
+void AppearEnemy::Update(ViewProjection* viewPro_, const KMyMath::Vector3& cameraPos_)
 {
 	// 出現演出
 	if (isAppear)
@@ -65,7 +65,7 @@ void AppearEnemy::Update(ViewProjection* viewPro, const KMyMath::Vector3& camera
 		}
 	}
 
-	object3d->Update(viewPro);
+	object3d->Update(viewPro_);
 }
 
 void AppearEnemy::Draw()

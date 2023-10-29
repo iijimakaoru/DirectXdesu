@@ -4,7 +4,7 @@
 #include "CanonEnemy.h"
 #include "RailCamera.h"
 
-EnemyManager* EnemyManager::Create(const std::string fileName, Player* player_, KModel* model_, KGPlin* pipeline_)
+EnemyManager* EnemyManager::Create(const std::string fileName_, Player* player_, KModel* model_, KGPlin* pipeline_)
 {
 	// インスタンス
 	EnemyManager* instance = new EnemyManager();
@@ -14,7 +14,7 @@ EnemyManager* EnemyManager::Create(const std::string fileName, Player* player_, 
 	}
 
 	instance->Init(player_,model_,pipeline_);
-	instance->LoadEnemyPopData(fileName);
+	instance->LoadEnemyPopData(fileName_);
 
 	return instance;
 }
@@ -31,7 +31,7 @@ void EnemyManager::Init(Player* player_, KModel* model_, KGPlin* pipeline_)
 	pipeline = pipeline_;
 }
 
-void EnemyManager::Update(ViewProjection* viewPro, const KMyMath::Vector3& cameraPos)
+void EnemyManager::Update(ViewProjection* viewPro_, const KMyMath::Vector3& cameraPos_)
 {
 	// 敵出現
 	UpdateEnemyPopCommands();
@@ -42,7 +42,7 @@ void EnemyManager::Update(ViewProjection* viewPro, const KMyMath::Vector3& camer
 	// 雑魚敵の更新
 	for (std::unique_ptr<MobEnemy>& mobEnemy : mobEnemys)
 	{
-		mobEnemy->Update(viewPro, cameraPos);
+		mobEnemy->Update(viewPro_, cameraPos_);
 	}
 }
 
@@ -63,19 +63,19 @@ const std::list<std::unique_ptr<MobEnemy>>& EnemyManager::GetMobEnemys() const
 void EnemyManager::DeleteEnemy()
 {
 	// 敵消去
-	mobEnemys.remove_if([](std::unique_ptr<MobEnemy>& MobEnemy)
+	mobEnemys.remove_if([](std::unique_ptr<MobEnemy>& MobEnemy_)
 		{
-			return MobEnemy->GetIsDead();
+			return MobEnemy_->GetIsDead();
 		});
 }
 
-void EnemyManager::LoadEnemyPopData(const std::string fileName)
+void EnemyManager::LoadEnemyPopData(const std::string fileName_)
 {
 	//"Resources/csv/enemyPop.csv"
 
 	// ファイルを開く
 	std::ifstream file;
-	file.open(fileName);
+	file.open(fileName_);
 	assert(file.is_open());
 
 	// ファイルの内容を文字ストリームにコピー

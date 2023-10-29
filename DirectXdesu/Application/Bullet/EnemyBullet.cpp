@@ -6,8 +6,8 @@
 
 #include "EnemyBullet.h"
 
-EnemyBullet* EnemyBullet::Create(KModel* model, KGPlin* pipeline_,
-	const KMyMath::Vector3& pos, const KMyMath::Vector3& vec_, const KMyMath::Vector3& rot_, const float bulletSpeed)
+EnemyBullet* EnemyBullet::Create(KModel* model_, KGPlin* pipeline_,
+	const KMyMath::Vector3& pos_, const KMyMath::Vector3& vec_, const KMyMath::Vector3& rot_, const float bulletSpeed_)
 {
 	// インスタンス生成
 	EnemyBullet* enemyBullet = new EnemyBullet();
@@ -17,8 +17,8 @@ EnemyBullet* EnemyBullet::Create(KModel* model, KGPlin* pipeline_,
 	}
 
 	// 初期化
-	enemyBullet->Init(model, pipeline_);
-	enemyBullet->Set(pos, vec_, rot_, bulletSpeed);
+	enemyBullet->Init(model_, pipeline_);
+	enemyBullet->Set(pos_, vec_, rot_, bulletSpeed_);
 
 	return enemyBullet;
 }

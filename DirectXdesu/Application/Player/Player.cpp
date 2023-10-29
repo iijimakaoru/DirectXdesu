@@ -95,7 +95,7 @@ void Player::Init(KModel* model_, KGPlin* objPipeline_, const float playerHP, KG
 	isStartEase = true;
 }
 
-void Player::Update(ViewProjection* viewPro)
+void Player::Update(ViewProjection* viewPro_)
 {
 	// スタート演出中の処理
 	if (isStart)
@@ -147,10 +147,10 @@ void Player::Update(ViewProjection* viewPro)
 	reticle3d->Update(nowMatWorld, GetWorldPos());
 
 	// 2Dレティクルの更新
-	reticle2d->Update(viewPro, reticle3d->GetWorldPos());
+	reticle2d->Update(viewPro_, reticle3d->GetWorldPos());
 
 	// オブジェクトの更新
-	object3d->Update(viewPro);
+	object3d->Update(viewPro_);
 }
 
 void Player::SetPos(const KMyMath::Vector3 pos_)

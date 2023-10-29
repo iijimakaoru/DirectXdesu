@@ -1,7 +1,7 @@
 #include "Bill1.h"
 #include "RailCamera.h"
 
-Bill1* Bill1::Create(KModel* model_, KGPlin* objPipeline_, const KMyMath::Vector2& pos)
+Bill1* Bill1::Create(KModel* model_, KGPlin* objPipeline_, const KMyMath::Vector2& pos_)
 {
     // インスタンス
     Bill1* instance = new Bill1();
@@ -11,7 +11,7 @@ Bill1* Bill1::Create(KModel* model_, KGPlin* objPipeline_, const KMyMath::Vector
     }
 
     // 初期化呼び出し
-    instance->Init(model_, objPipeline_, pos);
+    instance->Init(model_, objPipeline_, pos_);
 
     return instance;
 }
@@ -24,7 +24,7 @@ Bill1::~Bill1()
 {
 }
 
-void Bill1::Init(KModel* model_, KGPlin* objPipeline_, const KMyMath::Vector2 pos)
+void Bill1::Init(KModel* model_, KGPlin* objPipeline_, const KMyMath::Vector2 pos_)
 {
     // モデル生成
     model = model_;
@@ -34,12 +34,12 @@ void Bill1::Init(KModel* model_, KGPlin* objPipeline_, const KMyMath::Vector2 po
 
     // オブジェクト生成
     object.reset(KObject3d::Create(model, objPipeline));
-    object->SetPos({ pos.x,-18 ,pos.y });
+    object->SetPos({ pos_.x,-18 ,pos_.y });
 
     isDead = false;
 }
 
-void Bill1::Update(ViewProjection* viewPro, const float& cameraZ, const bool& isAdvance_)
+void Bill1::Update(ViewProjection* viewPro_, const float& cameraZ_, const bool& isAdvance_)
 {
     if (isAdvance_)
     {
@@ -50,12 +50,12 @@ void Bill1::Update(ViewProjection* viewPro, const float& cameraZ, const bool& is
         object->AddSetPos({ 0,0,-RailCamera::GetSpeed() });
     }
 
-    if (object->GetPos().z <= cameraZ)
+    if (object->GetPos().z <= cameraZ_)
     {
         isDead = true;
     }
 
-    object->Update(viewPro);
+    object->Update(viewPro_);
 }
 
 void Bill1::Draw()

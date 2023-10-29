@@ -24,18 +24,18 @@ void BillManager::Init()
 	isAdvance = false;
 }
 
-void BillManager::Update(ViewProjection* viewPro, const float& cameraZ)
+void BillManager::Update(ViewProjection* viewPro_, const float& cameraZ_)
 {
 	bill1s.remove_if([](std::unique_ptr<Bill1>& bill1) {return bill1->GetIsDead(); });
 
 	if (!isStopCreate)
 	{
-		Set(cameraZ);
+		Set(cameraZ_);
 	}
 
 	for (std::unique_ptr<Bill1>& bill1 : bill1s)
 	{
-		bill1->Update(viewPro, cameraZ, isAdvance);
+		bill1->Update(viewPro_, cameraZ_, isAdvance);
 	}
 }
 
@@ -47,11 +47,11 @@ void BillManager::Draw()
 	}
 }
 
-void BillManager::LeftSet(const float cameraZ)
+void BillManager::LeftSet(const float cameraZ_)
 {
 	//
 	std::unique_ptr<Bill1> newBill1;
-	newBill1.reset(Bill1::Create(model.get(), objPipeline.get(), { -60,cameraZ}));
+	newBill1.reset(Bill1::Create(model.get(), objPipeline.get(), { -60,cameraZ_}));
 	bill1s.push_back(std::move(newBill1));
 }
 
@@ -65,22 +65,22 @@ void BillManager::SetIsStopCreate(const bool isStopCreate_)
 	isStopCreate = isStopCreate_;
 }
 
-void BillManager::Set(const float& cameraZ)
+void BillManager::Set(const float& cameraZ_)
 {
 	billtimer++;
 
 	if (billtimer >= billtime)
 	{
-		RightSet(cameraZ + 500.0f);
-		LeftSet(cameraZ + 500.0f);
+		RightSet(cameraZ_ + 500.0f);
+		LeftSet(cameraZ_ + 500.0f);
 		billtimer = 0;
 	}
 }
 
-void BillManager::RightSet(const float cameraZ)
+void BillManager::RightSet(const float cameraZ_)
 {
 	//
 	std::unique_ptr<Bill1> newBill1;
-	newBill1.reset(Bill1::Create(model.get(), objPipeline.get(), { 60,cameraZ}));
+	newBill1.reset(Bill1::Create(model.get(), objPipeline.get(), { 60,cameraZ_}));
 	bill1s.push_back(std::move(newBill1));
 }

@@ -1,6 +1,6 @@
 #include "SkyBox.h"
 
-SkyBox* SkyBox::Create(KModel* model_, KGPlin* objPipeline_, const float posZ)
+SkyBox* SkyBox::Create(KModel* model_, KGPlin* objPipeline_, const float posZ_)
 {
 	// インスタンス生成
 	SkyBox* skyBox = new SkyBox();
@@ -10,12 +10,12 @@ SkyBox* SkyBox::Create(KModel* model_, KGPlin* objPipeline_, const float posZ)
 	}
 
 	// 初期化
-	skyBox->Init(model_, objPipeline_, posZ);
+	skyBox->Init(model_, objPipeline_, posZ_);
 
 	return skyBox;
 }
 
-void SkyBox::Init(KModel* model_, KGPlin* objPipeline_, const float posZ)
+void SkyBox::Init(KModel* model_, KGPlin* objPipeline_, const float posZ_)
 {
 	// モデル生成
 	model = model_;
@@ -25,7 +25,7 @@ void SkyBox::Init(KModel* model_, KGPlin* objPipeline_, const float posZ)
 
 	// オブジェクト生成
 	object3d.reset(KObject3d::Create(model, objPipeline));
-	object3d->SetPos({ object3d->GetPos().x,object3d->GetPos().y,posZ });
+	object3d->SetPos({ object3d->GetPos().x,object3d->GetPos().y,posZ_ });
 	object3d->SetScale({ 600.0f,600.0f,600.0f });
 }
 
@@ -39,7 +39,7 @@ void SkyBox::ObjDraw()
 	object3d->Draw();
 }
 
-void SkyBox::SetPosZ(const float posZ)
+void SkyBox::SetPosZ(const float posZ_)
 {
-	object3d->SetPos({ object3d->GetPos().x,object3d->GetPos().y,posZ });
+	object3d->SetPos({ object3d->GetPos().x,object3d->GetPos().y,posZ_ });
 }

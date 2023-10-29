@@ -122,11 +122,10 @@ public:
 private:
 	KGPlin* pipeline;
 
-public:
-
-private:
 	Microsoft::WRL::ComPtr<ID3D12Resource> constBuffB0;
 	Microsoft::WRL::ComPtr<ID3D12Resource> constBuffB1;
+
+private:
 
 	HRESULT result;
 

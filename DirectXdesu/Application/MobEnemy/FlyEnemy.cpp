@@ -35,7 +35,7 @@ void FlyEnemy::Init(KModel* model_, KGPlin* pipeline_)
 	coolTime = 120;
 }
 
-void FlyEnemy::Update(ViewProjection* viewPro, const KMyMath::Vector3& cameraPos_)
+void FlyEnemy::Update(ViewProjection* viewPro_, const KMyMath::Vector3& cameraPos_)
 {
 	// 出現演出
 	if (isAppear)
@@ -57,7 +57,7 @@ void FlyEnemy::Update(ViewProjection* viewPro, const KMyMath::Vector3& cameraPos
 
 	object3d->AddSetPos({ 0,0,moveSpeed });
 
-	object3d->Update(viewPro);
+	object3d->Update(viewPro_);
 }
 
 void FlyEnemy::Draw()
@@ -94,7 +94,7 @@ void FlyEnemy::SetEndPos(const KMyMath::Vector2& endPos_)
 	endPos = endPos_;
 }
 
-void FlyEnemy::SetSpeed(const float& speed)
+void FlyEnemy::SetSpeed(const float& speed_)
 {
-	moveSpeed = speed;
+	moveSpeed = speed_;
 }

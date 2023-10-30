@@ -104,7 +104,7 @@ void RailCamera::Crash()
 	const KMyMath::Vector3 crashCameraPos = player->GetWorldPos() + playerDistance;
 
 	// 角度
-	cameraObject->AddSetRot({ 0.0f,-135.0f ,0.0f });
+	cameraObject->SetRot({ 0.0f,-135.0f ,0.0f });
 
 	// カメラ動け
 	cameraObject->SetPos(crashCameraPos);

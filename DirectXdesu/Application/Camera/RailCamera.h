@@ -25,28 +25,12 @@ public:
 	void Init(Player* player_, const KMyMath::Vector3& startPos);
 
 	// 更新
-	void Update();
+	void Update(bool isStart_);
 
 	/// <summary>
 	/// カメラ動かす
 	/// </summary>
 	void Move();
-
-	/// <summary>
-	/// 壊れた時のカメラワーク
-	/// </summary>
-	void Crash();
-
-	/// <summary>
-	/// 始まりのカメラワーク
-	/// </summary>
-	void Start();
-
-	/// <summary>
-	/// プレイヤーの角度と連動させる
-	/// </summary>
-	/// <param name="playersRot"></param>
-	void SetRot();
 
 	/// <summary>
 	/// 前進フラグ
@@ -60,26 +44,27 @@ public:
 	void CallCrash();
 
 	/// <summary>
-	/// ステージの始まりに呼ぼう
-	/// </summary>
-	void CallStart();
-
-	/// <summary>
 	/// スタートカメラワークが終わった時の処理
 	/// </summary>
 	void EndStart();
 
 	/// <summary>
-	/// 
-	/// </summary>
-	/// <param name="isStart_"></param>
-	void SetIsStart(bool isStart_);
-
-	/// <summary>
-	/// カメラ速度セッター
+	/// カメラ速度ゲッター
 	/// </summary>
 	/// <returns></returns>
 	static const float GetSpeed();
+
+private:
+	/// <summary>
+	/// 壊れた時のカメラワーク
+	/// </summary>
+	void Crash();
+
+	/// <summary>
+	/// プレイヤーの角度と連動させる
+	/// </summary>
+	/// <param name="playersRot"></param>
+	void SetRot();
 
 private:
 	// 前進するか
@@ -103,16 +88,6 @@ private:
 
 	// プレイヤーの型
 	Player* player = nullptr;
-
-#pragma region スタートカメラワーク
-	// ゲームスタートで呼ぶ
-	bool isStart = false;
-
-	// フェーズ
-	uint32_t startPhase = 0;
-	float startPhaseTimer = 0;
-	float startPhaseTime = 0;
-#pragma endregion
 
 	// 角度
 	float rotAngle = 0;

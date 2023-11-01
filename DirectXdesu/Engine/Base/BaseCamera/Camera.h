@@ -31,9 +31,11 @@ public:
 
 	// ゲッター
 	const WorldTransfom& GetTransform()const;
-	const KMyMath::Vector3& GetPos()const;
+	const KMyMath::Vector3& GetCameraPos()const;
+	const KMyMath::Vector3& GetCameraRot() const;
 	const KMyMath::Vector3 GetWorldPos() const;
 
 	// セッター
-	void SetPos(const KMyMath::Vector3 pos);
+	void SetCameraPos(const KMyMath::Vector3& pos_);
+	void SetCameraRot(const KMyMath::Vector3& rot_);
 };

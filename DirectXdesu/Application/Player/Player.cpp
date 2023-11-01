@@ -90,17 +90,15 @@ void Player::Init(KModel* model_, KGPlin* objPipeline_, const float playerHP, KG
 	// ダメージエフェクトの透過値
 	dAlpha = 0;
 
-	isStart = true;
-
 	isStartEase = true;
 }
 
-void Player::Update(ViewProjection* viewPro_)
+void Player::Update(ViewProjection* viewPro_, bool isStart_)
 {
 	// スタート演出中の処理
-	if (isStart)
+	if (isStart_)
 	{
-		StartEffect();
+		
 	}
 	else if (isStartEase)
 	{
@@ -151,11 +149,6 @@ void Player::Update(ViewProjection* viewPro_)
 
 	// オブジェクトの更新
 	object3d->Update(viewPro_);
-}
-
-void Player::SetPos(const KMyMath::Vector3 pos_)
-{
-	object3d->SetPos(pos_);
 }
 
 void Player::Move()
@@ -414,46 +407,6 @@ void Player::DamageEffect()
 	}
 }
 
-void Player::StartEffect()
-{
-	if (startPhase == 0)
-	{
-		phaseTime = 660;
-
-		if (phaseTimer < phaseTime)
-		{
-			phaseTimer++;
-		}
-		else
-		{
-			startPhase++;
-			phaseTimer = 0;
-		}
-	}
-	else if (startPhase == 1)
-	{
-		phaseTime = 60;
-
-		if (phaseTimer < phaseTime)
-		{
-			phaseTimer++;
-
-			object3d->SetPos({ object3d->GetPos().x,
-				object3d->GetPos().y,
-				MyEase::OutCubicFloat(50.0f,100.0f,phaseTimer / phaseTime) });
-		}
-		else
-		{
-			startPhase++;
-			phaseTimer = 0;
-		}
-	}
-	else
-	{
-		isStart = false;
-	}
-}
-
 void Player::EndStart()
 {
 	object3d->SetPos({ 0,0,50 });
@@ -498,7 +451,7 @@ void Player::ObjDraw()
 void Player::SpriteDraw()
 {
 	// レティクル描画
-	if (isDead || isStart || isStartEase)
+	if (isDead || isStartEase)
 	{
 		return;
 	}
@@ -508,7 +461,7 @@ void Player::SpriteDraw()
 
 void Player::UIDraw()
 {
-	if (isStart || isStartEase)
+	if (isStartEase)
 	{
 		return;
 	}
@@ -567,6 +520,21 @@ const bool Player::GetIsFallEffectEnd() const
 	return isFallEffectEnd;
 }
 
+void Player::SetPos(const KMyMath::Vector3& pos_)
+{
+	object3d->SetPos(pos_);
+}
+
+void Player::SetRot(const KMyMath::Vector3& rot_)
+{
+	object3d->SetRot(rot_);
+}
+
+void Player::SetScale(const KMyMath::Vector3& scale_)
+{
+	object3d->SetScale(scale_);
+}
+
 const KMyMath::Vector2& Player::GetRotLimit()
 {
 	return rotLimit;
@@ -590,11 +558,6 @@ const KMyMath::Vector2& Player::GetPosLimitMin()
 const bool Player::GetIsInvisible() const
 {
 	return isInvisible;
-}
-
-const bool Player::GetIsStart() const
-{
-	return isStart;
 }
 
 void Player::OnCollision()

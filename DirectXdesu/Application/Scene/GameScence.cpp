@@ -20,6 +20,8 @@
 #include "FlyEnemy.h"
 #include "CanonEnemy.h"
 
+#include "Ease.h"
+
 GameScence::~GameScence()
 {
 	Final();
@@ -123,19 +125,9 @@ void GameScence::Update()
 {
 	if (isStageStart)
 	{
-
 		billManager->SetIsStopCreate(true);
 
-		if (!player->GetIsStart())
-		{
-			billManager->SetIsStopCreate(false);
-			camera->SetIsStart(false);
-			camera->EndStart();
-			player->EndStart();
-			// 親子関係接続
-			player->SetParent(&camera->GetTransform());
-			isStageStart = false;
-		}
+		StageStartMovie();
 	}
 	else
 	{
@@ -155,7 +147,7 @@ void GameScence::Update()
 		PlayerDead();
 
 		// エネミーマネージャーの更新
-		enemyManager->Update(camera->GetViewPro(), camera->GetPos());
+		enemyManager->Update(camera->GetViewPro(), camera->GetCameraPos());
 
 		// ボスの更新
 		if (boss)
@@ -168,13 +160,13 @@ void GameScence::Update()
 	}
 
 	// プレイヤーの更新
-	player->Update(camera->GetViewPro());
+	player->Update(camera->GetViewPro(), isStageStart);
 
 	// 弾の更新
 	bulletManager->Update(camera->GetViewPro());
 
 	// 地面の更新
-	ground->Update(camera->GetViewPro(), camera->GetPos());
+	ground->Update(camera->GetViewPro(), camera->GetCameraPos());
 
 	// スカイボックスの更新
 	skyBox->Update(camera->GetViewPro());
@@ -184,10 +176,10 @@ void GameScence::Update()
 	objParticleManager->Update(camera->GetViewPro());
 
 	// ビルマネージャー
-	billManager->Update(camera->GetViewPro(), camera->GetPos().z);
+	billManager->Update(camera->GetViewPro(), camera->GetCameraPos().z);
 
 	// カメラの更新
-	camera->Update();
+	camera->Update(isStageStart);
 
 	// ボス登場警告
 	if (bossWarning)
@@ -374,7 +366,7 @@ void GameScence::BossBattleStart()
 
 	if (!bossWarning)
 	{
-		bool isBossBattleStart = camera->GetPos().z >= bossBattleStartPos;
+		bool isBossBattleStart = camera->GetCameraPos().z >= bossBattleStartPos;
 		if (!isBossBattleStart) { return; }
 
 		// カメラ前進止める
@@ -423,11 +415,20 @@ void GameScence::BossBattleStart()
 		// 演出が終わってないときは抜ける
 		if (!bossWarning->GetIsDelete()) { return; }
 
-		// ボス登場警告解放
-		bossWarning.reset();
+		if (bossWarning)
+		{
+			// ボス出現演出前の暗転開始
+			sceneChange->Start();
 
-		// ビル生成再開
-		billManager->SetIsStopCreate(false);
+			// ボス登場警告解放
+			bossWarning.reset();
+		}
+
+		if (sceneChange->GetIsChange())
+		{
+			isBossAppearEffect = true;
+			bulletManager->AllBulletDelete();
+		}
 
 		// ボスバトル開始
 		isBossBattle = true;
@@ -442,6 +443,195 @@ void GameScence::PlayerDead()
 		isCallDeadCamera = true;
 		player->SetParent(nullptr);
 		player->SetPos(player->GetWorldPos());
+	}
+}
+
+void GameScence::StageStartMovie()
+{
+	// カメラワーク一段階(上から見下ろし)
+	if (startPhase == 0)
+	{
+		startPhaseTime = 180.0f;
+
+		if (startPhaseTimer == 0)
+		{
+			//自機とカメラの距離
+			const KMyMath::Vector3 playerDistance = { 0.0f, 20.0f, 40.0f };
+
+			// カメラの場所
+			const KMyMath::Vector3 crashCameraPos = player->GetWorldPos() + playerDistance;
+
+			// 角度
+			camera->SetCameraRot({ 20.0f,180.0f,camera->GetCameraRot().z });
+
+			// カメラ動け
+			camera->SetCameraPos(crashCameraPos);
+		}
+
+		if (startPhaseTimer < startPhaseTime)
+		{
+			startPhaseTimer++;
+
+			camera->SetCameraPos(
+				{ camera->GetCameraPos().x,
+				MyEase::Lerp(player->GetWorldPos().y + 20.0f,player->GetWorldPos().y + 10.0f,startPhaseTimer / startPhaseTime),
+				MyEase::Lerp(player->GetWorldPos().z + 40.0f,player->GetWorldPos().z + 45.0f,startPhaseTimer / startPhaseTime) }
+			);
+
+			camera->SetCameraRot(
+				{ MyEase::Lerp(20.0f,10.0f,startPhaseTimer / startPhaseTime) ,
+				camera->GetCameraRot().y,
+				camera->GetCameraRot().z
+				}
+			);
+		}
+		else
+		{
+			startPhase++;
+			startPhaseTimer = 0;
+		}
+	}
+	// カメラワーク二段階(自機右上から至近距離)
+	else if (startPhase == 1)
+	{
+		startPhaseTime = 180.0f;
+
+		if (startPhaseTimer == 0)
+		{
+			//自機とカメラの距離
+			const KMyMath::Vector3 playerDistance = { 2.5f, 2.5f, 3.5f };
+
+			// カメラの場所
+			const KMyMath::Vector3 crashCameraPos = player->GetWorldPos() + playerDistance;
+
+			// 角度
+			camera->SetCameraRot({ 45.0f,250.0f,camera->GetCameraRot().z });
+
+			// カメラ動け
+			camera->SetCameraPos(crashCameraPos);
+		}
+
+		if (startPhaseTimer < startPhaseTime)
+		{
+			startPhaseTimer++;
+
+			camera->SetCameraPos(
+				{ camera->GetCameraPos().x,
+				camera->GetCameraPos().y,
+				MyEase::Lerp(player->GetWorldPos().z + 3.5f,player->GetWorldPos().z + 1.5f,startPhaseTimer / startPhaseTime) }
+			);
+		}
+		else
+		{
+			startPhase++;
+			startPhaseTimer = 0;
+		}
+	}
+	// カメラワーク三段階(自機左したからブースター(ケツ)注視)
+	else if (startPhase == 2)
+	{
+		startPhaseTime = 180.0f;
+
+		if (startPhaseTimer == 0)
+		{
+			//自機とカメラの距離
+			const KMyMath::Vector3 playerDistance = { -2.0f, -1.8f, -3.5f };
+
+			// カメラの場所
+			const KMyMath::Vector3 crashCameraPos = player->GetWorldPos() + playerDistance;
+
+			// 角度
+			camera->SetCameraRot({ -35.0f,27.5f,camera->GetCameraRot().z });
+
+			// カメラ動け
+			camera->SetCameraPos(crashCameraPos);
+		}
+
+		if (startPhaseTimer < startPhaseTime)
+		{
+			startPhaseTimer++;
+
+			camera->SetCameraPos(
+				{ MyEase::Lerp(player->GetWorldPos().x - 2.0f,player->GetWorldPos().x - 1.5f,startPhaseTimer / startPhaseTime),
+				camera->GetCameraPos().y,
+				camera->GetCameraPos().z }
+			);
+
+			camera->SetCameraRot(
+				{ camera->GetCameraRot().x,
+				MyEase::Lerp(35.0f,27.5f,startPhaseTimer / startPhaseTime),
+				camera->GetCameraRot().z }
+			);
+		}
+		else
+		{
+			startPhase++;
+			startPhaseTimer = 0;
+		}
+	}
+	// カメラワーク四段階(正面でカメラを引く)
+	else if (startPhase == 3)
+	{
+		startPhaseTime = 120.0f;
+
+		if (startPhaseTimer == 0)
+		{
+			//自機とカメラの距離
+			const KMyMath::Vector3 playerDistance = { 0.0f, 1.0f, 10.0f };
+
+			// カメラの場所
+			const KMyMath::Vector3 crashCameraPos = player->GetWorldPos() + playerDistance;
+
+			// 角度
+			camera->SetCameraRot({ 0.0f,180.0f,camera->GetCameraRot().z });
+
+			// カメラ動け
+			camera->SetCameraPos(crashCameraPos);
+		}
+
+		if (startPhaseTimer < startPhaseTime)
+		{
+			startPhaseTimer++;
+
+			camera->SetCameraPos(
+				{ camera->GetCameraPos().x,
+				camera->GetCameraPos().y,
+				MyEase::OutCubicFloat(player->GetWorldPos().z + 10.0f,player->GetWorldPos().z + 30.0f,startPhaseTimer / startPhaseTime) }
+			);
+		}
+		else
+		{
+			startPhase++;
+			startPhaseTimer = 0;
+		}
+	}
+	// 自機が向かってくる
+	else if (startPhase == 4)
+	{
+		startPhaseTime = 60;
+
+		if (startPhaseTimer < startPhaseTime)
+		{
+			startPhaseTimer++;
+
+			player->SetPos({ player->GetPosition().x,
+				player->GetPosition().y,
+				MyEase::OutCubicFloat(50.0f,100.0f,startPhaseTimer / startPhaseTime) });
+		}
+		else
+		{
+			startPhase++;
+			startPhaseTimer = 0;
+		}
+	}
+	else
+	{
+		billManager->SetIsStopCreate(false);
+		camera->EndStart();
+		player->EndStart();
+		// 親子関係接続
+		player->SetParent(&camera->GetTransform());
+		isStageStart = false;
 	}
 }
 
@@ -491,4 +681,19 @@ void GameScence::GoGameOverScene()
 			bulletManager->AllBulletDelete();
 		}
 	}
+}
+
+void GameScence::BossAppearEffect()
+{
+	if (!isBossAppearEffect)
+	{
+		return;
+	}
+
+
+}
+
+const bool GameScence::GetIsStart() const
+{
+	return isStageStart;
 }

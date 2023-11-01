@@ -37,7 +37,7 @@ public:
 	/// 更新
 	/// </summary>
 	/// <param name="camera_"></param>
-	void Update(ViewProjection* viewPro);
+	void Update(ViewProjection* viewPro, bool isStart_);
 
 	// 描画
 	// オブジェクト
@@ -86,10 +86,11 @@ public:
 	static const KMyMath::Vector2& GetPosLimitMax();
 	static const KMyMath::Vector2& GetPosLimitMin();
 	const bool GetIsInvisible() const;
-	const bool GetIsStart() const;
 
 	// セッター
-	void SetPos(const KMyMath::Vector3 pos_);
+	void SetPos(const KMyMath::Vector3& pos_);
+	void SetRot(const KMyMath::Vector3& rot_);
+	void SetScale(const KMyMath::Vector3& scale_);
 
 private:
 	// 移動
@@ -109,9 +110,6 @@ private:
 
 	// ダメージエフェクト
 	void DamageEffect();
-
-	// スタート演出
-	void StartEffect();
 
 	// デバッグ用
 	void Debug();
@@ -218,15 +216,6 @@ private:
 	float expTimer = 0;
 
 	bool isFallEffectEnd = false;
-#pragma endregion
-
-#pragma region ステージスタート演出用
-	bool isStart = false;
-
-	uint32_t startPhase = 0;
-
-	float phaseTimer = 0;
-	float phaseTime = 0;
 #pragma endregion
 
 #pragma region ステージ始めのイージング

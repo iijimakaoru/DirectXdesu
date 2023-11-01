@@ -23,14 +23,14 @@ const WorldTransfom& Camera::GetTransform() const
 	return cameraObject->GetTransform();
 }
 
-const KMyMath::Vector3& Camera::GetPos() const
+const KMyMath::Vector3& Camera::GetCameraPos() const
 {
 	return cameraObject->GetPos();
 }
 
-void Camera::SetPos(const KMyMath::Vector3 pos_)
+const KMyMath::Vector3& Camera::GetCameraRot() const
 {
-	cameraObject->SetPos(pos_);
+	return cameraObject->GetRot();
 }
 
 const KMyMath::Vector3 Camera::GetWorldPos() const
@@ -44,4 +44,14 @@ const KMyMath::Vector3 Camera::GetWorldPos() const
 	result.z = cameraObject->GetMatWorld().m[3][2];
 
 	return result;
+}
+
+void Camera::SetCameraPos(const KMyMath::Vector3& pos_)
+{
+	cameraObject->SetPos(pos_);
+}
+
+void Camera::SetCameraRot(const KMyMath::Vector3& rot_)
+{
+	cameraObject->SetRot(rot_);
 }

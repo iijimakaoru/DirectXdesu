@@ -73,11 +73,21 @@ private:
 	// 自機死亡
 	void PlayerDead();
 
+	// スタート演出のムービー
+	void StageStartMovie();
+
 	// クリアシーンへ
 	void GoClearScene();
 
 	// ゲームオーバーシーンへ
 	void GoGameOverScene();
+
+	// ボス出現演出
+	void BossAppearEffect();
+
+public:
+	// フラグゲッター
+	const bool GetIsStart() const;
 
 private:
 	// インプット
@@ -153,7 +163,19 @@ private:
 	// 死亡カメラ呼び出しフラグ
 	bool isCallDeadCamera = false;
 
+#pragma region ステージスタート演出
+	// フラグ
 	bool isStageStart = false;
+
+	uint32_t startPhase = 0;
+
+	float startPhaseTimer = 0;
+	float startPhaseTime = 0;
+
+#pragma endregion
+
+	// ボス出現演出フラグ
+	bool isBossAppearEffect = false;
 
 	// エネミーマネージャー
 	std::unique_ptr<EnemyManager> enemyManager = nullptr;

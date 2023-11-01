@@ -24,23 +24,17 @@ void RailCamera::Init(Player* player_, const KMyMath::Vector3& startPos_)
 
 	player = player_;
 
-	isStart = true;
-
-	startPhase = 0;
-
-	startPhaseTimer = 0;
-
 	Camera::Update();
 }
 
-void RailCamera::Update()
+void RailCamera::Update(bool isStart_)
 {
 	moveLimitMax = Player::GetPosLimitMax();
 	moveLimitMin = Player::GetPosLimitMin();
 
-	if (isStart)
+	if (isStart_)
 	{
-		Start();
+		
 	}
 	else if (isCrash)
 	{
@@ -110,171 +104,6 @@ void RailCamera::Crash()
 	cameraObject->SetPos(crashCameraPos);
 }
 
-void RailCamera::Start()
-{
-	// カメラワーク一段階(上から見下ろし)
-	if (startPhase == 0)
-	{
-		startPhaseTime = 180.0f;
-
-		if (startPhaseTimer == 0)
-		{
-			//自機とカメラの距離
-			const KMyMath::Vector3 playerDistance = { 0.0f, 20.0f, 40.0f };
-
-			// カメラの場所
-			const KMyMath::Vector3 crashCameraPos = player->GetWorldPos() + playerDistance;
-
-			// 角度
-			cameraObject->SetRot({ 20.0f,180.0f,cameraObject->GetRot().z });
-
-			// カメラ動け
-			cameraObject->SetPos(crashCameraPos);
-		}
-
-		if (startPhaseTimer < startPhaseTime)
-		{
-			startPhaseTimer++;
-
-			cameraObject->SetPos(
-				{ cameraObject->GetPos().x,
-				MyEase::Lerp(player->GetWorldPos().y + 20.0f,player->GetWorldPos().y + 10.0f,startPhaseTimer / startPhaseTime),
-				MyEase::Lerp(player->GetWorldPos().z + 40.0f,player->GetWorldPos().z + 45.0f,startPhaseTimer / startPhaseTime) }
-			);
-
-			cameraObject->SetRot(
-				{ MyEase::Lerp(20.0f,10.0f,startPhaseTimer / startPhaseTime) ,
-				cameraObject->GetRot().y,
-				cameraObject->GetRot().z
-				}
-			);
-		}
-		else
-		{
-			startPhase++;
-			startPhaseTimer = 0;
-		}
-	}
-	// カメラワーク二段階(自機右上から至近距離)
-	else if (startPhase == 1)
-	{
-		startPhaseTime = 180.0f;
-
-		if (startPhaseTimer == 0)
-		{
-			//自機とカメラの距離
-			const KMyMath::Vector3 playerDistance = { 2.5f, 2.5f, 3.5f };
-
-			// カメラの場所
-			const KMyMath::Vector3 crashCameraPos = player->GetWorldPos() + playerDistance;
-
-			// 角度
-			cameraObject->SetRot({ 45.0f,250.0f,cameraObject->GetRot().z });
-
-			// カメラ動け
-			cameraObject->SetPos(crashCameraPos);
-		}
-
-		if (startPhaseTimer < startPhaseTime)
-		{
-			startPhaseTimer++;
-
-			cameraObject->SetPos(
-				{ cameraObject->GetPos().x,
-				cameraObject->GetPos().y,
-				MyEase::Lerp(player->GetWorldPos().z + 3.5f,player->GetWorldPos().z + 1.5f,startPhaseTimer / startPhaseTime) }
-			);
-		}
-		else
-		{
-			startPhase++;
-			startPhaseTimer = 0;
-		}
-	}
-	// カメラワーク三段階(自機左したからブースター(ケツ)注視)
-	else if (startPhase == 2)
-	{
-		startPhaseTime = 180.0f;
-
-		if (startPhaseTimer == 0)
-		{
-			//自機とカメラの距離
-			const KMyMath::Vector3 playerDistance = { -2.0f, -1.8f, -3.5f };
-
-			// カメラの場所
-			const KMyMath::Vector3 crashCameraPos = player->GetWorldPos() + playerDistance;
-
-			// 角度
-			cameraObject->SetRot({ -35.0f,27.5f,cameraObject->GetRot().z });
-
-			// カメラ動け
-			cameraObject->SetPos(crashCameraPos);
-		}
-
-		if (startPhaseTimer < startPhaseTime)
-		{
-			startPhaseTimer++;
-
-			cameraObject->SetPos(
-				{ MyEase::Lerp(player->GetWorldPos().x - 2.0f,player->GetWorldPos().x - 1.5f,startPhaseTimer / startPhaseTime),
-				cameraObject->GetPos().y,
-				cameraObject->GetPos().z }
-			);
-
-			cameraObject->SetRot(
-				{ cameraObject->GetRot().x,
-				MyEase::Lerp(35.0f,27.5f,startPhaseTimer / startPhaseTime),
-				cameraObject->GetRot().z }
-			);
-		}
-		else
-		{
-			startPhase++;
-			startPhaseTimer = 0;
-		}
-	}
-	// カメラワーク四段階(正面でカメラを引く)
-	else if (startPhase == 3)
-	{
-		startPhaseTime = 120.0f;
-
-		if (startPhaseTimer == 0)
-		{
-			//自機とカメラの距離
-			const KMyMath::Vector3 playerDistance = { 0.0f, 1.0f, 10.0f };
-
-			// カメラの場所
-			const KMyMath::Vector3 crashCameraPos = player->GetWorldPos() + playerDistance;
-
-			// 角度
-			cameraObject->SetRot({ 0.0f,180.0f,cameraObject->GetRot().z });
-
-			// カメラ動け
-			cameraObject->SetPos(crashCameraPos);
-		}
-
-		if (startPhaseTimer < startPhaseTime)
-		{
-			startPhaseTimer++;
-
-			cameraObject->SetPos(
-				{ cameraObject->GetPos().x,
-				cameraObject->GetPos().y,
-				MyEase::OutCubicFloat(player->GetWorldPos().z + 10.0f,player->GetWorldPos().z + 30.0f,startPhaseTimer / startPhaseTime) }
-			);
-		}
-		else
-		{
-			startPhase++;
-			startPhaseTimer = 0;
-		}
-	}
-	else
-	{
-		
-	}
-}
-
 void RailCamera::SetRot()
 {
 	// 回転
@@ -300,19 +129,8 @@ void RailCamera::CallCrash()
 	isCrash = true;
 }
 
-void RailCamera::CallStart()
-{
-	// スタート状態にする
-	isStart = true;
-}
-
 void RailCamera::EndStart()
 {
 	cameraObject->SetPos(startPos);
 	cameraObject->SetRot({ 0,0,0 });
-}
-
-void RailCamera::SetIsStart(bool isStart_)
-{
-	isStart = isStart_;
 }

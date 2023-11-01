@@ -145,7 +145,7 @@ public:
 private:
 	KInput() = default;
 	~KInput() = default;
-	KInput(const KInput&) = default;
+	KInput(const KInput&) = delete;
 	const KInput& operator=(const KInput&) = delete;
 
 	void InitInternal();

@@ -118,6 +118,7 @@ private:
 	// インフォキューを有効化
 	void EnbleInfoQueue();
 
+	// 
 	KDirectXCommon() = default;
 	~KDirectXCommon() = default;
 	KDirectXCommon(const KDirectXCommon&) = delete;

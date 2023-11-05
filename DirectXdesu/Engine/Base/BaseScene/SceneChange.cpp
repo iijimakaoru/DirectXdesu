@@ -47,6 +47,7 @@ void SceneChange::Update()
 
 		if (outTimer > outTime)
 		{
+			isChange = false;
 			isOut = false;
 			isEffect = false;
 			outTimer = 0;

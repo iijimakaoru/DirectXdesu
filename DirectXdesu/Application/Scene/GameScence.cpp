@@ -371,7 +371,7 @@ void GameScence::BossBattleStart()
 	}
 
 	// ボスバトル開始座標
-	const float bossBattleStartPos = 500;
+	bossBattleStartPos = 500;
 
 	if (!bossWarning)
 	{
@@ -748,12 +748,13 @@ void GameScence::BossAppearMovie()
 			// プレイヤーとカメラの親子関係解消
 			player->SetParent(nullptr);
 			// 現在位置まで連れてくる
-			player->SetPos(player->GetWorldPos());
+			player->SetPos({0.0f,0.0f, player->GetWorldPos().z });
+			player->SetRot({ 0.0f,0.0f,0.0f });
 			appearPhaseTimer = 0;
 			appearPhase++;
 		}
 	}
-	// 右上に視点を置いてボスが回転しながら降りてくる
+	// ムービーフェーズ1
 	else if (appearPhase == 1)
 	{
 		appearPhaseTime = 180.0f;
@@ -794,6 +795,7 @@ void GameScence::BossAppearMovie()
 			appearPhase++;
 		}
 	}
+	// ムービーフェーズ2
 	else if (appearPhase == 2)
 	{
 		appearPhaseTime = 180.0f;
@@ -834,14 +836,105 @@ void GameScence::BossAppearMovie()
 			appearPhase++;
 		}
 	}
+	// ムービーフェーズ3
+	else if (appearPhase == 3)
+	{
+		appearPhaseTime = 90.0f;
+
+		if (appearPhaseTimer < appearPhaseTime)
+		{
+			appearPhaseTimer++;
+
+			// ボス回転させよう
+			const float startBRotY = 0.0f;
+			const float endBRotY = 360.0f;
+			boss->SetRot({ boss->GetRot().x,MyEase::Lerp(startBRotY,endBRotY,appearPhaseTimer / appearPhaseTime),boss->GetRot().z });
+
+			// ボス降下
+			const float startBPosY = 40.0f;
+			const float endBPosY = 20.0f;
+			boss->SetPos({ boss->GetWorldPos().x,MyEase::Lerp(startBPosY,endBPosY,appearPhaseTimer / appearPhaseTime),boss->GetWorldPos().z });
+
+			//自機とカメラの距離
+			KMyMath::Vector3 bossDistance = { 0.0f, 0.0f, -30.0f };
+
+			// カメラの場所
+			const KMyMath::Vector3 cameraPos = boss->GetWorldPos() + bossDistance;
+
+			camera->SetCameraPos(cameraPos);
+
+			const KMyMath::Vector3 rot = { 0.0f,0.0f,0.0f };
+			camera->SetCameraRot(rot);
+		}
+		else
+		{
+			appearPhaseTimer = 0;
+			appearPhase++;
+		}
+	}
+	// ムービーフェーズ4
+	else if (appearPhase == 4)
+	{
+		appearPhaseTime = 180.0f;
+
+		if (appearPhaseTimer < appearPhaseTime)
+		{
+			appearPhaseTimer++;
+
+			//自機とカメラの距離
+			KMyMath::Vector3 bossDistance = 
+			{ 
+				MyEase::InOutCubicFloat(0.0f, 10.0f,appearPhaseTimer / appearPhaseTime),
+				MyEase::InOutCubicFloat(0.0f,-20.0f,appearPhaseTimer / appearPhaseTime),
+				MyEase::InOutCubicFloat(-30.0f,-120.0f,appearPhaseTimer / appearPhaseTime)
+			};
+
+			// カメラの場所
+			const KMyMath::Vector3 cameraPos = boss->GetWorldPos() + bossDistance;
+			camera->SetCameraPos(cameraPos);
+
+			const KMyMath::Vector3 rot = 
+			{
+				0.0f,
+				MyEase::InOutCubicFloat(0.0f,-15.0f,appearPhaseTimer / appearPhaseTime),
+				MyEase::InOutCubicFloat(0.0f,15.0f,appearPhaseTimer / appearPhaseTime)
+			};
+			camera->SetCameraRot(rot);
+		}
+		else
+		{
+			sceneChange->SceneChangeStart();
+			appearPhaseTimer = 0;
+			appearPhase++;
+		}
+	}
+	else if (appearPhase == 5)
+	{
+		appearPhaseTime = 30;
+
+		if (appearPhaseTimer < appearPhaseTime)
+		{
+			appearPhaseTimer++;
+		}
+		else
+		{
+			// カメラ配置
+			camera->SetCameraPos({ 0.0f,0.0f,bossBattleStartPos });
+			camera->SetCameraRot({ 0.0f,0.0f,0.0f });
+			// プレイヤーとカメラの親子関係解消
+			player->SetParent(&camera->GetTransform());
+			// 現在位置まで連れてくる
+			player->SetPos({ 0.0f,0.0f, 50.0f });
+			appearPhaseTimer = 0;
+			appearPhase++;
+		}
+	}
 	else
 	{
-
-
 		// ムービー終わり
-		//isBossAppearMovie = false;
+		isBossAppearMovie = false;
 		// ボスバトル開始
-		//isBossBattle = true;
+		isBossBattle = true;
 	}
 }
 

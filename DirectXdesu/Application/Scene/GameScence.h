@@ -194,5 +194,8 @@ private:
 
 	// エネミーマネージャー
 	std::unique_ptr<EnemyManager> enemyManager = nullptr;
+
+	// ボスバトル開始座標
+	float bossBattleStartPos = 1000;
 };
 

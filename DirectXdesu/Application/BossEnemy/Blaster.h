@@ -39,7 +39,7 @@ public:
 	/// 更新
 	/// </summary>
 	/// <param name="viewPro"></param>
-	void Update(ViewProjection* viewPro) override;
+	void Update(ViewProjection* viewPro, bool isBossMovie_) override;
 
 	/// <summary>
 	/// 当たり判定

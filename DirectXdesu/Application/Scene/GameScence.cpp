@@ -162,7 +162,7 @@ void GameScence::Update()
 	// ボスの更新
 	if (boss)
 	{
-		boss->Update(camera->GetViewPro());
+		boss->Update(camera->GetViewPro(),isBossAppearMovie);
 	}
 
 	// プレイヤーの更新
@@ -395,6 +395,14 @@ void GameScence::BossBattleStart()
 		// ボス登場警告作成
 		bossWarning = std::make_unique<Warning>();
 		bossWarning->Init();
+	}
+	else
+	{
+		// 演出が終わってないときは抜ける
+		if (!bossWarning->GetIsDelete())
+		{
+			return;
+		}
 
 		if (!boss)
 		{
@@ -415,22 +423,6 @@ void GameScence::BossBattleStart()
 				initBHP,
 				spritePipeline.get()
 			));
-		}
-	}
-	else
-	{
-		/*if (boss)
-		{
-			if (boss->GetIsHPE())
-			{
-				boss->HPGauge(bossWarning->GetTime());
-			}
-		}*/
-
-		// 演出が終わってないときは抜ける
-		if (!bossWarning->GetIsDelete())
-		{
-			return;
 		}
 
 		//
@@ -749,6 +741,7 @@ void GameScence::BossAppearMovie()
 			player->SetParent(nullptr);
 			// 現在位置まで連れてくる
 			player->SetPos({0.0f,0.0f, player->GetWorldPos().z });
+			// 回転角度初期化
 			player->SetRot({ 0.0f,0.0f,0.0f });
 			appearPhaseTimer = 0;
 			appearPhase++;

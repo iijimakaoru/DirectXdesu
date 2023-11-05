@@ -28,12 +28,7 @@ public:
 	/// 更新
 	/// </summary>
 	/// <param name="viewPro"></param>
-	virtual void Update(ViewProjection* viewPro);
-
-	/// <summary>
-	/// 
-	/// </summary>
-	void HPGauge(const uint32_t& easeTime);
+	virtual void Update(ViewProjection* viewPro, bool isBossMovie_);
 
 	/// <summary>
 	/// 描画
@@ -88,6 +83,9 @@ protected:
 
 	// 死んでるか
 	bool isDead = false;
+
+	// ボスムービーフラグ
+	bool isBossMovie = false;
 
 #pragma region HP
 	// 最大体力

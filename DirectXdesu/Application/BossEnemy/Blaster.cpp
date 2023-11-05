@@ -31,9 +31,9 @@ void Blaster::Init(KModel* model_, KGPlin* pipeline_, const KMyMath::Vector3& in
 	object3d->SetScale({ 10.0f,10.0f,10.0f });
 }
 
-void Blaster::Update(ViewProjection* viewPro)
+void Blaster::Update(ViewProjection* viewPro_, bool isBossMovie_)
 {
-	BossEnemy::Update(viewPro);
+	BossEnemy::Update(viewPro_, isBossMovie_);
 }
 
 bool Blaster::CollisionCheck(const KMyMath::Vector3& posA_, const KMyMath::Vector3& posB_)

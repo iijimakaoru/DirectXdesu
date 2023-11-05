@@ -24,7 +24,7 @@ void BossEnemy::Init(KModel* model_, KGPlin* pipeline_, const KMyMath::Vector3& 
 
 	// 体力セット
 	maxHP = HP_;
-	HP = 1;
+	HP = maxHP;
 
 	HPUI = std::make_unique<Sprite>();
 	HPUI->Init();
@@ -47,8 +47,10 @@ void BossEnemy::Init(KModel* model_, KGPlin* pipeline_, const KMyMath::Vector3& 
 	isDead = false;
 }
 
-void BossEnemy::Update(ViewProjection* viewPro_)
+void BossEnemy::Update(ViewProjection* viewPro_, bool isBossMovie_)
 {
+	isBossMovie = isBossMovie_;
+
 	if (!isDead)
 	{
 		if (HP <= min(HP, 0))
@@ -67,17 +69,6 @@ void BossEnemy::Update(ViewProjection* viewPro_)
 	object3d->Update(viewPro_);
 }
 
-void BossEnemy::HPGauge(const uint32_t& easeTime_)
-{
-	easeTimer ++;
-	HP = MyEase::OutQuadFloat(1, maxHP, (float)easeTimer / easeTime_);
-
-	if (HP >= max(HP, maxHP))
-	{
-		isHPE = false;
-	}
-}
-
 void BossEnemy::Draw()
 {
 	if (!isFallEffectEnd)
@@ -88,11 +79,14 @@ void BossEnemy::Draw()
 
 void BossEnemy::UIDraw()
 {
-	HPBarUI->Draw(hpbarTex, { 900,10 }, { 1,1 }, 0, { 1,1,1,1 }, false, false, { 0,0 });
+	if (!isBossMovie)
+	{
+		HPBarUI->Draw(hpbarTex, { 900,10 }, { 1,1 }, 0, { 1,1,1,1 }, false, false, { 0,0 });
 
-	HPrectUI->Draw(hpTex, { 901,11 }, { oldHP * (318 / maxHP),30 }, 0, { 1,0,0,0.3f }, false, false, { 0,0 });
+		HPrectUI->Draw(hpTex, { 901,11 }, { oldHP * (318 / maxHP),30 }, 0, { 1,0,0,0.3f }, false, false, { 0,0 });
 
-	HPUI->Draw(hpTex, { 901,11 }, { HP * (318 / maxHP),30 }, 0, { 1,0,0,1 }, false, false, { 0,0 });
+		HPUI->Draw(hpTex, { 901,11 }, { HP * (318 / maxHP),30 }, 0, { 1,0,0,1 }, false, false, { 0,0 });
+	}
 }
 
 const KMyMath::Vector3 BossEnemy::GetWorldPos() const

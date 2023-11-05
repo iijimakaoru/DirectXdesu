@@ -83,7 +83,7 @@ void GameScence::Init()
 	sceneManager = SceneManager::GetInstance();
 
 	// カメラ初期化
-	camera->Init(player.get(), { 0,0,-200 });
+	camera->Init(player.get(), { 0,0,450 });
 
 	// エネミーマネージャー生成
 	enemyManager.reset(EnemyManager::Create("Resources/csv/enemyPop.csv", // ステージのcsvを読み込む
@@ -129,6 +129,12 @@ void GameScence::Update()
 
 		StageStartMovie();
 	}
+	else if (isBossAppearMovie)
+	{
+		billManager->SetIsStopCreate(true);
+
+		BossAppearMovie();
+	}
 	else
 	{
 		// ボスバトル開始判定
@@ -149,18 +155,18 @@ void GameScence::Update()
 		// エネミーマネージャーの更新
 		enemyManager->Update(camera->GetViewPro(), camera->GetCameraPos());
 
-		// ボスの更新
-		if (boss)
-		{
-			boss->Update(camera->GetViewPro());
-		}
-
 		// 天箱を自機に追従
 		skyBox->SetPosZ(player->GetWorldPos().z);
 	}
 
+	// ボスの更新
+	if (boss)
+	{
+		boss->Update(camera->GetViewPro());
+	}
+
 	// プレイヤーの更新
-	player->Update(camera->GetViewPro(), isStageStart);
+	player->Update(camera->GetViewPro(), isStageStart,isBossAppearMovie);
 
 	// 弾の更新
 	bulletManager->Update(camera->GetViewPro());
@@ -179,7 +185,7 @@ void GameScence::Update()
 	billManager->Update(camera->GetViewPro(), camera->GetCameraPos().z);
 
 	// カメラの更新
-	camera->Update(isStageStart);
+	camera->Update(isStageStart, isBossAppearMovie);
 
 	// ボス登場警告
 	if (bossWarning)
@@ -355,8 +361,7 @@ void GameScence::CheckAllCollisions()
 
 void GameScence::BossBattleStart()
 {
-	// ボスバトルが始まってればスキップ
-	if (isBossBattle)
+	if (isWarnning)
 	{
 		return;
 	}
@@ -367,7 +372,12 @@ void GameScence::BossBattleStart()
 	if (!bossWarning)
 	{
 		bool isBossBattleStart = camera->GetCameraPos().z >= bossBattleStartPos;
-		if (!isBossBattleStart) { return; }
+
+		// スタート位置にいなかったらスキップ
+		if (!isBossBattleStart)
+		{
+			return;
+		}
 
 		// カメラ前進止める
 		camera->SetIsAdvance(false);
@@ -389,7 +399,7 @@ void GameScence::BossBattleStart()
 			const KMyMath::Vector3 bossBasePos =
 			{
 				0.0f,
-				23.0f,
+				120.0f,
 				bossBattleStartPos + bossDistance
 			};
 
@@ -404,34 +414,36 @@ void GameScence::BossBattleStart()
 	}
 	else
 	{
-		if (boss)
+		/*if (boss)
 		{
 			if (boss->GetIsHPE())
 			{
 				boss->HPGauge(bossWarning->GetTime());
 			}
-		}
+		}*/
 
 		// 演出が終わってないときは抜ける
-		if (!bossWarning->GetIsDelete()) { return; }
-
-		if (bossWarning)
+		if (!bossWarning->GetIsDelete())
 		{
-			// ボス出現演出前の暗転開始
-			sceneChange->Start();
-
-			// ボス登場警告解放
-			bossWarning.reset();
+			return;
 		}
 
-		if (sceneChange->GetIsChange())
-		{
-			isBossAppearEffect = true;
-			bulletManager->AllBulletDelete();
-		}
+		//
+		sceneChange->SceneChangeStart();
 
-		// ボスバトル開始
-		isBossBattle = true;
+		// ボス登場警告解放
+		bossWarning.reset();
+
+		// ボス出現ムービーへ
+		isBossAppearMovie = true;
+
+		isWarnning = true;
+	}
+
+	// ボスバトルが始まってればスキップ
+	if (isBossBattle || isBossAppearMovie)
+	{
+		return;
 	}
 }
 
@@ -647,7 +659,7 @@ void GameScence::GoClearScene()
 		goClearSceneTimer++;
 		if (goClearSceneTimer == goClearSceneTime)
 		{
-			sceneChange->Start();
+			sceneChange->SceneChangeStart();
 			goClearSceneTimer = goClearSceneTime + 1.0f;
 		}
 
@@ -671,7 +683,7 @@ void GameScence::GoGameOverScene()
 		goOverSceneTimer++;
 		if (goOverSceneTimer == goOverSceneTime)
 		{
-			sceneChange->Start();
+			sceneChange->SceneChangeStart();
 			goOverSceneTimer = goOverSceneTime + 1.0f;
 		}
 
@@ -683,14 +695,107 @@ void GameScence::GoGameOverScene()
 	}
 }
 
-void GameScence::BossAppearEffect()
+void GameScence::BossAppearMovie()
 {
-	if (!isBossAppearEffect)
+	// 暗転待ち時間
+	if (appearPhase == 0)
 	{
-		return;
+		appearPhaseTime = 30;
+
+		if (appearPhaseTimer < appearPhaseTime)
+		{
+			appearPhaseTimer++;
+		}
+		else
+		{
+			// すべての弾削除
+			bulletManager->AllBulletDelete();
+			// プレイヤーとカメラの親子関係解消
+			player->SetParent(nullptr);
+			// 現在位置まで連れてくる
+			player->SetPos(player->GetWorldPos());
+			appearPhaseTimer = 0;
+			appearPhase++;
+		}
 	}
+	// 右上に視点を置いてボスが回転しながら降りてくる
+	else if (appearPhase == 1)
+	{
+		appearPhaseTime = 180.0f;
+
+		if (appearPhaseTimer < appearPhaseTime)
+		{
+			appearPhaseTimer++;
+
+			// ボス回転させよう
+			boss->SetRot({ boss->GetRot().x,MyEase::Lerp(0,360,appearPhaseTimer / appearPhaseTime),boss->GetRot().z });
+
+			// ボス降下
+			boss->SetPos({ boss->GetWorldPos().x,MyEase::Lerp(120,80,appearPhaseTimer / appearPhaseTime),boss->GetWorldPos().z });
+
+			//自機とカメラの距離
+			const KMyMath::Vector3 bossDistance = { 0.0f, 12.5f, -15.0f };
+			//const KMyMath::Vector3 bossDistance = { 0.0f, 0.0f, -15.0f };
+
+			// カメラの場所
+			const KMyMath::Vector3 cameraPos = boss->GetWorldPos() + bossDistance;
+
+			// 角度
+			camera->SetCameraRot({ 15.0f,-0.0f,camera->GetCameraRot().z });
+			//camera->SetCameraRot({ 0.0f,-0.0f,camera->GetCameraRot().z });
+
+			// カメラ動け
+			camera->SetCameraPos(cameraPos);
+		}
+		else
+		{
+			appearPhaseTimer = 0;
+			appearPhase++;
+		}
+	}
+	else if (appearPhase == 2)
+	{
+		appearPhaseTime = 180.0f;
+
+		if (appearPhaseTimer < appearPhaseTime)
+		{
+			appearPhaseTimer++;
+
+			// ボス回転させよう
+			boss->SetRot({ boss->GetRot().x,MyEase::Lerp(0,360,appearPhaseTimer / appearPhaseTime),boss->GetRot().z });
+
+			// ボス降下
+			boss->SetPos({ boss->GetWorldPos().x,MyEase::Lerp(80,40,appearPhaseTimer / appearPhaseTime),boss->GetWorldPos().z });
+
+			//自機とカメラの距離
+			KMyMath::Vector3 bossDistance = { MyEase::Lerp(-12.0f,-11.5f,startPhaseTimer / startPhaseTime), 12.5f, -15.0f};
+
+			// カメラの場所
+			const KMyMath::Vector3 cameraPos = boss->GetWorldPos() + bossDistance;
+
+			camera->SetCameraPos(cameraPos);
+
+			camera->SetCameraRot(
+				{ camera->GetCameraRot().x,
+				MyEase::Lerp(35.0f,27.5f,startPhaseTimer / startPhaseTime),
+				camera->GetCameraRot().z }
+			);
+		}
+		else
+		{
+			appearPhaseTimer = 0;
+			appearPhase++;
+		}
+	}
+	else
+	{
 
 
+		// ムービー終わり
+		//isBossAppearMovie = false;
+		// ボスバトル開始
+		//isBossBattle = true;
+	}
 }
 
 const bool GameScence::GetIsStart() const

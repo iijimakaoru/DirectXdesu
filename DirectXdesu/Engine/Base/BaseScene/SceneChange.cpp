@@ -59,12 +59,12 @@ void SceneChange::Draw()
 	black->Draw(blackTex, { 1280 / 2, 720 / 2 }, { 1280 ,720 }, 0.0f, { 0,0,0,alpha });
 }
 
-void SceneChange::Start()
+void SceneChange::SceneChangeStart()
 {
 	isStart = true;
 }
 
-void SceneChange::End()
+void SceneChange::SceneChangeEnd()
 {
 	isChange = false;
 }

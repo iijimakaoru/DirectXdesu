@@ -430,7 +430,7 @@ void TitleScene::GoNextScene()
 	}
 	else if (goGamePhase == 3)
 	{
-		sceneChange->Start();
+		sceneChange->SceneChangeStart();
 		goGamePhase++;
 	}
 }

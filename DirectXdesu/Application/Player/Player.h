@@ -37,7 +37,7 @@ public:
 	/// 更新
 	/// </summary>
 	/// <param name="camera_"></param>
-	void Update(ViewProjection* viewPro, bool isStart_);
+	void Update(ViewProjection* viewPro, bool isStart_, bool isBossMovie_);
 
 	// 描画
 	// オブジェクト
@@ -223,4 +223,5 @@ private:
 	float startEaseTime = 0;
 #pragma endregion
 
+	bool isBossMovie = false;
 };

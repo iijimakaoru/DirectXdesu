@@ -205,3 +205,18 @@ const bool BossEnemy::GetIsFallEffectEnd() const
 {
 	return isFallEffectEnd;
 }
+
+const KMyMath::Vector3& BossEnemy::GetRot() const
+{
+	return object3d->GetRot();
+}
+
+void BossEnemy::SetPos(const KMyMath::Vector3& pos_)
+{
+	object3d->SetPos(pos_);
+}
+
+void BossEnemy::SetRot(const KMyMath::Vector3& rot_)
+{
+	object3d->SetRot(rot_);
+}

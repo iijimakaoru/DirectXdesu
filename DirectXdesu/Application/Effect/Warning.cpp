@@ -12,7 +12,7 @@ void Warning::Init()
 	warning->Init();
 	warning->SetPipeline(pipeline.get());
 
-	warningTime = 300;
+	warningTime = 150;
 }
 
 void Warning::Update()

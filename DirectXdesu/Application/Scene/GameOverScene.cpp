@@ -55,7 +55,7 @@ void GameOverScene::Update()
 	{
 		if (input->IsTrigger(DIK_SPACE) || input->GetPadButtonDown(XINPUT_GAMEPAD_A))
 		{
-			sceneChange->Start();
+			sceneChange->SceneChangeStart();
 		}
 	}
 

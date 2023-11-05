@@ -25,7 +25,7 @@ public:
 	void Init(Player* player_, const KMyMath::Vector3& startPos);
 
 	// 更新
-	void Update(bool isStart_);
+	void Update(bool isStart_, bool isBossMovie_);
 
 	/// <summary>
 	/// カメラ動かす

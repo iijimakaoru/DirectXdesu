@@ -83,7 +83,7 @@ private:
 	void GoGameOverScene();
 
 	// ボス出現演出
-	void BossAppearEffect();
+	void BossAppearMovie();
 
 public:
 	// フラグゲッター
@@ -163,19 +163,34 @@ private:
 	// 死亡カメラ呼び出しフラグ
 	bool isCallDeadCamera = false;
 
-#pragma region ステージスタート演出
+#pragma region ステージスタートムービー
 	// フラグ
 	bool isStageStart = false;
 
+	// フェーズ
 	uint32_t startPhase = 0;
 
 	float startPhaseTimer = 0;
 	float startPhaseTime = 0;
-
 #pragma endregion
 
-	// ボス出現演出フラグ
-	bool isBossAppearEffect = false;
+#pragma region ボス出現ムービー
+	// ボス出現ムービーフラグ
+	bool isBossAppearMovie = false;
+
+	// フェーズ
+	uint32_t appearPhase = 0;
+
+	float appearPhaseTimer = 0; 
+	float appearPhaseTime = 0;
+
+	// 暗転待ち時間
+	float bWaitTimer = 0;
+	float bWaitTime = 30;
+#pragma endregion
+
+	// 警告演出フラグ
+	bool isWarnning = false;
 
 	// エネミーマネージャー
 	std::unique_ptr<EnemyManager> enemyManager = nullptr;

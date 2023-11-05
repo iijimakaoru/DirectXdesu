@@ -4,6 +4,9 @@
 
 void SceneManager::Update()
 {
+	// シーンチェンジの更新
+	SceneChange::GetInstance()->Update();
+
 	// シーン切り替え
 	if (nextScene)
 	{
@@ -15,7 +18,7 @@ void SceneManager::Update()
 
 			delete scene;
 
-			SceneChange::GetInstance()->End();
+			SceneChange::GetInstance()->SceneChangeEnd();
 		}
 
 		// シーン切り替え
@@ -34,8 +37,6 @@ void SceneManager::Update()
 
 	// 実行中のシーン更新
 	scene->Update();
-
-	SceneChange::GetInstance()->Update();
 }
 
 void SceneManager::Draw()

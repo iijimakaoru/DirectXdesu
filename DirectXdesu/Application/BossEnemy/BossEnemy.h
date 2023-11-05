@@ -68,6 +68,13 @@ public:
 	// 墜落エフェクト終わりゲッター
 	const bool GetIsFallEffectEnd() const;
 
+	// ゲッター
+	const KMyMath::Vector3& GetRot() const;
+
+	// セッター
+	void SetPos(const KMyMath::Vector3& pos_);
+	void SetRot(const KMyMath::Vector3& rot_);
+
 protected:
 	// トランスフォーム
 	std::unique_ptr<KObject3d> object3d = nullptr;

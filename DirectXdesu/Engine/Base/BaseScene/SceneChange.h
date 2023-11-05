@@ -20,10 +20,10 @@ public:
 	void Draw();
 
 	// 演出始め
-	void Start();
+	void SceneChangeStart();
 
 	// 演出終わり
-	void End();
+	void SceneChangeEnd();
 
 public:
 	// インスタンス

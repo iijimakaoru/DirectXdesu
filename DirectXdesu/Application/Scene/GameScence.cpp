@@ -291,7 +291,9 @@ void GameScence::CheckAllCollisions()
 				posB = bullet->GetWorldPos();
 
 				// 球同士の交差判定
-				if (MyCollisions::CheckSphereToSphere(posA, posB, 6, 2))
+				const float enemyRange = 6.0f;
+				const float bulletRange = 2.0f;
+				if (MyCollisions::CheckSphereToSphere(posA, posB, enemyRange, bulletRange))
 				{
 					// 弾消去
 					bullet->OnCollision();
@@ -319,7 +321,9 @@ void GameScence::CheckAllCollisions()
 			posB = player->GetWorldPos();
 
 			// 球同士の交差判定
-			if (MyCollisions::CheckSphereToSphere(posA, posB, 2, 3))
+			const float bulletRange = 2.0f;
+			const float playerRange = 6.0f;
+			if (MyCollisions::CheckSphereToSphere(posA, posB, bulletRange, playerRange))
 			{
 				// 弾消去
 				bullet->OnCollision();
@@ -404,10 +408,11 @@ void GameScence::BossBattleStart()
 			};
 
 			// 生成
+			const float initBHP = 10.0f;
 			boss.reset(Blaster::Create(mobEnemysModel.get(),
 				objPipeline.get(),
 				bossBasePos,
-				10,
+				initBHP,
 				spritePipeline.get()
 			));
 		}
@@ -474,7 +479,9 @@ void GameScence::StageStartMovie()
 			const KMyMath::Vector3 crashCameraPos = player->GetWorldPos() + playerDistance;
 
 			// 角度
-			camera->SetCameraRot({ 20.0f,180.0f,camera->GetCameraRot().z });
+			const float rotX = 20.0f;
+			const float rotY = 180.0f;
+			camera->SetCameraRot({ rotX,rotY,camera->GetCameraRot().z });
 
 			// カメラ動け
 			camera->SetCameraPos(crashCameraPos);
@@ -484,14 +491,23 @@ void GameScence::StageStartMovie()
 		{
 			startPhaseTimer++;
 
+			const float startPosY = 20.0f;
+			const float endPosY = 10.0f;
+
+			const float startPosZ = 40.0f;
+			const float endPosZ = 45.0f;
+
 			camera->SetCameraPos(
 				{ camera->GetCameraPos().x,
-				MyEase::Lerp(player->GetWorldPos().y + 20.0f,player->GetWorldPos().y + 10.0f,startPhaseTimer / startPhaseTime),
-				MyEase::Lerp(player->GetWorldPos().z + 40.0f,player->GetWorldPos().z + 45.0f,startPhaseTimer / startPhaseTime) }
+				MyEase::Lerp(player->GetWorldPos().y + startPosY,player->GetWorldPos().y + endPosY,startPhaseTimer / startPhaseTime),
+				MyEase::Lerp(player->GetWorldPos().z + startPosZ,player->GetWorldPos().z + endPosZ,startPhaseTimer / startPhaseTime) }
 			);
 
+			const float startRotX = 20.0f;
+			const float endRotX = 10.0f;
+
 			camera->SetCameraRot(
-				{ MyEase::Lerp(20.0f,10.0f,startPhaseTimer / startPhaseTime) ,
+				{ MyEase::Lerp(startRotX,endRotX,startPhaseTimer / startPhaseTime) ,
 				camera->GetCameraRot().y,
 				camera->GetCameraRot().z
 				}
@@ -517,7 +533,9 @@ void GameScence::StageStartMovie()
 			const KMyMath::Vector3 crashCameraPos = player->GetWorldPos() + playerDistance;
 
 			// 角度
-			camera->SetCameraRot({ 45.0f,250.0f,camera->GetCameraRot().z });
+			const float rotX = 45.0f;
+			const float rotY = 250.0f;
+			camera->SetCameraRot({ rotX,rotY,camera->GetCameraRot().z });
 
 			// カメラ動け
 			camera->SetCameraPos(crashCameraPos);
@@ -527,10 +545,13 @@ void GameScence::StageStartMovie()
 		{
 			startPhaseTimer++;
 
+			const float startPosZ = 3.5f;
+			const float endPosZ = 1.5f;
+
 			camera->SetCameraPos(
 				{ camera->GetCameraPos().x,
 				camera->GetCameraPos().y,
-				MyEase::Lerp(player->GetWorldPos().z + 3.5f,player->GetWorldPos().z + 1.5f,startPhaseTimer / startPhaseTime) }
+				MyEase::Lerp(player->GetWorldPos().z + startPosZ,player->GetWorldPos().z + endPosZ,startPhaseTimer / startPhaseTime) }
 			);
 		}
 		else
@@ -553,7 +574,9 @@ void GameScence::StageStartMovie()
 			const KMyMath::Vector3 crashCameraPos = player->GetWorldPos() + playerDistance;
 
 			// 角度
-			camera->SetCameraRot({ -35.0f,27.5f,camera->GetCameraRot().z });
+			const float rotX = -35.0f;
+			const float rotY = 27.5f;
+			camera->SetCameraRot({ rotX,rotY,camera->GetCameraRot().z });
 
 			// カメラ動け
 			camera->SetCameraPos(crashCameraPos);
@@ -563,15 +586,19 @@ void GameScence::StageStartMovie()
 		{
 			startPhaseTimer++;
 
+			const float startPosX = 2.0f;
+			const float endPosX = 1.5f;
 			camera->SetCameraPos(
-				{ MyEase::Lerp(player->GetWorldPos().x - 2.0f,player->GetWorldPos().x - 1.5f,startPhaseTimer / startPhaseTime),
+				{ MyEase::Lerp(player->GetWorldPos().x - startPosX,player->GetWorldPos().x - endPosX,startPhaseTimer / startPhaseTime),
 				camera->GetCameraPos().y,
 				camera->GetCameraPos().z }
 			);
 
+			const float startRotY = 35.0f;
+			const float endRotY = 27.5f;
 			camera->SetCameraRot(
 				{ camera->GetCameraRot().x,
-				MyEase::Lerp(35.0f,27.5f,startPhaseTimer / startPhaseTime),
+				MyEase::Lerp(startRotY,endRotY,startPhaseTimer / startPhaseTime),
 				camera->GetCameraRot().z }
 			);
 		}
@@ -595,7 +622,9 @@ void GameScence::StageStartMovie()
 			const KMyMath::Vector3 crashCameraPos = player->GetWorldPos() + playerDistance;
 
 			// 角度
-			camera->SetCameraRot({ 0.0f,180.0f,camera->GetCameraRot().z });
+			const float rotX = 0.0f;
+			const float rotY = 180.0f;
+			camera->SetCameraRot({ rotX,rotY,camera->GetCameraRot().z });
 
 			// カメラ動け
 			camera->SetCameraPos(crashCameraPos);
@@ -605,10 +634,13 @@ void GameScence::StageStartMovie()
 		{
 			startPhaseTimer++;
 
+			const float startPosZ = 10.0f;
+			const float endPosZ = 30.0f;
+
 			camera->SetCameraPos(
 				{ camera->GetCameraPos().x,
 				camera->GetCameraPos().y,
-				MyEase::OutCubicFloat(player->GetWorldPos().z + 10.0f,player->GetWorldPos().z + 30.0f,startPhaseTimer / startPhaseTime) }
+				MyEase::OutCubicFloat(player->GetWorldPos().z + startPosZ,player->GetWorldPos().z + endPosZ,startPhaseTimer / startPhaseTime) }
 			);
 		}
 		else
@@ -626,9 +658,12 @@ void GameScence::StageStartMovie()
 		{
 			startPhaseTimer++;
 
+			const float startPosZ = 50.0f;
+			const float endPosZ = 100.0f;
+
 			player->SetPos({ player->GetPosition().x,
 				player->GetPosition().y,
-				MyEase::OutCubicFloat(50.0f,100.0f,startPhaseTimer / startPhaseTime) });
+				MyEase::OutCubicFloat(startPosZ,endPosZ,startPhaseTimer / startPhaseTime) });
 		}
 		else
 		{
@@ -728,10 +763,14 @@ void GameScence::BossAppearMovie()
 			appearPhaseTimer++;
 
 			// ボス回転させよう
-			boss->SetRot({ boss->GetRot().x,MyEase::Lerp(0,360,appearPhaseTimer / appearPhaseTime),boss->GetRot().z });
+			const float startRotY = 0.0f;
+			const float endRotY = 360.0f;
+			boss->SetRot({ boss->GetRot().x,MyEase::Lerp(startRotY,endRotY,appearPhaseTimer / appearPhaseTime),boss->GetRot().z });
 
 			// ボス降下
-			boss->SetPos({ boss->GetWorldPos().x,MyEase::Lerp(120,80,appearPhaseTimer / appearPhaseTime),boss->GetWorldPos().z });
+			const float startPosY = 120.0f;
+			const float endPosY = 80.0f;
+			boss->SetPos({ boss->GetWorldPos().x,MyEase::Lerp(startPosY,endPosY,appearPhaseTimer / appearPhaseTime),boss->GetWorldPos().z });
 
 			//自機とカメラの距離
 			const KMyMath::Vector3 bossDistance = { 0.0f, 12.5f, -15.0f };
@@ -741,7 +780,9 @@ void GameScence::BossAppearMovie()
 			const KMyMath::Vector3 cameraPos = boss->GetWorldPos() + bossDistance;
 
 			// 角度
-			camera->SetCameraRot({ 15.0f,-0.0f,camera->GetCameraRot().z });
+			const float rotX = 15.0f;
+			const float rotY = 0.0f;
+			camera->SetCameraRot({ rotX,rotY,camera->GetCameraRot().z });
 			//camera->SetCameraRot({ 0.0f,-0.0f,camera->GetCameraRot().z });
 
 			// カメラ動け
@@ -762,10 +803,14 @@ void GameScence::BossAppearMovie()
 			appearPhaseTimer++;
 
 			// ボス回転させよう
-			boss->SetRot({ boss->GetRot().x,MyEase::Lerp(0,360,appearPhaseTimer / appearPhaseTime),boss->GetRot().z });
+			const float startBRotY = 0.0f;
+			const float endBRotY = 360.0f;
+			boss->SetRot({ boss->GetRot().x,MyEase::Lerp(startBRotY,endBRotY,appearPhaseTimer / appearPhaseTime),boss->GetRot().z });
 
 			// ボス降下
-			boss->SetPos({ boss->GetWorldPos().x,MyEase::Lerp(80,40,appearPhaseTimer / appearPhaseTime),boss->GetWorldPos().z });
+			const float startBPosY = 80.0f;
+			const float endBPosY = 40.0f;
+			boss->SetPos({ boss->GetWorldPos().x,MyEase::Lerp(startBPosY,endBPosY,appearPhaseTimer / appearPhaseTime),boss->GetWorldPos().z });
 
 			//自機とカメラの距離
 			KMyMath::Vector3 bossDistance = { MyEase::Lerp(-12.0f,-11.5f,startPhaseTimer / startPhaseTime), 12.5f, -15.0f};
@@ -775,9 +820,11 @@ void GameScence::BossAppearMovie()
 
 			camera->SetCameraPos(cameraPos);
 
+			const float startCRotY = 35.0f;
+			const float endCRotY = 27.5f;
 			camera->SetCameraRot(
 				{ camera->GetCameraRot().x,
-				MyEase::Lerp(35.0f,27.5f,startPhaseTimer / startPhaseTime),
+				MyEase::Lerp(startCRotY,endCRotY,startPhaseTimer / startPhaseTime),
 				camera->GetCameraRot().z }
 			);
 		}

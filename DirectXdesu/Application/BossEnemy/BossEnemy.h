@@ -118,7 +118,7 @@ protected:
 
 #pragma region 撃破演出用
 	// 演出時間
-	float fallEffectTime = 90;
+	float fallEffectTime = 180;
 	float fallEffectTimer = 0;
 
 	// 爆発クールタイム

@@ -85,6 +85,9 @@ private:
 	// ボス出現演出
 	void BossAppearMovie();
 
+	// ボス撃破
+	void BossBreakMovie();
+
 public:
 	// フラグゲッター
 	const bool GetIsStart() const;

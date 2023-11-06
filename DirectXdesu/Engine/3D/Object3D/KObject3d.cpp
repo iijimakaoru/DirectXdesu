@@ -161,8 +161,7 @@ void KObject3d::SetParent(const WorldTransfom* parent_)
 
 void KObject3d::Finalize()
 {
-	constBuffB0->Release();
-	constBuffB1->Release();
+	
 }
 
 const KMyMath::Vector3& KObject3d::GetPos() const

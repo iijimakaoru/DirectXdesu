@@ -129,10 +129,10 @@ void BossEnemy::DeadEffect()
 		object3d->SetRot({ 0,0,object3d->GetRot().z });
 
 		// 回転
-		object3d->AddSetRot({ 0.0f,0.0f,10.0f });
+		object3d->SetRot(MyEase::Lerp3D({ 0.0f,0.0f,0.0f }, { 20.0f,0.0f,20.0f }, fallEffectTimer / fallEffectTime));
 
 		// 落下
-		object3d->AddSetPos({ 0.0f,0.0f,-0.1f });
+		object3d->AddSetPos({ 0.0f,-0.15f,0.0f });
 
 		// 時間経過
 		fallEffectTimer++;
@@ -142,8 +142,8 @@ void BossEnemy::DeadEffect()
 
 		if (expTimer >= max(expTimer, expTime))
 		{
-			ObjParticleManager::GetInstance()->SetSmallExp({ GetWorldPos().x + MyMathUtility::GetRand(-3.0f,3.0f),
-			GetWorldPos().y + MyMathUtility::GetRand(-3.0f,3.0f),GetWorldPos().z + MyMathUtility::GetRand(-3.0f,3.0f) });
+			ObjParticleManager::GetInstance()->SetSmallExp({ GetWorldPos().x + MyMathUtility::GetRand(-10.0f,10.0f),
+			GetWorldPos().y + MyMathUtility::GetRand(-10.0f,10.0f),GetWorldPos().z + MyMathUtility::GetRand(-10.0f,10.0f) });
 			expTimer = 0;
 		}
 

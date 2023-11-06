@@ -931,6 +931,11 @@ void GameScence::BossAppearMovie()
 	}
 }
 
+void GameScence::BossBreakMovie()
+{
+
+}
+
 const bool GameScence::GetIsStart() const
 {
 	return isStageStart;

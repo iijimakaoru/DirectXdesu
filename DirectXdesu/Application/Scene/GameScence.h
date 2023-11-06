@@ -88,6 +88,9 @@ private:
 	// ボス撃破
 	void BossBreakMovie();
 
+	// クリア演出
+	void ClearMovie();
+
 public:
 	// フラグゲッター
 	const bool GetIsStart() const;
@@ -153,10 +156,12 @@ private:
 
 	// 別のシーンへの移行タイマー
 	// ゲームクリア
+	bool isGoClearScene = false;
 	float goClearSceneTime = 120;
 	float goClearSceneTimer = 0;
 
 	// ゲームオーバー
+	bool isGoOverScene = false;
 	float goOverSceneTime = 120;
 	float goOverSceneTimer = 0;
 
@@ -200,5 +205,21 @@ private:
 
 	// ボスバトル開始座標
 	float bossBattleStartPos = 1000;
+
+#pragma region クリア演出
+	// クリアムービーフラグ
+	bool isClearMovie = false;
+
+	uint32_t clearPhase = 0;
+
+	float clearPhaseTime = 0;
+	float clearPhaseTimer = 0;
+
+	KMyMath::Vector3 start;
+	KMyMath::Vector3 p1;
+	KMyMath::Vector3 p2;
+	KMyMath::Vector3 end;
+#pragma endregion
+
 };
 

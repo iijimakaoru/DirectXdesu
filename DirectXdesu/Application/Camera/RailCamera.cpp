@@ -27,7 +27,7 @@ void RailCamera::Init(Player* player_, const KMyMath::Vector3& startPos_)
 	Camera::Update();
 }
 
-void RailCamera::Update(bool isStart_, bool isBossMovie_)
+void RailCamera::Update(bool isStart_, bool isBossMovie_,bool isClearMovie_)
 {
 	moveLimitMax = Player::GetPosLimitMax();
 	moveLimitMin = Player::GetPosLimitMin();
@@ -37,6 +37,10 @@ void RailCamera::Update(bool isStart_, bool isBossMovie_)
 		
 	}
 	else if (isBossMovie_)
+	{
+
+	}
+	else if (isClearMovie_)
 	{
 
 	}

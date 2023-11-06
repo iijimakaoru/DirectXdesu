@@ -93,9 +93,10 @@ void Player::Init(KModel* model_, KGPlin* objPipeline_, const float playerHP, KG
 	isStartEase = true;
 }
 
-void Player::Update(ViewProjection* viewPro_, bool isStart_, bool isBossMovie_)
+void Player::Update(ViewProjection* viewPro_, bool isStart_, bool isBossMovie_, bool isClearMovie_)
 {
 	isBossMovie = isBossMovie_;
+	isClearMovie = isClearMovie_;
 
 	// スタート演出中の処理
 	if (isStart_)
@@ -103,6 +104,10 @@ void Player::Update(ViewProjection* viewPro_, bool isStart_, bool isBossMovie_)
 		
 	}
 	else if (isBossMovie)
+	{
+
+	}
+	else if (isClearMovie)
 	{
 
 	}
@@ -457,7 +462,7 @@ void Player::ObjDraw()
 void Player::SpriteDraw()
 {
 	// レティクル描画
-	if (isDead || isBossMovie || isStartEase)
+	if (isDead || isBossMovie || isStartEase || isClearMovie)
 	{
 		return;
 	}
@@ -467,7 +472,7 @@ void Player::SpriteDraw()
 
 void Player::UIDraw()
 {
-	if (isStartEase || isBossMovie)
+	if (isStartEase || isBossMovie || isClearMovie)
 	{
 		return;
 	}

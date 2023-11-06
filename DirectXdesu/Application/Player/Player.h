@@ -37,7 +37,7 @@ public:
 	/// 更新
 	/// </summary>
 	/// <param name="camera_"></param>
-	void Update(ViewProjection* viewPro, bool isStart_, bool isBossMovie_);
+	void Update(ViewProjection* viewPro, bool isStart_, bool isBossMovie_, bool isClearMovie_);
 
 	// 描画
 	// オブジェクト
@@ -224,4 +224,5 @@ private:
 #pragma endregion
 
 	bool isBossMovie = false;
+	bool isClearMovie = false;
 };

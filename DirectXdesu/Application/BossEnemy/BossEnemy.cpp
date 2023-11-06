@@ -79,14 +79,16 @@ void BossEnemy::Draw()
 
 void BossEnemy::UIDraw()
 {
-	if (!isBossMovie)
+	if (isBossMovie || isDead)
 	{
-		HPBarUI->Draw(hpbarTex, { 900,10 }, { 1,1 }, 0, { 1,1,1,1 }, false, false, { 0,0 });
-
-		HPrectUI->Draw(hpTex, { 901,11 }, { oldHP * (318 / maxHP),30 }, 0, { 1,0,0,0.3f }, false, false, { 0,0 });
-
-		HPUI->Draw(hpTex, { 901,11 }, { HP * (318 / maxHP),30 }, 0, { 1,0,0,1 }, false, false, { 0,0 });
+		return;
 	}
+
+	HPBarUI->Draw(hpbarTex, { 900,10 }, { 1,1 }, 0, { 1,1,1,1 }, false, false, { 0,0 });
+
+	HPrectUI->Draw(hpTex, { 901,11 }, { oldHP * (318 / maxHP),30 }, 0, { 1,0,0,0.3f }, false, false, { 0,0 });
+
+	HPUI->Draw(hpTex, { 901,11 }, { HP * (318 / maxHP),30 }, 0, { 1,0,0,1 }, false, false, { 0,0 });
 }
 
 const KMyMath::Vector3 BossEnemy::GetWorldPos() const

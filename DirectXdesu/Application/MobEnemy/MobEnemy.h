@@ -51,6 +51,9 @@ public:
 
 	void SetCameraPos(const KMyMath::Vector3& cameraPos_);
 
+	// 自滅
+	void SelfDestruction();
+
 	/// <summary>
 	/// 攻撃
 	/// </summary>

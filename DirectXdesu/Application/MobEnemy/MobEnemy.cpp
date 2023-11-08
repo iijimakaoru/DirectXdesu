@@ -52,6 +52,11 @@ void MobEnemy::SetCameraPos(const KMyMath::Vector3& cameraPos_)
 	cameraPos = cameraPos_;
 }
 
+void MobEnemy::SelfDestruction()
+{
+	isDead = true;
+}
+
 void MobEnemy::Attack()
 {
 	assert(player);

@@ -83,8 +83,8 @@ void GameScence::Init()
 	sceneManager = SceneManager::GetInstance();
 
 	// カメラ初期化
-	//camera->Init(player.get(), { 0.0f,0.0f,-200.0f });
-	camera->Init(player.get(), { 0.0f,0.0f,450.0f });
+	camera->Init(player.get(), { 0.0f,0.0f,-200.0f });
+	//camera->Init(player.get(), { 0.0f,0.0f,450.0f });
 
 	// エネミーマネージャー生成
 	enemyManager.reset(EnemyManager::Create("Resources/csv/enemyPop.csv", // ステージのcsvを読み込む
@@ -124,9 +124,6 @@ void GameScence::Init()
 
 void GameScence::Update()
 {
-	// ゲームオーバーへの移動
-	GoGameOverScene();
-
 	if (isStageStart)
 	{
 		billManager->SetIsStopCreate(true);
@@ -140,6 +137,10 @@ void GameScence::Update()
 	else if (isClearMovie)
 	{
 		ClearMovie();
+	}
+	else if (isOverMovie)
+	{
+		GoGameOverScene();
 	}
 	else
 	{
@@ -460,10 +461,16 @@ void GameScence::PlayerDead()
 {
 	if (player->GetIsDead() && !isCallDeadCamera)
 	{
+		// 撃墜カメラ呼び出し
 		camera->CallCrash();
 		isCallDeadCamera = true;
+		// プレイヤーとカメラの接続解除
 		player->SetParent(nullptr);
 		player->SetPos(player->GetWorldPos());
+		// 全ての敵を消去
+		enemyManager->AllEnemyDelete();
+		// 撃墜ムービーへ
+		isOverMovie = true;
 	}
 }
 
@@ -697,11 +704,6 @@ void GameScence::StageStartMovie()
 
 void GameScence::GoGameOverScene()
 {
-	if (!player)
-	{
-		return;
-	}
-
 	if (player->GetIsFallEffectEnd())
 	{
 		isGoOverScene = true;
@@ -1095,11 +1097,13 @@ void GameScence::ClearMovie()
 			clearPhase++;
 		}
 	}
+	// 暗転
 	else if (clearPhase == 3)
 	{
 		sceneChange->SceneChangeStart();
 		clearPhase++;
 	}
+	// リザルトシーンへ
 	else
 	{
 		if (sceneChange->GetIsChange())

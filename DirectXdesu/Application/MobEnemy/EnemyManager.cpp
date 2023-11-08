@@ -55,6 +55,14 @@ void EnemyManager::Draw()
 	}
 }
 
+void EnemyManager::AllEnemyDelete()
+{
+	for (std::unique_ptr<MobEnemy>& mobEnemy : mobEnemys)
+	{
+		mobEnemy->SelfDestruction();
+	}
+}
+
 const std::list<std::unique_ptr<MobEnemy>>& EnemyManager::GetMobEnemys() const
 {
 	return mobEnemys;

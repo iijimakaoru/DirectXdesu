@@ -216,5 +216,12 @@ private:
 	KMyMath::Vector3 end;
 #pragma endregion
 
+#pragma region オーバー演出
+	// ゲームオーバームービーフラグ
+	bool isOverMovie = false;
+
+
+#pragma endregion
+
 };
 

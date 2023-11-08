@@ -29,6 +29,9 @@ public:
 	/// </summary>
 	void Draw();
 
+	// 出ている全ての敵を消す
+	void AllEnemyDelete();
+
 	// ゲッター
 	const std::list<std::unique_ptr<MobEnemy>>& GetMobEnemys() const;
 

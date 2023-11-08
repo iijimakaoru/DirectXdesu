@@ -83,7 +83,8 @@ void GameScence::Init()
 	sceneManager = SceneManager::GetInstance();
 
 	// カメラ初期化
-	camera->Init(player.get(), { 0.0f,0.0f,-200.0f });
+	//camera->Init(player.get(), { 0.0f,0.0f,-200.0f });
+	camera->Init(player.get(), { 0.0f,0.0f,450.0f });
 
 	// エネミーマネージャー生成
 	enemyManager.reset(EnemyManager::Create("Resources/csv/enemyPop.csv", // ステージのcsvを読み込む
@@ -793,7 +794,7 @@ void GameScence::BossAppearMovie()
 			// 角度
 			const float rotX = 15.0f;
 			const float rotY = 0.0f;
-			camera->SetCameraRot({ rotX,rotY,camera->GetCameraRot().z });
+			camera->SetCameraRot({ rotX,rotY,0.0f });
 			//camera->SetCameraRot({ 0.0f,-0.0f,camera->GetCameraRot().z });
 
 			// カメラ動け
@@ -858,18 +859,23 @@ void GameScence::BossAppearMovie()
 			// ボス回転させよう
 			const float startBRotY = 0.0f;
 			const float endBRotY = 360.0f;
-			boss->SetRot({ boss->GetRot().x,MyEase::Lerp(startBRotY,endBRotY,appearPhaseTimer / appearPhaseTime),boss->GetRot().z });
+			boss->SetRot({ boss->GetRot().x,MyEase::OutCubicFloat(startBRotY,endBRotY,appearPhaseTimer / appearPhaseTime),boss->GetRot().z });
 
 			// ボス降下
 			const float startBPosY = 40.0f;
 			const float endBPosY = 20.0f;
-			boss->SetPos({ boss->GetWorldPos().x,MyEase::Lerp(startBPosY,endBPosY,appearPhaseTimer / appearPhaseTime),boss->GetWorldPos().z });
+			boss->SetPos({ boss->GetWorldPos().x,MyEase::OutCubicFloat(startBPosY,endBPosY,appearPhaseTimer / appearPhaseTime),boss->GetWorldPos().z });
 
 			//自機とカメラの距離
 			KMyMath::Vector3 bossDistance = { 0.0f, 0.0f, -30.0f };
 
 			// カメラの場所
-			const KMyMath::Vector3 cameraPos = boss->GetWorldPos() + bossDistance;
+			const KMyMath::Vector3 cameraPos = 
+			{ 
+				boss->GetWorldPos().x + bossDistance.x,
+				endBPosY + bossDistance.y,
+				boss->GetWorldPos().z + bossDistance.z
+			};
 
 			camera->SetCameraPos(cameraPos);
 
@@ -918,6 +924,7 @@ void GameScence::BossAppearMovie()
 			appearPhase++;
 		}
 	}
+	// ムービーフェーズ5
 	else if (appearPhase == 5)
 	{
 		appearPhaseTime = 30;
@@ -973,7 +980,7 @@ void GameScence::ClearMovie()
 
 			const KMyMath::Vector3 cameraPos = playerPos + dhistans;
 
-			camera->SetCameraPos(MyEase::OutCubicVec3(camera->GetCameraPos(), cameraPos, clearPhaseTimer / clearPhaseTime));
+			camera->SetCameraPos(MyEase::InOutCubicVec3(camera->GetCameraPos(), cameraPos, clearPhaseTimer / clearPhaseTime));
 
 			camera->SetCameraRot({ 0.0f ,0.0f ,0.0f });
 		}
@@ -986,14 +993,14 @@ void GameScence::ClearMovie()
 	// フェーズ1
 	else if (clearPhase == 1)
 	{
-		clearPhaseTime = 360.0f;
+		clearPhaseTime = 120.0f;
 
 		if (clearPhaseTimer < clearPhaseTime)
 		{
 			clearPhaseTimer++;
 
 			// 角度を変更
-			float rotAngle = MyEase::Lerp(0.0f, -420.0f, clearPhaseTimer / clearPhaseTime);
+			float rotAngle = MyEase::InOutCubicFloat(0.0f, -60.0f, clearPhaseTimer / clearPhaseTime);
 
 			const float radian = DirectX::XMConvertToRadians(rotAngle);
 			const float distance = -30;
@@ -1029,20 +1036,20 @@ void GameScence::ClearMovie()
 			clearPhaseTimer++;
 
 			// ポイント１の制御点
-			KMyMath::Vector3 point1_1 = MyEase::InOutCubicVec3(start, p1,          clearPhaseTimer / clearPhaseTime);
-			KMyMath::Vector3 point1_2 = MyEase::InOutCubicVec3(p1, end,            clearPhaseTimer / clearPhaseTime);
-			KMyMath::Vector3 point1   = MyEase::InOutCubicVec3(point1_1, point1_2, clearPhaseTimer / clearPhaseTime);
+			KMyMath::Vector3 point1_1 = MyEase::OutCubicVec3(start, p1,          clearPhaseTimer / clearPhaseTime);
+			KMyMath::Vector3 point1_2 = MyEase::OutCubicVec3(p1, end,            clearPhaseTimer / clearPhaseTime);
+			KMyMath::Vector3 point1   = MyEase::OutCubicVec3(point1_1, point1_2, clearPhaseTimer / clearPhaseTime);
 
 			// ポイント２の制御点
-			KMyMath::Vector3 point2_1 = MyEase::InOutCubicVec3(start, p2,        clearPhaseTimer / clearPhaseTime);
-			KMyMath::Vector3 point2_2 = MyEase::InOutCubicVec3(p2, end,			 clearPhaseTimer / clearPhaseTime);
-			KMyMath::Vector3 point2   = MyEase::InOutCubicVec3(point2_1, point2_2, clearPhaseTimer / clearPhaseTime);
+			KMyMath::Vector3 point2_1 = MyEase::OutCubicVec3(start, p2,        clearPhaseTimer / clearPhaseTime);
+			KMyMath::Vector3 point2_2 = MyEase::OutCubicVec3(p2, end,			 clearPhaseTimer / clearPhaseTime);
+			KMyMath::Vector3 point2   = MyEase::OutCubicVec3(point2_1, point2_2, clearPhaseTimer / clearPhaseTime);
 
-			player->SetPos(MyEase::InOutCubicVec3(point1, point2, clearPhaseTimer / clearPhaseTime));
+			player->SetPos(MyEase::OutCubicVec3(point1, point2, clearPhaseTimer / clearPhaseTime));
 			player->SetScale(MyEase::InCubicVec3({ 2.0f,2.0f,2.0f }, { 0.0f,0.0f,0.0f }, clearPhaseTimer / clearPhaseTime));
-			player->SetRot(MyEase::InOutCubicVec3({ 0.0f,0.0f,0.0f }, { -45.0f,-45.0f,45.0f }, clearPhaseTimer / clearPhaseTime));
+			player->SetRot(MyEase::OutCubicVec3({ 0.0f,0.0f,0.0f }, { -45.0f,-45.0f,45.0f }, clearPhaseTimer / clearPhaseTime));
 
-			camera->SetCameraRot({ MyEase::InOutCubicFloat(0.0f,-15.0f,clearPhaseTimer / clearPhaseTime) ,camera->GetCameraRot().y, camera->GetCameraRot().z});
+			camera->SetCameraRot({ MyEase::OutCubicFloat(0.0f,-15.0f,clearPhaseTimer / clearPhaseTime) ,camera->GetCameraRot().y, camera->GetCameraRot().z});
 		}
 		else
 		{

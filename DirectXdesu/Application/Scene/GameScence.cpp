@@ -138,8 +138,6 @@ void GameScence::Update()
 	}
 	else if (isBossAppearMovie)
 	{
-		billManager->SetIsStopCreate(true);
-
 		BossAppearMovie();
 	}
 	else if (isClearMovie)
@@ -187,7 +185,7 @@ void GameScence::Update()
 	objParticleManager->Update(camera->GetViewPro());
 
 	// ビルマネージャー
-	billManager->Update(camera->GetViewPro(), camera->GetCameraPos().z);
+	billManager->Update(camera->GetViewPro(), camera->GetCameraPos().z - 20.0f);
 
 	// カメラの更新
 	camera->Update(isStageStart, isBossAppearMovie, isClearMovie);
@@ -462,6 +460,15 @@ void GameScence::PlayerDead()
 
 void GameScence::StageStartMovie()
 {
+	// スキップしよう
+	if (startPhase < 5)
+	{
+		if (input->GetPadButtonDown(XINPUT_GAMEPAD_START))
+		{
+			startPhase = 5;
+		}
+	}
+
 	// カメラワーク一段階(上から見下ろし)
 	if (startPhase == 0)
 	{
@@ -742,6 +749,16 @@ void GameScence::GoGameOverScene()
 
 void GameScence::BossAppearMovie()
 {
+	// スキップしよう
+	if (appearPhase > 0 && appearPhase < 5)
+	{
+		if (input->GetPadButtonDown(XINPUT_GAMEPAD_START))
+		{
+			appearPhaseTimer = 0;
+			appearPhase = 5;
+		}
+	}
+
 	// 暗転待ち時間
 	if (appearPhase == 0)
 	{
@@ -919,15 +936,18 @@ void GameScence::BossAppearMovie()
 		}
 		else
 		{
-			sceneChange->SceneChangeStart();
 			appearPhaseTimer = 0;
 			appearPhase++;
 		}
 	}
-	// ムービーフェーズ5
 	else if (appearPhase == 5)
 	{
 		appearPhaseTime = 30;
+
+		if (appearPhaseTimer == 0)
+		{
+			sceneChange->SceneChangeStart();
+		}
 
 		if (appearPhaseTimer < appearPhaseTime)
 		{
@@ -935,16 +955,47 @@ void GameScence::BossAppearMovie()
 		}
 		else
 		{
-			// カメラ配置
-			camera->SetCameraPos({ 0.0f,0.0f,bossBattleStartPos });
-			camera->SetCameraRot({ 0.0f,0.0f,0.0f });
-			// プレイヤーとカメラの親子関係解消
-			player->SetParent(&camera->GetTransform());
-			// 現在位置まで連れてくる
-			player->SetPos({ 0.0f,0.0f, 50.0f });
 			appearPhaseTimer = 0;
 			appearPhase++;
 		}
+	}
+	// ムービーフェーズ6
+	else if (appearPhase == 6)
+	{
+		// ボス配置
+		boss->SetPos({ boss->GetWorldPos().x,20.0f,boss->GetWorldPos().z });
+		boss->SetRot({ 0.0f,0.0f,0.0f });
+		// カメラ配置
+		camera->SetCameraPos({ 0.0f,0.0f,bossBattleStartPos });
+		camera->SetCameraRot({ 0.0f,0.0f,0.0f });
+		// プレイヤーとカメラの親子関係解消
+		player->SetParent(&camera->GetTransform());
+		// 現在位置まで連れてくる
+		player->SetPos({ 0.0f,0.0f, 50.0f });
+		appearPhaseTimer = 0;
+		appearPhase++;
+
+		//appearPhaseTime = 30;
+
+		//if (appearPhaseTimer < appearPhaseTime)
+		//{
+		//	appearPhaseTimer++;
+		//}
+		//else
+		//{
+		//	// ボス配置
+		//	boss->SetPos({ boss->GetWorldPos().x,20.0f,boss->GetWorldPos().z });
+		//	boss->SetRot({ 0.0f,0.0f,0.0f });
+		//	// カメラ配置
+		//	camera->SetCameraPos({ 0.0f,0.0f,bossBattleStartPos });
+		//	camera->SetCameraRot({ 0.0f,0.0f,0.0f });
+		//	// プレイヤーとカメラの親子関係解消
+		//	player->SetParent(&camera->GetTransform());
+		//	// 現在位置まで連れてくる
+		//	player->SetPos({ 0.0f,0.0f, 50.0f });
+		//	appearPhaseTimer = 0;
+		//	appearPhase++;
+		//}
 	}
 	else
 	{

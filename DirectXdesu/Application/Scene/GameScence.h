@@ -76,9 +76,6 @@ private:
 	// スタート演出のムービー
 	void StageStartMovie();
 
-	// クリアシーンへ
-	void GoClearScene();
-
 	// ゲームオーバーシーンへ
 	void GoGameOverScene();
 
@@ -88,7 +85,7 @@ private:
 	// ボス撃破
 	void BossBreakMovie();
 
-	// クリア演出
+	// クリアムービー
 	void ClearMovie();
 
 public:
@@ -154,15 +151,13 @@ private:
 	ParticleManager* particleManager = nullptr;
 	ObjParticleManager* objParticleManager = nullptr;
 
-	// 別のシーンへの移行タイマー
-	// ゲームクリア
-	bool isGoClearScene = false;
-	float goClearSceneTime = 120;
-	float goClearSceneTimer = 0;
+	// クリアムービーへの移行タイマー
+	float goClearMovieTime = 60.0f;
+	float goClearMovieTimer = 0;
 
 	// ゲームオーバー
 	bool isGoOverScene = false;
-	float goOverSceneTime = 120;
+	float goOverSceneTime = 60.0f;
 	float goOverSceneTimer = 0;
 
 	// ビルマネージャー

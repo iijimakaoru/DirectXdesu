@@ -124,9 +124,6 @@ void GameScence::Init()
 
 void GameScence::Update()
 {
-	// ゲームクリアシーンへの移動
-	GoClearScene();
-
 	// ゲームオーバーへの移動
 	GoGameOverScene();
 
@@ -165,7 +162,19 @@ void GameScence::Update()
 	// ボスの更新
 	if (boss)
 	{
-		boss->Update(camera->GetViewPro(),isBossAppearMovie);
+		if (boss->GetIsFallEffectEnd())
+		{
+			goClearMovieTimer++;
+			if (goClearMovieTimer == goClearMovieTime)
+			{
+				player->SetParent(nullptr);
+				player->SetPos(player->GetWorldPos());
+				isClearMovie = true;
+				goClearMovieTimer = goClearMovieTime + 1.0f;
+			}
+		}
+
+		boss->Update(camera->GetViewPro(), isBossAppearMovie);
 	}
 
 	// プレイヤーの更新
@@ -686,38 +695,6 @@ void GameScence::StageStartMovie()
 	}
 }
 
-void GameScence::GoClearScene()
-{
-	if (!boss)
-	{
-		return;
-	}
-
-	if (boss->GetIsFallEffectEnd())
-	{
-		isClearMovie = true;
-
-		player->SetParent(nullptr);
-		player->SetPos(player->GetWorldPos());
-	}
-
-	if (isGoClearScene)
-	{
-		goClearSceneTimer++;
-		if (goClearSceneTimer == goClearSceneTime)
-		{
-			sceneChange->SceneChangeStart();
-			goClearSceneTimer = goClearSceneTime + 1.0f;
-		}
-
-		if (sceneChange->GetIsChange())
-		{
-			sceneManager->ChangeScene("CLEAR");
-			bulletManager->AllBulletDelete();
-		}
-	}
-}
-
 void GameScence::GoGameOverScene()
 {
 	if (!player)
@@ -775,7 +752,7 @@ void GameScence::BossAppearMovie()
 			// プレイヤーとカメラの親子関係解消
 			player->SetParent(nullptr);
 			// 現在位置まで連れてくる
-			player->SetPos({0.0f,0.0f, player->GetWorldPos().z });
+			player->SetPos({ 0.0f,0.0f, player->GetWorldPos().z });
 			// 回転角度初期化
 			player->SetRot({ 0.0f,0.0f,0.0f });
 			appearPhaseTimer = 0;
@@ -843,7 +820,7 @@ void GameScence::BossAppearMovie()
 			boss->SetPos({ boss->GetWorldPos().x,MyEase::Lerp(startBPosY,endBPosY,appearPhaseTimer / appearPhaseTime),boss->GetWorldPos().z });
 
 			//自機とカメラの距離
-			KMyMath::Vector3 bossDistance = { MyEase::Lerp(-12.0f,-11.5f,startPhaseTimer / startPhaseTime), 12.5f, -15.0f};
+			KMyMath::Vector3 bossDistance = { MyEase::Lerp(-12.0f,-11.5f,startPhaseTimer / startPhaseTime), 12.5f, -15.0f };
 
 			// カメラの場所
 			const KMyMath::Vector3 cameraPos = boss->GetWorldPos() + bossDistance;
@@ -887,8 +864,8 @@ void GameScence::BossAppearMovie()
 			KMyMath::Vector3 bossDistance = { 0.0f, 0.0f, -30.0f };
 
 			// カメラの場所
-			const KMyMath::Vector3 cameraPos = 
-			{ 
+			const KMyMath::Vector3 cameraPos =
+			{
 				boss->GetWorldPos().x + bossDistance.x,
 				endBPosY + bossDistance.y,
 				boss->GetWorldPos().z + bossDistance.z
@@ -915,8 +892,8 @@ void GameScence::BossAppearMovie()
 			appearPhaseTimer++;
 
 			//自機とカメラの距離
-			KMyMath::Vector3 bossDistance = 
-			{ 
+			KMyMath::Vector3 bossDistance =
+			{
 				MyEase::InOutCubicFloat(0.0f, 10.0f,appearPhaseTimer / appearPhaseTime),
 				MyEase::InOutCubicFloat(0.0f,-20.0f,appearPhaseTimer / appearPhaseTime),
 				MyEase::InOutCubicFloat(-30.0f,-120.0f,appearPhaseTimer / appearPhaseTime)
@@ -926,7 +903,7 @@ void GameScence::BossAppearMovie()
 			const KMyMath::Vector3 cameraPos = boss->GetWorldPos() + bossDistance;
 			camera->SetCameraPos(cameraPos);
 
-			const KMyMath::Vector3 rot = 
+			const KMyMath::Vector3 rot =
 			{
 				0.0f,
 				MyEase::InOutCubicFloat(0.0f,-15.0f,appearPhaseTimer / appearPhaseTime),
@@ -1013,6 +990,16 @@ void GameScence::BossBreakMovie()
 
 void GameScence::ClearMovie()
 {
+	// スキップ
+	if (clearPhase < 3)
+	{
+		if (input->GetPadButtonDown(XINPUT_GAMEPAD_START))
+		{
+			clearPhaseTimer = 0;
+			clearPhase = 3;
+		}
+	}
+
 	// フェーズ0
 	if (clearPhase == 0)
 	{
@@ -1087,20 +1074,20 @@ void GameScence::ClearMovie()
 			clearPhaseTimer++;
 
 			// ポイント１の制御点
-			KMyMath::Vector3 point1_1 = MyEase::OutCubicVec3(start, p1,          clearPhaseTimer / clearPhaseTime);
-			KMyMath::Vector3 point1_2 = MyEase::OutCubicVec3(p1, end,            clearPhaseTimer / clearPhaseTime);
-			KMyMath::Vector3 point1   = MyEase::OutCubicVec3(point1_1, point1_2, clearPhaseTimer / clearPhaseTime);
+			KMyMath::Vector3 point1_1 = MyEase::OutCubicVec3(start, p1, clearPhaseTimer / clearPhaseTime);
+			KMyMath::Vector3 point1_2 = MyEase::OutCubicVec3(p1, end, clearPhaseTimer / clearPhaseTime);
+			KMyMath::Vector3 point1 = MyEase::OutCubicVec3(point1_1, point1_2, clearPhaseTimer / clearPhaseTime);
 
 			// ポイント２の制御点
-			KMyMath::Vector3 point2_1 = MyEase::OutCubicVec3(start, p2,        clearPhaseTimer / clearPhaseTime);
-			KMyMath::Vector3 point2_2 = MyEase::OutCubicVec3(p2, end,			 clearPhaseTimer / clearPhaseTime);
-			KMyMath::Vector3 point2   = MyEase::OutCubicVec3(point2_1, point2_2, clearPhaseTimer / clearPhaseTime);
+			KMyMath::Vector3 point2_1 = MyEase::OutCubicVec3(start, p2, clearPhaseTimer / clearPhaseTime);
+			KMyMath::Vector3 point2_2 = MyEase::OutCubicVec3(p2, end, clearPhaseTimer / clearPhaseTime);
+			KMyMath::Vector3 point2 = MyEase::OutCubicVec3(point2_1, point2_2, clearPhaseTimer / clearPhaseTime);
 
 			player->SetPos(MyEase::OutCubicVec3(point1, point2, clearPhaseTimer / clearPhaseTime));
 			player->SetScale(MyEase::InCubicVec3({ 2.0f,2.0f,2.0f }, { 0.0f,0.0f,0.0f }, clearPhaseTimer / clearPhaseTime));
 			player->SetRot(MyEase::OutCubicVec3({ 0.0f,0.0f,0.0f }, { -45.0f,-45.0f,45.0f }, clearPhaseTimer / clearPhaseTime));
 
-			camera->SetCameraRot({ MyEase::OutCubicFloat(0.0f,-15.0f,clearPhaseTimer / clearPhaseTime) ,camera->GetCameraRot().y, camera->GetCameraRot().z});
+			camera->SetCameraRot({ MyEase::OutCubicFloat(0.0f,-15.0f,clearPhaseTimer / clearPhaseTime) ,camera->GetCameraRot().y, camera->GetCameraRot().z });
 		}
 		else
 		{
@@ -1108,9 +1095,18 @@ void GameScence::ClearMovie()
 			clearPhase++;
 		}
 	}
+	else if (clearPhase == 3)
+	{
+		sceneChange->SceneChangeStart();
+		clearPhase++;
+	}
 	else
 	{
-		isGoClearScene = true;
+		if (sceneChange->GetIsChange())
+		{
+			sceneManager->ChangeScene("CLEAR");
+			bulletManager->AllBulletDelete();
+		}
 	}
 }
 

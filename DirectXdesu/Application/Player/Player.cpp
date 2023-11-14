@@ -186,7 +186,7 @@ void Player::Move()
 void Player::Rot()
 {
 	//回転速度
-	const float rotSpeed = 0.025f;
+	const float rotSpeed = 0.035f;
 
 	//角度修正基準速度
 	const float correctionSpeed = (rotSpeed * 2.0f) / 0.1f;

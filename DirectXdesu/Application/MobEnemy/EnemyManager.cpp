@@ -3,6 +3,7 @@
 #include "FlyEnemy.h"
 #include "CanonEnemy.h"
 #include "RailCamera.h"
+#include "Player.h"
 
 EnemyManager* EnemyManager::Create(const std::string fileName_, Player* player_, KModel* model_, KGPlin* pipeline_)
 {
@@ -31,7 +32,7 @@ void EnemyManager::Init(Player* player_, KModel* model_, KGPlin* pipeline_)
 	pipeline = pipeline_;
 }
 
-void EnemyManager::Update(ViewProjection* viewPro_, const KMyMath::Vector3& cameraPos_)
+void EnemyManager::Update(ViewProjection* viewPro_)
 {
 	// 敵出現
 	UpdateEnemyPopCommands();
@@ -42,7 +43,8 @@ void EnemyManager::Update(ViewProjection* viewPro_, const KMyMath::Vector3& came
 	// 雑魚敵の更新
 	for (std::unique_ptr<MobEnemy>& mobEnemy : mobEnemys)
 	{
-		mobEnemy->Update(viewPro_, cameraPos_);
+		const KMyMath::Vector3 pos = player->GetWorldPos();
+		mobEnemy->Update(viewPro_, pos);
 	}
 }
 

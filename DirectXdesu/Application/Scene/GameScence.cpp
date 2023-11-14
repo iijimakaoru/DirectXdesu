@@ -154,7 +154,7 @@ void GameScence::Update()
 		PlayerDead();
 
 		// エネミーマネージャーの更新
-		enemyManager->Update(camera->GetViewPro(), camera->GetCameraPos());
+		enemyManager->Update(camera->GetViewPro());
 
 		// 天箱を自機に追従
 		skyBox->SetPosZ(player->GetWorldPos().z);

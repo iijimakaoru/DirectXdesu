@@ -98,6 +98,8 @@ void Player::Update(ViewProjection* viewPro_, bool isStart_, bool isBossMovie_, 
 	isBossMovie = isBossMovie_;
 	isClearMovie = isClearMovie_;
 
+	SudCoolTime();
+
 	// スタート演出中の処理
 	if (isStart_)
 	{
@@ -294,23 +296,30 @@ void Player::Rot()
 
 void Player::Attack()
 {
-	if (input->GetPadButtonDown(XINPUT_GAMEPAD_A))
+	if (input->GetPadButton(XINPUT_GAMEPAD_A) && coolTimer <= 0)
 	{
+		// 弾スピード
 		const float bulletSpeed = 6.0f;
 		KMyMath::Vector3 bulletVec(0, 0, 1);
 
+		// 自機と発射位置の距離
 		const float distance = 20.0f;
 
 		// 速度ベクトルを自機の向きに合わせて回転
 		bulletVec = MyMathUtility::TransforNormal(bulletVec, object3d->GetMatWorld());
 
+		// 正規化
 		bulletVec = MyMathUtility::MakeNormalize(bulletVec);
 
 		// 弾発射
-		BulletManager::GetInstance()->PlayerBulletShot(GetWorldPos() + bulletVec * distance,
-			bulletVec,
-			object3d->GetRot(),
-			bulletSpeed);
+		BulletManager::GetInstance()->PlayerBulletShot(GetWorldPos() + (bulletVec * distance), // ポジション＋(角度＊距離)
+			bulletVec, // 弾の進む向き
+			object3d->GetRot(), // 角度取得
+			bulletSpeed // 弾の速度
+		);
+
+		// クールタイムセット
+		coolTimer = coolTimeSet;
 	}
 }
 
@@ -415,6 +424,14 @@ void Player::DamageEffect()
 			invisibleTimer = 0;
 			isInvisible = false;
 		}
+	}
+}
+
+void Player::SudCoolTime()
+{
+	if (coolTimer > 0)
+	{
+		coolTimer--;
 	}
 }
 

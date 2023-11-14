@@ -56,9 +56,14 @@ void AppearEnemy::Update(ViewProjection* viewPro_, const KMyMath::Vector3& camer
 	{
 		if (!isDead)
 		{
-			Attack();
+			if (object3d->GetPos().z >= cameraPos_.z)
+			{
+				Attack();
+			}
 
-			if (object3d->GetPos().z <= min(object3d->GetPos().z, cameraPos_.z))
+			const float cameraDistance = 50.0f;
+
+			if (object3d->GetPos().z <= min(object3d->GetPos().z, cameraPos_.z - cameraDistance))
 			{
 				isDead = true;
 			}
@@ -83,9 +88,9 @@ void AppearEnemy::Appear()
 	easeTimer += 1.0f;
 
 	object3d->SetScale(MyEase::OutQuadVec3(startScale, endScale, easeTimer / easeTime));
-	object3d->SetRot({object3d->GetRot().x,
+	object3d->SetRot({ object3d->GetRot().x,
 		MyEase::OutQuadFloat(0.0f, 360.0f * 2.0f, easeTimer / easeTime) ,
-		object3d->GetRot().z});
+		object3d->GetRot().z });
 
 	if (easeTimer >= max(easeTimer, easeTime))
 	{

@@ -111,6 +111,9 @@ private:
 	// ダメージエフェクト
 	void DamageEffect();
 
+	// 弾クールタイム
+	void SudCoolTime();
+
 	// デバッグ用
 	void Debug();
 
@@ -196,6 +199,11 @@ private:
 	const uint32_t invisibleTime = 30;
 	bool isInvisible = false;
 
+	// 弾間隔
+	uint32_t coolTimeSet = 10;
+	uint32_t coolTimer = 0;
+
+	// HP色
 	KMyMath::Vector4 hpColor = { 0,0,0,1.0f };
 #pragma endregion
 

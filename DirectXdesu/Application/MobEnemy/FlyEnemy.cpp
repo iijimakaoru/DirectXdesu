@@ -46,9 +46,14 @@ void FlyEnemy::Update(ViewProjection* viewPro_, const KMyMath::Vector3& cameraPo
 	{
 		if (!isDead)
 		{
-			Attack();
+			if (object3d->GetPos().z >= cameraPos_.z)
+			{
+				Attack();
+			}
 
-			if (object3d->GetPos().z <= min(object3d->GetPos().z, cameraPos_.z))
+			const float cameraDistance = 50.0f;
+
+			if (object3d->GetPos().z <= min(object3d->GetPos().z, cameraPos_.z - cameraDistance))
 			{
 				isDead = true;
 			}

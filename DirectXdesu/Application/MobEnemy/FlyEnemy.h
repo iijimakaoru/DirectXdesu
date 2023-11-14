@@ -87,5 +87,9 @@ private:
 
 	// スピード
 	float moveSpeed = 0;
+
+	// 生存時間
+	uint32_t lifeTime = 0;
+	uint32_t lifeTimer = 0;
 };
 

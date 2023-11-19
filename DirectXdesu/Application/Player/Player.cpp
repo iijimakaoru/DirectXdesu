@@ -89,6 +89,13 @@ void Player::Init(KModel* model_, KGPlin* objPipeline_, const float playerHP, KG
 
 	// ダメージエフェクトの透過値
 	dAlpha = 0;
+
+	// 操作説明
+	operation = std::make_unique<Sprite>();
+	operation->Init();
+	operation->SetPipeline(spritePipeline);
+	operationTex = TextureManager::Load("Resources/texture/setumei.png");
+	operationPos = { KWinApp::GetInstance()->GetWindowSizeW() - 300.0f, KWinApp::GetInstance()->GetWindowSizeH() - 100.0f };
 }
 
 void Player::Update(ViewProjection* viewPro_, bool isStart_, bool isBossMovie_, bool isClearMovie_)
@@ -447,7 +454,16 @@ void Player::StandStartPos()
 	{
 		startEaseTimer++;
 
-		HPPos = MyEase::OutCubicVec2({ -500.0f,0.0f }, { 0.0f,0.0f }, startEaseTimer / startEaseTime);
+		float width = static_cast<float>(KWinApp::GetInstance()->GetWindowSizeW());
+		float height = static_cast<float>(KWinApp::GetInstance()->GetWindowSizeH());
+
+		HPPos = MyEase::OutCubicVec2({ -600.0f,height + 200.0f },
+			{ 0.0f,height - 64.0f },
+			startEaseTimer / startEaseTime);
+
+		operationPos = MyEase::OutCubicVec2({ width + 300.0f,height + 100.0f },
+			{ width - 300.0f,height - 100.0f },
+			startEaseTimer / startEaseTime);
 
 		object3d->SetPos({ object3d->GetPos().x,
 			object3d->GetPos().y,
@@ -503,6 +519,9 @@ void Player::UIDraw()
 
 	// HP描画
 	HPUI->Draw(hpTex, HPPos + HPUIPos, { HP * (318 / maxHP),30 }, 0, { hpColor.x,hpColor.y,hpColor.z,1 }, false, false, { 0,0 });
+
+	// 操作説明
+	operation->Draw(operationTex, operationPos, { 1.0f,1.0f }, 0.0f, { 1.0f,1.0f,1.0f,1.0f }, false, false, { 0.0f,0.0f });
 
 	// ダメージエフェクト描画
 	if (isDamageEffect)

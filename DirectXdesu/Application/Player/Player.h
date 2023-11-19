@@ -239,4 +239,11 @@ private:
 	bool isStartMovie = false;
 	bool isBossMovie = false;
 	bool isClearMovie = false;
+
+#pragma region 操作説明
+	std::unique_ptr<Sprite> operation;
+	TextureData operationTex;
+	KMyMath::Vector2 operationPos;
+#pragma endregion
+
 };

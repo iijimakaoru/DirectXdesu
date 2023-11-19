@@ -89,19 +89,18 @@ void Player::Init(KModel* model_, KGPlin* objPipeline_, const float playerHP, KG
 
 	// ダメージエフェクトの透過値
 	dAlpha = 0;
-
-	isStartEase = true;
 }
 
 void Player::Update(ViewProjection* viewPro_, bool isStart_, bool isBossMovie_, bool isClearMovie_)
 {
+	isStartMovie = isStart_;
 	isBossMovie = isBossMovie_;
 	isClearMovie = isClearMovie_;
 
 	SudCoolTime();
 
 	// スタート演出中の処理
-	if (isStart_)
+	if (isStartMovie)
 	{
 		
 	}
@@ -448,6 +447,8 @@ void Player::StandStartPos()
 	{
 		startEaseTimer++;
 
+		HPPos = MyEase::OutCubicVec2({ -500.0f,0.0f }, { 0.0f,0.0f }, startEaseTimer / startEaseTime);
+
 		object3d->SetPos({ object3d->GetPos().x,
 			object3d->GetPos().y,
 			MyEase::OutCubicFloat(-50.0f,50.0f,startEaseTimer / startEaseTime) });
@@ -479,7 +480,7 @@ void Player::ObjDraw()
 void Player::SpriteDraw()
 {
 	// レティクル描画
-	if (isDead || isBossMovie || isStartEase || isClearMovie)
+	if (isStartMovie || isDead || isBossMovie || isStartEase || isClearMovie)
 	{
 		return;
 	}
@@ -489,19 +490,19 @@ void Player::SpriteDraw()
 
 void Player::UIDraw()
 {
-	if (isStartEase || isBossMovie || isClearMovie)
+	if (isStartMovie || isBossMovie || isClearMovie)
 	{
 		return;
 	}
 
 	// HPバー描画
-	HPBarUI->Draw(hpbarTex, { 10,10 }, { 1,1 }, 0, { 1,1,1,1 }, false, false, { 0,0 });
+	HPBarUI->Draw(hpbarTex,HPPos + HPBarUIPos, { 1,1 }, 0, { 1,1,1,1 }, false, false, { 0,0 });
 
 	// HP減少値描画
-	HPrectUI->Draw(hpTex, { 11,11 }, { oldHP * (318 / maxHP),30 }, 0, { hpColor.x,hpColor.y,hpColor.z,0.3f }, false, false, { 0,0 });
+	HPrectUI->Draw(hpTex, HPPos + HPUIPos, { oldHP * (318 / maxHP),30 }, 0, { hpColor.x,hpColor.y,hpColor.z,0.3f }, false, false, { 0,0 });
 
 	// HP描画
-	HPUI->Draw(hpTex, { 11,11 }, { HP * (318 / maxHP),30 }, 0, { hpColor.x,hpColor.y,hpColor.z,1 }, false, false, { 0,0 });
+	HPUI->Draw(hpTex, HPPos + HPUIPos, { HP * (318 / maxHP),30 }, 0, { hpColor.x,hpColor.y,hpColor.z,1 }, false, false, { 0,0 });
 
 	// ダメージエフェクト描画
 	if (isDamageEffect)

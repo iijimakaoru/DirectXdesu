@@ -88,6 +88,16 @@ private:
 	// クリアムービー
 	void ClearMovie();
 
+	// ムービーバー初期化
+	void MovieBarInInit();
+	void MovieBarOutInit();
+
+	// ムービーバーにょっき
+	void MovieBarOut(const float timer_);
+
+	// ムービーバーにょっき
+	void MovieBarIn(const float timer_);
+
 public:
 	// フラグゲッター
 	const bool GetIsStart() const;
@@ -219,8 +229,13 @@ private:
 #pragma region オーバー演出
 	// ゲームオーバームービーフラグ
 	bool isOverMovie = false;
+#pragma endregion
 
-
+#pragma region ムービー中
+	// 
+	std::array<std::unique_ptr<Sprite>, 2> movieBar;
+	TextureData movieBarTex;
+	std::array<KMyMath::Vector2, 2> movieBarPos;
 #pragma endregion
 
 };

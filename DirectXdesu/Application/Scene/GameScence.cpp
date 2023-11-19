@@ -32,6 +32,7 @@ void GameScence::LoadResources()
 	// テクスチャ
 	textureData = TextureManager::Load("Resources/texture/mario.jpg");
 	textureData2 = TextureManager::Load("Resources/texture/kariPlayerColor.png");
+	movieBarTex = TextureManager::Load("Resources/texture/white1x1.png");
 
 	// モデル
 	playerModel = std::make_unique<MtlObj>("BattleShip");
@@ -103,6 +104,7 @@ void GameScence::Init()
 		50
 	));
 
+	// 弾マネージャー
 	bulletManager = BulletManager::GetInstance();
 	bulletManager->Init(playersBulletModel.get(),
 		objPipeline.get());
@@ -110,12 +112,19 @@ void GameScence::Init()
 	// パーティクル
 	particleManager = ParticleManager::GetInstance();
 	particleManager->Init();
-
 	objParticleManager = ObjParticleManager::GetInstance();
 	objParticleManager->Init();
 
+	// ビル
 	billManager = std::make_unique<BillManager>();
 	billManager->Init();
+
+	for (size_t i = 0; i < 2; i++)
+	{
+		movieBar[i] = std::make_unique<Sprite>();
+		movieBar[i]->Init();
+		movieBar[i]->SetPipeline(spritePipeline.get());
+	}
 
 	isCallDeadCamera = false;
 
@@ -257,6 +266,28 @@ void GameScence::SpriteDraw()
 
 	// 2D情報描画
 	player->SpriteDraw();
+
+	if (isOverMovie || isClearMovie || isStageStart || isBossAppearMovie)
+	{
+		for (size_t i = 0; i < 2; i++)
+		{
+			movieBar[0]->Draw(movieBarTex,
+				movieBarPos[0],
+				{ static_cast<float>(KWinApp::GetInstance()->GetWindowSizeW()),50.0f },
+				0.0f,
+				{ 0.0f,0.0f,0.0f,1.0f },
+				false, false,
+				{ 0.0f,0.0f });
+
+			movieBar[1]->Draw(movieBarTex,
+				movieBarPos[1],
+				{ static_cast<float>(KWinApp::GetInstance()->GetWindowSizeW()),50.0f },
+				0.0f,
+				{ 0.0f,0.0f,0.0f,1.0f },
+				false, false,
+				{ 0.0f,1.0f });
+		}
+	}
 }
 
 void GameScence::Final()
@@ -492,6 +523,8 @@ void GameScence::StageStartMovie()
 
 		if (startPhaseTimer == 0)
 		{
+			MovieBarInInit();
+
 			//自機とカメラの距離
 			const KMyMath::Vector3 playerDistance = { 0.0f, 20.0f, 40.0f };
 
@@ -654,6 +687,9 @@ void GameScence::StageStartMovie()
 		{
 			startPhaseTimer++;
 
+			// ムービーバーを上下へ
+			MovieBarOut(startPhaseTimer / startPhaseTime);
+
 			const float startPosZ = 10.0f;
 			const float endPosZ = 30.0f;
 
@@ -693,9 +729,11 @@ void GameScence::StageStartMovie()
 	}
 	else
 	{
+		MovieBarOutInit();
 		billManager->SetIsStopCreate(false);
 		camera->EndStart();
 		player->EndStart();
+		Player::isStartEase = true;
 		// 親子関係接続
 		player->SetParent(&camera->GetTransform());
 		isStageStart = false;
@@ -765,6 +803,8 @@ void GameScence::BossAppearMovie()
 	else if (appearPhase == 1)
 	{
 		appearPhaseTime = 180.0f;
+
+		MovieBarInInit();
 
 		if (appearPhaseTimer < appearPhaseTime)
 		{
@@ -941,6 +981,7 @@ void GameScence::BossAppearMovie()
 	// ムービーフェーズ6
 	else if (appearPhase == 6)
 	{
+		MovieBarOutInit();
 		// ボス配置
 		boss->SetPos({ boss->GetWorldPos().x,20.0f,boss->GetWorldPos().z });
 		boss->SetRot({ 0.0f,0.0f,0.0f });
@@ -953,28 +994,6 @@ void GameScence::BossAppearMovie()
 		player->SetPos({ 0.0f,0.0f, 50.0f });
 		appearPhaseTimer = 0;
 		appearPhase++;
-
-		//appearPhaseTime = 30;
-
-		//if (appearPhaseTimer < appearPhaseTime)
-		//{
-		//	appearPhaseTimer++;
-		//}
-		//else
-		//{
-		//	// ボス配置
-		//	boss->SetPos({ boss->GetWorldPos().x,20.0f,boss->GetWorldPos().z });
-		//	boss->SetRot({ 0.0f,0.0f,0.0f });
-		//	// カメラ配置
-		//	camera->SetCameraPos({ 0.0f,0.0f,bossBattleStartPos });
-		//	camera->SetCameraRot({ 0.0f,0.0f,0.0f });
-		//	// プレイヤーとカメラの親子関係解消
-		//	player->SetParent(&camera->GetTransform());
-		//	// 現在位置まで連れてくる
-		//	player->SetPos({ 0.0f,0.0f, 50.0f });
-		//	appearPhaseTimer = 0;
-		//	appearPhase++;
-		//}
 	}
 	else
 	{
@@ -1010,6 +1029,8 @@ void GameScence::ClearMovie()
 		if (clearPhaseTimer < clearPhaseTime)
 		{
 			clearPhaseTimer++;
+
+			MovieBarIn(clearPhaseTimer / clearPhaseTime);
 
 			player->SetPos(MyEase::InCubicVec3(player->GetWorldPos(), { 0.0f,0.0f,player->GetWorldPos().z }, clearPhaseTimer / clearPhaseTime));
 			player->SetRot(MyEase::InCubicVec3(player->GetRot(), { 0.0f,0.0f,0.0f }, clearPhaseTimer / clearPhaseTime));
@@ -1112,6 +1133,38 @@ void GameScence::ClearMovie()
 			bulletManager->AllBulletDelete();
 		}
 	}
+}
+
+void GameScence::MovieBarInInit()
+{
+	float height = static_cast<float>(KWinApp::GetInstance()->GetWindowSizeH());
+
+	movieBarPos[0] = { 0.0f,0.0f };
+	movieBarPos[1] = { 0.0f,height };
+}
+
+void GameScence::MovieBarOutInit()
+{
+	float height = static_cast<float>(KWinApp::GetInstance()->GetWindowSizeH());
+
+	movieBarPos[0] = { 0.0f,-50.0f };
+	movieBarPos[1] = { 0.0f,height + 50.0f };
+}
+
+void GameScence::MovieBarOut(const float timer_)
+{
+	// ムービーバーを上下へ
+	float height = static_cast<float>(KWinApp::GetInstance()->GetWindowSizeH());
+	movieBarPos[0] = MyEase::Lerp2D({ 0.0f,0.0f }, { 0.0f,-50.0f }, timer_);
+	movieBarPos[1] = MyEase::Lerp2D({ 0.0f,height }, { 0.0f,height + 50.0f }, timer_);
+}
+
+void GameScence::MovieBarIn(const float timer_)
+{
+	// ムービーバーをにょっき
+	float height = static_cast<float>(KWinApp::GetInstance()->GetWindowSizeH());
+	movieBarPos[0] = MyEase::Lerp2D({ 0.0f,-50.0f }, { 0.0f,0.0f }, timer_);
+	movieBarPos[1] = MyEase::Lerp2D({ 0.0f,height + 50.0f }, { 0.0f,height }, timer_);
 }
 
 const bool GameScence::GetIsStart() const

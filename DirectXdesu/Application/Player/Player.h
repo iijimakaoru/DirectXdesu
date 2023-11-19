@@ -168,12 +168,12 @@ private:
 
 #pragma region HP関連
 	// 最大体力
-	float maxHP;
+	float maxHP = 0;
 
 	// 現体力
-	float HP;
-	float oldHP;
-	float startHpEase;
+	float HP = 0;
+	float oldHP = 0;
+	float startHpEase = 0;
 
 	uint32_t oldHpTimer = 0;
 	const uint32_t oldHpTime = 60;
@@ -182,17 +182,22 @@ private:
 	float hpEaseTimer = 0;
 	const float hpEaseTime = 15;
 
+	// スタート時のHPイージング
+	KMyMath::Vector2 HPPos = { -500.0f,0.0f };
+
 	// 死亡しているか
 	bool isDead;
 
 	// HP
 	std::unique_ptr<Sprite> HPUI = nullptr;
 	TextureData hpTex;
+	KMyMath::Vector2 HPUIPos = { 11.0f,11.0f };
 	std::unique_ptr<Sprite> HPrectUI = nullptr;
 
 	// HPバー
 	std::unique_ptr<Sprite> HPBarUI = nullptr;
 	TextureData hpbarTex;
+	KMyMath::Vector2 HPBarUIPos = { 10.0f,10.0f };
 
 	// 無敵時間
 	uint32_t invisibleTimer = 0;
@@ -231,6 +236,7 @@ private:
 	float startEaseTime = 0;
 #pragma endregion
 
+	bool isStartMovie = false;
 	bool isBossMovie = false;
 	bool isClearMovie = false;
 };

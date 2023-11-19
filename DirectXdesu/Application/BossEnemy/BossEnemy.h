@@ -107,10 +107,12 @@ protected:
 	std::unique_ptr<Sprite> HPUI = nullptr;
 	TextureData hpTex;
 	std::unique_ptr<Sprite> HPrectUI = nullptr;
+	KMyMath::Vector2 HPUIPos = { 0.0f,0.0f };
 
 	// HPバー
 	std::unique_ptr<Sprite> HPBarUI = nullptr;
 	TextureData hpbarTex;
+	KMyMath::Vector2 HPBarUIPos = { 0.0f,0.0f };
 
 	uint32_t easeTimer = 0;
 	bool isHPE = false;

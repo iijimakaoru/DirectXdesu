@@ -40,7 +40,7 @@ void BossEnemy::Init(KModel* model_, KGPlin* pipeline_, const KMyMath::Vector3& 
 	HPBarUI->Init();
 	HPBarUI->SetPipeline(spritePipeline);
 
-	hpbarTex = TextureManager::Load("Resources/texture/PlayersHPBar.png");
+	hpbarTex = TextureManager::Load("Resources/texture/BossHPBar.png");
 
 	isHPE = true;
 
@@ -84,11 +84,13 @@ void BossEnemy::UIDraw()
 		return;
 	}
 
-	HPBarUI->Draw(hpbarTex, { 900,10 }, { 1,1 }, 0, { 1,1,1,1 }, false, false, { 0,0 });
+	float width = static_cast<float>(KWinApp::GetInstance()->GetWindowSizeW());
 
-	HPrectUI->Draw(hpTex, { 901,11 }, { oldHP * (318 / maxHP),30 }, 0, { 1,0,0,0.3f }, false, false, { 0,0 });
+	HPrectUI->Draw(hpTex, { 46.0f,13.0f }, { oldHP * (1190 / maxHP),16 }, 0, { 1,0,0,0.3f }, false, false, { 0,0 });
 
-	HPUI->Draw(hpTex, { 901,11 }, { HP * (318 / maxHP),30 }, 0, { 1,0,0,1 }, false, false, { 0,0 });
+	HPUI->Draw(hpTex, { 46.0f,13.0f }, { HP * (1190 / maxHP),16 }, 0, { 1,0,0,1 }, false, false, { 0,0 });
+
+	HPBarUI->Draw(hpbarTex, { width / 2.0f,20.0f }, { 1.0f,1.0f }, 0, { 1.0f,1.0f,1.0f,1.0f });
 }
 
 const KMyMath::Vector3 BossEnemy::GetWorldPos() const

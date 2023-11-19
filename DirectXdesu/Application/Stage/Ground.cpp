@@ -27,7 +27,7 @@ void Ground::Init(Player* player_)
 		object3d[i]->SetScale({ 1.0f,1.0f,1.0f });
 	}
 
-	object3d[1]->SetPos({ 0,-20,(object3d[0]->GetPos().z + 800.0f) });
+	object3d[1]->SetPos({ 0,-20,(object3d[0]->GetPos().z + 1800.0f) });
 
 	player = player_;
 
@@ -36,7 +36,7 @@ void Ground::Init(Player* player_)
 
 void Ground::Update(ViewProjection* viewPro_, const KMyMath::Vector3& cameraPos_)
 {
-	const float flontOfScreenDiffuse = 800;
+	const float flontOfScreenDiffuse = 1800;
 
 	for (size_t i = 0; i < 2; i++)
 	{

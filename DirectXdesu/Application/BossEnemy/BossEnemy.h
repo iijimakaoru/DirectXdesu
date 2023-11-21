@@ -5,6 +5,8 @@
 #include "TextureManager.h"
 #include "Sprite.h"
 
+#include "ActState.h"
+
 /**
  * @file BossEnemy.h
  * @brief ボスの基底クラス
@@ -130,5 +132,6 @@ protected:
 	bool isFallEffectEnd = false;
 #pragma endregion
 
+	std::unique_ptr<ActState> actState = nullptr;
 };
 

@@ -6,6 +6,9 @@
 
 #include "Blaster.h"
 #include "Collision.h"
+#include "BlasterStandState.h"
+
+Blaster* Blaster::nowBlaster = nullptr;
 
 Blaster* Blaster::Create(KGPlin* pipeline_, const KMyMath::Vector3& pos_,
 	const float HP, KGPlin* spritePipeline_)
@@ -50,6 +53,9 @@ void Blaster::Init(KGPlin* pipeline_, const KMyMath::Vector3& initPos_,
 	units[5]->SetPos({ -3.0f, 3.0f,-3.0f });
 	units[6]->SetPos({ -3.0f,-3.0f,-3.0f });
 	units[7]->SetPos({  3.0f,-3.0f,-3.0f });
+
+	// 
+	actState = std::make_unique<BlasterStandState>();
 }
 
 void Blaster::Update(ViewProjection* viewPro_, bool isBossMovie_)
@@ -60,7 +66,15 @@ void Blaster::Update(ViewProjection* viewPro_, bool isBossMovie_)
 	}
 	else
 	{
+		if (actState->GetIsFinish())
+		{
+			actState = std::make_unique<BlasterStandState>();
+		}
 
+		if (actState)
+		{
+			actState->Update();
+		}
 	}
 
 	BossEnemy::Update(viewPro_, isBossMovie_);

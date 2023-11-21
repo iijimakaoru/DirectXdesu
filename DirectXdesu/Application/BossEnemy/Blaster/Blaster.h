@@ -11,6 +11,9 @@
 class Blaster : public BossEnemy
 {
 public:
+	static Blaster* nowBlaster;
+
+public:
 	/// <summary>
 	/// 生成
 	/// </summary>

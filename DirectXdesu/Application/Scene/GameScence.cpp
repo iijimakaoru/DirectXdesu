@@ -183,6 +183,7 @@ void GameScence::Update()
 		}
 
 		blaster->Update(camera->GetViewPro(), isBossAppearMovie);
+		Blaster::nowBlaster = blaster.get();
 	}
 
 	// プレイヤーの更新

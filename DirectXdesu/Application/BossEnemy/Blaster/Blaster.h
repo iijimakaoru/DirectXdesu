@@ -57,6 +57,14 @@ public:
 	/// <returns></returns>
 	bool CollisionCheck(const KMyMath::Vector3& posA, const KMyMath::Vector3& posB) override;
 
+	void SetFarstAct() override;
+
+	/// <summary>
+	/// ユニットのポジションゲッター
+	/// </summary>
+	/// <returns></returns>
+	const KMyMath::Vector3 GetUnitsPos(size_t num_) const;
+
 	/// <summary>
 	/// ユニットのポスセッター(0～7)
 	/// </summary>

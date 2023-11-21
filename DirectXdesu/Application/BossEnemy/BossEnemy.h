@@ -68,6 +68,9 @@ public:
 	// ゲッター
 	const KMyMath::Vector3& GetRot() const;
 
+	// 最初のアクションセット
+	virtual void SetFarstAct() = 0;
+
 	// セッター
 	void SetPos(const KMyMath::Vector3& pos_);
 	void SetRot(const KMyMath::Vector3& rot_);

@@ -447,11 +447,6 @@ void GameScence::BossBattleStart()
 			return;
 		}
 
-		if (!blaster)
-		{
-			
-		}
-
 		//
 		sceneChange->SceneChangeStart();
 
@@ -938,6 +933,11 @@ void GameScence::BossAppearMovie()
 
 		if (appearPhaseTimer < appearPhaseTime)
 		{
+			if (appearPhaseTimer == 0)
+			{
+				blaster->SetFarstAct();
+			}
+
 			appearPhaseTimer++;
 
 			// カメラの動き

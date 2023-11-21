@@ -18,5 +18,9 @@ protected:
 	// アクション時間
 	uint32_t actTimer = 0;
 	uint32_t actTime = 0;
+
+	// アクションスタートタイム
+	float actStartTimer = 0;
+	float actStartTime = 0;
 };
 

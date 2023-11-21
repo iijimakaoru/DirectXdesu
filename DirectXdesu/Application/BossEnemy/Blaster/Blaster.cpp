@@ -53,9 +53,6 @@ void Blaster::Init(KGPlin* pipeline_, const KMyMath::Vector3& initPos_,
 	units[5]->SetPos({ -3.0f, 3.0f,-3.0f });
 	units[6]->SetPos({ -3.0f,-3.0f,-3.0f });
 	units[7]->SetPos({  3.0f,-3.0f,-3.0f });
-
-	// 
-	actState = std::make_unique<BlasterStandState>();
 }
 
 void Blaster::Update(ViewProjection* viewPro_, bool isBossMovie_)
@@ -70,11 +67,11 @@ void Blaster::Update(ViewProjection* viewPro_, bool isBossMovie_)
 		{
 			actState = std::make_unique<BlasterStandState>();
 		}
+	}
 
-		if (actState)
-		{
-			actState->Update();
-		}
+	if (actState)
+	{
+		actState->Update();
 	}
 
 	BossEnemy::Update(viewPro_, isBossMovie_);
@@ -108,6 +105,16 @@ bool Blaster::CollisionCheck(const KMyMath::Vector3& posA_, const KMyMath::Vecto
 	}
 
 	return false;
+}
+
+void Blaster::SetFarstAct()
+{
+	actState = std::make_unique<BlasterStandState>();
+}
+
+const KMyMath::Vector3 Blaster::GetUnitsPos(size_t num_) const
+{
+	return units[num_]->GetPos();
 }
 
 void Blaster::SetUnitsPos(const KMyMath::Vector3& pos_, size_t num_)

@@ -21,7 +21,7 @@ public:
 	/// <param name="pipeline_"></param>
 	/// <param name="initPos"></param>
 	/// <param name="HP"></param>
-	virtual void Init(KModel* model_, KGPlin* pipeline_,const KMyMath::Vector3& initPos,
+	virtual void Init(KGPlin* pipeline_,const KMyMath::Vector3& initPos,
 		const float HP_, KGPlin* spritePipeline_);
 
 	/// <summary>
@@ -75,7 +75,7 @@ protected:
 	std::unique_ptr<KObject3d> object3d = nullptr;
 
 	// モデル
-	KModel* model = nullptr;
+	std::unique_ptr<KModel> model = nullptr;
 
 	// パイプライン
 	KGPlin* pipeline = nullptr;

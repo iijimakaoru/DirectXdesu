@@ -20,7 +20,7 @@ public:
 	/// <param name="HP"></param>
 	/// <param name="spritePipeline_"></param>
 	/// <returns></returns>
-	static Blaster* Create(KModel* model_, KGPlin* pipeline_, const KMyMath::Vector3& pos,
+	static Blaster* Create(KGPlin* pipeline_, const KMyMath::Vector3& pos,
 		const float HP, KGPlin* spritePipeline_);
 
 public:
@@ -32,7 +32,7 @@ public:
 	/// <param name="initPos"></param>
 	/// <param name="HP_"></param>
 	/// <param name="spritePipeline_"></param>
-	void Init(KModel* model_, KGPlin* pipeline_, const KMyMath::Vector3& initPos,
+	void Init(KGPlin* pipeline_, const KMyMath::Vector3& initPos,
 		const float HP_, KGPlin* spritePipeline_) override;
 
 	/// <summary>
@@ -42,11 +42,28 @@ public:
 	void Update(ViewProjection* viewPro, bool isBossMovie_) override;
 
 	/// <summary>
+	/// 描画
+	/// </summary>
+	void Draw() override;
+
+	/// <summary>
 	/// 当たり判定
 	/// </summary>
 	/// <param name="posA"></param>
 	/// <param name="posB"></param>
 	/// <returns></returns>
 	bool CollisionCheck(const KMyMath::Vector3& posA, const KMyMath::Vector3& posB) override;
+
+	/// <summary>
+	/// ユニットのポスセッター(0～7)
+	/// </summary>
+	/// <param name="pos_"></param>
+	/// <param name="num_"></param>
+	void SetUnitsPos(const KMyMath::Vector3& pos_, size_t num_);
+
+private:
+	std::array<std::unique_ptr<KObject3d>, 8> units;
+	std::unique_ptr<KModel> unitsModel;
+	std::array<KMyMath::Vector3, 8> unitsPos;
 };
 

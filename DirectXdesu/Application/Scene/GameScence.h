@@ -45,6 +45,8 @@
 
 #include "EnemyManager.h"
 
+#include "Blaster.h"
+
 /**
  * @file GameScene.h
  * @brief ゲームシーン
@@ -144,7 +146,9 @@ private:
 	TextureData textureData2;
 
 	// ボスバトル
-	std::unique_ptr<BossEnemy> boss = nullptr;
+
+	// MS01_Blaster
+	std::unique_ptr<Blaster> blaster = nullptr;
 
 	// 登場警告
 	std::unique_ptr<Warning> bossWarning = nullptr;

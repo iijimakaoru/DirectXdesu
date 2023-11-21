@@ -208,6 +208,12 @@
     <Filter Include="ヘッダー ファイル\Application\Reticle">
       <UniqueIdentifier>{0cf5abcd-c778-4a60-9b45-c1c61400448d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Application\BossEnemy\Blaster">
+      <UniqueIdentifier>{bbaabdb8-f663-4d3e-b5d9-5b6d449f370f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Application\BossEnemy\Blaster">
+      <UniqueIdentifier>{e6eb8886-7dc0-43ad-a38d-34a8ee8ca92f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Math\Vector2\Vector2.cpp">
@@ -384,9 +390,6 @@
     <ClCompile Include="Application\Effect\Warning.cpp">
       <Filter>ソース ファイル\Application\Effect</Filter>
     </ClCompile>
-    <ClCompile Include="Application\BossEnemy\Blaster.cpp">
-      <Filter>ソース ファイル\Application\BossEnemy</Filter>
-    </ClCompile>
     <ClCompile Include="Application\BossEnemy\BossEnemy.cpp">
       <Filter>ソース ファイル\Application\BossEnemy</Filter>
     </ClCompile>
@@ -416,6 +419,12 @@
     </ClCompile>
     <ClCompile Include="Application\MobEnemy\EnemyManager.cpp">
       <Filter>ソース ファイル\Application\MobEnemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\BossEnemy\Blaster\Blaster.cpp">
+      <Filter>ソース ファイル\Application\BossEnemy\Blaster</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\BossEnemy\ActState.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -593,9 +602,6 @@
     <ClInclude Include="Application\Effect\Warning.h">
       <Filter>ヘッダー ファイル\Application\Effect</Filter>
     </ClInclude>
-    <ClInclude Include="Application\BossEnemy\Blaster.h">
-      <Filter>ヘッダー ファイル\Application\BossEnemy</Filter>
-    </ClInclude>
     <ClInclude Include="Application\BossEnemy\BossEnemy.h">
       <Filter>ヘッダー ファイル\Application\BossEnemy</Filter>
     </ClInclude>
@@ -622,6 +628,12 @@
     </ClInclude>
     <ClInclude Include="Application\MobEnemy\EnemyManager.h">
       <Filter>ヘッダー ファイル\Application\MobEnemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\BossEnemy\Blaster\Blaster.h">
+      <Filter>ヘッダー ファイル\Application\BossEnemy\Blaster</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\BossEnemy\ActState.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

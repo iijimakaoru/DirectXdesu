@@ -9,17 +9,14 @@
 #include "Ease.h"
 #include "Collision.h"
 
-void BossEnemy::Init(KModel* model_, KGPlin* pipeline_, const KMyMath::Vector3& initPos_, const float HP_, KGPlin* spritePipeline_)
+void BossEnemy::Init(KGPlin* pipeline_, const KMyMath::Vector3& initPos_, const float HP_, KGPlin* spritePipeline_)
 {
-	// モデル生成
-	model = model_;
-
 	// パイプライン生成
 	pipeline = pipeline_;
 	spritePipeline = spritePipeline_;
 
 	// オブジェクト生成
-	object3d.reset(KObject3d::Create(model, pipeline));
+	object3d.reset(KObject3d::Create(model.get(), pipeline));
 	object3d->SetPos(initPos_);
 
 	// 体力セット
@@ -71,10 +68,7 @@ void BossEnemy::Update(ViewProjection* viewPro_, bool isBossMovie_)
 
 void BossEnemy::Draw()
 {
-	if (!isFallEffectEnd)
-	{
-		object3d->Draw();
-	}
+	object3d->Draw();
 }
 
 void BossEnemy::UIDraw()

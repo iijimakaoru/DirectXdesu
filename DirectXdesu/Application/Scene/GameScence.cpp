@@ -14,8 +14,6 @@
 
 #include "SceneManager.h"
 
-#include "Blaster.h"
-
 #include "AppearEnemy.h"
 #include "FlyEnemy.h"
 #include "CanonEnemy.h"
@@ -37,7 +35,7 @@ void GameScence::LoadResources()
 	// モデル
 	playerModel = std::make_unique<MtlObj>("BattleShip");
 	playerModel->CreateModel();
-	mobEnemysModel = std::make_unique<MtlObj>("boss_model");
+	mobEnemysModel = std::make_unique<MtlObj>("BlasterCore");
 	mobEnemysModel->CreateModel();
 	playersBulletModel = std::make_unique<MtlObj>("playerBullet");
 	playersBulletModel->CreateModel();
@@ -170,9 +168,9 @@ void GameScence::Update()
 	}
 
 	// ボスの更新
-	if (boss)
+	if (blaster)
 	{
-		if (boss->GetIsFallEffectEnd())
+		if (blaster->GetIsFallEffectEnd())
 		{
 			goClearMovieTimer++;
 			if (goClearMovieTimer == goClearMovieTime)
@@ -184,7 +182,7 @@ void GameScence::Update()
 			}
 		}
 
-		boss->Update(camera->GetViewPro(), isBossAppearMovie);
+		blaster->Update(camera->GetViewPro(), isBossAppearMovie);
 	}
 
 	// プレイヤーの更新
@@ -225,9 +223,9 @@ void GameScence::ObjDraw()
 	enemyManager->Draw();
 
 	// ボス描画
-	if (boss)
+	if (blaster)
 	{
-		boss->Draw();
+		blaster->Draw();
 	}
 
 	// プレイヤー描画
@@ -258,10 +256,10 @@ void GameScence::SpriteDraw()
 	// UI描画
 	player->UIDraw();
 
-	if (boss)
+	if (blaster)
 	{
 		// ボスUI描画
-		boss->UIDraw();
+		blaster->UIDraw();
 	}
 
 	// 2D情報描画
@@ -383,7 +381,7 @@ void GameScence::CheckAllCollisions()
 		for (const std::unique_ptr<PlayerBullet>& bullet : playerBullets)
 		{
 			// 弾が無いorボスがいないorボスが死んでるorボスバトルが始まってなかったらスキップ
-			if (!bullet || !boss || boss->GetIsDead() || !isBossBattle)
+			if (!bullet || !blaster || blaster->GetIsDead() || !isBossBattle)
 			{
 				return;
 			}
@@ -392,16 +390,16 @@ void GameScence::CheckAllCollisions()
 			posA = bullet->GetWorldPos();
 
 			// ボスの座標
-			posB = boss->GetWorldPos();
+			posB = blaster->GetWorldPos();
 
 			// 球同士の交差判定
-			if (boss->CollisionCheck(posA, posB))
+			if (blaster->CollisionCheck(posA, posB))
 			{
 				// 弾消去
 				bullet->OnCollision();
 
 				// 敵消去
-				boss->OnCollision();
+				blaster->OnCollision();
 			}
 		}
 	}
@@ -448,25 +446,9 @@ void GameScence::BossBattleStart()
 			return;
 		}
 
-		if (!boss)
+		if (!blaster)
 		{
-			// ボス配置
-			const float bossDistance = 150;
-			const KMyMath::Vector3 bossBasePos =
-			{
-				0.0f,
-				120.0f,
-				bossBattleStartPos + bossDistance
-			};
-
-			// 生成
-			const float initBHP = 10.0f;
-			boss.reset(Blaster::Create(mobEnemysModel.get(),
-				objPipeline.get(),
-				bossBasePos,
-				initBHP,
-				spritePipeline.get()
-			));
+			
 		}
 
 		//
@@ -767,12 +749,12 @@ void GameScence::GoGameOverScene()
 void GameScence::BossAppearMovie()
 {
 	// スキップしよう
-	if (appearPhase > 0 && appearPhase < 5)
+	if (appearPhase > 0 && appearPhase < 7)
 	{
 		if (input->GetPadButtonDown(XINPUT_GAMEPAD_START))
 		{
 			appearPhaseTimer = 0;
-			appearPhase = 5;
+			appearPhase = 7;
 		}
 	}
 
@@ -787,6 +769,23 @@ void GameScence::BossAppearMovie()
 		}
 		else
 		{
+			// ボス配置
+			const float bossDistance = 150;
+			const KMyMath::Vector3 bossBasePos =
+			{
+				0.0f,
+				120.0f,
+				bossBattleStartPos + bossDistance
+			};
+
+			// 生成
+			const float initBHP = 10.0f;
+			blaster.reset(Blaster::Create(objPipeline.get(),
+				bossBasePos,
+				initBHP,
+				spritePipeline.get()
+			));
+
 			// すべての弾削除
 			bulletManager->AllBulletDelete();
 			// プレイヤーとカメラの親子関係解消
@@ -802,7 +801,7 @@ void GameScence::BossAppearMovie()
 	// ムービーフェーズ1
 	else if (appearPhase == 1)
 	{
-		appearPhaseTime = 180.0f;
+		appearPhaseTime = 90.0f;
 
 		MovieBarInInit();
 
@@ -810,107 +809,20 @@ void GameScence::BossAppearMovie()
 		{
 			appearPhaseTimer++;
 
-			// ボス回転させよう
-			const float startRotY = 0.0f;
-			const float endRotY = 360.0f;
-			boss->SetRot({ boss->GetRot().x,MyEase::Lerp(startRotY,endRotY,appearPhaseTimer / appearPhaseTime),boss->GetRot().z });
-
-			// ボス降下
-			const float startPosY = 120.0f;
-			const float endPosY = 80.0f;
-			boss->SetPos({ boss->GetWorldPos().x,MyEase::Lerp(startPosY,endPosY,appearPhaseTimer / appearPhaseTime),boss->GetWorldPos().z });
-
-			//自機とカメラの距離
-			const KMyMath::Vector3 bossDistance = { 0.0f, 12.5f, -15.0f };
-			//const KMyMath::Vector3 bossDistance = { 0.0f, 0.0f, -15.0f };
-
-			// カメラの場所
-			const KMyMath::Vector3 cameraPos = boss->GetWorldPos() + bossDistance;
-
-			// 角度
-			const float rotX = 15.0f;
-			const float rotY = 0.0f;
-			camera->SetCameraRot({ rotX,rotY,0.0f });
-			//camera->SetCameraRot({ 0.0f,-0.0f,camera->GetCameraRot().z });
-
-			// カメラ動け
-			camera->SetCameraPos(cameraPos);
-		}
-		else
-		{
-			appearPhaseTimer = 0;
-			appearPhase++;
-		}
-	}
-	// ムービーフェーズ2
-	else if (appearPhase == 2)
-	{
-		appearPhaseTime = 180.0f;
-
-		if (appearPhaseTimer < appearPhaseTime)
-		{
-			appearPhaseTimer++;
-
-			// ボス回転させよう
-			const float startBRotY = 0.0f;
-			const float endBRotY = 360.0f;
-			boss->SetRot({ boss->GetRot().x,MyEase::Lerp(startBRotY,endBRotY,appearPhaseTimer / appearPhaseTime),boss->GetRot().z });
-
-			// ボス降下
-			const float startBPosY = 80.0f;
-			const float endBPosY = 40.0f;
-			boss->SetPos({ boss->GetWorldPos().x,MyEase::Lerp(startBPosY,endBPosY,appearPhaseTimer / appearPhaseTime),boss->GetWorldPos().z });
-
-			//自機とカメラの距離
-			KMyMath::Vector3 bossDistance = { MyEase::Lerp(-12.0f,-11.5f,startPhaseTimer / startPhaseTime), 12.5f, -15.0f };
-
-			// カメラの場所
-			const KMyMath::Vector3 cameraPos = boss->GetWorldPos() + bossDistance;
-
-			camera->SetCameraPos(cameraPos);
-
-			const float startCRotY = 35.0f;
-			const float endCRotY = 27.5f;
-			camera->SetCameraRot(
-				{ camera->GetCameraRot().x,
-				MyEase::Lerp(startCRotY,endCRotY,startPhaseTimer / startPhaseTime),
-				camera->GetCameraRot().z }
-			);
-		}
-		else
-		{
-			appearPhaseTimer = 0;
-			appearPhase++;
-		}
-	}
-	// ムービーフェーズ3
-	else if (appearPhase == 3)
-	{
-		appearPhaseTime = 90.0f;
-
-		if (appearPhaseTimer < appearPhaseTime)
-		{
-			appearPhaseTimer++;
-
-			// ボス回転させよう
-			const float startBRotY = 0.0f;
-			const float endBRotY = 360.0f;
-			boss->SetRot({ boss->GetRot().x,MyEase::OutCubicFloat(startBRotY,endBRotY,appearPhaseTimer / appearPhaseTime),boss->GetRot().z });
-
 			// ボス降下
 			const float startBPosY = 40.0f;
 			const float endBPosY = 20.0f;
-			boss->SetPos({ boss->GetWorldPos().x,MyEase::OutCubicFloat(startBPosY,endBPosY,appearPhaseTimer / appearPhaseTime),boss->GetWorldPos().z });
+			blaster->SetPos({ blaster->GetWorldPos().x,MyEase::OutCubicFloat(startBPosY,endBPosY,appearPhaseTimer / appearPhaseTime),blaster->GetWorldPos().z });
 
-			//自機とカメラの距離
-			KMyMath::Vector3 bossDistance = { 0.0f, 0.0f, -30.0f };
+			// カメラの最終位置
+			KMyMath::Vector3 cameraMove = { 0.0f, 0.0f, -30.0f };
 
 			// カメラの場所
 			const KMyMath::Vector3 cameraPos =
 			{
-				boss->GetWorldPos().x + bossDistance.x,
-				endBPosY + bossDistance.y,
-				boss->GetWorldPos().z + bossDistance.z
+				blaster->GetWorldPos().x + cameraMove.x,
+				endBPosY + cameraMove.y,
+				blaster->GetWorldPos().z + cameraMove.z
 			};
 
 			camera->SetCameraPos(cameraPos);
@@ -924,8 +836,102 @@ void GameScence::BossAppearMovie()
 			appearPhase++;
 		}
 	}
+	// ムービーフェーズ2
+	else if (appearPhase == 2)
+	{
+		appearPhaseTime = 30.0f;
+
+		if (appearPhaseTimer < appearPhaseTime)
+		{
+			appearPhaseTimer++;
+
+			//自機とカメラの距離
+			KMyMath::Vector3 cameraMove = { 0.0f, 0.0f, MyEase::OutCubicFloat(-30.0f,-20.0f,appearPhaseTimer / appearPhaseTime) };
+
+			// カメラの場所
+			const KMyMath::Vector3 cameraPos =
+			{
+				blaster->GetWorldPos().x + cameraMove.x,
+				blaster->GetWorldPos().y + cameraMove.y,
+				blaster->GetWorldPos().z + cameraMove.z
+			};
+
+			camera->SetCameraPos(cameraPos);
+
+			const KMyMath::Vector3 rot = { 0.0f,0.0f,0.0f };
+			camera->SetCameraRot(rot);
+		}
+		else
+		{
+			appearPhaseTimer = 0;
+			appearPhase++;
+		}
+	}
+	// 小休止
+	else if (appearPhase == 3)
+	{
+		appearPhaseTime = 30.0f;
+
+		if (appearPhaseTimer < appearPhaseTime)
+		{
+			appearPhaseTimer++;
+		}
+		else
+		{
+			appearPhaseTimer = 0;
+			appearPhase++;
+		}
+	}
 	// ムービーフェーズ4
 	else if (appearPhase == 4)
+	{
+		appearPhaseTime = 10.0f;
+
+		if (appearPhaseTimer < appearPhaseTime)
+		{
+			appearPhaseTimer++;
+
+			const float startNum = 3.0f;
+			const float endNum = 4.0f;
+
+			std::array<KMyMath::Vector3, 8> unitMove;
+			unitMove[0] = MyEase::Lerp3D({  startNum, startNum, startNum }, {  endNum, endNum, endNum }, appearPhaseTimer / appearPhaseTime);
+			unitMove[1] = MyEase::Lerp3D({ -startNum, startNum, startNum }, { -endNum, endNum, endNum }, appearPhaseTimer / appearPhaseTime);
+			unitMove[2] = MyEase::Lerp3D({ -startNum,-startNum, startNum }, { -endNum,-endNum, endNum }, appearPhaseTimer / appearPhaseTime);
+			unitMove[3] = MyEase::Lerp3D({  startNum,-startNum, startNum }, {  endNum,-endNum, endNum }, appearPhaseTimer / appearPhaseTime);
+			unitMove[4] = MyEase::Lerp3D({  startNum, startNum,-startNum }, {  endNum, endNum,-endNum }, appearPhaseTimer / appearPhaseTime);
+			unitMove[5] = MyEase::Lerp3D({ -startNum, startNum,-startNum }, { -endNum, endNum,-endNum }, appearPhaseTimer / appearPhaseTime);
+			unitMove[6] = MyEase::Lerp3D({ -startNum,-startNum,-startNum }, { -endNum,-endNum,-endNum }, appearPhaseTimer / appearPhaseTime);
+			unitMove[7] = MyEase::Lerp3D({  startNum,-startNum,-startNum }, {  endNum,-endNum,-endNum }, appearPhaseTimer / appearPhaseTime);
+
+			for (size_t i = 0; i < 8; i++)
+			{
+				blaster->SetUnitsPos(unitMove[i], i);
+			}
+		}
+		else
+		{
+			appearPhaseTimer = 0;
+			appearPhase++;
+		}
+	}
+	// 小休止
+	else if (appearPhase == 5)
+	{
+		appearPhaseTime = 30.0f;
+
+		if (appearPhaseTimer < appearPhaseTime)
+		{
+			appearPhaseTimer++;
+		}
+		else
+		{
+			appearPhaseTimer = 0;
+			appearPhase++;
+		}
+	}
+	// ムービーフェーズ6
+	else if (appearPhase == 6)
 	{
 		appearPhaseTime = 180.0f;
 
@@ -933,16 +939,13 @@ void GameScence::BossAppearMovie()
 		{
 			appearPhaseTimer++;
 
-			//自機とカメラの距離
-			KMyMath::Vector3 bossDistance =
-			{
-				MyEase::InOutCubicFloat(0.0f, 10.0f,appearPhaseTimer / appearPhaseTime),
-				MyEase::InOutCubicFloat(0.0f,-20.0f,appearPhaseTimer / appearPhaseTime),
-				MyEase::InOutCubicFloat(-30.0f,-120.0f,appearPhaseTimer / appearPhaseTime)
-			};
+			// カメラの動き
+			KMyMath::Vector3 cameraMove = MyEase::InOutCubicVec3({ 0.0f,0.0f,-20.0f },
+				{ 10.0f,-20.0f,-120.0f },
+				appearPhaseTimer / appearPhaseTime);
 
 			// カメラの場所
-			const KMyMath::Vector3 cameraPos = boss->GetWorldPos() + bossDistance;
+			const KMyMath::Vector3 cameraPos = blaster->GetWorldPos() + cameraMove;
 			camera->SetCameraPos(cameraPos);
 
 			const KMyMath::Vector3 rot =
@@ -959,7 +962,8 @@ void GameScence::BossAppearMovie()
 			appearPhase++;
 		}
 	}
-	else if (appearPhase == 5)
+	// 暗転
+	else if (appearPhase == 7)
 	{
 		appearPhaseTime = 30;
 
@@ -978,13 +982,13 @@ void GameScence::BossAppearMovie()
 			appearPhase++;
 		}
 	}
-	// ムービーフェーズ6
-	else if (appearPhase == 6)
+	// ボス戦配置
+	else if (appearPhase == 8)
 	{
 		MovieBarOutInit();
 		// ボス配置
-		boss->SetPos({ boss->GetWorldPos().x,20.0f,boss->GetWorldPos().z });
-		boss->SetRot({ 0.0f,0.0f,0.0f });
+		blaster->SetPos({ blaster->GetWorldPos().x,20.0f,blaster->GetWorldPos().z });
+		blaster->SetRot({ 0.0f,0.0f,0.0f });
 		// カメラ配置
 		camera->SetCameraPos({ 0.0f,0.0f,bossBattleStartPos });
 		camera->SetCameraRot({ 0.0f,0.0f,0.0f });

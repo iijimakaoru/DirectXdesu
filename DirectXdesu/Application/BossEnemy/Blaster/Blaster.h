@@ -66,15 +66,31 @@ public:
 	const KMyMath::Vector3 GetUnitsPos(size_t num_) const;
 
 	/// <summary>
+	/// ユニットのスケールゲッター
+	/// </summary>
+	/// <param name="num_"></param>
+	/// <returns></returns>
+	const KMyMath::Vector3 GetUnitsScale(size_t num_) const;
+
+	/// <summary>
 	/// ユニットのポスセッター(0～7)
 	/// </summary>
 	/// <param name="pos_"></param>
 	/// <param name="num_"></param>
 	void SetUnitsPos(const KMyMath::Vector3& pos_, size_t num_);
 
+	/// <summary>
+	/// ユニットのスケールセッター
+	/// </summary>
+	/// <param name="scale_"></param>
+	/// <param name="num_"></param>
+	void SetUnitsScale(const KMyMath::Vector3& scale_, size_t num_);
+
 private:
 	std::array<std::unique_ptr<KObject3d>, 8> units;
 	std::unique_ptr<KModel> unitsModel;
 	std::array<KMyMath::Vector3, 8> unitsPos;
+
+	bool isStand = true;
 };
 

@@ -15,12 +15,11 @@ protected:
 	// アクション終わり
 	bool isFinish = false;
 
-	// アクション時間
-	uint32_t actTimer = 0;
-	uint32_t actTime = 0;
+	// アクションフェーズ
+	uint32_t actPhase = 0;
 
-	// アクションスタートタイム
-	float actStartTimer = 0;
-	float actStartTime = 0;
+	// アクション時間
+	float actTimer = 0;
+	float actTime = 0;
 };
 

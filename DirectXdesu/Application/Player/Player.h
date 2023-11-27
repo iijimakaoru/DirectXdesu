@@ -118,6 +118,8 @@ private:
 	void Debug();
 
 public:
+	static Player* nowPlayer;
+
 	static bool isStartEase;
 
 private:

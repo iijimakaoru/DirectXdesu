@@ -7,6 +7,7 @@
 #include "Blaster.h"
 #include "Collision.h"
 #include "BlasterStandState.h"
+#include "BlasterAimState.h"
 
 Blaster* Blaster::nowBlaster = nullptr;
 
@@ -47,12 +48,14 @@ void Blaster::Init(KGPlin* pipeline_, const KMyMath::Vector3& initPos_,
 	// スタート時のユニットの位置
 	units[0]->SetPos({  3.0f, 3.0f, 3.0f });
 	units[1]->SetPos({ -3.0f, 3.0f, 3.0f });
-	units[2]->SetPos({ -3.0f,-3.0f, 3.0f });
-	units[3]->SetPos({  3.0f,-3.0f, 3.0f });
-	units[4]->SetPos({  3.0f, 3.0f,-3.0f });
-	units[5]->SetPos({ -3.0f, 3.0f,-3.0f });
-	units[6]->SetPos({ -3.0f,-3.0f,-3.0f });
-	units[7]->SetPos({  3.0f,-3.0f,-3.0f });
+	units[2]->SetPos({  3.0f, 3.0f,-3.0f });
+	units[3]->SetPos({ -3.0f, 3.0f,-3.0f });
+	units[4]->SetPos({  3.0f,-3.0f, 3.0f });
+	units[5]->SetPos({ -3.0f,-3.0f, 3.0f });
+	units[6]->SetPos({  3.0f,-3.0f,-3.0f });
+	units[7]->SetPos({ -3.0f,-3.0f,-3.0f });
+
+	actState = std::make_unique<BlasterStandState>();
 }
 
 void Blaster::Update(ViewProjection* viewPro_, bool isBossMovie_)
@@ -65,13 +68,22 @@ void Blaster::Update(ViewProjection* viewPro_, bool isBossMovie_)
 	{
 		if (actState->GetIsFinish())
 		{
-			actState = std::make_unique<BlasterStandState>();
+			if (isStand)
+			{
+				actState = std::make_unique<BlasterStandState>();
+				isStand = false;
+			}
+			else
+			{
+				actState = std::make_unique<BlasterAimState>();
+				isStand = true;
+			}
 		}
-	}
 
-	if (actState)
-	{
-		actState->Update();
+		if (actState)
+		{
+			actState->Update();
+		}
 	}
 
 	BossEnemy::Update(viewPro_, isBossMovie_);
@@ -117,7 +129,17 @@ const KMyMath::Vector3 Blaster::GetUnitsPos(size_t num_) const
 	return units[num_]->GetPos();
 }
 
+const KMyMath::Vector3 Blaster::GetUnitsScale(size_t num_) const
+{
+	return units[num_]->GetScale();
+}
+
 void Blaster::SetUnitsPos(const KMyMath::Vector3& pos_, size_t num_)
 {
 	units[num_]->SetPos(pos_);
+}
+
+void Blaster::SetUnitsScale(const KMyMath::Vector3& scale_, size_t num_)
+{
+	units[num_]->SetScale(scale_);
 }

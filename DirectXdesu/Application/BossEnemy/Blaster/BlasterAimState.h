@@ -1,15 +1,14 @@
 #pragma once
 #include "ActState.h"
-#include "MyMath.h"
-
-class BlasterStandState : public ActState
+class BlasterAimState : public ActState
 {
 public:
 	// コンストラクタ
-	BlasterStandState();
-
+	BlasterAimState();
 	// 更新
 	void Update() override;
+
+	void BulletShot();
 
 private:
 	float angle = 0;

@@ -423,11 +423,14 @@
     <ClCompile Include="Application\BossEnemy\Blaster\Blaster.cpp">
       <Filter>ソース ファイル\Application\BossEnemy\Blaster</Filter>
     </ClCompile>
-    <ClCompile Include="Application\BossEnemy\ActState.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Application\BossEnemy\Blaster\BlasterStandState.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\Application\BossEnemy\Blaster</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\BossEnemy\ActState.cpp">
+      <Filter>ソース ファイル\Application\BossEnemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\BossEnemy\Blaster\BlasterAimState.cpp">
+      <Filter>ソース ファイル\Application\BossEnemy\Blaster</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -635,11 +638,14 @@
     <ClInclude Include="Application\BossEnemy\Blaster\Blaster.h">
       <Filter>ヘッダー ファイル\Application\BossEnemy\Blaster</Filter>
     </ClInclude>
-    <ClInclude Include="Application\BossEnemy\ActState.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Application\BossEnemy\Blaster\BlasterStandState.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\Application\BossEnemy\Blaster</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\BossEnemy\ActState.h">
+      <Filter>ヘッダー ファイル\Application\BossEnemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\BossEnemy\Blaster\BlasterAimState.h">
+      <Filter>ヘッダー ファイル\Application\BossEnemy\Blaster</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -188,6 +188,7 @@ void GameScence::Update()
 
 	// プレイヤーの更新
 	player->Update(camera->GetViewPro(), isStageStart, isBossAppearMovie, isClearMovie);
+	Player::nowPlayer = player.get();
 
 	// 弾の更新
 	bulletManager->Update(camera->GetViewPro());
@@ -891,14 +892,14 @@ void GameScence::BossAppearMovie()
 			const float endNum = 4.0f;
 
 			std::array<KMyMath::Vector3, 8> unitMove;
-			unitMove[0] = MyEase::Lerp3D({  startNum, startNum, startNum }, {  endNum, endNum, endNum }, appearPhaseTimer / appearPhaseTime);
-			unitMove[1] = MyEase::Lerp3D({ -startNum, startNum, startNum }, { -endNum, endNum, endNum }, appearPhaseTimer / appearPhaseTime);
-			unitMove[2] = MyEase::Lerp3D({ -startNum,-startNum, startNum }, { -endNum,-endNum, endNum }, appearPhaseTimer / appearPhaseTime);
-			unitMove[3] = MyEase::Lerp3D({  startNum,-startNum, startNum }, {  endNum,-endNum, endNum }, appearPhaseTimer / appearPhaseTime);
-			unitMove[4] = MyEase::Lerp3D({  startNum, startNum,-startNum }, {  endNum, endNum,-endNum }, appearPhaseTimer / appearPhaseTime);
-			unitMove[5] = MyEase::Lerp3D({ -startNum, startNum,-startNum }, { -endNum, endNum,-endNum }, appearPhaseTimer / appearPhaseTime);
-			unitMove[6] = MyEase::Lerp3D({ -startNum,-startNum,-startNum }, { -endNum,-endNum,-endNum }, appearPhaseTimer / appearPhaseTime);
-			unitMove[7] = MyEase::Lerp3D({  startNum,-startNum,-startNum }, {  endNum,-endNum,-endNum }, appearPhaseTimer / appearPhaseTime);
+			unitMove[0] = MyEase::Lerp3D({ startNum, startNum, startNum }, { endNum, endNum, endNum }, appearPhaseTimer / appearPhaseTime);
+			unitMove[1] = MyEase::Lerp3D({-startNum, startNum, startNum }, {-endNum, endNum, endNum }, appearPhaseTimer / appearPhaseTime);
+			unitMove[2] = MyEase::Lerp3D({ startNum, startNum,-startNum }, { endNum, endNum,-endNum }, appearPhaseTimer / appearPhaseTime);
+			unitMove[3] = MyEase::Lerp3D({-startNum, startNum,-startNum }, {-endNum, endNum,-endNum }, appearPhaseTimer / appearPhaseTime);
+			unitMove[4] = MyEase::Lerp3D({ startNum,-startNum, startNum }, { endNum,-endNum, endNum }, appearPhaseTimer / appearPhaseTime);
+			unitMove[5] = MyEase::Lerp3D({-startNum,-startNum, startNum }, {-endNum,-endNum, endNum }, appearPhaseTimer / appearPhaseTime);
+			unitMove[6] = MyEase::Lerp3D({ startNum,-startNum,-startNum }, { endNum,-endNum,-endNum }, appearPhaseTimer / appearPhaseTime);
+			unitMove[7] = MyEase::Lerp3D({-startNum,-startNum,-startNum }, {-endNum,-endNum,-endNum }, appearPhaseTimer / appearPhaseTime);
 
 			for (size_t i = 0; i < 8; i++)
 			{
@@ -939,6 +940,24 @@ void GameScence::BossAppearMovie()
 			}
 
 			appearPhaseTimer++;
+
+			const float startNum = 4.0f;
+			const float endNum = 6.0f;
+
+			std::array<KMyMath::Vector3, 8> unitMove;
+			unitMove[0] = MyEase::Lerp3D({ startNum, startNum, startNum }, { endNum, endNum, endNum }, appearPhaseTimer / appearPhaseTime);
+			unitMove[1] = MyEase::Lerp3D({ -startNum, startNum, startNum }, { -endNum, endNum, endNum }, appearPhaseTimer / appearPhaseTime);
+			unitMove[2] = MyEase::Lerp3D({ startNum, startNum,-startNum }, { endNum, endNum,-endNum }, appearPhaseTimer / appearPhaseTime);
+			unitMove[3] = MyEase::Lerp3D({ -startNum, startNum,-startNum }, { -endNum, endNum,-endNum }, appearPhaseTimer / appearPhaseTime);
+			unitMove[4] = MyEase::Lerp3D({ startNum,-startNum, startNum }, { endNum,-endNum, endNum }, appearPhaseTimer / appearPhaseTime);
+			unitMove[5] = MyEase::Lerp3D({ -startNum,-startNum, startNum }, { -endNum,-endNum, endNum }, appearPhaseTimer / appearPhaseTime);
+			unitMove[6] = MyEase::Lerp3D({ startNum,-startNum,-startNum }, { endNum,-endNum,-endNum }, appearPhaseTimer / appearPhaseTime);
+			unitMove[7] = MyEase::Lerp3D({ -startNum,-startNum,-startNum }, { -endNum,-endNum,-endNum }, appearPhaseTimer / appearPhaseTime);
+
+			for (size_t i = 0; i < 8; i++)
+			{
+				blaster->SetUnitsPos(unitMove[i], i);
+			}
 
 			// カメラの動き
 			KMyMath::Vector3 cameraMove = MyEase::InOutCubicVec3({ 0.0f,0.0f,-20.0f },
@@ -986,6 +1005,7 @@ void GameScence::BossAppearMovie()
 	// ボス戦配置
 	else if (appearPhase == 8)
 	{
+		blaster->SetFarstAct();
 		MovieBarOutInit();
 		// ボス配置
 		blaster->SetPos({ blaster->GetWorldPos().x,20.0f,blaster->GetWorldPos().z });

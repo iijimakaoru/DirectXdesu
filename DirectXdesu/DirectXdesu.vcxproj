@@ -123,6 +123,7 @@
     <ClCompile Include="Application\Stage\Bill1.cpp" />
     <ClCompile Include="Application\MobEnemy\EnemyManager.cpp" />
     <ClCompile Include="Application\BossEnemy\Blaster\BlasterStandState.cpp" />
+    <ClCompile Include="Application\BossEnemy\Blaster\BlasterAimState.cpp" />
     <ClCompile Include="Engine\Base\BaseScene\ASceneFactory.cpp" />
     <ClCompile Include="Engine\Base\BaseScene\BaseScene.cpp" />
     <ClCompile Include="Engine\Base\BaseCamera\Camera.cpp" />
@@ -196,6 +197,7 @@
     <ClInclude Include="Application\Stage\Bill1.h" />
     <ClInclude Include="Application\MobEnemy\EnemyManager.h" />
     <ClInclude Include="Application\BossEnemy\Blaster\BlasterStandState.h" />
+    <ClInclude Include="Application\BossEnemy\Blaster\BlasterAimState.h" />
     <ClInclude Include="Engine\Base\BaseScene\ASceneFactory.h" />
     <ClInclude Include="Engine\Base\BaseScene\BaseScene.h" />
     <ClInclude Include="Engine\Base\BaseCamera\Camera.h" />

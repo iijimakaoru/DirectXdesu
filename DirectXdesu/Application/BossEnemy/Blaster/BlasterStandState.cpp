@@ -4,27 +4,93 @@
 
 BlasterStandState::BlasterStandState()
 {
-	actStartTime = 30.0f;
-
-	actTime = 300;
-
-	unitPos = { MyMathUtility::GetRand(-1.0f,1.0f),0.0f,0.0f };
+	isFinish = false;
 }
 
 void BlasterStandState::Update()
 {
 	Blaster* blaster = Blaster::nowBlaster;
-	if (actStartTimer < actStartTime)
+
+	if (actPhase == 0)
 	{
-		actStartTimer++;
-		blaster->SetUnitsPos(MyEase::Lerp3D(blaster->GetUnitsPos(0), { 0.0f, 9.0f, 0.0f }, actStartTimer / actStartTime), 0);
-		blaster->SetUnitsPos(MyEase::Lerp3D(blaster->GetUnitsPos(1), { 0.0f,-9.0f, 0.0f }, actStartTimer / actStartTime), 1);
-	}
-	else
-	{
+		actTime = 15.0f;
+
 		if (actTimer < actTime)
 		{
 			actTimer++;
+			for (size_t i = 0; i < 8; i++)
+			{
+				blaster->SetUnitsScale(MyEase::InCubicVec3({ 1.0f,1.0f,1.0f }, { 0.0f,0.0f,0.0f }, actTimer / actTime), i);
+			}
+		}
+		else
+		{
+			actTimer = 0;
+			actPhase++;
+		}
+	}
+	else if (actPhase == 1)
+	{
+		actTime = 300.0f;
+		startTime = 15.0f;
+		if (actTimer == 0)
+		{
+			float posY = 6.0f;
+			for (size_t i = 0; i < 8; i++)
+			{
+				if (i > 3)
+				{
+					posY = -6.0f;
+				}
+				blaster->SetUnitsPos({ blaster->GetUnitsPos(i).x,posY,blaster->GetUnitsPos(i).z }, i);
+			}
+		}
+
+		if (startTimer < startTime)
+		{
+			startTimer++;
+
+			for (size_t i = 0; i < 8; i++)
+			{
+				blaster->SetUnitsScale(MyEase::OutCubicVec3({ 0.0f,0.0f,0.0f }, { 1.0f,1.0f,1.0f }, startTimer / startTime), i);
+			}
+		}
+
+		if (actTimer < actTime)
+		{
+			if (actTimer == 0)
+			{
+				angle = 45.0f;
+				float posY = 6.0f;
+				for (size_t i = 0; i < 8; i++)
+				{
+					if (i > 3)
+					{
+						posY = -6.0f;
+					}
+					blaster->SetUnitsPos({ blaster->GetUnitsPos(i).x,posY,blaster->GetUnitsPos(i).z }, i);
+				}
+			}
+
+			actTimer++;
+
+			angle += 2.0f;
+
+			// 360を超えたら
+			if (angle >= 360)
+			{
+				angle = 0;
+			}
+
+			const float radian = DirectX::XMConvertToRadians(angle);
+			const float distance = 12.0f;
+
+			for (size_t i = 0; i < 8; i++)
+			{
+				blaster->SetUnitsPos({ distance * sinf(radian + DirectX::XMConvertToRadians(90.0f * (i + 1))) ,
+					blaster->GetUnitsPos(i).y ,
+					distance * cosf(radian + DirectX::XMConvertToRadians(90.0f * (i + 1))) }, i);
+			}
 		}
 		else
 		{

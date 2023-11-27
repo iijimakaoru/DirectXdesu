@@ -91,6 +91,6 @@ private:
 	std::unique_ptr<KModel> unitsModel;
 	std::array<KMyMath::Vector3, 8> unitsPos;
 
-	bool isStand = true;
+	bool isStand = false;
 };
 

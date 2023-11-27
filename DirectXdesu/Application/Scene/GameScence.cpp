@@ -35,7 +35,7 @@ void GameScence::LoadResources()
 	// モデル
 	playerModel = std::make_unique<MtlObj>("BattleShip");
 	playerModel->CreateModel();
-	mobEnemysModel = std::make_unique<MtlObj>("BlasterCore");
+	mobEnemysModel = std::make_unique<MtlObj>("MobEnemy1");
 	mobEnemysModel->CreateModel();
 	playersBulletModel = std::make_unique<MtlObj>("playerBullet");
 	playersBulletModel->CreateModel();
@@ -82,8 +82,8 @@ void GameScence::Init()
 	sceneManager = SceneManager::GetInstance();
 
 	// カメラ初期化
-	//camera->Init(player.get(), { 0.0f,0.0f,-200.0f });
-	camera->Init(player.get(), { 0.0f,0.0f,450.0f });
+	camera->Init(player.get(), { 0.0f,0.0f,-200.0f });
+	//camera->Init(player.get(), { 0.0f,0.0f,450.0f });
 
 	// エネミーマネージャー生成
 	enemyManager.reset(EnemyManager::Create("Resources/csv/enemyPop.csv", // ステージのcsvを読み込む
@@ -104,8 +104,7 @@ void GameScence::Init()
 
 	// 弾マネージャー
 	bulletManager = BulletManager::GetInstance();
-	bulletManager->Init(playersBulletModel.get(),
-		objPipeline.get());
+	bulletManager->Init(objPipeline.get());
 
 	// パーティクル
 	particleManager = ParticleManager::GetInstance();

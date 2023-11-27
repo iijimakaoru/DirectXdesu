@@ -8,9 +8,13 @@
 
 BulletManager* BulletManager::bulletManager = nullptr;
 
-void BulletManager::Init(KModel* playersBulletModel_, KGPlin* pipeline_)
+void BulletManager::Init(KGPlin* pipeline_)
 {
-	playersBulletModel = playersBulletModel_;
+	playersBulletModel = std::make_unique<MtlObj>("playerBullet");
+	playersBulletModel->CreateModel();
+
+	enemysBulletModel = std::make_unique<MtlObj>("EnemyBullet");
+	enemysBulletModel->CreateModel();
 
 	pipeline = pipeline_;
 }
@@ -48,7 +52,7 @@ void BulletManager::PlayerBulletShot(const KMyMath::Vector3& pos, const KMyMath:
 {
 	// 弾生成
 	std::unique_ptr<PlayerBullet> newBullet;
-	newBullet.reset(PlayerBullet::Create(playersBulletModel, pipeline, pos, vec_, rot_, bulletSpeed_));
+	newBullet.reset(PlayerBullet::Create(playersBulletModel.get(), pipeline, pos, vec_, rot_, bulletSpeed_));
 	// 登録
 	playerBullets.push_back(std::move(newBullet));
 }
@@ -57,7 +61,7 @@ void BulletManager::EnemyBulletShot(const KMyMath::Vector3& pos, const KMyMath::
 {
 	// 弾生成
 	std::unique_ptr<EnemyBullet> newBullet;
-	newBullet.reset(EnemyBullet::Create(playersBulletModel, pipeline, pos, vec_, rot_, bulletSpeed_));
+	newBullet.reset(EnemyBullet::Create(enemysBulletModel.get(), pipeline, pos, vec_, rot_, bulletSpeed_));
 	// 登録
 	enemyBullets.push_back(std::move(newBullet));
 }

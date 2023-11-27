@@ -12,8 +12,6 @@ void BlasterAimState::Update()
 {
 	Blaster* blaster = Blaster::nowBlaster;
 
-	//Player* player = Player::nowPlayer;
-
 	if (actPhase == 0)
 	{
 		actTime = 15.0f;

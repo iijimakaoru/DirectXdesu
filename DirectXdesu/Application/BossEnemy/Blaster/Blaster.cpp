@@ -63,33 +63,50 @@ void Blaster::Init(KGPlin* pipeline_, const KMyMath::Vector3& initPos_,
 
 void Blaster::Update(ViewProjection* viewPro_, bool isBossMovie_)
 {
-	if (isBossMovie_)
-	{
+	isBossMovie = isBossMovie_;
 
+	if (!isDead)
+	{
+		if (isBossMovie)
+		{
+
+		}
+		else
+		{
+			if (actState->GetIsFinish())
+			{
+				if (isStand)
+				{
+					actState = std::make_unique<BlasterStandState>();
+					isStand = false;
+				}
+				else
+				{
+					actState = std::make_unique<BlasterAimState>();
+					isStand = true;
+				}
+			}
+
+			if (actState)
+			{
+				actState->Update();
+			}
+		}
+
+		if (HP <= min(HP, 0))
+		{
+			isDead = true;
+		}
 	}
 	else
 	{
-		if (actState->GetIsFinish())
-		{
-			if (isStand)
-			{
-				actState = std::make_unique<BlasterStandState>();
-				isStand = false;
-			}
-			else
-			{
-				actState = std::make_unique<BlasterAimState>();
-				isStand = true;
-			}
-		}
-
-		if (actState)
-		{
-			actState->Update();
-		}
+		DeadEffect();
 	}
 
-	BossEnemy::Update(viewPro_, isBossMovie_);
+	// HP演出
+	HPEffect();
+
+	object3d->Update(viewPro_);
 
 	for (size_t i = 0; i < 8; i++)
 	{

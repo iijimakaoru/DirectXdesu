@@ -776,10 +776,8 @@ void GameScence::BossAppearMovie()
 			};
 
 			// 生成
-			const float initBHP = 10.0f;
 			blaster.reset(Blaster::Create(objPipeline.get(),
 				bossBasePos,
-				initBHP,
 				spritePipeline.get()
 			));
 

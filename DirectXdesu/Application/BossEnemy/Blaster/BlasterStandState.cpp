@@ -31,7 +31,7 @@ void BlasterStandState::Update()
 	}
 	else if (actPhase == 1)
 	{
-		actTime = 300.0f;
+		actTime = 120.0f;
 		startTime = 15.0f;
 		if (actTimer == 0)
 		{

@@ -9,7 +9,7 @@
 #include "Ease.h"
 #include "Collision.h"
 
-void BossEnemy::Init(KGPlin* pipeline_, const KMyMath::Vector3& initPos_, const float HP_, KGPlin* spritePipeline_)
+void BossEnemy::Init(KGPlin* pipeline_, const KMyMath::Vector3& initPos_, KGPlin* spritePipeline_)
 {
 	// パイプライン生成
 	pipeline = pipeline_;
@@ -20,7 +20,7 @@ void BossEnemy::Init(KGPlin* pipeline_, const KMyMath::Vector3& initPos_, const 
 	object3d->SetPos(initPos_);
 
 	// 体力セット
-	maxHP = HP_;
+	maxHP = 0;
 	HP = maxHP;
 
 	HPUI = std::make_unique<Sprite>();

@@ -24,7 +24,7 @@ public:
 	/// <param name="initPos"></param>
 	/// <param name="HP"></param>
 	virtual void Init(KGPlin* pipeline_,const KMyMath::Vector3& initPos,
-		const float HP_, KGPlin* spritePipeline_);
+		KGPlin* spritePipeline_);
 
 	/// <summary>
 	/// 更新

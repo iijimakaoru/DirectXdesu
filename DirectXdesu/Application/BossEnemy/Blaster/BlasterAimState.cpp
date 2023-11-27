@@ -102,7 +102,7 @@ void BlasterAimState::Update()
 		{
 			actTimer++;
 
-			angle += 4.0f;
+			angle += 6.0f;
 
 			// 360を超えたら
 			if (angle >= 360)
@@ -146,7 +146,7 @@ void BlasterAimState::BulletShot()
 	Blaster* blaster = Blaster::nowBlaster;
 
 	// 弾の速度
-	const float kBulletSpeed = 1.0f;
+	const float kBulletSpeed = 2.5f;
 
 	// 自キャラのワールド座標
 	KMyMath::Vector3 pPos = player->GetWorldPos();

@@ -12,7 +12,7 @@
 Blaster* Blaster::nowBlaster = nullptr;
 
 Blaster* Blaster::Create(KGPlin* pipeline_, const KMyMath::Vector3& pos_,
-	const float HP, KGPlin* spritePipeline_)
+	KGPlin* spritePipeline_)
 {
 	// インスタンス生成
 	Blaster* blaster = new Blaster();
@@ -22,18 +22,21 @@ Blaster* Blaster::Create(KGPlin* pipeline_, const KMyMath::Vector3& pos_,
 	}
 
 	// 初期化
-	blaster->Init(pipeline_, pos_, HP, spritePipeline_);
+	blaster->Init(pipeline_, pos_, spritePipeline_);
 
 	return blaster;
 }
 
 void Blaster::Init(KGPlin* pipeline_, const KMyMath::Vector3& initPos_,
-	const float HP_, KGPlin* spritePipeline_)
+	 KGPlin* spritePipeline_)
 {
 	model = std::make_unique<MtlObj>("BlasterCore");
 	model->CreateModel();
 
-	BossEnemy::Init(pipeline_, initPos_, HP_, spritePipeline_);
+	BossEnemy::Init(pipeline_, initPos_, spritePipeline_);
+
+	maxHP = 20;
+	HP = maxHP;
 
 	unitsModel = std::make_unique<MtlObj>("BlasterUnit");
 	unitsModel->CreateModel();

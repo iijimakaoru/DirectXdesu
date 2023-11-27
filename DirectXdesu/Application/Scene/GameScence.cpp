@@ -243,7 +243,7 @@ void GameScence::ObjDraw()
 	objParticleManager->Draw();
 
 	// 建物描画
-	billManager->Draw();
+	//billManager->Draw();
 }
 
 void GameScence::SpriteDraw()

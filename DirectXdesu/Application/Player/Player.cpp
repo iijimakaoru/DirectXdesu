@@ -73,7 +73,7 @@ void Player::Init(KModel* model_, KGPlin* objPipeline_, const float playerHP, KG
 	HPBarUI->SetPipeline(spritePipeline);
 
 	// HPゲージテクスチャ読み込み
-	hpbarTex = TextureManager::Load("Resources/texture/PlayersHPBar.png");
+	hpbarTex = TextureManager::Load("Resources/texture/PlayerHPBar2.png");
 
 	// 死亡フラグ
 	isDead = false;
@@ -460,7 +460,7 @@ void Player::StandStartPos()
 		float height = static_cast<float>(KWinApp::GetInstance()->GetWindowSizeH());
 
 		HPPos = MyEase::OutCubicVec2({ -600.0f,height + 200.0f },
-			{ 0.0f,height - 64.0f },
+			{ 32.0f,height - 64.0f },
 			startEaseTimer / startEaseTime);
 
 		operationPos = MyEase::OutCubicVec2({ width + 300.0f,height + 100.0f },
@@ -513,14 +513,18 @@ void Player::UIDraw()
 		return;
 	}
 
+	KMyMath::Vector2 HPsize = {286 / maxHP, 17};
+
 	// HPバー描画
 	HPBarUI->Draw(hpbarTex,HPPos + HPBarUIPos, { 1,1 }, 0, { 1,1,1,1 }, false, false, { 0,0 });
 
 	// HP減少値描画
-	HPrectUI->Draw(hpTex, HPPos + HPUIPos, { oldHP * (318 / maxHP),30 }, 0, { hpColor.x,hpColor.y,hpColor.z,0.3f }, false, false, { 0,0 });
+	HPrectUI->Draw(hpTex, HPPos + HPUIPos, { oldHP * HPsize.x,HPsize.y }, 0, { hpColor.x,hpColor.y,hpColor.z,0.3f }, false, false, { 0,0 });
 
 	// HP描画
-	HPUI->Draw(hpTex, HPPos + HPUIPos, { HP * (318 / maxHP),30 }, 0, { hpColor.x,hpColor.y,hpColor.z,1 }, false, false, { 0,0 });
+	HPUI->Draw(
+	    hpTex, HPPos + HPUIPos, {HP * HPsize.x, HPsize.y}, 0, {hpColor.x, hpColor.y, hpColor.z, 1},
+	    false, false, {0, 0});
 
 	// 操作説明
 	operation->Draw(operationTex, operationPos, { 1.0f,1.0f }, 0.0f, { 1.0f,1.0f,1.0f,1.0f }, false, false, { 0.0f,0.0f });

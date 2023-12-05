@@ -193,7 +193,7 @@ private:
 	// HP
 	std::unique_ptr<Sprite> HPUI = nullptr;
 	TextureData hpTex;
-	KMyMath::Vector2 HPUIPos = { 11.0f,11.0f };
+	KMyMath::Vector2 HPUIPos = { 14.0f,14.0f };
 	std::unique_ptr<Sprite> HPrectUI = nullptr;
 
 	// HPバー
@@ -247,5 +247,4 @@ private:
 	TextureData operationTex;
 	KMyMath::Vector2 operationPos;
 #pragma endregion
-
 };

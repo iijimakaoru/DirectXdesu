@@ -242,5 +242,6 @@ private:
 	std::array<KMyMath::Vector2, 2> movieBarPos;
 #pragma endregion
 
+	float hoge = 0.0f;
 };
 

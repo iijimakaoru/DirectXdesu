@@ -9,6 +9,8 @@
 #include "BlasterStandState.h"
 #include "BlasterAimState.h"
 
+#include "ImguiManager.h"
+
 Blaster* Blaster::nowBlaster = nullptr;
 
 Blaster* Blaster::Create(KGPlin* pipeline_, const KMyMath::Vector3& pos_,
@@ -65,6 +67,12 @@ void Blaster::Update(ViewProjection* viewPro_, bool isBossMovie_)
 {
 	isBossMovie = isBossMovie_;
 
+	/*ImGui::Begin("BossHP");
+	ImGui::SetWindowPos({10, 10});
+	ImGui::SetWindowSize({200, 200});
+	ImGui::SliderFloat("BarPos", &HPPos.y, 0.0f, 100.0f);
+	ImGui::End();*/
+
 	if (!isDead)
 	{
 		if (isBossMovie)
@@ -73,7 +81,7 @@ void Blaster::Update(ViewProjection* viewPro_, bool isBossMovie_)
 		}
 		else
 		{
-			if (actState->GetIsFinish())
+			/*if (actState->GetIsFinish())
 			{
 				if (isStand)
 				{
@@ -85,7 +93,7 @@ void Blaster::Update(ViewProjection* viewPro_, bool isBossMovie_)
 					actState = std::make_unique<BlasterAimState>();
 					isStand = true;
 				}
-			}
+			}*/
 
 			if (actState)
 			{

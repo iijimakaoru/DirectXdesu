@@ -37,33 +37,13 @@ void BossEnemy::Init(KGPlin* pipeline_, const KMyMath::Vector3& initPos_, KGPlin
 	HPBarUI->Init();
 	HPBarUI->SetPipeline(spritePipeline);
 
-	hpbarTex = TextureManager::Load("Resources/texture/BossHPBar.png");
+	hpbarTex = TextureManager::Load("Resources/texture/BossHPBar2.png");
 
 	isHPE = true;
 
 	isDead = false;
-}
 
-void BossEnemy::Update(ViewProjection* viewPro_, bool isBossMovie_)
-{
-	isBossMovie = isBossMovie_;
-
-	if (!isDead)
-	{
-		if (HP <= min(HP, 0))
-		{
-			isDead = true;
-		}
-	}
-	else
-	{
-		DeadEffect();
-	}
-
-	// HP演出
-	HPEffect();
-
-	object3d->Update(viewPro_);
+	HPPos = {204.0f, 40.0f};
 }
 
 void BossEnemy::Draw()
@@ -80,11 +60,15 @@ void BossEnemy::UIDraw()
 
 	float width = static_cast<float>(KWinApp::GetInstance()->GetWindowSizeW());
 
-	HPrectUI->Draw(hpTex, { 46.0f,13.0f }, { oldHP * (1190 / maxHP),16 }, 0, { 1,0,0,0.3f }, false, false, { 0,0 });
+	const float sizeX = 872 / maxHP;
+	const float sizeY = 21.5f;
 
-	HPUI->Draw(hpTex, { 46.0f,13.0f }, { HP * (1190 / maxHP),16 }, 0, { 1,0,0,1 }, false, false, { 0,0 });
+	HPBarUI->Draw(
+	    hpbarTex, {width / 2.0f, HPPos.y}, {1.0f, 1.0f}, 0, {1.0f, 1.0f, 1.0f, 1.0f});
 
-	HPBarUI->Draw(hpbarTex, { width / 2.0f,20.0f }, { 1.0f,1.0f }, 0, { 1.0f,1.0f,1.0f,1.0f });
+	HPrectUI->Draw(hpTex, HPPos, { oldHP * sizeX,sizeY }, 0, { 1,0,0,0.3f }, false, false, { 0,0.5f });
+
+	HPUI->Draw(hpTex, HPPos, { HP * sizeX,sizeY }, 0, { 1,0,0,1 }, false, false, { 0,0.5f });
 }
 
 const KMyMath::Vector3 BossEnemy::GetWorldPos() const

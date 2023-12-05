@@ -316,7 +316,7 @@ void GameScence::CheckAllCollisions()
 		for (const std::unique_ptr<EnemyBullet>& bullet : enemyBullets)
 		{
 			// 弾がないor自機が死んでるor自機が無敵状態の時はスキップ
-			if (!bullet || player->GetIsDead() || player->GetIsInvisible() || blaster->GetIsDead())
+			if (!bullet || player->GetIsDead() || blaster->GetIsDead())
 			{
 				return;
 			}
@@ -334,8 +334,12 @@ void GameScence::CheckAllCollisions()
 				// 弾消去
 				bullet->OnCollision();
 
-				// 自機被弾処理
-				player->OnCollision();
+				// 無敵状態じゃないとき
+				if (!player->GetIsInvisible())
+				{
+					// 自機被弾処理
+					player->OnCollision();
+				}
 			}
 		}
 	}

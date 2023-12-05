@@ -81,7 +81,7 @@ void Blaster::Update(ViewProjection* viewPro_, bool isBossMovie_)
 		}
 		else
 		{
-			/*if (actState->GetIsFinish())
+			if (actState->GetIsFinish())
 			{
 				if (isStand)
 				{
@@ -93,7 +93,7 @@ void Blaster::Update(ViewProjection* viewPro_, bool isBossMovie_)
 					actState = std::make_unique<BlasterAimState>();
 					isStand = true;
 				}
-			}*/
+			}
 
 			if (actState)
 			{

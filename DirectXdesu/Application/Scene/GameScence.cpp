@@ -299,9 +299,6 @@ void GameScence::Final()
 
 void GameScence::CheckAllCollisions()
 {
-	// 判定対象AとBの座標
-	KMyMath::Vector3 posA, posB;
-
 	// 自機弾の取得
 	const std::list<std::unique_ptr<PlayerBullet>>& playerBullets = bulletManager->GetPlayerBullets();
 
@@ -311,49 +308,15 @@ void GameScence::CheckAllCollisions()
 	// 敵の取得
 	const std::list<std::unique_ptr<MobEnemy>>& mobEnemys = enemyManager->GetMobEnemys();
 
-	// 自弾と敵の当たり判定
-	{
-		for (const std::unique_ptr<MobEnemy>& mobEnemy : mobEnemys)
-		{
-			if (!mobEnemy)
-			{
-				return;
-			}
-
-			// 敵の座標
-			posA = mobEnemy->GetWorldPos();
-
-			for (const std::unique_ptr<PlayerBullet>& bullet : playerBullets)
-			{
-				if (!bullet)
-				{
-					return;
-				}
-
-				// 弾の座標
-				posB = bullet->GetWorldPos();
-
-				// 球同士の交差判定
-				const float enemyRange = 6.0f;
-				const float bulletRange = 2.0f;
-				if (MyCollisions::CheckSphereToSphere(posA, posB, enemyRange, bulletRange))
-				{
-					// 弾消去
-					bullet->OnCollision();
-
-					// 敵消去
-					mobEnemy->OnCollision();
-				}
-			}
-		}
-	}
-
 	// 敵弾と自機の当たり判定
 	{
+		// 判定対象AとBの座標
+		KMyMath::Vector3 posA, posB;
+
 		for (const std::unique_ptr<EnemyBullet>& bullet : enemyBullets)
 		{
 			// 弾がないor自機が死んでるor自機が無敵状態の時はスキップ
-			if (!bullet || player->GetIsDead() || player->GetIsInvisible())
+			if (!bullet || player->GetIsDead() || player->GetIsInvisible() || blaster->GetIsDead())
 			{
 				return;
 			}
@@ -377,12 +340,55 @@ void GameScence::CheckAllCollisions()
 		}
 	}
 
+	// 自弾と敵の当たり判定
+	{
+		// 判定対象AとBの座標
+		KMyMath::Vector3 posA, posB;
+
+		for (const std::unique_ptr<MobEnemy>& mobEnemy : mobEnemys) 
+		{
+			if (!mobEnemy) 
+			{
+				return;
+			}
+
+			// 敵の座標
+			posA = mobEnemy->GetWorldPos();
+
+			for (const std::unique_ptr<PlayerBullet>& bullet : playerBullets) 
+			{
+				if (!bullet) 
+				{
+					return;
+				}
+
+				// 弾の座標
+				posB = bullet->GetWorldPos();
+
+				// 球同士の交差判定
+				const float enemyRange = 6.0f;
+				const float bulletRange = 2.0f;
+				if (MyCollisions::CheckSphereToSphere(posA, posB, enemyRange, bulletRange)) 
+				{
+					// 弾消去
+					bullet->OnCollision();
+
+					// 敵消去
+					mobEnemy->OnCollision();
+				}
+			}
+		}
+	}
+
 	// 自弾とボスの判定
 	{
+		// 判定対象AとBの座標
+		KMyMath::Vector3 posA, posB;
+
 		for (const std::unique_ptr<PlayerBullet>& bullet : playerBullets)
 		{
-			// 弾が無いorボスがいないorボスが死んでるorボスバトルが始まってなかったらスキップ
-			if (!bullet || !blaster || blaster->GetIsDead() || !isBossBattle)
+			// 弾が無いorボスがいないorボスが死んでるorボスバトルが始まってなかったorプレイヤーが死んでいたらスキップ
+			if (!bullet || !blaster || blaster->GetIsDead() || !isBossBattle || player->GetIsDead())
 			{
 				return;
 			}

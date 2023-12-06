@@ -214,6 +214,12 @@
     <Filter Include="ヘッダー ファイル\Application\BossEnemy\Blaster">
       <UniqueIdentifier>{e6eb8886-7dc0-43ad-a38d-34a8ee8ca92f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Application\Score">
+      <UniqueIdentifier>{492e2a89-39a8-4a85-9898-65068a9ecca1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Application\Score">
+      <UniqueIdentifier>{de255936-d107-47de-b190-a0cb8b50cfab}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Math\Vector2\Vector2.cpp">
@@ -432,6 +438,9 @@
     <ClCompile Include="Application\BossEnemy\Blaster\BlasterAimState.cpp">
       <Filter>ソース ファイル\Application\BossEnemy\Blaster</Filter>
     </ClCompile>
+    <ClCompile Include="Application\Score\ScoreManager.cpp">
+      <Filter>ソース ファイル\Application\Score</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Input\KInput.h">
@@ -646,6 +655,9 @@
     </ClInclude>
     <ClInclude Include="Application\BossEnemy\Blaster\BlasterAimState.h">
       <Filter>ヘッダー ファイル\Application\BossEnemy\Blaster</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\Score\ScoreManager.h">
+      <Filter>ヘッダー ファイル\Application\Score</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

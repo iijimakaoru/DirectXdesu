@@ -26,6 +26,10 @@ public:
 	void Final()override;
 
 private:
+	// 背景動かし
+	void MoveBack();
+
+private:
 	// インプット
 	KInput* input = nullptr;
 
@@ -39,11 +43,17 @@ private:
 	KShader spriteShader;
 
 	// クリアスプライト
-	std::unique_ptr<Sprite> clear = nullptr;
-	TextureData clearTex;
+	std::unique_ptr<Sprite> result = nullptr;
+	TextureData resultTex;
+	KMyMath::Vector2 resultPos;
 
 	// 次のシーンへのキー
 	std::unique_ptr<Sprite> pushA = nullptr;
 	TextureData pushATex;
+
+	// スプライト背景
+	std::array<std::unique_ptr<Sprite>,2> back;
+	TextureData backTex;
+	std::array<KMyMath::Vector2, 2> backPos;
 };
 

@@ -67,12 +67,6 @@ void Blaster::Update(ViewProjection* viewPro_, bool isBossMovie_)
 {
 	isBossMovie = isBossMovie_;
 
-	/*ImGui::Begin("BossHP");
-	ImGui::SetWindowPos({10, 10});
-	ImGui::SetWindowSize({200, 200});
-	ImGui::SliderFloat("BarPos", &HPPos.y, 0.0f, 100.0f);
-	ImGui::End();*/
-
 	if (!isDead)
 	{
 		if (isBossMovie)

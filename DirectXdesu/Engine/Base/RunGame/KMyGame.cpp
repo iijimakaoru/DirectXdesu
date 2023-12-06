@@ -10,6 +10,7 @@ void KMyGame::Init()
 	sceneFactory = new SceneFactory();
 	// シーンマネージャーにセット
 	SceneManager::GetInstance()->SetSceneFactory(sceneFactory);
+
 	// 最初のシーン
 	SceneManager::GetInstance()->ChangeScene("TITLE");
 }

@@ -1,10 +1,10 @@
 #pragma once
 #include "KDirectXCommon.h"
-#include "KObject3d.h"
-#include "Sprite.h"
-#include "Sound.h"
 #include "KGPlin.h"
+#include "KObject3d.h"
 #include "KShader.h"
+#include "Sound.h"
+#include "Sprite.h"
 #include <imgui.h>
 
 #include "Camera.h"
@@ -53,8 +53,7 @@
  * @author 飯島 薫
  */
 
-class GameScence : public BaseScene
-{
+class GameScence : public BaseScene {
 public:
 	GameScence(){};
 	~GameScence();
@@ -63,7 +62,7 @@ public:
 	void Update() override;
 	void ObjDraw() override;
 	void SpriteDraw() override;
-	void Final()override;
+	void Final() override;
 
 private:
 	// 衝突判定
@@ -198,7 +197,7 @@ private:
 	// フェーズ
 	uint32_t appearPhase = 0;
 
-	float appearPhaseTimer = 0; 
+	float appearPhaseTimer = 0;
 	float appearPhaseTime = 0;
 
 	// 暗転待ち時間
@@ -236,7 +235,7 @@ private:
 #pragma endregion
 
 #pragma region ムービー中
-	// 
+	//
 	std::array<std::unique_ptr<Sprite>, 2> movieBar;
 	TextureData movieBarTex;
 	std::array<KMyMath::Vector2, 2> movieBarPos;
@@ -244,4 +243,3 @@ private:
 
 	float hoge = 0.0f;
 };
-

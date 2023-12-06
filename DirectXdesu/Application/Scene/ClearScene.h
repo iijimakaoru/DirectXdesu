@@ -13,17 +13,16 @@
  * @author 飯島 薫
  */
 
-class ClearScene : public BaseScene
-{
+class ClearScene : public BaseScene {
 public:
-	ClearScene() {};
+	ClearScene(){};
 	~ClearScene();
 	void LoadResources() override;
 	void Init() override;
 	void Update() override;
 	void ObjDraw() override;
 	void SpriteDraw() override;
-	void Final()override;
+	void Final() override;
 
 private:
 	// 背景動かし
@@ -52,8 +51,7 @@ private:
 	TextureData pushATex;
 
 	// スプライト背景
-	std::array<std::unique_ptr<Sprite>,2> back;
+	std::array<std::unique_ptr<Sprite>, 2> back;
 	TextureData backTex;
 	std::array<KMyMath::Vector2, 2> backPos;
 };
-

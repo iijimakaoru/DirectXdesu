@@ -1,9 +1,8 @@
 #include "KMyGame.h"
-#include "SceneFactory.h"
 #include "BulletManager.h"
+#include "SceneFactory.h"
 
-void KMyGame::Init()
-{
+void KMyGame::Init() {
 	Framework::Init();
 
 	// シーンファクトリーを生成
@@ -15,13 +14,9 @@ void KMyGame::Init()
 	SceneManager::GetInstance()->ChangeScene("TITLE");
 }
 
-void KMyGame::Update()
-{
-	Framework::Update();
-}
+void KMyGame::Update() { Framework::Update(); }
 
-void KMyGame::Draw()
-{
+void KMyGame::Draw() {
 	// レンダーテクスチャへの描画
 	postEffect->PreDrawScene();
 
@@ -39,13 +34,12 @@ void KMyGame::Draw()
 	// Imgui描画
 #ifdef _DEBUG
 	imguiMane.Draw();
-#endif 
+#endif
 
 	dx->PostDraw();
 }
 
-void KMyGame::Final()
-{
+void KMyGame::Final() {
 	Framework::Final();
 
 	BulletManager::GetInstance()->Delete();

@@ -6,13 +6,12 @@
 
 #include "EnemyBullet.h"
 
-EnemyBullet* EnemyBullet::Create(KModel* model_, KGPlin* pipeline_,
-	const KMyMath::Vector3& pos_, const KMyMath::Vector3& vec_, const KMyMath::Vector3& rot_, const float bulletSpeed_)
-{
+EnemyBullet* EnemyBullet::Create(
+    KModel* model_, KGPlin* pipeline_, const KMyMath::Vector3& pos_, const KMyMath::Vector3& vec_,
+    const KMyMath::Vector3& rot_, const float bulletSpeed_) {
 	// インスタンス生成
 	EnemyBullet* enemyBullet = new EnemyBullet();
-	if (enemyBullet == nullptr)
-	{
+	if (enemyBullet == nullptr) {
 		return nullptr;
 	}
 
@@ -23,8 +22,7 @@ EnemyBullet* EnemyBullet::Create(KModel* model_, KGPlin* pipeline_,
 	return enemyBullet;
 }
 
-void EnemyBullet::Init(KModel* model_, KGPlin* pipeline_)
-{
+void EnemyBullet::Init(KModel* model_, KGPlin* pipeline_) {
 	// モデル生成
 	model = model_;
 
@@ -36,5 +34,5 @@ void EnemyBullet::Init(KModel* model_, KGPlin* pipeline_)
 	object3d->Initialize();
 	object3d->SetPipeline(pipeline);
 	object3d->LoadModel(model);
-	object3d->SetScale({ 1.0f,1.0f,1.0f });
+	object3d->SetScale({1.0f, 1.0f, 1.0f});
 }

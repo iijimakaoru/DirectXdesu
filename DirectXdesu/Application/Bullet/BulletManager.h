@@ -1,6 +1,6 @@
 #pragma once
-#include "PlayerBullet.h"
 #include "EnemyBullet.h"
+#include "PlayerBullet.h"
 
 /**
  * @file BulletManager.h
@@ -8,8 +8,7 @@
  * @author 飯島 薫
  */
 
-class BulletManager
-{
+class BulletManager {
 public:
 	void Init(KGPlin* pipeline_);
 
@@ -33,7 +32,9 @@ public:
 	/// <param name="vec_"></param>
 	/// <param name="rot_"></param>
 	/// <param name="bulletSpeed"></param>
-	void PlayerBulletShot(const KMyMath::Vector3& pos, const KMyMath::Vector3& vec_, const KMyMath::Vector3& rot_, const float bulletSpeed);
+	void PlayerBulletShot(
+	    const KMyMath::Vector3& pos, const KMyMath::Vector3& vec_, const KMyMath::Vector3& rot_,
+	    const float bulletSpeed);
 
 	/// <summary>
 	/// 敵の弾発射
@@ -42,7 +43,9 @@ public:
 	/// <param name="vec_"></param>
 	/// <param name="rot_"></param>
 	/// <param name="bulletSpeed"></param>
-	void EnemyBulletShot(const KMyMath::Vector3& pos, const KMyMath::Vector3& vec_, const KMyMath::Vector3& rot_, const float bulletSpeed);
+	void EnemyBulletShot(
+	    const KMyMath::Vector3& pos, const KMyMath::Vector3& vec_, const KMyMath::Vector3& rot_,
+	    const float bulletSpeed);
 
 	// インスタンスゲッター
 	static BulletManager* GetInstance();
@@ -67,7 +70,7 @@ private:
 private:
 	// プレイヤーの弾
 	std::list<std::unique_ptr<PlayerBullet>> playerBullets;
-	//KModel* playersBulletModel = nullptr;
+	// KModel* playersBulletModel = nullptr;
 	std::unique_ptr<KModel> playersBulletModel = nullptr;
 
 	// 敵の弾
@@ -86,4 +89,3 @@ private:
 	BulletManager(const BulletManager&) = delete;
 	const BulletManager& operator=(const BulletManager&) = delete;
 };
-

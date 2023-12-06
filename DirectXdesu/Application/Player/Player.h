@@ -1,14 +1,14 @@
 #pragma once
 #include "Camera.h"
-#include "KObject3d.h"
-#include "KModel.h"
 #include "KGPlin.h"
-#include "KShader.h"
 #include "KInput.h"
+#include "KModel.h"
+#include "KObject3d.h"
+#include "KShader.h"
 #include "PlayerBullet.h"
 
-#include "Reticle3D.h"
 #include "Reticle2D.h"
+#include "Reticle3D.h"
 
 /**
  * @file Player.h
@@ -19,15 +19,15 @@
 /// <summary>
 /// 自キャラ
 /// </summary>
-class Player
-{
+class Player {
 public:
 	/// <summary>
 	/// 生成
 	/// </summary>
 	/// <param name="model_"></param>
 	/// <returns></returns>
-	static Player* Create(KModel* model_,KGPlin* objPipeline_, const float playerHP, KGPlin* spritePipeline_);
+	static Player*
+	    Create(KModel* model_, KGPlin* objPipeline_, const float playerHP, KGPlin* spritePipeline_);
 
 public:
 	// 初期化
@@ -185,7 +185,7 @@ private:
 	const float hpEaseTime = 15;
 
 	// スタート時のHPイージング
-	KMyMath::Vector2 HPPos = { -500.0f,0.0f };
+	KMyMath::Vector2 HPPos = {-500.0f, 0.0f};
 
 	// 死亡しているか
 	bool isDead;
@@ -193,13 +193,13 @@ private:
 	// HP
 	std::unique_ptr<Sprite> HPUI = nullptr;
 	TextureData hpTex;
-	KMyMath::Vector2 HPUIPos = { 14.0f,14.0f };
+	KMyMath::Vector2 HPUIPos = {14.0f, 14.0f};
 	std::unique_ptr<Sprite> HPrectUI = nullptr;
 
 	// HPバー
 	std::unique_ptr<Sprite> HPBarUI = nullptr;
 	TextureData hpbarTex;
-	KMyMath::Vector2 HPBarUIPos = { 10.0f,10.0f };
+	KMyMath::Vector2 HPBarUIPos = {10.0f, 10.0f};
 
 	// 無敵時間
 	uint32_t invisibleTimer = 0;
@@ -211,7 +211,7 @@ private:
 	uint32_t coolTimer = 0;
 
 	// HP色
-	KMyMath::Vector4 hpColor = { 0,0,0,1.0f };
+	KMyMath::Vector4 hpColor = {0, 0, 0, 1.0f};
 #pragma endregion
 
 #pragma region 被弾演出

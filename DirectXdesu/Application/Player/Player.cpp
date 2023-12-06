@@ -1,23 +1,22 @@
 #include "Player.h"
-#include "Ease.h"
 #include "BulletManager.h"
+#include "Ease.h"
 #include "ParticleManager.h"
 
 const float Player::moveSpeed = 0.48f;
-const KMyMath::Vector2 Player::rotLimit = { 35.0f, 25.0f };
-const KMyMath::Vector2 Player::posLimitMin = { -15.0f, -4.0f };
-const KMyMath::Vector2 Player::posLimitMax = { 15.0f, Player::posLimitMin.y + 12.0f };
+const KMyMath::Vector2 Player::rotLimit = {35.0f, 25.0f};
+const KMyMath::Vector2 Player::posLimitMin = {-15.0f, -4.0f};
+const KMyMath::Vector2 Player::posLimitMax = {15.0f, Player::posLimitMin.y + 12.0f};
 
 Player* Player::nowPlayer = nullptr;
 
 bool Player::isStartEase = false;
 
-Player* Player::Create(KModel* model_, KGPlin* objPipeline_, const float playerHP, KGPlin* spritePipeline_)
-{
+Player* Player::Create(
+    KModel* model_, KGPlin* objPipeline_, const float playerHP, KGPlin* spritePipeline_) {
 	// インスタンス生成
 	Player* player = new Player();
-	if (player == nullptr)
-	{
+	if (player == nullptr) {
 		return nullptr;
 	}
 
@@ -27,8 +26,8 @@ Player* Player::Create(KModel* model_, KGPlin* objPipeline_, const float playerH
 	return player;
 }
 
-void Player::Init(KModel* model_, KGPlin* objPipeline_, const float playerHP, KGPlin* spritePipeline_)
-{
+void Player::Init(
+    KModel* model_, KGPlin* objPipeline_, const float playerHP, KGPlin* spritePipeline_) {
 	// 入力インスタンス
 	input = KInput::GetInstance();
 
@@ -41,8 +40,8 @@ void Player::Init(KModel* model_, KGPlin* objPipeline_, const float playerHP, KG
 
 	// オブジェクト生成
 	object3d.reset(KObject3d::Create(model, objPipeline));
-	object3d->SetPos({ 0,0,50 });
-	object3d->SetScale({ 2.0f,2.0f,2.0f });
+	object3d->SetPos({0, 0, 50});
+	object3d->SetScale({2.0f, 2.0f, 2.0f});
 
 	// レティクル
 	reticle3d = std::make_unique<Reticle3D>();
@@ -97,11 +96,13 @@ void Player::Init(KModel* model_, KGPlin* objPipeline_, const float playerHP, KG
 	operation->Init();
 	operation->SetPipeline(spritePipeline);
 	operationTex = TextureManager::Load("Resources/texture/setumei.png");
-	operationPos = { KWinApp::GetInstance()->GetWindowSizeW() - 300.0f, KWinApp::GetInstance()->GetWindowSizeH() - 100.0f };
+	operationPos = {
+	    KWinApp::GetInstance()->GetWindowSizeW() - 300.0f,
+	    KWinApp::GetInstance()->GetWindowSizeH() - 100.0f};
 }
 
-void Player::Update(ViewProjection* viewPro_, bool isStart_, bool isBossMovie_, bool isClearMovie_)
-{
+void Player::Update(
+    ViewProjection* viewPro_, bool isStart_, bool isBossMovie_, bool isClearMovie_) {
 	isStartMovie = isStart_;
 	isBossMovie = isBossMovie_;
 	isClearMovie = isClearMovie_;
@@ -109,32 +110,21 @@ void Player::Update(ViewProjection* viewPro_, bool isStart_, bool isBossMovie_, 
 	SudCoolTime();
 
 	// スタート演出中の処理
-	if (isStartMovie)
-	{
-		
-	}
-	else if (isBossMovie)
-	{
+	if (isStartMovie) {
 
-	}
-	else if (isClearMovie)
-	{
+	} else if (isBossMovie) {
 
-	}
-	else if (isStartEase)
-	{
+	} else if (isClearMovie) {
+
+	} else if (isStartEase) {
 		StandStartPos();
-	}
-	else
-	{
+	} else {
 		// 死亡条件
-		if (HP <= min(HP, 0))
-		{
+		if (HP <= min(HP, 0)) {
 			isDead = true;
 		}
 
-		if (!isDead)
-		{
+		if (!isDead) {
 			// 移動
 			Move();
 
@@ -147,9 +137,7 @@ void Player::Update(ViewProjection* viewPro_, bool isStart_, bool isBossMovie_, 
 #ifdef _DEBUG
 			Debug();
 #endif // _DEBUG
-		}
-		else
-		{
+		} else {
 			// 死亡演出
 			DeadEffect();
 		}
@@ -172,96 +160,78 @@ void Player::Update(ViewProjection* viewPro_, bool isStart_, bool isBossMovie_, 
 	object3d->Update(viewPro_);
 }
 
-void Player::Move()
-{
-	//自機が傾いている角度に移動させる
-	KMyMath::Vector3 velocity = { 0, 0, 0 };
+void Player::Move() {
+	// 自機が傾いている角度に移動させる
+	KMyMath::Vector3 velocity = {0, 0, 0};
 	velocity.x = (object3d->GetRot().y / rotLimit.y);
 	velocity.y = -(object3d->GetRot().x / rotLimit.x);
 
 	// 動け～
-	object3d->AddSetPos({ velocity.x * moveSpeed ,velocity.y * moveSpeed ,0 });
+	object3d->AddSetPos({velocity.x * moveSpeed, velocity.y * moveSpeed, 0});
 
 	// 移動制限
-	object3d->SetPos({ max(object3d->GetPos().x, posLimitMin.x) ,
-		max(object3d->GetPos().y, posLimitMin.y) ,
-		object3d->GetPos().z });
-	object3d->SetPos({ min(object3d->GetPos().x, posLimitMax.x) ,
-		min(object3d->GetPos().y, posLimitMax.y) ,
-		object3d->GetPos().z });
+	object3d->SetPos(
+	    {max(object3d->GetPos().x, posLimitMin.x), max(object3d->GetPos().y, posLimitMin.y),
+	     object3d->GetPos().z});
+	object3d->SetPos(
+	    {min(object3d->GetPos().x, posLimitMax.x), min(object3d->GetPos().y, posLimitMax.y),
+	     object3d->GetPos().z});
 }
 
-void Player::Rot()
-{
-	//回転速度
+void Player::Rot() {
+	// 回転速度
 	const float rotSpeed = 0.035f;
 
-	//角度修正基準速度
+	// 角度修正基準速度
 	const float correctionSpeed = (rotSpeed * 2.0f) / 0.1f;
-	KMyMath::Vector3 rot = { 0, 0, 0 };
+	KMyMath::Vector3 rot = {0, 0, 0};
 
-	//どこまで傾けたら判定をとるか
+	// どこまで傾けたら判定をとるか
 	const float stickNum = 100;
 
 	// Y軸回転
-	if (input->LStickTiltX(stickNum) || input->LStickTiltX(-stickNum))
-	{
-		//自機はスティックを倒した方向に動く
+	if (input->LStickTiltX(stickNum) || input->LStickTiltX(-stickNum)) {
+		// 自機はスティックを倒した方向に動く
 		const float stickRota = input->GetLStickAngle();
 		const float moveAngle = DirectX::XMConvertToRadians(stickRota);
 		const float padStickIncline = input->GetLStickInline().x;
 		rot.y = rotSpeed * cosf(moveAngle) * fabsf(padStickIncline);
-	}
-	else
-	{
-		//角度修正速度倍率
+	} else {
+		// 角度修正速度倍率
 		float backSpeedRatio = fabsf(object3d->GetRot().y / (rotLimit.y * 2)) + 0.5f;
-		//角度修正速度
+		// 角度修正速度
 		const float backSpeed = correctionSpeed * backSpeedRatio;
-		//y軸回転の傾きを修正する
+		// y軸回転の傾きを修正する
 		const float rotMin = 0.5f;
-		if (object3d->GetRot().y > rotMin)
-		{
+		if (object3d->GetRot().y > rotMin) {
 			rot.y -= backSpeed;
-		}
-		else if (object3d->GetRot().y < -rotMin)
-		{
+		} else if (object3d->GetRot().y < -rotMin) {
 			rot.y += backSpeed;
-		}
-		else
-		{
-			object3d->SetRot({ object3d->GetRot().x,0,object3d->GetRot().z });
+		} else {
+			object3d->SetRot({object3d->GetRot().x, 0, object3d->GetRot().z});
 		}
 	}
 
 	// X軸回転
-	if (input->LStickTiltY(stickNum) || input->LStickTiltY(-stickNum))
-	{
-		//自機はスティックを倒した方向に動く
+	if (input->LStickTiltY(stickNum) || input->LStickTiltY(-stickNum)) {
+		// 自機はスティックを倒した方向に動く
 		const float stickRota = -input->GetLStickAngle();
 		const float moveAngle = DirectX::XMConvertToRadians(stickRota);
 		const float padStickIncline = input->GetLStickInline().y;
 		rot.x = rotSpeed * sinf(moveAngle) * fabsf(padStickIncline);
-	}
-	else
-	{
-		//角度修正速度倍率
+	} else {
+		// 角度修正速度倍率
 		float backSpeedRatio = fabsf(object3d->GetRot().x / (rotLimit.x * 2)) + 0.5f;
-		//角度修正速度
+		// 角度修正速度
 		const float backSpeed = correctionSpeed * backSpeedRatio;
-		//y軸回転の傾きを修正する
+		// y軸回転の傾きを修正する
 		const float rotMin = 0.5f;
-		if (object3d->GetRot().x > rotMin)
-		{
+		if (object3d->GetRot().x > rotMin) {
 			rot.x -= backSpeed;
-		}
-		else if (object3d->GetRot().x < -rotMin)
-		{
+		} else if (object3d->GetRot().x < -rotMin) {
 			rot.x += backSpeed;
-		}
-		else
-		{
-			object3d->SetRot({ 0,object3d->GetRot().y,object3d->GetRot().z });
+		} else {
+			object3d->SetRot({0, object3d->GetRot().y, object3d->GetRot().z});
 		}
 	}
 
@@ -269,43 +239,38 @@ void Player::Rot()
 	{
 		const float rotZspeed = 0.01f;
 		const float rotZLimit = 1.0f;
-		//右回転
-		if (isRotZRight)
-		{
+		// 右回転
+		if (isRotZRight) {
 			swayZ += rotZspeed;
-			if (swayZ >= rotZLimit)
-			{
+			if (swayZ >= rotZLimit) {
 				isRotZRight = false;
 			}
 		}
-		//左回転
-		else
-		{
+		// 左回転
+		else {
 			swayZ -= rotZspeed;
-			if (swayZ <= -rotZLimit)
-			{
+			if (swayZ <= -rotZLimit) {
 				isRotZRight = true;
 			}
 		}
 
-		object3d->SetRot({ object3d->GetRot().x,object3d->GetRot().y,-object3d->GetRot().y + swayZ});
+		object3d->SetRot(
+		    {object3d->GetRot().x, object3d->GetRot().y, -object3d->GetRot().y + swayZ});
 	}
 
 	object3d->AddSetRot(rot);
 
 	// 角度制限
-	object3d->SetRot({ max(object3d->GetRot().x, -rotLimit.x),
-		max(object3d->GetRot().y, -rotLimit.y) ,
-		object3d->GetRot().z });
-	object3d->SetRot({ min(object3d->GetRot().x, rotLimit.x),
-		min(object3d->GetRot().y, rotLimit.y),
-		object3d->GetRot().z });
+	object3d->SetRot(
+	    {max(object3d->GetRot().x, -rotLimit.x), max(object3d->GetRot().y, -rotLimit.y),
+	     object3d->GetRot().z});
+	object3d->SetRot(
+	    {min(object3d->GetRot().x, rotLimit.x), min(object3d->GetRot().y, rotLimit.y),
+	     object3d->GetRot().z});
 }
 
-void Player::Attack()
-{
-	if (input->GetPadButton(XINPUT_GAMEPAD_A) && coolTimer <= 0)
-	{
+void Player::Attack() {
+	if (input->GetPadButton(XINPUT_GAMEPAD_A) && coolTimer <= 0) {
 		// 弾スピード
 		const float bulletSpeed = 6.0f;
 		KMyMath::Vector3 bulletVec(0, 0, 1);
@@ -320,10 +285,11 @@ void Player::Attack()
 		bulletVec = MyMathUtility::MakeNormalize(bulletVec);
 
 		// 弾発射
-		BulletManager::GetInstance()->PlayerBulletShot(GetWorldPos() + (bulletVec * distance), // ポジション＋(角度＊距離)
-			bulletVec, // 弾の進む向き
-			object3d->GetRot(), // 角度取得
-			bulletSpeed // 弾の速度
+		BulletManager::GetInstance()->PlayerBulletShot(
+		    GetWorldPos() + (bulletVec * distance), // ポジション＋(角度＊距離)
+		    bulletVec,                              // 弾の進む向き
+		    object3d->GetRot(),                     // 角度取得
+		    bulletSpeed                             // 弾の速度
 		);
 
 		// クールタイムセット
@@ -331,18 +297,16 @@ void Player::Attack()
 	}
 }
 
-void Player::DeadEffect()
-{
-	if (!isFallEffectEnd)
-	{
+void Player::DeadEffect() {
+	if (!isFallEffectEnd) {
 		// 姿勢制御
-		object3d->SetRot({ 25.0f,0.0f,object3d->GetRot().z });
+		object3d->SetRot({25.0f, 0.0f, object3d->GetRot().z});
 
 		// 回転
-		object3d->AddSetRot({ 0.0f,0.0f,10.0f });
+		object3d->AddSetRot({0.0f, 0.0f, 10.0f});
 
 		// 落下
-		object3d->AddSetPos({ 0.0f,-0.1f,0.5f });
+		object3d->AddSetPos({0.0f, -0.1f, 0.5f});
 
 		// 時間経過
 		fallEffectTimer++;
@@ -351,45 +315,37 @@ void Player::DeadEffect()
 		expTimer++;
 
 		// 堕ちてる間の爆発
-		if (expTimer >= max(expTimer, expTime))
-		{
-			ObjParticleManager::GetInstance()->SetSmallExp({ GetWorldPos().x + MyMathUtility::GetRand(-1.0f,1.0f),
-			 GetWorldPos().y + MyMathUtility::GetRand(-1.0f,1.0f), GetWorldPos().z + MyMathUtility::GetRand(-1.0f,1.0f) });
+		if (expTimer >= max(expTimer, expTime)) {
+			ObjParticleManager::GetInstance()->SetSmallExp(
+			    {GetWorldPos().x + MyMathUtility::GetRand(-1.0f, 1.0f),
+			     GetWorldPos().y + MyMathUtility::GetRand(-1.0f, 1.0f),
+			     GetWorldPos().z + MyMathUtility::GetRand(-1.0f, 1.0f)});
 			expTimer = 0;
 		}
 
 		// 演出終わり
-		if (fallEffectTimer >= max(fallEffectTimer, fallEffectTime))
-		{
+		if (fallEffectTimer >= max(fallEffectTimer, fallEffectTime)) {
 			ObjParticleManager::GetInstance()->SetExp(GetWorldPos());
 			isFallEffectEnd = true;
 		}
 	}
 }
 
-void Player::HPEffect()
-{
+void Player::HPEffect() {
 	// HP減少演出処理
-	if (hpEase)
-	{
-		if (oldHpTimer < oldHpTime)
-		{
+	if (hpEase) {
+		if (oldHpTimer < oldHpTime) {
 			oldHpTimer++;
-		}
-		else
-		{
+		} else {
 			hpEaseTimer++;
 
 			oldHP = MyEase::OutCubicFloat(startHpEase, HP, hpEaseTimer / hpEaseTime);
 
-			if (hpEaseTimer > hpEaseTime)
-			{
+			if (hpEaseTimer > hpEaseTime) {
 				hpEase = false;
 			}
 		}
-	}
-	else
-	{
+	} else {
 		oldHP = HP;
 		startHpEase = oldHP;
 		oldHpTimer = 0;
@@ -397,129 +353,101 @@ void Player::HPEffect()
 	}
 
 	// ピンチ状態のHP演出
-	if (HP < maxHP * 1 / 4)
-	{
-		hpColor = { 1,0,0,1 };
-	}
-	else
-	{
-		hpColor = { 0,1,0,1 };
+	if (HP < maxHP * 1 / 4) {
+		hpColor = {1, 0, 0, 1};
+	} else {
+		hpColor = {0, 1, 0, 1};
 	}
 }
 
-void Player::DamageEffect()
-{
+void Player::DamageEffect() {
 	// ダメージエフェクト処理
-	if (isDamageEffect)
-	{
+	if (isDamageEffect) {
 		dAlpha -= 0.1f;
 
-		if (dAlpha < 0)
-		{
+		if (dAlpha < 0) {
 			isDamageEffect = false;
 		}
 	}
 
 	// 無敵時間処理
-	if (isInvisible)
-	{
-		if (invisibleTimer < invisibleTime)
-		{
+	if (isInvisible) {
+		if (invisibleTimer < invisibleTime) {
 			invisibleTimer++;
-		}
-		else
-		{
+		} else {
 			invisibleTimer = 0;
 			isInvisible = false;
 		}
 	}
 }
 
-void Player::SudCoolTime()
-{
-	if (coolTimer > 0)
-	{
+void Player::SudCoolTime() {
+	if (coolTimer > 0) {
 		coolTimer--;
 	}
 }
 
-void Player::EndStart()
-{
-	object3d->SetPos({ 0,0,50 });
-}
+void Player::EndStart() { object3d->SetPos({0, 0, 50}); }
 
-void Player::StandStartPos()
-{
+void Player::StandStartPos() {
 	startEaseTime = 30;
 
-	if (startEaseTimer < startEaseTime)
-	{
+	if (startEaseTimer < startEaseTime) {
 		startEaseTimer++;
 
 		float width = static_cast<float>(KWinApp::GetInstance()->GetWindowSizeW());
 		float height = static_cast<float>(KWinApp::GetInstance()->GetWindowSizeH());
 
-		HPPos = MyEase::OutCubicVec2({ -600.0f,height + 200.0f },
-			{ 32.0f,height - 64.0f },
-			startEaseTimer / startEaseTime);
+		HPPos = MyEase::OutCubicVec2(
+		    {-600.0f, height + 200.0f}, {32.0f, height - 64.0f}, startEaseTimer / startEaseTime);
 
-		operationPos = MyEase::OutCubicVec2({ width + 300.0f,height + 100.0f },
-			{ width - 300.0f,height - 100.0f },
-			startEaseTimer / startEaseTime);
+		operationPos = MyEase::OutCubicVec2(
+		    {width + 300.0f, height + 100.0f}, {width - 300.0f, height - 100.0f},
+		    startEaseTimer / startEaseTime);
 
-		object3d->SetPos({ object3d->GetPos().x,
-			object3d->GetPos().y,
-			MyEase::OutCubicFloat(-50.0f,50.0f,startEaseTimer / startEaseTime) });
+		object3d->SetPos(
+		    {object3d->GetPos().x, object3d->GetPos().y,
+		     MyEase::OutCubicFloat(-50.0f, 50.0f, startEaseTimer / startEaseTime)});
 
-		object3d->SetRot({ 0.0f,
-			0.0f,
-			MyEase::InOutCubicFloat(0.0f,360.0f,startEaseTimer / startEaseTime) });
-	}
-	else
-	{
+		object3d->SetRot(
+		    {0.0f, 0.0f, MyEase::InOutCubicFloat(0.0f, 360.0f, startEaseTimer / startEaseTime)});
+	} else {
 		isStartEase = false;
 	}
 }
 
-void Player::Debug()
-{
+void Player::Debug() {}
 
-}
-
-void Player::ObjDraw()
-{
+void Player::ObjDraw() {
 	// 機体描画
-	if (!isFallEffectEnd)
-	{
+	if (!isFallEffectEnd) {
 		object3d->Draw();
 	}
 }
 
-void Player::SpriteDraw()
-{
+void Player::SpriteDraw() {
 	// レティクル描画
-	if (isStartMovie || isDead || isBossMovie || isStartEase || isClearMovie)
-	{
+	if (isStartMovie || isDead || isBossMovie || isStartEase || isClearMovie) {
 		return;
 	}
 
 	reticle2d->Draw();
 }
 
-void Player::UIDraw()
-{
-	if (isStartMovie || isBossMovie || isClearMovie)
-	{
+void Player::UIDraw() {
+	if (isStartMovie || isBossMovie || isClearMovie) {
 		return;
 	}
 
 	KMyMath::Vector2 HPsize = {286 / maxHP, 17};
 
 	// HPバー描画
-	HPBarUI->Draw(hpbarTex,HPPos + HPBarUIPos, { 1,1 }, 0, { 1,1,1,1 }, false, false, { 0,0 });
+	HPBarUI->Draw(hpbarTex, HPPos + HPBarUIPos, {1, 1}, 0, {1, 1, 1, 1}, false, false, {0, 0});
 
 	// HP減少値描画
-	HPrectUI->Draw(hpTex, HPPos + HPUIPos, { oldHP * HPsize.x,HPsize.y }, 0, { hpColor.x,hpColor.y,hpColor.z,0.3f }, false, false, { 0,0 });
+	HPrectUI->Draw(
+	    hpTex, HPPos + HPUIPos, {oldHP * HPsize.x, HPsize.y}, 0,
+	    {hpColor.x, hpColor.y, hpColor.z, 0.3f}, false, false, {0, 0});
 
 	// HP描画
 	HPUI->Draw(
@@ -527,27 +455,21 @@ void Player::UIDraw()
 	    false, false, {0, 0});
 
 	// 操作説明
-	operation->Draw(operationTex, operationPos, { 1.0f,1.0f }, 0.0f, { 1.0f,1.0f,1.0f,1.0f }, false, false, { 0.0f,0.0f });
+	operation->Draw(
+	    operationTex, operationPos, {1.0f, 1.0f}, 0.0f, {1.0f, 1.0f, 1.0f, 1.0f}, false, false,
+	    {0.0f, 0.0f});
 
 	// ダメージエフェクト描画
-	if (isDamageEffect)
-	{
-		damage->Draw(damageTex, { 1280 / 2, 720 / 2 }, { 1 ,1 }, 0.0f, { 1,0,0,dAlpha });
+	if (isDamageEffect) {
+		damage->Draw(damageTex, {1280 / 2, 720 / 2}, {1, 1}, 0.0f, {1, 0, 0, dAlpha});
 	}
 }
 
-void Player::SetParent(const WorldTransfom* parent_)
-{
-	object3d->SetParent(parent_);
-}
+void Player::SetParent(const WorldTransfom* parent_) { object3d->SetParent(parent_); }
 
-const KMyMath::Vector3& Player::GetPosition() const
-{
-	return object3d->GetPos();
-}
+const KMyMath::Vector3& Player::GetPosition() const { return object3d->GetPos(); }
 
-const KMyMath::Vector3 Player::GetWorldPos() const
-{
+const KMyMath::Vector3 Player::GetWorldPos() const {
 	// ワールド座標格納変数
 	KMyMath::Vector3 result;
 
@@ -559,63 +481,29 @@ const KMyMath::Vector3 Player::GetWorldPos() const
 	return result;
 }
 
-const KMyMath::Vector3 Player::GetRot() const
-{
-	return object3d->GetRot();
-}
+const KMyMath::Vector3 Player::GetRot() const { return object3d->GetRot(); }
 
-const bool Player::GetIsDead() const
-{
-	return isDead;
-}
+const bool Player::GetIsDead() const { return isDead; }
 
-const bool Player::GetIsFallEffectEnd() const
-{
-	return isFallEffectEnd;
-}
+const bool Player::GetIsFallEffectEnd() const { return isFallEffectEnd; }
 
-void Player::SetPos(const KMyMath::Vector3& pos_)
-{
-	object3d->SetPos(pos_);
-}
+void Player::SetPos(const KMyMath::Vector3& pos_) { object3d->SetPos(pos_); }
 
-void Player::SetRot(const KMyMath::Vector3& rot_)
-{
-	object3d->SetRot(rot_);
-}
+void Player::SetRot(const KMyMath::Vector3& rot_) { object3d->SetRot(rot_); }
 
-void Player::SetScale(const KMyMath::Vector3& scale_)
-{
-	object3d->SetScale(scale_);
-}
+void Player::SetScale(const KMyMath::Vector3& scale_) { object3d->SetScale(scale_); }
 
-const KMyMath::Vector2& Player::GetRotLimit()
-{
-	return rotLimit;
-}
+const KMyMath::Vector2& Player::GetRotLimit() { return rotLimit; }
 
-const float Player::GetMoveSpeed()
-{
-	return moveSpeed;
-}
+const float Player::GetMoveSpeed() { return moveSpeed; }
 
-const KMyMath::Vector2& Player::GetPosLimitMax()
-{
-	return posLimitMax;
-}
+const KMyMath::Vector2& Player::GetPosLimitMax() { return posLimitMax; }
 
-const KMyMath::Vector2& Player::GetPosLimitMin()
-{
-	return posLimitMin;
-}
+const KMyMath::Vector2& Player::GetPosLimitMin() { return posLimitMin; }
 
-const bool Player::GetIsInvisible() const
-{
-	return isInvisible;
-}
+const bool Player::GetIsInvisible() const { return isInvisible; }
 
-void Player::OnCollision()
-{
+void Player::OnCollision() {
 	ObjParticleManager::GetInstance()->SetSmallExp(GetWorldPos());
 	HP--;
 	hpEase = true;

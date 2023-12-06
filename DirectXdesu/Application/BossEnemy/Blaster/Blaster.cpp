@@ -5,21 +5,18 @@
  */
 
 #include "Blaster.h"
-#include "Collision.h"
-#include "BlasterStandState.h"
 #include "BlasterAimState.h"
+#include "BlasterStandState.h"
+#include "Collision.h"
 
 #include "ImguiManager.h"
 
 Blaster* Blaster::nowBlaster = nullptr;
 
-Blaster* Blaster::Create(KGPlin* pipeline_, const KMyMath::Vector3& pos_,
-	KGPlin* spritePipeline_)
-{
+Blaster* Blaster::Create(KGPlin* pipeline_, const KMyMath::Vector3& pos_, KGPlin* spritePipeline_) {
 	// インスタンス生成
 	Blaster* blaster = new Blaster();
-	if (blaster == nullptr)
-	{
+	if (blaster == nullptr) {
 		return nullptr;
 	}
 
@@ -29,9 +26,7 @@ Blaster* Blaster::Create(KGPlin* pipeline_, const KMyMath::Vector3& pos_,
 	return blaster;
 }
 
-void Blaster::Init(KGPlin* pipeline_, const KMyMath::Vector3& initPos_,
-	 KGPlin* spritePipeline_)
-{
+void Blaster::Init(KGPlin* pipeline_, const KMyMath::Vector3& initPos_, KGPlin* spritePipeline_) {
 	model = std::make_unique<MtlObj>("BlasterCore");
 	model->CreateModel();
 
@@ -43,65 +38,51 @@ void Blaster::Init(KGPlin* pipeline_, const KMyMath::Vector3& initPos_,
 	unitsModel = std::make_unique<MtlObj>("BlasterUnit");
 	unitsModel->CreateModel();
 
-	for (size_t i = 0; i < 8; i++)
-	{
+	for (size_t i = 0; i < 8; i++) {
 		units[i].reset(KObject3d::Create(unitsModel.get(), pipeline_));
 
 		units[i]->SetParent(&object3d->GetTransform());
 	}
 
 	// スタート時のユニットの位置
-	units[0]->SetPos({  3.0f, 3.0f, 3.0f });
-	units[1]->SetPos({ -3.0f, 3.0f, 3.0f });
-	units[2]->SetPos({  3.0f, 3.0f,-3.0f });
-	units[3]->SetPos({ -3.0f, 3.0f,-3.0f });
-	units[4]->SetPos({  3.0f,-3.0f, 3.0f });
-	units[5]->SetPos({ -3.0f,-3.0f, 3.0f });
-	units[6]->SetPos({  3.0f,-3.0f,-3.0f });
-	units[7]->SetPos({ -3.0f,-3.0f,-3.0f });
+	units[0]->SetPos({3.0f, 3.0f, 3.0f});
+	units[1]->SetPos({-3.0f, 3.0f, 3.0f});
+	units[2]->SetPos({3.0f, 3.0f, -3.0f});
+	units[3]->SetPos({-3.0f, 3.0f, -3.0f});
+	units[4]->SetPos({3.0f, -3.0f, 3.0f});
+	units[5]->SetPos({-3.0f, -3.0f, 3.0f});
+	units[6]->SetPos({3.0f, -3.0f, -3.0f});
+	units[7]->SetPos({-3.0f, -3.0f, -3.0f});
 
 	actState = std::make_unique<BlasterStandState>();
 }
 
-void Blaster::Update(ViewProjection* viewPro_, bool isBossMovie_)
-{
+void Blaster::Update(ViewProjection* viewPro_, bool isBossMovie_) {
 	isBossMovie = isBossMovie_;
 
-	if (!isDead)
-	{
-		if (isBossMovie)
-		{
+	if (!isDead) {
+		if (isBossMovie) {
 
-		}
-		else
-		{
-			if (actState->GetIsFinish())
-			{
-				if (isStand)
-				{
+		} else {
+			if (actState->GetIsFinish()) {
+				if (isStand) {
 					actState = std::make_unique<BlasterStandState>();
 					isStand = false;
-				}
-				else
-				{
+				} else {
 					actState = std::make_unique<BlasterAimState>();
 					isStand = true;
 				}
 			}
 
-			if (actState)
-			{
+			if (actState) {
 				actState->Update();
 			}
 		}
 
-		if (HP <= min(HP, 0))
-		{
+		if (HP <= min(HP, 0)) {
 			isDead = true;
 		}
-	}
-	else
-	{
+	} else {
 		DeadEffect();
 	}
 
@@ -110,58 +91,39 @@ void Blaster::Update(ViewProjection* viewPro_, bool isBossMovie_)
 
 	object3d->Update(viewPro_);
 
-	for (size_t i = 0; i < 8; i++)
-	{
+	for (size_t i = 0; i < 8; i++) {
 		units[i]->Update(viewPro_);
 	}
 }
 
-void Blaster::Draw()
-{
-	if (isFallEffectEnd)
-	{
+void Blaster::Draw() {
+	if (isFallEffectEnd) {
 		return;
 	}
 
 	BossEnemy::Draw();
 
-	for (size_t i = 0; i < 8; i++)
-	{
+	for (size_t i = 0; i < 8; i++) {
 		units[i]->Draw();
 	}
 }
 
-bool Blaster::CollisionCheck(const KMyMath::Vector3& posA_, const KMyMath::Vector3& posB_)
-{
-	if (MyCollisions::CheckSphereToSphere(posA_, posB_, 2, 12))
-	{
+bool Blaster::CollisionCheck(const KMyMath::Vector3& posA_, const KMyMath::Vector3& posB_) {
+	if (MyCollisions::CheckSphereToSphere(posA_, posB_, 2, 12)) {
 		return true;
 	}
 
 	return false;
 }
 
-void Blaster::SetFarstAct()
-{
-	actState = std::make_unique<BlasterStandState>();
-}
+void Blaster::SetFarstAct() { actState = std::make_unique<BlasterStandState>(); }
 
-const KMyMath::Vector3 Blaster::GetUnitsPos(size_t num_) const
-{
-	return units[num_]->GetPos();
-}
+const KMyMath::Vector3 Blaster::GetUnitsPos(size_t num_) const { return units[num_]->GetPos(); }
 
-const KMyMath::Vector3 Blaster::GetUnitsScale(size_t num_) const
-{
-	return units[num_]->GetScale();
-}
+const KMyMath::Vector3 Blaster::GetUnitsScale(size_t num_) const { return units[num_]->GetScale(); }
 
-void Blaster::SetUnitsPos(const KMyMath::Vector3& pos_, size_t num_)
-{
-	units[num_]->SetPos(pos_);
-}
+void Blaster::SetUnitsPos(const KMyMath::Vector3& pos_, size_t num_) { units[num_]->SetPos(pos_); }
 
-void Blaster::SetUnitsScale(const KMyMath::Vector3& scale_, size_t num_)
-{
+void Blaster::SetUnitsScale(const KMyMath::Vector3& scale_, size_t num_) {
 	units[num_]->SetScale(scale_);
 }

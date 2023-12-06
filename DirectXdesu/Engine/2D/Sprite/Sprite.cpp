@@ -6,8 +6,7 @@ KMyMath::Matrix4 Sprite::matPro;
 Microsoft::WRL::ComPtr<ID3D12Device> Sprite::device;
 Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> Sprite::cmdList;
 
-void Sprite::StaticInit()
-{
+void Sprite::StaticInit() {
 	device = KDirectXCommon::GetInstance()->GetDev();
 
 	cmdList = KDirectXCommon::GetInstance()->GetCmdlist();
@@ -18,20 +17,13 @@ void Sprite::StaticInit()
 	matPro = MyMathUtility::MakeOrthogonalL(0.0f, width, height, 0.0f, 0.0f, 1.0f);
 }
 
-void Sprite::SetPipeline(KGPlin* pipeline_)
-{
-	pipeline = pipeline_;
-}
+void Sprite::SetPipeline(KGPlin* pipeline_) { pipeline = pipeline_; }
 
-const KMyMath::Vector2 Sprite::GetPos() const
-{
-	return KMyMath::Vector2();
-}
+const KMyMath::Vector2 Sprite::GetPos() const { return KMyMath::Vector2(); }
 
-void Sprite::CreateCBMaterial()
-{
+void Sprite::CreateCBMaterial() {
 	// 定数バッファ生成用
-	D3D12_HEAP_PROPERTIES cbHeapProp{}; // ヒープの設定
+	D3D12_HEAP_PROPERTIES cbHeapProp{};       // ヒープの設定
 	cbHeapProp.Type = D3D12_HEAP_TYPE_UPLOAD; // GPUへの転送用
 
 	// リソース設定
@@ -46,13 +38,11 @@ void Sprite::CreateCBMaterial()
 
 	// 定数バッファの生成
 	result = device->CreateCommittedResource(
-		&cbHeapProp, // ヒープ設定
-		D3D12_HEAP_FLAG_NONE,
-		&cbResourceDesc, // リソース設定
-		D3D12_RESOURCE_STATE_GENERIC_READ,
-		nullptr,
-		IID_PPV_ARGS(constBuffMaterial.ReleaseAndGetAddressOf())
-	);
+	    &cbHeapProp, // ヒープ設定
+	    D3D12_HEAP_FLAG_NONE,
+	    &cbResourceDesc, // リソース設定
+	    D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
+	    IID_PPV_ARGS(constBuffMaterial.ReleaseAndGetAddressOf()));
 	assert(SUCCEEDED(result));
 
 	// 定数バッファのマッピング
@@ -63,8 +53,7 @@ void Sprite::CreateCBMaterial()
 	*constMapMaterial = KMyMath::Vector4(1.0f, 0.5f, 0.5f, 1.0f);
 }
 
-void Sprite::CreateVertexIndex()
-{
+void Sprite::CreateVertexIndex() {
 	// ヒープ設定
 	D3D12_HEAP_PROPERTIES heapProp{};
 
@@ -88,13 +77,11 @@ void Sprite::CreateVertexIndex()
 
 	// 頂点バッファの設定
 	result = device->CreateCommittedResource(
-		&heapProp, // ヒープ設定
-		D3D12_HEAP_FLAG_NONE,
-		&resDesc, // リソース設定
-		D3D12_RESOURCE_STATE_GENERIC_READ,
-		nullptr,
-		IID_PPV_ARGS(vertBuff.ReleaseAndGetAddressOf())
-	);
+	    &heapProp, // ヒープ設定
+	    D3D12_HEAP_FLAG_NONE,
+	    &resDesc, // リソース設定
+	    D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
+	    IID_PPV_ARGS(vertBuff.ReleaseAndGetAddressOf()));
 	assert(SUCCEEDED(result));
 
 	// GPU上のバッファに対応した仮想メモリ(メインメモリ上)を取得
@@ -126,13 +113,11 @@ void Sprite::CreateVertexIndex()
 
 	// 頂点バッファの設定
 	result = device->CreateCommittedResource(
-		&heapProp, // ヒープ設定
-		D3D12_HEAP_FLAG_NONE,
-		&resDesc, // リソース設定
-		D3D12_RESOURCE_STATE_GENERIC_READ,
-		nullptr,
-		IID_PPV_ARGS(indexBuff.ReleaseAndGetAddressOf())
-	);
+	    &heapProp, // ヒープ設定
+	    D3D12_HEAP_FLAG_NONE,
+	    &resDesc, // リソース設定
+	    D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
+	    IID_PPV_ARGS(indexBuff.ReleaseAndGetAddressOf()));
 	assert(SUCCEEDED(result));
 
 	// インデックスバッファのマッピング
@@ -151,10 +136,9 @@ void Sprite::CreateVertexIndex()
 	assert(SUCCEEDED(result));
 }
 
-void Sprite::CreateCBTransform()
-{
+void Sprite::CreateCBTransform() {
 	// 定数バッファ生成用
-	D3D12_HEAP_PROPERTIES cbHeapProp{}; // ヒープの設定
+	D3D12_HEAP_PROPERTIES cbHeapProp{};       // ヒープの設定
 	cbHeapProp.Type = D3D12_HEAP_TYPE_UPLOAD; // GPUへの転送用
 
 	// リソース設定
@@ -169,13 +153,11 @@ void Sprite::CreateCBTransform()
 
 	// 定数バッファの生成
 	result = device->CreateCommittedResource(
-		&cbHeapProp, // ヒープ設定
-		D3D12_HEAP_FLAG_NONE,
-		&cbResDesc, // リソース設定
-		D3D12_RESOURCE_STATE_GENERIC_READ,
-		nullptr,
-		IID_PPV_ARGS(constBuffTransform.ReleaseAndGetAddressOf())
-	);
+	    &cbHeapProp, // ヒープ設定
+	    D3D12_HEAP_FLAG_NONE,
+	    &cbResDesc, // リソース設定
+	    D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
+	    IID_PPV_ARGS(constBuffTransform.ReleaseAndGetAddressOf()));
 	assert(SUCCEEDED(result));
 
 	// 定数バッファのマッピング
@@ -183,10 +165,9 @@ void Sprite::CreateCBTransform()
 	assert(SUCCEEDED(result));
 }
 
-void Sprite::DrawCommand(TextureData texData)
-{
+void Sprite::DrawCommand(TextureData texData) {
 	// デスクリプタヒープの配列をセットするコマンド
-	ID3D12DescriptorHeap* ppHeaps[] = { texData.srvHeap.Get() };
+	ID3D12DescriptorHeap* ppHeaps[] = {texData.srvHeap.Get()};
 	cmdList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 	// SRVヒープの先頭ハンドルを取得
 	D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle = texData.gpuHandle;
@@ -203,8 +184,7 @@ void Sprite::DrawCommand(TextureData texData)
 	cmdList->IASetIndexBuffer(&ibView);
 }
 
-void Sprite::Init()
-{
+void Sprite::Init() {
 	// 定数バッファマテリアル
 	CreateCBMaterial();
 
@@ -219,55 +199,46 @@ void Sprite::Init()
 	isInvisible = false;
 }
 
-void Sprite::Draw(TextureData& texData, KMyMath::Vector2 pos, KMyMath::Vector2 setSize_, float rot, KMyMath::Vector4 color_,
-	bool isFlipX_, bool isFlipY_, KMyMath::Vector2 anchorPoint_)
-{
+void Sprite::Draw(
+    TextureData& texData, KMyMath::Vector2 pos, KMyMath::Vector2 setSize_, float rot,
+    KMyMath::Vector4 color_, bool isFlipX_, bool isFlipY_, KMyMath::Vector2 anchorPoint_) {
 	// 非表示処理
-	if (isInvisible)
-	{
+	if (isInvisible) {
 		return;
 	}
 
 	// X反転
-	if (isFlipX_)
-	{
+	if (isFlipX_) {
 		flipX = -1;
-	}
-	else
-	{
+	} else {
 		flipX = 1;
 	}
 
 	// Y反転
-	if (isFlipY_)
-	{
+	if (isFlipY_) {
 		flipY = -1;
-	}
-	else
-	{
+	} else {
 		flipY = 1;
 	}
 
 	// アンカーポイント
-	float left   = ((0.0f - anchorPoint_.x) * (texData.width * setSize_.x)) * flipX;
-	float right  = ((1.0f - anchorPoint_.x) * (texData.width * setSize_.x)) * flipX;
-	float top    = ((0.0f - anchorPoint_.y) * (texData.height * setSize_.y)) * flipY;
+	float left = ((0.0f - anchorPoint_.x) * (texData.width * setSize_.x)) * flipX;
+	float right = ((1.0f - anchorPoint_.x) * (texData.width * setSize_.x)) * flipX;
+	float top = ((0.0f - anchorPoint_.y) * (texData.height * setSize_.y)) * flipY;
 	float bottom = ((1.0f - anchorPoint_.y) * (texData.height * setSize_.y)) * flipY;
 
 	// 頂点データ
-	Vertex vertices[] =
-	{
-		{{ left,   top,0.0f},{0.0f,0.0f}}, // 左上
-		{{ left,bottom,0.0f},{0.0f,1.0f}}, // 左下
-		{{right,   top,0.0f},{1.0f,0.0f}}, // 右上
-		{{right,bottom,0.0f},{1.0f,1.0f}}, // 右下
+	Vertex vertices[] = {
+	    {{left, top, 0.0f},     {0.0f, 0.0f}}, // 左上
+	    {{left, bottom, 0.0f},  {0.0f, 1.0f}}, // 左下
+	    {{right, top, 0.0f},    {1.0f, 0.0f}}, // 右上
+	    {{right, bottom, 0.0f}, {1.0f, 1.0f}}, // 右下
 	};
 
 	// インデックスデータ
-	uint16_t indices[] =
-	{
-		1,0,3, // 三角形1つ目
-		2,3,0, // 三角形2つ目
+	uint16_t indices[] = {
+	    1, 0, 3, // 三角形1つ目
+	    2, 3, 0, // 三角形2つ目
 	};
 
 	// 全頂点に対して
@@ -289,14 +260,82 @@ void Sprite::Draw(TextureData& texData, KMyMath::Vector2 pos, KMyMath::Vector2 s
 	cmdList->DrawIndexedInstanced(6, 1, 0, 0, 0);
 }
 
-void Sprite::Update(KMyMath::Vector2 pos, KMyMath::Vector2 scale, float rot, KMyMath::Vector4 color_)
-{
+void Sprite::DivDraw(
+    TextureData& texData, size_t num_, KMyMath::Vector2 pos = {0.0f, 0.0f},
+    KMyMath::Vector2 setSize_ = {1.0f, 1.0f}, float rot = 0.0f,
+    KMyMath::Vector4 color_ = {1.0f, 1.0f, 1.0f, 1.0f}) {
+	// 非表示処理
+	if (isInvisible) {
+		return;
+	}
+
+	// X反転
+	if (isFlipX_) {
+		flipX = -1;
+	} else {
+		flipX = 1;
+	}
+
+	// Y反転
+	if (isFlipY_) {
+		flipY = -1;
+	} else {
+		flipY = 1;
+	}
+
+	// アンカーポイント
+	float left = ((0.0f) * (texData.width * setSize_.x));
+	float right = ((1.0f) * (texData.width * setSize_.x));
+	float top = ((0.0f) * (texData.height * setSize_.y));
+	float bottom = ((1.0f) * (texData.height * setSize_.y));
+
+	// 頂点データ
+	float texLeft = leftTop_.x / texData.width;
+	float texRight = (leftTop_.x + divSize_.x) / texData.width;
+	float texTop = leftTop_.y / texData.height;
+	float texBottom = (leftTop_.y + divSize_.y) / texData.height;
+
+	// 頂点データ
+	Vertex vertices[] = {
+	    {{left, top, 0.0f},     {0.0f, 0.0f}}, // 左上
+	    {{left, bottom, 0.0f},  {0.0f, 1.0f}}, // 左下
+	    {{right, top, 0.0f},    {1.0f, 0.0f}}, // 右上
+	    {{right, bottom, 0.0f}, {1.0f, 1.0f}}, // 右下
+	};
+
+	// インデックスデータ
+	uint16_t indices[] = {
+	    1, 0, 3, // 三角形1つ目
+	    2, 3, 0, // 三角形2つ目
+	};
+
+	// 全頂点に対して
+	memcpy(vertMap, vertices, sizeof(Vertex) * 4);
+
+	// 全インデックスに対して
+	memcpy(indexMap, indices, sizeof(uint16_t) * 6);
+
+	Update(pos, setSize_, rot, color_);
+
+	// パイプラインセット
+	pipeline->Setting();
+	pipeline->Update(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST); // 三角形リスト
+
+	// 描画の条件
+	DrawCommand(texData);
+
+	// 描画コマンド
+	cmdList->DrawIndexedInstanced(6, 1, 0, 0, 0);
+}
+
+void Sprite::Update(
+    KMyMath::Vector2 pos, KMyMath::Vector2 scale, float rot, KMyMath::Vector4 color_) {
 	// ワールド変換
 	KMyMath::Matrix4 matWorld, matTrans, matRot;
 	// 移動行列
-	matTrans = MyMathUtility::MakeTranslation({ pos.x,pos.y,0.0f });
+	matTrans = MyMathUtility::MakeTranslation({pos.x, pos.y, 0.0f});
 	// 回転行列
-	matRot = MyMathUtility::MakeRotation({ 0.0f,0.0f,DirectX::XMConvertToRadians(rot) });
+	matRot = MyMathUtility::MakeRotation({0.0f, 0.0f, DirectX::XMConvertToRadians(rot)});
 
 	// 全て合体
 	matWorld = matRot * matTrans;

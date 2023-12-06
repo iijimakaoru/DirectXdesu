@@ -9,8 +9,7 @@
  * @author 飯島 薫
  */
 
-class Sprite
-{
+class Sprite {
 public:
 	static void StaticInit();
 
@@ -40,8 +39,16 @@ public:
 	/// <param name="isFlipX_"></param>
 	/// <param name="isFlipY_"></param>
 	/// <param name="anchorPoint_"></param>
-	void Draw(TextureData& texData, KMyMath::Vector2 pos = { 0.0f,0.0f }, KMyMath::Vector2 setSize_ = { 1.0f,1.0f }, float rot = 0.0f,
-		KMyMath::Vector4 color_ = {1.0f,1.0f,1.0f,1.0f}, bool isFlipX_ = false, bool isFlipY_ = false, KMyMath::Vector2 anchorPoint_ = { 0.5f,0.5f });
+	void Draw(
+	    TextureData& texData, KMyMath::Vector2 pos = {0.0f, 0.0f},
+	    KMyMath::Vector2 setSize_ = {1.0f, 1.0f}, float rot = 0.0f,
+	    KMyMath::Vector4 color_ = {1.0f, 1.0f, 1.0f, 1.0f}, bool isFlipX_ = false,
+	    bool isFlipY_ = false, KMyMath::Vector2 anchorPoint_ = {0.5f, 0.5f});
+
+	void DivDraw(
+	    TextureData& texData, KMyMath::Vector2 leftTop_, KMyMath::Vector2 divSize_, size_t num_,
+	    KMyMath::Vector2 pos = {0.0f, 0.0f}, KMyMath::Vector2 setSize_ = {1.0f, 1.0f},
+	    float rot = 0.0f, KMyMath::Vector4 color_ = {1.0f, 1.0f, 1.0f, 1.0f});
 
 	/// <summary>
 	/// パイプラインセッター
@@ -63,14 +70,12 @@ private:
 	void CreateCBTransform();
 
 private:
-	struct Vertex
-	{
+	struct Vertex {
 		KMyMath::Vector3 pos;
 		KMyMath::Vector2 uv;
 	};
 
-	enum VertexNumber
-	{
+	enum VertexNumber {
 		LB, // 左下
 		LT, // 左上
 		RB, // 右下

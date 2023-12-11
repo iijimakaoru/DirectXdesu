@@ -6,45 +6,25 @@
 #include "Sound.h"
 #include "Sprite.h"
 #include <imgui.h>
-
 #include "Camera.h"
-
 #include <array>
-
 #include "FbxObject3D.h"
-
 #include "KModel.h"
-
 #include "BaseScene.h"
-
 #include "KInput.h"
-
 #include "PostEffect.h"
-
 #include "Player.h"
-
 #include "Bullet.h"
-
 #include "MobEnemy.h"
-
 #include "Ground.h"
-
 #include "RailCamera.h"
-
 #include "Warning.h"
-
 #include "BossEnemy.h"
-
 #include "BulletManager.h"
-
 #include "SkyBox.h"
-
 #include "ParticleManager.h"
-
 #include "BillManager.h"
-
 #include "EnemyManager.h"
-
 #include "Blaster.h"
 
 /**
@@ -241,5 +221,7 @@ private:
 	std::array<KMyMath::Vector2, 2> movieBarPos;
 #pragma endregion
 
-	float hoge = 0.0f;
+	std::unique_ptr<Sprite> testDiv;
+	TextureData testDivTex;
+	KMyMath::Vector2 testDivPos;
 };

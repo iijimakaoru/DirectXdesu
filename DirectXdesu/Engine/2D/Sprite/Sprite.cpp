@@ -261,26 +261,13 @@ void Sprite::Draw(
 }
 
 void Sprite::DivDraw(
-    TextureData& texData, size_t num_, KMyMath::Vector2 pos = {0.0f, 0.0f},
-    KMyMath::Vector2 setSize_ = {1.0f, 1.0f}, float rot = 0.0f,
-    KMyMath::Vector4 color_ = {1.0f, 1.0f, 1.0f, 1.0f}) {
+    TextureData& texData, KMyMath::Vector2 leftTop_, KMyMath::Vector2 divSize_,
+    KMyMath::Vector2 pos,
+    KMyMath::Vector2 setSize_, float rot,
+    KMyMath::Vector4 color_, KMyMath::Vector2 anchorPoint_) {
 	// 非表示処理
 	if (isInvisible) {
 		return;
-	}
-
-	// X反転
-	if (isFlipX_) {
-		flipX = -1;
-	} else {
-		flipX = 1;
-	}
-
-	// Y反転
-	if (isFlipY_) {
-		flipY = -1;
-	} else {
-		flipY = 1;
 	}
 
 	// アンカーポイント
@@ -289,7 +276,7 @@ void Sprite::DivDraw(
 	float top = ((0.0f) * (texData.height * setSize_.y));
 	float bottom = ((1.0f) * (texData.height * setSize_.y));
 
-	// 頂点データ
+	// UVデータ
 	float texLeft = leftTop_.x / texData.width;
 	float texRight = (leftTop_.x + divSize_.x) / texData.width;
 	float texTop = leftTop_.y / texData.height;
@@ -297,10 +284,10 @@ void Sprite::DivDraw(
 
 	// 頂点データ
 	Vertex vertices[] = {
-	    {{left, top, 0.0f},     {0.0f, 0.0f}}, // 左上
-	    {{left, bottom, 0.0f},  {0.0f, 1.0f}}, // 左下
-	    {{right, top, 0.0f},    {1.0f, 0.0f}}, // 右上
-	    {{right, bottom, 0.0f}, {1.0f, 1.0f}}, // 右下
+	    {{left, top, 0.0f},     {texLeft, texTop}}, // 左上
+	    {{left, bottom, 0.0f},  {texLeft, texBottom}}, // 左下
+	    {{right, top, 0.0f},    {texRight, texTop}}, // 右上
+	    {{right, bottom, 0.0f}, {texRight, texBottom}}, // 右下
 	};
 
 	// インデックスデータ

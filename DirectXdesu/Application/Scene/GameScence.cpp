@@ -27,6 +27,7 @@ void GameScence::LoadResources() {
 	textureData = TextureManager::Load("Resources/texture/mario.jpg");
 	textureData2 = TextureManager::Load("Resources/texture/kariPlayerColor.png");
 	movieBarTex = TextureManager::Load("Resources/texture/white1x1.png");
+	testDivTex = TextureManager::Load("Resources/texture/tex1.png");
 
 	// モデル
 	playerModel = std::make_unique<MtlObj>("BattleShip");
@@ -114,6 +115,10 @@ void GameScence::Init() {
 	isCallDeadCamera = false;
 
 	isStageStart = true;
+
+	testDiv = std::make_unique<Sprite>();
+	testDiv->Init();
+	testDiv->SetPipeline(spritePipeline.get());
 }
 
 void GameScence::Update() {
@@ -248,6 +253,10 @@ void GameScence::SpriteDraw() {
 			    {0.0f, 0.0f, 0.0f, 1.0f}, false, false, {0.0f, 1.0f});
 		}
 	}
+
+	testDiv->DivDraw(
+	    testDivTex, {9.0f, 0.0f}, {18.0f, 18.0f}, {10.0f, 10.0f}, {1, 1}, 0.0f, {1, 1, 1, 1},
+	    {0, 0});
 }
 
 void GameScence::Final() {

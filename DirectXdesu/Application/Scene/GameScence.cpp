@@ -74,7 +74,7 @@ void GameScence::Init() {
 	sceneManager = SceneManager::GetInstance();
 
 	// カメラ初期化
-	// camera->Init(player.get(), { 0.0f,0.0f,-200.0f });
+	//camera->Init(player.get(), {0.0f, 0.0f, -200.0f});
 	camera->Init(player.get(), {0.0f, 0.0f, 450.0f});
 
 	// エネミーマネージャー生成
@@ -254,9 +254,9 @@ void GameScence::SpriteDraw() {
 		}
 	}
 
-	testDiv->DivDraw(
+	/*testDiv->DivDraw(
 	    testDivTex, {9.0f, 0.0f}, {18.0f, 18.0f}, {10.0f, 10.0f}, {1, 1}, 0.0f, {1, 1, 1, 1},
-	    {0, 0});
+	    {0, 0});*/
 }
 
 void GameScence::Final() {
@@ -284,8 +284,14 @@ void GameScence::CheckAllCollisions() {
 
 		for (const std::unique_ptr<EnemyBullet>& bullet : enemyBullets) {
 			// 弾がないor自機が死んでるor自機が無敵状態の時はスキップ
-			if (!bullet || player->GetIsDead() || blaster->GetIsDead()) {
+			if (!bullet || player->GetIsDead()) {
 				return;
+			}
+
+			if (blaster) {
+				if (blaster->GetIsDead()) {
+					return;
+				}
 			}
 
 			// 弾の座標

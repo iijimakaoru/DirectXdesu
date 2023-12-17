@@ -20,6 +20,8 @@
 
 #include "Ease.h"
 
+#include "ScoreManager.h"
+
 GameScence::~GameScence() { Final(); };
 
 void GameScence::LoadResources() {
@@ -119,6 +121,8 @@ void GameScence::Init() {
 	testDiv = std::make_unique<Sprite>();
 	testDiv->Init();
 	testDiv->SetPipeline(spritePipeline.get());
+
+	ScoreManager::GetInstance()->Init();
 }
 
 void GameScence::Update() {
@@ -188,6 +192,8 @@ void GameScence::Update() {
 	// カメラの更新
 	camera->Update(isStageStart, isBossAppearMovie, isClearMovie);
 
+	ScoreManager::GetInstance()->Update();
+
 	// ボス登場警告
 	if (bossWarning) {
 		bossWarning->Update();
@@ -254,9 +260,7 @@ void GameScence::SpriteDraw() {
 		}
 	}
 
-	/*testDiv->DivDraw(
-	    testDivTex, {9.0f, 0.0f}, {18.0f, 18.0f}, {10.0f, 10.0f}, {1, 1}, 0.0f, {1, 1, 1, 1},
-	    {0, 0});*/
+	ScoreManager::GetInstance()->Draw();
 }
 
 void GameScence::Final() {
@@ -375,6 +379,8 @@ void GameScence::CheckAllCollisions() {
 
 				// 敵消去
 				blaster->OnCollision();
+
+				ScoreManager::GetInstance()->AddMobScore(100);
 			}
 		}
 	}

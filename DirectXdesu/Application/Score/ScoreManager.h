@@ -1,4 +1,6 @@
 #pragma once
+#include "Sprite.h"
+
 class ScoreManager {
 public:
 	// インスタンス
@@ -20,4 +22,44 @@ public:
 	/// 更新
 	/// </summary>
 	void Update();
+
+	/// <summary>
+	/// 描画
+	/// </summary>
+	void Draw();
+
+	void AddMobScore(size_t score_);
+	void AddBossScore(size_t score_);
+
+private:
+	std::array<std::unique_ptr<Sprite>, 6> nums;
+	KMyMath::Vector2 scoresPos = {0, 0};
+	std::array<TextureData, 10> numTexs;
+
+	std::unique_ptr<KGPlin> spritePipeline;
+	KShader spriteShader;
+
+	/// <summary>
+	/// スコアのやつ(ゴリ押し)
+	/// </summary>
+	size_t gameScore = 0;
+	size_t oldGameScore = 0;
+
+	/// <summary>
+	/// 加算するスコア
+	/// </summary>
+	size_t addScoreNum = 0;
+
+	/// <summary>
+	/// ボーナスの受付時間
+	/// </summary>
+	float bonusTimer = 0;
+	const float bonusTime = 180;
+
+	/// <summary>
+	/// 加算時間
+	/// </summary>
+	bool isAddScore = false;
+	float addScoreTimer = 0;
+	const float addScoreTime = 60;
 };

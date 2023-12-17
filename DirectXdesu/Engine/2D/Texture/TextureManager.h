@@ -1,8 +1,8 @@
 #pragma once
 #pragma warning(push)
-#pragma warning(disable: 4514)
-#pragma warning(disable: 4365)
-#pragma warning(disable: 4820)
+#pragma warning(disable : 4514)
+#pragma warning(disable : 4365)
+#pragma warning(disable : 4820)
 #include <DirectXTex.h>
 #include <d3dx12.h>
 #pragma warning(pop)
@@ -14,8 +14,7 @@
  * @author 飯島 薫
  */
 
-struct TextureData
-{
+struct TextureData {
 	// テクスチャバッファ
 	Microsoft::WRL::ComPtr<ID3D12Resource> texBuff;
 
@@ -35,8 +34,7 @@ struct TextureData
 	size_t height = 0;
 };
 
-class TextureManager
-{
+class TextureManager {
 public: // 定数
 	static const size_t MaxSRVCount = 256;
 
@@ -50,6 +48,9 @@ public:
 	/// <param name="fileName"></param>
 	/// <returns></returns>
 	TextureData LoadTexture(const std::string& fileName);
+
+	TextureData LoadDivTexture(
+	    const std::string& fileName_, KMyMath::Vector2 leftTop_, KMyMath::Vector2 divSize_);
 
 	/// <summary>
 	/// 読み込み
@@ -74,7 +75,8 @@ private:
 	/// <param name="metadata"></param>
 	/// <param name="scratchImg"></param>
 	/// <returns></returns>
-	Microsoft::WRL::ComPtr<ID3D12Resource> CreateTexBuff(DirectX::TexMetadata& metadata, DirectX::ScratchImage& scratchImg);
+	Microsoft::WRL::ComPtr<ID3D12Resource>
+	    CreateTexBuff(DirectX::TexMetadata& metadata, DirectX::ScratchImage& scratchImg);
 
 	/// <summary>
 	/// シェーダリソースビューの生成
@@ -107,4 +109,3 @@ private:
 	TextureManager(const TextureManager&) = delete;
 	TextureManager& operator=(const TextureManager&) = delete;
 };
-

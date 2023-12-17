@@ -64,12 +64,6 @@ void ClearScene::Update() {
 	resultPos.x = width / 2.0f;
 	resultPos.y = height / 9.0f;
 
-	/*ImGui::Begin("TextPos");
-	ImGui::SetWindowPos({10, 10});
-	ImGui::SetWindowSize({200, 200});
-	ImGui::SliderFloat("Result.y", &resultPos.y, 0.0f, 100.0f);
-	ImGui::End();*/
-
 	MoveBack();
 
 	camera->Update();

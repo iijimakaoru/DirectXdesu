@@ -32,9 +32,17 @@ public:
 	void AddBossScore(size_t score_);
 
 private:
+	// スコアの桁分のスプライト
 	std::array<std::unique_ptr<Sprite>, 6> nums;
-	KMyMath::Vector2 scoresPos = {0, 0};
+	// スコアの場所
+	KMyMath::Vector2 numsPos = {200, 42};
+	// 数字のテキスト
 	std::array<TextureData, 10> numTexs;
+
+	// 「Score」テクスチャ用
+	std::unique_ptr<Sprite> scores;
+	KMyMath::Vector2 scoresPos = {30, 30};
+	TextureData scoresTex;
 
 	std::unique_ptr<KGPlin> spritePipeline;
 	KShader spriteShader;

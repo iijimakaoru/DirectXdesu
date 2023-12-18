@@ -29,6 +29,12 @@ void ScoreManager::Init() {
 	numTexs[7] = TextureManager::Load("Resources/texture/Num7.png");
 	numTexs[8] = TextureManager::Load("Resources/texture/Num8.png");
 	numTexs[9] = TextureManager::Load("Resources/texture/Num9.png");
+
+	scores = std::make_unique<Sprite>();
+	scores->Init();
+	scores->SetPipeline(spritePipeline.get());
+
+	scoresTex = TextureManager::Load("Resources/texture/ScoreTex.png");
 }
 
 void ScoreManager::Update() {
@@ -58,12 +64,16 @@ void ScoreManager::Draw() {
 	size_t scrNum = gameScore;
 	size_t i = 0;
 
+	scores->Draw(
+	    scoresTex, scoresPos, {1.0f, 1.0f}, 0.0f, {1.0f, 1.0f, 1.0f, 1.0f}, false, false,
+	    {0.0f, 0.0f});
+
 	while (i < 6)
 	{
-		KMyMath::Vector2 pos = {800.0f, 50.0f};
-		pos.x = pos.x - (15 * (i));
+		KMyMath::Vector2 numsPos_ = numsPos;
+		numsPos_.x = numsPos_.x - (15 * (i));
 		size_t j = scrNum % 10;
-		nums[i]->Draw(numTexs[j], pos, {1, 1}, 0.0f, {1, 1, 1, 1}, false, false, {0.5f, 0.5f});
+		nums[i]->Draw(numTexs[j], numsPos_, {1, 1}, 0.0f, {1, 1, 1, 1});
 		scrNum /= 10;
 		i++;
 	}

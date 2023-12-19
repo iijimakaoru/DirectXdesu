@@ -57,6 +57,8 @@ private:
 	/// 加算するスコア
 	/// </summary>
 	size_t addScoreNum = 0;
+	size_t addResultScore = 0;
+	bool isCount = false;
 
 	/// <summary>
 	/// ボーナスの受付時間

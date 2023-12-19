@@ -44,15 +44,31 @@ void ScoreManager::Update() {
 	ImGui::SliderInt("Result.y", &(int)gameScore, 0, 100);
 	ImGui::End();*/
 
+	if (isCount)
+	{
+		if (bonusTimer > 0) {
+			bonusTimer--;
+
+		} else {
+			addResultScore = addScoreNum;
+			addScoreNum = 0;
+			bonusTimer = 0;
+			isAddScore = true;
+			isCount = false;
+		}
+	}
+
 	if (isAddScore)
 	{
 		if (addScoreTimer < addScoreTime) {
 			addScoreTimer++;
 			gameScore = (size_t)MyEase::Lerp(
-			    (float)oldGameScore, (float)(oldGameScore + addScoreNum),
+			    (float)oldGameScore, (float)(oldGameScore + addResultScore),
 			    addScoreTimer / addScoreTime);
 		} else {
 			addScoreNum = 0;
+			addScoreTimer = 0;
+			addResultScore = 0;
 			isAddScore = false;
 		}
 	} else {
@@ -80,9 +96,9 @@ void ScoreManager::Draw() {
 }
 
 void ScoreManager::AddMobScore(size_t score_) { 
-	addScoreNum = score_;
-	addScoreTimer = 0;
-	isAddScore = true;
+	addScoreNum += score_;
+	isCount = true;
+	bonusTimer = bonusTime;
 }
 
 void ScoreManager::AddBossScore(size_t score_) { 

@@ -44,11 +44,13 @@ private:
 
 private:
 	// スコアの桁分のスプライト
-	std::array<std::unique_ptr<Sprite>, 6> nums;
+	std::array<std::unique_ptr<Sprite>, 6> score;
 	// スコアの場所
 	KMyMath::Vector2 numsPos = {200, 42};
 	// 数字のテキスト
 	std::array<TextureData, 10> numTexs;
+
+
 
 	// 「Score」テクスチャ用
 	std::unique_ptr<Sprite> scores;

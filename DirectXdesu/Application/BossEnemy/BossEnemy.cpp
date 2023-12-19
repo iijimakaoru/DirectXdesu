@@ -37,7 +37,7 @@ void BossEnemy::Init(KGPlin* pipeline_, const KMyMath::Vector3& initPos_, KGPlin
 	HPBarUI->Init();
 	HPBarUI->SetPipeline(spritePipeline);
 
-	hpbarTex = TextureManager::Load("Resources/texture/BossHPBar2.png");
+	hpbarTex = TextureManager::Load("Resources/texture/BossHPBar3.png");
 
 	isHPE = true;
 
@@ -60,15 +60,19 @@ void BossEnemy::UIDraw()
 
 	float width = static_cast<float>(KWinApp::GetInstance()->GetWindowSizeW());
 
-	const float sizeX = 872 / maxHP;
-	const float sizeY = 21.5f;
+	const KMyMath::Vector2 hpTexSize = {672.0f, 22.0f};
+
+	const float sizeX = hpTexSize.x / maxHP;
+	const float sizeY = hpTexSize.y;
 
 	HPBarUI->Draw(
 	    hpbarTex, {width / 2.0f, HPPos.y}, {1.0f, 1.0f}, 0, {1.0f, 1.0f, 1.0f, 1.0f});
 
-	HPrectUI->Draw(hpTex, HPPos, { oldHP * sizeX,sizeY }, 0, { 1,0,0,0.3f }, false, false, { 0,0.5f });
+	const KMyMath::Vector2 HPUIPos = {(width / 2) - (hpTexSize.x / 2), HPPos.y};
 
-	HPUI->Draw(hpTex, HPPos, { HP * sizeX,sizeY }, 0, { 1,0,0,1 }, false, false, { 0,0.5f });
+	HPrectUI->Draw(hpTex, HPUIPos, { oldHP * sizeX,sizeY }, 0, { 1,0,0,0.3f }, false, false, { 0,0.5f });
+
+	HPUI->Draw(hpTex, HPUIPos, { HP * sizeX,sizeY }, 0, { 1,0,0,1 }, false, false, { 0,0.5f });
 }
 
 const KMyMath::Vector3 BossEnemy::GetWorldPos() const

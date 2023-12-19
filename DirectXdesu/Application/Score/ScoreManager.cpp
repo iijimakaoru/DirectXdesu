@@ -14,9 +14,9 @@ void ScoreManager::Init() {
 
 	for (size_t i = 0; i < 6; i++)
 	{
-		nums[i] = std::make_unique<Sprite>();
-		nums[i]->Init();
-		nums[i]->SetPipeline(spritePipeline.get());
+		score[i] = std::make_unique<Sprite>();
+		score[i]->Init();
+		score[i]->SetPipeline(spritePipeline.get());
 	}
 
 	numTexs[0] = TextureManager::Load("Resources/texture/Num0.png");
@@ -90,7 +90,7 @@ void ScoreManager::Draw() {
 		KMyMath::Vector2 numsPos_ = numsPos;
 		numsPos_.x = numsPos_.x - (15 * (i));
 		size_t j = scrNum % 10;
-		nums[i]->Draw(numTexs[j], numsPos_, {1, 1}, 0.0f, {1, 1, 1, 1});
+		score[i]->Draw(numTexs[j], numsPos_, {1, 1}, 0.0f, {1, 1, 1, 1});
 		scrNum /= 10;
 		i++;
 	}

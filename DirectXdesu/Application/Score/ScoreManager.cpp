@@ -12,11 +12,22 @@ void ScoreManager::Init() {
 	spriteShader.Init(L"Resources/Shader/SpriteVS.hlsl", L"Resources/Shader/SpritePS.hlsl");
 	spritePipeline.reset(KGPlin::Create(spriteShader, "Sprite"));
 
-	for (size_t i = 0; i < 6; i++)
-	{
+	for (size_t i = 0; i < 6; i++) {
 		score[i] = std::make_unique<Sprite>();
 		score[i]->Init();
 		score[i]->SetPipeline(spritePipeline.get());
+	}
+
+	for (size_t i = 0; i < 4; i++) {
+		addScore[i] = std::make_unique<Sprite>();
+		addScore[i]->Init();
+		addScore[i]->SetPipeline(spritePipeline.get());
+	}
+
+	for (size_t i = 0; i < 2; i++) {
+		bonusCountS[i] = std::make_unique<Sprite>();
+		bonusCountS[i]->Init();
+		bonusCountS[i]->SetPipeline(spritePipeline.get());
 	}
 
 	numTexs[0] = TextureManager::Load("Resources/texture/Num0.png");
@@ -35,6 +46,18 @@ void ScoreManager::Init() {
 	scores->SetPipeline(spritePipeline.get());
 
 	scoresTex = TextureManager::Load("Resources/texture/ScoreTex.png");
+
+	hits = std::make_unique<Sprite>();
+	hits->Init();
+	hits->SetPipeline(spritePipeline.get());
+
+	hitsTex = TextureManager::Load("Resources/texture/HitTex.png");
+
+	xS = std::make_unique<Sprite>();
+	xS->Init();
+	xS->SetPipeline(spritePipeline.get());
+
+	xTex = TextureManager::Load("Resources/texture/XTex.png");
 }
 
 void ScoreManager::Update() {
@@ -44,8 +67,7 @@ void ScoreManager::Update() {
 	ImGui::SliderInt("Result.y", &(int)gameScore, 0, 100);
 	ImGui::End();*/
 
-	if (isCount)
-	{
+	if (isCount) {
 		if (bonusTimer > 0) {
 			CountBonusTimer();
 		} else {
@@ -59,8 +81,7 @@ void ScoreManager::Update() {
 		}
 	}
 
-	if (isAddScore)
-	{
+	if (isAddScore) {
 		if (addScoreTimer < addScoreTime) {
 			addScoreTimer++;
 			gameScore = (size_t)MyEase::Lerp(
@@ -79,20 +100,49 @@ void ScoreManager::Update() {
 
 void ScoreManager::Draw() {
 	size_t scrNum = gameScore;
-	size_t i = 0;
 
 	scores->Draw(
 	    scoresTex, scoresPos, {1.0f, 1.0f}, 0.0f, {1.0f, 1.0f, 1.0f, 1.0f}, false, false,
 	    {0.0f, 0.0f});
 
-	while (i < 6)
-	{
+	size_t i = 0;
+	while (i < 6) {
 		KMyMath::Vector2 numsPos_ = numsPos;
 		numsPos_.x = numsPos_.x - (15 * (i));
 		size_t j = scrNum % 10;
 		score[i]->Draw(numTexs[j], numsPos_, {1, 1}, 0.0f, {1, 1, 1, 1});
 		scrNum /= 10;
 		i++;
+	}
+
+	if (isCount) {
+		size_t addScrNum = addScoreNum;
+		size_t k = 0;
+		while (k < 4) {
+			KMyMath::Vector2 numsPos_ = {numsPos.x, numsPos.y + 40.0f};
+			numsPos_.x = numsPos_.x - (15 * (k));
+			size_t j = addScrNum % 10;
+			addScore[k]->Draw(numTexs[j], numsPos_, {1, 1}, 0.0f, {1, 1, 1, 1});
+			addScrNum /= 10;
+			k++;
+		}
+
+		size_t bonusCountNum = bonusCount;
+		size_t l = 0;
+		while (l < 2) {
+			KMyMath::Vector2 numsPos_ = {scoresPos.x + 25.0f, numsPos.y + 40.0f};
+			numsPos_.x = numsPos_.x - (15 * (l));
+			size_t j = bonusCountNum % 10;
+			bonusCountS[l]->Draw(numTexs[j], numsPos_, {1, 1}, 0.0f, {1, 1, 1, 1});
+			bonusCountNum /= 10;
+			l++;
+		}
+
+		hits->Draw(
+		    hitsTex, {scoresPos.x + 40.0f, numsPos.y + 40.0f}, {1.0f, 1.0f}, 0.0f,
+		    {1.0f, 1.0f, 1.0f, 1.0f}, false, false, {0.0f, 0.5f});
+
+		xS->Draw(xTex, {scoresPos.x + 102.5f, numsPos.y + 41.0f}, {0.8f, 0.8f});
 	}
 }
 
@@ -115,16 +165,14 @@ void ScoreManager::ResetScore() {
 	addScoreTimer = 0;
 }
 
-void ScoreManager::AddMobScore(size_t score_) { 
+void ScoreManager::AddMobScore(size_t score_) {
 	addScoreNum += score_;
 	bonusCount++;
 	isCount = true;
 	bonusTimer = bonusTime;
 }
 
-void ScoreManager::AddBossScore(size_t score_) { 
-	addScoreNum = score_; 
-}
+void ScoreManager::AddBossScore(size_t score_) { addScoreNum = score_; }
 
 void ScoreManager::CountBonusTimer() {
 	// ボーナスフラグON

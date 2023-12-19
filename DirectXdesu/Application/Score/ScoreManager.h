@@ -50,12 +50,26 @@ private:
 	// 数字のテキスト
 	std::array<TextureData, 10> numTexs;
 
+	// 加算スコアのスプライト
+	std::array<std::unique_ptr<Sprite>, 4> addScore;
 
+	// ボーナスカウントのスプライト
+	std::array<std::unique_ptr<Sprite>, 2> bonusCountS;
 
-	// 「Score」テクスチャ用
+	//「Score」テクスチャ用
 	std::unique_ptr<Sprite> scores;
 	KMyMath::Vector2 scoresPos = {30, 30};
 	TextureData scoresTex;
+
+	//「HIT」テクスチャ用
+	std::unique_ptr<Sprite> hits;
+	KMyMath::Vector2 hitsPos = {30, 30};
+	TextureData hitsTex;
+
+	// 「X」テクスチャ用
+	std::unique_ptr<Sprite> xS;
+	KMyMath::Vector2 xPos = {30, 30};
+	TextureData xTex;
 
 	std::unique_ptr<KGPlin> spritePipeline;
 	KShader spriteShader;

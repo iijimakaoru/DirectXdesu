@@ -259,9 +259,9 @@ void GameScence::SpriteDraw() {
 			    {static_cast<float>(KWinApp::GetInstance()->GetWindowSizeW()), 50.0f}, 0.0f,
 			    {0.0f, 0.0f, 0.0f, 1.0f}, false, false, {0.0f, 1.0f});
 		}
+	} else {
+		ScoreManager::GetInstance()->Draw();
 	}
-
-	ScoreManager::GetInstance()->Draw();
 }
 
 void GameScence::Final() {

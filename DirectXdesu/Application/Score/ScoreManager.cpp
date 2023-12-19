@@ -58,6 +58,18 @@ void ScoreManager::Init() {
 	xS->SetPipeline(spritePipeline.get());
 
 	xTex = TextureManager::Load("Resources/texture/XTex.png");
+
+	bonusBar = std::make_unique<Sprite>();
+	bonusBar->Init();
+	bonusBar->SetPipeline(spritePipeline.get());
+
+	bonusBarTex = TextureManager::Load("Resources/texture/scoreBonusBar.png");
+
+	bonusGage = std::make_unique<Sprite>();
+	bonusGage->Init();
+	bonusGage->SetPipeline(spritePipeline.get());
+
+	bonusGageTex = TextureManager::Load("Resources/texture/white1x1.png");
 }
 
 void ScoreManager::Update() {
@@ -143,6 +155,22 @@ void ScoreManager::Draw() {
 		    {1.0f, 1.0f, 1.0f, 1.0f}, false, false, {0.0f, 0.5f});
 
 		xS->Draw(xTex, {scoresPos.x + 102.5f, numsPos.y + 41.0f}, {0.8f, 0.8f});
+
+		const KMyMath::Vector2 gageTexSize = {218.0f, 17.0f};
+
+		const float sizeX = gageTexSize.x / bonusTime;
+		const float sizeY = gageTexSize.y;
+
+		const KMyMath::Vector2 bonusBarPos = {scoresPos.x + 103.5f, numsPos.y + 80.0f};
+
+		bonusBar->Draw(
+		    bonusBarTex, bonusBarPos);
+
+		const KMyMath::Vector2 bonusGagePos = {bonusBarPos.x - (gageTexSize.x / 2), bonusBarPos.y};
+
+		bonusGage->Draw(
+		    bonusGageTex, bonusGagePos, {bonusTimer * sizeX, sizeY}, 0.0f, {0, 0, 1, 1}, false,
+		    false, {0.0f, 0.5f});
 	}
 }
 

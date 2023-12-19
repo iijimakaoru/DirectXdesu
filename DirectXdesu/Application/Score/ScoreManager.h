@@ -66,10 +66,16 @@ private:
 	KMyMath::Vector2 hitsPos = {30, 30};
 	TextureData hitsTex;
 
-	// 「X」テクスチャ用
+	//「X」テクスチャ用
 	std::unique_ptr<Sprite> xS;
 	KMyMath::Vector2 xPos = {30, 30};
 	TextureData xTex;
+
+	// ボーナスカウントバー
+	std::unique_ptr<Sprite> bonusBar;
+	TextureData bonusBarTex;
+	std::unique_ptr<Sprite> bonusGage;
+	TextureData bonusGageTex;
 
 	std::unique_ptr<KGPlin> spritePipeline;
 	KShader spriteShader;

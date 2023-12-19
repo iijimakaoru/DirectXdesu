@@ -63,8 +63,10 @@ private:
 	/// <summary>
 	/// ボーナスの受付時間
 	/// </summary>
+	bool isBonus = false;
 	float bonusTimer = 0;
 	const float bonusTime = 180;
+	size_t bonusCount = 0;
 
 	/// <summary>
 	/// 加算時間

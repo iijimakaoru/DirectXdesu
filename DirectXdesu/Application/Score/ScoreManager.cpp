@@ -47,12 +47,15 @@ void ScoreManager::Update() {
 	if (isCount)
 	{
 		if (bonusTimer > 0) {
+			isBonus = true;
 			bonusTimer--;
 
 		} else {
-			addResultScore = addScoreNum;
+			addResultScore = addScoreNum * bonusCount;
 			addScoreNum = 0;
 			bonusTimer = 0;
+			bonusCount = 0;
+			isBonus = false;
 			isAddScore = true;
 			isCount = false;
 		}
@@ -97,6 +100,7 @@ void ScoreManager::Draw() {
 
 void ScoreManager::AddMobScore(size_t score_) { 
 	addScoreNum += score_;
+	bonusCount++;
 	isCount = true;
 	bonusTimer = bonusTime;
 }

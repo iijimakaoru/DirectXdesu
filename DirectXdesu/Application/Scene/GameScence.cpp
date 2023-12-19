@@ -123,6 +123,7 @@ void GameScence::Init() {
 	testDiv->SetPipeline(spritePipeline.get());
 
 	ScoreManager::GetInstance()->Init();
+	ScoreManager::GetInstance()->ResetScore();
 }
 
 void GameScence::Update() {

@@ -28,8 +28,19 @@ public:
 	/// </summary>
 	void Draw();
 
+	/// <summary>
+	/// スコアリセット
+	/// </summary>
+	void ResetScore();
+
 	void AddMobScore(size_t score_);
 	void AddBossScore(size_t score_);
+
+private:
+	/// <summary>
+	/// ボーナス中
+	/// </summary>
+	void CountBonusTimer();
 
 private:
 	// スコアの桁分のスプライト

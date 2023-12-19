@@ -47,9 +47,7 @@ void ScoreManager::Update() {
 	if (isCount)
 	{
 		if (bonusTimer > 0) {
-			isBonus = true;
-			bonusTimer--;
-
+			CountBonusTimer();
 		} else {
 			addResultScore = addScoreNum * bonusCount;
 			addScoreNum = 0;
@@ -98,6 +96,25 @@ void ScoreManager::Draw() {
 	}
 }
 
+void ScoreManager::ResetScore() {
+	// ゲームスコア
+	gameScore = 0;
+	// 過去ゲームスコア
+	oldGameScore = 0;
+	// 加算スコア
+	addScoreNum = 0;
+	// 加算スコア結果
+	addResultScore = 0;
+	isCount = false;
+	isBonus = false;
+	// ボーナスタイマー
+	bonusTimer = 0;
+	// ボーナスカウント
+	bonusCount = 0;
+	isAddScore = false;
+	addScoreTimer = 0;
+}
+
 void ScoreManager::AddMobScore(size_t score_) { 
 	addScoreNum += score_;
 	bonusCount++;
@@ -107,4 +124,11 @@ void ScoreManager::AddMobScore(size_t score_) {
 
 void ScoreManager::AddBossScore(size_t score_) { 
 	addScoreNum = score_; 
+}
+
+void ScoreManager::CountBonusTimer() {
+	// ボーナスフラグON
+	isBonus = true;
+	// ボーナス時間減少
+	bonusTimer--;
 }

@@ -46,12 +46,26 @@ private:
 	TextureData resultTex;
 	KMyMath::Vector2 resultPos;
 
+	// スコアボード
+	std::unique_ptr<Sprite> scoreBord;
+	TextureData scoreBordTex;
+	KMyMath::Vector2 scoreBordPos;
+	KMyMath::Vector2 scoreBordSize;
+
 	// 次のシーンへのキー
 	std::unique_ptr<Sprite> pushA = nullptr;
 	TextureData pushATex;
+	KMyMath::Vector2 pushAPos = {0, 0};
 
 	// スプライト背景
 	std::array<std::unique_ptr<Sprite>, 2> back;
 	TextureData backTex;
 	std::array<KMyMath::Vector2, 2> backPos;
+
+	// リザルトフェーズ
+	size_t resultPhase = 0;
+	float phaseTimer = 0;
+	float phaseTime = 0;
+
+	bool isGoScene = false;
 };

@@ -36,6 +36,8 @@ public:
 	void AddMobScore(size_t score_);
 	void AddBossScore(size_t score_);
 
+	const size_t& GetGameScore() const;
+
 private:
 	/// <summary>
 	/// ボーナス中

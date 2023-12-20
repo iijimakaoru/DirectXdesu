@@ -52,6 +52,33 @@ private:
 	KMyMath::Vector2 scoreBordPos;
 	KMyMath::Vector2 scoreBordSize;
 
+	// ゲーム内スコア
+	std::unique_ptr<Sprite> gameScore;
+	TextureData gameScoreTex;
+	KMyMath::Vector2 gameScorePos;
+
+	// 敵撃破数スコア
+	std::unique_ptr<Sprite> enemyScore;
+	TextureData enemyScoreTex;
+	KMyMath::Vector2 enemyScorePos;
+
+	// 被弾率スコア
+	std::unique_ptr<Sprite> minDamageScore;
+	TextureData minDamageScoreTex;
+	KMyMath::Vector2 minDamageScorePos;
+
+	// ボス撃破時間スコア
+	std::unique_ptr<Sprite> bossTimeScore;
+	TextureData bossTimeScoreTex;
+	KMyMath::Vector2 bossTimeScorePos;
+
+	// 総合スコア
+	std::unique_ptr<Sprite> total;
+	TextureData totalTex;
+	KMyMath::Vector2 totalPos;
+
+	bool isDrawScores = false;
+
 	// 次のシーンへのキー
 	std::unique_ptr<Sprite> pushA = nullptr;
 	TextureData pushATex;

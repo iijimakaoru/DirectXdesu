@@ -44,6 +44,14 @@ private:
 	/// </summary>
 	void CountBonusTimer();
 
+	void GameScoreDraw();
+
+	void AddScoreDraw();
+
+	void BonusCountDraw();
+
+	void BonusTimerDraw();
+
 private:
 	// スコアの桁分のスプライト
 	std::array<std::unique_ptr<Sprite>, 6> score;

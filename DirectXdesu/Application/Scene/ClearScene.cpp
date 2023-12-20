@@ -27,6 +27,16 @@ void ClearScene::LoadResources() {
 
 	// 背景テクスチャ
 	backTex = TextureManager::Load("Resources/texture/ResultBack.png");
+
+	gameScoreTex = TextureManager::Load("Resources/texture/LevelScore.png");
+
+	enemyScoreTex = TextureManager::Load("Resources/texture/EnemyBonus.png");
+
+	minDamageScoreTex = TextureManager::Load("Resources/texture/MinDamageBonus.png");
+
+	bossTimeScoreTex = TextureManager::Load("Resources/texture/BossTimeBonus.png");
+
+	totalTex = TextureManager::Load("Resources/texture/Total.png");
 }
 
 void ClearScene::Init() {
@@ -67,6 +77,26 @@ void ClearScene::Init() {
 	backPos[0] = {width / 2.0f, height / 2.0f};
 	backPos[1] = {backPos[0].x + width, backPos[0].y};
 
+	gameScore = std::make_unique<Sprite>();
+	gameScore->Init();
+	gameScore->SetPipeline(spritePipeline.get());
+
+	enemyScore = std::make_unique<Sprite>();
+	enemyScore->Init();
+	enemyScore->SetPipeline(spritePipeline.get());
+
+	minDamageScore = std::make_unique<Sprite>();
+	minDamageScore->Init();
+	minDamageScore->SetPipeline(spritePipeline.get());
+
+	bossTimeScore = std::make_unique<Sprite>();
+	bossTimeScore->Init();
+	bossTimeScore->SetPipeline(spritePipeline.get());
+
+	total = std::make_unique<Sprite>();
+	total->Init();
+	total->SetPipeline(spritePipeline.get());
+
 	isGoScene = false;
 }
 
@@ -78,6 +108,13 @@ void ClearScene::Update() {
 	resultPos.y = height / 9.0f;
 
 	scoreBordPos = {width / 2.0f, height * 5.0f / 9.0f};
+
+	const float scoresTexPos = scoreBordPos.x - 500.0f;
+	gameScorePos = {scoresTexPos, scoreBordPos.y - 150.0f};
+	enemyScorePos = {scoresTexPos, scoreBordPos.y - 100.0f};
+	minDamageScorePos = {scoresTexPos, scoreBordPos.y - 50.0f};
+	bossTimeScorePos = {scoresTexPos, scoreBordPos.y};
+	totalPos = {scoresTexPos, scoreBordPos.y + 150.0f};
 
 	pushAPos = {width / 2, height * 9 / 10};
 
@@ -120,8 +157,13 @@ void ClearScene::Update() {
 			resultPhase++;
 		}
 	}
-	// 待ち時間
+	// スコアの描画ON
 	else if (resultPhase == 3) {
+		isDrawScores = true;
+		resultPhase++;
+	}
+	// 待ち時間
+	else if (resultPhase == 4) {
 		phaseTime = 15.0f;
 		if (phaseTimer < phaseTime) {
 			phaseTimer++;
@@ -157,6 +199,24 @@ void ClearScene::SpriteDraw() {
 	result->Draw(resultTex, resultPos, {1, 1}, 0.0f, {1, 1, 1, 1}, false, false, {0.5f, 0});
 
 	scoreBord->Draw(scoreBordTex, scoreBordPos, scoreBordSize);
+
+	if (isDrawScores) {
+		gameScore->Draw(
+		    gameScoreTex, gameScorePos, {1, 1}, 0.0f, {1, 1, 1, 1}, false, false, {0.0f, 0.5f});
+
+		enemyScore->Draw(
+		    enemyScoreTex, enemyScorePos, {1, 1}, 0.0f, {1, 1, 1, 1}, false, false, {0.0f, 0.5f});
+
+		minDamageScore->Draw(
+		    minDamageScoreTex, minDamageScorePos, {1, 1}, 0.0f, {1, 1, 1, 1}, false, false,
+		    {0.0f, 0.5f});
+
+		bossTimeScore->Draw(
+		    bossTimeScoreTex, bossTimeScorePos, {1, 1}, 0.0f, {1, 1, 1, 1}, false, false,
+		    {0.0f, 0.5f});
+
+		total->Draw(totalTex, totalPos, {1, 1}, 0.0f, {1, 1, 1, 1}, false, false, {0.0f, 0.5f});
+	}
 
 	if (isGoScene) {
 		pushA->Draw(pushATex, pushAPos, {0.6f, 0.6f});

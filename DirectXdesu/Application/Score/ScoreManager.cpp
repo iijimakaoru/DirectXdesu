@@ -115,45 +115,14 @@ void ScoreManager::Update() {
 }
 
 void ScoreManager::Draw() {
-	size_t scrNum = gameScore;
-
-	scores->Draw(
-	    scoresTex, scoresPos, {1.0f, 1.0f}, 0.0f, {1.0f, 1.0f, 1.0f, 1.0f}, false, false,
-	    {0.0f, 0.0f});
-
-	size_t i = 0;
-	while (i < 6) {
-		KMyMath::Vector2 numsPos_ = numsPos;
-		numsPos_.x = numsPos_.x - (15 * (i));
-		size_t j = scrNum % 10;
-		score[i]->Draw(numTexs[j], numsPos_, {1, 1}, 0.0f, {1, 1, 1, 1});
-		scrNum /= 10;
-		i++;
-	}
+	GameScoreDraw();
 
 	// bonus中
 	if (isCount) {
-		size_t addScrNum = addScoreNum;
-		size_t k = 0;
-		while (k < 4) {
-			KMyMath::Vector2 numsPos_ = {numsPos.x, numsPos.y + 40.0f};
-			numsPos_.x = numsPos_.x - (15 * (k));
-			size_t j = addScrNum % 10;
-			addScore[k]->Draw(numTexs[j], numsPos_, {1, 1}, 0.0f, {1, 1, 1, 1});
-			addScrNum /= 10;
-			k++;
-		}
 
-		size_t bonusCountNum = bonusCount;
-		size_t l = 0;
-		while (l < 2) {
-			KMyMath::Vector2 numsPos_ = {scoresPos.x + 25.0f, numsPos.y + 40.0f};
-			numsPos_.x = numsPos_.x - (15 * (l));
-			size_t j = bonusCountNum % 10;
-			bonusCountS[l]->Draw(numTexs[j], numsPos_, {1, 1}, 0.0f, {1, 1, 1, 1});
-			bonusCountNum /= 10;
-			l++;
-		}
+		AddScoreDraw();
+
+		BonusCountDraw();
 
 		hits->Draw(
 		    hitsTex, {scoresPos.x + 40.0f, numsPos.y + 40.0f}, {1.0f, 1.0f}, 0.0f,
@@ -161,21 +130,7 @@ void ScoreManager::Draw() {
 
 		xS->Draw(xTex, {scoresPos.x + 102.5f, numsPos.y + 41.0f}, {0.8f, 0.8f});
 
-		const KMyMath::Vector2 gageTexSize = {218.0f, 16.0f};
-
-		const float sizeX = gageTexSize.x / bonusTime;
-		const float sizeY = gageTexSize.y;
-
-		const KMyMath::Vector2 bonusBarPos = {scoresPos.x + 103.5f, numsPos.y + 80.0f};
-
-		bonusBar->Draw(
-		    bonusBarTex, bonusBarPos);
-
-		const KMyMath::Vector2 bonusGagePos = {bonusBarPos.x - (gageTexSize.x / 2), bonusBarPos.y};
-
-		bonusGage->Draw(
-		    bonusGageTex, bonusGagePos, {bonusTimer * sizeX, sizeY}, 0.0f, {0, 0, 1, 1}, false,
-		    false, {0.0f, 0.5f});
+		BonusTimerDraw();
 	}
 }
 
@@ -217,4 +172,65 @@ void ScoreManager::CountBonusTimer() {
 	isBonus = true;
 	// ボーナス時間減少
 	bonusTimer--;
+}
+
+void ScoreManager::GameScoreDraw() {
+	size_t scrNum = gameScore;
+
+	scores->Draw(
+	    scoresTex, scoresPos, {1.0f, 1.0f}, 0.0f, {1.0f, 1.0f, 1.0f, 1.0f}, false, false,
+	    {0.0f, 0.0f});
+
+	size_t i = 0;
+	while (i < 6) {
+		KMyMath::Vector2 numsPos_ = numsPos;
+		numsPos_.x = numsPos_.x - (15 * (i));
+		size_t j = scrNum % 10;
+		score[i]->Draw(numTexs[j], numsPos_, {1, 1}, 0.0f, {1, 1, 1, 1});
+		scrNum /= 10;
+		i++;
+	}
+}
+
+void ScoreManager::AddScoreDraw() {
+	size_t addScrNum = addScoreNum;
+	size_t i = 0;
+	while (i < 4) {
+		KMyMath::Vector2 numsPos_ = {numsPos.x, numsPos.y + 40.0f};
+		numsPos_.x = numsPos_.x - (15 * (i));
+		size_t j = addScrNum % 10;
+		addScore[i]->Draw(numTexs[j], numsPos_, {1, 1}, 0.0f, {1, 1, 1, 1});
+		addScrNum /= 10;
+		i++;
+	}
+}
+
+void ScoreManager::BonusCountDraw() {
+	size_t bonusCountNum = bonusCount;
+	size_t i = 0;
+	while (i < 2) {
+		KMyMath::Vector2 numsPos_ = {scoresPos.x + 25.0f, numsPos.y + 40.0f};
+		numsPos_.x = numsPos_.x - (15 * (i));
+		size_t j = bonusCountNum % 10;
+		bonusCountS[i]->Draw(numTexs[j], numsPos_, {1, 1}, 0.0f, {1, 1, 1, 1});
+		bonusCountNum /= 10;
+		i++;
+	}
+}
+
+void ScoreManager::BonusTimerDraw() {
+	const KMyMath::Vector2 gageTexSize = {218.0f, 16.0f};
+
+	const float sizeX = gageTexSize.x / bonusTime;
+	const float sizeY = gageTexSize.y;
+
+	const KMyMath::Vector2 bonusBarPos = {scoresPos.x + 103.5f, numsPos.y + 80.0f};
+
+	bonusBar->Draw(bonusBarTex, bonusBarPos);
+
+	const KMyMath::Vector2 bonusGagePos = {bonusBarPos.x - (gageTexSize.x / 2), bonusBarPos.y};
+
+	bonusGage->Draw(
+	    bonusGageTex, bonusGagePos, {bonusTimer * sizeX, sizeY}, 0.0f, {0, 0, 1, 1}, false, false,
+	    {0.0f, 0.5f});
 }

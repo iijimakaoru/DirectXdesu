@@ -11,7 +11,7 @@ void KMyGame::Init() {
 	SceneManager::GetInstance()->SetSceneFactory(sceneFactory);
 
 	// 最初のシーン
-	SceneManager::GetInstance()->ChangeScene("CLEAR");
+	SceneManager::GetInstance()->ChangeScene("TITLE");
 }
 
 void KMyGame::Update() { Framework::Update(); }

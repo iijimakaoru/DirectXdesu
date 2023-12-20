@@ -161,7 +161,7 @@ void ScoreManager::Draw() {
 
 		xS->Draw(xTex, {scoresPos.x + 102.5f, numsPos.y + 41.0f}, {0.8f, 0.8f});
 
-		const KMyMath::Vector2 gageTexSize = {218.0f, 17.0f};
+		const KMyMath::Vector2 gageTexSize = {218.0f, 16.0f};
 
 		const float sizeX = gageTexSize.x / bonusTime;
 		const float sizeY = gageTexSize.y;
@@ -205,7 +205,10 @@ void ScoreManager::AddMobScore(size_t score_) {
 	bonusTimer = bonusTime;
 }
 
-void ScoreManager::AddBossScore(size_t score_) { addScoreNum = score_; }
+void ScoreManager::AddBossScore(size_t score_) { 
+	addResultScore = score_;
+	isAddScore = true;
+}
 
 const size_t& ScoreManager::GetGameScore() const { return gameScore; }
 

@@ -8,7 +8,7 @@
 #include "BlasterAimState.h"
 #include "BlasterStandState.h"
 #include "Collision.h"
-
+#include "ScoreManager.h"
 #include "ImguiManager.h"
 
 Blaster* Blaster::nowBlaster = nullptr;
@@ -80,6 +80,7 @@ void Blaster::Update(ViewProjection* viewPro_, bool isBossMovie_) {
 		}
 
 		if (HP <= min(HP, 0)) {
+			ScoreManager::GetInstance()->AddBossScore(100000);
 			isDead = true;
 		}
 	} else {

@@ -1,27 +1,25 @@
 #include "EnemyManager.h"
 #include "AppearEnemy.h"
-#include "FlyEnemy.h"
 #include "CanonEnemy.h"
-#include "RailCamera.h"
+#include "FlyEnemy.h"
 #include "Player.h"
+#include "RailCamera.h"
 
-EnemyManager* EnemyManager::Create(const std::string fileName_, Player* player_, KModel* model_, KGPlin* pipeline_)
-{
+EnemyManager* EnemyManager::Create(
+    const std::string fileName_, Player* player_, KModel* model_, KGPlin* pipeline_) {
 	// インスタンス
 	EnemyManager* instance = new EnemyManager();
-	if (instance == nullptr)
-	{
+	if (instance == nullptr) {
 		return nullptr;
 	}
 
-	instance->Init(player_,model_,pipeline_);
+	instance->Init(player_, model_, pipeline_);
 	instance->LoadEnemyPopData(fileName_);
 
 	return instance;
 }
 
-void EnemyManager::Init(Player* player_, KModel* model_, KGPlin* pipeline_)
-{
+void EnemyManager::Init(Player* player_, KModel* model_, KGPlin* pipeline_) {
 	// プレイヤー情報格納
 	player = player_;
 
@@ -32,55 +30,47 @@ void EnemyManager::Init(Player* player_, KModel* model_, KGPlin* pipeline_)
 	pipeline = pipeline_;
 }
 
-void EnemyManager::Update(ViewProjection* viewPro_)
-{
+void EnemyManager::Update(ViewProjection* viewPro_) {
 	// 敵出現
 	UpdateEnemyPopCommands();
 
-	// 条件削除
-	DeleteEnemy();
-
 	// 雑魚敵の更新
-	for (std::unique_ptr<MobEnemy>& mobEnemy : mobEnemys)
-	{
+	for (std::unique_ptr<MobEnemy>& mobEnemy : mobEnemys) {
 		const KMyMath::Vector3 pos = player->GetWorldPos();
 		mobEnemy->Update(viewPro_, pos);
 	}
+
+	// 条件削除
+	DeleteEnemy();
 }
 
-void EnemyManager::Draw()
-{
+void EnemyManager::Draw() {
 	// 雑魚敵描画
-	for (std::unique_ptr<MobEnemy>& mobEnemy : mobEnemys)
-	{
+	for (std::unique_ptr<MobEnemy>& mobEnemy : mobEnemys) {
 		mobEnemy->Draw();
 	}
 }
 
-void EnemyManager::AllEnemyDelete()
-{
-	for (std::unique_ptr<MobEnemy>& mobEnemy : mobEnemys)
-	{
+void EnemyManager::AllEnemyDelete() {
+	for (std::unique_ptr<MobEnemy>& mobEnemy : mobEnemys) {
 		mobEnemy->SelfDestruction();
 	}
 }
 
-const std::list<std::unique_ptr<MobEnemy>>& EnemyManager::GetMobEnemys() const
-{
-	return mobEnemys;
-}
+const std::list<std::unique_ptr<MobEnemy>>& EnemyManager::GetMobEnemys() const { return mobEnemys; }
 
-void EnemyManager::DeleteEnemy()
-{
+void EnemyManager::DeleteEnemy() {
 	// 敵消去
-	mobEnemys.remove_if([](std::unique_ptr<MobEnemy>& MobEnemy_)
-		{
-			return MobEnemy_->GetIsDead();
-		});
+	mobEnemys.remove_if([](std::unique_ptr<MobEnemy>& MobEnemy_) {
+		if (MobEnemy_->GetIsDead() || MobEnemy_->GetIsDelete()) {
+			return true;
+		}
+
+		return false;
+	});
 }
 
-void EnemyManager::LoadEnemyPopData(const std::string fileName_)
-{
+void EnemyManager::LoadEnemyPopData(const std::string fileName_) {
 	//"Resources/csv/enemyPop.csv"
 
 	// ファイルを開く
@@ -95,14 +85,11 @@ void EnemyManager::LoadEnemyPopData(const std::string fileName_)
 	file.close();
 }
 
-void EnemyManager::UpdateEnemyPopCommands()
-{
+void EnemyManager::UpdateEnemyPopCommands() {
 	// 待機処理
-	if (isStand)
-	{
+	if (isStand) {
 		waitTimer--;
-		if (waitTimer <= 0)
-		{
+		if (waitTimer <= 0) {
 			// 待機終了
 			isStand = false;
 		}
@@ -113,8 +100,7 @@ void EnemyManager::UpdateEnemyPopCommands()
 	std::string line;
 
 	// コマンド実行ループ
-	while (getline(enemyPopCommands, line))
-	{
+	while (getline(enemyPopCommands, line)) {
 		// 1行分の文字数をストリームに変換して解析しやすくする
 		std::istringstream line_stream(line);
 
@@ -123,15 +109,13 @@ void EnemyManager::UpdateEnemyPopCommands()
 		getline(line_stream, word, ',');
 
 		// コメント
-		if (word.find("//") == 0)
-		{
+		if (word.find("//") == 0) {
 			// 行を飛ばす
 			continue;
 		}
 
 		// POP
-		if (word.find("POP") == 0)
-		{
+		if (word.find("POP") == 0) {
 			// 敵の種類
 			getline(line_stream, word, ',');
 			size_t enemyType = static_cast<size_t>(std::atof(word.c_str()));
@@ -153,8 +137,7 @@ void EnemyManager::UpdateEnemyPopCommands()
 			std::unique_ptr<MobEnemy> newMEnemy;
 
 			// 該当するタイプの敵生成
-			if (enemyType == MobEnemy::EnemysType::Fly)
-			{
+			if (enemyType == MobEnemy::EnemysType::Fly) {
 				// x座標
 				getline(line_stream, word, ',');
 				float _x = static_cast<float>(std::atof(word.c_str()));
@@ -164,40 +147,39 @@ void EnemyManager::UpdateEnemyPopCommands()
 				float _y = static_cast<float>(std::atof(word.c_str()));
 
 				// 生成
-				newMEnemy.reset(FlyEnemy::Create(model1, // モデルセット
-					pipeline, // パイプラインセット
-					{ x,y,z }, // 生成場所
-					{ _x,_y }, // 最終地点
-					RailCamera::GetSpeed() // 移動スピード
-				));
+				newMEnemy.reset(FlyEnemy::Create(
+				    model1,                // モデルセット
+				    pipeline,              // パイプラインセット
+				    {x, y, z},             // 生成場所
+				    {_x, _y},              // 最終地点
+				    RailCamera::GetSpeed() // 移動スピード
+				    ));
 
 				// 自機狙い弾用にプレイヤーセット
 				newMEnemy->SetPlayer(player);
 
 				// 登録
 				mobEnemys.push_back(std::move(newMEnemy));
-			}
-			else if (enemyType == MobEnemy::EnemysType::Canon)
-			{
+			} else if (enemyType == MobEnemy::EnemysType::Canon) {
 				// 生成
-				newMEnemy.reset(CanonEnemy::Create(model1, // モデルセット
-					pipeline, // パイプラインセット
-					{ x,y,z } // 出現位置
-				));
+				newMEnemy.reset(CanonEnemy::Create(
+				    model1,   // モデルセット
+				    pipeline, // パイプラインセット
+				    {x, y, z} // 出現位置
+				    ));
 
 				// 自機狙い弾用にプレイヤーセット
 				newMEnemy->SetPlayer(player);
 
 				// 登録
 				mobEnemys.push_back(std::move(newMEnemy));
-			}
-			else if (enemyType == MobEnemy::EnemysType::Appear)
-			{
+			} else if (enemyType == MobEnemy::EnemysType::Appear) {
 				// 生成
-				newMEnemy.reset(AppearEnemy::Create(model1, // モデルセット
-					pipeline, // パイプラインセット
-					{ x,y,z } // 出現位置
-				));
+				newMEnemy.reset(AppearEnemy::Create(
+				    model1,   // モデルセット
+				    pipeline, // パイプラインセット
+				    {x, y, z} // 出現位置
+				    ));
 
 				// 自機狙い弾用にプレイヤーセット
 				newMEnemy->SetPlayer(player);
@@ -207,8 +189,7 @@ void EnemyManager::UpdateEnemyPopCommands()
 			}
 		}
 		// WAITコマンド
-		else if (word.find("WAIT") == 0)
-		{
+		else if (word.find("WAIT") == 0) {
 			getline(line_stream, word, ',');
 
 			// 待ち時間

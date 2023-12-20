@@ -1,11 +1,10 @@
 #include "CanonEnemy.h"
 #include "Ease.h"
+#include "ScoreManager.h"
 
-CanonEnemy* CanonEnemy::Create(KModel* model_, KGPlin* pipeline_, const KMyMath::Vector3& pos_)
-{
+CanonEnemy* CanonEnemy::Create(KModel* model_, KGPlin* pipeline_, const KMyMath::Vector3& pos_) {
 	CanonEnemy* newEnemy = new CanonEnemy();
-	if (newEnemy == nullptr)
-	{
+	if (newEnemy == nullptr) {
 		return nullptr;
 	}
 
@@ -18,76 +17,62 @@ CanonEnemy* CanonEnemy::Create(KModel* model_, KGPlin* pipeline_, const KMyMath:
 	return newEnemy;
 }
 
-void CanonEnemy::Init(KModel* model_, KGPlin* pipeline_)
-{
+void CanonEnemy::Init(KModel* model_, KGPlin* pipeline_) {
 	MobEnemy::Init(model_, pipeline_);
 
 	isAppear = true;
 
 	easeTimer = 0;
 
-	object3d->SetScale({ 6.0f,6.0f,6.0f });
+	object3d->SetScale({6.0f, 6.0f, 6.0f});
 
 	coolTime = 30;
 }
 
-void CanonEnemy::Update(ViewProjection* viewPro_, const KMyMath::Vector3& cameraPos_)
-{
+void CanonEnemy::Update(ViewProjection* viewPro_, const KMyMath::Vector3& cameraPos_) {
 	// 出現演出
-	if (isAppear)
-	{
+	if (isAppear) {
 		Appear();
-	}
-	else
-	{
-		if (!isDead)
-		{
-			if (object3d->GetPos().z >= cameraPos_.z)
-			{
+	} else {
+		if (!isDead && !isDelete) {
+			if (object3d->GetPos().z >= cameraPos_.z) {
 				Attack();
 			}
 
 			const float cameraDistance = 50.0f;
 
-			if (object3d->GetPos().z <= min(object3d->GetPos().z, cameraPos_.z - cameraDistance))
-			{
-				isDead = true;
+			if (object3d->GetPos().z <= min(object3d->GetPos().z, cameraPos_.z - cameraDistance)) {
+				isDelete = true;
 			}
 		}
+
+		if (isDead) {
+			ScoreManager::GetInstance()->AddMobScore(100);
+		}
 	}
-	
+
 	object3d->Update(viewPro_);
 }
 
-void CanonEnemy::Draw()
-{
-	MobEnemy::Draw();
-}
+void CanonEnemy::Draw() { MobEnemy::Draw(); }
 
-void CanonEnemy::Attack()
-{
-	MobEnemy::Attack();
-}
+void CanonEnemy::Attack() { MobEnemy::Attack(); }
 
-void CanonEnemy::Appear()
-{
+void CanonEnemy::Appear() {
 	easeTimer += 1.0f;
 
-	object3d->SetPos({ object3d->GetPos().x,
-		MyEase::InOutCubicFloat(startPos.y, startPos.y + 20, easeTimer / easeTime) ,
-		object3d->GetPos().z });
+	object3d->SetPos(
+	    {object3d->GetPos().x,
+	     MyEase::InOutCubicFloat(startPos.y, startPos.y + 20, easeTimer / easeTime),
+	     object3d->GetPos().z});
 
-	object3d->SetRot({ object3d->GetRot().x,
-		MyEase::OutCubicFloat(0, 360 * 2, easeTimer / easeTime) ,
-		object3d->GetRot().z });
+	object3d->SetRot(
+	    {object3d->GetRot().x, MyEase::OutCubicFloat(0, 360 * 2, easeTimer / easeTime),
+	     object3d->GetRot().z});
 
-	if (easeTimer >= max(easeTimer, easeTime))
-	{
+	if (easeTimer >= max(easeTimer, easeTime)) {
 		isAppear = false;
 	}
 }
 
-void CanonEnemy::SetStartPos(const KMyMath::Vector3& startPos_)
-{
-	startPos = startPos_;
-}
+void CanonEnemy::SetStartPos(const KMyMath::Vector3& startPos_) { startPos = startPos_; }

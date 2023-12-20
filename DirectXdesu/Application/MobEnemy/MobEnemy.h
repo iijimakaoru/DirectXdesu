@@ -44,10 +44,13 @@ public:
 	virtual void OnCollision();
 
 	// 死亡判定
-	virtual const bool GetIsDead()const
+	const bool GetIsDead()const
 	{
 		return isDead;
 	}
+
+	// 消去
+	const bool GetIsDelete() const;
 
 	void SetCameraPos(const KMyMath::Vector3& cameraPos_);
 
@@ -71,6 +74,9 @@ protected:
 
 	// 死亡フラグ
 	bool isDead = false;
+
+	// 消去
+	bool isDelete = false;
 
 	// クールタイム
 	float coolTimer = 0;

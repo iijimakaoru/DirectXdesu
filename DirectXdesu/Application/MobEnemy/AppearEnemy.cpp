@@ -1,13 +1,12 @@
 #include "AppearEnemy.h"
 #include "BulletManager.h"
 #include "Ease.h"
+#include "ScoreManager.h"
 
-AppearEnemy* AppearEnemy::Create(KModel* model_, KGPlin* pipeline_, const KMyMath::Vector3& pos_)
-{
+AppearEnemy* AppearEnemy::Create(KModel* model_, KGPlin* pipeline_, const KMyMath::Vector3& pos_) {
 	// インスタンス生成
 	AppearEnemy* newEnemy = new AppearEnemy();
-	if (newEnemy == nullptr)
-	{
+	if (newEnemy == nullptr) {
 		return nullptr;
 	}
 
@@ -20,21 +19,16 @@ AppearEnemy* AppearEnemy::Create(KModel* model_, KGPlin* pipeline_, const KMyMat
 	return newEnemy;
 }
 
-AppearEnemy::AppearEnemy()
-{
-}
+AppearEnemy::AppearEnemy() {}
 
-AppearEnemy::~AppearEnemy()
-{
-}
+AppearEnemy::~AppearEnemy() {}
 
-void AppearEnemy::Init(KModel* model_, KGPlin* pipeline_)
-{
+void AppearEnemy::Init(KModel* model_, KGPlin* pipeline_) {
 	MobEnemy::Init(model_, pipeline_);
 
-	startScale = { 0,0,0 };
+	startScale = {0, 0, 0};
 
-	endScale = { 4.0f,4.0f,4.0f };
+	endScale = {4.0f, 4.0f, 4.0f};
 
 	object3d->SetScale(startScale);
 
@@ -45,55 +39,44 @@ void AppearEnemy::Init(KModel* model_, KGPlin* pipeline_)
 	coolTime = 60;
 }
 
-void AppearEnemy::Update(ViewProjection* viewPro_, const KMyMath::Vector3& cameraPos_)
-{
+void AppearEnemy::Update(ViewProjection* viewPro_, const KMyMath::Vector3& cameraPos_) {
 	// 出現演出
-	if (isAppear)
-	{
+	if (isAppear) {
 		Appear();
-	}
-	else
-	{
-		if (!isDead)
-		{
-			if (object3d->GetPos().z >= cameraPos_.z)
-			{
+	} else {
+		if (!isDead && !isDelete) {
+			if (object3d->GetPos().z >= cameraPos_.z) {
 				Attack();
 			}
 
 			const float cameraDistance = 50.0f;
 
-			if (object3d->GetPos().z <= min(object3d->GetPos().z, cameraPos_.z - cameraDistance))
-			{
-				isDead = true;
+			if (object3d->GetPos().z <= min(object3d->GetPos().z, cameraPos_.z - cameraDistance)) {
+				isDelete = true;
 			}
+		}
+
+		if (isDead) {
+			ScoreManager::GetInstance()->AddMobScore(100);
 		}
 	}
 
 	object3d->Update(viewPro_);
 }
 
-void AppearEnemy::Draw()
-{
-	MobEnemy::Draw();
-}
+void AppearEnemy::Draw() { MobEnemy::Draw(); }
 
-void AppearEnemy::Attack()
-{
-	MobEnemy::Attack();
-}
+void AppearEnemy::Attack() { MobEnemy::Attack(); }
 
-void AppearEnemy::Appear()
-{
+void AppearEnemy::Appear() {
 	easeTimer += 1.0f;
 
 	object3d->SetScale(MyEase::OutQuadVec3(startScale, endScale, easeTimer / easeTime));
-	object3d->SetRot({ object3d->GetRot().x,
-		MyEase::OutQuadFloat(0.0f, 360.0f * 2.0f, easeTimer / easeTime) ,
-		object3d->GetRot().z });
+	object3d->SetRot(
+	    {object3d->GetRot().x, MyEase::OutQuadFloat(0.0f, 360.0f * 2.0f, easeTimer / easeTime),
+	     object3d->GetRot().z});
 
-	if (easeTimer >= max(easeTimer, easeTime))
-	{
+	if (easeTimer >= max(easeTimer, easeTime)) {
 		isAppear = false;
 	}
 }

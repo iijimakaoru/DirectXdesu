@@ -47,8 +47,9 @@ void MobEnemy::OnCollision()
 	isDead = true;
 }
 
-void MobEnemy::SetCameraPos(const KMyMath::Vector3& cameraPos_)
-{
+const bool MobEnemy::GetIsDelete() const { return isDelete; }
+
+void MobEnemy::SetCameraPos(const KMyMath::Vector3& cameraPos_) {
 	cameraPos = cameraPos_;
 }
 

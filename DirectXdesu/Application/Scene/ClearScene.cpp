@@ -37,6 +37,18 @@ void ClearScene::LoadResources() {
 	bossTimeScoreTex = TextureManager::Load("Resources/texture/BossTimeBonus.png");
 
 	totalTex = TextureManager::Load("Resources/texture/Total.png");
+
+	// 数字読み込み
+	numTexs[0] = TextureManager::Load("Resources/texture/Num0.png");
+	numTexs[1] = TextureManager::Load("Resources/texture/Num1.png");
+	numTexs[2] = TextureManager::Load("Resources/texture/Num2.png");
+	numTexs[3] = TextureManager::Load("Resources/texture/Num3.png");
+	numTexs[4] = TextureManager::Load("Resources/texture/Num4.png");
+	numTexs[5] = TextureManager::Load("Resources/texture/Num5.png");
+	numTexs[6] = TextureManager::Load("Resources/texture/Num6.png");
+	numTexs[7] = TextureManager::Load("Resources/texture/Num7.png");
+	numTexs[8] = TextureManager::Load("Resources/texture/Num8.png");
+	numTexs[9] = TextureManager::Load("Resources/texture/Num9.png");
 }
 
 void ClearScene::Init() {
@@ -80,22 +92,47 @@ void ClearScene::Init() {
 	gameScore = std::make_unique<Sprite>();
 	gameScore->Init();
 	gameScore->SetPipeline(spritePipeline.get());
+	for (size_t i = 0; i < 6; i++) {
+		gameScoreS[i] = std::make_unique<Sprite>();
+		gameScoreS[i]->Init();
+		gameScoreS[i]->SetPipeline(spritePipeline.get());
+	}
 
 	enemyScore = std::make_unique<Sprite>();
 	enemyScore->Init();
 	enemyScore->SetPipeline(spritePipeline.get());
+	for (size_t i = 0; i < 6; i++) {
+		enemyScoreS[i] = std::make_unique<Sprite>();
+		enemyScoreS[i]->Init();
+		enemyScoreS[i]->SetPipeline(spritePipeline.get());
+	}
 
 	minDamageScore = std::make_unique<Sprite>();
 	minDamageScore->Init();
 	minDamageScore->SetPipeline(spritePipeline.get());
+	for (size_t i = 0; i < 6; i++) {
+		minDamageScoreS[i] = std::make_unique<Sprite>();
+		minDamageScoreS[i]->Init();
+		minDamageScoreS[i]->SetPipeline(spritePipeline.get());
+	}
 
 	bossTimeScore = std::make_unique<Sprite>();
 	bossTimeScore->Init();
 	bossTimeScore->SetPipeline(spritePipeline.get());
+	for (size_t i = 0; i < 6; i++) {
+		bossTimeScoreS[i] = std::make_unique<Sprite>();
+		bossTimeScoreS[i]->Init();
+		bossTimeScoreS[i]->SetPipeline(spritePipeline.get());
+	}
 
 	total = std::make_unique<Sprite>();
 	total->Init();
 	total->SetPipeline(spritePipeline.get());
+	for (size_t i = 0; i < 6; i++) {
+		totalS[i] = std::make_unique<Sprite>();
+		totalS[i]->Init();
+		totalS[i]->SetPipeline(spritePipeline.get());
+	}
 
 	isGoScene = false;
 }
@@ -110,11 +147,17 @@ void ClearScene::Update() {
 	scoreBordPos = {width / 2.0f, height * 5.0f / 9.0f};
 
 	const float scoresTexPos = scoreBordPos.x - 500.0f;
+	const float scoresNumPos = scoreBordPos.x + 500.0f;
 	gameScorePos = {scoresTexPos, scoreBordPos.y - 150.0f};
+	gameScoreSPos = {scoresNumPos, scoreBordPos.y - 150.0f};
 	enemyScorePos = {scoresTexPos, scoreBordPos.y - 100.0f};
+	enemyScoreSPos = {scoresNumPos, scoreBordPos.y - 100.0f};
 	minDamageScorePos = {scoresTexPos, scoreBordPos.y - 50.0f};
+	minDamageScoreSPos = {scoresNumPos, scoreBordPos.y - 50.0f};
 	bossTimeScorePos = {scoresTexPos, scoreBordPos.y};
+	bossTimeScoreSPos = {scoresNumPos, scoreBordPos.y};
 	totalPos = {scoresTexPos, scoreBordPos.y + 150.0f};
+	totalSPos = {scoresTexPos + 200.0f, scoreBordPos.y + 150.0f};
 
 	pushAPos = {width / 2, height * 9 / 10};
 
@@ -201,21 +244,15 @@ void ClearScene::SpriteDraw() {
 	scoreBord->Draw(scoreBordTex, scoreBordPos, scoreBordSize);
 
 	if (isDrawScores) {
-		gameScore->Draw(
-		    gameScoreTex, gameScorePos, {1, 1}, 0.0f, {1, 1, 1, 1}, false, false, {0.0f, 0.5f});
+		GameScoreDraw();
 
-		enemyScore->Draw(
-		    enemyScoreTex, enemyScorePos, {1, 1}, 0.0f, {1, 1, 1, 1}, false, false, {0.0f, 0.5f});
+		EnemyScoreDraw();
 
-		minDamageScore->Draw(
-		    minDamageScoreTex, minDamageScorePos, {1, 1}, 0.0f, {1, 1, 1, 1}, false, false,
-		    {0.0f, 0.5f});
+		MinDamageScoreDraw();
 
-		bossTimeScore->Draw(
-		    bossTimeScoreTex, bossTimeScorePos, {1, 1}, 0.0f, {1, 1, 1, 1}, false, false,
-		    {0.0f, 0.5f});
+		BossTimeScoreDraw();
 
-		total->Draw(totalTex, totalPos, {1, 1}, 0.0f, {1, 1, 1, 1}, false, false, {0.0f, 0.5f});
+		TotalScoreDraw();
 	}
 
 	if (isGoScene) {
@@ -237,5 +274,95 @@ void ClearScene::MoveBack() {
 			}
 		}
 		backPos[i].x--;
+	}
+}
+
+void ClearScene::GameScoreDraw() {
+	size_t scrNum = gameScoreNum;
+
+	gameScore->Draw(
+	    gameScoreTex, gameScorePos, {1, 1}, 0.0f, {1, 1, 1, 1}, false, false, {0.0f, 0.5f});
+
+	size_t i = 0;
+	while (i < 6) {
+		KMyMath::Vector2 numsPos_ = gameScoreSPos;
+		numsPos_.x = numsPos_.x - (15 * (i));
+		size_t j = scrNum % 10;
+		gameScoreS[i]->Draw(
+		    numTexs[j], numsPos_, {1, 1}, 0.0f, {1, 1, 1, 1}, false, false, {1.0f, 0.5f});
+		scrNum /= 10;
+		i++;
+	}
+}
+
+void ClearScene::EnemyScoreDraw() {
+	size_t scrNum = enemyScoreNum;
+
+	enemyScore->Draw(
+	    enemyScoreTex, enemyScorePos, {1, 1}, 0.0f, {1, 1, 1, 1}, false, false, {0.0f, 0.5f});
+
+	size_t i = 0;
+	while (i < 6) {
+		KMyMath::Vector2 numsPos_ = enemyScoreSPos;
+		numsPos_.x = numsPos_.x - (15 * (i));
+		size_t j = scrNum % 10;
+		enemyScoreS[i]->Draw(
+		    numTexs[j], numsPos_, {1, 1}, 0.0f, {1, 1, 1, 1}, false, false, {1.0f, 0.5f});
+		scrNum /= 10;
+		i++;
+	}
+}
+
+void ClearScene::MinDamageScoreDraw() {
+	size_t scrNum = minDamageScoreNum;
+
+	minDamageScore->Draw(
+	    minDamageScoreTex, minDamageScorePos, {1, 1}, 0.0f, {1, 1, 1, 1}, false, false,
+	    {0.0f, 0.5f});
+
+	size_t i = 0;
+	while (i < 6) {
+		KMyMath::Vector2 numsPos_ = minDamageScoreSPos;
+		numsPos_.x = numsPos_.x - (15 * (i));
+		size_t j = scrNum % 10;
+		minDamageScoreS[i]->Draw(
+		    numTexs[j], numsPos_, {1, 1}, 0.0f, {1, 1, 1, 1}, false, false, {1.0f, 0.5f});
+		scrNum /= 10;
+		i++;
+	}
+}
+
+void ClearScene::BossTimeScoreDraw() {
+	size_t scrNum = bossTimeScoreNum;
+
+	bossTimeScore->Draw(
+	    bossTimeScoreTex, bossTimeScorePos, {1, 1}, 0.0f, {1, 1, 1, 1}, false, false, {0.0f, 0.5f});
+
+	size_t i = 0;
+	while (i < 6) {
+		KMyMath::Vector2 numsPos_ = bossTimeScoreSPos;
+		numsPos_.x = numsPos_.x - (15 * (i));
+		size_t j = scrNum % 10;
+		bossTimeScoreS[i]->Draw(
+		    numTexs[j], numsPos_, {1, 1}, 0.0f, {1, 1, 1, 1}, false, false, {1.0f, 0.5f});
+		scrNum /= 10;
+		i++;
+	}
+}
+
+void ClearScene::TotalScoreDraw() {
+	size_t scrNum = totalScoreNum;
+
+	total->Draw(totalTex, totalPos, {1, 1}, 0.0f, {1, 1, 1, 1}, false, false, {0.0f, 0.5f});
+
+	size_t i = 0;
+	while (i < 6) {
+		KMyMath::Vector2 numsPos_ = totalSPos;
+		numsPos_.x = numsPos_.x - (15 * (i));
+		size_t j = scrNum % 10;
+		totalS[i]->Draw(
+		    numTexs[j], numsPos_, {1, 1}, 0.0f, {1, 1, 1, 1}, false, false, {1.0f, 0.5f});
+		scrNum /= 10;
+		i++;
 	}
 }

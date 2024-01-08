@@ -1,31 +1,31 @@
 #pragma once
+#include "BaseScene.h"
+#include "BillManager.h"
+#include "Blaster.h"
+#include "BossEnemy.h"
+#include "Bullet.h"
+#include "BulletManager.h"
+#include "Camera.h"
+#include "EnemyManager.h"
+#include "FbxObject3D.h"
+#include "Ground.h"
 #include "KDirectXCommon.h"
 #include "KGPlin.h"
+#include "KInput.h"
+#include "KModel.h"
 #include "KObject3d.h"
 #include "KShader.h"
+#include "MobEnemy.h"
+#include "ParticleManager.h"
+#include "Player.h"
+#include "PostEffect.h"
+#include "RailCamera.h"
+#include "SkyBox.h"
 #include "Sound.h"
 #include "Sprite.h"
-#include <imgui.h>
-#include "Camera.h"
-#include <array>
-#include "FbxObject3D.h"
-#include "KModel.h"
-#include "BaseScene.h"
-#include "KInput.h"
-#include "PostEffect.h"
-#include "Player.h"
-#include "Bullet.h"
-#include "MobEnemy.h"
-#include "Ground.h"
-#include "RailCamera.h"
 #include "Warning.h"
-#include "BossEnemy.h"
-#include "BulletManager.h"
-#include "SkyBox.h"
-#include "ParticleManager.h"
-#include "BillManager.h"
-#include "EnemyManager.h"
-#include "Blaster.h"
+#include <array>
+#include <imgui.h>
 
 /**
  * @file GameScene.h
@@ -223,7 +223,14 @@ private:
 	std::array<KMyMath::Vector2, 2> movieBarPos;
 #pragma endregion
 
+#pragma region ポーズ
 	bool isPose = false;
+
+	std::unique_ptr<Sprite> poseBack;
+
+	std::unique_ptr<Sprite> poseTexS;
+	TextureData poseTexT;
+#pragma endregion
 
 	std::unique_ptr<Sprite> testDiv;
 	TextureData testDivTex;

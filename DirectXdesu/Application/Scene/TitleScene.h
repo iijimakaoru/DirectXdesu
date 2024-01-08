@@ -73,6 +73,9 @@ private:
 	// 次のシーンへのキー
 	std::unique_ptr<Sprite> pushA = nullptr;
 	TextureData pushATex;
+	float Aalpha = 1.0f;
+	float AalphaTimer = 0;
+	float AalphaTime = 60;
 
 	KMyMath::Vector2 pushAPos = { 0,0 };
 

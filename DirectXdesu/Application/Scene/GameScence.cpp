@@ -32,6 +32,7 @@ void GameScence::LoadResources() {
 	textureData2 = TextureManager::Load("Resources/texture/kariPlayerColor.png");
 	movieBarTex = TextureManager::Load("Resources/texture/white1x1.png");
 	testDivTex = TextureManager::Load("Resources/texture/tex1.png");
+	poseTexT = TextureManager::Load("Resources/texture/pose.png");
 
 	// モデル
 	playerModel = std::make_unique<MtlObj>("BattleShip");
@@ -121,6 +122,14 @@ void GameScence::Init() {
 	isCallDeadCamera = false;
 
 	isStageStart = true;
+
+	poseBack = std::make_unique<Sprite>();
+	poseBack->Init();
+	poseBack->SetPipeline(spritePipeline.get());
+
+	poseTexS = std::make_unique<Sprite>();
+	poseTexS->Init();
+	poseTexS->SetPipeline(spritePipeline.get());
 
 	testDiv = std::make_unique<Sprite>();
 	testDiv->Init();
@@ -282,6 +291,19 @@ void GameScence::SpriteDraw() {
 		}
 	} else {
 		ScoreManager::GetInstance()->Draw();
+	}
+
+	if (isPose)
+	{
+		poseBack->Draw(
+		    movieBarTex, {0, 0},
+		    {static_cast<float>(KWinApp::GetInstance()->GetWindowSizeW()),
+		     static_cast<float>(KWinApp::GetInstance()->GetWindowSizeH())},
+		    0.0f, {0, 0, 0, 0.7f}, false, false, {0, 0});
+
+		poseTexS->Draw(
+		    poseTexT, {static_cast<float>(KWinApp::GetInstance()->GetWindowSizeW()) / 2,
+		               static_cast<float>(KWinApp::GetInstance()->GetWindowSizeH()) / 2});
 	}
 }
 

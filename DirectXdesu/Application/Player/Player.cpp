@@ -2,6 +2,7 @@
 #include "BulletManager.h"
 #include "Ease.h"
 #include "ParticleManager.h"
+#include "ScoreManager.h"
 
 const float Player::moveSpeed = 0.48f;
 const KMyMath::Vector2 Player::rotLimit = {35.0f, 25.0f};
@@ -512,4 +513,5 @@ void Player::OnCollision() {
 	isDamageEffect = true;
 	dAlpha = 1;
 	isInvisible = true;
+	ScoreManager::GetInstance()->AddDamageCount();
 }

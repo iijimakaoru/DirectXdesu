@@ -67,7 +67,8 @@ void GameScence::Init() {
 	input = KInput::GetInstance();
 
 	// プレイヤー生成
-	player.reset(Player::Create(playerModel.get(), objPipeline.get(), 10, spritePipeline.get()));
+	float playersHPInit = 10.0f;
+	player.reset(Player::Create(playerModel.get(), objPipeline.get(), playersHPInit, spritePipeline.get()));
 
 	// カメラ生成
 	camera = std::make_unique<RailCamera>();
@@ -124,6 +125,7 @@ void GameScence::Init() {
 
 	ScoreManager::GetInstance()->Init();
 	ScoreManager::GetInstance()->ResetScore();
+	ScoreManager::GetInstance()->SetDamageCountMax((size_t)playersHPInit);
 }
 
 void GameScence::Update() {

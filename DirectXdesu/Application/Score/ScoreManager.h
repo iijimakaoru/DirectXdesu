@@ -36,13 +36,41 @@ public:
 	void AddMobScore(size_t score_);
 	void AddBossScore(size_t score_);
 
+	/// <summary>
+	/// ゲームスコア
+	/// </summary>
 	const size_t& GetGameScore() const;
 
+	/// <summary>
+	/// 撃破数マックス増加
+	/// </summary>
 	void AddDestoryCountMax();
 
+	/// <summary>
+	/// 撃破数増加
+	/// </summary>
 	void AddDestoryCount();
 
+	/// <summary>
+	/// 敵撃破数
+	/// </summary>
+	/// <returns></returns>
 	const float GetDestoryCount() const;
+
+	/// <summary>
+	/// ダメージ率
+	/// </summary>
+	const float GetDamageCount() const;
+
+	/// <summary>
+	/// ダメージ率上限
+	/// </summary>
+	void SetDamageCountMax(size_t max_);
+
+	/// <summary>
+	/// ダメージ率上昇
+	/// </summary>
+	void AddDamageCount();
 
 private:
 	/// <summary>
@@ -112,6 +140,10 @@ private:
 	// エネミー撃破カウント
 	size_t destoryCount = 0;
 	size_t destoryCountMax = 0;
+
+	// 自機損傷率
+	size_t damageCount = 0;
+	size_t damageCountMax = 0;
 
 	/// <summary>
 	/// ボーナスの受付時間

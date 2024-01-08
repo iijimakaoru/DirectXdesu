@@ -80,12 +80,16 @@ void ScoreManager::Update() {
 	int GameScore_ = (int)gameScore;
 	int DestoryCount_ = (int)destoryCount;
 	int DestoryCountMax_ = (int)destoryCountMax;
-	ImGui::Begin("TextPos");
+	int DamageCount_ = (int)damageCount;
+	int DamageCountMax_ = (int)damageCountMax;
+	ImGui::Begin("ScoreCount");
 	ImGui::SetWindowPos({10, 10});
 	ImGui::SetWindowSize({200, 200});
 	ImGui::Text("%d", GameScore_);
 	ImGui::Text("%d", DestoryCount_);
 	ImGui::Text("%d", DestoryCountMax_);
+	ImGui::Text("%d", DamageCount_);
+	ImGui::Text("%d", DamageCountMax_);
 	ImGui::End();
 
 	if (isCount) {
@@ -262,3 +266,23 @@ const float ScoreManager::GetDestoryCount() const {
 
 	return result;
 }
+
+const float ScoreManager::GetDamageCount() const {
+	float result = 1;
+
+	if (damageCount == damageCountMax) {
+		result = 0;
+	} else if (damageCount >= damageCountMax * 0.75f) {
+		result = 0.25f;
+	} else if (damageCount >= damageCountMax * 0.5f) {
+		result = 0.5f;
+	} else if (damageCount >= damageCountMax * 0.25f) {
+		result = 0.75f;
+	}
+
+	return result;
+}
+
+void ScoreManager::SetDamageCountMax(size_t max_) { damageCountMax = max_; }
+
+void ScoreManager::AddDamageCount() { damageCount++; }

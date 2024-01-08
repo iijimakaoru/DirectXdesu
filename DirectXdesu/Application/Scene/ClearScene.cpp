@@ -241,6 +241,19 @@ void ClearScene::Update() {
 			resultPhase++;
 		}
 	}
+	// ダメージスコア計算
+	else if (resultPhase == 7) {
+		float DamageScore = 100000 * ScoreManager::GetInstance()->GetDamageCount();
+		phaseTime = 30.0f;
+		if (phaseTimer < phaseTime) {
+			phaseTimer++;
+
+			minDamageScoreNum = (size_t)MyEase::Lerp(0, DamageScore, phaseTimer / phaseTime);
+		} else {
+			phaseTimer = 0;
+			resultPhase++;
+		}
+	}
 	// 待ち時間
 	else if (resultPhase == 7) {
 		phaseTime = 15.0f;

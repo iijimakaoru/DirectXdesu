@@ -163,6 +163,8 @@ void ScoreManager::ResetScore() {
 	// エネミー撃破カウント
 	destoryCount = 0;
 	destoryCountMax = 0;
+	// 被弾率カウント
+	damageCount = 0;
 }
 
 void ScoreManager::AddMobScore(size_t score_) {

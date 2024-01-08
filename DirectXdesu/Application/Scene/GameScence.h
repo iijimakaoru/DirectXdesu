@@ -79,6 +79,8 @@ private:
 	// ムービーバーにょっき
 	void MovieBarIn(const float timer_);
 
+	void PoseAction();
+
 public:
 	// フラグゲッター
 	const bool GetIsStart() const;
@@ -220,6 +222,8 @@ private:
 	TextureData movieBarTex;
 	std::array<KMyMath::Vector2, 2> movieBarPos;
 #pragma endregion
+
+	bool isPose = false;
 
 	std::unique_ptr<Sprite> testDiv;
 	TextureData testDivTex;

@@ -70,7 +70,8 @@ void GameScence::Init() {
 
 	// プレイヤー生成
 	float playersHPInit = 10.0f;
-	player.reset(Player::Create(playerModel.get(), objPipeline.get(), playersHPInit, spritePipeline.get()));
+	player.reset(
+	    Player::Create(playerModel.get(), objPipeline.get(), playersHPInit, spritePipeline.get()));
 
 	// カメラ生成
 	camera = std::make_unique<RailCamera>();
@@ -80,7 +81,7 @@ void GameScence::Init() {
 
 	// カメラ初期化
 	camera->Init(player.get(), {0.0f, 0.0f, -200.0f});
-	//camera->Init(player.get(), {0.0f, 0.0f, 450.0f});
+	// camera->Init(player.get(), {0.0f, 0.0f, 450.0f});
 
 	// エネミーマネージャー生成
 	enemyManager.reset(EnemyManager::Create(
@@ -144,66 +145,80 @@ void GameScence::Update() {
 	} else {
 		GameManager::GetInstance()->SetIsStartMovie(true);
 
-		// ボスバトル開始判定
-		BossBattleStart();
-
-		// 当たり判定
-		CheckAllCollisions();
-
-		// 自機が死んだとき
-		PlayerDead();
-
-		// エネミーマネージャーの更新
-		enemyManager->Update(camera->GetViewPro());
-
-		// 天箱を自機に追従
-		skyBox->SetPosZ(player->GetWorldPos().z);
-	}
-
-	// ボスの更新
-	if (blaster) {
-		if (blaster->GetIsFallEffectEnd()) {
-			goClearMovieTimer++;
-			if (goClearMovieTimer == goClearMovieTime) {
-				player->SetParent(nullptr);
-				player->SetPos(player->GetWorldPos());
-				isClearMovie = true;
-				goClearMovieTimer = goClearMovieTime + 1.0f;
+		if (input->GetPadButtonDown(XINPUT_GAMEPAD_START)) {
+			if (isPose) {
+				isPose = false;
+			} else {
+				isPose = true;
 			}
 		}
 
-		blaster->Update(camera->GetViewPro(), isBossAppearMovie);
-		Blaster::nowBlaster = blaster.get();
+		if (!isPose) {
+			// ボスバトル開始判定
+			BossBattleStart();
+
+			// 当たり判定
+			CheckAllCollisions();
+
+			// 自機が死んだとき
+			PlayerDead();
+
+			// エネミーマネージャーの更新
+			enemyManager->Update(camera->GetViewPro());
+
+			// 天箱を自機に追従
+			skyBox->SetPosZ(player->GetWorldPos().z);
+		}
 	}
 
-	// プレイヤーの更新
-	player->Update(camera->GetViewPro(), isStageStart, isBossAppearMovie, isClearMovie);
-	Player::nowPlayer = player.get();
+	if (!isPose) {
+		// ボスの更新
+		if (blaster) {
+			if (blaster->GetIsFallEffectEnd()) {
+				goClearMovieTimer++;
+				if (goClearMovieTimer == goClearMovieTime) {
+					player->SetParent(nullptr);
+					player->SetPos(player->GetWorldPos());
+					isClearMovie = true;
+					goClearMovieTimer = goClearMovieTime + 1.0f;
+				}
+			}
 
-	// 弾の更新
-	bulletManager->Update(camera->GetViewPro());
+			blaster->Update(camera->GetViewPro(), isBossAppearMovie);
+			Blaster::nowBlaster = blaster.get();
+		}
 
-	// 地面の更新
-	ground->Update(camera->GetViewPro(), camera->GetCameraPos());
+		// プレイヤーの更新
+		player->Update(camera->GetViewPro(), isStageStart, isBossAppearMovie, isClearMovie);
+		Player::nowPlayer = player.get();
 
-	// スカイボックスの更新
-	skyBox->Update(camera->GetViewPro());
+		// 弾の更新
+		bulletManager->Update(camera->GetViewPro());
 
-	// パーティクルマネージャーの更新
-	particleManager->Update(camera->GetViewPro());
-	objParticleManager->Update(camera->GetViewPro());
+		// 地面の更新
+		ground->Update(camera->GetViewPro(), camera->GetCameraPos());
 
-	// ビルマネージャー
-	billManager->Update(camera->GetViewPro(), camera->GetCameraPos().z - 20.0f);
+		// スカイボックスの更新
+		skyBox->Update(camera->GetViewPro());
 
-	// カメラの更新
-	camera->Update(isStageStart, isBossAppearMovie, isClearMovie);
+		// パーティクルマネージャーの更新
+		particleManager->Update(camera->GetViewPro());
+		objParticleManager->Update(camera->GetViewPro());
 
-	ScoreManager::GetInstance()->Update();
+		// ビルマネージャー
+		billManager->Update(camera->GetViewPro(), camera->GetCameraPos().z - 20.0f);
 
-	// ボス登場警告
-	if (bossWarning) {
-		bossWarning->Update();
+		// カメラの更新
+		camera->Update(isStageStart, isBossAppearMovie, isClearMovie);
+
+		ScoreManager::GetInstance()->Update();
+
+		// ボス登場警告
+		if (bossWarning) {
+			bossWarning->Update();
+		}
+	} else {
+		PoseAction();
 	}
 }
 
@@ -464,7 +479,8 @@ void GameScence::PlayerDead() {
 void GameScence::StageStartMovie() {
 	// スキップしよう
 	if (startPhase < 5) {
-		if (input->GetPadButtonDown(XINPUT_GAMEPAD_START) || GameManager::GetInstance()->GetIsStartMovie()) {
+		if (input->GetPadButtonDown(XINPUT_GAMEPAD_START) ||
+		    GameManager::GetInstance()->GetIsStartMovie()) {
 			startPhase = 5;
 		}
 	}
@@ -1096,6 +1112,17 @@ void GameScence::MovieBarIn(const float timer_) {
 	float height = static_cast<float>(KWinApp::GetInstance()->GetWindowSizeH());
 	movieBarPos[0] = MyEase::Lerp2D({0.0f, -50.0f}, {0.0f, 0.0f}, timer_);
 	movieBarPos[1] = MyEase::Lerp2D({0.0f, height + 50.0f}, {0.0f, height}, timer_);
+}
+
+void GameScence::PoseAction() {
+	if (input->GetPadButton(XINPUT_GAMEPAD_A)) {
+		sceneChange->SceneChangeStart();
+	}
+
+	if (sceneChange->GetIsChange()) {
+		sceneManager->ChangeScene("TITLE");
+		bulletManager->AllBulletDelete();
+	}
 }
 
 const bool GameScence::GetIsStart() const { return isStageStart; }

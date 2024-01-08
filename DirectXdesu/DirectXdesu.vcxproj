@@ -176,6 +176,7 @@
     <ClCompile Include="Application\Camera\TitleCamera.cpp" />
     <ClCompile Include="Engine\Base\BaseScene\SceneChange.cpp" />
     <ClCompile Include="Application\Score\ScoreManager.cpp" />
+    <ClCompile Include="Application\GameManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\BossEnemy\ActState.h" />
@@ -250,6 +251,7 @@
     <ClInclude Include="Application\Scene\GameOverScene.h" />
     <ClInclude Include="Engine\Base\BaseScene\SceneChange.h" />
     <ClInclude Include="Application\Score\ScoreManager.h" />
+    <ClInclude Include="Application\GameManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DirectXdesu.rc" />

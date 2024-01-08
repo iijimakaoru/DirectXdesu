@@ -22,6 +22,8 @@
 
 #include "ScoreManager.h"
 
+#include "GameManager.h"
+
 GameScence::~GameScence() { Final(); };
 
 void GameScence::LoadResources() {
@@ -140,6 +142,8 @@ void GameScence::Update() {
 	} else if (isOverMovie) {
 		GoGameOverScene();
 	} else {
+		GameManager::GetInstance()->SetIsStartMovie(true);
+
 		// ボスバトル開始判定
 		BossBattleStart();
 
@@ -460,7 +464,7 @@ void GameScence::PlayerDead() {
 void GameScence::StageStartMovie() {
 	// スキップしよう
 	if (startPhase < 5) {
-		if (input->GetPadButtonDown(XINPUT_GAMEPAD_START)) {
+		if (input->GetPadButtonDown(XINPUT_GAMEPAD_START) || GameManager::GetInstance()->GetIsStartMovie()) {
 			startPhase = 5;
 		}
 	}
@@ -675,7 +679,7 @@ void GameScence::GoGameOverScene() {
 		}
 
 		if (sceneChange->GetIsChange()) {
-			sceneManager->ChangeScene("OVER");
+			sceneManager->ChangeScene("GAME");
 			bulletManager->AllBulletDelete();
 		}
 	}
@@ -1054,6 +1058,7 @@ void GameScence::ClearMovie() {
 	// 暗転
 	else if (clearPhase == 3) {
 		sceneChange->SceneChangeStart();
+		GameManager::GetInstance()->SetIsStartMovie(false);
 		clearPhase++;
 	}
 	// リザルトシーンへ

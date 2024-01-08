@@ -180,10 +180,10 @@ void Player::Move() {
 
 void Player::Rot() {
 	// 回転速度
-	const float rotSpeed = 0.035f;
+	const float rotSpeed = 0.04f;
 
 	// 角度修正基準速度
-	const float correctionSpeed = (rotSpeed * 2.0f) / 0.1f;
+	const float correctionSpeed = (rotSpeed * 2.5f) / 0.1f;
 	KMyMath::Vector3 rot = {0, 0, 0};
 
 	// どこまで傾けたら判定をとるか

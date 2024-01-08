@@ -413,6 +413,9 @@ void GameScence::BossBattleStart() {
 		// ボス登場警告作成
 		bossWarning = std::make_unique<Warning>();
 		bossWarning->Init();
+
+		// 敵を全削除
+		enemyManager->AllEnemyDelete();
 	} else {
 		// 演出が終わってないときは抜ける
 		if (!bossWarning->GetIsDelete()) {

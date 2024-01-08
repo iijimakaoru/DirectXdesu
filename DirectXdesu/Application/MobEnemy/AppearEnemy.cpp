@@ -58,6 +58,7 @@ void AppearEnemy::Update(ViewProjection* viewPro_, const KMyMath::Vector3& camer
 
 		if (isDead) {
 			ScoreManager::GetInstance()->AddMobScore(100);
+			ScoreManager::GetInstance()->AddDestoryCount();
 		}
 	}
 

@@ -54,6 +54,7 @@ void FlyEnemy::Update(ViewProjection* viewPro_, const KMyMath::Vector3& cameraPo
 
 		if (isDead) {
 			ScoreManager::GetInstance()->AddMobScore(100);
+			ScoreManager::GetInstance()->AddDestoryCount();
 		}
 	}
 

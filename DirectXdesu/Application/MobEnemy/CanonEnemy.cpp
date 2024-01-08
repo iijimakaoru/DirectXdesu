@@ -48,6 +48,7 @@ void CanonEnemy::Update(ViewProjection* viewPro_, const KMyMath::Vector3& camera
 
 		if (isDead) {
 			ScoreManager::GetInstance()->AddMobScore(100);
+			ScoreManager::GetInstance()->AddDestoryCount();
 		}
 	}
 

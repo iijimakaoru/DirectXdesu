@@ -8,6 +8,8 @@
 
 #include <imgui.h>
 
+#include "ScoreManager.h"
+
 ClearScene::~ClearScene() { Final(); }
 
 void ClearScene::LoadResources() {
@@ -141,11 +143,10 @@ void ClearScene::Update() {
 	const float width = static_cast<float>(KWinApp::GetInstance()->GetWindowSizeW());
 	const float height = static_cast<float>(KWinApp::GetInstance()->GetWindowSizeH());
 
+	// テクスチャ場所
 	resultPos.x = width / 2.0f;
 	resultPos.y = height / 9.0f;
-
 	scoreBordPos = {width / 2.0f, height * 5.0f / 9.0f};
-
 	const float scoresTexPos = scoreBordPos.x - 500.0f;
 	const float scoresNumPos = scoreBordPos.x + 500.0f;
 	gameScorePos = {scoresTexPos, scoreBordPos.y - 150.0f};
@@ -158,7 +159,6 @@ void ClearScene::Update() {
 	bossTimeScoreSPos = {scoresNumPos, scoreBordPos.y};
 	totalPos = {scoresTexPos, scoreBordPos.y + 150.0f};
 	totalSPos = {scoresTexPos + 200.0f, scoreBordPos.y + 150.0f};
-
 	pushAPos = {width / 2, height * 9 / 10};
 
 	MoveBack();
@@ -215,6 +215,42 @@ void ClearScene::Update() {
 			resultPhase++;
 		}
 	}
+	// レベルスコア計算
+	else if (resultPhase == 5) {
+		size_t levelScore = ScoreManager::GetInstance()->GetGameScore();
+		phaseTime = 30.0f;
+		if (phaseTimer < phaseTime) {
+			phaseTimer++;
+
+			gameScoreNum = (size_t)MyEase::Lerp(0, (float)levelScore, phaseTimer / phaseTime);
+		} else {
+			phaseTimer = 0;
+			resultPhase++;
+		}
+	}
+	// 撃破スコア計算
+	else if (resultPhase == 6) {
+		float DestoryScore = 100000 * ScoreManager::GetInstance()->GetDestoryCount();
+		phaseTime = 30.0f;
+		if (phaseTimer < phaseTime) {
+			phaseTimer++;
+
+			enemyScoreNum = (size_t)MyEase::Lerp(0, DestoryScore, phaseTimer / phaseTime);
+		} else {
+			phaseTimer = 0;
+			resultPhase++;
+		}
+	}
+	// 待ち時間
+	else if (resultPhase == 7) {
+		phaseTime = 15.0f;
+		if (phaseTimer < phaseTime) {
+			phaseTimer++;
+		} else {
+			phaseTimer = 0;
+			resultPhase++;
+		}
+	}
 	// 次のシーンへ
 	else {
 		isGoScene = true;
@@ -225,6 +261,8 @@ void ClearScene::Update() {
 			}
 		}
 	}
+
+	totalScoreNum = gameScoreNum + enemyScoreNum + minDamageScoreNum + bossTimeScoreNum;
 
 	if (sceneChange->GetIsChange()) {
 		// シーン切り替え依頼

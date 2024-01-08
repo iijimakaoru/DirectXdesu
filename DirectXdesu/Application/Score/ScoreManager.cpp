@@ -45,13 +45,13 @@ void ScoreManager::Init() {
 	numTexs[8] = TextureManager::Load("Resources/texture/Num8.png");
 	numTexs[9] = TextureManager::Load("Resources/texture/Num9.png");
 
-	//「Score」文字
+	// 「Score」文字
 	scores = std::make_unique<Sprite>();
 	scores->Init();
 	scores->SetPipeline(spritePipeline.get());
 	scoresTex = TextureManager::Load("Resources/texture/ScoreTex.png");
 
-	//「HIT」文字
+	// 「HIT」文字
 	hits = std::make_unique<Sprite>();
 	hits->Init();
 	hits->SetPipeline(spritePipeline.get());
@@ -77,11 +77,16 @@ void ScoreManager::Init() {
 }
 
 void ScoreManager::Update() {
-	/*ImGui::Begin("TextPos");
+	int GameScore_ = (int)gameScore;
+	int DestoryCount_ = (int)destoryCount;
+	int DestoryCountMax_ = (int)destoryCountMax;
+	ImGui::Begin("TextPos");
 	ImGui::SetWindowPos({10, 10});
 	ImGui::SetWindowSize({200, 200});
-	ImGui::SliderInt("Result.y", &(int)gameScore, 0, 100);
-	ImGui::End();*/
+	ImGui::Text("%d", GameScore_);
+	ImGui::Text("%d", DestoryCount_);
+	ImGui::Text("%d", DestoryCountMax_);
+	ImGui::End();
 
 	if (isCount) {
 		if (bonusTimer > 0) {
@@ -151,6 +156,9 @@ void ScoreManager::ResetScore() {
 	bonusCount = 0;
 	isAddScore = false;
 	addScoreTimer = 0;
+	// エネミー撃破カウント
+	destoryCount = 0;
+	destoryCountMax = 0;
 }
 
 void ScoreManager::AddMobScore(size_t score_) {
@@ -160,7 +168,7 @@ void ScoreManager::AddMobScore(size_t score_) {
 	bonusTimer = bonusTime;
 }
 
-void ScoreManager::AddBossScore(size_t score_) { 
+void ScoreManager::AddBossScore(size_t score_) {
 	addResultScore = score_;
 	isAddScore = true;
 }
@@ -233,4 +241,24 @@ void ScoreManager::BonusTimerDraw() {
 	bonusGage->Draw(
 	    bonusGageTex, bonusGagePos, {bonusTimer * sizeX, sizeY}, 0.0f, {0, 0, 1, 1}, false, false,
 	    {0.0f, 0.5f});
+}
+
+void ScoreManager::AddDestoryCountMax() { destoryCountMax++; }
+
+void ScoreManager::AddDestoryCount() { destoryCount++; }
+
+const float ScoreManager::GetDestoryCount() const {
+	float result = 0;
+
+	if (destoryCount == destoryCountMax) {
+		result = 1;
+	} else if (destoryCount >= destoryCountMax * 0.75f) {
+		result = 0.75f;
+	} else if (destoryCount >= destoryCountMax * 0.5f) {
+		result = 0.5f;
+	} else if (destoryCount >= destoryCountMax * 0.25f) {
+		result = 0.25f;
+	}
+
+	return result;
 }

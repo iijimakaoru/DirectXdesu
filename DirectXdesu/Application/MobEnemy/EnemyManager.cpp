@@ -4,6 +4,7 @@
 #include "FlyEnemy.h"
 #include "Player.h"
 #include "RailCamera.h"
+#include "ScoreManager.h"
 
 EnemyManager* EnemyManager::Create(
     const std::string fileName_, Player* player_, KModel* model_, KGPlin* pipeline_) {
@@ -187,6 +188,8 @@ void EnemyManager::UpdateEnemyPopCommands() {
 				// 登録
 				mobEnemys.push_back(std::move(newMEnemy));
 			}
+
+			ScoreManager::GetInstance()->AddDestoryCountMax();
 		}
 		// WAITコマンド
 		else if (word.find("WAIT") == 0) {

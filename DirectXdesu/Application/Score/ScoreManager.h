@@ -38,6 +38,12 @@ public:
 
 	const size_t& GetGameScore() const;
 
+	void AddDestoryCountMax();
+
+	void AddDestoryCount();
+
+	const float GetDestoryCount() const;
+
 private:
 	/// <summary>
 	/// ボーナス中
@@ -102,6 +108,10 @@ private:
 	size_t addScoreNum = 0;
 	size_t addResultScore = 0;
 	bool isCount = false;
+
+	// エネミー撃破カウント
+	size_t destoryCount = 0;
+	size_t destoryCountMax = 0;
 
 	/// <summary>
 	/// ボーナスの受付時間

@@ -41,7 +41,7 @@ void Reticle2D::Update(ViewProjection* viewPro_, KMyMath::Vector3 reticle3dPos_)
 
 	position = { positionReticle.x, positionReticle.y };
 
-	scale = { 2.0f,2.0f };
+	scale = { 0.5f,0.5f };
 
 	color = { 1.0f,1.0f,1.0f,1.0f };
 

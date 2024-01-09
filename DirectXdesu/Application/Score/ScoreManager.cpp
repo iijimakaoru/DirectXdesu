@@ -270,16 +270,16 @@ const float ScoreManager::GetDestoryCount() const {
 }
 
 const float ScoreManager::GetDamageCount() const {
-	float result = 1;
+	float result = 0;
 
-	if (damageCount == damageCountMax) {
-		result = 0;
-	} else if (damageCount >= damageCountMax * 0.75f) {
-		result = 0.25f;
-	} else if (damageCount >= damageCountMax * 0.5f) {
-		result = 0.5f;
+	if (damageCount == 0) {
+		result = 1;
 	} else if (damageCount >= damageCountMax * 0.25f) {
 		result = 0.75f;
+	} else if (damageCount >= damageCountMax * 0.5f) {
+		result = 0.5f;
+	} else if (damageCount >= damageCountMax * 0.75f) {
+		result = 0.25f;
 	}
 
 	return result;

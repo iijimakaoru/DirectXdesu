@@ -274,12 +274,12 @@ const float ScoreManager::GetDamageCount() const {
 
 	if (damageCount == 0) {
 		result = 1;
-	} else if (damageCount >= damageCountMax * 0.25f) {
-		result = 0.75f;
-	} else if (damageCount >= damageCountMax * 0.5f) {
-		result = 0.5f;
 	} else if (damageCount >= damageCountMax * 0.75f) {
 		result = 0.25f;
+	} else if (damageCount >= damageCountMax * 0.5f) {
+		result = 0.5f;
+	} else if (damageCount >= damageCountMax * 0.25f) {
+		result = 0.75f;
 	}
 
 	return result;

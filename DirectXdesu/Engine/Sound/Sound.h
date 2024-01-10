@@ -32,6 +32,7 @@ struct SoundData
 	BYTE* pBuffer;
 	unsigned int bufferSize;
 	WAVEFORMATEX wfex;
+	IXAudio2SourceVoice* pSourceVoice;
 };
 
 struct FormatChunk
@@ -66,7 +67,14 @@ public:
 	/// 再生
 	/// </summary>
 	/// <param name="soundData"></param>
-	void SoundPlayWave(const SoundData& soundData);
+	/// <param name="isLoop"></param>
+	void SoundPlayWave(SoundData& soundData,bool isLoop = false);
+
+	/// <summary>
+	/// 停止
+	/// </summary>
+	/// <param name="soundData"></param>
+	void SoundStopWave(const SoundData& soundData);
 
 	// ゲッター
 	ComPtr<IXAudio2> GetxAudio();
@@ -77,6 +85,8 @@ public:
 private:
 	ComPtr<IXAudio2> xAudio2;
 	IXAudio2MasteringVoice* masterVoice;
+
+	float outputMatrix[2] = {1.0f, 0.05f};
 
 private:
 	Sound() = default;

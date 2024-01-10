@@ -47,7 +47,7 @@ void GameScence::LoadResources() {
 	skyBoxModel->CreateModel();
 
 	// サウンド
-	soundData1 = Sound::GetInstance()->SoundLoadWave("Resources/Sound/Alarm01.wav");
+	soundData1 = Sound::GetInstance()->SoundLoadWave("Resources/Sound/BattleBGM.wav");
 	soundData2 = Sound::GetInstance()->SoundLoadWave("Resources/Sound/Alarm02.wav");
 	soundData3 = Sound::GetInstance()->SoundLoadWave("Resources/Sound/Alarm03.wav");
 
@@ -155,6 +155,10 @@ void GameScence::Init() {
 }
 
 void GameScence::Update() {
+	if (input->GetPadButtonDown(XINPUT_GAMEPAD_A)){
+		Sound::GetInstance()->SoundPlayWave(soundData1);
+	}
+
 	if (isStageStart) {
 		billManager->SetIsStopCreate(true);
 

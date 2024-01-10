@@ -1142,6 +1142,7 @@ void GameScence::PoseAction() {
 	}
 
 	if (sceneChange->GetIsChange()) {
+		GameManager::GetInstance()->SetIsStartMovie(false);
 		sceneManager->ChangeScene("TITLE");
 		bulletManager->AllBulletDelete();
 	}

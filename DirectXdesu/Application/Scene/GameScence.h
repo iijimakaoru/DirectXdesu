@@ -226,10 +226,25 @@ private:
 #pragma region ポーズ
 	bool isPose = false;
 
+	bool isOperation = true;
+	bool isBackTitle = false;
+
 	std::unique_ptr<Sprite> poseBack;
+
+	std::unique_ptr<Sprite> selectBar;
+	KMyMath::Vector2 selectBarPos;
 
 	std::unique_ptr<Sprite> poseTexS;
 	TextureData poseTexT;
+	KMyMath::Vector2 poseTexPos;
+
+	std::unique_ptr<Sprite> backTitleS;
+	TextureData backTitleT;
+	KMyMath::Vector2 backTitlePos;
+
+	std::unique_ptr<Sprite> operationS;
+	TextureData operationT;
+	KMyMath::Vector2 operationPos;
 #pragma endregion
 
 	std::unique_ptr<Sprite> testDiv;

@@ -33,6 +33,8 @@ void GameScence::LoadResources() {
 	movieBarTex = TextureManager::Load("Resources/texture/white1x1.png");
 	testDivTex = TextureManager::Load("Resources/texture/tex1.png");
 	poseTexT = TextureManager::Load("Resources/texture/pose.png");
+	backTitleT = TextureManager::Load("Resources/texture/BackTitle.png");
+	operationT = TextureManager::Load("Resources/texture/Operation.png");
 
 	// モデル
 	playerModel = std::make_unique<MtlObj>("BattleShip");
@@ -127,9 +129,21 @@ void GameScence::Init() {
 	poseBack->Init();
 	poseBack->SetPipeline(spritePipeline.get());
 
+	selectBar = std::make_unique<Sprite>();
+	selectBar->Init();
+	selectBar->SetPipeline(spritePipeline.get());
+
 	poseTexS = std::make_unique<Sprite>();
 	poseTexS->Init();
 	poseTexS->SetPipeline(spritePipeline.get());
+
+	backTitleS = std::make_unique<Sprite>();
+	backTitleS->Init();
+	backTitleS->SetPipeline(spritePipeline.get());
+
+	operationS = std::make_unique<Sprite>();
+	operationS->Init();
+	operationS->SetPipeline(spritePipeline.get());
 
 	testDiv = std::make_unique<Sprite>();
 	testDiv->Init();
@@ -293,17 +307,20 @@ void GameScence::SpriteDraw() {
 		ScoreManager::GetInstance()->Draw();
 	}
 
-	if (isPose)
-	{
-		poseBack->Draw(
-		    movieBarTex, {0, 0},
-		    {static_cast<float>(KWinApp::GetInstance()->GetWindowSizeW()),
-		     static_cast<float>(KWinApp::GetInstance()->GetWindowSizeH())},
-		    0.0f, {0, 0, 0, 0.7f}, false, false, {0, 0});
+	if (isPose) {
+		float width = static_cast<float>(KWinApp::GetInstance()->GetWindowSizeW());
+		float height = static_cast<float>(KWinApp::GetInstance()->GetWindowSizeH());
 
-		poseTexS->Draw(
-		    poseTexT, {static_cast<float>(KWinApp::GetInstance()->GetWindowSizeW()) / 2,
-		               static_cast<float>(KWinApp::GetInstance()->GetWindowSizeH()) / 2});
+		poseBack->Draw(
+		    movieBarTex, {0, 0}, {width, height}, 0.0f, {0, 0, 0, 0.7f}, false, false, {0, 0});
+
+		poseTexPos = {width / 2, height * 1 / 4};
+		poseTexS->Draw(poseTexT, poseTexPos, {1.5f, 1.5f});
+
+		selectBar->Draw(movieBarTex, selectBarPos, {200.0f, 34.0f}, 0.0f, {0.5f, 0.5f, 0.5f, 0.8f});
+
+		operationS->Draw(operationT, operationPos);
+		backTitleS->Draw(backTitleT, backTitlePos);
 	}
 }
 
@@ -1137,8 +1154,41 @@ void GameScence::MovieBarIn(const float timer_) {
 }
 
 void GameScence::PoseAction() {
-	if (input->GetPadButton(XINPUT_GAMEPAD_A)) {
-		sceneChange->SceneChangeStart();
+
+	float width = static_cast<float>(KWinApp::GetInstance()->GetWindowSizeW());
+	float height = static_cast<float>(KWinApp::GetInstance()->GetWindowSizeH());
+
+	operationPos = {width / 2, (height / 2) - 60.0f};
+	backTitlePos = {width / 2, height / 2};
+
+	if (input->GetLStickDown()) {
+		if (isOperation)
+		{
+			isOperation = false;
+			isBackTitle = true;
+		}
+	}
+
+	if (input->GetLStickUp()) {
+		if (isBackTitle) {
+			isBackTitle = false;
+			isOperation = true;
+		}
+	}
+
+	if (isOperation) {
+		selectBarPos = operationPos;
+
+		if (input->GetPadButton(XINPUT_GAMEPAD_A)) {
+		}
+	}
+
+	if (isBackTitle) {
+		selectBarPos = backTitlePos;
+
+		if (input->GetPadButton(XINPUT_GAMEPAD_A)) {
+			sceneChange->SceneChangeStart();
+		}
 	}
 
 	if (sceneChange->GetIsChange()) {

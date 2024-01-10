@@ -24,6 +24,8 @@
 
 #include "GameManager.h"
 
+using namespace MesiEngine;
+
 GameScence::~GameScence() { Final(); };
 
 void GameScence::LoadResources() {

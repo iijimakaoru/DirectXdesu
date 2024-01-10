@@ -3,6 +3,8 @@
 #include "BaseScene.h"
 #include "ParticleManager.h"
 
+using namespace MesiEngine;
+
 void Framework::Init()
 {
 	// FBX初期化

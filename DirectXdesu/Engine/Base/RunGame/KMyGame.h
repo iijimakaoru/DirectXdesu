@@ -7,8 +7,8 @@
  * @author 飯島 薫
  */
 
-class KMyGame : public Framework
-{
+namespace MesiEngine {
+class KMyGame : public Framework {
 public:
 	// 初期化
 	void Init() override;
@@ -21,4 +21,5 @@ public:
 
 private:
 };
+}
 

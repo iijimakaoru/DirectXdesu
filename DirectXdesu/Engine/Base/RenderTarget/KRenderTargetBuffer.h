@@ -19,9 +19,8 @@
  * @brief レンダーターゲットバッファ
  * @author 飯島 薫
  */
-
-class KRenderTargetBuffer
-{
+namespace MesiEngine {
+class KRenderTargetBuffer {
 public:
 	/// <summary>
 	/// 生成
@@ -33,13 +32,10 @@ public:
 	/// <param name="arraySize">配列のサイズ</param>
 	/// <param name="format">フォーマット</param>
 	/// <param name="clearColor">カラー</param>
-	bool Create(UINT w,
-		UINT h,
-		D3D12_RESOURCE_STATES resourceStates,
-		UINT16 mipLevel = 0,
-		UINT16 arraySize = 1,
-		DXGI_FORMAT format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,
-		const KMyMath::Vector4& clearColor = { 1.0f,1.0f,1.0f,1.0f });
+	bool Create(
+	    UINT w, UINT h, D3D12_RESOURCE_STATES resourceStates, UINT16 mipLevel = 0,
+	    UINT16 arraySize = 1, DXGI_FORMAT format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,
+	    const KMyMath::Vector4& clearColor = {1.0f, 1.0f, 1.0f, 1.0f});
 
 	/// <summary>
 	/// 生成
@@ -65,19 +61,19 @@ public:
 	~KRenderTargetBuffer() = default;
 
 private:
-	//ステータス
+	// ステータス
 	D3D12_RESOURCE_STATES states;
-	//幅
+	// 幅
 	UINT width = 0;
-	//高さ
+	// 高さ
 	UINT height = 0;
-	//テクスチャ
+	// テクスチャ
 	Microsoft::WRL::ComPtr<ID3D12Resource> texture;
-	//ディスクリプタヒープ
+	// ディスクリプタヒープ
 	KRtvDescriptorHeap* rtvHeap = nullptr;
-	//デバイス
+	// デバイス
 	ID3D12Device* device = nullptr;
-	//ハンドル
+	// ハンドル
 	D3D12_CPU_DESCRIPTOR_HANDLE handle{};
 };
-
+} // namespace MesiEngine

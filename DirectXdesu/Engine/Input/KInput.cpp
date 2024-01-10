@@ -3,6 +3,8 @@
 #include"KWinApp.h"
 #include "MyMath.h"
 
+using namespace MesiEngine;
+
 KInput* KInput::GetInstance()
 {
 	static KInput instance;

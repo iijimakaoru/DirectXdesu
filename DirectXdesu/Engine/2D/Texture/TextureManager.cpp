@@ -1,6 +1,8 @@
 #include "TextureManager.h"
 #include "KDirectXCommon.h"
 
+using namespace MesiEngine;
+
 TextureManager* TextureManager::textureManager = nullptr;
 std::string TextureManager::DefaultTextureDirectoryPath = "Resource/";
 

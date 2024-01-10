@@ -24,9 +24,8 @@
  * @brief シェーダー
  * @author 飯島 薫
  */
-
-class KShader
-{
+namespace MesiEngine {
+class KShader {
 public:
 	template<class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
 
@@ -48,19 +47,20 @@ public:
 	/// <param name="GSFileName"></param>
 	/// <param name="DSFileName"></param>
 	/// <param name="HSFileName"></param>
-	void Init(LPCWSTR VSFileName, LPCWSTR PSFileName, LPCSTR pEntryPoint = "main", 
-		LPCWSTR GSFileName = nullptr, LPCWSTR DSFileName = nullptr, LPCWSTR HSFileName = nullptr);
+	void Init(
+	    LPCWSTR VSFileName, LPCWSTR PSFileName, LPCSTR pEntryPoint = "main",
+	    LPCWSTR GSFileName = nullptr, LPCWSTR DSFileName = nullptr, LPCWSTR HSFileName = nullptr);
 
 	// エラー
 	void Error();
 
 private:
 	// シェーダーオブジェクト
-	ComPtr<ID3D10Blob> vsBlob = nullptr; // 頂点シェーダーオブジェクト
-	ComPtr<ID3D10Blob> hsBlob = nullptr; // ハルシェーダーオブジェクト
-	ComPtr<ID3D10Blob> dsBlob = nullptr; // ドメインシェーダーオブジェクト
-	ComPtr<ID3D10Blob> gsBlob = nullptr; // ジオメトリシェーダーオブジェクト
-	ComPtr<ID3D10Blob> psBlob = nullptr; // ピクセルシェーダーオブジェクト
+	ComPtr<ID3D10Blob> vsBlob = nullptr;    // 頂点シェーダーオブジェクト
+	ComPtr<ID3D10Blob> hsBlob = nullptr;    // ハルシェーダーオブジェクト
+	ComPtr<ID3D10Blob> dsBlob = nullptr;    // ドメインシェーダーオブジェクト
+	ComPtr<ID3D10Blob> gsBlob = nullptr;    // ジオメトリシェーダーオブジェクト
+	ComPtr<ID3D10Blob> psBlob = nullptr;    // ピクセルシェーダーオブジェクト
 	ComPtr<ID3D10Blob> errorBlob = nullptr; // エラーオブジェクト
 
 	// シェーダーバイトコード
@@ -85,4 +85,4 @@ public:
 	D3D12_SHADER_BYTECODE* GetGSBytecode();
 	D3D12_SHADER_BYTECODE* GetPSBytecode();
 };
-
+} // namespace MesiEngine

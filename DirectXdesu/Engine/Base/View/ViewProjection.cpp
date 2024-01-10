@@ -1,6 +1,8 @@
 #include "ViewProjection.h"
 #include "KWinApp.h"
 
+using namespace MesiEngine;
+
 ViewProjection::ViewProjection(){}
 
 void ViewProjection::Initialize() 

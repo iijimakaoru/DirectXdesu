@@ -2,6 +2,8 @@
 #include "KWinApp.h"
 #include <thread>
 
+using namespace MesiEngine;
+
 KDirectXCommon* KDirectXCommon::directXCommon_ = nullptr;
 
 // 対応レベルの配列

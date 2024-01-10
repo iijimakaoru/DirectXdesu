@@ -26,9 +26,8 @@ struct Plane
 	// 原点(0,0,0)からの距離
 	float distance = 0.0f;
 };
-
-class ColTriangle
-{
+namespace MesiEngine {
+class ColTriangle {
 public:
 	// 頂点座標3つ
 	DirectX::XMVECTOR p0;
@@ -39,6 +38,7 @@ public:
 
 	void ConputeNormal();
 };
+} // namespace MesiEngine
 
 struct Ray
 {
@@ -47,8 +47,6 @@ struct Ray
 	// 方向
 	DirectX::XMVECTOR dir = { 1,0,0,0 };
 };
-
-class CollisionPrimitive
-{
-};
-
+namespace MesiEngine {
+class CollisionPrimitive {};
+} // namespace MesiEngine

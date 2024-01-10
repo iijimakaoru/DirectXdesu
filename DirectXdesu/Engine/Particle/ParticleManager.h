@@ -14,26 +14,22 @@
  * @brief パーティクルのマネージャー
  * @author 飯島 薫
  */
-
-class Particles
-{
-public:// サブクラス
+namespace MesiEngine {
+class Particles {
+public: // サブクラス
 	// 頂点データ構造体
-	struct VertexPos
-	{
+	struct VertexPos {
 		KMyMath::Vector3 pos; // xyz座標
 		float scale;
 	};
 
 	// 定数バッファ用データ構造体
-	struct PConstBufferData
-	{
-		KMyMath::Matrix4 mat;	// ３Ｄ変換行列
+	struct PConstBufferData {
+		KMyMath::Matrix4 mat; // ３Ｄ変換行列
 		KMyMath::Matrix4 matBillboard;
 	};
 
-	struct Particle
-	{
+	struct Particle {
 		KMyMath::Vector3 pos = {};
 
 		KMyMath::Vector3 vel = {};
@@ -51,8 +47,8 @@ public:// サブクラス
 		float e_scale = 0.0f;
 	};
 
-private: // 定数
-	static const int vertexCount = 1024;		// 頂点数
+private:                                 // 定数
+	static const int vertexCount = 1024; // 頂点数
 
 public: // 静的メンバ関数
 	/// <summary>
@@ -87,7 +83,7 @@ private: // 静的メンバ変数
 	// Y軸回りビルボード行列
 	static DirectX::XMMATRIX matBillboardY;
 
-private:// 静的メンバ関数
+private: // 静的メンバ関数
 	/// <summary>
 	/// グラフィックパイプライン生成
 	/// </summary>
@@ -115,7 +111,9 @@ public: // メンバ関数
 	/// <param name="accel"></param>
 	/// <param name="start_scale"></param>
 	/// <param name="end_scale"></param>
-	void Add(int life, KMyMath::Vector3 pos, KMyMath::Vector3 vel, KMyMath::Vector3 accel, float start_scale, float end_scale);
+	void
+	    Add(int life, KMyMath::Vector3 pos, KMyMath::Vector3 vel, KMyMath::Vector3 accel,
+	        float start_scale, float end_scale);
 
 	/// <summary>
 	/// モデル作成
@@ -132,7 +130,7 @@ private:
 	// 頂点バッファビュー
 	D3D12_VERTEX_BUFFER_VIEW vbView;
 
-private: // メンバ変数
+private:                                              // メンバ変数
 	Microsoft::WRL::ComPtr<ID3D12Resource> constBuff; // 定数バッファ
 
 	TextureData textureData;
@@ -140,8 +138,7 @@ private: // メンバ変数
 	std::forward_list<Particle> particles;
 };
 
-class ParticleManager
-{
+class ParticleManager {
 public:
 	/// <summary>
 	/// 初期化
@@ -195,15 +192,15 @@ private:
 	const ParticleManager& operator=(const ParticleManager&) = delete;
 };
 
-class ObjParticle
-{
+class ObjParticle {
 public:
 	/// <summary>
 	/// 作成
 	/// </summary>
 	/// <returns></returns>
-	static ObjParticle* Create(const KMyMath::Vector3& pos_, 
-		KModel* model_, KGPlin* pipeline_, const KMyMath::Vector3& velocity, TextureData& tex);
+	static ObjParticle* Create(
+	    const KMyMath::Vector3& pos_, KModel* model_, KGPlin* pipeline_,
+	    const KMyMath::Vector3& velocity, TextureData& tex);
 
 	/// <summary>
 	/// 初期化
@@ -211,8 +208,9 @@ public:
 	/// <param name="pos_"></param>
 	/// <param name="model_"></param>
 	/// <param name="pipeline_"></param>
-	void Init(const KMyMath::Vector3& pos_, 
-		KModel* model_, KGPlin* pipeline_, const KMyMath::Vector3& velocity, TextureData& tex);
+	void Init(
+	    const KMyMath::Vector3& pos_, KModel* model_, KGPlin* pipeline_,
+	    const KMyMath::Vector3& velocity, TextureData& tex);
 
 	/// <summary>
 	/// 更新
@@ -229,17 +227,14 @@ public:
 	/// 死んだかゲッター
 	/// </summary>
 	/// <returns></returns>
-	const bool GetIsDead() const
-	{
-		return isDead;
-	}
+	const bool GetIsDead() const { return isDead; }
 
 private:
 	// オブジェクト
 	std::unique_ptr<KObject3d> object3d = nullptr;
 
 	// 速度
-	KMyMath::Vector3 velocity = { 0,0,0 };
+	KMyMath::Vector3 velocity = {0, 0, 0};
 
 	// 生存時間
 	uint32_t lifeTimer = 0;
@@ -255,8 +250,7 @@ private:
 	TextureData texture;
 };
 
-class ObjParticleManager
-{
+class ObjParticleManager {
 public:
 	/// <summary>
 	/// 初期化
@@ -281,7 +275,7 @@ public:
 	void SetExp(const KMyMath::Vector3& pos_);
 
 	/// <summary>
-	/// 
+	///
 	/// </summary>
 	/// <param name="pos_"></param>
 	void SetSmallExp(const KMyMath::Vector3& pos_);
@@ -316,3 +310,4 @@ private:
 	ObjParticleManager(const ObjParticleManager&) = default;
 	const ObjParticleManager& operator=(const ObjParticleManager&) = delete;
 };
+} // namespace MesiEngine

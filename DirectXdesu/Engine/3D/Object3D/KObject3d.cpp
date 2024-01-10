@@ -1,6 +1,8 @@
 #include "KObject3d.h"
 #include "KDirectXCommon.h"
 
+using namespace MesiEngine;
+
 void KObject3d::StaticInit()
 {
 }

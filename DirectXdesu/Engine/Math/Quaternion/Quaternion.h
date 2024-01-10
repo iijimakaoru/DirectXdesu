@@ -7,17 +7,17 @@
  * @brief クォータニオン
  * @author 飯島 薫
  */
-
-class Quaternion
-{
+namespace MesiEngine {
+class Quaternion {
 public:
 	float x = 0.0f;
 	float y = 0.0f;
 	float z = 0.0f;
 	float w = 0.0f;
+
 public:
-	Quaternion() {};
-	Quaternion(float w, float x, float y, float z) :w(w), x(x), y(y), z(z) {};
+	Quaternion(){};
+	Quaternion(float w, float x, float y, float z) : w(w), x(x), y(y), z(z){};
 	void SetQuaternion(KMyMath::Vector3 v, float angle);
 	Quaternion SetQuaternion(KMyMath::Vector3 v);
 
@@ -72,3 +72,4 @@ float Dot(const Quaternion& q1, const Quaternion& q2);
 Quaternion Slerp(const Quaternion& q1, const Quaternion& q2, float time);
 
 Quaternion DirectionToDirection(const KMyMath::Vector3& v1, const KMyMath::Vector3& v2);
+} // namespace MesiEngine

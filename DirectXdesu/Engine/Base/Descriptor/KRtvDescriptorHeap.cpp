@@ -1,8 +1,9 @@
 #include "KRtvDescriptorHeap.h"
 #include "KDirectXCommon.h"
 
-void KRtvDescriptorHeap::Initialize()
-{
+using namespace MesiEngine;
+
+void KRtvDescriptorHeap::Initialize() {
 	device = KDirectXCommon::GetInstance()->GetDev();
 	HRESULT result = 0;
 
@@ -12,23 +13,23 @@ void KRtvDescriptorHeap::Initialize()
 	rtvHeapDesc.NumDescriptors = static_cast<UINT>(maxRTV);
 
 	// 設定を元にSRV用デスクリプタヒープを生成
-	result = device->CreateDescriptorHeap(&rtvHeapDesc, IID_PPV_ARGS(descriptorHeap.ReleaseAndGetAddressOf()));
+	result = device->CreateDescriptorHeap(
+	    &rtvHeapDesc, IID_PPV_ARGS(descriptorHeap.ReleaseAndGetAddressOf()));
 	assert(SUCCEEDED(result));
 
 	incrementSize = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 
-	//SRVヒープの先頭ハンドルを取得
+	// SRVヒープの先頭ハンドルを取得
 	startCpuHandle = descriptorHeap->GetCPUDescriptorHandleForHeapStart();
 }
 
-UINT64 KRtvDescriptorHeap::CreateRTV(D3D12_RENDER_TARGET_VIEW_DESC& desc, ID3D12Resource* resource)
-{
-	if (countRTV > maxRTV)
-	{
+UINT64
+    KRtvDescriptorHeap::CreateRTV(D3D12_RENDER_TARGET_VIEW_DESC& desc, ID3D12Resource* resource) {
+	if (countRTV > maxRTV) {
 		assert(0);
 	}
 
-	D3D12_CPU_DESCRIPTOR_HANDLE	handle{};
+	D3D12_CPU_DESCRIPTOR_HANDLE handle{};
 
 	handle.ptr = startCpuHandle.ptr + (static_cast<UINT64>(countRTV) * incrementSize);
 
@@ -38,12 +39,6 @@ UINT64 KRtvDescriptorHeap::CreateRTV(D3D12_RENDER_TARGET_VIEW_DESC& desc, ID3D12
 	return handle.ptr;
 }
 
-ID3D12DescriptorHeap* KRtvDescriptorHeap::GetHeap()
-{
-	return descriptorHeap.Get();
-}
+ID3D12DescriptorHeap* KRtvDescriptorHeap::GetHeap() { return descriptorHeap.Get(); }
 
-UINT KRtvDescriptorHeap::GetIncrementSize()
-{
-	return incrementSize;
-}
+UINT KRtvDescriptorHeap::GetIncrementSize() { return incrementSize; }

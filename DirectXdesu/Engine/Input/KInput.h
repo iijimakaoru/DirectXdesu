@@ -18,12 +18,10 @@
  * @brief 入力
  * @author 飯島 薫
  */
-
-class KInput
-{
+namespace MesiEngine {
+class KInput {
 public:
-	 enum MouseBotton
-	{
+	enum MouseBotton {
 		Left,
 		Right,
 		Wheel,
@@ -46,17 +44,11 @@ public:
 	// 離した瞬間
 	bool IsRelease(int keyNum);
 
-	//マウス
-	//マウスの状態を得る
-	static inline DIMOUSESTATE2 GetMouseState()
-	{
-		return GetInstance()->mouseState;
-	}
+	// マウス
+	// マウスの状態を得る
+	static inline DIMOUSESTATE2 GetMouseState() { return GetInstance()->mouseState; }
 	// 前回のマウスの状態を得る
-	static inline DIMOUSESTATE2 GetOldMouseState()
-	{
-		return GetInstance()->oldMouseState;
-	}
+	static inline DIMOUSESTATE2 GetOldMouseState() { return GetInstance()->oldMouseState; }
 	// マウスクリックされてるか
 	static bool GetMouseClick(int bottonNum);
 	// マウスクリックが離れた瞬間
@@ -73,25 +65,25 @@ public:
 	static KMyMath::Vector3 GetMouseMove();
 
 	// ゲームパッド
-	//パッドに接続されてるか
+	// パッドに接続されてるか
 	bool GetPadConnect();
-	//パッドのボタンが押されているか
+	// パッドのボタンが押されているか
 	bool GetPadButton(UINT button);
-	//パッドのボタンが離れた瞬間か
+	// パッドのボタンが離れた瞬間か
 	bool GetPadButtonUp(UINT button);
-	//パッドのボタンが押された瞬間か
+	// パッドのボタンが押された瞬間か
 	bool GetPadButtonDown(UINT button);
-	//パッドの左スティック
+	// パッドの左スティック
 	KMyMath::Vector2 GetPadLStick();
-	//パッドの右スティック
+	// パッドの右スティック
 	KMyMath::Vector2 GetPadRStick();
-	//左トリガーを押し込んだ瞬間か
+	// 左トリガーを押し込んだ瞬間か
 	bool GetLTriggerDown();
-	//右トリガーを押し込んだ瞬間か
+	// 右トリガーを押し込んだ瞬間か
 	bool GetRTriggerDown();
-	//左スティックを上に倒した瞬間か
+	// 左スティックを上に倒した瞬間か
 	bool GetLStickUp();
-	//左スティックを下に倒した瞬間か
+	// 左スティックを下に倒した瞬間か
 	bool GetLStickDown();
 
 	/// <summary>
@@ -150,4 +142,4 @@ private:
 
 	void InitInternal();
 };
-
+} // namespace MesiEngine

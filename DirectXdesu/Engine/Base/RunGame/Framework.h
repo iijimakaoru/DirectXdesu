@@ -19,8 +19,8 @@
  * @author 飯島 薫
  */
 
-class Framework
-{
+namespace MesiEngine {
+class Framework {
 public:
 	// 初期化
 	virtual void Init();
@@ -75,4 +75,5 @@ protected:
 
 	SceneChange* sceneChange = nullptr;
 };
+}
 

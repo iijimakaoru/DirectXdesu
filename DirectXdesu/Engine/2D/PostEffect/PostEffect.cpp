@@ -1,5 +1,7 @@
 #include "PostEffect.h"
 
+using namespace MesiEngine;
+
 // 静的メンバ変数の実体
 KGPlin* PostEffect::pipeline = nullptr;
 Microsoft::WRL::ComPtr<ID3D12Device> PostEffect::device;

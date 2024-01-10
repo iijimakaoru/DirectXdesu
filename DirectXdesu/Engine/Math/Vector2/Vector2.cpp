@@ -2,8 +2,10 @@
 #include <cmath>
 #include <math.h>
 
-namespace KMyMath
-{
+using namespace MesiEngine;
+
+using namespace KMyMath;
+
 	// ゼロベクトル
 	Vector2::Vector2() :x(0), y(0) {}
 

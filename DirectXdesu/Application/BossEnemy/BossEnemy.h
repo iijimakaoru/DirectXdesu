@@ -15,6 +15,9 @@
 
 class BossEnemy
 {
+private:
+	using KGPlin = MesiEngine::KGPlin;
+
 public:
 	/// <summary>
 	/// 初期化

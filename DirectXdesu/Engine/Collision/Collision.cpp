@@ -2,6 +2,8 @@
 
 using namespace DirectX;
 
+using namespace MesiEngine;
+
 bool Collision::CheckSphere2Plane(const Sphere& sphere, const Plane& plane, DirectX::XMVECTOR* inter)
 {
 	// 座標系の原点から球の中心座標への距離

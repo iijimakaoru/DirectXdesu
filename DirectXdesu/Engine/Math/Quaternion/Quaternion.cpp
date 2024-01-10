@@ -1,6 +1,8 @@
 #include "Quaternion.h"
 #include <cmath>
 
+using namespace MesiEngine;
+
 const float EPSILON = 0.000001f;
 
 void Quaternion::SetQuaternion(KMyMath::Vector3 v, float angle)

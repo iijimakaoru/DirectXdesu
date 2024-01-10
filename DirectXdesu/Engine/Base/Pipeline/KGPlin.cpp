@@ -1,6 +1,8 @@
 #include "KGPlin.h"
 #include "KDirectXCommon.h"
 
+using namespace MesiEngine;
+
 void KGPlin::SetShader(KShader shader)
 {
 	// Vertex

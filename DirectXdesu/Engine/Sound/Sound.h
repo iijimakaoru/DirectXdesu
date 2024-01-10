@@ -2,12 +2,12 @@
 #include "KDirectXCommon.h"
 
 #pragma warning(push)
-#pragma warning(disable: 4668)
-#include <xaudio2.h>
+#pragma warning(disable : 4668)
 #include <fstream>
+#include <xaudio2.h>
 #pragma warning(pop)
 
-#pragma comment(lib,"xaudio2.lib")
+#pragma comment(lib, "xaudio2.lib")
 
 /**
  * @file Sound.h
@@ -15,35 +15,31 @@
  * @author 飯島 薫
  */
 
-struct ChunkHeader
-{
+struct ChunkHeader {
 	char id[4];
 	int32_t size;
 };
 
-struct RiffHeader
-{
+struct RiffHeader {
 	ChunkHeader chunk;
 	char type[4];
 };
 
-struct SoundData
-{
+struct SoundData {
 	BYTE* pBuffer;
 	unsigned int bufferSize;
 	WAVEFORMATEX wfex;
 };
 
-struct FormatChunk
-{
+struct FormatChunk {
 	ChunkHeader chunk;
 	WAVEFORMATEX fmt;
 };
 
-class Sound
-{
+namespace MesiEngine {
+class Sound {
 private:
-	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
+	template<class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
 
 public:
 	// 初期化
@@ -85,4 +81,4 @@ private:
 	Sound(const Sound&) = default;
 	const Sound& operator=(const Sound&) = delete;
 };
-
+} // namespace MesiEngine

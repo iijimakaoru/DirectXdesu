@@ -2,6 +2,8 @@
 #include <string>
 #include <assert.h>
 
+using namespace MesiEngine;
+
 void KShader::Error() 
 {
 	// エラーがでたら

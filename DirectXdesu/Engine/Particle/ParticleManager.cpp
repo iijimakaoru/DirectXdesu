@@ -10,6 +10,8 @@
 
 #include "Ease.h"
 
+using namespace MesiEngine;
+
 /// <summary>
 /// 静的メンバ変数の実体
 /// </summary>

@@ -1,6 +1,8 @@
 #include "LevelLoader.h"
 #include<fstream>
 
+using namespace MesiEngine;
+
 const std::string LevelLoader::kDefaultBaseDirectory = "Resources/";
 const std::string LevelLoader::kExtension = ".json";
 

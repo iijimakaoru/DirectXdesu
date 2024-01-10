@@ -8,9 +8,8 @@
  * @brief ビュープロジェクション
  * @author 飯島 薫
  */
-
-class ViewProjection
-{
+namespace MesiEngine {
+class ViewProjection {
 public:
 	// コンストラクタ
 	ViewProjection();
@@ -52,4 +51,4 @@ public:
 	void SetFarZ(const float& farZ_);
 	void SetNearZ(const float& nearZ_);
 };
-
+} // namespace MesiEngine

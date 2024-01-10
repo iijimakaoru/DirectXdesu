@@ -1,6 +1,8 @@
 #include "FbxLoader.h"
 #include "MyMath.h"
 
+using namespace MesiEngine;
+
 /// <summary>
 /// 静的メンバ変数の実体
 /// </summary>

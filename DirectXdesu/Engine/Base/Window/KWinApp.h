@@ -10,9 +10,8 @@
  * @brief ウィンドウ
  * @author 飯島 薫
  */
-
-class KWinApp
-{
+namespace MesiEngine {
+class KWinApp {
 private:
 	KWinApp() = default;
 	~KWinApp() = default;
@@ -36,13 +35,13 @@ public:
 	static int GetWindowSizeW();
 	// ウィンドウ縦幅
 	static int GetWindowSizeH();
-	
+
 	// プロセスメッセージ
 	bool ProcessMessage();
 
 	// 最終処理
 	void Finalize();
-	
+
 	// ゲッター
 	static HWND GetHWND();
 	static WNDCLASSEX GetWindow();
@@ -54,7 +53,7 @@ private:
 
 	// ウィンドウクラスの設定
 	WNDCLASSEX window{};
-	
+
 	HWND hwnd;
 };
-
+} // namespace MesiEngine

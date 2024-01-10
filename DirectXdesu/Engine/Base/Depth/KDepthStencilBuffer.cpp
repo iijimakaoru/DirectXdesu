@@ -9,6 +9,8 @@
 #include <d3dx12.h>
 #pragma warning(pop)
 
+using namespace MesiEngine;
+
 bool KDepthStencilBuffer::Create(UINT w, UINT h, DXGI_FORMAT format)
 {
 	height = h;

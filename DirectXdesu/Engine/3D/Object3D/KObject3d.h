@@ -39,8 +39,8 @@ struct WorldTransfom
 	const WorldTransfom* parent = nullptr;
 };
 
-class KObject3d
-{
+namespace MesiEngine {
+class KObject3d {
 public:
 	static void StaticInit();
 
@@ -96,10 +96,7 @@ public:
 	/// <param name="texture"></param>
 	void Draw(TextureData& texData_);
 
-	~KObject3d()
-	{
-		Finalize();
-	}
+	~KObject3d() { Finalize(); }
 
 	void Finalize();
 
@@ -126,7 +123,6 @@ private:
 	Microsoft::WRL::ComPtr<ID3D12Resource> constBuffB1;
 
 private:
-
 	HRESULT result;
 
 	KModel* model = nullptr;
@@ -134,4 +130,4 @@ private:
 	// 3Dオブジェクトの配列
 	WorldTransfom transform;
 };
-
+} // namespace MesiEngine

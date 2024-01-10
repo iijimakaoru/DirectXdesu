@@ -7,6 +7,8 @@
 #include <imgui_impl_win32.h>
 #pragma warning(pop)
 
+using namespace MesiEngine;
+
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 LRESULT KWinApp::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) 

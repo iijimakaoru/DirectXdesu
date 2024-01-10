@@ -21,15 +21,14 @@
  * @brief レンダーターゲットビューのデスクリプタヒープ
  * @author 飯島 薫
  */
-
-class KRtvDescriptorHeap
-{
+namespace MesiEngine {
+class KRtvDescriptorHeap {
 private:
-	//デバイス
+	// デバイス
 	ID3D12Device* device;
 
-	//デスクプリタヒープ
-	Microsoft::WRL::ComPtr <ID3D12DescriptorHeap> descriptorHeap;
+	// デスクプリタヒープ
+	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> descriptorHeap;
 
 	size_t maxRTV = 2048;
 
@@ -39,10 +38,9 @@ private:
 
 	char PADING2[4];
 
-	D3D12_CPU_DESCRIPTOR_HANDLE	startCpuHandle;
+	D3D12_CPU_DESCRIPTOR_HANDLE startCpuHandle;
 
 public:
-
 	/// <summary>
 	/// 初期化
 	/// </summary>
@@ -63,4 +61,4 @@ public:
 
 	UINT GetIncrementSize();
 };
-
+} // namespace MesiEngine

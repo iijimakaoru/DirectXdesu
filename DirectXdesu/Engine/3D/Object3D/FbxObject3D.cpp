@@ -2,6 +2,8 @@
 #include "FbxLoader.h"
 #include "MyMath.h"
 
+using namespace MesiEngine;
+
 KGPlin* FbxObject3D::pipeline = nullptr;
 
 void FbxObject3D::Init()

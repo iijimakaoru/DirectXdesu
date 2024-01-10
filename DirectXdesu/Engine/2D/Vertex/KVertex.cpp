@@ -1,6 +1,8 @@
 #include "KVertex.h"
 #include "MyMath.h"
 
+using namespace MesiEngine;
+
 KVertex::KVertex(ID3D12Device* dev, std::vector<VertexPosNormalUV>& vertices, std::vector<unsigned short>& indices) 
 {
 	KVertexInit(dev, vertices, indices);

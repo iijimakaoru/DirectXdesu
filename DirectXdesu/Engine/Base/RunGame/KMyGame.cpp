@@ -2,6 +2,8 @@
 #include "BulletManager.h"
 #include "SceneFactory.h"
 
+using namespace MesiEngine;
+
 void KMyGame::Init() {
 	Framework::Init();
 

@@ -9,10 +9,10 @@
  * @author 飯島 薫
  */
 
-class PostEffect
-{
-public:// 静的メンバ関数
-	//　静的初期化
+namespace MesiEngine {
+class PostEffect {
+public: // 静的メンバ関数
+	// 　静的初期化
 	static void StaticInit();
 
 public:
@@ -43,7 +43,7 @@ public:
 	/// <param name="pipeline_"></param>
 	void SetPipeline(KGPlin* pipeline_);
 
-private:// クラス内でしか使わない関数
+private: // クラス内でしか使わない関数
 	// 定数バッファマテリアル
 	void CreateCBMaterial();
 
@@ -66,14 +66,12 @@ private:// クラス内でしか使わない関数
 	void CreateRTVDescHeap();
 
 private:
-	struct Vertex
-	{
+	struct Vertex {
 		KMyMath::Vector3 pos;
 		KMyMath::Vector2 uv;
 	};
 
-	enum VertexNumber
-	{
+	enum VertexNumber {
 		LB, // 左下
 		LT, // 左上
 		RB, // 右下
@@ -120,7 +118,7 @@ private:
 
 	Vertex vertices_[4];
 
-private:// 静的メンバ変数
+private: // 静的メンバ変数
 	// デバイス
 	static Microsoft::WRL::ComPtr<ID3D12Device> device;
 
@@ -136,4 +134,5 @@ private:// 静的メンバ変数
 	// 画面クリアカラー
 	static const float clearColor[4];
 };
+}
 

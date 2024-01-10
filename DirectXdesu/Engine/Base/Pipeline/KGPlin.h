@@ -7,12 +7,10 @@
  * @brief グラフィックスパイプライン
  * @author 飯島 薫
  */
-
-class KGPlin
-{
+namespace MesiEngine {
+class KGPlin {
 public:
-	 enum BlendMord
-	{
+	enum BlendMord {
 		NONE = 0,
 		ADD,
 		SUB,
@@ -21,7 +19,7 @@ public:
 	};
 
 private:
-	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
+	template<class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
 
 private:
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC piplineDesc;
@@ -46,10 +44,13 @@ private:
 	/// <param name="shaderRegister"></param>
 	/// <param name="registerSpace"></param>
 	/// <param name="shaderVisibility"></param>
-	void SetRootParam(D3D12_ROOT_PARAMETER& rootParam, D3D12_ROOT_PARAMETER_TYPE type, UINT shaderRegister, UINT registerSpace,
-		D3D12_SHADER_VISIBILITY shaderVisibility = D3D12_SHADER_VISIBILITY_ALL);
-	void SetRootParam(D3D12_ROOT_PARAMETER& rootParam, D3D12_ROOT_PARAMETER_TYPE type, D3D12_DESCRIPTOR_RANGE pDescripterRange, UINT numDescripterRanges,
-		D3D12_SHADER_VISIBILITY shaderVisibility = D3D12_SHADER_VISIBILITY_ALL);
+	void SetRootParam(
+	    D3D12_ROOT_PARAMETER& rootParam, D3D12_ROOT_PARAMETER_TYPE type, UINT shaderRegister,
+	    UINT registerSpace, D3D12_SHADER_VISIBILITY shaderVisibility = D3D12_SHADER_VISIBILITY_ALL);
+	void SetRootParam(
+	    D3D12_ROOT_PARAMETER& rootParam, D3D12_ROOT_PARAMETER_TYPE type,
+	    D3D12_DESCRIPTOR_RANGE pDescripterRange, UINT numDescripterRanges,
+	    D3D12_SHADER_VISIBILITY shaderVisibility = D3D12_SHADER_VISIBILITY_ALL);
 
 	/// <summary>
 	/// ルートシグネチャセット
@@ -92,4 +93,4 @@ public:
 	/// </summary>
 	void Setting();
 };
-
+} // namespace MesiEngine

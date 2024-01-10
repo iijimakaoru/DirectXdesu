@@ -4,6 +4,8 @@
 
 #include "Framework.h"
 
+using namespace MesiEngine;
+
 int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 {
 	Framework* game = new KMyGame();

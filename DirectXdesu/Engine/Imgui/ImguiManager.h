@@ -10,9 +10,8 @@
  * @brief Imguiのマネージャー
  * @author 飯島 薫
  */
-
-class ImguiManager
-{
+namespace MesiEngine {
+class ImguiManager {
 private:
 	template<class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
 
@@ -39,4 +38,4 @@ private:
 	KWinApp* win = KWinApp::GetInstance();
 	KDirectXCommon* dx = KDirectXCommon::GetInstance();
 };
-
+} // namespace MesiEngine

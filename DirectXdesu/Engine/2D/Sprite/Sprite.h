@@ -9,6 +9,7 @@
  * @author 飯島 薫
  */
 
+namespace MesiEngine {
 class Sprite {
 public:
 	static void StaticInit();
@@ -131,3 +132,4 @@ private:
 
 	static KMyMath::Matrix4 matPro;
 };
+}

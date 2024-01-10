@@ -11,11 +11,10 @@
  * @author 飯島 薫
  */
 
-class KModel 
-{
+namespace MesiEngine {
+class KModel {
 public:
-	struct ObjMaterialInfo
-	{
+	struct ObjMaterialInfo {
 		// マテリアル名
 		std::string name;
 		// アンビエント影響度
@@ -56,30 +55,27 @@ public:
 	void Draw(TextureData texData);
 };
 
-class Cube : public KModel 
-{
+class Cube : public KModel {
 public:
 	Cube();
 	~Cube();
 };
 
-class Triangle : public KModel 
-{
+class Triangle : public KModel {
 public:
 	Triangle();
 	~Triangle();
 };
 
-class Line : public KModel 
-{
+class Line : public KModel {
 public:
 	Line();
 	~Line();
 };
 
-class MtlObj : public KModel
-{
+class MtlObj : public KModel {
 public:
 	MtlObj(const std::string modelname);
 	~MtlObj();
 };
+} // namespace MesiEngine

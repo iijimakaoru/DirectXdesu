@@ -1,6 +1,8 @@
 #include "KDescriptorHeap.h"
 #include "KDirectXCommon.h"
 
+using namespace MesiEngine;
+
 void KDescriptorHeap::Initialize()
 {
 	device = KDirectXCommon::GetInstance()->GetDev();

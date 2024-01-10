@@ -6,6 +6,8 @@
 #include <DirectXTex.h>
 #pragma warning(pop)
 
+using namespace MesiEngine;
+
 void FbxModel::CreateBuffer()
 {
 	HRESULT result;

@@ -21,14 +21,14 @@
  * @author 飯島 薫
  */
 
-class KDescriptorHeap
-{
+namespace MesiEngine {
+class KDescriptorHeap {
 private:
-	//デバイス
-	Microsoft::WRL::ComPtr <ID3D12Device> device;
-	//デスクプリタヒープ
-	Microsoft::WRL::ComPtr <ID3D12DescriptorHeap> descriptorHeap;
-	//デスクプリタレンジ
+	// デバイス
+	Microsoft::WRL::ComPtr<ID3D12Device> device;
+	// デスクプリタヒープ
+	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> descriptorHeap;
+	// デスクプリタレンジ
 	D3D12_DESCRIPTOR_RANGE descriptorRange{};
 
 	char PADING1[4];
@@ -44,16 +44,13 @@ private:
 	UINT incrementSize;
 	char PADING2[4];
 
-
-	D3D12_CPU_DESCRIPTOR_HANDLE	startCpuHandle;
-	D3D12_GPU_DESCRIPTOR_HANDLE	startGpuHandle;
+	D3D12_CPU_DESCRIPTOR_HANDLE startCpuHandle;
+	D3D12_GPU_DESCRIPTOR_HANDLE startGpuHandle;
 
 public:
-
-	struct DescriptorHeapViewHandle
-	{
-		D3D12_CPU_DESCRIPTOR_HANDLE	cpuHandle;
-		D3D12_GPU_DESCRIPTOR_HANDLE	gpuHandle;
+	struct DescriptorHeapViewHandle {
+		D3D12_CPU_DESCRIPTOR_HANDLE cpuHandle;
+		D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle;
 	};
 
 	/// <summary>
@@ -104,4 +101,4 @@ public:
 	/// </summary>
 	ID3D12DescriptorHeap* GetHeap();
 };
-
+} // namespace MesiEngine

@@ -1,6 +1,8 @@
 #include "ImguiManager.h"
 #include "KDescriptorHeap.h"
 
+using namespace MesiEngine;
+
 void ImguiManager::Init()
 {
     //ImGuiのコンテキストを生成

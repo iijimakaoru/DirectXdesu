@@ -2,6 +2,8 @@
 #include "KDirectXCommon.h"
 #include "KWinApp.h"
 
+using namespace MesiEngine;
+
 KMyMath::Matrix4 Sprite::matPro;
 Microsoft::WRL::ComPtr<ID3D12Device> Sprite::device;
 Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> Sprite::cmdList;

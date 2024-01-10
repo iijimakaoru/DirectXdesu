@@ -2,6 +2,8 @@
 
 using namespace DirectX;
 
+using namespace MesiEngine;
+
 void ColTriangle::ConputeNormal()
 {
 	DirectX::XMVECTOR p0_p1 = p1 - p0; // p0からp1までのベクトル

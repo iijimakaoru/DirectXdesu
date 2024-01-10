@@ -21,14 +21,14 @@
  * @author 飯島 薫
  */
 
-class KDsvDescriptorHeap
-{
+namespace MesiEngine {
+class KDsvDescriptorHeap {
 private:
-	//デバイス
+	// デバイス
 	ID3D12Device* device;
 
-	//デスクプリタヒープ
-	Microsoft::WRL::ComPtr <ID3D12DescriptorHeap> descriptorHeap;
+	// デスクプリタヒープ
+	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> descriptorHeap;
 
 	size_t maxDSV = 2048;
 
@@ -38,10 +38,9 @@ private:
 
 	char PADING2[4];
 
-	D3D12_CPU_DESCRIPTOR_HANDLE	startCpuHandle;
+	D3D12_CPU_DESCRIPTOR_HANDLE startCpuHandle;
 
 public:
-
 	/// <summary>
 	/// 初期化
 	/// </summary>
@@ -63,6 +62,5 @@ public:
 	UINT GetIncrementSize();
 
 	~KDsvDescriptorHeap() = default;
-
 };
-
+} // namespace MesiEngine

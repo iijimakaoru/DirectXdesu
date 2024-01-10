@@ -34,11 +34,10 @@
  * @brief DirectX12
  * @author 飯島 薫
  */
-
-class KDirectXCommon
-{
+namespace MesiEngine {
+class KDirectXCommon {
 private:
-	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
+	template<class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
 
 	// FPS固定初期化
 	void InitFixFPS();
@@ -50,7 +49,9 @@ public:
 	static KDirectXCommon* GetInstance();
 
 	// リソースの状態を変える
-	static void ResourceTransition(ID3D12Resource* resource, D3D12_RESOURCE_STATES beforeState, D3D12_RESOURCE_STATES afterState);
+	static void ResourceTransition(
+	    ID3D12Resource* resource, D3D12_RESOURCE_STATES beforeState,
+	    D3D12_RESOURCE_STATES afterState);
 
 	// 初期化
 	void Init();
@@ -88,7 +89,9 @@ public:
 	KDsvDescriptorHeap* GetDsvDescriptorHrap();
 
 	// リソースの状態を変える
-	void Transition(ID3D12Resource* resource, D3D12_RESOURCE_STATES beforeState, D3D12_RESOURCE_STATES afterState);
+	void Transition(
+	    ID3D12Resource* resource, D3D12_RESOURCE_STATES beforeState,
+	    D3D12_RESOURCE_STATES afterState);
 
 	// バックバッファの数を取得
 	size_t GetBackBufferCount() const;
@@ -118,7 +121,7 @@ private:
 	// インフォキューを有効化
 	void EnbleInfoQueue();
 
-	// 
+	//
 	KDirectXCommon() = default;
 	~KDirectXCommon() = default;
 	KDirectXCommon(const KDirectXCommon&) = delete;
@@ -166,12 +169,12 @@ private:
 	DXGI_SWAP_CHAIN_DESC1 swapChainDesc{};
 
 	// クリアカラー
-	FLOAT clearColor[4] = { 0.1f,0.25f,0.5f,0.0f };
+	FLOAT clearColor[4] = {0.1f, 0.25f, 0.5f, 0.0f};
 
-	//ビューポート
+	// ビューポート
 	D3D12_VIEWPORT viewport{};
 
-	//シザー矩形
+	// シザー矩形
 	D3D12_RECT scissorRect{};
 
 	UINT bbIndex;
@@ -197,4 +200,4 @@ private:
 	// コマンドキューの設定
 	D3D12_COMMAND_QUEUE_DESC cmdQueueDesc{};
 };
-
+} // namespace MesiEngine

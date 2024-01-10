@@ -33,7 +33,7 @@ struct TextureData {
 	// 縦幅
 	size_t height = 0;
 };
-
+namespace MesiEngine {
 class TextureManager {
 public: // 定数
 	static const size_t MaxSRVCount = 256;
@@ -109,3 +109,4 @@ private:
 	TextureManager(const TextureManager&) = delete;
 	TextureManager& operator=(const TextureManager&) = delete;
 };
+} // namespace MesiEngine

@@ -7,25 +7,23 @@
  * @author 飯島 薫
  */
 
-class KDepthStencilBuffer
-{
+namespace MesiEngine {
+class KDepthStencilBuffer {
 private:
-
-	//テクスチャ
+	// テクスチャ
 	Microsoft::WRL::ComPtr<ID3D12Resource> texture;
-	//ディスクリプタヒープ
+	// ディスクリプタヒープ
 	KDsvDescriptorHeap* dsvHeap = nullptr;
-	//幅
+	// 幅
 	UINT width = 0;
-	//高さ
+	// 高さ
 	UINT height = 0;
-	//デバイス
+	// デバイス
 	ID3D12Device* device = nullptr;
-	//ハンドル
+	// ハンドル
 	D3D12_CPU_DESCRIPTOR_HANDLE handle{};
 
 public:
-
 	/// <summary>
 	/// 生成
 	/// </summary>
@@ -54,7 +52,6 @@ public:
 	~KDepthStencilBuffer() = default;
 
 private:
-
 	KDepthStencilBuffer() = delete;
 };
-
+} // namespace MesiEngine

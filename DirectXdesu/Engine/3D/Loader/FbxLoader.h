@@ -1,16 +1,16 @@
 #pragma once
 #pragma warning(push)
-#pragma warning(disable: 4619)
-#pragma warning(disable: 4514)
-#pragma warning(disable: 4820)
-#pragma warning(disable: 4625)
-#pragma warning(disable: 4626)
-#pragma warning(disable: 5026)
-#pragma warning(disable: 5027)
-#pragma warning(disable: 4365)
-#pragma warning(disable: 4266)
-#pragma warning(disable: 4061)
-#pragma warning(disable: 5267)
+#pragma warning(disable : 4619)
+#pragma warning(disable : 4514)
+#pragma warning(disable : 4820)
+#pragma warning(disable : 4625)
+#pragma warning(disable : 4626)
+#pragma warning(disable : 5026)
+#pragma warning(disable : 5027)
+#pragma warning(disable : 4365)
+#pragma warning(disable : 4266)
+#pragma warning(disable : 4061)
+#pragma warning(disable : 5267)
 #include "fbxsdk.h"
 #pragma warning(pop)
 
@@ -22,9 +22,9 @@
  * @author 飯島 薫
  */
 
-class FbxLoader
-{
-private:// エイリアス
+namespace MesiEngine {
+class FbxLoader {
+private: // エイリアス
 	// stdを省略
 	using string = std::string;
 
@@ -85,9 +85,9 @@ public:
 	// スキニング情報読み取り
 	void ParseSkin(FbxModel* model_, FbxMesh* fbxMesh);
 
-/// <summary>
-/// FBXの行列をXMMatrixに変換
-/// </summary>
+	/// <summary>
+	/// FBXの行列をXMMatrixに変換
+	/// </summary>
 	static void ConvertMatrixFromFbx(KMyMath::Matrix4* dst, const FbxAMatrix& src);
 
 private:
@@ -109,9 +109,10 @@ private:
 	// Fbxインポーター
 	FbxImporter* fbxImporter = nullptr;
 
-public:// 定数
+public: // 定数
 	// モデル格納ルートパス
 	static const string baseDirectory;
 	// テクスチャがない場合のテクスチャファイル名
 	static const string defaultTextureFileName;
 };
+} // namespace MesiEngine

@@ -42,16 +42,15 @@ struct Node
 	Node* parent = nullptr;
 };
 
-class FbxModel
-{
+namespace MesiEngine {
+class FbxModel {
 public:
 	// フレンドクラス
 	friend class FbxLoader;
 
 	static const int MAX_BONE_INDICES = 4;
 
-	struct Bone
-	{
+	struct Bone {
 		std::string name;
 		// 初期姿勢の逆行列
 		KMyMath::Matrix4 invInitialPose;
@@ -61,18 +60,17 @@ public:
 		Bone(const std::string& name_);
 	};
 
-	struct VertexPosNormalUVSkin
-	{
-		KMyMath::Vector3 pos;	 // xyz座標
+	struct VertexPosNormalUVSkin {
+		KMyMath::Vector3 pos;    // xyz座標
 		KMyMath::Vector3 normal; // 法線ベクトル
-		KMyMath::Vector2 uv;	 // uv座標
+		KMyMath::Vector2 uv;     // uv座標
 		UINT boneIndex[MAX_BONE_INDICES];
 		float boneWeight[MAX_BONE_INDICES];
 	};
 
 private: // エイリアス
 	// Microsoft::WRL::を省略
-	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
+	template<class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
 	// DirectX::省略
 	using XMFLOAT2 = DirectX::XMFLOAT2;
 	using XMFLOAT3 = DirectX::XMFLOAT3;
@@ -82,7 +80,7 @@ private: // エイリアス
 	using ScratchImage = DirectX::ScratchImage;
 	// std::省略
 	using string = std::string;
-	template <class T> using vector = std::vector<T>;
+	template<class T> using vector = std::vector<T>;
 
 private:
 	// モデル名
@@ -96,9 +94,9 @@ private:
 	// 頂点インデックス配列
 	std::vector<unsigned short> indices;
 	// アンビエント係数
-	DirectX::XMFLOAT3 ambient = { 1,1,1 };
+	DirectX::XMFLOAT3 ambient = {1, 1, 1};
 	// ディフーズ係数
-	DirectX::XMFLOAT3 diffuse = { 1,1,1 };
+	DirectX::XMFLOAT3 diffuse = {1, 1, 1};
 
 	std::unique_ptr<KVertex> vertexs;
 
@@ -106,7 +104,7 @@ private:
 
 	TexMetadata metadata;
 
-	// 
+	//
 	ComPtr<ID3D12Resource> vertBuff;
 
 	ComPtr<ID3D12Resource> indexBuff;
@@ -149,4 +147,4 @@ public: // 関数
 	const KMyMath::Matrix4& GetModelTransform();
 	std::vector<Bone>& GetBones();
 };
-
+} // namespace MesiEngine

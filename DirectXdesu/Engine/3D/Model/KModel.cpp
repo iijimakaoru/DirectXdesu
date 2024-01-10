@@ -6,6 +6,8 @@
 #include <xutility>
 #pragma warning(pop)
 
+using namespace MesiEngine;
+
 Cube::Cube() 
 {
 	vertices = 

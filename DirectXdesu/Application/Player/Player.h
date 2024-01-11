@@ -203,6 +203,8 @@ private:
 	TextureData hpbarTex;
 	KMyMath::Vector2 HPBarUIPos = {10.0f, 10.0f};
 
+	bool isCrisis = false;
+
 	// 無敵時間
 	uint32_t invisibleTimer = 0;
 	const uint32_t invisibleTime = 30;
@@ -252,4 +254,5 @@ private:
 
 	// サウンド
 	SoundData shotSE;
+	SoundData alertSE;
 };

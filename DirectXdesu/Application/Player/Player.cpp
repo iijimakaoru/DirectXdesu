@@ -81,6 +81,8 @@ void Player::Init(
 	// ダメージ演出フラグ
 	isDamageEffect = false;
 
+	isCrisis = false;
+
 	// ダメージエフェクト
 	damage = std::make_unique<Sprite>();
 	damage->Init();
@@ -102,6 +104,7 @@ void Player::Init(
 	    KWinApp::GetInstance()->GetWindowSizeH() - 100.0f};
 
 	shotSE = Sound::GetInstance()->SoundLoadWave("Resources/Sound/shotSE.wav");
+	alertSE = Sound::GetInstance()->SoundLoadWave("Resources/Sound/alertSE.wav");
 }
 
 void Player::Update(
@@ -296,7 +299,7 @@ void Player::Attack() {
 		);
 
 		// SE鳴らし
-		Sound::GetInstance()->SoundPlayWave(shotSE,0.3f);
+		Sound::GetInstance()->SoundPlayWave(shotSE, 0.3f);
 
 		// クールタイムセット
 		coolTimer = coolTimeSet;
@@ -360,8 +363,13 @@ void Player::HPEffect() {
 
 	// ピンチ状態のHP演出
 	if (HP < maxHP * 1 / 4) {
+		if (!isCrisis) {
+			Sound::GetInstance()->SoundPlayWave(alertSE, 0.5f);
+			isCrisis = true;
+		}
 		hpColor = {1, 0, 0, 1};
 	} else {
+		isCrisis = false;
 		hpColor = {0, 1, 0, 1};
 	}
 }

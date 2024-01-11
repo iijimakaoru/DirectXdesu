@@ -10,7 +10,7 @@
 #include "Reticle2D.h"
 #include "Reticle3D.h"
 
-#include "Sound.h"
+#include "SEManager.h"
 
 /**
  * @file Player.h
@@ -252,7 +252,5 @@ private:
 	KMyMath::Vector2 operationPos;
 #pragma endregion
 
-	// サウンド
-	SoundData shotSE;
-	SoundData alertSE;
+	SEManager* seManager = nullptr;
 };

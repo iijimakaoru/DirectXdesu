@@ -103,8 +103,7 @@ void Player::Init(
 	    KWinApp::GetInstance()->GetWindowSizeW() - 300.0f,
 	    KWinApp::GetInstance()->GetWindowSizeH() - 100.0f};
 
-	shotSE = Sound::GetInstance()->SoundLoadWave("Resources/Sound/shotSE.wav");
-	alertSE = Sound::GetInstance()->SoundLoadWave("Resources/Sound/alertSE.wav");
+	seManager = SEManager::GetInstance();
 }
 
 void Player::Update(
@@ -299,7 +298,7 @@ void Player::Attack() {
 		);
 
 		// SE鳴らし
-		Sound::GetInstance()->SoundPlayWave(shotSE, 0.3f);
+		seManager->SoundPlay(seManager->GetShotSE());
 
 		// クールタイムセット
 		coolTimer = coolTimeSet;
@@ -364,7 +363,7 @@ void Player::HPEffect() {
 	// ピンチ状態のHP演出
 	if (HP < maxHP * 1 / 4) {
 		if (!isCrisis) {
-			Sound::GetInstance()->SoundPlayWave(alertSE, 0.5f);
+			seManager->SoundPlay(seManager->GetAlertSE());
 			isCrisis = true;
 		}
 		hpColor = {1, 0, 0, 1};

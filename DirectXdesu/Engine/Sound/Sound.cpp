@@ -1,4 +1,5 @@
 #include "Sound.h"
+#include <map>
 
 void Sound::Init() {
 	HRESULT result;

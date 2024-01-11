@@ -24,6 +24,10 @@ void Framework::Init()
 	sound = Sound::GetInstance();
 	sound->Init();
 
+	seManager = SEManager::GetInstance();
+	seManager->Init();
+	seManager->LoadSE();
+
 	// 静的初期化
 	Sprite::StaticInit();
 	PostEffect::StaticInit();
@@ -65,6 +69,8 @@ void Framework::Final()
 	// パーティクルマネージャー解放
 	ParticleManager::GetInstance()->Delete();
 	ObjParticleManager::GetInstance()->Delete();
+
+	seManager->Finalize();
 
 	// シーンファクトリー解放
 	delete sceneFactory;

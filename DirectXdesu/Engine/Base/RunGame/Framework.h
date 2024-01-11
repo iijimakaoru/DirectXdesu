@@ -12,6 +12,7 @@
 #include "Sound.h"
 #include "TextureManager.h"
 #include "SceneChange.h"
+#include "SEManager.h"
 
 /**
  * @file Framework.h
@@ -74,5 +75,7 @@ protected:
 	std::unique_ptr<PostEffect> postEffect = nullptr;
 
 	SceneChange* sceneChange = nullptr;
+
+	SEManager* seManager = nullptr;
 };
 

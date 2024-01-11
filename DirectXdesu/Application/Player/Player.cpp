@@ -100,6 +100,8 @@ void Player::Init(
 	operationPos = {
 	    KWinApp::GetInstance()->GetWindowSizeW() - 300.0f,
 	    KWinApp::GetInstance()->GetWindowSizeH() - 100.0f};
+
+	shotSE = Sound::GetInstance()->SoundLoadWave("Resources/Sound/shotSE.wav");
 }
 
 void Player::Update(
@@ -292,6 +294,9 @@ void Player::Attack() {
 		    object3d->GetRot(),                     // 角度取得
 		    bulletSpeed                             // 弾の速度
 		);
+
+		// SE鳴らし
+		Sound::GetInstance()->SoundPlayWave(shotSE);
 
 		// クールタイムセット
 		coolTimer = coolTimeSet;

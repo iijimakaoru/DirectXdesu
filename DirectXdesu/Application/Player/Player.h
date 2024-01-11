@@ -10,6 +10,8 @@
 #include "Reticle2D.h"
 #include "Reticle3D.h"
 
+#include "Sound.h"
+
 /**
  * @file Player.h
  * @brief 自機
@@ -247,4 +249,7 @@ private:
 	TextureData operationTex;
 	KMyMath::Vector2 operationPos;
 #pragma endregion
+
+	// サウンド
+	SoundData shotSE;
 };

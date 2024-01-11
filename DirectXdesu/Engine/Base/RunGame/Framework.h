@@ -81,6 +81,6 @@ protected:
 
 	SEManager* seManager = nullptr;
 
-	//AudioManager* audioManager = nullptr;
+	AudioManager* audioManager = nullptr;
 };
 

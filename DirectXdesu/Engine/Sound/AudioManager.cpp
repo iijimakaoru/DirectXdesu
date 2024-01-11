@@ -178,7 +178,7 @@ void AudioManager::SoundStopWave(std::string fileName) {
 	}
 }
 
-// AudioManager* AudioManager::GetInstance() {
-//	static AudioManager instance;
-//	return &instance;
-// }
+ AudioManager* AudioManager::GetInstance() {
+	static AudioManager instance;
+	return &instance;
+ }

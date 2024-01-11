@@ -64,7 +64,6 @@ public:
 	/// <param name="fileName"></param>
 	void SoundPlayWave(std::string fileName, float volume = 0.25f, bool isLoop = false);
 
-
 	void SoundStopWave(std::string fileName);
 
 private:
@@ -75,13 +74,13 @@ private:
 
 	std::string directoryPath;
 
-	// public:
-	//	static AudioManager* GetInstance();
-	//
-	// private:
-	//	AudioManager() = default;
-	//	~AudioManager() = default;
-	//
-	//	AudioManager(const AudioManager&) = default;
-	//	const AudioManager& operator=(const AudioManager&) = delete;
+public:
+	static AudioManager* GetInstance();
+
+private:
+	AudioManager() = default;
+	~AudioManager() = default;
+
+	AudioManager(const AudioManager&) = default;
+	const AudioManager& operator=(const AudioManager&) = delete;
 };

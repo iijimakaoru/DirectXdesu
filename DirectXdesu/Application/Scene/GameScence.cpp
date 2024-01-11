@@ -148,8 +148,7 @@ void GameScence::Init() {
 	ScoreManager::GetInstance()->ResetScore();
 	ScoreManager::GetInstance()->SetDamageCountMax((size_t)playersHPInit);
 
-	audioManager = new AudioManager();
-	audioManager->Init();
+	audioManager = AudioManager::GetInstance();
 
 	audioManager->SoundLoadWave("BattleBGM.wav");
 								 

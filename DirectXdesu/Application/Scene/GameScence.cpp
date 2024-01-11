@@ -144,11 +144,16 @@ void GameScence::Init() {
 	testDiv->Init();
 	testDiv->SetPipeline(spritePipeline.get());
 
-	bgmManager = BGMManager::GetInstance();
-
 	ScoreManager::GetInstance()->Init();
 	ScoreManager::GetInstance()->ResetScore();
 	ScoreManager::GetInstance()->SetDamageCountMax((size_t)playersHPInit);
+
+	audioManager = new AudioManager();
+	audioManager->Init();
+
+	audioManager->SoundLoadWave("BattleBGM.wav");
+								 
+	audioManager->SoundPlayWave("BattleBGM.wav");
 }
 
 void GameScence::Update() {
@@ -167,10 +172,10 @@ void GameScence::Update() {
 
 		if (input->GetPadButtonDown(XINPUT_GAMEPAD_START)) {
 			if (isPose) {
-				//bgmManager->SoundPlay(bgmManager->GetBGM1());
+				audioManager->SoundPlayWave("BattleBGM.wav");
 				isPose = false;
 			} else {
-				//bgmManager->SoundStop(bgmManager->GetBGM1());
+				audioManager->SoundStopWave("BattleBGM.wav");
 				isPose = true;
 			}
 		}
@@ -323,9 +328,7 @@ void GameScence::SpriteDraw() {
 	}
 }
 
-void GameScence::Final() {
-	
-}
+void GameScence::Final() { audioManager->Finalize(); }
 
 void GameScence::CheckAllCollisions() {
 	// 自機弾の取得
@@ -1110,7 +1113,6 @@ void GameScence::ClearMovie() {
 	// 暗転
 	else if (clearPhase == 3) {
 		sceneChange->SceneChangeStart();
-		bgmManager->SoundStop(bgmManager->GetBGM1());
 		GameManager::GetInstance()->SetIsStartMovie(false);
 		clearPhase++;
 	}
@@ -1186,7 +1188,6 @@ void GameScence::PoseAction() {
 
 		if (input->GetPadButton(XINPUT_GAMEPAD_A)) {
 			sceneChange->SceneChangeStart();
-			bgmManager->SoundStop(bgmManager->GetBGM1());
 		}
 	}
 

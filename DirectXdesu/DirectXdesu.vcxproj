@@ -124,7 +124,7 @@
     <ClCompile Include="Application\MobEnemy\EnemyManager.cpp" />
     <ClCompile Include="Application\BossEnemy\Blaster\BlasterStandState.cpp" />
     <ClCompile Include="Application\BossEnemy\Blaster\BlasterAimState.cpp" />
-    <ClCompile Include="Application\BGMManager.cpp" />
+    <ClCompile Include="Engine\Sound\AudioManager.cpp" />
     <ClCompile Include="Engine\Base\BaseScene\ASceneFactory.cpp" />
     <ClCompile Include="Engine\Base\BaseScene\BaseScene.cpp" />
     <ClCompile Include="Engine\Base\BaseCamera\Camera.cpp" />
@@ -202,7 +202,7 @@
     <ClInclude Include="Application\MobEnemy\EnemyManager.h" />
     <ClInclude Include="Application\BossEnemy\Blaster\BlasterStandState.h" />
     <ClInclude Include="Application\BossEnemy\Blaster\BlasterAimState.h" />
-    <ClInclude Include="Application\BGMManager.h" />
+    <ClInclude Include="Engine\Sound\AudioManager.h" />
     <ClInclude Include="Engine\Base\BaseScene\ASceneFactory.h" />
     <ClInclude Include="Engine\Base\BaseScene\BaseScene.h" />
     <ClInclude Include="Engine\Base\BaseCamera\Camera.h" />

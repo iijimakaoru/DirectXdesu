@@ -27,7 +27,7 @@
 #include <array>
 #include <imgui.h>
 
-#include "BGMManager.h"
+#include "AudioManager.h"
 
 /**
  * @file GameScene.h
@@ -244,7 +244,7 @@ private:
 	KMyMath::Vector2 operationPos;
 #pragma endregion
 
-	BGMManager* bgmManager = nullptr;
+	AudioManager* audioManager;
 
 	std::unique_ptr<Sprite> testDiv;
 	TextureData testDivTex;

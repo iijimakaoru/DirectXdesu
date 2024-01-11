@@ -14,7 +14,8 @@
 #include "SceneChange.h"
 
 #include "SEManager.h"
-#include "BGMManager.h"
+
+#include "AudioManager.h"
 
 /**
  * @file Framework.h
@@ -80,6 +81,6 @@ protected:
 
 	SEManager* seManager = nullptr;
 
-	BGMManager* bgmManager = nullptr;
+	//AudioManager* audioManager = nullptr;
 };
 

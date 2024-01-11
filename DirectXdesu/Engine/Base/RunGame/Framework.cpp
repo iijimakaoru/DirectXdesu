@@ -28,9 +28,8 @@ void Framework::Init()
 	seManager->Init();
 	seManager->LoadSE();
 
-	bgmManager = BGMManager::GetInstance();
-	bgmManager->Init();
-	bgmManager->LoadBGM();
+	/*audioManager = AudioManager::GetInstance();
+	audioManager->Init();*/
 
 	// 静的初期化
 	Sprite::StaticInit();
@@ -78,7 +77,7 @@ void Framework::Final()
 
 	seManager->Finalize();
 
-	bgmManager->Finalize();
+	//audioManager->Finalize();
 
 	// シーンファクトリー解放
 	delete sceneFactory;

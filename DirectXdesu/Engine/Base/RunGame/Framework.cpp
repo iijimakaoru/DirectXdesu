@@ -28,6 +28,10 @@ void Framework::Init()
 	seManager->Init();
 	seManager->LoadSE();
 
+	bgmManager = BGMManager::GetInstance();
+	bgmManager->Init();
+	bgmManager->LoadBGM();
+
 	// 静的初期化
 	Sprite::StaticInit();
 	PostEffect::StaticInit();
@@ -60,6 +64,8 @@ void Framework::Init()
 
 void Framework::Final()
 {
+	Sound::GetInstance()->GetxAudio().Reset();
+
 	// シーンマネージャーの解放
 	sceneManager->Final();
 
@@ -71,6 +77,8 @@ void Framework::Final()
 	ObjParticleManager::GetInstance()->Delete();
 
 	seManager->Finalize();
+
+	bgmManager->Finalize();
 
 	// シーンファクトリー解放
 	delete sceneFactory;

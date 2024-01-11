@@ -12,7 +12,9 @@
 #include "Sound.h"
 #include "TextureManager.h"
 #include "SceneChange.h"
+
 #include "SEManager.h"
+#include "BGMManager.h"
 
 /**
  * @file Framework.h
@@ -77,5 +79,7 @@ protected:
 	SceneChange* sceneChange = nullptr;
 
 	SEManager* seManager = nullptr;
+
+	BGMManager* bgmManager = nullptr;
 };
 

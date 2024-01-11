@@ -27,6 +27,8 @@
 #include <array>
 #include <imgui.h>
 
+#include "BGMManager.h"
+
 /**
  * @file GameScene.h
  * @brief ゲームシーン
@@ -101,11 +103,6 @@ private:
 	KShader objShader;
 	KShader spriteShader;
 	KShader fbxShader;
-
-	// サウンド
-	SoundData soundData1;
-	SoundData soundData2;
-	SoundData soundData3;
 
 	// プレイヤー
 	std::unique_ptr<Player> player = nullptr;
@@ -246,6 +243,8 @@ private:
 	TextureData operationT;
 	KMyMath::Vector2 operationPos;
 #pragma endregion
+
+	BGMManager* bgmManager = nullptr;
 
 	std::unique_ptr<Sprite> testDiv;
 	TextureData testDivTex;

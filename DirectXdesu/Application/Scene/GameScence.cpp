@@ -46,11 +46,6 @@ void GameScence::LoadResources() {
 	skyBoxModel = std::make_unique<MtlObj>("SkyBox");
 	skyBoxModel->CreateModel();
 
-	// サウンド
-	soundData1 = Sound::GetInstance()->SoundLoadWave("Resources/Sound/BattleBGM.wav");
-	soundData2 = Sound::GetInstance()->SoundLoadWave("Resources/Sound/Alarm02.wav");
-	soundData3 = Sound::GetInstance()->SoundLoadWave("Resources/Sound/Alarm03.wav");
-
 	// パイプライン
 	// Obj
 	objShader.Init(L"Resources/Shader/ObjVS.hlsl", L"Resources/Shader/ObjPS.hlsl");
@@ -149,19 +144,14 @@ void GameScence::Init() {
 	testDiv->Init();
 	testDiv->SetPipeline(spritePipeline.get());
 
+	bgmManager = BGMManager::GetInstance();
+
 	ScoreManager::GetInstance()->Init();
 	ScoreManager::GetInstance()->ResetScore();
 	ScoreManager::GetInstance()->SetDamageCountMax((size_t)playersHPInit);
 }
 
 void GameScence::Update() {
-	/*if (input->GetPadButtonDown(XINPUT_GAMEPAD_X)){
-		Sound::GetInstance()->SoundPlayWave(soundData1);
-	}
-	if (input->GetPadButtonDown(XINPUT_GAMEPAD_Y)) {
-		Sound::GetInstance()->SoundStopWave(soundData1);
-	}*/
-
 	if (isStageStart) {
 		billManager->SetIsStopCreate(true);
 
@@ -177,8 +167,10 @@ void GameScence::Update() {
 
 		if (input->GetPadButtonDown(XINPUT_GAMEPAD_START)) {
 			if (isPose) {
+				//bgmManager->SoundPlay(bgmManager->GetBGM1());
 				isPose = false;
 			} else {
+				//bgmManager->SoundStop(bgmManager->GetBGM1());
 				isPose = true;
 			}
 		}
@@ -332,10 +324,7 @@ void GameScence::SpriteDraw() {
 }
 
 void GameScence::Final() {
-	Sound::GetInstance()->GetxAudio().Reset();
-	Sound::GetInstance()->SoundUnLoad(&soundData1);
-	Sound::GetInstance()->SoundUnLoad(&soundData2);
-	Sound::GetInstance()->SoundUnLoad(&soundData3);
+	
 }
 
 void GameScence::CheckAllCollisions() {
@@ -724,6 +713,7 @@ void GameScence::StageStartMovie() {
 		Player::isStartEase = true;
 		// 親子関係接続
 		player->SetParent(&camera->GetTransform());
+		//bgmManager->SoundPlay(bgmManager->GetBGM1());
 		isStageStart = false;
 	}
 }
@@ -1120,6 +1110,7 @@ void GameScence::ClearMovie() {
 	// 暗転
 	else if (clearPhase == 3) {
 		sceneChange->SceneChangeStart();
+		bgmManager->SoundStop(bgmManager->GetBGM1());
 		GameManager::GetInstance()->SetIsStartMovie(false);
 		clearPhase++;
 	}
@@ -1195,6 +1186,7 @@ void GameScence::PoseAction() {
 
 		if (input->GetPadButton(XINPUT_GAMEPAD_A)) {
 			sceneChange->SceneChangeStart();
+			bgmManager->SoundStop(bgmManager->GetBGM1());
 		}
 	}
 

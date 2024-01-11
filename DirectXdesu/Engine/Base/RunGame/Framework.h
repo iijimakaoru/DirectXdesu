@@ -9,11 +9,8 @@
 #include "PostEffect.h"
 #include "KGPlin.h"
 #include "KShader.h"
-#include "Sound.h"
 #include "TextureManager.h"
 #include "SceneChange.h"
-
-#include "SEManager.h"
 
 #include "AudioManager.h"
 
@@ -64,8 +61,6 @@ protected:
 	// シーンファクトリー
 	ASceneFactory* sceneFactory = nullptr;
 
-	Sound* sound = nullptr;
-
 	ImguiManager imguiMane;
 
 	// パイプライン
@@ -78,8 +73,6 @@ protected:
 	std::unique_ptr<PostEffect> postEffect = nullptr;
 
 	SceneChange* sceneChange = nullptr;
-
-	SEManager* seManager = nullptr;
 
 	AudioManager* audioManager = nullptr;
 };

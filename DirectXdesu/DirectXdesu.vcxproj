@@ -163,7 +163,6 @@
     <ClCompile Include="Engine\Math\Quaternion\Quaternion.cpp" />
     <ClCompile Include="Application\Scene\SceneFactory.cpp" />
     <ClCompile Include="Engine\Base\BaseScene\SceneManager.cpp" />
-    <ClCompile Include="Engine\Sound\Sound.cpp" />
     <ClCompile Include="Engine\2D\Sprite\Sprite.cpp" />
     <ClCompile Include="Application\Scene\TitleScene.cpp" />
     <ClCompile Include="Engine\Math\Vector2\Vector2.cpp" />
@@ -178,7 +177,6 @@
     <ClCompile Include="Engine\Base\BaseScene\SceneChange.cpp" />
     <ClCompile Include="Application\Score\ScoreManager.cpp" />
     <ClCompile Include="Application\GameManager.cpp" />
-    <ClCompile Include="Application\SEManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\BossEnemy\ActState.h" />
@@ -238,7 +236,6 @@
     <ClInclude Include="Engine\Math\Quaternion\Quaternion.h" />
     <ClInclude Include="Application\Scene\SceneFactory.h" />
     <ClInclude Include="Engine\Base\BaseScene\SceneManager.h" />
-    <ClInclude Include="Engine\Sound\Sound.h" />
     <ClInclude Include="Engine\2D\Sprite\Sprite.h" />
     <ClInclude Include="Application\Scene\TitleScene.h" />
     <ClInclude Include="Engine\Math\Vector2\Vector2.h" />
@@ -255,7 +252,6 @@
     <ClInclude Include="Engine\Base\BaseScene\SceneChange.h" />
     <ClInclude Include="Application\Score\ScoreManager.h" />
     <ClInclude Include="Application\GameManager.h" />
-    <ClInclude Include="Application\SEManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DirectXdesu.rc" />

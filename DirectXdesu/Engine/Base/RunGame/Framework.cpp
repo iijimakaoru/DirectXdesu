@@ -21,13 +21,6 @@ void Framework::Init()
 	input = KInput::GetInstance();
 	input->Init();
 
-	sound = Sound::GetInstance();
-	sound->Init();
-
-	seManager = SEManager::GetInstance();
-	seManager->Init();
-	seManager->LoadSE();
-
 	audioManager = AudioManager::GetInstance();
 	audioManager->Init();
 
@@ -63,8 +56,6 @@ void Framework::Init()
 
 void Framework::Final()
 {
-	Sound::GetInstance()->GetxAudio().Reset();
-
 	// シーンマネージャーの解放
 	sceneManager->Final();
 
@@ -74,8 +65,6 @@ void Framework::Final()
 	// パーティクルマネージャー解放
 	ParticleManager::GetInstance()->Delete();
 	ObjParticleManager::GetInstance()->Delete();
-
-	seManager->Finalize();
 
 	audioManager->Finalize();
 

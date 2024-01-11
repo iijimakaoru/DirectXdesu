@@ -312,9 +312,6 @@
     <ClCompile Include="Application\Camera\GameCamera.cpp">
       <Filter>ソース ファイル\Application\Camera</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Sound\Sound.cpp">
-      <Filter>ソース ファイル\Engine\Sound</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Base\Depth\KDepthStencilBuffer.cpp">
       <Filter>ソース ファイル\Engine\Base\Depth</Filter>
     </ClCompile>
@@ -444,11 +441,8 @@
     <ClCompile Include="Application\GameManager.cpp">
       <Filter>ソース ファイル\Application</Filter>
     </ClCompile>
-    <ClCompile Include="Application\SEManager.cpp">
-      <Filter>ソース ファイル\Application</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Sound\AudioManager.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\Engine\Sound</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -541,9 +535,6 @@
     </ClInclude>
     <ClInclude Include="Engine\Math\MyMath\MyMath.h">
       <Filter>ヘッダー ファイル\Engine\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Sound\Sound.h">
-      <Filter>ヘッダー ファイル\Engine\Sound</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Base\Depth\KDepthStencilBuffer.h">
       <Filter>ヘッダー ファイル\Engine\Base\Depth</Filter>
@@ -671,11 +662,8 @@
     <ClInclude Include="Application\GameManager.h">
       <Filter>ヘッダー ファイル\Application</Filter>
     </ClInclude>
-    <ClInclude Include="Application\SEManager.h">
-      <Filter>ヘッダー ファイル\Application</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Sound\AudioManager.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\Engine\Sound</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

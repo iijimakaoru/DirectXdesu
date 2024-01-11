@@ -155,12 +155,12 @@ void GameScence::Init() {
 }
 
 void GameScence::Update() {
-	if (input->GetPadButtonDown(XINPUT_GAMEPAD_X)){
+	/*if (input->GetPadButtonDown(XINPUT_GAMEPAD_X)){
 		Sound::GetInstance()->SoundPlayWave(soundData1);
 	}
 	if (input->GetPadButtonDown(XINPUT_GAMEPAD_Y)) {
 		Sound::GetInstance()->SoundStopWave(soundData1);
-	}
+	}*/
 
 	if (isStageStart) {
 		billManager->SetIsStopCreate(true);

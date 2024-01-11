@@ -68,7 +68,7 @@ public:
 	/// </summary>
 	/// <param name="soundData"></param>
 	/// <param name="isLoop"></param>
-	void SoundPlayWave(SoundData& soundData,bool isLoop = false);
+	void SoundPlayWave(SoundData& soundData,float volume ,bool isLoop = false);
 
 	/// <summary>
 	/// 停止

@@ -296,7 +296,7 @@ void Player::Attack() {
 		);
 
 		// SE鳴らし
-		Sound::GetInstance()->SoundPlayWave(shotSE);
+		Sound::GetInstance()->SoundPlayWave(shotSE,0.3f);
 
 		// クールタイムセット
 		coolTimer = coolTimeSet;

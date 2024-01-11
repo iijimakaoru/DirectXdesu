@@ -97,7 +97,7 @@ void Sound::SoundUnLoad(SoundData* soundData) {
 	soundData->wfex = {};
 }
 
-void Sound::SoundPlayWave(SoundData& soundData, bool isLoop) {
+void Sound::SoundPlayWave(SoundData& soundData, float volume, bool isLoop) {
 	HRESULT result;
 	// 波形フォーマットを元にSourceVoiceの生成
 	//IXAudio2SourceVoice* pSourceVoice = nullptr;
@@ -112,6 +112,7 @@ void Sound::SoundPlayWave(SoundData& soundData, bool isLoop) {
 	}
 	buf.Flags = XAUDIO2_END_OF_STREAM;
 	// 波形データの再生
+	result = soundData.pSourceVoice->SetVolume(volume);
 	result = soundData.pSourceVoice->SetOutputMatrix(soundData.pSourceVoice, 1, 2, outputMatrix);
 	result = soundData.pSourceVoice->SubmitSourceBuffer(&buf);
 	result = soundData.pSourceVoice->Start();

@@ -74,7 +74,7 @@ public:
 	/// 停止
 	/// </summary>
 	/// <param name="soundData"></param>
-	void SoundStopWave(const SoundData& soundData);
+	void SoundStopWave(SoundData& soundData);
 
 	// ゲッター
 	ComPtr<IXAudio2> GetxAudio();

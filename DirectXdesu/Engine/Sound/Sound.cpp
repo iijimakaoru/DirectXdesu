@@ -119,8 +119,11 @@ void Sound::SoundPlayWave(SoundData& soundData, float volume, bool isLoop) {
 	result = soundData.pSourceVoice->Start();
 }
 
-void Sound::SoundStopWave(const SoundData& soundData) {
+void Sound::SoundStopWave(SoundData& soundData) {
 	HRESULT result;
+
+	result = xAudio2->CreateSourceVoice(&soundData.pSourceVoice, &soundData.wfex);
+	assert(SUCCEEDED(result));
 
 	// 再生する波形データの設定
 	XAUDIO2_BUFFER buf{};

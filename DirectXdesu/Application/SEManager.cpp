@@ -22,3 +22,7 @@ void SEManager::SoundPlay(SoundData seData) { sound->SoundPlayWave(seData, 0.4f)
 SoundData SEManager::GetShotSE() { return shotSE; }
 
 SoundData SEManager::GetAlertSE() { return alertSE; }
+
+SoundData SEManager::GetEShotSE() { return EshotSE; }
+
+SoundData SEManager::GetBakuhaSE() { return bakuhaSE; }

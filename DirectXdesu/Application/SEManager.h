@@ -28,9 +28,15 @@ public:
 
 	SoundData GetAlertSE();
 
+	SoundData GetEShotSE();
+
+	SoundData GetBakuhaSE();
+
 private:
 	Sound* sound;
 
 	SoundData shotSE;
 	SoundData alertSE;
+	SoundData EshotSE;
+	SoundData bakuhaSE;
 };

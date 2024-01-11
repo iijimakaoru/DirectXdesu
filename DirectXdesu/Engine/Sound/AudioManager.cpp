@@ -119,7 +119,7 @@ void AudioManager::SoundUnLoad(SoundData* soundData) {
 	soundData->wfex = {};
 }
 
-void AudioManager::SoundPlayWave(std::string fileName, float volume, bool isLoop) {
+void AudioManager::SoundPlayWave(const std::string& fileName, float volume, bool isLoop) {
 	HRESULT result;
 
 	std::string fullPath = directoryPath + fileName;
@@ -148,7 +148,7 @@ void AudioManager::SoundPlayWave(std::string fileName, float volume, bool isLoop
 	result = soundData.pSourceVoice->Start();
 }
 
-void AudioManager::SoundStopWave(std::string fileName) {
+void AudioManager::SoundStopWave(const std::string& fileName) {
 	std::string fullPath = directoryPath + fileName;
 
 	std::map<std::string, SoundData>::iterator it = soundDatas.find(fullPath);

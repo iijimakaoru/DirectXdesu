@@ -62,9 +62,9 @@ public:
 	/// サウンド再生
 	/// </summary>
 	/// <param name="fileName"></param>
-	void SoundPlayWave(std::string fileName, float volume = 0.25f, bool isLoop = false);
+	void SoundPlayWave(const std::string& fileName, float volume = 0.25f, bool isLoop = false);
 
-	void SoundStopWave(std::string fileName);
+	void SoundStopWave(const std::string& fileName);
 
 private:
 	// XAudioのインスタンス

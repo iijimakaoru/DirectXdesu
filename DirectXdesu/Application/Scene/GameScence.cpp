@@ -327,7 +327,7 @@ void GameScence::SpriteDraw() {
 	}
 }
 
-void GameScence::Final() { audioManager->Finalize(); }
+void GameScence::Final() { }
 
 void GameScence::CheckAllCollisions() {
 	// 自機弾の取得
@@ -729,6 +729,7 @@ void GameScence::GoGameOverScene() {
 		goOverSceneTimer++;
 		if (goOverSceneTimer == goOverSceneTime) {
 			sceneChange->SceneChangeStart();
+			audioManager->SoundStopWave("BattleBGM.wav");
 			goOverSceneTimer = goOverSceneTime + 1.0f;
 		}
 
@@ -1112,6 +1113,7 @@ void GameScence::ClearMovie() {
 	// 暗転
 	else if (clearPhase == 3) {
 		sceneChange->SceneChangeStart();
+		audioManager->SoundStopWave("BattleBGM.wav");
 		GameManager::GetInstance()->SetIsStartMovie(false);
 		clearPhase++;
 	}

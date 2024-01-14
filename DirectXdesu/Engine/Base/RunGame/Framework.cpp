@@ -1,10 +1,9 @@
 #include "Framework.h"
-#include "Sprite.h"
 #include "BaseScene.h"
 #include "ParticleManager.h"
+#include "Sprite.h"
 
-void Framework::Init()
-{
+void Framework::Init() {
 	// FBX初期化
 	fbxLoader = FbxLoader::GetInstance();
 	fbxLoader->Init();
@@ -21,6 +20,7 @@ void Framework::Init()
 	input = KInput::GetInstance();
 	input->Init();
 
+	// 
 	audioManager = AudioManager::GetInstance();
 	audioManager->Init();
 
@@ -54,8 +54,7 @@ void Framework::Init()
 	sceneChange->Init();
 }
 
-void Framework::Final()
-{
+void Framework::Final() {
 	// シーンマネージャーの解放
 	sceneManager->Final();
 
@@ -78,8 +77,7 @@ void Framework::Final()
 	fbxLoader->Finalize();
 }
 
-void Framework::Update()
-{
+void Framework::Update() {
 	// 更新
 	input->Update();
 
@@ -93,25 +91,20 @@ void Framework::Update()
 	imguiMane.End();
 }
 
-bool Framework::IsEndRwquest()
-{
-	if (win->ProcessMessage() || input->IsTrigger(DIK_ESCAPE))
-	{
+bool Framework::IsEndRwquest() {
+	if (win->ProcessMessage() || input->IsTrigger(DIK_ESCAPE)) {
 		return true;
 	}
 
 	return false;
 }
 
-void Framework::Run()
-{
+void Framework::Run() {
 	Init();
 
-	while (true)
-	{
+	while (true) {
 		// 終了リクエスト
-		if (IsEndRwquest())
-		{
+		if (IsEndRwquest()) {
 			break;
 		}
 

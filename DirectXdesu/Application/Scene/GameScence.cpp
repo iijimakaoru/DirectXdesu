@@ -78,8 +78,8 @@ void GameScence::Init() {
 	sceneManager = SceneManager::GetInstance();
 
 	// カメラ初期化
-	camera->Init(player.get(), {0.0f, 0.0f, -200.0f});
-	// camera->Init(player.get(), {0.0f, 0.0f, 450.0f});
+	//camera->Init(player.get(), {0.0f, 0.0f, -200.0f});
+	camera->Init(player.get(), {0.0f, 0.0f, 450.0f});
 
 	// エネミーマネージャー生成
 	enemyManager.reset(EnemyManager::Create(
@@ -535,6 +535,11 @@ void GameScence::BossBattleStart() {
 		return;
 	}
 
+	// ボスバトルが始まってればスキップ
+	if (isBossBattle || isBossAppearMovie) {
+		return;
+	}
+
 	// ボスバトル開始座標
 	bossBattleStartPos = 500;
 
@@ -577,11 +582,6 @@ void GameScence::BossBattleStart() {
 		isBossAppearMovie = true;
 
 		isWarnning = true;
-	}
-
-	// ボスバトルが始まってればスキップ
-	if (isBossBattle || isBossAppearMovie) {
-		return;
 	}
 }
 

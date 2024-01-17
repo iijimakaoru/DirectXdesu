@@ -7,9 +7,10 @@
 #include "Blaster.h"
 #include "BlasterAimState.h"
 #include "BlasterStandState.h"
+#include "BlasterTackleState.h"
 #include "Collision.h"
-#include "ScoreManager.h"
 #include "ImguiManager.h"
+#include "ScoreManager.h"
 
 Blaster* Blaster::nowBlaster = nullptr;
 
@@ -64,12 +65,18 @@ void Blaster::Update(ViewProjection* viewPro_, bool isBossMovie_) {
 		if (isBossMovie) {
 
 		} else {
+			if (actState == std::make_unique<BlasterStandState>()) {
+				if (actState->GetIsFinish()) {
+
+				}
+			}
+
 			if (actState->GetIsFinish()) {
 				if (isStand) {
 					actState = std::make_unique<BlasterStandState>();
 					isStand = false;
 				} else {
-					actState = std::make_unique<BlasterAimState>();
+					actState = std::make_unique<BlasterTackleState>();
 					isStand = true;
 				}
 			}
@@ -128,3 +135,5 @@ void Blaster::SetUnitsPos(const KMyMath::Vector3& pos_, size_t num_) { units[num
 void Blaster::SetUnitsScale(const KMyMath::Vector3& scale_, size_t num_) {
 	units[num_]->SetScale(scale_);
 }
+
+void Blaster::AddSetPos(const KMyMath::Vector3& pos_) { object3d->AddSetPos(pos_); }

@@ -86,6 +86,8 @@ public:
 	/// <param name="num_"></param>
 	void SetUnitsScale(const KMyMath::Vector3& scale_, size_t num_);
 
+	void AddSetPos(const KMyMath::Vector3& pos_);
+
 private:
 	std::array<std::unique_ptr<KObject3d>, 8> units;
 	std::unique_ptr<KModel> unitsModel;

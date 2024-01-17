@@ -83,10 +83,22 @@ void Bom::Set(
 	isDead = false;
 }
 
-void Bom::OnExplosion() { isExp = true; }
+void Bom::OnCollision() { isExp = true; }
 
 void Bom::SetIsDead(bool isDead_) { isDead = isDead_; }
 
 const bool& Bom::GetIsDead() const { return isDead; }
 
 const bool& Bom::GetIsExp() const { return isExp; }
+
+KMyMath::Vector3 Bom::GetWorldPos() {
+	// ワールド座標格納変数
+	KMyMath::Vector3 result;
+
+	// ワールド行列の平行移動成分取得
+	result.x = object3d->GetMatWorld().m[3][0];
+	result.y = object3d->GetMatWorld().m[3][1];
+	result.z = object3d->GetMatWorld().m[3][2];
+
+	return result;
+}

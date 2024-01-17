@@ -115,6 +115,8 @@ const std::list<std::unique_ptr<EnemyBullet>>& BulletManager::GetEnemyBullets() 
 	return enemyBullets;
 }
 
+const std::list<std::unique_ptr<Bom>>& BulletManager::GetBoms() const { return boms; }
+
 void BulletManager::DeleteBullet() {
 	// プレイヤーの弾
 	playerBullets.remove_if(
@@ -124,6 +126,5 @@ void BulletManager::DeleteBullet() {
 	enemyBullets.remove_if(
 	    [](std::unique_ptr<EnemyBullet>& enemyBullet_) { return enemyBullet_->GetIsDead(); });
 
-	boms.remove_if(
-	    [](std::unique_ptr<Bom>& bom_) { return bom_->GetIsDead(); });
+	boms.remove_if([](std::unique_ptr<Bom>& bom_) { return bom_->GetIsDead(); });
 }

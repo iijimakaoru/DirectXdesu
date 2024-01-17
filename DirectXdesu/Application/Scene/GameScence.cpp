@@ -151,7 +151,7 @@ void GameScence::Init() {
 	audioManager = AudioManager::GetInstance();
 
 	audioManager->SoundLoadWave("BattleBGM.wav");
-								 
+
 	audioManager->SoundPlayWave("BattleBGM.wav");
 }
 
@@ -327,7 +327,7 @@ void GameScence::SpriteDraw() {
 	}
 }
 
-void GameScence::Final() { }
+void GameScence::Final() {}
 
 void GameScence::CheckAllCollisions() {
 	// 自機弾の取得
@@ -336,6 +336,9 @@ void GameScence::CheckAllCollisions() {
 
 	// 敵弾の取得
 	const std::list<std::unique_ptr<EnemyBullet>>& enemyBullets = bulletManager->GetEnemyBullets();
+
+	// ボム
+	const std::list<std::unique_ptr<Bom>>& boms = bulletManager->GetBoms();
 
 	// 敵の取得
 	const std::list<std::unique_ptr<MobEnemy>>& mobEnemys = enemyManager->GetMobEnemys();
@@ -438,6 +441,47 @@ void GameScence::CheckAllCollisions() {
 
 				// 敵消去
 				blaster->OnCollision();
+			}
+		}
+	}
+
+	// ボムと敵の当たり判定
+	{
+		// 判定対象AとBの座標
+		KMyMath::Vector3 posA, posB;
+
+		for (const std::unique_ptr<MobEnemy>& mobEnemy : mobEnemys) {
+			if (!mobEnemy) {
+				return;
+			}
+
+			// 敵の座標
+			posA = mobEnemy->GetWorldPos();
+
+			for (const std::unique_ptr<Bom>& bom : boms) {
+				if (!bom) {
+					return;
+				}
+
+				// 弾の座標
+				posB = bom->GetWorldPos();
+
+				// 球同士の交差判定
+				const float enemyRange = 6.0f;
+				const float bulletRange = 2.0f;
+				if (MyCollisions::CheckSphereToSphere(posA, posB, enemyRange, bulletRange)) {
+					// 弾消去
+					bom->OnCollision();
+				}
+
+				if (bom->GetIsExp()) {
+					const float ExpRange = 50.0f;
+
+					if (MyCollisions::CheckSphereToSphere(posA, posB, enemyRange, ExpRange)) {
+						// 敵消去
+						mobEnemy->OnCollision();
+					}
+				}
 			}
 		}
 	}
@@ -715,7 +759,7 @@ void GameScence::StageStartMovie() {
 		Player::isStartEase = true;
 		// 親子関係接続
 		player->SetParent(&camera->GetTransform());
-		//bgmManager->SoundPlay(bgmManager->GetBGM1());
+		// bgmManager->SoundPlay(bgmManager->GetBGM1());
 		isStageStart = false;
 	}
 }
@@ -1163,8 +1207,7 @@ void GameScence::PoseAction() {
 	backTitlePos = {width / 2, height / 2};
 
 	if (input->GetLStickDown()) {
-		if (isOperation)
-		{
+		if (isOperation) {
 			isOperation = false;
 			isBackTitle = true;
 		}

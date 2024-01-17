@@ -1,7 +1,7 @@
 #pragma once
+#include "Bom.h"
 #include "EnemyBullet.h"
 #include "PlayerBullet.h"
-#include "Bom.h"
 
 /**
  * @file BulletManager.h
@@ -74,6 +74,9 @@ public:
 
 	// 敵弾のリストを取得
 	const std::list<std::unique_ptr<EnemyBullet>>& GetEnemyBullets() const;
+
+	// ボムのリスト所得
+	const std::list<std::unique_ptr<Bom>>& GetBoms() const;
 
 private:
 	// 弾の削除

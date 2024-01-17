@@ -22,13 +22,16 @@ public:
 	    Set(const KMyMath::Vector3& pos_, const KMyMath::Vector3& vec_, const KMyMath::Vector3& rot_,
 	        const float bulletSpeed_);
 
-	void OnExplosion();
+	void OnCollision();
 
 	void SetIsDead(bool isDead_);
 
 	const bool& GetIsDead() const;
 
 	const bool& GetIsExp() const;
+
+	// ワールドポジションゲッター
+	KMyMath::Vector3 GetWorldPos();
 
 private:
 	// オブジェクト
@@ -57,4 +60,6 @@ private:
 
 	float expTimer = 0.0f;
 	float expTime = 30.0f;
+
+	
 };

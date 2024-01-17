@@ -252,5 +252,7 @@ private:
 	KMyMath::Vector2 operationPos;
 #pragma endregion
 
+	size_t bomsCount = 3;
+
 	AudioManager* audioManager = nullptr;
 };

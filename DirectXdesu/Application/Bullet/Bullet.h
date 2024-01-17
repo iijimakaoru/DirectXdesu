@@ -1,11 +1,11 @@
 #pragma once
-#include <memory>
 #include "Camera.h"
-#include "KObject3d.h"
-#include "KModel.h"
 #include "KGPlin.h"
+#include "KModel.h"
+#include "KObject3d.h"
 #include "KShader.h"
 #include "TextureManager.h"
+#include <memory>
 
 /**
  * @file Bullet.h
@@ -13,8 +13,7 @@
  * @author 飯島 薫
  */
 
-class Bullet
-{
+class Bullet {
 public:
 	// 初期化
 	virtual void Init(KModel* model_, KGPlin* pipeline_) = 0;
@@ -23,7 +22,9 @@ public:
 	/// 呼び出し
 	/// </summary>
 	/// <param name="pos"></param>
-	virtual void Set(const KMyMath::Vector3& pos, const KMyMath::Vector3& vec_, const KMyMath::Vector3& rot_, const float bulletSpeed);
+	virtual void
+	    Set(const KMyMath::Vector3& pos, const KMyMath::Vector3& vec_, const KMyMath::Vector3& rot_,
+	        const float bulletSpeed);
 
 	/// <summary>
 	/// 更新
@@ -35,16 +36,10 @@ public:
 	virtual void Draw();
 
 	// ゲッター
-	virtual bool GetIsDead() const
-	{
-		return isDead;
-	}
+	virtual bool GetIsDead() const { return isDead; }
 
 	// セッター
-	virtual void SetIsDead(bool isDead_)
-	{
-		isDead = isDead_;
-	}
+	virtual void SetIsDead(bool isDead_) { isDead = isDead_; }
 
 	// 衝突時に呼び出し
 	virtual void OnCollision();

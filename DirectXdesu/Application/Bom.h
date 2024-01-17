@@ -37,6 +37,10 @@ public:
 
 	const float& GetExpPower() const;
 
+	void SetBomHit(bool isBomHit_);
+
+	const bool& GetBomHit() const;
+
 private:
 	// オブジェクト
 	std::unique_ptr<KObject3d> object3d;
@@ -67,4 +71,7 @@ private:
 
 	const float bomPower = 10;
 	const float expPower = 20;
+
+	// ボス限定
+	bool isBomHit = false;
 };

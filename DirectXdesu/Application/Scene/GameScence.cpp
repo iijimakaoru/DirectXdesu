@@ -496,7 +496,7 @@ void GameScence::CheckAllCollisions() {
 
 		for (const std::unique_ptr<Bom>& bom : boms) {
 			// 弾が無いorボスがいないorボスが死んでるorボスバトルが始まってなかったorプレイヤーが死んでいたらスキップ
-			if (!bom || !blaster || blaster->GetIsDead() || !isBossBattle || player->GetIsDead()) {
+			if (!bom || !blaster || blaster->GetIsDead() || !isBossBattle || player->GetIsDead() || bom->GetBomHit()) {
 				return;
 			}
 
@@ -521,6 +521,9 @@ void GameScence::CheckAllCollisions() {
 				if (MyCollisions::CheckSphereToSphere(posA, posB, ExpRange, 12)) {
 					// ボスダメージ
 					blaster->OnCollision(bom->GetExpPower());
+
+					// 多段ヒット防止
+					bom->SetBomHit(true);
 				}
 			}
 		}

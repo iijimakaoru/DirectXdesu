@@ -106,3 +106,7 @@ KMyMath::Vector3 Bom::GetWorldPos() {
 const float& Bom::GetBomsPower() const { return bomPower; }
 
 const float& Bom::GetExpPower() const { return expPower; }
+
+void Bom::SetBomHit(bool isBomHit_) { isBomHit = isBomHit_; }
+
+const bool& Bom::GetBomHit() const { return isBomHit; }

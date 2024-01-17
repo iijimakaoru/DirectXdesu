@@ -59,3 +59,5 @@ KMyMath::Vector3 Bullet::GetWorldPos()
 
 	return result;
 }
+
+const float& Bullet::GetBulletPower() const { return bulletPower; }

@@ -33,6 +33,10 @@ public:
 	// ワールドポジションゲッター
 	KMyMath::Vector3 GetWorldPos();
 
+	const float& GetBomsPower() const;
+
+	const float& GetExpPower() const;
+
 private:
 	// オブジェクト
 	std::unique_ptr<KObject3d> object3d;
@@ -61,5 +65,6 @@ private:
 	float expTimer = 0.0f;
 	float expTime = 30.0f;
 
-	
+	const float bomPower = 10;
+	const float expPower = 20;
 };

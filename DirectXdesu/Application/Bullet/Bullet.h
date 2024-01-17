@@ -47,6 +47,8 @@ public:
 	// ワールドポジションゲッター
 	virtual KMyMath::Vector3 GetWorldPos();
 
+	const float& GetBulletPower() const;
+
 protected:
 	// オブジェクト
 	std::unique_ptr<KObject3d> object3d;
@@ -68,4 +70,6 @@ protected:
 	KMyMath::Vector3 vec;
 
 	float lifeTimer = 0.0f;
+
+	float bulletPower = 1.0f;
 };

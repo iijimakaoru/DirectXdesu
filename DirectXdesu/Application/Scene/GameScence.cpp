@@ -440,7 +440,7 @@ void GameScence::CheckAllCollisions() {
 				bullet->OnCollision();
 
 				// 敵消去
-				blaster->OnCollision();
+				blaster->OnCollision(bullet->GetBulletPower());
 			}
 		}
 	}
@@ -468,19 +468,59 @@ void GameScence::CheckAllCollisions() {
 
 				// 球同士の交差判定
 				const float enemyRange = 6.0f;
-				const float bulletRange = 2.0f;
+				const float bulletRange = 4.0f;
 				if (MyCollisions::CheckSphereToSphere(posA, posB, enemyRange, bulletRange)) {
 					// 弾消去
 					bom->OnCollision();
+
+					// 敵消去
+					mobEnemy->OnCollision();
 				}
 
 				if (bom->GetIsExp()) {
-					const float ExpRange = 50.0f;
+					const float ExpRange = 75.0f;
 
 					if (MyCollisions::CheckSphereToSphere(posA, posB, enemyRange, ExpRange)) {
 						// 敵消去
 						mobEnemy->OnCollision();
 					}
+				}
+			}
+		}
+	}
+
+	// ボムとボスの当たり判定
+	{
+		// 判定対象AとBの座標
+		KMyMath::Vector3 posA, posB;
+
+		for (const std::unique_ptr<Bom>& bom : boms) {
+			// 弾が無いorボスがいないorボスが死んでるorボスバトルが始まってなかったorプレイヤーが死んでいたらスキップ
+			if (!bom || !blaster || blaster->GetIsDead() || !isBossBattle || player->GetIsDead()) {
+				return;
+			}
+
+			// 弾の座標
+			posA = bom->GetWorldPos();
+
+			// ボスの座標
+			posB = blaster->GetWorldPos();
+
+			// 球同士の交差判定
+			if (MyCollisions::CheckSphereToSphere(posA, posB, 4, 12)) {
+				// 弾消去
+				bom->OnCollision();
+
+				// ボスダメージ
+				blaster->OnCollision(bom->GetBomsPower());
+			}
+
+			if (bom->GetIsExp()) {
+				const float ExpRange = 75.0f;
+
+				if (MyCollisions::CheckSphereToSphere(posA, posB, ExpRange, 12)) {
+					// ボスダメージ
+					blaster->OnCollision(bom->GetExpPower());
 				}
 			}
 		}

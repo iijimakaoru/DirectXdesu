@@ -47,7 +47,7 @@ void Bom::Update(ViewProjection* viewPro_) {
 			expTimer++;
 
 			KMyMath::Vector3 start = {0.0f, 0.0f, 0.0f};
-			KMyMath::Vector3 end = {50.0f, 50.0f, 50.0f};
+			KMyMath::Vector3 end = {75.0f, 75.0f, 75.0f};
 
 			KMyMath::Vector3 scale = MyEase::OutCubicVec3(start, end, expTimer / expTime);
 			expObject->SetScale(scale);
@@ -102,3 +102,7 @@ KMyMath::Vector3 Bom::GetWorldPos() {
 
 	return result;
 }
+
+const float& Bom::GetBomsPower() const { return bomPower; }
+
+const float& Bom::GetExpPower() const { return expPower; }

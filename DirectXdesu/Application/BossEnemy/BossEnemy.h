@@ -45,7 +45,7 @@ public:
 	virtual const KMyMath::Vector3 GetWorldPos() const;
 
 	// 当たった時の処理
-	virtual void OnCollision();
+	virtual void OnCollision(const float& damage);
 
 	// 当たり判定範囲
 	virtual bool CollisionCheck(const KMyMath::Vector3& posA, const KMyMath::Vector3& posB);

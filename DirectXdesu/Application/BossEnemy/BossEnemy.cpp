@@ -88,10 +88,10 @@ const KMyMath::Vector3 BossEnemy::GetWorldPos() const
 	return result;
 }
 
-void BossEnemy::OnCollision()
+void BossEnemy::OnCollision(const float& damage)
 {
 	ObjParticleManager::GetInstance()->SetExp(GetWorldPos());
-	HP--;
+	HP -= damage;
 	hpEase = true;
 	oldHpTimer = 0;
 	hpEaseTimer = 0;

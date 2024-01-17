@@ -32,7 +32,7 @@ void Blaster::Init(KGPlin* pipeline_, const KMyMath::Vector3& initPos_, KGPlin* 
 
 	BossEnemy::Init(pipeline_, initPos_, spritePipeline_);
 
-	maxHP = 20;
+	maxHP = 200;
 	HP = maxHP;
 
 	unitsModel = std::make_unique<MtlObj>("BlasterUnit");

@@ -253,6 +253,7 @@ private:
 #pragma endregion
 
 	size_t bomsCount = 3;
+	float bomsCoolTimer = 60.0f;
 
 	AudioManager* audioManager = nullptr;
 };

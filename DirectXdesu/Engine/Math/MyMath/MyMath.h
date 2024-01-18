@@ -172,7 +172,8 @@ namespace MyMathUtility
 	/// <param name="min"></param>
 	/// <param name="max"></param>
 	/// <returns></returns>
-	float GetRand(float min, float max);
+    size_t GetRandS(size_t min, size_t max);
+	float GetRandF(float min, float max);
 
 	/// <summary>
 	/// ベクトル変換

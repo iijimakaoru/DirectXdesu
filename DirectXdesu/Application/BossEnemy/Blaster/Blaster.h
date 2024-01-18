@@ -13,6 +13,8 @@ class Blaster : public BossEnemy
 public:
 	static Blaster* nowBlaster;
 
+	static std::unique_ptr<ActState> blasterActState;
+
 public:
 	/// <summary>
 	/// 生成
@@ -94,5 +96,7 @@ private:
 	std::array<KMyMath::Vector3, 8> unitsPos;
 
 	bool isStand = false;
+
+	size_t actSelect = 0;
 };
 

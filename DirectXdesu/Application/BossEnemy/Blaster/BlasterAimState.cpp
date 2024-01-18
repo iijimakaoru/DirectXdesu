@@ -3,6 +3,7 @@
 #include "Ease.h"
 #include "Player.h"
 #include "BulletManager.h"
+#include "BlasterStandState.h"
 
 BlasterAimState::BlasterAimState()
 {
@@ -133,7 +134,7 @@ void BlasterAimState::Update()
 	}
 	else
 	{
-		isFinish = true;
+		Blaster::blasterActState = std::make_unique<BlasterStandState>();
 	}
 }
 

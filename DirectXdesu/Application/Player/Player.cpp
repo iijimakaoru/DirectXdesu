@@ -353,9 +353,9 @@ void Player::DeadEffect() {
 		// 堕ちてる間の爆発
 		if (expTimer >= max(expTimer, expTime)) {
 			ObjParticleManager::GetInstance()->SetSmallExp(
-			    {GetWorldPos().x + MyMathUtility::GetRand(-1.0f, 1.0f),
-			     GetWorldPos().y + MyMathUtility::GetRand(-1.0f, 1.0f),
-			     GetWorldPos().z + MyMathUtility::GetRand(-1.0f, 1.0f)});
+			    {GetWorldPos().x + MyMathUtility::GetRandF(-1.0f, 1.0f),
+			     GetWorldPos().y + MyMathUtility::GetRandF(-1.0f, 1.0f),
+			     GetWorldPos().z + MyMathUtility::GetRandF(-1.0f, 1.0f)});
 			expTimer = 0;
 		}
 

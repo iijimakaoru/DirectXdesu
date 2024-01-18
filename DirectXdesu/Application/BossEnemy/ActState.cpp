@@ -1,7 +1,5 @@
 #include "ActState.h"
 
-ActState* ActState::nowActState = nullptr;
-
 ActState::~ActState()
 {
 }

@@ -133,7 +133,5 @@ protected:
 
 	bool isFallEffectEnd = false;
 #pragma endregion
-
-	std::unique_ptr<ActState> actState = nullptr;
 };
 

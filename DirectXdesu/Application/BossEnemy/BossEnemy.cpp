@@ -128,8 +128,8 @@ void BossEnemy::DeadEffect()
 
 		if (expTimer >= max(expTimer, expTime))
 		{
-			ObjParticleManager::GetInstance()->SetSmallExp({ GetWorldPos().x + MyMathUtility::GetRand(-10.0f,10.0f),
-			GetWorldPos().y + MyMathUtility::GetRand(-10.0f,10.0f),GetWorldPos().z + MyMathUtility::GetRand(-10.0f,10.0f) });
+			ObjParticleManager::GetInstance()->SetSmallExp({ GetWorldPos().x + MyMathUtility::GetRandF(-10.0f,10.0f),
+			GetWorldPos().y + MyMathUtility::GetRandF(-10.0f,10.0f),GetWorldPos().z + MyMathUtility::GetRandF(-10.0f,10.0f) });
 			expTimer = 0;
 		}
 

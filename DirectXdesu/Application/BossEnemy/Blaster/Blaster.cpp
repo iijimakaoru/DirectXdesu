@@ -14,6 +14,8 @@
 
 Blaster* Blaster::nowBlaster = nullptr;
 
+std::unique_ptr<ActState> Blaster::blasterActState = nullptr;
+
 Blaster* Blaster::Create(KGPlin* pipeline_, const KMyMath::Vector3& pos_, KGPlin* spritePipeline_) {
 	// インスタンス生成
 	Blaster* blaster = new Blaster();
@@ -55,7 +57,7 @@ void Blaster::Init(KGPlin* pipeline_, const KMyMath::Vector3& initPos_, KGPlin* 
 	units[6]->SetPos({3.0f, -3.0f, -3.0f});
 	units[7]->SetPos({-3.0f, -3.0f, -3.0f});
 
-	actState = std::make_unique<BlasterStandState>();
+	blasterActState = std::make_unique<BlasterStandState>();
 }
 
 void Blaster::Update(ViewProjection* viewPro_, bool isBossMovie_) {
@@ -65,24 +67,23 @@ void Blaster::Update(ViewProjection* viewPro_, bool isBossMovie_) {
 		if (isBossMovie) {
 
 		} else {
-			if (actState == std::make_unique<BlasterStandState>()) {
-				if (actState->GetIsFinish()) {
-
+			if (blasterActState->GetIsFinish()) {
+				switch (actSelect) {
+				case 1:
+					blasterActState = std::make_unique<BlasterAimState>();
+					break;
+				case 2:
+					blasterActState = std::make_unique<BlasterTackleState>();
+					break;
+				default:
+					blasterActState = std::make_unique<BlasterStandState>();
+					break;
 				}
 			}
 
-			if (actState->GetIsFinish()) {
-				if (isStand) {
-					actState = std::make_unique<BlasterStandState>();
-					isStand = false;
-				} else {
-					actState = std::make_unique<BlasterTackleState>();
-					isStand = true;
-				}
-			}
-
-			if (actState) {
-				actState->Update();
+			if (blasterActState) {
+				blasterActState->Update();
+				actSelect = (size_t)MyMathUtility::GetRandF(1, 3);
 			}
 		}
 
@@ -124,7 +125,7 @@ bool Blaster::CollisionCheck(const KMyMath::Vector3& posA_, const KMyMath::Vecto
 	return false;
 }
 
-void Blaster::SetFarstAct() { actState = std::make_unique<BlasterStandState>(); }
+void Blaster::SetFarstAct() { blasterActState = std::make_unique<BlasterStandState>(); }
 
 const KMyMath::Vector3 Blaster::GetUnitsPos(size_t num_) const { return units[num_]->GetPos(); }
 

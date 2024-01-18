@@ -405,7 +405,7 @@ void ObjParticleManager::SetExp(const KMyMath::Vector3& pos_)
 		newParticle.reset(ObjParticle::Create(pos_,
 			model.get(),
 			pipeline.get(),
-			{ MyMathUtility::GetRand(-1.0f,1.0f),MyMathUtility::GetRand(-1.0f,1.0f),MyMathUtility::GetRand(-1.0f,1.0f) }, 
+			{ MyMathUtility::GetRandF(-1.0f,1.0f),MyMathUtility::GetRandF(-1.0f,1.0f),MyMathUtility::GetRandF(-1.0f,1.0f) }, 
 			textureData1));
 		// 出力
 		objParticles.push_back(std::move(newParticle));
@@ -421,7 +421,7 @@ void ObjParticleManager::SetSmallExp(const KMyMath::Vector3& pos_)
 		newParticle.reset(ObjParticle::Create(pos_,
 			model.get(),
 			pipeline.get(),
-			{ MyMathUtility::GetRand(-0.25f,0.25f),MyMathUtility::GetRand(-0.25f,0.25f),MyMathUtility::GetRand(-0.25f,0.25f) },
+			{ MyMathUtility::GetRandF(-0.25f,0.25f),MyMathUtility::GetRandF(-0.25f,0.25f),MyMathUtility::GetRandF(-0.25f,0.25f) },
 			textureData1));
 		// 出力
 		objParticles.push_back(std::move(newParticle));

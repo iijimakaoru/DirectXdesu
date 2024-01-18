@@ -2,6 +2,7 @@
 #include "Blaster.h"
 #include "Ease.h"
 #include "Player.h"
+#include "BlasterStandState.h"
 
 BlasterTackleState::BlasterTackleState() {}
 
@@ -231,7 +232,7 @@ void BlasterTackleState::Update() {
 			angle = 0;
 
 			KMyMath::Vector3 move =
-			    MyEase::OutCubicVec3({0, 50.0f, 650.0f}, {0, 0, 650}, actTimer / actTime);
+			    MyEase::OutCubicVec3({0, 100.0f, 650.0f}, {0, 0, 650}, actTimer / actTime);
 
 			blaster->SetPos(move);
 
@@ -243,7 +244,7 @@ void BlasterTackleState::Update() {
 	}
 	// 終わり
 	else {
-		isFinish = true;
+		Blaster::blasterActState = std::make_unique<BlasterStandState>();
 	}
 }
 

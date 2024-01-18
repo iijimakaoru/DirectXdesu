@@ -11,8 +11,6 @@ public:
 
 	const bool GetIsFinish() const;
 
-	static ActState* nowActState;
-
 protected:
 	// アクション終わり
 	bool isFinish = false;

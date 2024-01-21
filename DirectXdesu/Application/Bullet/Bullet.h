@@ -24,7 +24,7 @@ public:
 	/// <param name="pos"></param>
 	virtual void
 	    Set(const KMyMath::Vector3& pos, const KMyMath::Vector3& vec_, const KMyMath::Vector3& rot_,
-	        const float bulletSpeed);
+	        const float bulletSpeed, const float bulletPower_);
 
 	/// <summary>
 	/// 更新

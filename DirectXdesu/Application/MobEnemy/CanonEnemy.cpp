@@ -1,6 +1,8 @@
 #include "CanonEnemy.h"
 #include "Ease.h"
 #include "ScoreManager.h"
+#include "Player.h"
+#include "BulletManager.h"
 
 CanonEnemy* CanonEnemy::Create(KModel* model_, KGPlin* pipeline_, const KMyMath::Vector3& pos_) {
 	CanonEnemy* newEnemy = new CanonEnemy();
@@ -57,7 +59,36 @@ void CanonEnemy::Update(ViewProjection* viewPro_, const KMyMath::Vector3& camera
 
 void CanonEnemy::Draw() { MobEnemy::Draw(); }
 
-void CanonEnemy::Attack() { MobEnemy::Attack(); }
+void CanonEnemy::Attack() { // プレイヤー情報
+	assert(player);
+
+	// クールタイム経過
+	coolTimer++;
+
+	if (coolTimer >= max(coolTimer, coolTime)) {
+		// 弾の速度
+		const float kBulletSpeed = 1.0f;
+
+		// 弾のパワー
+		const float bulletPower = 2.0f;
+
+		// 自キャラのワールド座標
+		KMyMath::Vector3 pPos = player->GetWorldPos();
+
+		// ワールド座標
+		KMyMath::Vector3 ePos = GetWorldPos();
+
+		// 差分ベクトル
+		KMyMath::Vector3 vec = pPos - ePos;
+
+		// 弾生成
+		BulletManager::GetInstance()->EnemyBulletShot(
+		    ePos, vec, {1, 1, 1}, kBulletSpeed, bulletPower);
+
+		// クールタイム初期化
+		coolTimer = 0;
+	}
+}
 
 void CanonEnemy::Appear() {
 	easeTimer += 1.0f;

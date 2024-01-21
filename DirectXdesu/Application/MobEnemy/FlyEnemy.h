@@ -43,7 +43,7 @@ public:
 	/// <summary>
 	/// 攻撃
 	/// </summary>
-	void Attack();
+	void Attack() override;
 
 	/// <summary>
 	/// 出現

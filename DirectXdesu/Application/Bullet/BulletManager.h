@@ -35,7 +35,7 @@ public:
 	/// <param name="bulletSpeed"></param>
 	void PlayerBulletShot(
 	    const KMyMath::Vector3& pos, const KMyMath::Vector3& vec_, const KMyMath::Vector3& rot_,
-	    const float bulletSpeed);
+	    const float bulletSpeed, const float BulletPower_);
 
 	/// <summary>
 	/// 敵の弾発射
@@ -46,7 +46,7 @@ public:
 	/// <param name="bulletSpeed"></param>
 	void EnemyBulletShot(
 	    const KMyMath::Vector3& pos, const KMyMath::Vector3& vec_, const KMyMath::Vector3& rot_,
-	    const float bulletSpeed);
+	    const float bulletSpeed, const float BulletPower_);
 
 	/// <summary>
 	/// ボム発射

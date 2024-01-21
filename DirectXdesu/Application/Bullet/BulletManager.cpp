@@ -57,22 +57,22 @@ void BulletManager::Draw() {
 
 void BulletManager::PlayerBulletShot(
     const KMyMath::Vector3& pos, const KMyMath::Vector3& vec_, const KMyMath::Vector3& rot_,
-    const float bulletSpeed_) {
+    const float bulletSpeed_, const float BulletPower_) {
 	// 弾生成
 	std::unique_ptr<PlayerBullet> newBullet;
-	newBullet.reset(
-	    PlayerBullet::Create(playersBulletModel.get(), pipeline, pos, vec_, rot_, bulletSpeed_));
+	newBullet.reset(PlayerBullet::Create(
+	    playersBulletModel.get(), pipeline, pos, vec_, rot_, bulletSpeed_, BulletPower_));
 	// 登録
 	playerBullets.push_back(std::move(newBullet));
 }
 
 void BulletManager::EnemyBulletShot(
     const KMyMath::Vector3& pos, const KMyMath::Vector3& vec_, const KMyMath::Vector3& rot_,
-    const float bulletSpeed_) {
+    const float bulletSpeed_, const float BulletPower_) {
 	// 弾生成
 	std::unique_ptr<EnemyBullet> newBullet;
-	newBullet.reset(
-	    EnemyBullet::Create(enemysBulletModel.get(), pipeline, pos, vec_, rot_, bulletSpeed_));
+	newBullet.reset(EnemyBullet::Create(
+	    enemysBulletModel.get(), pipeline, pos, vec_, rot_, bulletSpeed_, BulletPower_));
 	// 登録
 	enemyBullets.push_back(std::move(newBullet));
 }

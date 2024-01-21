@@ -52,7 +52,7 @@ public:
 	void UIDraw();
 
 	// 衝突時に呼び出し
-	void OnCollision();
+	void OnCollision(const float& bulletPower_);
 
 	// スタートエフェクト終わり
 	void EndStart();

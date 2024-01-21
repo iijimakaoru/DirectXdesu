@@ -1,5 +1,7 @@
 #include "FlyEnemy.h"
+#include "BulletManager.h"
 #include "Ease.h"
+#include "Player.h"
 #include "ScoreManager.h"
 
 FlyEnemy* FlyEnemy::Create(
@@ -65,7 +67,37 @@ void FlyEnemy::Update(ViewProjection* viewPro_, const KMyMath::Vector3& cameraPo
 
 void FlyEnemy::Draw() { MobEnemy::Draw(); }
 
-void FlyEnemy::Attack() { MobEnemy::Attack(); }
+void FlyEnemy::Attack() {
+	// プレイヤー情報
+	assert(player);
+
+	// クールタイム経過
+	coolTimer++;
+
+	if (coolTimer >= max(coolTimer, coolTime)) {
+		// 弾の速度
+		const float kBulletSpeed = 1.0f;
+
+		// 弾のパワー
+		const float bulletPower = 5.0f;
+
+		// 自キャラのワールド座標
+		KMyMath::Vector3 pPos = player->GetWorldPos();
+
+		// ワールド座標
+		KMyMath::Vector3 ePos = GetWorldPos();
+
+		// 差分ベクトル
+		KMyMath::Vector3 vec = pPos - ePos;
+
+		// 弾生成
+		BulletManager::GetInstance()->EnemyBulletShot(
+		    ePos, vec, {1, 1, 1}, kBulletSpeed, bulletPower);
+
+		// クールタイム初期化
+		coolTimer = 0;
+	}
+}
 
 void FlyEnemy::Appear() {
 	easeTimer += 1.0f;

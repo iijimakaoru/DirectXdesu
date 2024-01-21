@@ -147,6 +147,9 @@ void BlasterAimState::BulletShot()
 	// 弾の速度
 	const float kBulletSpeed = 2.5f;
 
+	// 弾のパワー
+	const float bulletPower = 5.0f;
+
 	// 自キャラのワールド座標
 	KMyMath::Vector3 pPos = player->GetWorldPos();
 
@@ -157,5 +160,5 @@ void BlasterAimState::BulletShot()
 	KMyMath::Vector3 vec = pPos - ePos;
 
 	// 弾生成
-	BulletManager::GetInstance()->EnemyBulletShot(ePos, vec, { 1,1,1 }, kBulletSpeed);
+	BulletManager::GetInstance()->EnemyBulletShot(ePos, vec, {1, 1, 1}, kBulletSpeed, bulletPower);
 }

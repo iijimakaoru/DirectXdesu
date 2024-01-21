@@ -58,37 +58,9 @@ void MobEnemy::SelfDestruction()
 	isDelete = true;
 }
 
-void MobEnemy::Attack()
-{
-	assert(player);
+void MobEnemy::Attack() {}
 
-	// クールタイム経過
-	coolTimer++;
-
-	if (coolTimer >= max(coolTimer, coolTime))
-	{
-		// 弾の速度
-		const float kBulletSpeed = 1.0f;
-
-		// 自キャラのワールド座標
-		KMyMath::Vector3 pPos = player->GetWorldPos();
-
-		// ワールド座標
-		KMyMath::Vector3 ePos = GetWorldPos();
-
-		// 差分ベクトル
-		KMyMath::Vector3 vec = pPos - ePos;
-
-		// 弾生成
-		BulletManager::GetInstance()->EnemyBulletShot(ePos, vec, { 1,1,1 }, kBulletSpeed);
-
-		// クールタイム初期化
-		coolTimer = 0;
-	}
-}
-
-const KMyMath::Vector3 MobEnemy::GetWorldPos() const
-{
+const KMyMath::Vector3 MobEnemy::GetWorldPos() const {
 	// ワールド座標格納変数
 	KMyMath::Vector3 result;
 

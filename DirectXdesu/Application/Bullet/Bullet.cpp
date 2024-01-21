@@ -6,14 +6,17 @@
 
 #include "Bullet.h"
 
-void Bullet::Set(const KMyMath::Vector3& pos_, const KMyMath::Vector3& vec_, const KMyMath::Vector3& rot_, const float bulletSpeed_)
-{
+void Bullet::Set(
+    const KMyMath::Vector3& pos_, const KMyMath::Vector3& vec_, const KMyMath::Vector3& rot_,
+    const float bulletSpeed_, const float bulletPower_) {
 	object3d->SetPos(pos_);
 	this->vec = vec_;
 	vec = MyMathUtility::MakeNormalize(vec) * bulletSpeed_;
 	object3d->SetRot(rot_);
 
 	lifeTimer = 120;
+
+	bulletPower = bulletPower_;
 
 	isDead = false;
 }

@@ -7,8 +7,7 @@
  * @author 飯島 薫
  */
 
-class PlayerBullet : public Bullet
-{
+class PlayerBullet : public Bullet {
 public:
 	/// <summary>
 	/// 生成
@@ -20,8 +19,9 @@ public:
 	/// <param name="rot_">回転角</param>
 	/// <param name="bulletSpeed">弾速</param>
 	/// <returns></returns>
-	static PlayerBullet* Create(KModel* model, KGPlin* pipeline_,
-		const KMyMath::Vector3& pos, const KMyMath::Vector3& vec_, const KMyMath::Vector3& rot_, const float bulletSpeed);
+	static PlayerBullet* Create(
+	    KModel* model, KGPlin* pipeline_, const KMyMath::Vector3& pos, const KMyMath::Vector3& vec_,
+	    const KMyMath::Vector3& rot_, const float bulletSpeed, const float BulletPower_);
 
 public:
 	// 初期化

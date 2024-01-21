@@ -8,7 +8,7 @@
 
 EnemyBullet* EnemyBullet::Create(
     KModel* model_, KGPlin* pipeline_, const KMyMath::Vector3& pos_, const KMyMath::Vector3& vec_,
-    const KMyMath::Vector3& rot_, const float bulletSpeed_) {
+    const KMyMath::Vector3& rot_, const float bulletSpeed_, const float BulletPower_) {
 	// インスタンス生成
 	EnemyBullet* enemyBullet = new EnemyBullet();
 	if (enemyBullet == nullptr) {
@@ -17,7 +17,7 @@ EnemyBullet* EnemyBullet::Create(
 
 	// 初期化
 	enemyBullet->Init(model_, pipeline_);
-	enemyBullet->Set(pos_, vec_, rot_, bulletSpeed_);
+	enemyBullet->Set(pos_, vec_, rot_, bulletSpeed_, BulletPower_);
 
 	return enemyBullet;
 }

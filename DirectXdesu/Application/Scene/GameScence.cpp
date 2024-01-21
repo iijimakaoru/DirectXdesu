@@ -67,7 +67,7 @@ void GameScence::Init() {
 	input = KInput::GetInstance();
 
 	// プレイヤー生成
-	float playersHPInit = 10.0f;
+	float playersHPInit = 50.0f;
 	player.reset(
 	    Player::Create(playerModel.get(), objPipeline.get(), playersHPInit, spritePipeline.get()));
 
@@ -78,8 +78,8 @@ void GameScence::Init() {
 	sceneManager = SceneManager::GetInstance();
 
 	// カメラ初期化
-	//camera->Init(player.get(), {0.0f, 0.0f, -200.0f});
-	camera->Init(player.get(), {0.0f, 0.0f, 450.0f});
+	camera->Init(player.get(), {0.0f, 0.0f, -200.0f});
+	//camera->Init(player.get(), {0.0f, 0.0f, 450.0f});
 
 	// エネミーマネージャー生成
 	enemyManager.reset(EnemyManager::Create(
@@ -375,7 +375,7 @@ void GameScence::CheckAllCollisions() {
 				// 無敵状態じゃないとき
 				if (!player->GetIsInvisible()) {
 					// 自機被弾処理
-					player->OnCollision();
+					player->OnCollision(bullet->GetBulletPower());
 				}
 			}
 		}

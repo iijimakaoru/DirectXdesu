@@ -7,8 +7,7 @@
  * @author 飯島 薫
  */
 
-class EnemyBullet : public Bullet
-{
+class EnemyBullet : public Bullet {
 public:
 	/// <summary>
 	///	生成
@@ -20,11 +19,11 @@ public:
 	/// <param name="rot_"></param>
 	/// <param name="bulletSpeed"></param>
 	/// <returns></returns>
-	static EnemyBullet* Create(KModel* model, KGPlin* pipeline_,
-		const KMyMath::Vector3& pos, const KMyMath::Vector3& vec_, const KMyMath::Vector3& rot_, const float bulletSpeed);
+	static EnemyBullet* Create(
+	    KModel* model, KGPlin* pipeline_, const KMyMath::Vector3& pos, const KMyMath::Vector3& vec_,
+	    const KMyMath::Vector3& rot_, const float bulletSpeed, const float BulletPower_);
 
 public:
 	// 初期化
 	void Init(KModel* model_, KGPlin* pipeline_) override;
 };
-

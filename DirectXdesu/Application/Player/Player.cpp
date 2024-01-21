@@ -286,6 +286,8 @@ void Player::Attack() {
 		// 自機と発射位置の距離
 		const float distance = 20.0f;
 
+		const float bulletPower = 5.0f;
+
 		// 速度ベクトルを自機の向きに合わせて回転
 		bulletVec = MyMathUtility::TransforNormal(bulletVec, object3d->GetMatWorld());
 
@@ -297,7 +299,8 @@ void Player::Attack() {
 		    GetWorldPos() + (bulletVec * distance), // ポジション＋(角度＊距離)
 		    bulletVec,                              // 弾の進む向き
 		    object3d->GetRot(),                     // 角度取得
-		    bulletSpeed                             // 弾の速度
+		    bulletSpeed,                            // 弾の速度
+			bulletPower								// 弾のパワー
 		);
 
 		// SE鳴らし
@@ -544,9 +547,9 @@ const KMyMath::Vector2& Player::GetPosLimitMin() { return posLimitMin; }
 
 const bool Player::GetIsInvisible() const { return isInvisible; }
 
-void Player::OnCollision() {
+void Player::OnCollision(const float& bulletPower_) {
 	ObjParticleManager::GetInstance()->SetSmallExp(GetWorldPos());
-	HP--;
+	HP -= bulletPower_;
 	hpEase = true;
 	oldHpTimer = 0;
 	hpEaseTimer = 0;

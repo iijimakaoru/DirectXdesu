@@ -100,8 +100,8 @@ void Player::Init(
 	operation->SetPipeline(spritePipeline);
 	operationTex = TextureManager::Load("Resources/texture/setumei.png");
 	operationPos = {
-	    KWinApp::GetInstance()->GetWindowSizeW() - 300.0f,
-	    KWinApp::GetInstance()->GetWindowSizeH() - 100.0f};
+	    KWinApp::GetInstance()->GetWindowSizeW() + 450.0f,
+	    KWinApp::GetInstance()->GetWindowSizeH() + 100.0f};
 
 	audioManager = AudioManager::GetInstance();
 
@@ -446,7 +446,7 @@ void Player::StandStartPos() {
 		    {-600.0f, height + 200.0f}, {32.0f, height - 64.0f}, startEaseTimer / startEaseTime);
 
 		operationPos = MyEase::OutCubicVec2(
-		    {width + 300.0f, height + 100.0f}, {width - 300.0f, height - 100.0f},
+		    {width + 450.0f, height + 100.0f}, {width, height},
 		    startEaseTimer / startEaseTime);
 
 		object3d->SetPos(
@@ -501,7 +501,7 @@ void Player::UIDraw() {
 	// 操作説明
 	operation->Draw(
 	    operationTex, operationPos, {1.0f, 1.0f}, 0.0f, {1.0f, 1.0f, 1.0f, 1.0f}, false, false,
-	    {0.0f, 0.0f});
+	    {1.0f, 1.0f});
 
 	// ダメージエフェクト描画
 	if (isDamageEffect) {

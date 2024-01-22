@@ -152,7 +152,7 @@ void GameScence::Init() {
 
 	audioManager->SoundLoadWave("BattleBGM.wav");
 
-	audioManager->SoundPlayWave("BattleBGM.wav");
+	audioManager->SoundPlayWave("BattleBGM.wav",0.25f,true);
 }
 
 void GameScence::Update() {
@@ -171,7 +171,7 @@ void GameScence::Update() {
 
 		if (input->GetPadButtonDown(XINPUT_GAMEPAD_START)) {
 			if (isPose) {
-				audioManager->SoundPlayWave("BattleBGM.wav");
+				audioManager->SoundPlayWave("BattleBGM.wav", 0.25f, true);
 				isPose = false;
 			} else {
 				audioManager->SoundStopWave("BattleBGM.wav");
@@ -413,6 +413,24 @@ void GameScence::CheckAllCollisions() {
 					mobEnemy->OnCollision();
 				}
 			}
+		}
+	}
+
+	// ボスと自機の当たり判定
+	{
+		// 判定対象AとBの座標
+		KMyMath::Vector3 posA, posB;
+
+		if (!blaster || blaster->GetIsDead() || !isBossBattle || player->GetIsDead()) {
+			return;
+		}
+
+		posA = player->GetWorldPos();
+
+		posB = blaster->GetWorldPos();
+
+		if (MyCollisions::CheckSphereToSphere(posA, posB, 6.0f, 12.0f)) {
+			player->OnCollision(10.0f);
 		}
 	}
 

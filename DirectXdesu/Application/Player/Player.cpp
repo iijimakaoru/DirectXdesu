@@ -104,10 +104,16 @@ void Player::Init(
 	    KWinApp::GetInstance()->GetWindowSizeW() + 450.0f,
 	    KWinApp::GetInstance()->GetWindowSizeH() + 100.0f};
 
+	// ボムアイコン
 	bomIcon = std::make_unique<Sprite>();
 	bomIcon->Init();
 	bomIcon->SetPipeline(spritePipeline);
 	bomIconTex = TextureManager::Load("Resources/texture/BomIcon.png");
+
+	// ボムクールタイム
+	bomCoolIcon = std::make_unique<Sprite>();
+	bomCoolIcon->Init();
+	bomCoolIcon->SetPipeline(spritePipeline);
 
 	audioManager = AudioManager::GetInstance();
 
@@ -152,8 +158,10 @@ void Player::Update(
 	if (bomsCoolTimer >= 1) {
 		bomsCoolTimer--;
 		bomIconAlpha = 0.5f;
+		isBom = false;
 	} else {
 		bomIconAlpha = 1.0f;
+		isBom = true;
 	}
 
 	// スタート演出中の処理
@@ -349,7 +357,7 @@ void Player::Attack() {
 		coolTimer = coolTimeSet;
 	}
 
-	if (input->GetPadButtonDown(XINPUT_GAMEPAD_B) && bomsCoolTimer <= 0) {
+	if (input->GetPadButtonDown(XINPUT_GAMEPAD_B) && isBom) {
 		// 弾スピード
 		const float bulletSpeed = 3.0f;
 		KMyMath::Vector3 bulletVec(0, 0, 1);
@@ -371,7 +379,7 @@ void Player::Attack() {
 		    bulletSpeed                             // 弾の速度
 		);
 
-		bomsCoolTimer = 120.0f;
+		bomsCoolTimer = bomsCoolTime;
 	}
 }
 
@@ -485,7 +493,7 @@ void Player::StandStartPos() {
 		    {-600.0f, height + 200.0f}, {32.0f, height - 32.0f}, startEaseTimer / startEaseTime);
 
 		bomIconPos = MyEase::OutCubicVec2(
-		    {180.0f, height + 200.0f}, {360.0f, 698.5f}, startEaseTimer / startEaseTime);
+		    {180.0f, height + 200.0f}, {360.0f, 648.5f}, startEaseTimer / startEaseTime);
 
 		operationPos = MyEase::OutCubicVec2(
 		    {width + 450.0f, height + 100.0f}, {width, height}, startEaseTimer / startEaseTime);
@@ -540,7 +548,13 @@ void Player::UIDraw() {
 	    false, false, {0, 1});
 
 	// ボムアイコン描画
-	bomIcon->Draw(bomIconTex, bomIconPos, {0.1f, 0.1f}, 0.0f, {1, 1, 1, bomIconAlpha}, false, false, {0, 1});
+	bomIcon->Draw(
+	    bomIconTex, bomIconPos, {0.1f, 0.1f}, 0.0f, {1, 1, 1, bomIconAlpha}, false, false, {0, 0});
+	if (!isBom) {
+		bomCoolIcon->Draw(
+		    hpTex, bomIconPos, {50.0f, bomsCoolTimer * (50.0f / bomsCoolTime)}, 0.0f,
+		    {0, 0, 0, 0.8f}, false, false, {0, 0});
+	}
 
 	// 操作説明
 	operation->Draw(

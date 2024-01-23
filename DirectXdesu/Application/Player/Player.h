@@ -253,13 +253,23 @@ private:
 	KMyMath::Vector2 operationPos;
 #pragma endregion
 
+#pragma region ボム関連
+	// ボム個数
 	size_t bomsCount = 3;
-	float bomsCoolTimer = 60.0f;
+	// ボムクールタイム
+	float bomsCoolTime = 120.0f;
+	float bomsCoolTimer = bomsCoolTime;
 
+	// ボムのアイコン
 	std::unique_ptr<Sprite> bomIcon = nullptr;
 	TextureData bomIconTex;
 	KMyMath::Vector2 bomIconPos = {0.0f, 0.0f};
 	float bomIconAlpha = 1.0f;
+	bool isBom = false;
+
+	// ボムのクールタイム用
+	std::unique_ptr<Sprite> bomCoolIcon = nullptr;
+#pragma endregion
 
 	bool muteki = false;
 

@@ -188,6 +188,7 @@ private:
 
 	// スタート時のHPイージング
 	KMyMath::Vector2 HPPos = {-500.0f, 0.0f};
+	KMyMath::Vector2 HPSize = {1.0f, 1.0f};
 
 	// 死亡しているか
 	bool isDead;
@@ -195,7 +196,7 @@ private:
 	// HP
 	std::unique_ptr<Sprite> HPUI = nullptr;
 	TextureData hpTex;
-	KMyMath::Vector2 HPUIPos = {14.0f, 14.0f};
+	KMyMath::Vector2 HPUIPos = {14.0f, 6.0f};
 	std::unique_ptr<Sprite> HPrectUI = nullptr;
 
 	// HPバー
@@ -254,6 +255,13 @@ private:
 
 	size_t bomsCount = 3;
 	float bomsCoolTimer = 60.0f;
+
+	std::unique_ptr<Sprite> bomIcon = nullptr;
+	TextureData bomIconTex;
+	KMyMath::Vector2 bomIconPos = {0.0f, 0.0f};
+	float bomIconAlpha = 1.0f;
+
+	bool muteki = false;
 
 	AudioManager* audioManager = nullptr;
 };

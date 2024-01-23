@@ -1,6 +1,7 @@
 #include "Player.h"
 #include "BulletManager.h"
 #include "Ease.h"
+#include "ImguiManager.h"
 #include "ParticleManager.h"
 #include "ScoreManager.h"
 
@@ -103,6 +104,11 @@ void Player::Init(
 	    KWinApp::GetInstance()->GetWindowSizeW() + 450.0f,
 	    KWinApp::GetInstance()->GetWindowSizeH() + 100.0f};
 
+	bomIcon = std::make_unique<Sprite>();
+	bomIcon->Init();
+	bomIcon->SetPipeline(spritePipeline);
+	bomIconTex = TextureManager::Load("Resources/texture/BomIcon.png");
+
 	audioManager = AudioManager::GetInstance();
 
 	audioManager->SoundLoadWave("shotSE.wav");
@@ -111,6 +117,32 @@ void Player::Init(
 
 void Player::Update(
     ViewProjection* viewPro_, bool isStart_, bool isBossMovie_, bool isClearMovie_) {
+	ImGui::Begin("Player");
+	ImGui::SetWindowPos({400, 10});
+	ImGui::SetWindowSize({200, 200});
+	if (ImGui::Button("MUTEKI_Mode")) {
+		if (muteki) {
+			muteki = false;
+		} else {
+			muteki = true;
+		}
+	}
+	ImGui::SliderFloat(
+	    "HPPosX", &HPPos.x, 0, (float)KWinApp::GetInstance()->GetWindowSizeW() * 1 / 3, "%.1f");
+	ImGui::SliderFloat(
+	    "HPPosY", &HPPos.y, (float)KWinApp::GetInstance()->GetWindowSizeH() * 2 / 3,
+	    (float)KWinApp::GetInstance()->GetWindowSizeH(), "%.1f");
+	ImGui::SliderFloat("HPSizeX", &HPSize.x, 0, 1, "%.1f");
+	ImGui::SliderFloat("HPSizeY", &HPSize.y, 0, 1, "%.1f");
+
+	ImGui::SliderFloat(
+	    "BomIconX", &bomIconPos.x, 0, (float)KWinApp::GetInstance()->GetWindowSizeW() * 1 / 3,
+	    "%.1f");
+	ImGui::SliderFloat(
+	    "BomIconY", &bomIconPos.y, (float)KWinApp::GetInstance()->GetWindowSizeH() * 2 / 3,
+	    (float)KWinApp::GetInstance()->GetWindowSizeH(), "%.1f");
+	ImGui::End();
+
 	isStartMovie = isStart_;
 	isBossMovie = isBossMovie_;
 	isClearMovie = isClearMovie_;
@@ -119,6 +151,9 @@ void Player::Update(
 
 	if (bomsCoolTimer >= 1) {
 		bomsCoolTimer--;
+		bomIconAlpha = 0.5f;
+	} else {
+		bomIconAlpha = 1.0f;
 	}
 
 	// スタート演出中の処理
@@ -447,7 +482,10 @@ void Player::StandStartPos() {
 		float height = static_cast<float>(KWinApp::GetInstance()->GetWindowSizeH());
 
 		HPPos = MyEase::OutCubicVec2(
-		    {-600.0f, height + 200.0f}, {32.0f, height - 64.0f}, startEaseTimer / startEaseTime);
+		    {-600.0f, height + 200.0f}, {32.0f, height - 32.0f}, startEaseTimer / startEaseTime);
+
+		bomIconPos = MyEase::OutCubicVec2(
+		    {180.0f, height + 200.0f}, {360.0f, 698.5f}, startEaseTimer / startEaseTime);
 
 		operationPos = MyEase::OutCubicVec2(
 		    {width + 450.0f, height + 100.0f}, {width, height}, startEaseTimer / startEaseTime);
@@ -489,17 +527,20 @@ void Player::UIDraw() {
 	KMyMath::Vector2 HPsize = {286 / maxHP, 17};
 
 	// HPバー描画
-	HPBarUI->Draw(hpbarTex, HPPos + HPBarUIPos, {1, 1}, 0, {1, 1, 1, 1}, false, false, {0, 0});
+	HPBarUI->Draw(hpbarTex, HPPos + HPBarUIPos, HPSize, 0, {1, 1, 1, 1}, false, false, {0, 1});
 
 	// HP減少値描画
 	HPrectUI->Draw(
 	    hpTex, HPPos + HPUIPos, {oldHP * HPsize.x, HPsize.y}, 0,
-	    {hpColor.x, hpColor.y, hpColor.z, 0.3f}, false, false, {0, 0});
+	    {hpColor.x, hpColor.y, hpColor.z, 0.3f}, false, false, {0, 1});
 
 	// HP描画
 	HPUI->Draw(
 	    hpTex, HPPos + HPUIPos, {HP * HPsize.x, HPsize.y}, 0, {hpColor.x, hpColor.y, hpColor.z, 1},
-	    false, false, {0, 0});
+	    false, false, {0, 1});
+
+	// ボムアイコン描画
+	bomIcon->Draw(bomIconTex, bomIconPos, {0.1f, 0.1f}, 0.0f, {1, 1, 1, bomIconAlpha}, false, false, {0, 1});
 
 	// 操作説明
 	operation->Draw(
@@ -552,7 +593,9 @@ const bool Player::GetIsInvisible() const { return isInvisible; }
 
 void Player::OnCollision(const float& bulletPower_) {
 	ObjParticleManager::GetInstance()->SetSmallExp(GetWorldPos());
-	HP -= bulletPower_;
+	if (!muteki) {
+		HP -= bulletPower_;
+	}
 	hpEase = true;
 	oldHpTimer = 0;
 	hpEaseTimer = 0;

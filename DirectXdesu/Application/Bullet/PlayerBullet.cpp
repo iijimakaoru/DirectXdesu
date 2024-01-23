@@ -31,5 +31,5 @@ void PlayerBullet::Init(KModel* model_, KGPlin* pipeline_) {
 
 	// オブジェクト生成
 	object3d.reset(KObject3d::Create(model, pipeline));
-	object3d->SetScale({10.0f, 10.0f, 10.0f});
+	object3d->SetScale({5.0f, 5.0f, 5.0f});
 }

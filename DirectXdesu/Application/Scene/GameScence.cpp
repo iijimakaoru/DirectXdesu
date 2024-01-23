@@ -420,7 +420,7 @@ void GameScence::CheckAllCollisions() {
 
 				// 球同士の交差判定
 				const float enemyRange = 6.0f;
-				const float bulletRange = 2.0f;
+				const float bulletRange = 1.0f;
 				if (MyCollisions::CheckSphereToSphere(posA, posB, enemyRange, bulletRange)) {
 					// 弾消去
 					bullet->OnCollision();
@@ -451,7 +451,7 @@ void GameScence::CheckAllCollisions() {
 			posB = blaster->GetWorldPos();
 
 			// 球同士の交差判定
-			if (blaster->CollisionCheck(posA, posB)) {
+			if (MyCollisions::CheckSphereToSphere(posA, posB, 1, 8)) {
 				// 弾消去
 				bullet->OnCollision();
 
@@ -523,7 +523,7 @@ void GameScence::CheckAllCollisions() {
 			posB = blaster->GetWorldPos();
 
 			// 球同士の交差判定
-			if (MyCollisions::CheckSphereToSphere(posA, posB, 4, 12)) {
+			if (MyCollisions::CheckSphereToSphere(posA, posB, 4, 8)) {
 				// 弾消去
 				bom->OnCollision();
 
@@ -534,7 +534,7 @@ void GameScence::CheckAllCollisions() {
 			if (bom->GetIsExp()) {
 				const float ExpRange = 75.0f;
 
-				if (MyCollisions::CheckSphereToSphere(posA, posB, ExpRange, 12)) {
+				if (MyCollisions::CheckSphereToSphere(posA, posB, ExpRange, 8)) {
 					// ボスダメージ
 					blaster->OnCollision(bom->GetExpPower());
 

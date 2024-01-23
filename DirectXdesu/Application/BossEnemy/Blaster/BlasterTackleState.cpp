@@ -232,7 +232,7 @@ void BlasterTackleState::Update() {
 			angle = 0;
 
 			KMyMath::Vector3 move =
-			    MyEase::OutCubicVec3({0, 100.0f, 650.0f}, {0, 0, 650}, actTimer / actTime);
+			    MyEase::OutCubicVec3({0, 100.0f, 650.0f}, {0, 20, 650}, actTimer / actTime);
 
 			blaster->SetPos(move);
 

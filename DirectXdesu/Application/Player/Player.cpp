@@ -117,6 +117,10 @@ void Player::Update(
 
 	SudCoolTime();
 
+	if (bomsCoolTimer >= 1) {
+		bomsCoolTimer--;
+	}
+
 	// スタート演出中の処理
 	if (isStartMovie) {
 
@@ -300,7 +304,7 @@ void Player::Attack() {
 		    bulletVec,                              // 弾の進む向き
 		    object3d->GetRot(),                     // 角度取得
 		    bulletSpeed,                            // 弾の速度
-			bulletPower								// 弾のパワー
+		    bulletPower                             // 弾のパワー
 		);
 
 		// SE鳴らし
@@ -310,7 +314,7 @@ void Player::Attack() {
 		coolTimer = coolTimeSet;
 	}
 
-	if (input->GetPadButtonDown(XINPUT_GAMEPAD_B) && bomsCount > 0) {
+	if (input->GetPadButtonDown(XINPUT_GAMEPAD_B) && bomsCoolTimer <= 0) {
 		// 弾スピード
 		const float bulletSpeed = 3.0f;
 		KMyMath::Vector3 bulletVec(0, 0, 1);
@@ -332,7 +336,7 @@ void Player::Attack() {
 		    bulletSpeed                             // 弾の速度
 		);
 
-		bomsCount--;
+		bomsCoolTimer = 120.0f;
 	}
 }
 
@@ -446,8 +450,7 @@ void Player::StandStartPos() {
 		    {-600.0f, height + 200.0f}, {32.0f, height - 64.0f}, startEaseTimer / startEaseTime);
 
 		operationPos = MyEase::OutCubicVec2(
-		    {width + 450.0f, height + 100.0f}, {width, height},
-		    startEaseTimer / startEaseTime);
+		    {width + 450.0f, height + 100.0f}, {width, height}, startEaseTimer / startEaseTime);
 
 		object3d->SetPos(
 		    {object3d->GetPos().x, object3d->GetPos().y,

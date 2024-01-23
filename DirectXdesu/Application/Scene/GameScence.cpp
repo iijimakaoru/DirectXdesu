@@ -381,6 +381,22 @@ void GameScence::CheckAllCollisions() {
 		}
 	}
 
+	// ボスと自機の当たり判定
+	{
+		// 判定対象AとBの座標
+		KMyMath::Vector3 posA, posB;
+
+		if (blaster && !blaster->GetIsDead() && isBossBattle && !player->GetIsDead()) {
+			posA = player->GetWorldPos();
+
+			posB = blaster->GetWorldPos();
+
+			if (MyCollisions::CheckSphereToSphere(posA, posB, 6.0f, 12.0f)) {
+				player->OnCollision(10.0f);
+			}
+		}
+	}
+
 	// 自弾と敵の当たり判定
 	{
 		// 判定対象AとBの座標
@@ -413,24 +429,6 @@ void GameScence::CheckAllCollisions() {
 					mobEnemy->OnCollision();
 				}
 			}
-		}
-	}
-
-	// ボスと自機の当たり判定
-	{
-		// 判定対象AとBの座標
-		KMyMath::Vector3 posA, posB;
-
-		if (!blaster || blaster->GetIsDead() || !isBossBattle || player->GetIsDead()) {
-			return;
-		}
-
-		posA = player->GetWorldPos();
-
-		posB = blaster->GetWorldPos();
-
-		if (MyCollisions::CheckSphereToSphere(posA, posB, 6.0f, 12.0f)) {
-			player->OnCollision(10.0f);
 		}
 	}
 

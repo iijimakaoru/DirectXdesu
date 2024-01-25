@@ -220,6 +220,18 @@
     <Filter Include="ヘッダー ファイル\Application\Particle">
       <UniqueIdentifier>{029f01f4-2cb5-47e1-b28a-84110fc785b2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Engine\Camera">
+      <UniqueIdentifier>{e975677e-0632-4ebf-ae3d-6c46fb2608c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Engine\Camera">
+      <UniqueIdentifier>{0c3b6276-69ef-43ff-b45a-f41efd801bbb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Engine\Scene">
+      <UniqueIdentifier>{b4be8d4d-ef2b-471a-8fe7-d606c91c5820}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Engine\Scene">
+      <UniqueIdentifier>{7b482469-1118-4363-a78b-0667f935a5ee}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Math\Vector2\Vector2.cpp">
@@ -243,32 +255,14 @@
     <ClCompile Include="Engine\Math\Quaternion\Quaternion.cpp">
       <Filter>ソース ファイル\Engine\Math</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Base\BaseScene\BaseScene.cpp">
-      <Filter>ソース ファイル\Application\Scene</Filter>
-    </ClCompile>
     <ClCompile Include="Application\Scene\GameScence.cpp">
-      <Filter>ソース ファイル\Application\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Base\BaseScene\SceneManager.cpp">
       <Filter>ソース ファイル\Application\Scene</Filter>
     </ClCompile>
     <ClCompile Include="Application\Scene\TitleScene.cpp">
       <Filter>ソース ファイル\Application\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="Application\Scene\SceneFactory.cpp">
-      <Filter>ソース ファイル\Application\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Base\BaseCamera\Camera.cpp">
-      <Filter>ソース ファイル\Application\Camera</Filter>
-    </ClCompile>
-    <ClCompile Include="Application\Camera\DebugCamera.cpp">
-      <Filter>ソース ファイル\Application\Camera</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Imgui\ImguiManager.cpp">
       <Filter>ソース ファイル\Engine\Imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Base\BaseScene\ASceneFactory.cpp">
-      <Filter>ソース ファイル\Application\Scene</Filter>
     </ClCompile>
     <ClCompile Include="Engine\2D\PostEffect\PostEffect.cpp">
       <Filter>ソース ファイル\Engine\2d\Sprites</Filter>
@@ -450,6 +444,24 @@
     <ClCompile Include="Application\BossEnemy\Blaster\BlasterTackleState.cpp">
       <Filter>ソース ファイル\Application\BossEnemy\Blaster</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Base\BaseCamera\Camera.cpp">
+      <Filter>ソース ファイル\Engine\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Camera\DebugCamera.cpp">
+      <Filter>ソース ファイル\Engine\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Base\BaseScene\ASceneFactory.cpp">
+      <Filter>ソース ファイル\Engine\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Scene\SceneFactory.cpp">
+      <Filter>ソース ファイル\Engine\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Base\BaseScene\SceneManager.cpp">
+      <Filter>ソース ファイル\Engine\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Base\BaseScene\BaseScene.cpp">
+      <Filter>ソース ファイル\Engine\Scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Input\KInput.h">
@@ -509,31 +521,13 @@
     <ClInclude Include="Engine\Collision\CollisionPrimitive.h">
       <Filter>ヘッダー ファイル\Engine\Collision</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Base\BaseCamera\Camera.h">
-      <Filter>ヘッダー ファイル\Application\Camera</Filter>
-    </ClInclude>
-    <ClInclude Include="Application\Camera\DebugCamera.h">
-      <Filter>ヘッダー ファイル\Application\Camera</Filter>
-    </ClInclude>
     <ClInclude Include="Application\Camera\GameCamera.h">
       <Filter>ヘッダー ファイル\Application\Camera</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Base\BaseScene\ASceneFactory.h">
-      <Filter>ヘッダー ファイル\Application\Scene</Filter>
     </ClInclude>
     <ClInclude Include="Application\Scene\GameScence.h">
       <Filter>ヘッダー ファイル\Application\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Base\BaseScene\BaseScene.h">
-      <Filter>ヘッダー ファイル\Application\Scene</Filter>
-    </ClInclude>
     <ClInclude Include="Application\Scene\TitleScene.h">
-      <Filter>ヘッダー ファイル\Application\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Base\BaseScene\SceneManager.h">
-      <Filter>ヘッダー ファイル\Application\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="Application\Scene\SceneFactory.h">
       <Filter>ヘッダー ファイル\Application\Scene</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Math\Ease\Ease.h">
@@ -676,6 +670,24 @@
     </ClInclude>
     <ClInclude Include="Application\BossEnemy\Blaster\BlasterTackleState.h">
       <Filter>ヘッダー ファイル\Application\BossEnemy\Blaster</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Base\BaseCamera\Camera.h">
+      <Filter>ヘッダー ファイル\Engine\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Camera\DebugCamera.h">
+      <Filter>ヘッダー ファイル\Engine\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Base\BaseScene\ASceneFactory.h">
+      <Filter>ヘッダー ファイル\Engine\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Base\BaseScene\BaseScene.h">
+      <Filter>ヘッダー ファイル\Engine\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Scene\SceneFactory.h">
+      <Filter>ヘッダー ファイル\Engine\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Base\BaseScene\SceneManager.h">
+      <Filter>ヘッダー ファイル\Engine\Scene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

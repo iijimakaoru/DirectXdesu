@@ -26,7 +26,7 @@ public:
 	};
 
 	MobEnemy();
-	~MobEnemy();
+	virtual ~MobEnemy();
 
 	// 初期化
 	virtual void Init(KModel* model_, KGPlin* pipeline_);

@@ -327,7 +327,7 @@ void Player::Rot() {
 void Player::Attack() {
 	if (input->GetPadButton(XINPUT_GAMEPAD_A) && coolTimer <= 0) {
 		// 弾スピード
-		const float bulletSpeed = 6.0f;
+		const float bulletSpeed = 9.0f;
 		KMyMath::Vector3 bulletVec(0, 0, 1);
 
 		// 自機と発射位置の距離

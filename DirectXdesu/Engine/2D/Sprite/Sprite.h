@@ -13,6 +13,8 @@ class Sprite {
 public:
 	static void StaticInit();
 
+	static Sprite* Create(KGPlin* pipeline_);
+
 	/// <summary>
 	/// 初期化
 	/// </summary>

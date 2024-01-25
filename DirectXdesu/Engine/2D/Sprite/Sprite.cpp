@@ -17,6 +17,18 @@ void Sprite::StaticInit() {
 	matPro = MyMathUtility::MakeOrthogonalL(0.0f, width, height, 0.0f, 0.0f, 1.0f);
 }
 
+Sprite* Sprite::Create(KGPlin* pipeline_) {
+	Sprite* instance = new Sprite();
+	if (instance == nullptr) {
+		return nullptr;
+	}
+
+	instance->Init();
+	instance->SetPipeline(pipeline_);
+
+	return instance;
+}
+
 void Sprite::SetPipeline(KGPlin* pipeline_) { pipeline = pipeline_; }
 
 const KMyMath::Vector2 Sprite::GetPos() const { return KMyMath::Vector2(); }
@@ -262,9 +274,8 @@ void Sprite::Draw(
 
 void Sprite::DivDraw(
     TextureData& texData, KMyMath::Vector2 leftTop_, KMyMath::Vector2 divSize_,
-    KMyMath::Vector2 pos,
-    KMyMath::Vector2 setSize_, float rot,
-    KMyMath::Vector4 color_, KMyMath::Vector2 anchorPoint_) {
+    KMyMath::Vector2 pos, KMyMath::Vector2 setSize_, float rot, KMyMath::Vector4 color_,
+    KMyMath::Vector2 anchorPoint_) {
 	// 非表示処理
 	if (isInvisible) {
 		return;
@@ -284,9 +295,9 @@ void Sprite::DivDraw(
 
 	// 頂点データ
 	Vertex vertices[] = {
-	    {{left, top, 0.0f},     {texLeft, texTop}}, // 左上
-	    {{left, bottom, 0.0f},  {texLeft, texBottom}}, // 左下
-	    {{right, top, 0.0f},    {texRight, texTop}}, // 右上
+	    {{left, top, 0.0f},     {texLeft, texTop}    }, // 左上
+	    {{left, bottom, 0.0f},  {texLeft, texBottom} }, // 左下
+	    {{right, top, 0.0f},    {texRight, texTop}   }, // 右上
 	    {{right, bottom, 0.0f}, {texRight, texBottom}}, // 右下
 	};
 

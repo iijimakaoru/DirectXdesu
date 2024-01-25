@@ -120,9 +120,7 @@ void GameScence::Init() {
 
 	isStageStart = true;
 
-	poseBack = std::make_unique<Sprite>();
-	poseBack->Init();
-	poseBack->SetPipeline(spritePipeline.get());
+	poseBack.reset(Sprite::Create(spritePipeline.get()));
 
 	selectBar = std::make_unique<Sprite>();
 	selectBar->Init();

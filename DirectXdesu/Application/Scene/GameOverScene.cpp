@@ -15,8 +15,7 @@ void GameOverScene::LoadResources()
 {
 	// パイプライン
 	spriteShader.Init(L"Resources/Shader/SpriteVS.hlsl", L"Resources/Shader/SpritePS.hlsl");
-	spritePipeline = std::make_unique<KGPlin>();
-	spritePipeline->CreatePipelineAll(spriteShader, "Sprite");
+	spritePipeline.reset(KGPlin::Create(spriteShader, "Sprite"));
 
 	// ゲームオーバーテクスチャ
 	overTex = TextureManager::Load("Resources/texture/kariGameOver.png");
@@ -36,14 +35,10 @@ void GameOverScene::Init()
 	sceneManager = SceneManager::GetInstance();
 
 	// タイトル名
-	over = std::make_unique<Sprite>();
-	over->Init();
-	over->SetPipeline(spritePipeline.get());
+	over.reset(Sprite::Create(spritePipeline.get()));
 
 	// プッシュA
-	pushA = std::make_unique<Sprite>();
-	pushA->Init();
-	pushA->SetPipeline(spritePipeline.get());
+	pushA.reset(Sprite::Create(spritePipeline.get()));
 }
 
 void GameOverScene::Update()

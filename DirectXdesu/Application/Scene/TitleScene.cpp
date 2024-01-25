@@ -18,8 +18,7 @@ void TitleScene::LoadResources()
 {
 	// パイプライン
 	spriteShader.Init(L"Resources/Shader/SpriteVS.hlsl", L"Resources/Shader/SpritePS.hlsl");
-	spritePipeline = std::make_unique<KGPlin>();
-	spritePipeline->CreatePipelineAll(spriteShader, "Sprite");
+	spritePipeline.reset(KGPlin::Create(spriteShader, "Sprite"));
 
 	objShader.Init(L"Resources/Shader/ObjVS.hlsl", L"Resources/Shader/ObjPS.hlsl");
 	objPipeline.reset(KGPlin::Create(objShader, "Obj"));
@@ -59,29 +58,19 @@ void TitleScene::Init()
 	sceneManager = SceneManager::GetInstance();
 
 	// タイトル名
-	titleName = std::make_unique<Sprite>();
-	titleName->Init();
-	titleName->SetPipeline(spritePipeline.get());
+	titleName.reset(Sprite::Create(spritePipeline.get()));
 	titlePos = { width / 2 ,height * 1 / 3 };
 
-	mesi = std::make_unique<Sprite>();
-	mesi->Init();
-	mesi->SetPipeline(spritePipeline.get());
+	mesi.reset(Sprite::Create(spritePipeline.get()));
 	
-	shooter = std::make_unique<Sprite>();
-	shooter->Init();
-	shooter->SetPipeline(spritePipeline.get());
+	shooter.reset(Sprite::Create(spritePipeline.get()));
 	shooterScale = { 1.0f,1.0f };
 
-	mold = std::make_unique<Sprite>();
-	mold->Init();
-	mold->SetPipeline(spritePipeline.get());
+	mold.reset(Sprite::Create(spritePipeline.get()));
 	moldScale = { 1.6f,1.6f };
 
 	// プッシュA
-	pushA = std::make_unique<Sprite>();
-	pushA->Init();
-	pushA->SetPipeline(spritePipeline.get());
+	pushA.reset(Sprite::Create(spritePipeline.get()));
 	pushAPos = { width / 2, height * 4 / 5 };
 
 	// オブジェクト生成
@@ -92,9 +81,7 @@ void TitleScene::Init()
 	skyDome->SetScale({ 200.0f,200.0f,200.0f });
 
 	// フラッシュ
-	flash = std::make_unique<Sprite>();
-	flash->Init();
-	flash->SetPipeline(spritePipeline.get());
+	flash.reset(Sprite::Create(spritePipeline.get()));
 
 	flashAlpha = 0;
 

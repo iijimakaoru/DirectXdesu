@@ -23,19 +23,13 @@ void BossEnemy::Init(KGPlin* pipeline_, const KMyMath::Vector3& initPos_, KGPlin
 	maxHP = 0;
 	HP = maxHP;
 
-	HPUI = std::make_unique<Sprite>();
-	HPUI->Init();
-	HPUI->SetPipeline(spritePipeline);
+	HPUI.reset(Sprite::Create(spritePipeline));
 
-	HPrectUI = std::make_unique<Sprite>();
-	HPrectUI->Init();
-	HPrectUI->SetPipeline(spritePipeline);
+	HPrectUI.reset(Sprite::Create(spritePipeline));
 
 	hpTex = TextureManager::Load("Resources/texture/white1x1.png");
 
-	HPBarUI = std::make_unique<Sprite>();
-	HPBarUI->Init();
-	HPBarUI->SetPipeline(spritePipeline);
+	HPBarUI.reset(Sprite::Create(spritePipeline));
 
 	hpbarTex = TextureManager::Load("Resources/texture/BossHPBar3.png");
 

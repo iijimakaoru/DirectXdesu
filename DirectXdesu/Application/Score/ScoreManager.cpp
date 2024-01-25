@@ -14,23 +14,17 @@ void ScoreManager::Init() {
 
 	// スコアスプライトズ
 	for (size_t i = 0; i < 6; i++) {
-		score[i] = std::make_unique<Sprite>();
-		score[i]->Init();
-		score[i]->SetPipeline(spritePipeline.get());
+		score[i].reset(Sprite::Create(spritePipeline.get()));
 	}
 
 	// 加算スコアスプライトズ
 	for (size_t i = 0; i < 4; i++) {
-		addScore[i] = std::make_unique<Sprite>();
-		addScore[i]->Init();
-		addScore[i]->SetPipeline(spritePipeline.get());
+		addScore[i].reset(Sprite::Create(spritePipeline.get()));
 	}
 
 	// ボーナスカウントスプライトズ
 	for (size_t i = 0; i < 2; i++) {
-		bonusCountS[i] = std::make_unique<Sprite>();
-		bonusCountS[i]->Init();
-		bonusCountS[i]->SetPipeline(spritePipeline.get());
+		bonusCountS[i].reset(Sprite::Create(spritePipeline.get()));
 	}
 
 	// 数字読み込み
@@ -46,33 +40,23 @@ void ScoreManager::Init() {
 	numTexs[9] = TextureManager::Load("Resources/texture/Num9.png");
 
 	// 「Score」文字
-	scores = std::make_unique<Sprite>();
-	scores->Init();
-	scores->SetPipeline(spritePipeline.get());
+	scores.reset(Sprite::Create(spritePipeline.get()));
 	scoresTex = TextureManager::Load("Resources/texture/ScoreTex.png");
 
 	// 「HIT」文字
-	hits = std::make_unique<Sprite>();
-	hits->Init();
-	hits->SetPipeline(spritePipeline.get());
+	hits.reset(Sprite::Create(spritePipeline.get()));
 	hitsTex = TextureManager::Load("Resources/texture/HitTex.png");
 
 	// 「X」文字
-	xS = std::make_unique<Sprite>();
-	xS->Init();
-	xS->SetPipeline(spritePipeline.get());
+	xS.reset(Sprite::Create(spritePipeline.get()));
 	xTex = TextureManager::Load("Resources/texture/XTex.png");
 
 	// ボーナス時間バースプライト
-	bonusBar = std::make_unique<Sprite>();
-	bonusBar->Init();
-	bonusBar->SetPipeline(spritePipeline.get());
+	bonusBar.reset(Sprite::Create(spritePipeline.get()));
 	bonusBarTex = TextureManager::Load("Resources/texture/scoreBonusBar.png");
 
 	// ボーナス時間ゲージスプライト
-	bonusGage = std::make_unique<Sprite>();
-	bonusGage->Init();
-	bonusGage->SetPipeline(spritePipeline.get());
+	bonusGage.reset(Sprite::Create(spritePipeline.get()));
 	bonusGageTex = TextureManager::Load("Resources/texture/white1x1.png");
 }
 

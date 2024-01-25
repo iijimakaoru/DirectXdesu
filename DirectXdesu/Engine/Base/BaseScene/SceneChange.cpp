@@ -10,9 +10,7 @@ void SceneChange::Init()
 	shader.Init(L"Resources/Shader/SpriteVS.hlsl", L"Resources/Shader/SpritePS.hlsl");
 	pipeline.reset(KGPlin::Create(shader, "Sprite"));
 
-	black = std::make_unique<Sprite>();
-	black->Init();
-	black->SetPipeline(pipeline.get());
+	black.reset(Sprite::Create(pipeline.get()));
 }
 
 void SceneChange::Update()

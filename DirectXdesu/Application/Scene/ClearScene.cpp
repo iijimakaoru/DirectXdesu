@@ -15,8 +15,7 @@ ClearScene::~ClearScene() { Final(); }
 void ClearScene::LoadResources() {
 	// パイプライン
 	spriteShader.Init(L"Resources/Shader/SpriteVS.hlsl", L"Resources/Shader/SpritePS.hlsl");
-	spritePipeline = std::make_unique<KGPlin>();
-	spritePipeline->CreatePipelineAll(spriteShader, "Sprite");
+	spritePipeline.reset(KGPlin::Create(spriteShader, "Sprite"));
 
 	// リザルトテクスチャ
 	resultTex = TextureManager::Load("Resources/texture/ResultText.png");
@@ -66,74 +65,46 @@ void ClearScene::Init() {
 	sceneManager = SceneManager::GetInstance();
 
 	// タイトル名
-	result = std::make_unique<Sprite>();
-	result->Init();
-	result->SetPipeline(spritePipeline.get());
+	result.reset(Sprite::Create(spritePipeline.get()));
 
 	// スコアボード
-	scoreBord = std::make_unique<Sprite>();
-	scoreBord->Init();
-	scoreBord->SetPipeline(spritePipeline.get());
+	scoreBord.reset(Sprite::Create(spritePipeline.get()));
 
 	// プッシュA
-	pushA = std::make_unique<Sprite>();
-	pushA->Init();
-	pushA->SetPipeline(spritePipeline.get());
+	pushA.reset(Sprite::Create(spritePipeline.get()));
 	scoreBordSize = {0.0f, 0.01f};
 
 	// 背景
 	for (size_t i = 0; i < 2; i++) {
-		back[i] = std::make_unique<Sprite>();
-		back[i]->Init();
-		back[i]->SetPipeline(spritePipeline.get());
+		back[i].reset(Sprite::Create(spritePipeline.get()));
 	}
 
 	backPos[0] = {width / 2.0f, height / 2.0f};
 	backPos[1] = {backPos[0].x + width, backPos[0].y};
 
-	gameScore = std::make_unique<Sprite>();
-	gameScore->Init();
-	gameScore->SetPipeline(spritePipeline.get());
+	gameScore.reset(Sprite::Create(spritePipeline.get()));
 	for (size_t i = 0; i < 6; i++) {
-		gameScoreS[i] = std::make_unique<Sprite>();
-		gameScoreS[i]->Init();
-		gameScoreS[i]->SetPipeline(spritePipeline.get());
+		gameScoreS[i].reset(Sprite::Create(spritePipeline.get()));
 	}
 
-	enemyScore = std::make_unique<Sprite>();
-	enemyScore->Init();
-	enemyScore->SetPipeline(spritePipeline.get());
+	enemyScore.reset(Sprite::Create(spritePipeline.get()));
 	for (size_t i = 0; i < 6; i++) {
-		enemyScoreS[i] = std::make_unique<Sprite>();
-		enemyScoreS[i]->Init();
-		enemyScoreS[i]->SetPipeline(spritePipeline.get());
+		enemyScoreS[i].reset(Sprite::Create(spritePipeline.get()));
 	}
 
-	minDamageScore = std::make_unique<Sprite>();
-	minDamageScore->Init();
-	minDamageScore->SetPipeline(spritePipeline.get());
+	minDamageScore.reset(Sprite::Create(spritePipeline.get()));
 	for (size_t i = 0; i < 6; i++) {
-		minDamageScoreS[i] = std::make_unique<Sprite>();
-		minDamageScoreS[i]->Init();
-		minDamageScoreS[i]->SetPipeline(spritePipeline.get());
+		minDamageScoreS[i].reset(Sprite::Create(spritePipeline.get()));
 	}
 
-	bossTimeScore = std::make_unique<Sprite>();
-	bossTimeScore->Init();
-	bossTimeScore->SetPipeline(spritePipeline.get());
+	bossTimeScore.reset(Sprite::Create(spritePipeline.get()));
 	for (size_t i = 0; i < 6; i++) {
-		bossTimeScoreS[i] = std::make_unique<Sprite>();
-		bossTimeScoreS[i]->Init();
-		bossTimeScoreS[i]->SetPipeline(spritePipeline.get());
+		bossTimeScoreS[i].reset(Sprite::Create(spritePipeline.get()));
 	}
 
-	total = std::make_unique<Sprite>();
-	total->Init();
-	total->SetPipeline(spritePipeline.get());
+	total.reset(Sprite::Create(spritePipeline.get()));
 	for (size_t i = 0; i < 6; i++) {
-		totalS[i] = std::make_unique<Sprite>();
-		totalS[i]->Init();
-		totalS[i]->SetPipeline(spritePipeline.get());
+		totalS[i].reset(Sprite::Create(spritePipeline.get()));
 	}
 
 	isGoScene = false;

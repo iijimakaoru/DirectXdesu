@@ -31,7 +31,6 @@ void GameScence::LoadResources() {
 	textureData = TextureManager::Load("Resources/texture/mario.jpg");
 	textureData2 = TextureManager::Load("Resources/texture/kariPlayerColor.png");
 	movieBarTex = TextureManager::Load("Resources/texture/white1x1.png");
-	testDivTex = TextureManager::Load("Resources/texture/tex1.png");
 	poseTexT = TextureManager::Load("Resources/texture/pose.png");
 	backTitleT = TextureManager::Load("Resources/texture/BackTitle.png");
 	operationT = TextureManager::Load("Resources/texture/Operation.png");
@@ -111,9 +110,7 @@ void GameScence::Init() {
 	billManager->Init();
 
 	for (size_t i = 0; i < 2; i++) {
-		movieBar[i] = std::make_unique<Sprite>();
-		movieBar[i]->Init();
-		movieBar[i]->SetPipeline(spritePipeline.get());
+		movieBar[i].reset(Sprite::Create(spritePipeline.get()));
 	}
 
 	isCallDeadCamera = false;
@@ -122,25 +119,13 @@ void GameScence::Init() {
 
 	poseBack.reset(Sprite::Create(spritePipeline.get()));
 
-	selectBar = std::make_unique<Sprite>();
-	selectBar->Init();
-	selectBar->SetPipeline(spritePipeline.get());
+	selectBar.reset(Sprite::Create(spritePipeline.get()));
 
-	poseTexS = std::make_unique<Sprite>();
-	poseTexS->Init();
-	poseTexS->SetPipeline(spritePipeline.get());
+	poseTexS.reset(Sprite::Create(spritePipeline.get()));
 
-	backTitleS = std::make_unique<Sprite>();
-	backTitleS->Init();
-	backTitleS->SetPipeline(spritePipeline.get());
+	backTitleS.reset(Sprite::Create(spritePipeline.get()));
 
-	operationS = std::make_unique<Sprite>();
-	operationS->Init();
-	operationS->SetPipeline(spritePipeline.get());
-
-	testDiv = std::make_unique<Sprite>();
-	testDiv->Init();
-	testDiv->SetPipeline(spritePipeline.get());
+	operationS.reset(Sprite::Create(spritePipeline.get()));
 
 	ScoreManager::GetInstance()->Init();
 	ScoreManager::GetInstance()->ResetScore();

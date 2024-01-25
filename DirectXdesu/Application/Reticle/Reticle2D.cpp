@@ -10,9 +10,7 @@ void Reticle2D::Init()
 	shader.Init(L"Resources/Shader/SpriteVS.hlsl", L"Resources/Shader/SpritePS.hlsl");
 	pipeline.reset(KGPlin::Create(shader, "Sprite"));
 
-	reticle = std::make_unique<Sprite>();
-	reticle->Init();
-	reticle->SetPipeline(pipeline.get());
+	reticle.reset(Sprite::Create(pipeline.get()));
 }
 
 void Reticle2D::Update(ViewProjection* viewPro_, KMyMath::Vector3 reticle3dPos_)

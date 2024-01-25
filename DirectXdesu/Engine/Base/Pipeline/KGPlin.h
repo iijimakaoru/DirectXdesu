@@ -8,11 +8,9 @@
  * @author 飯島 薫
  */
 
-class KGPlin
-{
+class KGPlin {
 public:
-	 enum BlendMord
-	{
+	enum BlendMord {
 		NONE = 0,
 		ADD,
 		SUB,
@@ -21,7 +19,7 @@ public:
 	};
 
 private:
-	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
+	template<class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
 
 private:
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC piplineDesc;
@@ -46,10 +44,13 @@ private:
 	/// <param name="shaderRegister"></param>
 	/// <param name="registerSpace"></param>
 	/// <param name="shaderVisibility"></param>
-	void SetRootParam(D3D12_ROOT_PARAMETER& rootParam, D3D12_ROOT_PARAMETER_TYPE type, UINT shaderRegister, UINT registerSpace,
-		D3D12_SHADER_VISIBILITY shaderVisibility = D3D12_SHADER_VISIBILITY_ALL);
-	void SetRootParam(D3D12_ROOT_PARAMETER& rootParam, D3D12_ROOT_PARAMETER_TYPE type, D3D12_DESCRIPTOR_RANGE pDescripterRange, UINT numDescripterRanges,
-		D3D12_SHADER_VISIBILITY shaderVisibility = D3D12_SHADER_VISIBILITY_ALL);
+	void SetRootParam(
+	    D3D12_ROOT_PARAMETER& rootParam, D3D12_ROOT_PARAMETER_TYPE type, UINT shaderRegister,
+	    UINT registerSpace, D3D12_SHADER_VISIBILITY shaderVisibility = D3D12_SHADER_VISIBILITY_ALL);
+	void SetRootParam(
+	    D3D12_ROOT_PARAMETER& rootParam, D3D12_ROOT_PARAMETER_TYPE type,
+	    D3D12_DESCRIPTOR_RANGE pDescripterRange, UINT numDescripterRanges,
+	    D3D12_SHADER_VISIBILITY shaderVisibility = D3D12_SHADER_VISIBILITY_ALL);
 
 	/// <summary>
 	/// ルートシグネチャセット
@@ -66,13 +67,6 @@ private:
 	void Blending(D3D12_BLEND_DESC& blenddesc, const int mord = ALPHA);
 
 public:
-	/// <summary>
-	/// パイプライン生成
-	/// </summary>
-	/// <param name="shader"></param>
-	/// <param name="shaderName"></param>
-	void CreatePipelineAll(KShader shader, std::string shaderName = "Null");
-
 	/// <summary>
 	/// 生成
 	/// </summary>
@@ -91,5 +85,12 @@ public:
 	/// 描画設定
 	/// </summary>
 	void Setting();
-};
 
+private:
+	/// <summary>
+	/// パイプライン生成
+	/// </summary>
+	/// <param name="shader"></param>
+	/// <param name="shaderName"></param>
+	void CreatePipelineAll(KShader shader, std::string shaderName = "Null");
+};

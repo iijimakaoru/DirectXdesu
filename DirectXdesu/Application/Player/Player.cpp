@@ -56,22 +56,16 @@ void Player::Init(
 	HP = maxHP;
 
 	// HPバー
-	HPUI = std::make_unique<Sprite>();
-	HPUI->Init();
-	HPUI->SetPipeline(spritePipeline);
+	HPUI.reset(Sprite::Create(spritePipeline));
 
 	// HP減少値バー
-	HPrectUI = std::make_unique<Sprite>();
-	HPrectUI->Init();
-	HPrectUI->SetPipeline(spritePipeline);
+	HPrectUI.reset(Sprite::Create(spritePipeline));
 
 	// HPテクスチャ読み込み
 	hpTex = TextureManager::Load("Resources/texture/white1x1.png");
 
 	// HPゲージ
-	HPBarUI = std::make_unique<Sprite>();
-	HPBarUI->Init();
-	HPBarUI->SetPipeline(spritePipeline);
+	HPBarUI.reset(Sprite::Create(spritePipeline));
 
 	// HPゲージテクスチャ読み込み
 	hpbarTex = TextureManager::Load("Resources/texture/PlayerHPBar2.png");
@@ -85,9 +79,7 @@ void Player::Init(
 	isCrisis = false;
 
 	// ダメージエフェクト
-	damage = std::make_unique<Sprite>();
-	damage->Init();
-	damage->SetPipeline(spritePipeline);
+	damage.reset(Sprite::Create(spritePipeline));
 
 	// ダメージエフェクトテクスチャ読み込み
 	damageTex = TextureManager::Load("Resources/texture/damage.png");
@@ -96,24 +88,18 @@ void Player::Init(
 	dAlpha = 0;
 
 	// 操作説明
-	operation = std::make_unique<Sprite>();
-	operation->Init();
-	operation->SetPipeline(spritePipeline);
+	operation.reset(Sprite::Create(spritePipeline));
 	operationTex = TextureManager::Load("Resources/texture/setumei.png");
 	operationPos = {
 	    KWinApp::GetInstance()->GetWindowSizeW() + 450.0f,
 	    KWinApp::GetInstance()->GetWindowSizeH() + 100.0f};
 
 	// ボムアイコン
-	bomIcon = std::make_unique<Sprite>();
-	bomIcon->Init();
-	bomIcon->SetPipeline(spritePipeline);
+	bomIcon.reset(Sprite::Create(spritePipeline));
 	bomIconTex = TextureManager::Load("Resources/texture/BomIcon.png");
 
 	// ボムクールタイム
-	bomCoolIcon = std::make_unique<Sprite>();
-	bomCoolIcon->Init();
-	bomCoolIcon->SetPipeline(spritePipeline);
+	bomCoolIcon.reset(Sprite::Create(spritePipeline));
 
 	audioManager = AudioManager::GetInstance();
 

@@ -1,8 +1,8 @@
 #pragma once
-#include "Vector3.h"
-#include "KModel.h"
-#include "ViewProjection.h"
 #include "KGPlin.h"
+#include "KModel.h"
+#include "Vector3.h"
+#include "ViewProjection.h"
 
 /**
  * @file KObject3D.h
@@ -10,8 +10,7 @@
  * @author 飯島 薫
  */
 
-struct ConstBufferDataB1
-{
+struct ConstBufferDataB1 {
 	KMyMath::Vector3 ambient;
 	float pad1;
 	KMyMath::Vector3 diffuse;
@@ -20,17 +19,15 @@ struct ConstBufferDataB1
 	float alpha;
 };
 
-struct ConstBufferDataB0
-{
+struct ConstBufferDataB0 {
 	KMyMath::Matrix4 mat;
 };
 
-struct WorldTransfom 
-{
+struct WorldTransfom {
 	// アフィン変換
-	KMyMath::Vector3 scale = { 1,1,1 };
-	KMyMath::Vector3 rot = { 0,0,0 };
-	KMyMath::Vector3 pos = { 0,0,0 };
+	KMyMath::Vector3 scale = {1, 1, 1};
+	KMyMath::Vector3 rot = {0, 0, 0};
+	KMyMath::Vector3 pos = {0, 0, 0};
 
 	// ワールド変換行列
 	KMyMath::Matrix4 matWorld = {};
@@ -39,8 +36,7 @@ struct WorldTransfom
 	const WorldTransfom* parent = nullptr;
 };
 
-class KObject3d
-{
+class KObject3d {
 public:
 	static void StaticInit();
 
@@ -52,7 +48,7 @@ public:
 	/// <returns></returns>
 	static KObject3d* Create(KModel* model_, KGPlin* pipeline_);
 
-public:
+private:
 	// 初期化
 	void Initialize();
 
@@ -68,6 +64,7 @@ public:
 	/// <param name="pipeline_"></param>
 	void SetPipeline(KGPlin* pipeline_);
 
+public:
 	/// <summary>
 	/// トランスフォーム更新
 	/// </summary>
@@ -96,10 +93,7 @@ public:
 	/// <param name="texture"></param>
 	void Draw(TextureData& texData_);
 
-	~KObject3d()
-	{
-		Finalize();
-	}
+	~KObject3d() { Finalize(); }
 
 	void Finalize();
 
@@ -126,7 +120,6 @@ private:
 	Microsoft::WRL::ComPtr<ID3D12Resource> constBuffB1;
 
 private:
-
 	HRESULT result;
 
 	KModel* model = nullptr;
@@ -134,4 +127,3 @@ private:
 	// 3Dオブジェクトの配列
 	WorldTransfom transform;
 };
-

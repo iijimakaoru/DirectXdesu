@@ -12,17 +12,13 @@ void Ground::Init(Player* player_)
 	texData = TextureManager::Load("Resources/texture/haikei.jpg");
 
 	// パイプライン生成
-	pipeline = std::make_unique<KGPlin>();
 	shader.Init(L"Resources/Shader/ObjVS.hlsl", L"Resources/Shader/ObjPS.hlsl");
-	pipeline->CreatePipelineAll(shader, "Obj");
+	pipeline.reset(KGPlin::Create(shader, "Obj"));
 
 	// オブジェクト生成
 	for (size_t i = 0; i < 2; i++)
 	{
-		object3d[i] = std::make_unique<KObject3d>();
-		object3d[i]->Initialize();
-		object3d[i]->SetPipeline(pipeline.get());
-		object3d[i]->LoadModel(model.get());
+		object3d[i].reset(KObject3d::Create(model.get(), pipeline.get()));
 		object3d[i]->SetPos({ 0.0f,-20.0f,0.0f });
 		object3d[i]->SetScale({ 1.0f,1.0f,1.0f });
 	}

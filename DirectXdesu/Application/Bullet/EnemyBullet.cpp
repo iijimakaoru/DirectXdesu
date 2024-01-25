@@ -30,9 +30,6 @@ void EnemyBullet::Init(KModel* model_, KGPlin* pipeline_) {
 	pipeline = pipeline_;
 
 	// オブジェクト生成
-	object3d = std::make_unique<KObject3d>();
-	object3d->Initialize();
-	object3d->SetPipeline(pipeline);
-	object3d->LoadModel(model);
+	object3d.reset(KObject3d::Create(model, pipeline));
 	object3d->SetScale({1.0f, 1.0f, 1.0f});
 }

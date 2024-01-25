@@ -8,9 +8,7 @@ void Warning::Init()
 	shader.Init(L"Resources/Shader/SpriteVS.hlsl", L"Resources/Shader/SpritePS.hlsl");
 	pipeline.reset(KGPlin::Create(shader, "Sprite"));
 
-	warning = std::make_unique<Sprite>();
-	warning->Init();
-	warning->SetPipeline(pipeline.get());
+	warning.reset(Sprite::Create(pipeline.get()));
 
 	warningTime = 150;
 }

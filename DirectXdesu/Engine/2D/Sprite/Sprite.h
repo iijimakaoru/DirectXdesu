@@ -15,12 +15,6 @@ public:
 
 	static Sprite* Create(KGPlin* pipeline_);
 
-	/// <summary>
-	/// 初期化
-	/// </summary>
-	/// <param name="spriteCommon"></param>
-	void Init();
-
 	// 更新
 	void Update(KMyMath::Vector2 pos, KMyMath::Vector2 scale, float rot, KMyMath::Vector4 color_);
 
@@ -52,16 +46,22 @@ public:
 	    KMyMath::Vector2 pos, KMyMath::Vector2 setSize_, float rot, KMyMath::Vector4 color_,
 	    KMyMath::Vector2 anchorPoint_);
 
+	// ポジションゲッター
+	const KMyMath::Vector2 GetPos() const;
+
+private:
+	/// <summary>
+	/// 初期化
+	/// </summary>
+	/// <param name="spriteCommon"></param>
+	void Init();
+
 	/// <summary>
 	/// パイプラインセッター
 	/// </summary>
 	/// <param name="pipeline_"></param>
 	void SetPipeline(KGPlin* pipeline_);
 
-	// ポジションゲッター
-	const KMyMath::Vector2 GetPos() const;
-
-private:
 	// 定数バッファマテリアル
 	void CreateCBMaterial();
 

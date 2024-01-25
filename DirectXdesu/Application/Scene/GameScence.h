@@ -244,8 +244,4 @@ private:
 #pragma endregion
 
 	AudioManager* audioManager;
-
-	std::unique_ptr<Sprite> testDiv;
-	TextureData testDivTex;
-	KMyMath::Vector2 testDivPos;
 };

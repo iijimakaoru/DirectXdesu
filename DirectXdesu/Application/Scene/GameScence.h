@@ -93,16 +93,6 @@ private:
 	// カメラ
 	std::unique_ptr<RailCamera> camera = nullptr;
 
-	// パイプライン
-	std::unique_ptr<KGPlin> objPipeline;
-	std::unique_ptr<KGPlin> spritePipeline;
-	std::unique_ptr<KGPlin> fbxPipeline;
-
-	// シェーダー
-	KShader objShader;
-	KShader spriteShader;
-	KShader fbxShader;
-
 	// プレイヤー
 	std::unique_ptr<Player> player = nullptr;
 	std::unique_ptr<KModel> playerModel;

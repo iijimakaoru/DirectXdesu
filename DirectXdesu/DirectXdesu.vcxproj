@@ -179,6 +179,7 @@
     <ClCompile Include="Engine\Base\BaseScene\SceneChange.cpp" />
     <ClCompile Include="Application\Score\ScoreManager.cpp" />
     <ClCompile Include="Application\GameManager.cpp" />
+    <ClCompile Include="Engine\Base\Pipeline\PipelineManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\BossEnemy\ActState.h" />
@@ -256,6 +257,7 @@
     <ClInclude Include="Engine\Base\BaseScene\SceneChange.h" />
     <ClInclude Include="Application\Score\ScoreManager.h" />
     <ClInclude Include="Application\GameManager.h" />
+    <ClInclude Include="Engine\Base\Pipeline\PipelineManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DirectXdesu.rc" />

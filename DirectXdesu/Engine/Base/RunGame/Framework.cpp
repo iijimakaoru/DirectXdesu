@@ -2,6 +2,7 @@
 #include "BaseScene.h"
 #include "ParticleManager.h"
 #include "Sprite.h"
+#include "PipelineManager.h"
 
 void Framework::Init() {
 	// FBX初期化
@@ -23,6 +24,9 @@ void Framework::Init() {
 	// 
 	audioManager = AudioManager::GetInstance();
 	audioManager->Init();
+
+	// パイプライン生成
+	PipelineManager::GetInstance()->Init();
 
 	// 静的初期化
 	Sprite::StaticInit();

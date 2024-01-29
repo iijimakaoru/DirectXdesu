@@ -24,6 +24,8 @@
 
 #include "GameManager.h"
 
+#include "PipelineManager.h"
+
 GameScence::~GameScence() { Final(); };
 
 void GameScence::LoadResources() {
@@ -44,19 +46,6 @@ void GameScence::LoadResources() {
 	playersBulletModel->CreateModel();
 	skyBoxModel = std::make_unique<MtlObj>("SkyBox");
 	skyBoxModel->CreateModel();
-
-	// パイプライン
-	// Obj
-	objShader.Init(L"Resources/Shader/ObjVS.hlsl", L"Resources/Shader/ObjPS.hlsl");
-	objPipeline.reset(KGPlin::Create(objShader, "Obj"));
-
-	// Sprite
-	spriteShader.Init(L"Resources/Shader/SpriteVS.hlsl", L"Resources/Shader/SpritePS.hlsl");
-	spritePipeline.reset(KGPlin::Create(spriteShader, "Sprite"));
-
-	// fbx
-	fbxShader.Init(L"Resources/Shader/FbxVS.hlsl", L"Resources/Shader/FbxPS.hlsl");
-	fbxPipeline.reset(KGPlin::Create(fbxShader, "Fbx"));
 }
 
 void GameScence::Init() {
@@ -67,8 +56,9 @@ void GameScence::Init() {
 
 	// プレイヤー生成
 	float playersHPInit = 50.0f;
-	player.reset(
-	    Player::Create(playerModel.get(), objPipeline.get(), playersHPInit, spritePipeline.get()));
+	player.reset(Player::Create(
+	    playerModel.get(), PipelineManager::GetInstance()->GetObjPipeline(), playersHPInit,
+	    PipelineManager::GetInstance()->GetSpritePipeline()));
 
 	// カメラ生成
 	camera = std::make_unique<RailCamera>();
@@ -78,14 +68,14 @@ void GameScence::Init() {
 
 	// カメラ初期化
 	camera->Init(player.get(), {0.0f, 0.0f, -200.0f});
-	//camera->Init(player.get(), {0.0f, 0.0f, 450.0f});
+	// camera->Init(player.get(), {0.0f, 0.0f, 450.0f});
 
 	// エネミーマネージャー生成
 	enemyManager.reset(EnemyManager::Create(
 	    "Resources/csv/enemyPop.csv", // ステージのcsvを読み込む
 	    player.get(),                 // プレイヤー情報
 	    mobEnemysModel.get(),         // モデル渡し(マネージャー内で作るか悩み中)
-	    objPipeline.get()             // パイプライン渡し
+	    PipelineManager::GetInstance()->GetObjPipeline() // パイプライン渡し
 	    ));
 
 	// 地面
@@ -93,11 +83,12 @@ void GameScence::Init() {
 	ground->Init(player.get());
 
 	// スカイボックス
-	skyBox.reset(SkyBox::Create(skyBoxModel.get(), objPipeline.get(), 50));
+	skyBox.reset(
+	    SkyBox::Create(skyBoxModel.get(), PipelineManager::GetInstance()->GetObjPipeline(), 50));
 
 	// 弾マネージャー
 	bulletManager = BulletManager::GetInstance();
-	bulletManager->Init(objPipeline.get());
+	bulletManager->Init(PipelineManager::GetInstance()->GetObjPipeline());
 
 	// パーティクル
 	particleManager = ParticleManager::GetInstance();
@@ -110,22 +101,22 @@ void GameScence::Init() {
 	billManager->Init();
 
 	for (size_t i = 0; i < 2; i++) {
-		movieBar[i].reset(Sprite::Create(spritePipeline.get()));
+		movieBar[i].reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
 	}
 
 	isCallDeadCamera = false;
 
 	isStageStart = true;
 
-	poseBack.reset(Sprite::Create(spritePipeline.get()));
+	poseBack.reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
 
-	selectBar.reset(Sprite::Create(spritePipeline.get()));
+	selectBar.reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
 
-	poseTexS.reset(Sprite::Create(spritePipeline.get()));
+	poseTexS.reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
 
-	backTitleS.reset(Sprite::Create(spritePipeline.get()));
+	backTitleS.reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
 
-	operationS.reset(Sprite::Create(spritePipeline.get()));
+	operationS.reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
 
 	ScoreManager::GetInstance()->Init();
 	ScoreManager::GetInstance()->ResetScore();
@@ -135,7 +126,7 @@ void GameScence::Init() {
 
 	audioManager->SoundLoadWave("BattleBGM.wav");
 
-	audioManager->SoundPlayWave("BattleBGM.wav",0.25f,true);
+	audioManager->SoundPlayWave("BattleBGM.wav", 0.25f, true);
 }
 
 void GameScence::Update() {
@@ -495,7 +486,8 @@ void GameScence::CheckAllCollisions() {
 
 		for (const std::unique_ptr<Bom>& bom : boms) {
 			// 弾が無いorボスがいないorボスが死んでるorボスバトルが始まってなかったorプレイヤーが死んでいたらスキップ
-			if (!bom || !blaster || blaster->GetIsDead() || !isBossBattle || player->GetIsDead() || bom->GetBomHit()) {
+			if (!bom || !blaster || blaster->GetIsDead() || !isBossBattle || player->GetIsDead() ||
+			    bom->GetBomHit()) {
 				return;
 			}
 
@@ -847,7 +839,9 @@ void GameScence::BossAppearMovie() {
 			const KMyMath::Vector3 bossBasePos = {0.0f, 120.0f, bossBattleStartPos + bossDistance};
 
 			// 生成
-			blaster.reset(Blaster::Create(objPipeline.get(), bossBasePos, spritePipeline.get()));
+			blaster.reset(Blaster::Create(
+			    PipelineManager::GetInstance()->GetObjPipeline(), bossBasePos,
+			    PipelineManager::GetInstance()->GetSpritePipeline()));
 
 			// すべての弾削除
 			bulletManager->AllBulletDelete();

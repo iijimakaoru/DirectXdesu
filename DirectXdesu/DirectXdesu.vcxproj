@@ -181,6 +181,7 @@
     <ClCompile Include="Application\GameManager.cpp" />
     <ClCompile Include="Engine\Base\Pipeline\PipelineManager.cpp" />
     <ClCompile Include="Engine\ResourceManager.cpp" />
+    <ClCompile Include="TextureConverter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\BossEnemy\ActState.h" />
@@ -260,6 +261,7 @@
     <ClInclude Include="Application\GameManager.h" />
     <ClInclude Include="Engine\Base\Pipeline\PipelineManager.h" />
     <ClInclude Include="Engine\ResourceManager.h" />
+    <ClInclude Include="TextureConverter.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DirectXdesu.rc" />

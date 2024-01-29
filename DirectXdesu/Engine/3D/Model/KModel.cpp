@@ -216,8 +216,8 @@ Line::~Line()
 {
 }
 
-void KModel::LoadMaterial(const std::string& directoryPath, const std::string& filename)
-{
+void KModel::LoadMaterial(
+    const std::string& directoryPath, const std::string& filename) {
 	// ファイルストリーム
 	std::ifstream file;
 	// マテリアルファイルを開く

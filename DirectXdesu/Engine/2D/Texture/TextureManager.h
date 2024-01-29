@@ -47,7 +47,7 @@ public:
 	/// </summary>
 	/// <param name="fileName"></param>
 	/// <returns></returns>
-	TextureData LoadTexture(const std::string& fileName);
+	TextureData LoadTexture(const std::string& fileName, const std::string& fileExit = nullptr);
 
 	TextureData LoadDivTexture(
 	    const std::string& fileName_, KMyMath::Vector2 leftTop_, KMyMath::Vector2 divSize_);
@@ -57,7 +57,7 @@ public:
 	/// </summary>
 	/// <param name="fileName"></param>
 	/// <returns></returns>
-	static TextureData Load(const std::string& fileName);
+	static TextureData Load(const std::string& fileName, const std::string& fileExit = nullptr);
 
 	// 解放
 	void Delete();

@@ -16,10 +16,10 @@ GameOverScene::~GameOverScene()
 void GameOverScene::LoadResources()
 {
 	// ゲームオーバーテクスチャ
-	overTex = TextureManager::Load("Resources/texture/kariGameOver.png");
+	overTex = TextureManager::Load("kariGameOver", ".png");
 
 	// プッシュAテクスチャ
-	pushATex = TextureManager::Load("Resources/texture/kariNextScene.png");
+	pushATex = TextureManager::Load("kariNextScene", ".png");
 }
 
 void GameOverScene::Init()

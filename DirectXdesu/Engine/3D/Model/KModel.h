@@ -28,6 +28,7 @@ public:
 		float alpha;
 		// テクスチャファイル名
 		std::string textureFilename;
+		std::string textureExit;
 		// コンストラクタ
 		ObjMaterialInfo();
 	};

@@ -4,7 +4,7 @@
 
 void Warning::Init()
 {
-	warningTex = TextureManager::Load("Resources/texture/white1x1.png");
+	warningTex = TextureManager::Load("white1x1", ".png");
 
 	warning.reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
 

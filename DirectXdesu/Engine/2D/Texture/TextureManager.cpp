@@ -2,7 +2,7 @@
 #include "KDirectXCommon.h"
 
 TextureManager* TextureManager::textureManager = nullptr;
-std::string TextureManager::DefaultTextureDirectoryPath = "Resource/";
+std::string TextureManager::DefaultTextureDirectoryPath = "Resource/texture/";
 
 void TextureManager::Init() {
 	HRESULT result;
@@ -29,7 +29,7 @@ void TextureManager::Init() {
 	textureHeapProp.MemoryPoolPreference = D3D12_MEMORY_POOL_L0;
 }
 
-TextureData TextureManager::LoadTexture(const std::string& fileName) {
+TextureData TextureManager::LoadTexture(const std::string& fileName, const std::string& fileExit) {
 	HRESULT result;
 
 	if (texCount > 1024) {
@@ -46,6 +46,8 @@ TextureData TextureManager::LoadTexture(const std::string& fileName) {
 	data.descriptorRange = descriptorRange;
 
 	wchar_t wfilepath[256];
+
+	const std::string fullFileName = DefaultTextureDirectoryPath + fileName + fileExit;
 
 	MultiByteToWideChar(CP_ACP, 0, fileName.c_str(), -1, wfilepath, _countof(wfilepath));
 
@@ -138,8 +140,8 @@ TextureData TextureManager::LoadDivTexture(
 	return data;
 }
 
-TextureData TextureManager::Load(const std::string& fileName) {
-	return TextureManager::GetInstance()->LoadTexture(fileName);
+TextureData TextureManager::Load(const std::string& fileName, const std::string& fileExit) {
+	return TextureManager::GetInstance()->LoadTexture(fileName, fileExit);
 }
 
 Microsoft::WRL::ComPtr<ID3D12Resource> TextureManager::CreateTexBuff(

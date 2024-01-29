@@ -5,7 +5,7 @@
 void Reticle2D::Init()
 {
 	// テクスチャ生成
-	texData = TextureManager::Load("Resources/texture/reticle.png");
+	texData = TextureManager::Load("reticle", ".png");
 
 	reticle.reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
 }

@@ -6,7 +6,7 @@ SceneChange* SceneChange::sceneChange = nullptr;
 
 void SceneChange::Init()
 {
-	blackTex = TextureManager::Load("Resources/texture/white1x1.png");
+	blackTex = TextureManager::Load("white1x1", ".png");
 
 	black.reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
 }

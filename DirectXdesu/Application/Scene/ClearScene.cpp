@@ -15,38 +15,38 @@ ClearScene::~ClearScene() { Final(); }
 
 void ClearScene::LoadResources() {
 	// リザルトテクスチャ
-	resultTex = TextureManager::Load("Resources/texture/ResultText.png");
+	resultTex = TextureManager::Load("ResultText", ".png");
 
 	// スコアボードテクスチャ
-	scoreBordTex = TextureManager::Load("Resources/texture/ScoreBord.png");
+	scoreBordTex = TextureManager::Load("ScoreBord", ".png");
 
 	// プッシュAテクスチャ
-	pushATex = TextureManager::Load("Resources/texture/kariNextScene.png");
+	pushATex = TextureManager::Load("kariNextScene", ".png");
 
 	// 背景テクスチャ
-	backTex = TextureManager::Load("Resources/texture/ResultBack.png");
+	backTex = TextureManager::Load("ResultBack", ".png");
 
-	gameScoreTex = TextureManager::Load("Resources/texture/LevelScore.png");
+	gameScoreTex = TextureManager::Load("LevelScore", ".png");
 
-	enemyScoreTex = TextureManager::Load("Resources/texture/EnemyBonus.png");
+	enemyScoreTex = TextureManager::Load("EnemyBonus", ".png");
 
-	minDamageScoreTex = TextureManager::Load("Resources/texture/MinDamageBonus.png");
+	minDamageScoreTex = TextureManager::Load("MinDamageBonus", ".png");
 
-	bossTimeScoreTex = TextureManager::Load("Resources/texture/BossTimeBonus.png");
+	bossTimeScoreTex = TextureManager::Load("BossTimeBonus", ".png");
 
-	totalTex = TextureManager::Load("Resources/texture/Total.png");
+	totalTex = TextureManager::Load("Total", ".png");
 
 	// 数字読み込み
-	numTexs[0] = TextureManager::Load("Resources/texture/Num0.png");
-	numTexs[1] = TextureManager::Load("Resources/texture/Num1.png");
-	numTexs[2] = TextureManager::Load("Resources/texture/Num2.png");
-	numTexs[3] = TextureManager::Load("Resources/texture/Num3.png");
-	numTexs[4] = TextureManager::Load("Resources/texture/Num4.png");
-	numTexs[5] = TextureManager::Load("Resources/texture/Num5.png");
-	numTexs[6] = TextureManager::Load("Resources/texture/Num6.png");
-	numTexs[7] = TextureManager::Load("Resources/texture/Num7.png");
-	numTexs[8] = TextureManager::Load("Resources/texture/Num8.png");
-	numTexs[9] = TextureManager::Load("Resources/texture/Num9.png");
+	numTexs[0] = TextureManager::Load("Num0", ".png");
+	numTexs[1] = TextureManager::Load("Num1", ".png");
+	numTexs[2] = TextureManager::Load("Num2", ".png");
+	numTexs[3] = TextureManager::Load("Num3", ".png");
+	numTexs[4] = TextureManager::Load("Num4", ".png");
+	numTexs[5] = TextureManager::Load("Num5", ".png");
+	numTexs[6] = TextureManager::Load("Num6", ".png");
+	numTexs[7] = TextureManager::Load("Num7", ".png");
+	numTexs[8] = TextureManager::Load("Num8", ".png");
+	numTexs[9] = TextureManager::Load("Num9", ".png");
 }
 
 void ClearScene::Init() {

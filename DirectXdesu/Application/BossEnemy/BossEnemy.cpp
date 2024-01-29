@@ -27,11 +27,11 @@ void BossEnemy::Init(KGPlin* pipeline_, const KMyMath::Vector3& initPos_, KGPlin
 
 	HPrectUI.reset(Sprite::Create(spritePipeline));
 
-	hpTex = TextureManager::Load("Resources/texture/white1x1.png");
+	hpTex = TextureManager::Load("white1x1", ".png");
 
 	HPBarUI.reset(Sprite::Create(spritePipeline));
 
-	hpbarTex = TextureManager::Load("Resources/texture/BossHPBar3.png");
+	hpbarTex = TextureManager::Load("BossHPBar3", ".png");
 
 	isHPE = true;
 

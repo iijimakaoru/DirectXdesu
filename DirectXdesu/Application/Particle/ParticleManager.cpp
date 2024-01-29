@@ -231,8 +231,8 @@ ParticleManager* ParticleManager::parthicleManager = nullptr;
 void ParticleManager::Init()
 {
 	// テクスチャ読み込み
-	textureData1 = TextureManager::Load("Resources/texture/mario.jpg");
-	textureData2 = TextureManager::Load("Resources/texture/kariPlayerColor.png");
+	textureData1 = TextureManager::Load("mario", ".jpg");
+	textureData2 = TextureManager::Load("kariPlayerColor", ".png");
 
 	// パーティクル
 	particles1.reset(Particles::Create(textureData1));
@@ -375,7 +375,7 @@ void ObjParticleManager::Init()
 	model->CreateModel();
 
 	// テクスチャ
-	textureData1 = TextureManager::Load("Resources/texture/kariPlayerColor.png");
+	textureData1 = TextureManager::Load("kariPlayerColor", ".png");
 }
 
 void ObjParticleManager::Update(ViewProjection* viewPro)

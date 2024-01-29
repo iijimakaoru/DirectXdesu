@@ -30,12 +30,12 @@ GameScence::~GameScence() { Final(); };
 
 void GameScence::LoadResources() {
 	// テクスチャ
-	textureData = TextureManager::Load("Resources/texture/mario.jpg");
-	textureData2 = TextureManager::Load("Resources/texture/kariPlayerColor.png");
-	movieBarTex = TextureManager::Load("Resources/texture/white1x1.png");
-	poseTexT = TextureManager::Load("Resources/texture/pose.png");
-	backTitleT = TextureManager::Load("Resources/texture/BackTitle.png");
-	operationT = TextureManager::Load("Resources/texture/Operation.png");
+	textureData = TextureManager::Load("mario", ".jpg");
+	textureData2 = TextureManager::Load("kariPlayerColor", ".png");
+	movieBarTex = TextureManager::Load("white1x1", ".png");
+	poseTexT = TextureManager::Load("pose", ".png");
+	backTitleT = TextureManager::Load("BackTitle", ".png");
+	operationT = TextureManager::Load("Operation", ".png");
 
 	// モデル
 	playerModel = std::make_unique<MtlObj>("BattleShip");

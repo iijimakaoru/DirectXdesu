@@ -62,13 +62,13 @@ void Player::Init(
 	HPrectUI.reset(Sprite::Create(spritePipeline));
 
 	// HPテクスチャ読み込み
-	hpTex = TextureManager::Load("Resources/texture/white1x1.png");
+	hpTex = TextureManager::Load("white1x1", ".png");
 
 	// HPゲージ
 	HPBarUI.reset(Sprite::Create(spritePipeline));
 
 	// HPゲージテクスチャ読み込み
-	hpbarTex = TextureManager::Load("Resources/texture/PlayerHPBar2.png");
+	hpbarTex = TextureManager::Load("PlayerHPBar2", ".png");
 
 	// 死亡フラグ
 	isDead = false;
@@ -82,21 +82,21 @@ void Player::Init(
 	damage.reset(Sprite::Create(spritePipeline));
 
 	// ダメージエフェクトテクスチャ読み込み
-	damageTex = TextureManager::Load("Resources/texture/damage.png");
+	damageTex = TextureManager::Load("damage", ".png");
 
 	// ダメージエフェクトの透過値
 	dAlpha = 0;
 
 	// 操作説明
 	operation.reset(Sprite::Create(spritePipeline));
-	operationTex = TextureManager::Load("Resources/texture/setumei.png");
+	operationTex = TextureManager::Load("setumei", ".png");
 	operationPos = {
 	    KWinApp::GetInstance()->GetWindowSizeW() + 450.0f,
 	    KWinApp::GetInstance()->GetWindowSizeH() + 100.0f};
 
 	// ボムアイコン
 	bomIcon.reset(Sprite::Create(spritePipeline));
-	bomIconTex = TextureManager::Load("Resources/texture/BomIcon.png");
+	bomIconTex = TextureManager::Load("BomIcon", ".png");
 
 	// ボムクールタイム
 	bomCoolIcon.reset(Sprite::Create(spritePipeline));

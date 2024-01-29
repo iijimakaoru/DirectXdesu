@@ -9,14 +9,11 @@
 #include <imgui.h>
 
 #include "ScoreManager.h"
+#include "PipelineManager.h"
 
 ClearScene::~ClearScene() { Final(); }
 
 void ClearScene::LoadResources() {
-	// パイプライン
-	spriteShader.Init(L"Resources/Shader/SpriteVS.hlsl", L"Resources/Shader/SpritePS.hlsl");
-	spritePipeline.reset(KGPlin::Create(spriteShader, "Sprite"));
-
 	// リザルトテクスチャ
 	resultTex = TextureManager::Load("Resources/texture/ResultText.png");
 
@@ -65,46 +62,48 @@ void ClearScene::Init() {
 	sceneManager = SceneManager::GetInstance();
 
 	// タイトル名
-	result.reset(Sprite::Create(spritePipeline.get()));
+	result.reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
 
 	// スコアボード
-	scoreBord.reset(Sprite::Create(spritePipeline.get()));
+	scoreBord.reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
 
 	// プッシュA
-	pushA.reset(Sprite::Create(spritePipeline.get()));
+	pushA.reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
 	scoreBordSize = {0.0f, 0.01f};
 
 	// 背景
 	for (size_t i = 0; i < 2; i++) {
-		back[i].reset(Sprite::Create(spritePipeline.get()));
+		back[i].reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
 	}
 
 	backPos[0] = {width / 2.0f, height / 2.0f};
 	backPos[1] = {backPos[0].x + width, backPos[0].y};
 
-	gameScore.reset(Sprite::Create(spritePipeline.get()));
+	gameScore.reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
 	for (size_t i = 0; i < 6; i++) {
-		gameScoreS[i].reset(Sprite::Create(spritePipeline.get()));
+		gameScoreS[i].reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
 	}
 
-	enemyScore.reset(Sprite::Create(spritePipeline.get()));
+	enemyScore.reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
 	for (size_t i = 0; i < 6; i++) {
-		enemyScoreS[i].reset(Sprite::Create(spritePipeline.get()));
+		enemyScoreS[i].reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
 	}
 
-	minDamageScore.reset(Sprite::Create(spritePipeline.get()));
+	minDamageScore.reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
 	for (size_t i = 0; i < 6; i++) {
-		minDamageScoreS[i].reset(Sprite::Create(spritePipeline.get()));
+		minDamageScoreS[i].reset(
+		    Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
 	}
 
-	bossTimeScore.reset(Sprite::Create(spritePipeline.get()));
+	bossTimeScore.reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
 	for (size_t i = 0; i < 6; i++) {
-		bossTimeScoreS[i].reset(Sprite::Create(spritePipeline.get()));
+		bossTimeScoreS[i].reset(
+		    Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
 	}
 
-	total.reset(Sprite::Create(spritePipeline.get()));
+	total.reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
 	for (size_t i = 0; i < 6; i++) {
-		totalS[i].reset(Sprite::Create(spritePipeline.get()));
+		totalS[i].reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
 	}
 
 	isGoScene = false;

@@ -1,14 +1,12 @@
 #include "Warning.h"
 #include "KWinApp.h"
+#include "PipelineManager.h"
 
 void Warning::Init()
 {
 	warningTex = TextureManager::Load("Resources/texture/white1x1.png");
 
-	shader.Init(L"Resources/Shader/SpriteVS.hlsl", L"Resources/Shader/SpritePS.hlsl");
-	pipeline.reset(KGPlin::Create(shader, "Sprite"));
-
-	warning.reset(Sprite::Create(pipeline.get()));
+	warning.reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
 
 	warningTime = 150;
 }

@@ -31,12 +31,6 @@ protected:
 	// スプライト
 	std::unique_ptr<Sprite> reticle = nullptr;
 
-	// パイプライン
-	std::unique_ptr<KGPlin> pipeline;
-
-	// シェーダー
-	KShader shader;
-
 	// テクスチャ
 	TextureData texData;
 

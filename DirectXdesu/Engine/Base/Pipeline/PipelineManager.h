@@ -17,15 +17,18 @@ public:
 	KGPlin* GetObjPipeline();
 	KGPlin* GetSpritePipeline();
 	KGPlin* GetFbxPipeline();
+	KGPlin* GetPostPipeline();
 
 private:
 	// パイプライン
 	std::unique_ptr<KGPlin> objPipeline;
 	std::unique_ptr<KGPlin> spritePipeline;
 	std::unique_ptr<KGPlin> fbxPipeline;
+	std::unique_ptr<KGPlin> postPipeline;
 
 	// シェーダー
 	KShader objShader;
 	KShader spriteShader;
 	KShader fbxShader;
+	KShader postShader;
 };

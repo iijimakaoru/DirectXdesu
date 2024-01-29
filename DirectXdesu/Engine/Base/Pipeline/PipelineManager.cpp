@@ -18,6 +18,10 @@ void PipelineManager::Init() {
 	// fbx
 	fbxShader.Init(L"Resources/Shader/FbxVS.hlsl", L"Resources/Shader/FbxPS.hlsl");
 	fbxPipeline.reset(KGPlin::Create(fbxShader, "Fbx"));
+
+	// post
+	postShader.Init(L"Resources/Shader/PostEffectVS.hlsl", L"Resources/Shader/PostEffectPS.hlsl");
+	postPipeline.reset(KGPlin::Create(postShader, "PostEffect"));
 }
 
 KGPlin* PipelineManager::GetObjPipeline() { return objPipeline.get(); }
@@ -25,3 +29,5 @@ KGPlin* PipelineManager::GetObjPipeline() { return objPipeline.get(); }
 KGPlin* PipelineManager::GetSpritePipeline() { return spritePipeline.get(); }
 
 KGPlin* PipelineManager::GetFbxPipeline() { return fbxPipeline.get(); }
+
+KGPlin* PipelineManager::GetPostPipeline() { return postPipeline.get(); }

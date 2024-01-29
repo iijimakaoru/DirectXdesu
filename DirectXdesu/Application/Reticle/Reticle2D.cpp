@@ -1,16 +1,13 @@
 #include "Reticle2D.h"
 #include "KWinApp.h"
+#include "PipelineManager.h"
 
 void Reticle2D::Init()
 {
 	// テクスチャ生成
 	texData = TextureManager::Load("Resources/texture/reticle.png");
 
-	// パイプライン生成
-	shader.Init(L"Resources/Shader/SpriteVS.hlsl", L"Resources/Shader/SpritePS.hlsl");
-	pipeline.reset(KGPlin::Create(shader, "Sprite"));
-
-	reticle.reset(Sprite::Create(pipeline.get()));
+	reticle.reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
 }
 
 void Reticle2D::Update(ViewProjection* viewPro_, KMyMath::Vector3 reticle3dPos_)

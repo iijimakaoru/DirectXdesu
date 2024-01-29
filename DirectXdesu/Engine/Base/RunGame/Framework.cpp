@@ -44,14 +44,10 @@ void Framework::Init() {
 	// Imgui初期化
 	imguiMane.Init();
 
-	// Spriteパイプライン
-	spriteShader.Init(L"Resources/Shader/PostEffectVS.hlsl", L"Resources/Shader/PostEffectPS.hlsl");
-	spritePipeline.reset(KGPlin::Create(spriteShader, "PostEffect"));
-
 	// ポストエフェクトテスト
 	postEffect = std::make_unique<PostEffect>();
 	postEffect->Init();
-	postEffect->SetPipeline(spritePipeline.get());
+	postEffect->SetPipeline(PipelineManager::GetInstance()->GetPostPipeline());
 
 	sceneChange = SceneChange::GetInstance();
 	sceneChange->Init();

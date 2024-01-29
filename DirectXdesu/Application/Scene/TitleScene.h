@@ -44,12 +44,6 @@ private:
 	// カメラ
 	std::unique_ptr<TitleCamera> camera = nullptr;
 
-	// パイプライン
-	std::unique_ptr<KGPlin> spritePipeline = nullptr;
-
-	// シェーダー
-	KShader spriteShader;
-
 	// タイトルスプライト
 	std::unique_ptr<Sprite> titleName = nullptr;
 	TextureData titleTex;
@@ -94,10 +88,6 @@ private:
 	// モデル
 	std::unique_ptr<KModel> skyDomeModel = nullptr;
 #pragma endregion
-
-	// パイプライン
-	std::unique_ptr<KGPlin> objPipeline;
-	KShader objShader;
 
 	// 画面サイズ
 	const float width = static_cast<float>(KWinApp::GetInstance()->GetWindowSizeW());

@@ -121,9 +121,6 @@ private:
 	std::unique_ptr<Sprite> bonusGage;
 	TextureData bonusGageTex;
 
-	std::unique_ptr<KGPlin> spritePipeline;
-	KShader spriteShader;
-
 	/// <summary>
 	/// スコアのやつ(ゴリ押し)
 	/// </summary>

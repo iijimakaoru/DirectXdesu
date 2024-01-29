@@ -9,6 +9,8 @@
 
 #include "Ease.h"
 
+#include "PipelineManager.h"
+
 TitleScene::~TitleScene()
 {
 	Final();
@@ -16,13 +18,6 @@ TitleScene::~TitleScene()
 
 void TitleScene::LoadResources()
 {
-	// パイプライン
-	spriteShader.Init(L"Resources/Shader/SpriteVS.hlsl", L"Resources/Shader/SpritePS.hlsl");
-	spritePipeline.reset(KGPlin::Create(spriteShader, "Sprite"));
-
-	objShader.Init(L"Resources/Shader/ObjVS.hlsl", L"Resources/Shader/ObjPS.hlsl");
-	objPipeline.reset(KGPlin::Create(objShader, "Obj"));
-
 	// タイトル名テクスチャ
 	titleTex = TextureManager::Load("Resources/texture/kariTitle.png");
 	mesiTex = TextureManager::Load("Resources/texture/MESI.png");
@@ -58,30 +53,32 @@ void TitleScene::Init()
 	sceneManager = SceneManager::GetInstance();
 
 	// タイトル名
-	titleName.reset(Sprite::Create(spritePipeline.get()));
+	titleName.reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
 	titlePos = { width / 2 ,height * 1 / 3 };
 
-	mesi.reset(Sprite::Create(spritePipeline.get()));
+	mesi.reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
 	
-	shooter.reset(Sprite::Create(spritePipeline.get()));
+	shooter.reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
 	shooterScale = { 1.0f,1.0f };
 
-	mold.reset(Sprite::Create(spritePipeline.get()));
+	mold.reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
 	moldScale = { 1.6f,1.6f };
 
 	// プッシュA
-	pushA.reset(Sprite::Create(spritePipeline.get()));
+	pushA.reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
 	pushAPos = { width / 2, height * 4 / 5 };
 
 	// オブジェクト生成
-	object3d.reset(KObject3d::Create(model.get(), objPipeline.get()));
+	object3d.reset(
+	    KObject3d::Create(model.get(), PipelineManager::GetInstance()->GetObjPipeline()));
 	object3d->SetScale({ 0.0f,0.0f,0.0f });
 
-	skyDome.reset(KObject3d::Create(skyDomeModel.get(), objPipeline.get()));
+	skyDome.reset(
+	    KObject3d::Create(skyDomeModel.get(), PipelineManager::GetInstance()->GetObjPipeline()));
 	skyDome->SetScale({ 200.0f,200.0f,200.0f });
 
 	// フラッシュ
-	flash.reset(Sprite::Create(spritePipeline.get()));
+	flash.reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
 
 	flashAlpha = 0;
 

@@ -50,12 +50,6 @@ private:
 	// テクスチャ
 	TextureData blackTex;
 
-	// パイプライン
-	std::unique_ptr<KGPlin> pipeline = nullptr;
-
-	// シェーダー
-	KShader shader;
-
 	// 暗転時間
 	int32_t inTimer = 0;
 	int32_t inTime = 30;

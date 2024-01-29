@@ -1,6 +1,7 @@
 #include "ScoreManager.h"
 #include "Ease.h"
 #include "ImguiManager.h"
+#include "PipelineManager.h"
 
 ScoreManager* ScoreManager::GetInstance() {
 	static ScoreManager instance;
@@ -8,23 +9,19 @@ ScoreManager* ScoreManager::GetInstance() {
 }
 
 void ScoreManager::Init() {
-	// Sprite
-	spriteShader.Init(L"Resources/Shader/SpriteVS.hlsl", L"Resources/Shader/SpritePS.hlsl");
-	spritePipeline.reset(KGPlin::Create(spriteShader, "Sprite"));
-
 	// スコアスプライトズ
 	for (size_t i = 0; i < 6; i++) {
-		score[i].reset(Sprite::Create(spritePipeline.get()));
+		score[i].reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
 	}
 
 	// 加算スコアスプライトズ
 	for (size_t i = 0; i < 4; i++) {
-		addScore[i].reset(Sprite::Create(spritePipeline.get()));
+		addScore[i].reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
 	}
 
 	// ボーナスカウントスプライトズ
 	for (size_t i = 0; i < 2; i++) {
-		bonusCountS[i].reset(Sprite::Create(spritePipeline.get()));
+		bonusCountS[i].reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
 	}
 
 	// 数字読み込み
@@ -40,23 +37,23 @@ void ScoreManager::Init() {
 	numTexs[9] = TextureManager::Load("Resources/texture/Num9.png");
 
 	// 「Score」文字
-	scores.reset(Sprite::Create(spritePipeline.get()));
+	scores.reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
 	scoresTex = TextureManager::Load("Resources/texture/ScoreTex.png");
 
 	// 「HIT」文字
-	hits.reset(Sprite::Create(spritePipeline.get()));
+	hits.reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
 	hitsTex = TextureManager::Load("Resources/texture/HitTex.png");
 
 	// 「X」文字
-	xS.reset(Sprite::Create(spritePipeline.get()));
+	xS.reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
 	xTex = TextureManager::Load("Resources/texture/XTex.png");
 
 	// ボーナス時間バースプライト
-	bonusBar.reset(Sprite::Create(spritePipeline.get()));
+	bonusBar.reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
 	bonusBarTex = TextureManager::Load("Resources/texture/scoreBonusBar.png");
 
 	// ボーナス時間ゲージスプライト
-	bonusGage.reset(Sprite::Create(spritePipeline.get()));
+	bonusGage.reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
 	bonusGageTex = TextureManager::Load("Resources/texture/white1x1.png");
 }
 

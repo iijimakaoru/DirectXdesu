@@ -30,12 +30,6 @@ private:
 	// テクスチャ
 	TextureData warningTex;
 
-	// パイプライン
-	std::unique_ptr<KGPlin> pipeline = nullptr;
-
-	// シェーダー
-	KShader shader;
-
 	// 警告時間
 	int32_t warningTimer = 0;
 	int32_t warningTime = 0;

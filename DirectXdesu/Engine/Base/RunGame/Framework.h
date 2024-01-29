@@ -7,8 +7,6 @@
 #include "ImguiManager.h"
 #include "ASceneFactory.h"
 #include "PostEffect.h"
-#include "KGPlin.h"
-#include "KShader.h"
 #include "TextureManager.h"
 #include "SceneChange.h"
 
@@ -62,12 +60,6 @@ protected:
 	ASceneFactory* sceneFactory = nullptr;
 
 	ImguiManager imguiMane;
-
-	// パイプライン
-	std::unique_ptr<KGPlin> spritePipeline;
-
-	// シェーダー
-	KShader spriteShader;
 
 	// ポストエフェクト
 	std::unique_ptr<PostEffect> postEffect = nullptr;

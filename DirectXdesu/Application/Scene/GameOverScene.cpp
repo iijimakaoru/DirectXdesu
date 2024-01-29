@@ -6,6 +6,8 @@
 
 #include <imgui.h>
 
+#include "PipelineManager.h"
+
 GameOverScene::~GameOverScene()
 {
 	Final();
@@ -13,10 +15,6 @@ GameOverScene::~GameOverScene()
 
 void GameOverScene::LoadResources()
 {
-	// パイプライン
-	spriteShader.Init(L"Resources/Shader/SpriteVS.hlsl", L"Resources/Shader/SpritePS.hlsl");
-	spritePipeline.reset(KGPlin::Create(spriteShader, "Sprite"));
-
 	// ゲームオーバーテクスチャ
 	overTex = TextureManager::Load("Resources/texture/kariGameOver.png");
 
@@ -35,10 +33,10 @@ void GameOverScene::Init()
 	sceneManager = SceneManager::GetInstance();
 
 	// タイトル名
-	over.reset(Sprite::Create(spritePipeline.get()));
+	over.reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
 
 	// プッシュA
-	pushA.reset(Sprite::Create(spritePipeline.get()));
+	pushA.reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
 }
 
 void GameOverScene::Update()

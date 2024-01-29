@@ -3,6 +3,7 @@
 #include "ParticleManager.h"
 #include "Sprite.h"
 #include "PipelineManager.h"
+#include "ResourceManager.h"
 
 void Framework::Init() {
 	// FBX初期化
@@ -38,6 +39,10 @@ void Framework::Init() {
 	// テクスチャマネージャー初期化
 	textureManager = TextureManager::GetInstance();
 	textureManager->Init();
+
+	// リソース読み込み
+	ResourceManager::GetInstance()->Init();
+
 
 	Particles::StaticInitialize();
 

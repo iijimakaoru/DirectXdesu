@@ -212,7 +212,7 @@ void Sprite::Init() {
 }
 
 void Sprite::Draw(
-    TextureData& texData, KMyMath::Vector2 pos, KMyMath::Vector2 setSize_, float rot,
+    const TextureData& texData, KMyMath::Vector2 pos, KMyMath::Vector2 setSize_, float rot,
     KMyMath::Vector4 color_, bool isFlipX_, bool isFlipY_, KMyMath::Vector2 anchorPoint_) {
 	// 非表示処理
 	if (isInvisible) {

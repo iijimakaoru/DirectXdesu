@@ -91,8 +91,6 @@ private:
 	std::array<std::unique_ptr<Sprite>, 6> score;
 	// スコアの場所
 	KMyMath::Vector2 numsPos = {200, 42};
-	// 数字のテキスト
-	std::array<TextureData, 10> numTexs;
 
 	// 加算スコアのスプライト
 	std::array<std::unique_ptr<Sprite>, 4> addScore;
@@ -103,23 +101,18 @@ private:
 	//「Score」テクスチャ用
 	std::unique_ptr<Sprite> scores;
 	KMyMath::Vector2 scoresPos = {30, 30};
-	TextureData scoresTex;
 
 	//「HIT」テクスチャ用
 	std::unique_ptr<Sprite> hits;
 	KMyMath::Vector2 hitsPos = {30, 30};
-	TextureData hitsTex;
 
 	//「X」テクスチャ用
 	std::unique_ptr<Sprite> xS;
 	KMyMath::Vector2 xPos = {30, 30};
-	TextureData xTex;
 
 	// ボーナスカウントバー
 	std::unique_ptr<Sprite> bonusBar;
-	TextureData bonusBarTex;
 	std::unique_ptr<Sprite> bonusGage;
-	TextureData bonusGageTex;
 
 	/// <summary>
 	/// スコアのやつ(ゴリ押し)

@@ -36,7 +36,7 @@ public:
 	/// <param name="isFlipY_"></param>
 	/// <param name="anchorPoint_"></param>
 	void Draw(
-	    TextureData& texData, KMyMath::Vector2 pos = {0.0f, 0.0f},
+	    const TextureData& texData, KMyMath::Vector2 pos = {0.0f, 0.0f},
 	    KMyMath::Vector2 setSize_ = {1.0f, 1.0f}, float rot = 0.0f,
 	    KMyMath::Vector4 color_ = {1.0f, 1.0f, 1.0f, 1.0f}, bool isFlipX_ = false,
 	    bool isFlipY_ = false, KMyMath::Vector2 anchorPoint_ = {0.5f, 0.5f});

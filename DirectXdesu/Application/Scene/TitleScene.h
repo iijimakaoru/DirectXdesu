@@ -45,28 +45,22 @@ private:
 	std::unique_ptr<TitleCamera> camera = nullptr;
 
 	// タイトルスプライト
-	std::unique_ptr<Sprite> titleName = nullptr;
-	TextureData titleTex;
 	KMyMath::Vector2 titlePos = { 0,0 };
 
 	std::unique_ptr<Sprite> mesi = nullptr;
-	TextureData mesiTex;
 	KMyMath::Vector2 mesiPos = { -150,-30 };
 	KMyMath::Vector2 mesiScale = { 0,0 };
 
 	std::unique_ptr<Sprite> shooter = nullptr;
-	TextureData shooterTex;
 	KMyMath::Vector2 shooterPos = { 1200,40 };
 	KMyMath::Vector2 shooterScale = { 1,1 };
 
 	std::unique_ptr<Sprite> mold = nullptr;
-	TextureData moldTex;
 	KMyMath::Vector2 moldPos = { -1200,0 };
 	KMyMath::Vector2 moldScale = { 1,1 };
 
 	// 次のシーンへのキー
 	std::unique_ptr<Sprite> pushA = nullptr;
-	TextureData pushATex;
 	float Aalpha = 1.0f;
 	float AalphaTimer = 0;
 	float AalphaTime = 60;
@@ -112,7 +106,6 @@ private:
 
 	// フラッシュ
 	std::unique_ptr<Sprite> flash = nullptr;
-	TextureData flashTex;
 
 	float flashAlpha = 0;
 

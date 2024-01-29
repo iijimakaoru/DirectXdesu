@@ -43,12 +43,6 @@ private:
 	// モデル
 	std::unique_ptr<KModel> model = nullptr;
 
-	// パイプライン
-	std::unique_ptr<KGPlin> objPipeline;
-
-	// シェーダー
-	KShader objShader;
-
 	// ビル１
 	std::list<std::unique_ptr<Bill1>> bill1s;
 

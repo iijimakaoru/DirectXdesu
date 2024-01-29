@@ -11,6 +11,8 @@
 
 #include "PipelineManager.h"
 
+#include "ResourceManager.h"
+
 TitleScene::~TitleScene()
 {
 	Final();
@@ -18,15 +20,6 @@ TitleScene::~TitleScene()
 
 void TitleScene::LoadResources()
 {
-	// タイトル名テクスチャ
-	titleTex = TextureManager::Load("Resources/texture/kariTitle.png");
-	mesiTex = TextureManager::Load("Resources/texture/MESI.png");
-	shooterTex = TextureManager::Load("Resources/texture/SHOOTER.png");
-	moldTex = TextureManager::Load("Resources/texture/BattleShipMold.png");
-
-	// プッシュAテクスチャ
-	pushATex = TextureManager::Load("Resources/texture/kariNextScene.png");
-
 	// 機体モデル
 	model = std::make_unique<MtlObj>("BattleShip");
 	model->CreateModel();
@@ -34,9 +27,6 @@ void TitleScene::LoadResources()
 	// 天球モデル
 	skyDomeModel = std::make_unique<MtlObj>("Hosizora");
 	skyDomeModel->CreateModel();
-
-	// フラッシュテクスチャ
-	flashTex = TextureManager::Load("Resources/texture/white1x1.png");
 }
 
 void TitleScene::Init()
@@ -53,9 +43,7 @@ void TitleScene::Init()
 	sceneManager = SceneManager::GetInstance();
 
 	// タイトル名
-	titleName.reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
-	titlePos = { width / 2 ,height * 1 / 3 };
-
+	titlePos = {width / 2, height * 1 / 3};
 	mesi.reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
 	
 	shooter.reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
@@ -152,26 +140,27 @@ void TitleScene::ObjDraw()
 
 void TitleScene::SpriteDraw()
 {
-	if (!startScene)
-	{
-		mold->Draw(moldTex, titlePos + moldPos, moldScale);
+	if (!startScene) {
+		mold->Draw(ResourceManager::GetInstance()->GetMoldTex(), titlePos + moldPos, moldScale);
 
-		mesi->Draw(mesiTex, titlePos + mesiPos, mesiScale);
+		mesi->Draw(ResourceManager::GetInstance()->GetMesiTex(), titlePos + mesiPos, mesiScale);
 
-		shooter->Draw(shooterTex, titlePos + shooterPos, shooterScale);
+		shooter->Draw(
+		    ResourceManager::GetInstance()->GetShooterTex(), titlePos + shooterPos, shooterScale);
 
-		pushA->Draw(pushATex, pushAPos, { 0.75f,0.75f });
+		pushA->Draw(ResourceManager::GetInstance()->GetPushATex(), pushAPos, {0.75f, 0.75f});
+	} else {
+		mold->Draw(ResourceManager::GetInstance()->GetMoldTex(), titlePos + moldPos, moldScale);
+
+		shooter->Draw(
+		    ResourceManager::GetInstance()->GetShooterTex(), titlePos + shooterPos, shooterScale);
+
+		mesi->Draw(ResourceManager::GetInstance()->GetMesiTex(), titlePos + mesiPos, mesiScale);
 	}
-	else
-	{
-		mold->Draw(moldTex, titlePos + moldPos, moldScale);
 
-		shooter->Draw(shooterTex, titlePos + shooterPos, shooterScale);
-
-		mesi->Draw(mesiTex, titlePos + mesiPos, mesiScale);
-	}
-
-	flash->Draw(flashTex, { width / 2,height / 2 }, { width,height }, 0, { 1,1,1,flashAlpha });
+	flash->Draw(
+	    ResourceManager::GetInstance()->GetWhite1x1Tex(), {width / 2, height / 2}, {width, height},
+	    0, {1.0f, 1.0f, 1.0f, flashAlpha});
 }
 
 void TitleScene::Final()

@@ -210,7 +210,7 @@ void ScoreManager::BonusTimerDraw() {
 
 	const KMyMath::Vector2 bonusBarPos = {scoresPos.x + 103.5f, numsPos.y + 80.0f};
 
-	bonusBar->Draw(ResourceManager::GetInstance()->GetBonusBarTex(), bonusBarPos);
+	bonusBar->Draw(ResourceManager::GetInstance()->GetWhite1x1Tex(), bonusBarPos);
 
 	const KMyMath::Vector2 bonusGagePos = {bonusBarPos.x - (gageTexSize.x / 2), bonusBarPos.y};
 

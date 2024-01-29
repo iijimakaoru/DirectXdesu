@@ -1,4 +1,5 @@
 #include "BillManager.h"
+#include "PipelineManager.h"
 
 BillManager::BillManager()
 {
@@ -12,12 +13,6 @@ void BillManager::Init()
 {
 	model = std::make_unique<MtlObj>("bill1");
 	model->CreateModel();
-
-	// シェーダー
-	objShader.Init(L"Resources/Shader/ObjVS.hlsl", L"Resources/Shader/ObjPS.hlsl");
-
-	// パイプライン
-	objPipeline.reset(KGPlin::Create(objShader, "Obj"));
 
 	billtimer = 0;
 
@@ -51,7 +46,8 @@ void BillManager::LeftSet(const float cameraZ_)
 {
 	//
 	std::unique_ptr<Bill1> newBill1;
-	newBill1.reset(Bill1::Create(model.get(), objPipeline.get(), { -60,cameraZ_}));
+	newBill1.reset(Bill1::Create(
+	    model.get(), PipelineManager::GetInstance()->GetObjPipeline(), {-60, cameraZ_}));
 	bill1s.push_back(std::move(newBill1));
 }
 
@@ -81,6 +77,7 @@ void BillManager::RightSet(const float cameraZ_)
 {
 	//
 	std::unique_ptr<Bill1> newBill1;
-	newBill1.reset(Bill1::Create(model.get(), objPipeline.get(), { 60,cameraZ_}));
+	newBill1.reset(Bill1::Create(
+	    model.get(), PipelineManager::GetInstance()->GetObjPipeline(), {60, cameraZ_}));
 	bill1s.push_back(std::move(newBill1));
 }

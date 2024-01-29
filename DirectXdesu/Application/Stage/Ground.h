@@ -42,15 +42,6 @@ private:
 	// モデル
 	std::unique_ptr<KModel> model;
 
-	// テクスチャ
-	TextureData texData;
-
-	// パイプライン
-	std::unique_ptr<KGPlin> pipeline;
-
-	// シェーダー
-	KShader shader;
-
 	// プレイヤーインスタンス格納
 	Player* player;
 

@@ -15,19 +15,37 @@ private:
 public:
 	void Init();
 
+	// 「Mesi」
+	const TextureData& GetMesiTex() const;
+	// 「Shooter」
+	const TextureData& GetShooterTex() const;
+	// タイトルバック
+	const TextureData& GetMoldTex() const;
+
+	// 「Aを押してください」
+	const TextureData& GetPushATex() const;
+
+	// 数字
 	const TextureData& GetNumeTexs(size_t i) const;
-
+	// 「Score」
 	const TextureData& GetScoresTex() const;
-
+	// 「Hit」
 	const TextureData& GetHitsTex() const;
-
+	// 「x」
 	const TextureData& GetXsTex() const;
-
-	const TextureData& GetBonusBarTex() const;
-
+	// 白1x1テクスチャ
+	const TextureData& GetWhite1x1Tex() const;
+	// ボーナスゲージ
 	const TextureData& GetBonusGageTex() const;
 
 private:
+	// タイトルスプライト
+	TextureData mesiTex;
+	TextureData shooterTex;
+	TextureData moldTex;
+
+	TextureData pushATex;
+
 	// 数字のテキスト
 	std::array<TextureData, 10> numTexs;
 
@@ -40,8 +58,8 @@ private:
 	// 「x」テキスト
 	TextureData xTex;
 
-	// ボーナスバー
-	TextureData bonusBarTex;
+	// 白1x1テキスト(たくさん使えるテクスチャ)
+	TextureData white1x1Tex;
 
 	// ボーナスゲージ
 	TextureData bonusGageTex;

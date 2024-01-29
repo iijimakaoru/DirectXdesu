@@ -7,6 +7,14 @@ ResourceManager* ResourceManager::GetInstance() {
 }
 
 void ResourceManager::Init() {
+	// タイトル名テクスチャ
+	mesiTex = TextureManager::Load("Resources/texture/MESI.png");
+	shooterTex = TextureManager::Load("Resources/texture/SHOOTER.png");
+	moldTex = TextureManager::Load("Resources/texture/BattleShipMold.png");
+
+	// プッシュAテクスチャ
+	pushATex = TextureManager::Load("Resources/texture/kariNextScene.png");
+
 	// 数字読み込み
 	numTexs[0] = TextureManager::Load("Resources/texture/Num0.png");
 	numTexs[1] = TextureManager::Load("Resources/texture/Num1.png");
@@ -29,11 +37,18 @@ void ResourceManager::Init() {
 	xTex = TextureManager::Load("Resources/texture/XTex.png");
 
 	// ボーナス時間バースプライト
-	bonusBarTex = TextureManager::Load("Resources/texture/scoreBonusBar.png");
+	white1x1Tex = TextureManager::Load("Resources/texture/scoreBonusBar.png");
 
-	// ボーナス時間ゲージスプライト
 	bonusGageTex = TextureManager::Load("Resources/texture/white1x1.png");
 }
+
+const TextureData& ResourceManager::GetMesiTex() const { return mesiTex; }
+
+const TextureData& ResourceManager::GetShooterTex() const { return shooterTex; }
+
+const TextureData& ResourceManager::GetMoldTex() const { return moldTex; }
+
+const TextureData& ResourceManager::GetPushATex() const { return pushATex; }
 
 const TextureData& ResourceManager::GetNumeTexs(size_t i) const { return numTexs[i]; }
 
@@ -43,6 +58,6 @@ const TextureData& ResourceManager::GetHitsTex() const { return hitsTex; }
 
 const TextureData& ResourceManager::GetXsTex() const { return xTex; }
 
-const TextureData& ResourceManager::GetBonusBarTex() const { return bonusBarTex; }
+const TextureData& ResourceManager::GetWhite1x1Tex() const { return white1x1Tex; }
 
 const TextureData& ResourceManager::GetBonusGageTex() const { return bonusGageTex; }

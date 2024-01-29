@@ -1,6 +1,7 @@
 #include "Ground.h"
 #include "Player.h"
 #include "RailCamera.h"
+#include "PipelineManager.h"
 
 void Ground::Init(Player* player_)
 {
@@ -8,17 +9,10 @@ void Ground::Init(Player* player_)
 	model = std::make_unique<MtlObj>("Grand");
 	model->CreateModel();
 
-	// テクスチャ生成
-	texData = TextureManager::Load("Resources/texture/haikei.jpg");
-
-	// パイプライン生成
-	shader.Init(L"Resources/Shader/ObjVS.hlsl", L"Resources/Shader/ObjPS.hlsl");
-	pipeline.reset(KGPlin::Create(shader, "Obj"));
-
 	// オブジェクト生成
 	for (size_t i = 0; i < 2; i++)
 	{
-		object3d[i].reset(KObject3d::Create(model.get(), pipeline.get()));
+		object3d[i].reset(KObject3d::Create(model.get(), PipelineManager::GetInstance()->GetObjPipeline()));
 		object3d[i]->SetPos({ 0.0f,-20.0f,0.0f });
 		object3d[i]->SetScale({ 1.0f,1.0f,1.0f });
 	}

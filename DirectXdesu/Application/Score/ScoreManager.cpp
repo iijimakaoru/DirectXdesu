@@ -210,13 +210,13 @@ void ScoreManager::BonusTimerDraw() {
 
 	const KMyMath::Vector2 bonusBarPos = {scoresPos.x + 103.5f, numsPos.y + 80.0f};
 
-	bonusBar->Draw(ResourceManager::GetInstance()->GetWhite1x1Tex(), bonusBarPos);
+	bonusBar->Draw(ResourceManager::GetInstance()->GetBonusGageTex(), bonusBarPos);
 
 	const KMyMath::Vector2 bonusGagePos = {bonusBarPos.x - (gageTexSize.x / 2), bonusBarPos.y};
 
 	bonusGage->Draw(
-	    ResourceManager::GetInstance()->GetBonusGageTex(), bonusGagePos,
-	    {bonusTimer * sizeX, sizeY}, 0.0f, {0, 0, 1, 1}, false, false, {0.0f, 0.5f});
+	    ResourceManager::GetInstance()->GetWhite1x1Tex(), bonusGagePos, {bonusTimer * sizeX, sizeY},
+	    0.0f, {0, 0, 1, 1}, false, false, {0.0f, 0.5f});
 }
 
 void ScoreManager::AddDestoryCountMax() { destoryCountMax++; }

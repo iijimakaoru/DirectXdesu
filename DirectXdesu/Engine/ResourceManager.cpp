@@ -37,9 +37,9 @@ void ResourceManager::Init() {
 	xTex = TextureManager::Load("Resources/texture/XTex.png");
 
 	// ボーナス時間バースプライト
-	white1x1Tex = TextureManager::Load("Resources/texture/scoreBonusBar.png");
+	scoreBonusBar = TextureManager::Load("Resources/texture/scoreBonusBar.png");
 
-	bonusGageTex = TextureManager::Load("Resources/texture/white1x1.png");
+	white1x1sTex = TextureManager::Load("Resources/texture/white1x1.png");
 }
 
 const TextureData& ResourceManager::GetMesiTex() const { return mesiTex; }
@@ -58,6 +58,6 @@ const TextureData& ResourceManager::GetHitsTex() const { return hitsTex; }
 
 const TextureData& ResourceManager::GetXsTex() const { return xTex; }
 
-const TextureData& ResourceManager::GetWhite1x1Tex() const { return white1x1Tex; }
+const TextureData& ResourceManager::GetWhite1x1Tex() const { return white1x1sTex; }
 
-const TextureData& ResourceManager::GetBonusGageTex() const { return bonusGageTex; }
+const TextureData& ResourceManager::GetBonusGageTex() const { return scoreBonusBar; }

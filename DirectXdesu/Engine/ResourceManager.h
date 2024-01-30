@@ -59,8 +59,8 @@ private:
 	TextureData xTex;
 
 	// 白1x1テキスト(たくさん使えるテクスチャ)
-	TextureData white1x1Tex;
+	TextureData scoreBonusBar;
 
 	// ボーナスゲージ
-	TextureData bonusGageTex;
+	TextureData white1x1sTex;
 };

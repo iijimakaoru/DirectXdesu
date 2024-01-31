@@ -8,46 +8,14 @@
 
 #include <imgui.h>
 
-#include "ScoreManager.h"
 #include "PipelineManager.h"
+#include "ScoreManager.h"
+
+#include "ResourceManager.h"
 
 ClearScene::~ClearScene() { Final(); }
 
-void ClearScene::LoadResources() {
-	// リザルトテクスチャ
-	resultTex = TextureManager::Load("Resources/texture/ResultText.png");
-
-	// スコアボードテクスチャ
-	scoreBordTex = TextureManager::Load("Resources/texture/ScoreBord.png");
-
-	// プッシュAテクスチャ
-	pushATex = TextureManager::Load("Resources/texture/kariNextScene.png");
-
-	// 背景テクスチャ
-	backTex = TextureManager::Load("Resources/texture/ResultBack.png");
-
-	gameScoreTex = TextureManager::Load("Resources/texture/LevelScore.png");
-
-	enemyScoreTex = TextureManager::Load("Resources/texture/EnemyBonus.png");
-
-	minDamageScoreTex = TextureManager::Load("Resources/texture/MinDamageBonus.png");
-
-	bossTimeScoreTex = TextureManager::Load("Resources/texture/BossTimeBonus.png");
-
-	totalTex = TextureManager::Load("Resources/texture/Total.png");
-
-	// 数字読み込み
-	numTexs[0] = TextureManager::Load("Resources/texture/Num0.png");
-	numTexs[1] = TextureManager::Load("Resources/texture/Num1.png");
-	numTexs[2] = TextureManager::Load("Resources/texture/Num2.png");
-	numTexs[3] = TextureManager::Load("Resources/texture/Num3.png");
-	numTexs[4] = TextureManager::Load("Resources/texture/Num4.png");
-	numTexs[5] = TextureManager::Load("Resources/texture/Num5.png");
-	numTexs[6] = TextureManager::Load("Resources/texture/Num6.png");
-	numTexs[7] = TextureManager::Load("Resources/texture/Num7.png");
-	numTexs[8] = TextureManager::Load("Resources/texture/Num8.png");
-	numTexs[9] = TextureManager::Load("Resources/texture/Num9.png");
-}
+void ClearScene::LoadResources() {}
 
 void ClearScene::Init() {
 	const float width = static_cast<float>(KWinApp::GetInstance()->GetWindowSizeW());
@@ -257,12 +225,14 @@ void ClearScene::ObjDraw() {}
 
 void ClearScene::SpriteDraw() {
 	for (size_t i = 0; i < 2; i++) {
-		back[i]->Draw(backTex, backPos[i]);
+		back[i]->Draw(ResourceManager::GetInstance()->GetBackTex(), backPos[i]);
 	}
 
-	result->Draw(resultTex, resultPos, {1, 1}, 0.0f, {1, 1, 1, 1}, false, false, {0.5f, 0});
+	result->Draw(
+	    ResourceManager::GetInstance()->GetResultTex(), resultPos, {1, 1}, 0.0f, {1, 1, 1, 1},
+	    false, false, {0.5f, 0});
 
-	scoreBord->Draw(scoreBordTex, scoreBordPos, scoreBordSize);
+	scoreBord->Draw(ResourceManager::GetInstance()->GetScoreBordTex(), scoreBordPos, scoreBordSize);
 
 	if (isDrawScores) {
 		GameScoreDraw();
@@ -277,7 +247,7 @@ void ClearScene::SpriteDraw() {
 	}
 
 	if (isGoScene) {
-		pushA->Draw(pushATex, pushAPos, {0.6f, 0.6f});
+		pushA->Draw(ResourceManager::GetInstance()->GetPushATex(), pushAPos, {0.6f, 0.6f});
 	}
 }
 
@@ -302,7 +272,8 @@ void ClearScene::GameScoreDraw() {
 	size_t scrNum = gameScoreNum;
 
 	gameScore->Draw(
-	    gameScoreTex, gameScorePos, {1, 1}, 0.0f, {1, 1, 1, 1}, false, false, {0.0f, 0.5f});
+	    ResourceManager::GetInstance()->GetGameScoreTex(), gameScorePos, {1, 1}, 0.0f, {1, 1, 1, 1},
+	    false, false, {0.0f, 0.5f});
 
 	size_t i = 0;
 	while (i < 6) {
@@ -310,7 +281,8 @@ void ClearScene::GameScoreDraw() {
 		numsPos_.x = numsPos_.x - (15 * (i));
 		size_t j = scrNum % 10;
 		gameScoreS[i]->Draw(
-		    numTexs[j], numsPos_, {1, 1}, 0.0f, {1, 1, 1, 1}, false, false, {1.0f, 0.5f});
+		    ResourceManager::GetInstance()->GetNumeTexs(j), numsPos_, {1, 1}, 0.0f, {1, 1, 1, 1},
+		    false, false, {1.0f, 0.5f});
 		scrNum /= 10;
 		i++;
 	}
@@ -320,7 +292,8 @@ void ClearScene::EnemyScoreDraw() {
 	size_t scrNum = enemyScoreNum;
 
 	enemyScore->Draw(
-	    enemyScoreTex, enemyScorePos, {1, 1}, 0.0f, {1, 1, 1, 1}, false, false, {0.0f, 0.5f});
+	    ResourceManager::GetInstance()->GetEnemyScoreTex(), enemyScorePos, {1, 1}, 0.0f,
+	    {1, 1, 1, 1}, false, false, {0.0f, 0.5f});
 
 	size_t i = 0;
 	while (i < 6) {
@@ -328,7 +301,8 @@ void ClearScene::EnemyScoreDraw() {
 		numsPos_.x = numsPos_.x - (15 * (i));
 		size_t j = scrNum % 10;
 		enemyScoreS[i]->Draw(
-		    numTexs[j], numsPos_, {1, 1}, 0.0f, {1, 1, 1, 1}, false, false, {1.0f, 0.5f});
+		    ResourceManager::GetInstance()->GetNumeTexs(j), numsPos_, {1, 1}, 0.0f, {1, 1, 1, 1},
+		    false, false, {1.0f, 0.5f});
 		scrNum /= 10;
 		i++;
 	}
@@ -338,8 +312,8 @@ void ClearScene::MinDamageScoreDraw() {
 	size_t scrNum = minDamageScoreNum;
 
 	minDamageScore->Draw(
-	    minDamageScoreTex, minDamageScorePos, {1, 1}, 0.0f, {1, 1, 1, 1}, false, false,
-	    {0.0f, 0.5f});
+	    ResourceManager::GetInstance()->GetMinDamageScoreTex(), minDamageScorePos, {1, 1}, 0.0f,
+	    {1, 1, 1, 1}, false, false, {0.0f, 0.5f});
 
 	size_t i = 0;
 	while (i < 6) {
@@ -347,7 +321,8 @@ void ClearScene::MinDamageScoreDraw() {
 		numsPos_.x = numsPos_.x - (15 * (i));
 		size_t j = scrNum % 10;
 		minDamageScoreS[i]->Draw(
-		    numTexs[j], numsPos_, {1, 1}, 0.0f, {1, 1, 1, 1}, false, false, {1.0f, 0.5f});
+		    ResourceManager::GetInstance()->GetNumeTexs(j), numsPos_, {1, 1}, 0.0f, {1, 1, 1, 1},
+		    false, false, {1.0f, 0.5f});
 		scrNum /= 10;
 		i++;
 	}
@@ -357,7 +332,8 @@ void ClearScene::BossTimeScoreDraw() {
 	size_t scrNum = bossTimeScoreNum;
 
 	bossTimeScore->Draw(
-	    bossTimeScoreTex, bossTimeScorePos, {1, 1}, 0.0f, {1, 1, 1, 1}, false, false, {0.0f, 0.5f});
+	    ResourceManager::GetInstance()->GetbossTimeScoreTex(), bossTimeScorePos, {1, 1}, 0.0f,
+	    {1, 1, 1, 1}, false, false, {0.0f, 0.5f});
 
 	size_t i = 0;
 	while (i < 6) {
@@ -365,7 +341,8 @@ void ClearScene::BossTimeScoreDraw() {
 		numsPos_.x = numsPos_.x - (15 * (i));
 		size_t j = scrNum % 10;
 		bossTimeScoreS[i]->Draw(
-		    numTexs[j], numsPos_, {1, 1}, 0.0f, {1, 1, 1, 1}, false, false, {1.0f, 0.5f});
+		    ResourceManager::GetInstance()->GetNumeTexs(j), numsPos_, {1, 1}, 0.0f, {1, 1, 1, 1},
+		    false, false, {1.0f, 0.5f});
 		scrNum /= 10;
 		i++;
 	}
@@ -374,7 +351,9 @@ void ClearScene::BossTimeScoreDraw() {
 void ClearScene::TotalScoreDraw() {
 	size_t scrNum = totalScoreNum;
 
-	total->Draw(totalTex, totalPos, {1, 1}, 0.0f, {1, 1, 1, 1}, false, false, {0.0f, 0.5f});
+	total->Draw(
+	    ResourceManager::GetInstance()->GetTotalScoreTex(), totalPos, {1, 1}, 0.0f, {1, 1, 1, 1},
+	    false, false, {0.0f, 0.5f});
 
 	size_t i = 0;
 	while (i < 6) {
@@ -382,7 +361,8 @@ void ClearScene::TotalScoreDraw() {
 		numsPos_.x = numsPos_.x - (15 * (i));
 		size_t j = scrNum % 10;
 		totalS[i]->Draw(
-		    numTexs[j], numsPos_, {1, 1}, 0.0f, {1, 1, 1, 1}, false, false, {1.0f, 0.5f});
+		    ResourceManager::GetInstance()->GetNumeTexs(j), numsPos_, {1, 1}, 0.0f, {1, 1, 1, 1},
+		    false, false, {1.0f, 0.5f});
 		scrNum /= 10;
 		i++;
 	}

@@ -47,18 +47,15 @@ private:
 
 	// クリアスプライト
 	std::unique_ptr<Sprite> result = nullptr;
-	TextureData resultTex;
 	KMyMath::Vector2 resultPos;
 
 	// スコアボード
 	std::unique_ptr<Sprite> scoreBord;
-	TextureData scoreBordTex;
 	KMyMath::Vector2 scoreBordPos;
 	KMyMath::Vector2 scoreBordSize;
 
 	// ゲーム内スコア
 	std::unique_ptr<Sprite> gameScore;
-	TextureData gameScoreTex;
 	KMyMath::Vector2 gameScorePos;
 	std::array<std::unique_ptr<Sprite>, 6> gameScoreS;
 	KMyMath::Vector2 gameScoreSPos;
@@ -66,7 +63,6 @@ private:
 
 	// 敵撃破数スコア
 	std::unique_ptr<Sprite> enemyScore;
-	TextureData enemyScoreTex;
 	KMyMath::Vector2 enemyScorePos;
 	std::array<std::unique_ptr<Sprite>, 6> enemyScoreS;
 	KMyMath::Vector2 enemyScoreSPos;
@@ -74,7 +70,6 @@ private:
 
 	// 被弾率スコア
 	std::unique_ptr<Sprite> minDamageScore;
-	TextureData minDamageScoreTex;
 	KMyMath::Vector2 minDamageScorePos;
 	std::array<std::unique_ptr<Sprite>, 6> minDamageScoreS;
 	KMyMath::Vector2 minDamageScoreSPos;
@@ -82,7 +77,6 @@ private:
 
 	// ボス撃破時間スコア
 	std::unique_ptr<Sprite> bossTimeScore;
-	TextureData bossTimeScoreTex;
 	KMyMath::Vector2 bossTimeScorePos;
 	std::array<std::unique_ptr<Sprite>, 6> bossTimeScoreS;
 	KMyMath::Vector2 bossTimeScoreSPos;
@@ -90,7 +84,6 @@ private:
 
 	// 総合スコア
 	std::unique_ptr<Sprite> total;
-	TextureData totalTex;
 	KMyMath::Vector2 totalPos;
 	std::array<std::unique_ptr<Sprite>, 6> totalS;
 	KMyMath::Vector2 totalSPos;
@@ -98,17 +91,12 @@ private:
 
 	bool isDrawScores = false;
 
-	// 数字のテキスト
-	std::array<TextureData, 10> numTexs;
-
 	// 次のシーンへのキー
 	std::unique_ptr<Sprite> pushA = nullptr;
-	TextureData pushATex;
 	KMyMath::Vector2 pushAPos = {0, 0};
 
 	// スプライト背景
 	std::array<std::unique_ptr<Sprite>, 2> back;
-	TextureData backTex;
 	std::array<KMyMath::Vector2, 2> backPos;
 
 	// リザルトフェーズ

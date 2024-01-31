@@ -17,6 +17,20 @@ void ResourceManager::Init() {
 	backTitleT = TextureManager::Load("Resources/texture/BackTitle.png");
 	operationT = TextureManager::Load("Resources/texture/Operation.png");
 
+	// クリア
+	// リザルトテクスチャ
+	resultTex = TextureManager::Load("Resources/texture/ResultText.png");
+	// スコアボードテクスチャ
+	scoreBordTex = TextureManager::Load("Resources/texture/ScoreBord.png");
+	// 背景テクスチャ
+	backTex = TextureManager::Load("Resources/texture/ResultBack.png");
+	// スコア
+	gameScoreTex = TextureManager::Load("Resources/texture/LevelScore.png");
+	enemyScoreTex = TextureManager::Load("Resources/texture/EnemyBonus.png");
+	minDamageScoreTex = TextureManager::Load("Resources/texture/MinDamageBonus.png");
+	bossTimeScoreTex = TextureManager::Load("Resources/texture/BossTimeBonus.png");
+	totalTex = TextureManager::Load("Resources/texture/Total.png");
+
 	// プッシュAテクスチャ
 	pushATex = TextureManager::Load("Resources/texture/kariNextScene.png");
 
@@ -72,3 +86,19 @@ const TextureData& ResourceManager::GetPoseTex() const { return poseTexT; }
 const TextureData& ResourceManager::GetBackTitleTex() const { return backTitleT; }
 
 const TextureData& ResourceManager::GetOperationTex() const { return operationT; }
+
+const TextureData& ResourceManager::GetResultTex() const { return resultTex; }
+
+const TextureData& ResourceManager::GetScoreBordTex() const { return scoreBordTex; }
+
+const TextureData& ResourceManager::GetGameScoreTex() const { return gameScoreTex; }
+
+const TextureData& ResourceManager::GetEnemyScoreTex() const { return enemyScoreTex; }
+
+const TextureData& ResourceManager::GetMinDamageScoreTex() const { return minDamageScoreTex; }
+
+const TextureData& ResourceManager::GetbossTimeScoreTex() const { return bossTimeScoreTex; }
+
+const TextureData& ResourceManager::GetTotalScoreTex() const { return totalTex; }
+
+const TextureData& ResourceManager::GetBackTex() const { return backTex; }

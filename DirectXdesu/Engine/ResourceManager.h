@@ -45,6 +45,23 @@ public:
 	// 「操作説明」
 	const TextureData& GetOperationTex() const;
 
+
+	const TextureData& GetResultTex() const;
+
+	const TextureData& GetScoreBordTex() const;
+
+	const TextureData& GetGameScoreTex() const;
+
+	const TextureData& GetEnemyScoreTex() const;
+
+	const TextureData& GetMinDamageScoreTex() const;
+
+	const TextureData& GetbossTimeScoreTex() const;
+
+	const TextureData& GetTotalScoreTex() const;
+
+	const TextureData& GetBackTex() const;
+
 private:
 #pragma region タイトル
 	TextureData mesiTex;
@@ -68,6 +85,25 @@ private:
 	TextureData xTex;
 	// ボーナスゲージ
 	TextureData scoreBonusBar;
+#pragma endregion
+
+#pragma region クリア
+	// 「Result」
+	TextureData resultTex;
+	// スコアボード
+	TextureData scoreBordTex;
+	// 「GameScore」
+	TextureData gameScoreTex;
+	// 「EnemyBonus」
+	TextureData enemyScoreTex;
+	// 「min.DamageBonus」
+	TextureData minDamageScoreTex;
+	// 「BossTimer」(消す可能性大)
+	TextureData bossTimeScoreTex;
+	// 「TotalScore」
+	TextureData totalTex;
+	// リザルト背景
+	TextureData backTex;
 #pragma endregion
 
 	// プッシュA

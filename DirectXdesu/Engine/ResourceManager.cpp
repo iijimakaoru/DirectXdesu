@@ -12,6 +12,11 @@ void ResourceManager::Init() {
 	shooterTex = TextureManager::Load("Resources/texture/SHOOTER.png");
 	moldTex = TextureManager::Load("Resources/texture/BattleShipMold.png");
 
+	// ポーズ
+	poseTexT = TextureManager::Load("Resources/texture/pose.png");
+	backTitleT = TextureManager::Load("Resources/texture/BackTitle.png");
+	operationT = TextureManager::Load("Resources/texture/Operation.png");
+
 	// プッシュAテクスチャ
 	pushATex = TextureManager::Load("Resources/texture/kariNextScene.png");
 
@@ -61,3 +66,9 @@ const TextureData& ResourceManager::GetXsTex() const { return xTex; }
 const TextureData& ResourceManager::GetWhite1x1Tex() const { return white1x1sTex; }
 
 const TextureData& ResourceManager::GetBonusGageTex() const { return scoreBonusBar; }
+
+const TextureData& ResourceManager::GetPoseTex() const { return poseTexT; }
+
+const TextureData& ResourceManager::GetBackTitleTex() const { return backTitleT; }
+
+const TextureData& ResourceManager::GetOperationTex() const { return operationT; }

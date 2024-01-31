@@ -1,6 +1,6 @@
 #pragma once
-#include <array>
 #include "TextureManager.h"
+#include <array>
 
 class ResourceManager {
 public:
@@ -38,29 +38,44 @@ public:
 	// ボーナスゲージ
 	const TextureData& GetBonusGageTex() const;
 
+	// 「ポーズ」
+	const TextureData& GetPoseTex() const;
+	// 「タイトルへ」
+	const TextureData& GetBackTitleTex() const;
+	// 「操作説明」
+	const TextureData& GetOperationTex() const;
+
 private:
-	// タイトルスプライト
+#pragma region タイトル
 	TextureData mesiTex;
 	TextureData shooterTex;
 	TextureData moldTex;
+#pragma endregion
 
+#pragma region ゲーム
+	// ポーズ
+	TextureData poseTexT;
+	TextureData backTitleT;
+	TextureData operationT;
+#pragma endregion
+
+#pragma region スコア
+	// スコアテキスト
+	TextureData scoresTex;
+	// 「Hit」テキスト
+	TextureData hitsTex;
+	// 「x」テキスト
+	TextureData xTex;
+	// ボーナスゲージ
+	TextureData scoreBonusBar;
+#pragma endregion
+
+	// プッシュA
 	TextureData pushATex;
 
 	// 数字のテキスト
 	std::array<TextureData, 10> numTexs;
 
-	// スコアテキスト
-	TextureData scoresTex;
-
-	// 「Hit」テキスト
-	TextureData hitsTex;
-
-	// 「x」テキスト
-	TextureData xTex;
-
 	// 白1x1テキスト(たくさん使えるテクスチャ)
-	TextureData scoreBonusBar;
-
-	// ボーナスゲージ
 	TextureData white1x1sTex;
 };

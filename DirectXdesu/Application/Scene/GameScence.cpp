@@ -26,17 +26,11 @@
 
 #include "PipelineManager.h"
 
+#include "ResourceManager.h"
+
 GameScence::~GameScence() { Final(); };
 
 void GameScence::LoadResources() {
-	// テクスチャ
-	textureData = TextureManager::Load("Resources/texture/mario.jpg");
-	textureData2 = TextureManager::Load("Resources/texture/kariPlayerColor.png");
-	movieBarTex = TextureManager::Load("Resources/texture/white1x1.png");
-	poseTexT = TextureManager::Load("Resources/texture/pose.png");
-	backTitleT = TextureManager::Load("Resources/texture/BackTitle.png");
-	operationT = TextureManager::Load("Resources/texture/Operation.png");
-
 	// モデル
 	playerModel = std::make_unique<MtlObj>("BattleShip");
 	playerModel->CreateModel();
@@ -271,12 +265,12 @@ void GameScence::SpriteDraw() {
 	if (isOverMovie || isClearMovie || isStageStart || isBossAppearMovie) {
 		for (size_t i = 0; i < 2; i++) {
 			movieBar[0]->Draw(
-			    movieBarTex, movieBarPos[0],
+			    ResourceManager::GetInstance()->GetWhite1x1Tex(), movieBarPos[0],
 			    {static_cast<float>(KWinApp::GetInstance()->GetWindowSizeW()), 50.0f}, 0.0f,
 			    {0.0f, 0.0f, 0.0f, 1.0f}, false, false, {0.0f, 0.0f});
 
 			movieBar[1]->Draw(
-			    movieBarTex, movieBarPos[1],
+			    ResourceManager::GetInstance()->GetWhite1x1Tex(), movieBarPos[1],
 			    {static_cast<float>(KWinApp::GetInstance()->GetWindowSizeW()), 50.0f}, 0.0f,
 			    {0.0f, 0.0f, 0.0f, 1.0f}, false, false, {0.0f, 1.0f});
 		}
@@ -289,15 +283,18 @@ void GameScence::SpriteDraw() {
 		float height = static_cast<float>(KWinApp::GetInstance()->GetWindowSizeH());
 
 		poseBack->Draw(
-		    movieBarTex, {0, 0}, {width, height}, 0.0f, {0, 0, 0, 0.7f}, false, false, {0, 0});
+		    ResourceManager::GetInstance()->GetWhite1x1Tex(), {0, 0}, {width, height}, 0.0f,
+		    {0, 0, 0, 0.7f}, false, false, {0, 0});
 
 		poseTexPos = {width / 2, height * 1 / 4};
-		poseTexS->Draw(poseTexT, poseTexPos, {1.5f, 1.5f});
+		poseTexS->Draw(ResourceManager::GetInstance()->GetPoseTex(), poseTexPos, {1.5f, 1.5f});
 
-		selectBar->Draw(movieBarTex, selectBarPos, {200.0f, 34.0f}, 0.0f, {0.5f, 0.5f, 0.5f, 0.8f});
+		selectBar->Draw(
+		    ResourceManager::GetInstance()->GetWhite1x1Tex(), selectBarPos, {200.0f, 34.0f}, 0.0f,
+		    {0.5f, 0.5f, 0.5f, 0.8f});
 
-		operationS->Draw(operationT, operationPos);
-		backTitleS->Draw(backTitleT, backTitlePos);
+		operationS->Draw(ResourceManager::GetInstance()->GetOperationTex(), operationPos);
+		backTitleS->Draw(ResourceManager::GetInstance()->GetBackTitleTex(), backTitlePos);
 	}
 }
 

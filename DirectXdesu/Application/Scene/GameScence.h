@@ -109,9 +109,6 @@ private:
 	// 簡易地面
 	std::unique_ptr<Ground> ground = nullptr;
 
-	TextureData textureData;
-	TextureData textureData2;
-
 	// ボスバトル
 
 	// MS01_Blaster
@@ -205,7 +202,6 @@ private:
 #pragma region ムービー中
 	//
 	std::array<std::unique_ptr<Sprite>, 2> movieBar;
-	TextureData movieBarTex;
 	std::array<KMyMath::Vector2, 2> movieBarPos;
 #pragma endregion
 
@@ -221,15 +217,12 @@ private:
 	KMyMath::Vector2 selectBarPos;
 
 	std::unique_ptr<Sprite> poseTexS;
-	TextureData poseTexT;
 	KMyMath::Vector2 poseTexPos;
 
 	std::unique_ptr<Sprite> backTitleS;
-	TextureData backTitleT;
 	KMyMath::Vector2 backTitlePos;
 
 	std::unique_ptr<Sprite> operationS;
-	TextureData operationT;
 	KMyMath::Vector2 operationPos;
 #pragma endregion
 

@@ -15,14 +15,22 @@
 
 TitleScene::~TitleScene() { Final(); }
 
-void TitleScene::LoadResources() { model_ = std::make_unique<MtlObj>("BattleShip"); }
+void TitleScene::LoadResources() { 
+	model_ = std::make_unique<MtlObj>("BattleShip"); 
+}
 
 void TitleScene::Init() {
+	camera = std::make_unique<TitleCamera>();
+	camera->Init();
+
 	object_.reset(
 	    KObject3d::Create(model_.get(), PipelineManager::GetInstance()->GetObjPipeline()));
 }
 
-void TitleScene::Update() { object_->Update(); }
+void TitleScene::Update() {
+	object_->Update(camera->GetViewPro());
+	camera->Update();
+}
 
 void TitleScene::ObjDraw() { object_->Draw(); }
 

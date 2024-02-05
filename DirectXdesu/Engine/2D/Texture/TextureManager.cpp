@@ -50,12 +50,14 @@ TextureData TextureManager::LoadTexture(const std::string& fileName) {
 	MultiByteToWideChar(CP_ACP, 0, fileName.c_str(), -1, wfilepath, _countof(wfilepath));
 
 	// テクスチャロード
-	result = DirectX::LoadFromDDSFile(wfilepath, DirectX::DDS_FLAGS_NONE, &metadata, scratchImg);
+	result = LoadFromDDSFile(wfilepath, DirectX::DDS_FLAGS_NONE, &metadata, scratchImg);
 	assert(SUCCEEDED(result));
 
 	// ミニマップ作成
 	result = GenerateMipMaps(
-	    scratchImg.GetImages(), scratchImg.GetImageCount(), scratchImg.GetMetadata(),
+	    scratchImg.GetImages(), 
+		scratchImg.GetImageCount(), 
+		scratchImg.GetMetadata(),
 	    DirectX::TEX_FILTER_DEFAULT, 0, mipChain);
 
 	if (SUCCEEDED(result)) {

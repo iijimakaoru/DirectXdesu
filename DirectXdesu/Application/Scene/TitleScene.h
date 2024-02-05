@@ -40,5 +40,8 @@ public:
 private:
 	std::unique_ptr<KModel> model_;
 	std::unique_ptr<KObject3d> object_;
+
+	// カメラ
+	std::unique_ptr<TitleCamera> camera = nullptr;
 };
 

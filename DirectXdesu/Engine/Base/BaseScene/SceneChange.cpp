@@ -6,14 +6,14 @@ SceneChange* SceneChange::sceneChange = nullptr;
 
 void SceneChange::Init()
 {
-	blackTex = TextureManager::Load("Resources/texture/white1x1.png");
+	//blackTex = TextureManager::Load("Resources/texture/white1x1.png");
 
-	black.reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
+	//black.reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
 }
 
 void SceneChange::Update()
 {
-	if (isStart)
+	/*if (isStart)
 	{
 		isIn = true;
 		isEffect = true;
@@ -48,12 +48,12 @@ void SceneChange::Update()
 			isEffect = false;
 			outTimer = 0;
 		}
-	}
+	}*/
 }
 
 void SceneChange::Draw()
 {
-	black->Draw(blackTex, { 1280 / 2, 720 / 2 }, { 1280 ,720 }, 0.0f, { 0,0,0,alpha });
+	//black->Draw(blackTex, { 1280 / 2, 720 / 2 }, { 1280 ,720 }, 0.0f, { 0,0,0,alpha });
 }
 
 void SceneChange::SceneChangeStart()

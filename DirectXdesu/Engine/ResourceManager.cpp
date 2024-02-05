@@ -8,9 +8,9 @@ ResourceManager* ResourceManager::GetInstance() {
 
 void ResourceManager::Init() {
 	// タイトル名テクスチャ
-	titleTex.mesiTex = TextureManager::Load("Resources/texture/MESI.png");
-	titleTex.shooterTex = TextureManager::Load("Resources/texture/SHOOTER.png");
-	titleTex.moldTex = TextureManager::Load("Resources/texture/BattleShipMold.png");
+	mesiTex = TextureManager::Load("Resources/texture/MESI.png");
+	shooterTex = TextureManager::Load("Resources/texture/SHOOTER.png");
+	moldTex = TextureManager::Load("Resources/texture/BattleShipMold.png");
 
 	// ポーズ
 	poseTexT = TextureManager::Load("Resources/texture/pose.png");
@@ -61,15 +61,11 @@ void ResourceManager::Init() {
 	white1x1sTex = TextureManager::Load("Resources/texture/white1x1.png");
 }
 
-//const TextureData& ResourceManager::GetMesiTex() const { return mesiTex; }
-//
-//const TextureData& ResourceManager::GetShooterTex() const { return shooterTex; }
-//
-//const TextureData& ResourceManager::GetMoldTex() const { return moldTex; }
+const TextureData& ResourceManager::GetMesiTex() const { return mesiTex; }
 
-const TITLE& ResourceManager::GetTitleTex() const {
-	// TODO: return ステートメントをここに挿入します
-}
+const TextureData& ResourceManager::GetShooterTex() const { return shooterTex; }
+
+const TextureData& ResourceManager::GetMoldTex() const { return moldTex; }
 
 const TextureData& ResourceManager::GetPushATex() const { return pushATex; }
 

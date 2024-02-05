@@ -50,7 +50,7 @@ TextureData TextureManager::LoadTexture(const std::string& fileName) {
 	MultiByteToWideChar(CP_ACP, 0, fileName.c_str(), -1, wfilepath, _countof(wfilepath));
 
 	// テクスチャロード
-	result = LoadFromWICFile(wfilepath, DirectX::WIC_FLAGS_NONE, &metadata, scratchImg);
+	result = DirectX::LoadFromDDSFile(wfilepath, DirectX::DDS_FLAGS_NONE, &metadata, scratchImg);
 	assert(SUCCEEDED(result));
 
 	// ミニマップ作成

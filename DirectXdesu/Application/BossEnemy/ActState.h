@@ -15,9 +15,6 @@ protected:
 	// アクション終わり
 	bool isFinish = false;
 
-	// アクションフェーズ
-	uint32_t actPhase = 0;
-
 	// アクション時間
 	float actTimer = 0;
 	float actTime = 0;

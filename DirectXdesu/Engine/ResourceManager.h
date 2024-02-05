@@ -6,6 +6,12 @@ class ResourceManager {
 public:
 	static ResourceManager* GetInstance();
 
+	struct TITLE {
+		TextureData mesiTex;
+		TextureData shooterTex;
+		TextureData moldTex;
+	};
+
 private:
 	ResourceManager() = default;
 	~ResourceManager() = default;
@@ -15,12 +21,15 @@ private:
 public:
 	void Init();
 
-	// 「Mesi」
-	const TextureData& GetMesiTex() const;
-	// 「Shooter」
-	const TextureData& GetShooterTex() const;
-	// タイトルバック
-	const TextureData& GetMoldTex() const;
+	//// 「Mesi」
+	//const TextureData& GetMesiTex() const;
+	//// 「Shooter」
+	//const TextureData& GetShooterTex() const;
+	//// タイトルバック
+	//const TextureData& GetMoldTex() const;
+
+	// 
+	const TITLE& GetTitleTex() const;
 
 	// 「Aを押してください」
 	const TextureData& GetPushATex() const;
@@ -64,9 +73,7 @@ public:
 
 private:
 #pragma region タイトル
-	TextureData mesiTex;
-	TextureData shooterTex;
-	TextureData moldTex;
+	TITLE titleTex;
 #pragma endregion
 
 #pragma region ゲーム

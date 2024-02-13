@@ -1,11 +1,10 @@
 #include "Warning.h"
 #include "KWinApp.h"
 #include "PipelineManager.h"
+#include "ResourceManager.h"
 
 void Warning::Init()
 {
-	warningTex = TextureManager::Load("Resources/texture/white1x1.png");
-
 	warning.reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
 
 	warningTime = 150;
@@ -31,7 +30,9 @@ void Warning::Update()
 
 void Warning::Draw()
 {
-	warning->Draw(warningTex,{ 1280 / 2, 720 / 2 }, { 1280 ,720 }, 0.0f, { 1,0,0,alpha });
+	warning->Draw(
+	    ResourceManager::GetInstance()->GetWhite1x1Tex(), {1280 / 2, 720 / 2}, {1280, 720}, 0.0f,
+	    {1, 0, 0, alpha});
 }
 
 bool Warning::GetIsDelete()

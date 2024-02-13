@@ -27,9 +27,6 @@ private:
 	// スプライト
 	std::unique_ptr<Sprite> warning = nullptr;
 
-	// テクスチャ
-	TextureData warningTex;
-
 	// 警告時間
 	int32_t warningTimer = 0;
 	int32_t warningTime = 0;

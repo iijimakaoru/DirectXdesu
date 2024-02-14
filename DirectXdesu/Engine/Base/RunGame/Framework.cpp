@@ -44,7 +44,6 @@ void Framework::Init() {
 	// リソース読み込み
 	ResourceManager::GetInstance()->Init();
 
-
 	Particles::StaticInitialize();
 
 	// Imgui初期化

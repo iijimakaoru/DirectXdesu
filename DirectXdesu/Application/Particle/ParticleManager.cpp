@@ -2,13 +2,15 @@
 #include "KInput.h"
 
 #pragma warning(push)
-#pragma warning(disable: 4820)
+#pragma warning(disable : 4820)
 #include <d3dcompiler.h>
 #pragma warning(pop)
 
 #pragma comment(lib, "d3dcompiler.lib")
 
 #include "Ease.h"
+
+#include "PipelineManager.h"
 
 /// <summary>
 /// 静的メンバ変数の実体
@@ -22,8 +24,7 @@ DirectX::XMMATRIX Particles::matBillboard = DirectX::XMMatrixIdentity();
 DirectX::XMMATRIX Particles::matBillboardY = DirectX::XMMatrixIdentity();
 
 // ビルボードパーティクル
-const DirectX::XMFLOAT3 operator+(const DirectX::XMFLOAT3& lhs, const DirectX::XMFLOAT3& rhs)
-{
+const DirectX::XMFLOAT3 operator+(const DirectX::XMFLOAT3& lhs, const DirectX::XMFLOAT3& rhs) {
 	DirectX::XMFLOAT3 result;
 	result.x = lhs.x + rhs.x;
 	result.y = lhs.y + rhs.y;
@@ -31,8 +32,9 @@ const DirectX::XMFLOAT3 operator+(const DirectX::XMFLOAT3& lhs, const DirectX::X
 	return result;
 }
 
-void Particles::Add(int life, KMyMath::Vector3 pos, KMyMath::Vector3 vel, KMyMath::Vector3 accel, float start_scale, float end_scale)
-{
+void Particles::Add(
+    int life, KMyMath::Vector3 pos, KMyMath::Vector3 vel, KMyMath::Vector3 accel, float start_scale,
+    float end_scale) {
 	particles.emplace_front();
 
 	Particle& p = particles.front();
@@ -45,8 +47,7 @@ void Particles::Add(int life, KMyMath::Vector3 pos, KMyMath::Vector3 vel, KMyMat
 	p.e_scale = end_scale;
 }
 
-void Particles::StaticInitialize()
-{
+void Particles::StaticInitialize() {
 	// デバイスセット
 	Particles::device = KDirectXCommon::GetInstance()->GetDev();
 
@@ -57,12 +58,10 @@ void Particles::StaticInitialize()
 	InitializeGraphicsPipeline();
 }
 
-Particles* Particles::Create(TextureData& textureData_)
-{
+Particles* Particles::Create(TextureData& textureData_) {
 	// 3Dオブジェクトのインスタンスを生成
 	Particles* object3d = new Particles();
-	if (object3d == nullptr)
-	{
+	if (object3d == nullptr) {
 		return nullptr;
 	}
 
@@ -76,26 +75,21 @@ Particles* Particles::Create(TextureData& textureData_)
 	return object3d;
 }
 
-void Particles::InitializeGraphicsPipeline()
-{
+void Particles::InitializeGraphicsPipeline() {
 	shader.Init(
-		L"Resources/Shader/ParticleVS.hlsl", 
-		L"Resources/Shader/ParticlePS.hlsl", 
-		"main", 
-		L"Resources/Shader/ParticleGS.hlsl"
-	);
+	    L"Resources/Shader/ParticleVS.hlsl", L"Resources/Shader/ParticlePS.hlsl", "main",
+	    L"Resources/Shader/ParticleGS.hlsl");
 
 	pipeline.reset(KGPlin::Create(shader, "Particle"));
 }
 
-void Particles::CreateModel()
-{
+void Particles::CreateModel() {
 	HRESULT result = S_FALSE;
 
 	// 四角形のインデックスデータ
 	unsigned short indicesSquare[] = {
-		0,1,2,// 三角形1
-		2,1,3,// 三角形2
+	    0, 1, 2, // 三角形1
+	    2, 1, 3, // 三角形2
 	};
 
 	UINT sizeVB = static_cast<UINT>(sizeof(vertices));
@@ -107,8 +101,8 @@ void Particles::CreateModel()
 
 	// 頂点バッファ生成
 	result = device->CreateCommittedResource(
-		&heapProps, D3D12_HEAP_FLAG_NONE, &resourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
-		IID_PPV_ARGS(&vertBuff));
+	    &heapProps, D3D12_HEAP_FLAG_NONE, &resourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
+	    IID_PPV_ARGS(&vertBuff));
 	assert(SUCCEEDED(result));
 
 	// 頂点バッファへのデータ転送
@@ -125,8 +119,7 @@ void Particles::CreateModel()
 	vbView.StrideInBytes = sizeof(vertices[0]);
 }
 
-bool Particles::Initialize(TextureData textureData_)
-{
+bool Particles::Initialize(TextureData textureData_) {
 	// nullptrチェック
 	assert(device);
 
@@ -140,32 +133,29 @@ bool Particles::Initialize(TextureData textureData_)
 	CD3DX12_HEAP_PROPERTIES heapProps = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
 	// リソース設定
 	CD3DX12_RESOURCE_DESC resourceDesc =
-		CD3DX12_RESOURCE_DESC::Buffer((sizeof(PConstBufferData) + 0xff) & ~0xff);
+	    CD3DX12_RESOURCE_DESC::Buffer((sizeof(PConstBufferData) + 0xff) & ~0xff);
 
 	HRESULT result;
 
 	// 定数バッファの生成
 	result = device->CreateCommittedResource(
-		&heapProps, // アップロード可能
-		D3D12_HEAP_FLAG_NONE, &resourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
-		IID_PPV_ARGS(&constBuff));
+	    &heapProps, // アップロード可能
+	    D3D12_HEAP_FLAG_NONE, &resourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
+	    IID_PPV_ARGS(&constBuff));
 	assert(SUCCEEDED(result));
 
 	return true;
 }
 
-void Particles::Update(ViewProjection* viewProjection)
-{
+void Particles::Update(ViewProjection* viewProjection) {
 	HRESULT result;
 
 	// パーティクルの削除
-	particles.remove_if([](Particle& p) {return p.frame >= p.num_frame; });
+	particles.remove_if([](Particle& p) { return p.frame >= p.num_frame; });
 
 	// 全パーティクルの更新
-	for (std::forward_list<Particle>::iterator it = particles.begin();
-		it != particles.end();
-		it++)
-	{
+	for (std::forward_list<Particle>::iterator it = particles.begin(); it != particles.end();
+	     it++) {
 		it->frame++;
 		it->vel = it->vel + it->accel;
 		it->pos = it->pos + it->vel;
@@ -178,12 +168,9 @@ void Particles::Update(ViewProjection* viewProjection)
 	// 頂点バッファへデータ転送
 	VertexPos* vertMap = nullptr;
 	result = vertBuff->Map(0, nullptr, (void**)&vertMap);
-	if (SUCCEEDED(result))
-	{
-		for (std::forward_list<Particle>::iterator it = particles.begin();
-			it != particles.end();
-			it++)
-		{
+	if (SUCCEEDED(result)) {
+		for (std::forward_list<Particle>::iterator it = particles.begin(); it != particles.end();
+		     it++) {
 			vertMap->pos = it->pos;
 
 			vertMap->scale = it->scale;
@@ -195,13 +182,12 @@ void Particles::Update(ViewProjection* viewProjection)
 	// 定数バッファへデータ転送
 	PConstBufferData* constMap = nullptr;
 	result = constBuff->Map(0, nullptr, (void**)&constMap);
-	constMap->mat = viewProjection->GetMatView() * viewProjection->GetMatPro();	// 行列の合成
-	constMap->matBillboard = MyMathConvert::ChangeXMMATRIXtoMatrix4(matBillboard);	// 行列の合成
+	constMap->mat = viewProjection->GetMatView() * viewProjection->GetMatPro(); // 行列の合成
+	constMap->matBillboard = MyMathConvert::ChangeXMMATRIXtoMatrix4(matBillboard); // 行列の合成
 	constBuff->Unmap(0, nullptr);
 }
 
-void Particles::Draw()
-{
+void Particles::Draw() {
 	// nullptrチェック
 	assert(device);
 	assert(cmdList);
@@ -213,7 +199,7 @@ void Particles::Draw()
 	pipeline->Update(D3D_PRIMITIVE_TOPOLOGY_POINTLIST);
 
 	// デスクリプタヒープの配列
-	ID3D12DescriptorHeap* ppHeaps[] = { textureData.srvHeap.Get()};
+	ID3D12DescriptorHeap* ppHeaps[] = {textureData.srvHeap.Get()};
 	cmdList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 
 	// 定数バッファビューをセット
@@ -222,14 +208,13 @@ void Particles::Draw()
 	// シェーダリソースビューをセット
 	cmdList->SetGraphicsRootDescriptorTable(1, textureData.gpuHandle);
 
-	//描画コマンド
+	// 描画コマンド
 	cmdList->DrawInstanced((UINT)std::distance(particles.begin(), particles.end()), 1, 0, 0);
 }
 
 ParticleManager* ParticleManager::parthicleManager = nullptr;
 
-void ParticleManager::Init()
-{
+void ParticleManager::Init() {
 	// テクスチャ読み込み
 	textureData1 = TextureManager::Load("Resources/texture/mario.jpg");
 	textureData2 = TextureManager::Load("Resources/texture/kariPlayerColor.png");
@@ -239,22 +224,18 @@ void ParticleManager::Init()
 	particles2.reset(Particles::Create(textureData2));
 }
 
-void ParticleManager::Update(ViewProjection* viewPro)
-{
+void ParticleManager::Update(ViewProjection* viewPro) {
 	particles1->Update(viewPro);
 	particles2->Update(viewPro);
 }
 
-void ParticleManager::Draw()
-{
+void ParticleManager::Draw() {
 	particles1->Draw();
 	particles2->Draw();
 }
 
-void ParticleManager::CallExp(const KMyMath::Vector3& pos)
-{
-	for (int i = 0; i < 100; i++)
-	{
+void ParticleManager::CallExp(const KMyMath::Vector3& pos) {
+	for (int i = 0; i < 100; i++) {
 		const float md_vel = 1.0f;
 		KMyMath::Vector3 vel{};
 		vel.x = (float)rand() / RAND_MAX * md_vel - md_vel / 2.0f;
@@ -269,10 +250,8 @@ void ParticleManager::CallExp(const KMyMath::Vector3& pos)
 	}
 }
 
-void ParticleManager::CallSmallExp(const KMyMath::Vector3& pos)
-{
-	for (int i = 0; i < 20; i++)
-	{
+void ParticleManager::CallSmallExp(const KMyMath::Vector3& pos) {
+	for (int i = 0; i < 20; i++) {
 		const float md_vel = 1.0f;
 		KMyMath::Vector3 vel{};
 		vel.x = (float)rand() / RAND_MAX * md_vel - md_vel / 2.0f;
@@ -287,24 +266,19 @@ void ParticleManager::CallSmallExp(const KMyMath::Vector3& pos)
 	}
 }
 
-ParticleManager* ParticleManager::GetInstance()
-{
+ParticleManager* ParticleManager::GetInstance() {
 	static ParticleManager instance;
 	return &instance;
 }
 
-void ParticleManager::Delete()
-{
-	delete parthicleManager;
-}
+void ParticleManager::Delete() { delete parthicleManager; }
 
-ObjParticle* ObjParticle::Create(const KMyMath::Vector3& pos_, 
-	KModel* model_, KGPlin* pipeline_, const KMyMath::Vector3& velocity_, TextureData& tex)
-{
+ObjParticle* ObjParticle::Create(
+    const KMyMath::Vector3& pos_, KModel* model_, KGPlin* pipeline_,
+    const KMyMath::Vector3& velocity_, TextureData& tex) {
 	// インスタンス
 	ObjParticle* instance = new ObjParticle();
-	if (instance == nullptr)
-	{
+	if (instance == nullptr) {
 		return nullptr;
 	}
 
@@ -314,14 +288,14 @@ ObjParticle* ObjParticle::Create(const KMyMath::Vector3& pos_,
 	return instance;
 }
 
-void ObjParticle::Init(const KMyMath::Vector3& pos_, 
-	KModel* model_, KGPlin* pipeline_, const KMyMath::Vector3& velocity_, TextureData& tex_)
-{
+void ObjParticle::Init(
+    const KMyMath::Vector3& pos_, KModel* model_, KGPlin* pipeline_,
+    const KMyMath::Vector3& velocity_, TextureData& tex_) {
 	object3d.reset(KObject3d::Create(model_, pipeline_));
 
 	object3d->SetPos(pos_);
 
-	object3d->SetScale({ 0.5f,0.5f,0.5f });
+	object3d->SetScale({0.5f, 0.5f, 0.5f});
 
 	velocity = velocity_;
 
@@ -330,46 +304,33 @@ void ObjParticle::Init(const KMyMath::Vector3& pos_,
 	texture = tex_;
 }
 
-void ObjParticle::Update(ViewProjection* viewPro_)
-{
-	if (lifeTimer < lifeTime)
-	{
+void ObjParticle::Update(ViewProjection* viewPro_) {
+	if (lifeTimer < lifeTime) {
 		lifeTimer++;
 
 		object3d->AddSetPos(velocity);
 
-		object3d->AddSetRot({ 30.0f, 30.0f, 30.0f });
+		object3d->AddSetRot({30.0f, 30.0f, 30.0f});
 
-		if (lifeTimer > 40)
-		{
-			if (easeTimer < easeTime)
-			{
+		if (lifeTimer > 40) {
+			if (easeTimer < easeTime) {
 				easeTimer++;
-				object3d->SetScale(MyEase::OutQuadVec3({ 0.5f,0.5f,0.5f }, { 0.0f,0.0f,0.0f }, easeTimer / easeTime));
+				object3d->SetScale(MyEase::OutQuadVec3(
+				    {0.5f, 0.5f, 0.5f}, {0.0f, 0.0f, 0.0f}, easeTimer / easeTime));
 			}
 		}
-	}
-	else
-	{
+	} else {
 		isDead = true;
 	}
 
 	object3d->Update(viewPro_);
 }
 
-void ObjParticle::Draw()
-{
-	object3d->Draw(texture);
-}
+void ObjParticle::Draw() { object3d->Draw(texture); }
 
 ObjParticleManager* ObjParticleManager::objParticleManager = nullptr;
 
-void ObjParticleManager::Init()
-{
-	// Obj
-	shader.Init(L"Resources/Shader/ObjVS.hlsl", L"Resources/Shader/ObjPS.hlsl");
-	pipeline.reset(KGPlin::Create(shader, "Obj"));
-
+void ObjParticleManager::Init() {
 	// キューブ生成
 	model = std::make_unique<Cube>();
 
@@ -377,63 +338,52 @@ void ObjParticleManager::Init()
 	textureData1 = TextureManager::Load("Resources/texture/kariPlayerColor.png");
 }
 
-void ObjParticleManager::Update(ViewProjection* viewPro)
-{
-	objParticles.remove_if([](std::unique_ptr<ObjParticle>& objParticle) {return objParticle->GetIsDead(); });
+void ObjParticleManager::Update(ViewProjection* viewPro) {
+	objParticles.remove_if(
+	    [](std::unique_ptr<ObjParticle>& objParticle) { return objParticle->GetIsDead(); });
 
-	for (std::unique_ptr<ObjParticle>& objParticle : objParticles)
-	{
+	for (std::unique_ptr<ObjParticle>& objParticle : objParticles) {
 		objParticle->Update(viewPro);
 	}
 }
 
-void ObjParticleManager::Draw()
-{
-	for (std::unique_ptr<ObjParticle>& objParticle : objParticles)
-	{
+void ObjParticleManager::Draw() {
+	for (std::unique_ptr<ObjParticle>& objParticle : objParticles) {
 		objParticle->Draw();
 	}
 }
 
-void ObjParticleManager::SetExp(const KMyMath::Vector3& pos_)
-{
+void ObjParticleManager::SetExp(const KMyMath::Vector3& pos_) {
 	std::unique_ptr<ObjParticle> newParticle;
-	for (size_t i = 0; i < 40; i++)
-	{
+	for (size_t i = 0; i < 40; i++) {
 		// 生成
-		newParticle.reset(ObjParticle::Create(pos_,
-			model.get(),
-			pipeline.get(),
-			{ MyMathUtility::GetRandF(-1.0f,1.0f),MyMathUtility::GetRandF(-1.0f,1.0f),MyMathUtility::GetRandF(-1.0f,1.0f) }, 
-			textureData1));
+		newParticle.reset(ObjParticle::Create(
+		    pos_, model.get(), PipelineManager::GetInstance()->GetObjPipeline(),
+		    {MyMathUtility::GetRandF(-1.0f, 1.0f), MyMathUtility::GetRandF(-1.0f, 1.0f),
+		     MyMathUtility::GetRandF(-1.0f, 1.0f)},
+		    textureData1));
 		// 出力
 		objParticles.push_back(std::move(newParticle));
 	}
 }
 
-void ObjParticleManager::SetSmallExp(const KMyMath::Vector3& pos_)
-{
+void ObjParticleManager::SetSmallExp(const KMyMath::Vector3& pos_) {
 	std::unique_ptr<ObjParticle> newParticle;
-	for (size_t i = 0; i < 10; i++)
-	{
+	for (size_t i = 0; i < 10; i++) {
 		// 生成
-		newParticle.reset(ObjParticle::Create(pos_,
-			model.get(),
-			pipeline.get(),
-			{ MyMathUtility::GetRandF(-0.25f,0.25f),MyMathUtility::GetRandF(-0.25f,0.25f),MyMathUtility::GetRandF(-0.25f,0.25f) },
-			textureData1));
+		newParticle.reset(ObjParticle::Create(
+		    pos_, model.get(), PipelineManager::GetInstance()->GetObjPipeline(),
+		    {MyMathUtility::GetRandF(-0.25f, 0.25f), MyMathUtility::GetRandF(-0.25f, 0.25f),
+		     MyMathUtility::GetRandF(-0.25f, 0.25f)},
+		    textureData1));
 		// 出力
 		objParticles.push_back(std::move(newParticle));
 	}
 }
 
-ObjParticleManager* ObjParticleManager::GetInstance()
-{
+ObjParticleManager* ObjParticleManager::GetInstance() {
 	static ObjParticleManager instance;
 	return &instance;
 }
 
-void ObjParticleManager::Delete()
-{
-	delete objParticleManager;
-}
+void ObjParticleManager::Delete() { delete objParticleManager; }

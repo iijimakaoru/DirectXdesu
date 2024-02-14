@@ -297,10 +297,6 @@ private:
 	// インスタンス
 	static ObjParticleManager* objParticleManager;
 
-	// パイプライン
-	KShader shader;
-	std::unique_ptr<KGPlin> pipeline = nullptr;
-
 	// モデル
 	std::unique_ptr<KModel> model = nullptr;
 

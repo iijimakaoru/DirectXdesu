@@ -11,7 +11,7 @@
 
 class BulletManager {
 public:
-	void Init(KGPlin* pipeline_);
+	void Init();
 
 	/// <summary>
 	/// 弾の更新
@@ -88,11 +88,9 @@ private:
 
 	// 敵の弾
 	std::list<std::unique_ptr<EnemyBullet>> enemyBullets;
-	std::unique_ptr<KModel> enemysBulletModel = nullptr;
 
 	// ボム
 	std::list<std::unique_ptr<Bom>> boms;
-	std::unique_ptr<KModel> expsModel = nullptr;
 
 	// パイプライン
 	KGPlin* pipeline = nullptr;

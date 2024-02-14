@@ -5,17 +5,12 @@
  */
 
 #include "BulletManager.h"
+#include "PipelineManager.h"
 #include "ResourceManager.h"
 
 BulletManager* BulletManager::bulletManager = nullptr;
 
-void BulletManager::Init(KGPlin* pipeline_) {
-	enemysBulletModel = std::make_unique<MtlObj>("EnemyBullet");
-
-	expsModel = std::make_unique<MtlObj>("Explosion");
-
-	pipeline = pipeline_;
-}
+void BulletManager::Init() { pipeline = PipelineManager::GetInstance()->GetObjPipeline(); }
 
 void BulletManager::Update(ViewProjection* viewPro_) {
 	// 弾の削除
@@ -66,7 +61,8 @@ void BulletManager::EnemyBulletShot(
 	// 弾生成
 	std::unique_ptr<EnemyBullet> newBullet;
 	newBullet.reset(EnemyBullet::Create(
-	    enemysBulletModel.get(), pipeline, pos, vec_, rot_, bulletSpeed_, BulletPower_));
+	    ResourceManager::GetInstance()->GetModels("E_Bullet"), pipeline, pos, vec_, rot_,
+	    bulletSpeed_, BulletPower_));
 	// 登録
 	enemyBullets.push_back(std::move(newBullet));
 }
@@ -76,8 +72,9 @@ void BulletManager::BomShot(
     const float bulletSpeed_) {
 	std::unique_ptr<Bom> newBom;
 	newBom.reset(Bom::Create(
-	    ResourceManager::GetInstance()->GetModels("P_Bullet"), expsModel.get(), pipeline, pos_,
-	    vec_, rot_, bulletSpeed_));
+	    ResourceManager::GetInstance()->GetModels("P_Bullet"),
+	    ResourceManager::GetInstance()->GetModels("Explotion"), pipeline, pos_, vec_, rot_,
+	    bulletSpeed_));
 	boms.push_back(std::move(newBom));
 }
 

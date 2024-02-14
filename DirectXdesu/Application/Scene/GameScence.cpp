@@ -26,10 +26,12 @@
 
 #include "PipelineManager.h"
 
+#include "ResourceManager.h"
+
 GameScence::~GameScence() { Final(); };
 
 void GameScence::LoadResources() {
-	skyBoxModel = std::make_unique<MtlObj>("SkyBox");
+	
 }
 
 void GameScence::Init() {
@@ -63,12 +65,13 @@ void GameScence::Init() {
 	ground->Init(player.get());
 
 	// スカイボックス
-	skyBox.reset(
-	    SkyBox::Create(skyBoxModel.get(), PipelineManager::GetInstance()->GetObjPipeline(), 50));
+	skyBox.reset(SkyBox::Create(
+	    ResourceManager::GetInstance()->GetModels("SkyDorm"),
+	    PipelineManager::GetInstance()->GetObjPipeline(), 50));
 
 	// 弾マネージャー
 	bulletManager = BulletManager::GetInstance();
-	bulletManager->Init(PipelineManager::GetInstance()->GetObjPipeline());
+	bulletManager->Init();
 
 	// パーティクル
 	particleManager = ParticleManager::GetInstance();

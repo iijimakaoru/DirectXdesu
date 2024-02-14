@@ -116,7 +116,6 @@ private:
 
 	// スカイボックス
 	std::unique_ptr<SkyBox> skyBox = nullptr;
-	std::unique_ptr<KModel> skyBoxModel = nullptr;
 
 	// パーティクル
 	ParticleManager* particleManager = nullptr;

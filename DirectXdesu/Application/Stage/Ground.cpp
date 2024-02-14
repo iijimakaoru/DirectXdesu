@@ -8,7 +8,7 @@ void Ground::Init(Player* player_) {
 	// オブジェクト生成
 	for (size_t i = 0; i < 2; i++) {
 		object3d[i].reset(KObject3d::Create(
-		    ResourceManager::GetInstance()->GetModels("Ground"),
+		    ModelManager::GetInstance()->GetModels("Ground"),
 		    PipelineManager::GetInstance()->GetObjPipeline()));
 		object3d[i]->SetPos({0.0f, -20.0f, 0.0f});
 		object3d[i]->SetScale({1.0f, 1.0f, 1.0f});

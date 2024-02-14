@@ -20,10 +20,10 @@ TitleScene::~TitleScene()
 void TitleScene::LoadResources()
 {
 	// 機体モデル
-	model = ResourceManager::GetInstance()->GetModels("Player");
+	model = ModelManager::GetInstance()->GetModels("Player");
 
 	// 天球モデル
-	skyDomeModel = ResourceManager::GetInstance()->GetModels("T_SkyDorm");
+	skyDomeModel = ModelManager::GetInstance()->GetModels("T_SkyDorm");
 }
 
 void TitleScene::Init()

@@ -35,7 +35,7 @@ void Player::Init(const float playerHP) {
 
 	// オブジェクト生成
 	object3d.reset(KObject3d::Create(
-	    ResourceManager::GetInstance()->GetModels("Player"),
+	    ModelManager::GetInstance()->GetModels("Player"),
 	    PipelineManager::GetInstance()->GetObjPipeline()));
 	object3d->SetPos({0, 0, 50});
 	object3d->SetScale({2.0f, 2.0f, 2.0f});

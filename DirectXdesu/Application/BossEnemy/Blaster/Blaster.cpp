@@ -31,7 +31,7 @@ Blaster* Blaster::Create(KGPlin* pipeline_, const KMyMath::Vector3& pos_, KGPlin
 }
 
 void Blaster::Init(KGPlin* pipeline_, const KMyMath::Vector3& initPos_, KGPlin* spritePipeline_) {
-	model = ResourceManager::GetInstance()->GetModels("Blaster_Core");
+	model = ModelManager::GetInstance()->GetModels("Blaster_Core");
 
 	BossEnemy::Init(pipeline_, initPos_, spritePipeline_);
 
@@ -40,7 +40,7 @@ void Blaster::Init(KGPlin* pipeline_, const KMyMath::Vector3& initPos_, KGPlin* 
 
 	for (size_t i = 0; i < 8; i++) {
 		units[i].reset(KObject3d::Create(
-		    ResourceManager::GetInstance()->GetModels("Blaster_Unit"), pipeline_));
+		    ModelManager::GetInstance()->GetModels("Blaster_Unit"), pipeline_));
 
 		units[i]->SetParent(&object3d->GetTransform());
 	}

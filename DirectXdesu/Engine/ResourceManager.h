@@ -5,15 +5,15 @@
 #include <memory>
 #include "KModel.h"
 
-class ResourceManager {
+class ModelManager {
 public:
-	static ResourceManager* GetInstance();
+	static ModelManager* GetInstance();
 
 private:
-	ResourceManager() = default;
-	~ResourceManager() = default;
-	ResourceManager(const ResourceManager&) = delete;
-	const ResourceManager& operator=(const ResourceManager&) = delete;
+	ModelManager() = default;
+	~ModelManager() = default;
+	ModelManager(const ModelManager&) = delete;
+	const ModelManager& operator=(const ModelManager&) = delete;
 
 public:
 	void Init();

@@ -333,7 +333,7 @@ ObjParticleManager* ObjParticleManager::objParticleManager = nullptr;
 
 void ObjParticleManager::Init() {
 	// キューブ生成
-	model = ResourceManager::GetInstance()->GetModels("Cube");
+	model = ModelManager::GetInstance()->GetModels("Cube");
 
 	// テクスチャ
 	textureData1 = TextureManager::GetInstance()->GetTextures("Cube");

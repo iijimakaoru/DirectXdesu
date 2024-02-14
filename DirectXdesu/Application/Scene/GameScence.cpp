@@ -66,7 +66,7 @@ void GameScence::Init() {
 
 	// スカイボックス
 	skyBox.reset(SkyBox::Create(
-	    ResourceManager::GetInstance()->GetModels("SkyDorm"),
+	    ModelManager::GetInstance()->GetModels("SkyDorm"),
 	    PipelineManager::GetInstance()->GetObjPipeline(), 50));
 
 	// 弾マネージャー

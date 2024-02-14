@@ -42,7 +42,7 @@ void Framework::Init() {
 	textureManager->LoadTextures();
 
 	// リソース読み込み
-	ResourceManager::GetInstance()->Init();
+	ModelManager::GetInstance()->Init();
 
 	Particles::StaticInitialize();
 

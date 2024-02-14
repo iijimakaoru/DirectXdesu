@@ -49,7 +49,7 @@ void BulletManager::PlayerBulletShot(
 	// 弾生成
 	std::unique_ptr<PlayerBullet> newBullet;
 	newBullet.reset(PlayerBullet::Create(
-	    ResourceManager::GetInstance()->GetModels("P_Bullet"), pipeline, pos, vec_, rot_,
+	    ModelManager::GetInstance()->GetModels("P_Bullet"), pipeline, pos, vec_, rot_,
 	    bulletSpeed_, BulletPower_));
 	// 登録
 	playerBullets.push_back(std::move(newBullet));
@@ -61,7 +61,7 @@ void BulletManager::EnemyBulletShot(
 	// 弾生成
 	std::unique_ptr<EnemyBullet> newBullet;
 	newBullet.reset(EnemyBullet::Create(
-	    ResourceManager::GetInstance()->GetModels("E_Bullet"), pipeline, pos, vec_, rot_,
+	    ModelManager::GetInstance()->GetModels("E_Bullet"), pipeline, pos, vec_, rot_,
 	    bulletSpeed_, BulletPower_));
 	// 登録
 	enemyBullets.push_back(std::move(newBullet));
@@ -72,8 +72,8 @@ void BulletManager::BomShot(
     const float bulletSpeed_) {
 	std::unique_ptr<Bom> newBom;
 	newBom.reset(Bom::Create(
-	    ResourceManager::GetInstance()->GetModels("P_Bullet"),
-	    ResourceManager::GetInstance()->GetModels("Explotion"), pipeline, pos_, vec_, rot_,
+	    ModelManager::GetInstance()->GetModels("P_Bullet"),
+	    ModelManager::GetInstance()->GetModels("Explotion"), pipeline, pos_, vec_, rot_,
 	    bulletSpeed_));
 	boms.push_back(std::move(newBom));
 }

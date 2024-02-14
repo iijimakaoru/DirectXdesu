@@ -80,7 +80,7 @@ protected:
 	std::unique_ptr<KObject3d> object3d = nullptr;
 
 	// モデル
-	std::unique_ptr<KModel> model = nullptr;
+	KModel* model = nullptr;
 
 	// パイプライン
 	KGPlin* pipeline = nullptr;

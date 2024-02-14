@@ -92,7 +92,6 @@ public:
 
 private:
 	std::array<std::unique_ptr<KObject3d>, 8> units;
-	std::unique_ptr<KModel> unitsModel;
 	std::array<KMyMath::Vector3, 8> unitsPos;
 
 	bool isStand = false;

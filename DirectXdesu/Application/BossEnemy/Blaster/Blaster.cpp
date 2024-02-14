@@ -10,6 +10,7 @@
 #include "BlasterTackleState.h"
 #include "Collision.h"
 #include "ImguiManager.h"
+#include "ResourceManager.h"
 #include "ScoreManager.h"
 
 Blaster* Blaster::nowBlaster = nullptr;
@@ -30,17 +31,16 @@ Blaster* Blaster::Create(KGPlin* pipeline_, const KMyMath::Vector3& pos_, KGPlin
 }
 
 void Blaster::Init(KGPlin* pipeline_, const KMyMath::Vector3& initPos_, KGPlin* spritePipeline_) {
-	model = std::make_unique<MtlObj>("BlasterCore");
+	model = ResourceManager::GetInstance()->GetModels("Blaster_Core");
 
 	BossEnemy::Init(pipeline_, initPos_, spritePipeline_);
 
 	maxHP = 300;
 	HP = maxHP;
 
-	unitsModel = std::make_unique<MtlObj>("BlasterUnit");
-
 	for (size_t i = 0; i < 8; i++) {
-		units[i].reset(KObject3d::Create(unitsModel.get(), pipeline_));
+		units[i].reset(KObject3d::Create(
+		    ResourceManager::GetInstance()->GetModels("Blaster_Unit"), pipeline_));
 
 		units[i]->SetParent(&object3d->GetTransform());
 	}

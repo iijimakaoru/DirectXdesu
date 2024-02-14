@@ -72,7 +72,7 @@ private:
 	std::unique_ptr<KObject3d> object3d = nullptr;
 
 	// モデル
-	std::unique_ptr<KModel> model = nullptr;
+	KModel* model = nullptr;
 #pragma endregion
 
 #pragma region 天球
@@ -80,7 +80,7 @@ private:
 	std::unique_ptr<KObject3d> skyDome = nullptr;
 
 	// モデル
-	std::unique_ptr<KModel> skyDomeModel = nullptr;
+	KModel* skyDomeModel = nullptr;
 #pragma endregion
 
 	// 画面サイズ

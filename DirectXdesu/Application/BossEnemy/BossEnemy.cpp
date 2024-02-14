@@ -16,7 +16,7 @@ void BossEnemy::Init(KGPlin* pipeline_, const KMyMath::Vector3& initPos_, KGPlin
 	spritePipeline = spritePipeline_;
 
 	// オブジェクト生成
-	object3d.reset(KObject3d::Create(model.get(), pipeline));
+	object3d.reset(KObject3d::Create(model, pipeline));
 	object3d->SetPos(initPos_);
 
 	// 体力セット

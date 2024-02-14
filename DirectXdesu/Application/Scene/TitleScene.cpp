@@ -10,6 +10,7 @@
 #include "Ease.h"
 
 #include "PipelineManager.h"
+#include "ResourceManager.h"
 
 TitleScene::~TitleScene()
 {
@@ -19,12 +20,10 @@ TitleScene::~TitleScene()
 void TitleScene::LoadResources()
 {
 	// 機体モデル
-	model = std::make_unique<MtlObj>("BattleShip");
-	model->CreateModel();
+	model = ResourceManager::GetInstance()->GetModels("Player");
 
 	// 天球モデル
-	skyDomeModel = std::make_unique<MtlObj>("Hosizora");
-	skyDomeModel->CreateModel();
+	skyDomeModel = ResourceManager::GetInstance()->GetModels("T_SkyDorm");
 }
 
 void TitleScene::Init()
@@ -56,11 +55,11 @@ void TitleScene::Init()
 
 	// オブジェクト生成
 	object3d.reset(
-	    KObject3d::Create(model.get(), PipelineManager::GetInstance()->GetObjPipeline()));
+	    KObject3d::Create(model, PipelineManager::GetInstance()->GetObjPipeline()));
 	object3d->SetScale({ 0.0f,0.0f,0.0f });
 
 	skyDome.reset(
-	    KObject3d::Create(skyDomeModel.get(), PipelineManager::GetInstance()->GetObjPipeline()));
+	    KObject3d::Create(skyDomeModel, PipelineManager::GetInstance()->GetObjPipeline()));
 	skyDome->SetScale({ 200.0f,200.0f,200.0f });
 
 	// フラッシュ

@@ -6,7 +6,7 @@
 
 #include "BulletManager.h"
 #include "PipelineManager.h"
-#include "ResourceManager.h"
+#include "ModelManager.h"
 
 BulletManager* BulletManager::bulletManager = nullptr;
 

@@ -2,7 +2,7 @@
 #include "PipelineManager.h"
 #include "Player.h"
 #include "RailCamera.h"
-#include "ResourceManager.h"
+#include "ModelManager.h"
 
 void Ground::Init(Player* player_) {
 	// オブジェクト生成

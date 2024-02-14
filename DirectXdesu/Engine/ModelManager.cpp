@@ -1,4 +1,4 @@
-#include "ResourceManager.h"
+#include "ModelManager.h"
 
 ModelManager* ModelManager::GetInstance() {
 	static ModelManager instance;

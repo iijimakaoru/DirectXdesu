@@ -10,7 +10,7 @@
 #include "Ease.h"
 
 #include "PipelineManager.h"
-#include "ResourceManager.h"
+#include "ModelManager.h"
 
 TitleScene::~TitleScene()
 {

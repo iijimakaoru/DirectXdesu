@@ -26,7 +26,7 @@
 
 #include "PipelineManager.h"
 
-#include "ResourceManager.h"
+#include "ModelManager.h"
 
 GameScence::~GameScence() { Final(); };
 

@@ -11,7 +11,7 @@
 #include "Ease.h"
 
 #include "PipelineManager.h"
-#include "ResourceManager.h"
+#include "ModelManager.h"
 
 /// <summary>
 /// 静的メンバ変数の実体

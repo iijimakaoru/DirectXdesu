@@ -465,7 +465,7 @@
     <ClCompile Include="BlasterUnitLazer.cpp">
       <Filter>ソース ファイル\Application\BossEnemy\Blaster</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\ResourceManager.cpp">
+    <ClCompile Include="Engine\ModelManager.cpp">
       <Filter>ソース ファイル\Engine</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Base\Pipeline\PipelineManager.cpp">
@@ -704,7 +704,7 @@
     <ClInclude Include="Engine\Base\Pipeline\PipelineManager.h">
       <Filter>ヘッダー ファイル\Engine\Base\Pipeline</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\ResourceManager.h">
+    <ClInclude Include="Engine\ModelManager.h">
       <Filter>ヘッダー ファイル\Engine</Filter>
     </ClInclude>
   </ItemGroup>

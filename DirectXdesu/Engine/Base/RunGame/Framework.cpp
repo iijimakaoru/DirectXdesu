@@ -3,7 +3,7 @@
 #include "ParticleManager.h"
 #include "Sprite.h"
 #include "PipelineManager.h"
-#include "ResourceManager.h"
+#include "ModelManager.h"
 
 void Framework::Init() {
 	// FBX初期化

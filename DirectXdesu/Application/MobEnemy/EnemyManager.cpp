@@ -5,7 +5,7 @@
 #include "Player.h"
 #include "RailCamera.h"
 #include "ScoreManager.h"
-#include "ResourceManager.h"
+#include "ModelManager.h"
 #include "PipelineManager.h"
 
 EnemyManager* EnemyManager::Create(

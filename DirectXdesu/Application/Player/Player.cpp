@@ -4,7 +4,7 @@
 #include "ImguiManager.h"
 #include "ParticleManager.h"
 #include "PipelineManager.h"
-#include "ResourceManager.h"
+#include "ModelManager.h"
 #include "ScoreManager.h"
 
 const float Player::moveSpeed = 0.48f;

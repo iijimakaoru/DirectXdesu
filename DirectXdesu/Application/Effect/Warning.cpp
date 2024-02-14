@@ -1,7 +1,6 @@
 #include "Warning.h"
 #include "KWinApp.h"
 #include "PipelineManager.h"
-#include "ResourceManager.h"
 
 void Warning::Init()
 {

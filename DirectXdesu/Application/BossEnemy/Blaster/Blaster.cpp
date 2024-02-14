@@ -10,7 +10,7 @@
 #include "BlasterTackleState.h"
 #include "Collision.h"
 #include "ImguiManager.h"
-#include "ResourceManager.h"
+#include "ModelManager.h"
 #include "ScoreManager.h"
 
 Blaster* Blaster::nowBlaster = nullptr;

@@ -181,7 +181,7 @@
     <ClCompile Include="Application\Score\ScoreManager.cpp" />
     <ClCompile Include="Application\GameManager.cpp" />
     <ClCompile Include="Engine\Base\Pipeline\PipelineManager.cpp" />
-    <ClCompile Include="Engine\ResourceManager.cpp" />
+    <ClCompile Include="Engine\ModelManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\BossEnemy\ActState.h" />
@@ -261,7 +261,7 @@
     <ClInclude Include="Application\Score\ScoreManager.h" />
     <ClInclude Include="Application\GameManager.h" />
     <ClInclude Include="Engine\Base\Pipeline\PipelineManager.h" />
-    <ClInclude Include="Engine\ResourceManager.h" />
+    <ClInclude Include="Engine\ModelManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DirectXdesu.rc" />

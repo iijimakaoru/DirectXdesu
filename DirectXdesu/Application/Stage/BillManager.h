@@ -1,11 +1,11 @@
 #pragma once
-#include <memory>
-#include "Camera.h"
-#include "KObject3d.h"
-#include "KModel.h"
-#include "KGPlin.h"
-#include "KShader.h"
 #include "Bill1.h"
+#include "Camera.h"
+#include "KGPlin.h"
+#include "KModel.h"
+#include "KObject3d.h"
+#include "KShader.h"
+#include <memory>
 
 /**
  * @file BillManager.h
@@ -13,8 +13,7 @@
  * @author 飯島 薫
  */
 
-class BillManager
-{
+class BillManager {
 public:
 	BillManager();
 	~BillManager();
@@ -40,9 +39,6 @@ public:
 	void SetIsStopCreate(const bool isStopCreate_);
 
 private:
-	// モデル
-	std::unique_ptr<KModel> model = nullptr;
-
 	// ビル１
 	std::list<std::unique_ptr<Bill1>> bill1s;
 
@@ -54,4 +50,3 @@ private:
 
 	bool isStopCreate = false;
 };
-

@@ -95,13 +95,6 @@ private:
 
 	// プレイヤー
 	std::unique_ptr<Player> player = nullptr;
-	std::unique_ptr<KModel> playerModel;
-
-	// プレイヤーの弾モデル
-	std::unique_ptr<KModel> playersBulletModel = nullptr;
-
-	// 雑魚モデル
-	std::unique_ptr<KModel> mobEnemysModel;
 
 	// 敵の弾モデル
 	std::unique_ptr<KModel> enemysBulletModel = nullptr;

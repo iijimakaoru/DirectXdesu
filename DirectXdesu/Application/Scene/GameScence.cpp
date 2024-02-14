@@ -29,15 +29,7 @@
 GameScence::~GameScence() { Final(); };
 
 void GameScence::LoadResources() {
-	// モデル
-	playerModel = std::make_unique<MtlObj>("BattleShip");
-	playerModel->CreateModel();
-	mobEnemysModel = std::make_unique<MtlObj>("MobEnemy1");
-	mobEnemysModel->CreateModel();
-	playersBulletModel = std::make_unique<MtlObj>("playerBullet");
-	playersBulletModel->CreateModel();
 	skyBoxModel = std::make_unique<MtlObj>("SkyBox");
-	skyBoxModel->CreateModel();
 }
 
 void GameScence::Init() {
@@ -48,9 +40,7 @@ void GameScence::Init() {
 
 	// プレイヤー生成
 	float playersHPInit = 50.0f;
-	player.reset(Player::Create(
-	    playerModel.get(), PipelineManager::GetInstance()->GetObjPipeline(), playersHPInit,
-	    PipelineManager::GetInstance()->GetSpritePipeline()));
+	player.reset(Player::Create(playersHPInit));
 
 	// カメラ生成
 	camera = std::make_unique<RailCamera>();
@@ -65,9 +55,7 @@ void GameScence::Init() {
 	// エネミーマネージャー生成
 	enemyManager.reset(EnemyManager::Create(
 	    "Resources/csv/enemyPop.csv", // ステージのcsvを読み込む
-	    player.get(),                 // プレイヤー情報
-	    mobEnemysModel.get(),         // モデル渡し(マネージャー内で作るか悩み中)
-	    PipelineManager::GetInstance()->GetObjPipeline() // パイプライン渡し
+	    player.get()                  // プレイヤー情報
 	    ));
 
 	// 地面

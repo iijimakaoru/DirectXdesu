@@ -11,11 +11,9 @@
  * @author 飯島 薫
  */
 
-class KModel 
-{
+class KModel {
 public:
-	struct ObjMaterialInfo
-	{
+	struct ObjMaterialInfo {
 		// マテリアル名
 		std::string name;
 		// アンビエント影響度
@@ -32,6 +30,19 @@ public:
 		ObjMaterialInfo();
 	};
 
+	// マテリアル読み込み
+	void LoadMaterial(const std::string& directoryPath, const std::string& filename);
+
+	// 描画
+	void Draw();
+
+	// 描画(テクスチャ指定)
+	void Draw(TextureData texData);
+
+	// モデル生成
+	void CreateModel();
+
+public:
 	// 頂点データ
 	std::vector<VertexPosNormalUV> vertices;
 	// インデックスデータ
@@ -43,42 +54,29 @@ public:
 
 	ObjMaterialInfo objMtl;
 
-	// マテリアル読み込み
-	void LoadMaterial(const std::string& directoryPath, const std::string& filename);
-
-	// モデル生成
-	void CreateModel();
-
-	// 描画
-	void Draw();
-
-	// 描画(テクスチャ指定)
-	void Draw(TextureData texData);
+private:
+	
 };
 
-class Cube : public KModel 
-{
+class Cube : public KModel {
 public:
 	Cube();
 	~Cube();
 };
 
-class Triangle : public KModel 
-{
+class Triangle : public KModel {
 public:
 	Triangle();
 	~Triangle();
 };
 
-class Line : public KModel 
-{
+class Line : public KModel {
 public:
 	Line();
 	~Line();
 };
 
-class MtlObj : public KModel
-{
+class MtlObj : public KModel {
 public:
 	MtlObj(const std::string modelname);
 	~MtlObj();

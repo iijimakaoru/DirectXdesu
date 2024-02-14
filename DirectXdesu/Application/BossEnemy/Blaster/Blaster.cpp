@@ -31,7 +31,6 @@ Blaster* Blaster::Create(KGPlin* pipeline_, const KMyMath::Vector3& pos_, KGPlin
 
 void Blaster::Init(KGPlin* pipeline_, const KMyMath::Vector3& initPos_, KGPlin* spritePipeline_) {
 	model = std::make_unique<MtlObj>("BlasterCore");
-	model->CreateModel();
 
 	BossEnemy::Init(pipeline_, initPos_, spritePipeline_);
 
@@ -39,7 +38,6 @@ void Blaster::Init(KGPlin* pipeline_, const KMyMath::Vector3& initPos_, KGPlin* 
 	HP = maxHP;
 
 	unitsModel = std::make_unique<MtlObj>("BlasterUnit");
-	unitsModel->CreateModel();
 
 	for (size_t i = 0; i < 8; i++) {
 		units[i].reset(KObject3d::Create(unitsModel.get(), pipeline_));

@@ -28,12 +28,11 @@ public:
 	/// </summary>
 	/// <param name="model_"></param>
 	/// <returns></returns>
-	static Player*
-	    Create(KModel* model_, KGPlin* objPipeline_, const float playerHP, KGPlin* spritePipeline_);
+	static Player* Create(const float playerHP);
 
 public:
 	// 初期化
-	void Init(KModel* model_, KGPlin* objPipeline_, const float playerHP, KGPlin* spritePipeline_);
+	void Init(const float playerHP);
 
 	/// <summary>
 	/// 更新
@@ -131,13 +130,6 @@ private:
 
 	// オブジェクト
 	std::unique_ptr<KObject3d> object3d;
-
-	// モデル
-	KModel* model = nullptr;
-
-	// パイプライン
-	KGPlin* objPipeline;
-	KGPlin* spritePipeline;
 #pragma endregion
 
 #pragma region 回転用変数

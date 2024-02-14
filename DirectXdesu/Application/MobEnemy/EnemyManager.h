@@ -12,12 +12,12 @@ public:
 	/// 生成
 	/// </summary>
 	/// <returns></returns>
-	static EnemyManager* Create(const std::string fileName, Player* player_, KModel* model_, KGPlin* pipeline_);
+	static EnemyManager* Create(const std::string fileName, Player* player_);
 
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void Init(Player* player_, KModel* model_, KGPlin* pipeline_);
+	void Init(Player* player_);
 
 	/// <summary>
 	/// 更新
@@ -51,15 +51,11 @@ private:
 	bool isStand = false;
 	int32_t waitTimer = 0;
 
-	// パイプライン
-	KGPlin* pipeline;
-
 	// プレイヤー情報格納
 	Player* player = nullptr;
 
 private:
 	// 雑魚
 	std::list<std::unique_ptr<MobEnemy>> mobEnemys;
-	KModel* model1;
 };
 

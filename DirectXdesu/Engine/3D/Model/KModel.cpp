@@ -64,6 +64,8 @@ Cube::Cube()
 		 20,21,22,
 		 22,21,23
 	};
+
+	CreateModel();
 }
 
 Cube::~Cube()
@@ -147,6 +149,8 @@ Triangle::Triangle()
 		}
 	}
 	file.close();
+
+	CreateModel();
 }
 
 Triangle::~Triangle()
@@ -210,6 +214,8 @@ Line::Line()
 		 20,21,22,
 		 22,21,23
 	};
+
+	CreateModel();
 }
 
 Line::~Line()
@@ -417,6 +423,8 @@ MtlObj::MtlObj(const std::string modelname)
 		}
 	}
 	file.close();
+
+	CreateModel();
 }
 
 MtlObj::~MtlObj()

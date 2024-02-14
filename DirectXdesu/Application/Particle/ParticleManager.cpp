@@ -372,7 +372,6 @@ void ObjParticleManager::Init()
 
 	// キューブ生成
 	model = std::make_unique<Cube>();
-	model->CreateModel();
 
 	// テクスチャ
 	textureData1 = TextureManager::Load("Resources/texture/kariPlayerColor.png");

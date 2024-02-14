@@ -85,7 +85,6 @@ private:
 private:
 	// プレイヤーの弾
 	std::list<std::unique_ptr<PlayerBullet>> playerBullets;
-	std::unique_ptr<KModel> playersBulletModel = nullptr;
 
 	// 敵の弾
 	std::list<std::unique_ptr<EnemyBullet>> enemyBullets;
@@ -93,7 +92,6 @@ private:
 
 	// ボム
 	std::list<std::unique_ptr<Bom>> boms;
-	std::unique_ptr<KModel> bomsModel = nullptr;
 	std::unique_ptr<KModel> expsModel = nullptr;
 
 	// パイプライン

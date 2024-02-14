@@ -5,21 +5,14 @@
  */
 
 #include "BulletManager.h"
+#include "ResourceManager.h"
 
 BulletManager* BulletManager::bulletManager = nullptr;
 
 void BulletManager::Init(KGPlin* pipeline_) {
-	playersBulletModel = std::make_unique<MtlObj>("playerBullet");
-	playersBulletModel->CreateModel();
-
 	enemysBulletModel = std::make_unique<MtlObj>("EnemyBullet");
-	enemysBulletModel->CreateModel();
-
-	bomsModel = std::make_unique<MtlObj>("playerBullet");
-	bomsModel->CreateModel();
 
 	expsModel = std::make_unique<MtlObj>("Explosion");
-	expsModel->CreateModel();
 
 	pipeline = pipeline_;
 }
@@ -61,7 +54,8 @@ void BulletManager::PlayerBulletShot(
 	// 弾生成
 	std::unique_ptr<PlayerBullet> newBullet;
 	newBullet.reset(PlayerBullet::Create(
-	    playersBulletModel.get(), pipeline, pos, vec_, rot_, bulletSpeed_, BulletPower_));
+	    ResourceManager::GetInstance()->GetModels("P_Bullet"), pipeline, pos, vec_, rot_,
+	    bulletSpeed_, BulletPower_));
 	// 登録
 	playerBullets.push_back(std::move(newBullet));
 }
@@ -81,8 +75,9 @@ void BulletManager::BomShot(
     const KMyMath::Vector3& pos_, const KMyMath::Vector3& vec_, const KMyMath::Vector3& rot_,
     const float bulletSpeed_) {
 	std::unique_ptr<Bom> newBom;
-	newBom.reset(
-	    Bom::Create(bomsModel.get(), expsModel.get(), pipeline, pos_, vec_, rot_, bulletSpeed_));
+	newBom.reset(Bom::Create(
+	    ResourceManager::GetInstance()->GetModels("P_Bullet"), expsModel.get(), pipeline, pos_,
+	    vec_, rot_, bulletSpeed_));
 	boms.push_back(std::move(newBom));
 }
 

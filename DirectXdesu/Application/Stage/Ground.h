@@ -1,10 +1,10 @@
 #pragma once
-#include <memory>
 #include "Camera.h"
-#include "KObject3d.h"
-#include "KModel.h"
 #include "KGPlin.h"
+#include "KModel.h"
+#include "KObject3d.h"
 #include "KShader.h"
+#include <memory>
 
 /**
  * @file Ground.h
@@ -14,8 +14,7 @@
 
 class Player;
 
-class Ground
-{
+class Ground {
 public:
 	// 初期化
 	void Init(Player* player_);
@@ -37,10 +36,7 @@ public:
 
 private:
 	// オブジェクト
-	std::array<std::unique_ptr<KObject3d>,2> object3d;
-
-	// モデル
-	std::unique_ptr<KModel> model;
+	std::array<std::unique_ptr<KObject3d>, 2> object3d;
 
 	// プレイヤーインスタンス格納
 	Player* player;

@@ -5,30 +5,26 @@
 #include "Player.h"
 #include "RailCamera.h"
 #include "ScoreManager.h"
+#include "ResourceManager.h"
+#include "PipelineManager.h"
 
 EnemyManager* EnemyManager::Create(
-    const std::string fileName_, Player* player_, KModel* model_, KGPlin* pipeline_) {
+    const std::string fileName_, Player* player_) {
 	// インスタンス
 	EnemyManager* instance = new EnemyManager();
 	if (instance == nullptr) {
 		return nullptr;
 	}
 
-	instance->Init(player_, model_, pipeline_);
+	instance->Init(player_);
 	instance->LoadEnemyPopData(fileName_);
 
 	return instance;
 }
 
-void EnemyManager::Init(Player* player_, KModel* model_, KGPlin* pipeline_) {
+void EnemyManager::Init(Player* player_) {
 	// プレイヤー情報格納
 	player = player_;
-
-	// モデル読み込み
-	model1 = model_;
-
-	// パイプライン読み込み
-	pipeline = pipeline_;
 }
 
 void EnemyManager::Update(ViewProjection* viewPro_) {
@@ -149,8 +145,8 @@ void EnemyManager::UpdateEnemyPopCommands() {
 
 				// 生成
 				newMEnemy.reset(FlyEnemy::Create(
-				    model1,                // モデルセット
-				    pipeline,              // パイプラインセット
+				    ResourceManager::GetInstance()->GetModels("MobEnemy1"), // モデルセット
+				    PipelineManager::GetInstance()->GetObjPipeline(), // パイプラインセット
 				    {x, y, z},             // 生成場所
 				    {_x, _y},              // 最終地点
 				    RailCamera::GetSpeed() // 移動スピード
@@ -164,8 +160,8 @@ void EnemyManager::UpdateEnemyPopCommands() {
 			} else if (enemyType == MobEnemy::EnemysType::Canon) {
 				// 生成
 				newMEnemy.reset(CanonEnemy::Create(
-				    model1,   // モデルセット
-				    pipeline, // パイプラインセット
+				    ResourceManager::GetInstance()->GetModels("MobEnemy1"), // モデルセット
+				    PipelineManager::GetInstance()->GetObjPipeline(), // パイプラインセット
 				    {x, y, z} // 出現位置
 				    ));
 
@@ -177,8 +173,8 @@ void EnemyManager::UpdateEnemyPopCommands() {
 			} else if (enemyType == MobEnemy::EnemysType::Appear) {
 				// 生成
 				newMEnemy.reset(AppearEnemy::Create(
-				    model1,   // モデルセット
-				    pipeline, // パイプラインセット
+				    ResourceManager::GetInstance()->GetModels("MobEnemy1"), // モデルセット
+				    PipelineManager::GetInstance()->GetObjPipeline(), // パイプラインセット
 				    {x, y, z} // 出現位置
 				    ));
 

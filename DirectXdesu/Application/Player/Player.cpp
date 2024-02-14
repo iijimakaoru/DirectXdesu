@@ -3,6 +3,8 @@
 #include "Ease.h"
 #include "ImguiManager.h"
 #include "ParticleManager.h"
+#include "PipelineManager.h"
+#include "ResourceManager.h"
 #include "ScoreManager.h"
 
 const float Player::moveSpeed = 0.48f;
@@ -14,8 +16,7 @@ Player* Player::nowPlayer = nullptr;
 
 bool Player::isStartEase = false;
 
-Player* Player::Create(
-    KModel* model_, KGPlin* objPipeline_, const float playerHP, KGPlin* spritePipeline_) {
+Player* Player::Create(const float playerHP) {
 	// インスタンス生成
 	Player* player = new Player();
 	if (player == nullptr) {
@@ -23,25 +24,19 @@ Player* Player::Create(
 	}
 
 	// 初期化
-	player->Init(model_, objPipeline_, playerHP, spritePipeline_);
+	player->Init(playerHP);
 
 	return player;
 }
 
-void Player::Init(
-    KModel* model_, KGPlin* objPipeline_, const float playerHP, KGPlin* spritePipeline_) {
+void Player::Init(const float playerHP) {
 	// 入力インスタンス
 	input = KInput::GetInstance();
 
-	// モデル生成
-	model = model_;
-
-	// パイプライン生成
-	objPipeline = objPipeline_;
-	spritePipeline = spritePipeline_;
-
 	// オブジェクト生成
-	object3d.reset(KObject3d::Create(model, objPipeline));
+	object3d.reset(KObject3d::Create(
+	    ResourceManager::GetInstance()->GetModels("Player"),
+	    PipelineManager::GetInstance()->GetObjPipeline()));
 	object3d->SetPos({0, 0, 50});
 	object3d->SetScale({2.0f, 2.0f, 2.0f});
 
@@ -56,16 +51,16 @@ void Player::Init(
 	HP = maxHP;
 
 	// HPバー
-	HPUI.reset(Sprite::Create(spritePipeline));
+	HPUI.reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
 
 	// HP減少値バー
-	HPrectUI.reset(Sprite::Create(spritePipeline));
+	HPrectUI.reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
 
 	// HPテクスチャ読み込み
 	hpTex = TextureManager::Load("Resources/texture/white1x1.png");
 
 	// HPゲージ
-	HPBarUI.reset(Sprite::Create(spritePipeline));
+	HPBarUI.reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
 
 	// HPゲージテクスチャ読み込み
 	hpbarTex = TextureManager::Load("Resources/texture/PlayerHPBar2.png");
@@ -79,7 +74,7 @@ void Player::Init(
 	isCrisis = false;
 
 	// ダメージエフェクト
-	damage.reset(Sprite::Create(spritePipeline));
+	damage.reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
 
 	// ダメージエフェクトテクスチャ読み込み
 	damageTex = TextureManager::Load("Resources/texture/damage.png");
@@ -88,18 +83,18 @@ void Player::Init(
 	dAlpha = 0;
 
 	// 操作説明
-	operation.reset(Sprite::Create(spritePipeline));
+	operation.reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
 	operationTex = TextureManager::Load("Resources/texture/setumei.png");
 	operationPos = {
 	    KWinApp::GetInstance()->GetWindowSizeW() + 450.0f,
 	    KWinApp::GetInstance()->GetWindowSizeH() + 100.0f};
 
 	// ボムアイコン
-	bomIcon.reset(Sprite::Create(spritePipeline));
+	bomIcon.reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
 	bomIconTex = TextureManager::Load("Resources/texture/BomIcon.png");
 
 	// ボムクールタイム
-	bomCoolIcon.reset(Sprite::Create(spritePipeline));
+	bomCoolIcon.reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
 
 	audioManager = AudioManager::GetInstance();
 

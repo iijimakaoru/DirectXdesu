@@ -39,6 +39,7 @@ void Framework::Init() {
 	// テクスチャマネージャー初期化
 	textureManager = TextureManager::GetInstance();
 	textureManager->Init();
+	textureManager->LoadTextures();
 
 	// リソース読み込み
 	ResourceManager::GetInstance()->Init();

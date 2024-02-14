@@ -31,7 +31,7 @@ void Warning::Update()
 void Warning::Draw()
 {
 	warning->Draw(
-	    ResourceManager::GetInstance()->GetWhite1x1Tex(), {1280 / 2, 720 / 2}, {1280, 720}, 0.0f,
+	    TextureManager::GetInstance()->GetTextures("White1x1"), {1280 / 2, 720 / 2}, {1280, 720}, 0.0f,
 	    {1, 0, 0, alpha});
 }
 

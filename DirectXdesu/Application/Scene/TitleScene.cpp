@@ -11,8 +11,6 @@
 
 #include "PipelineManager.h"
 
-#include "ResourceManager.h"
-
 TitleScene::~TitleScene()
 {
 	Final();
@@ -141,25 +139,31 @@ void TitleScene::ObjDraw()
 void TitleScene::SpriteDraw()
 {
 	if (!startScene) {
-		mold->Draw(ResourceManager::GetInstance()->GetMoldTex(), titlePos + moldPos, moldScale);
+		mold->Draw(TextureManager::GetInstance()->GetTextures("Mold"), titlePos + moldPos, moldScale);
 
-		mesi->Draw(ResourceManager::GetInstance()->GetMesiTex(), titlePos + mesiPos, mesiScale);
+		mesi->Draw(
+		    TextureManager::GetInstance()->GetTextures("MESI"), titlePos + mesiPos, mesiScale);
 
 		shooter->Draw(
-		    ResourceManager::GetInstance()->GetShooterTex(), titlePos + shooterPos, shooterScale);
+		    TextureManager::GetInstance()->GetTextures("SHOOTER"), titlePos + shooterPos,
+		    shooterScale);
 
-		pushA->Draw(ResourceManager::GetInstance()->GetPushATex(), pushAPos, {0.75f, 0.75f});
+		pushA->Draw(TextureManager::GetInstance()->GetTextures("PushA"), pushAPos, {0.75f, 0.75f});
 	} else {
-		mold->Draw(ResourceManager::GetInstance()->GetMoldTex(), titlePos + moldPos, moldScale);
+		mold->Draw(
+		    TextureManager::GetInstance()->GetTextures("Mold"), titlePos + moldPos, moldScale);
 
 		shooter->Draw(
-		    ResourceManager::GetInstance()->GetShooterTex(), titlePos + shooterPos, shooterScale);
+		    TextureManager::GetInstance()->GetTextures("SHOOTER"), titlePos + shooterPos,
+		    shooterScale);
 
-		mesi->Draw(ResourceManager::GetInstance()->GetMesiTex(), titlePos + mesiPos, mesiScale);
+		mesi->Draw(
+		    TextureManager::GetInstance()->GetTextures("MESI"), titlePos + mesiPos, mesiScale);
 	}
 
 	flash->Draw(
-	    ResourceManager::GetInstance()->GetWhite1x1Tex(), {width / 2, height / 2}, {width, height},
+	    TextureManager::GetInstance()->GetTextures("White1x1"), {width / 2, height / 2},
+	    {width, height},
 	    0, {1.0f, 1.0f, 1.0f, flashAlpha});
 }
 

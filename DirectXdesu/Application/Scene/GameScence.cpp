@@ -26,8 +26,6 @@
 
 #include "PipelineManager.h"
 
-#include "ResourceManager.h"
-
 GameScence::~GameScence() { Final(); };
 
 void GameScence::LoadResources() {
@@ -265,12 +263,12 @@ void GameScence::SpriteDraw() {
 	if (isOverMovie || isClearMovie || isStageStart || isBossAppearMovie) {
 		for (size_t i = 0; i < 2; i++) {
 			movieBar[0]->Draw(
-			    ResourceManager::GetInstance()->GetWhite1x1Tex(), movieBarPos[0],
+			    TextureManager::GetInstance()->GetTextures("White1x1"), movieBarPos[0],
 			    {static_cast<float>(KWinApp::GetInstance()->GetWindowSizeW()), 50.0f}, 0.0f,
 			    {0.0f, 0.0f, 0.0f, 1.0f}, false, false, {0.0f, 0.0f});
 
 			movieBar[1]->Draw(
-			    ResourceManager::GetInstance()->GetWhite1x1Tex(), movieBarPos[1],
+			    TextureManager::GetInstance()->GetTextures("White1x1"), movieBarPos[1],
 			    {static_cast<float>(KWinApp::GetInstance()->GetWindowSizeW()), 50.0f}, 0.0f,
 			    {0.0f, 0.0f, 0.0f, 1.0f}, false, false, {0.0f, 1.0f});
 		}
@@ -283,18 +281,19 @@ void GameScence::SpriteDraw() {
 		float height = static_cast<float>(KWinApp::GetInstance()->GetWindowSizeH());
 
 		poseBack->Draw(
-		    ResourceManager::GetInstance()->GetWhite1x1Tex(), {0, 0}, {width, height}, 0.0f,
+		    TextureManager::GetInstance()->GetTextures("White1x1"), {0, 0}, {width, height}, 0.0f,
 		    {0, 0, 0, 0.7f}, false, false, {0, 0});
 
 		poseTexPos = {width / 2, height * 1 / 4};
-		poseTexS->Draw(ResourceManager::GetInstance()->GetPoseTex(), poseTexPos, {1.5f, 1.5f});
+		poseTexS->Draw(
+		    TextureManager::GetInstance()->GetTextures("Pose"), poseTexPos, {1.5f, 1.5f});
 
 		selectBar->Draw(
-		    ResourceManager::GetInstance()->GetWhite1x1Tex(), selectBarPos, {200.0f, 34.0f}, 0.0f,
-		    {0.5f, 0.5f, 0.5f, 0.8f});
+		    TextureManager::GetInstance()->GetTextures("White1x1"), selectBarPos, {200.0f, 34.0f},
+		    0.0f, {0.5f, 0.5f, 0.5f, 0.8f});
 
-		operationS->Draw(ResourceManager::GetInstance()->GetOperationTex(), operationPos);
-		backTitleS->Draw(ResourceManager::GetInstance()->GetBackTitleTex(), backTitlePos);
+		operationS->Draw(TextureManager::GetInstance()->GetTextures("Operation"), operationPos);
+		backTitleS->Draw(TextureManager::GetInstance()->GetTextures("Back"), backTitlePos);
 	}
 }
 

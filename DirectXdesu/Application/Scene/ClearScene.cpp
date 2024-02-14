@@ -11,8 +11,6 @@
 #include "PipelineManager.h"
 #include "ScoreManager.h"
 
-#include "ResourceManager.h"
-
 ClearScene::~ClearScene() { Final(); }
 
 void ClearScene::LoadResources() {}
@@ -225,14 +223,15 @@ void ClearScene::ObjDraw() {}
 
 void ClearScene::SpriteDraw() {
 	for (size_t i = 0; i < 2; i++) {
-		back[i]->Draw(ResourceManager::GetInstance()->GetBackTex(), backPos[i]);
+		back[i]->Draw(TextureManager::GetInstance()->GetTextures("R_Back"), backPos[i]);
 	}
 
 	result->Draw(
-	    ResourceManager::GetInstance()->GetResultTex(), resultPos, {1, 1}, 0.0f, {1, 1, 1, 1},
+	    TextureManager::GetInstance()->GetTextures("Result"), resultPos, {1, 1}, 0.0f, {1, 1, 1, 1},
 	    false, false, {0.5f, 0});
 
-	scoreBord->Draw(ResourceManager::GetInstance()->GetScoreBordTex(), scoreBordPos, scoreBordSize);
+	scoreBord->Draw(
+	    TextureManager::GetInstance()->GetTextures("Bord"), scoreBordPos, scoreBordSize);
 
 	if (isDrawScores) {
 		GameScoreDraw();
@@ -247,7 +246,7 @@ void ClearScene::SpriteDraw() {
 	}
 
 	if (isGoScene) {
-		pushA->Draw(ResourceManager::GetInstance()->GetPushATex(), pushAPos, {0.6f, 0.6f});
+		pushA->Draw(TextureManager::GetInstance()->GetTextures("PushA"), pushAPos, {0.6f, 0.6f});
 	}
 }
 
@@ -272,7 +271,8 @@ void ClearScene::GameScoreDraw() {
 	size_t scrNum = gameScoreNum;
 
 	gameScore->Draw(
-	    ResourceManager::GetInstance()->GetGameScoreTex(), gameScorePos, {1, 1}, 0.0f, {1, 1, 1, 1},
+	    TextureManager::GetInstance()->GetTextures("L_Score"), gameScorePos, {1, 1}, 0.0f,
+	    {1, 1, 1, 1},
 	    false, false, {0.0f, 0.5f});
 
 	size_t i = 0;
@@ -281,7 +281,7 @@ void ClearScene::GameScoreDraw() {
 		numsPos_.x = numsPos_.x - (15 * (i));
 		size_t j = scrNum % 10;
 		gameScoreS[i]->Draw(
-		    ResourceManager::GetInstance()->GetNumeTexs(j), numsPos_, {1, 1}, 0.0f, {1, 1, 1, 1},
+		    TextureManager::GetInstance()->GetNumTex(j), numsPos_, {1, 1}, 0.0f, {1, 1, 1, 1},
 		    false, false, {1.0f, 0.5f});
 		scrNum /= 10;
 		i++;
@@ -292,7 +292,7 @@ void ClearScene::EnemyScoreDraw() {
 	size_t scrNum = enemyScoreNum;
 
 	enemyScore->Draw(
-	    ResourceManager::GetInstance()->GetEnemyScoreTex(), enemyScorePos, {1, 1}, 0.0f,
+	    TextureManager::GetInstance()->GetTextures("E_Bonus"), enemyScorePos, {1, 1}, 0.0f,
 	    {1, 1, 1, 1}, false, false, {0.0f, 0.5f});
 
 	size_t i = 0;
@@ -301,7 +301,7 @@ void ClearScene::EnemyScoreDraw() {
 		numsPos_.x = numsPos_.x - (15 * (i));
 		size_t j = scrNum % 10;
 		enemyScoreS[i]->Draw(
-		    ResourceManager::GetInstance()->GetNumeTexs(j), numsPos_, {1, 1}, 0.0f, {1, 1, 1, 1},
+		    TextureManager::GetInstance()->GetNumTex(j), numsPos_, {1, 1}, 0.0f, {1, 1, 1, 1},
 		    false, false, {1.0f, 0.5f});
 		scrNum /= 10;
 		i++;
@@ -312,7 +312,7 @@ void ClearScene::MinDamageScoreDraw() {
 	size_t scrNum = minDamageScoreNum;
 
 	minDamageScore->Draw(
-	    ResourceManager::GetInstance()->GetMinDamageScoreTex(), minDamageScorePos, {1, 1}, 0.0f,
+	    TextureManager::GetInstance()->GetTextures("D_Bonus"), minDamageScorePos, {1, 1}, 0.0f,
 	    {1, 1, 1, 1}, false, false, {0.0f, 0.5f});
 
 	size_t i = 0;
@@ -321,7 +321,7 @@ void ClearScene::MinDamageScoreDraw() {
 		numsPos_.x = numsPos_.x - (15 * (i));
 		size_t j = scrNum % 10;
 		minDamageScoreS[i]->Draw(
-		    ResourceManager::GetInstance()->GetNumeTexs(j), numsPos_, {1, 1}, 0.0f, {1, 1, 1, 1},
+		    TextureManager::GetInstance()->GetNumTex(j), numsPos_, {1, 1}, 0.0f, {1, 1, 1, 1},
 		    false, false, {1.0f, 0.5f});
 		scrNum /= 10;
 		i++;
@@ -332,7 +332,7 @@ void ClearScene::BossTimeScoreDraw() {
 	size_t scrNum = bossTimeScoreNum;
 
 	bossTimeScore->Draw(
-	    ResourceManager::GetInstance()->GetbossTimeScoreTex(), bossTimeScorePos, {1, 1}, 0.0f,
+	    TextureManager::GetInstance()->GetTextures("T_Bonus"), bossTimeScorePos, {1, 1}, 0.0f,
 	    {1, 1, 1, 1}, false, false, {0.0f, 0.5f});
 
 	size_t i = 0;
@@ -341,7 +341,7 @@ void ClearScene::BossTimeScoreDraw() {
 		numsPos_.x = numsPos_.x - (15 * (i));
 		size_t j = scrNum % 10;
 		bossTimeScoreS[i]->Draw(
-		    ResourceManager::GetInstance()->GetNumeTexs(j), numsPos_, {1, 1}, 0.0f, {1, 1, 1, 1},
+		    TextureManager::GetInstance()->GetNumTex(j), numsPos_, {1, 1}, 0.0f, {1, 1, 1, 1},
 		    false, false, {1.0f, 0.5f});
 		scrNum /= 10;
 		i++;
@@ -352,7 +352,7 @@ void ClearScene::TotalScoreDraw() {
 	size_t scrNum = totalScoreNum;
 
 	total->Draw(
-	    ResourceManager::GetInstance()->GetTotalScoreTex(), totalPos, {1, 1}, 0.0f, {1, 1, 1, 1},
+	    TextureManager::GetInstance()->GetTextures("Total"), totalPos, {1, 1}, 0.0f, {1, 1, 1, 1},
 	    false, false, {0.0f, 0.5f});
 
 	size_t i = 0;
@@ -361,7 +361,7 @@ void ClearScene::TotalScoreDraw() {
 		numsPos_.x = numsPos_.x - (15 * (i));
 		size_t j = scrNum % 10;
 		totalS[i]->Draw(
-		    ResourceManager::GetInstance()->GetNumeTexs(j), numsPos_, {1, 1}, 0.0f, {1, 1, 1, 1},
+		    TextureManager::GetInstance()->GetNumTex(j), numsPos_, {1, 1}, 0.0f, {1, 1, 1, 1},
 		    false, false, {1.0f, 0.5f});
 		scrNum /= 10;
 		i++;

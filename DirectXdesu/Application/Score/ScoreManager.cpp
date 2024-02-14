@@ -2,7 +2,6 @@
 #include "Ease.h"
 #include "ImguiManager.h"
 #include "PipelineManager.h"
-#include "ResourceManager.h"
 
 ScoreManager* ScoreManager::GetInstance() {
 	static ScoreManager instance;
@@ -99,11 +98,13 @@ void ScoreManager::Draw() {
 		BonusCountDraw();
 
 		hits->Draw(
-		    ResourceManager::GetInstance()->GetHitsTex(), {scoresPos.x + 40.0f, numsPos.y + 40.0f},
+		    TextureManager::GetInstance()->GetTextures("Hit"),
+		    {scoresPos.x + 40.0f, numsPos.y + 40.0f},
 		    {1.0f, 1.0f}, 0.0f, {1.0f, 1.0f, 1.0f, 1.0f}, false, false, {0.0f, 0.5f});
 
 		xS->Draw(
-		    ResourceManager::GetInstance()->GetXsTex(), {scoresPos.x + 102.5f, numsPos.y + 41.0f},
+		    TextureManager::GetInstance()->GetTextures("X"),
+		    {scoresPos.x + 102.5f, numsPos.y + 41.0f},
 		    {0.8f, 0.8f});
 
 		BonusTimerDraw();
@@ -159,7 +160,7 @@ void ScoreManager::GameScoreDraw() {
 	size_t scrNum = gameScore;
 
 	scores->Draw(
-	    ResourceManager::GetInstance()->GetScoresTex(), scoresPos, {1.0f, 1.0f}, 0.0f,
+	    TextureManager::GetInstance()->GetTextures("Score"), scoresPos, {1.0f, 1.0f}, 0.0f,
 	    {1.0f, 1.0f, 1.0f, 1.0f}, false, false, {0.0f, 0.0f});
 
 	size_t i = 0;
@@ -168,7 +169,7 @@ void ScoreManager::GameScoreDraw() {
 		numsPos_.x = numsPos_.x - (15 * (i));
 		size_t j = scrNum % 10;
 		score[i]->Draw(
-		    ResourceManager::GetInstance()->GetNumeTexs(j), numsPos_, {1, 1}, 0.0f, {1, 1, 1, 1});
+		    TextureManager::GetInstance()->GetNumTex(j), numsPos_, {1, 1}, 0.0f, {1, 1, 1, 1});
 		scrNum /= 10;
 		i++;
 	}
@@ -182,7 +183,7 @@ void ScoreManager::AddScoreDraw() {
 		numsPos_.x = numsPos_.x - (15 * (i));
 		size_t j = addScrNum % 10;
 		addScore[i]->Draw(
-		    ResourceManager::GetInstance()->GetNumeTexs(j), numsPos_, {1, 1}, 0.0f, {1, 1, 1, 1});
+		    TextureManager::GetInstance()->GetNumTex(j), numsPos_, {1, 1}, 0.0f, {1, 1, 1, 1});
 		addScrNum /= 10;
 		i++;
 	}
@@ -196,7 +197,7 @@ void ScoreManager::BonusCountDraw() {
 		numsPos_.x = numsPos_.x - (15 * (i));
 		size_t j = bonusCountNum % 10;
 		bonusCountS[i]->Draw(
-		    ResourceManager::GetInstance()->GetNumeTexs(j), numsPos_, {1, 1}, 0.0f, {1, 1, 1, 1});
+		    TextureManager::GetInstance()->GetNumTex(j), numsPos_, {1, 1}, 0.0f, {1, 1, 1, 1});
 		bonusCountNum /= 10;
 		i++;
 	}
@@ -210,12 +211,13 @@ void ScoreManager::BonusTimerDraw() {
 
 	const KMyMath::Vector2 bonusBarPos = {scoresPos.x + 103.5f, numsPos.y + 80.0f};
 
-	bonusBar->Draw(ResourceManager::GetInstance()->GetBonusGageTex(), bonusBarPos);
+	bonusBar->Draw(TextureManager::GetInstance()->GetTextures("BonusBar"), bonusBarPos);
 
 	const KMyMath::Vector2 bonusGagePos = {bonusBarPos.x - (gageTexSize.x / 2), bonusBarPos.y};
 
 	bonusGage->Draw(
-	    ResourceManager::GetInstance()->GetWhite1x1Tex(), bonusGagePos, {bonusTimer * sizeX, sizeY},
+	    TextureManager::GetInstance()->GetTextures("White1x1"), bonusGagePos,
+	    {bonusTimer * sizeX, sizeY},
 	    0.0f, {0, 0, 1, 1}, false, false, {0.0f, 0.5f});
 }
 

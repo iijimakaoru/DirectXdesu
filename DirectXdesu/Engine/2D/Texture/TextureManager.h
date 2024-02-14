@@ -7,6 +7,7 @@
 #include <d3dx12.h>
 #pragma warning(pop)
 #include "MyMath.h"
+#include <map>
 
 /**
  * @file TextureManager.h
@@ -68,6 +69,12 @@ public:
 	// ゲッター
 	ID3D12DescriptorHeap* GetSrvHeap() { return srvHeap.Get(); }
 
+	void LoadTextures();
+
+	TextureData& GetTextures(std::string mapName);
+
+	TextureData& GetNumTex(size_t i);
+
 private:
 	/// <summary>
 	/// テクスチャバッファの生成
@@ -97,6 +104,8 @@ private:
 
 	// テクスチャ数
 	UINT texCount;
+
+	std::map<std::string, TextureData> textures;
 
 	// デフォルトテクスチャ格納ディレクトリ
 	static std::string DefaultTextureDirectoryPath;

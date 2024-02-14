@@ -178,7 +178,7 @@ Microsoft::WRL::ComPtr<ID3D12Resource> TextureManager::CreateTexBuff(
 }
 
 D3D12_GPU_DESCRIPTOR_HANDLE
-    TextureManager::CreateSRV(ID3D12Resource* texBuff, DirectX::TexMetadata& metadata) {
+TextureManager::CreateSRV(ID3D12Resource* texBuff, DirectX::TexMetadata& metadata) {
 	// アドレスの先頭を取得
 	D3D12_CPU_DESCRIPTOR_HANDLE cpuHandle = srvHeap->GetCPUDescriptorHandleForHeapStart();
 	D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle = srvHeap->GetGPUDescriptorHandleForHeapStart();
@@ -208,4 +208,89 @@ void TextureManager::Delete() { delete textureManager; }
 TextureManager* TextureManager::GetInstance() {
 	static TextureManager instance;
 	return &instance;
+}
+
+void TextureManager::LoadTextures() {
+	textures["MESI"] = TextureManager::Load("Resources/texture/MESI.png");
+	textures["SHOOTER"] = TextureManager::Load("Resources/texture/SHOOTER.png");
+	textures["Mold"] = TextureManager::Load("Resources/texture/BattleShipMold.png");
+
+	textures["Pose"] = TextureManager::Load("Resources/texture/pose.png");
+	textures["Back"] = TextureManager::Load("Resources/texture/BackTitle.png");
+	textures["Operation"] = TextureManager::Load("Resources/texture/Operation.png");
+
+	textures["Result"] = TextureManager::Load("Resources/texture/ResultText.png");
+	textures["Bord"] = TextureManager::Load("Resources/texture/ScoreBord.png");
+	textures["R_Back"] = TextureManager::Load("Resources/texture/ResultBack.png");
+	textures["L_Score"] = TextureManager::Load("Resources/texture/LevelScore.png");
+	textures["E_Bonus"] = TextureManager::Load("Resources/texture/EnemyBonus.png");
+	textures["D_Bonus"] = TextureManager::Load("Resources/texture/MinDamageBonus.png");
+	textures["T_Bonus"] = TextureManager::Load("Resources/texture/BossTimeBonus.png");
+	textures["Total"] = TextureManager::Load("Resources/texture/Total.png");
+
+	// プッシュAテクスチャ
+	textures["PushA"] = TextureManager::Load("Resources/texture/kariNextScene.png");
+
+	// 数字読み込み
+	textures["0"] = TextureManager::Load("Resources/texture/Num0.png");
+	textures["1"] = TextureManager::Load("Resources/texture/Num1.png");
+	textures["2"] = TextureManager::Load("Resources/texture/Num2.png");
+	textures["3"] = TextureManager::Load("Resources/texture/Num3.png");
+	textures["4"] = TextureManager::Load("Resources/texture/Num4.png");
+	textures["5"] = TextureManager::Load("Resources/texture/Num5.png");
+	textures["6"] = TextureManager::Load("Resources/texture/Num6.png");
+	textures["7"] = TextureManager::Load("Resources/texture/Num7.png");
+	textures["8"] = TextureManager::Load("Resources/texture/Num8.png");
+	textures["9"] = TextureManager::Load("Resources/texture/Num9.png");
+
+	// 「Score」文字
+	textures["Score"] = TextureManager::Load("Resources/texture/ScoreTex.png");
+
+	// 「HIT」文字
+	textures["Hit"] = TextureManager::Load("Resources/texture/HitTex.png");
+
+	// 「X」文字
+	textures["X"] = TextureManager::Load("Resources/texture/XTex.png");
+
+	// ボーナス時間バースプライト
+	textures["BonusBar"] = TextureManager::Load("Resources/texture/scoreBonusBar.png");
+
+	textures["White1x1"] = TextureManager::Load("Resources/texture/white1x1.png");
+}
+
+TextureData& TextureManager::GetTextures(std::string mapName) { return textures[mapName]; }
+
+TextureData& TextureManager::GetNumTex(size_t i) {
+	switch (i) {
+	case 1:
+		return GetTextures("1");
+		break;
+	case 2:
+		return GetTextures("2");
+		break;
+	case 3:
+		return GetTextures("3");
+		break;
+	case 4:
+		return GetTextures("4");
+		break;
+	case 5:
+		return GetTextures("5");
+		break;
+	case 6:
+		return GetTextures("6");
+		break;
+	case 7:
+		return GetTextures("7");
+		break;
+	case 8:
+		return GetTextures("8");
+		break;
+	case 9:
+		return GetTextures("9");
+		break;
+	default:
+		return GetTextures("0");
+		break;
+	}
 }

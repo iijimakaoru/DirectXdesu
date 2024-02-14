@@ -298,7 +298,7 @@ private:
 	static ObjParticleManager* objParticleManager;
 
 	// モデル
-	std::unique_ptr<KModel> model = nullptr;
+	KModel* model = nullptr;
 
 	// パーティクルズ
 	std::list<std::unique_ptr<ObjParticle>> objParticles;

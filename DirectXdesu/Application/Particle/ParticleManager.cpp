@@ -11,6 +11,7 @@
 #include "Ease.h"
 
 #include "PipelineManager.h"
+#include "ResourceManager.h"
 
 /// <summary>
 /// 静的メンバ変数の実体
@@ -332,10 +333,10 @@ ObjParticleManager* ObjParticleManager::objParticleManager = nullptr;
 
 void ObjParticleManager::Init() {
 	// キューブ生成
-	model = std::make_unique<Cube>();
+	model = ResourceManager::GetInstance()->GetModels("Cube");
 
 	// テクスチャ
-	textureData1 = TextureManager::Load("Resources/texture/kariPlayerColor.png");
+	textureData1 = TextureManager::GetInstance()->GetTextures("Cube");
 }
 
 void ObjParticleManager::Update(ViewProjection* viewPro) {
@@ -358,7 +359,7 @@ void ObjParticleManager::SetExp(const KMyMath::Vector3& pos_) {
 	for (size_t i = 0; i < 40; i++) {
 		// 生成
 		newParticle.reset(ObjParticle::Create(
-		    pos_, model.get(), PipelineManager::GetInstance()->GetObjPipeline(),
+		    pos_, model, PipelineManager::GetInstance()->GetObjPipeline(),
 		    {MyMathUtility::GetRandF(-1.0f, 1.0f), MyMathUtility::GetRandF(-1.0f, 1.0f),
 		     MyMathUtility::GetRandF(-1.0f, 1.0f)},
 		    textureData1));
@@ -372,7 +373,7 @@ void ObjParticleManager::SetSmallExp(const KMyMath::Vector3& pos_) {
 	for (size_t i = 0; i < 10; i++) {
 		// 生成
 		newParticle.reset(ObjParticle::Create(
-		    pos_, model.get(), PipelineManager::GetInstance()->GetObjPipeline(),
+		    pos_, model, PipelineManager::GetInstance()->GetObjPipeline(),
 		    {MyMathUtility::GetRandF(-0.25f, 0.25f), MyMathUtility::GetRandF(-0.25f, 0.25f),
 		     MyMathUtility::GetRandF(-0.25f, 0.25f)},
 		    textureData1));

@@ -17,6 +17,8 @@ void ResourceManager::Init() {
 	models_["Bill1"] = std::make_unique<MtlObj>("bill1");
 
 	models_["SkyDorm"] = std::make_unique<MtlObj>("SkyBox");
+
+	models_["Cube"] = std::make_unique<Cube>();
 }
 
 KModel* ResourceManager::GetModels(std::string mapName) { return models_[mapName].get(); }

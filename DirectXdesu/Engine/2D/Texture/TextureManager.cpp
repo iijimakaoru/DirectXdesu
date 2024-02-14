@@ -256,6 +256,8 @@ void TextureManager::LoadTextures() {
 	textures["BonusBar"] = TextureManager::Load("Resources/texture/scoreBonusBar.png");
 
 	textures["White1x1"] = TextureManager::Load("Resources/texture/white1x1.png");
+
+	textures["Cube"] = TextureManager::Load("Resources/texture/kariPlayerColor.png");
 }
 
 TextureData& TextureManager::GetTextures(std::string mapName) { return textures[mapName]; }

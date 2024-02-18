@@ -25,6 +25,7 @@ void Framework::Init() {
 	// 
 	audioManager = AudioManager::GetInstance();
 	audioManager->Init();
+	audioManager->AllLoad();
 
 	// パイプライン生成
 	PipelineManager::GetInstance()->Init();

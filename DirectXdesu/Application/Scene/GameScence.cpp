@@ -107,9 +107,7 @@ void GameScence::Init() {
 
 	audioManager = AudioManager::GetInstance();
 
-	audioManager->SoundLoadWave("BattleBGM.wav");
-
-	audioManager->SoundPlayWave("BattleBGM.wav", 0.25f, true);
+	audioManager->BGMPlay_wav("BattleBGM.wav", 0.25f);
 }
 
 void GameScence::Update() {
@@ -128,7 +126,7 @@ void GameScence::Update() {
 
 		if (input->GetPadButtonDown(XINPUT_GAMEPAD_START)) {
 			if (isPose) {
-				audioManager->SoundPlayWave("BattleBGM.wav", 0.25f, true);
+				audioManager->BGMPlay_wav("BattleBGM.wav", 0.25f);
 				isPose = false;
 			} else {
 				audioManager->SoundStopWave("BattleBGM.wav");
@@ -288,7 +286,7 @@ void GameScence::SpriteDraw() {
 	}
 }
 
-void GameScence::Final() {}
+void GameScence::Final() { }
 
 void GameScence::CheckAllCollisions() {
 	// 自機弾の取得

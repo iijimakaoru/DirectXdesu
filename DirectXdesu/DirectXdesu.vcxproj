@@ -126,7 +126,7 @@
     <ClCompile Include="Application\BossEnemy\Blaster\BlasterAimState.cpp" />
     <ClCompile Include="Application\Bom.cpp" />
     <ClCompile Include="Application\BossEnemy\Blaster\BlasterTackleState.cpp" />
-    <ClCompile Include="BlasterUnitLazer.cpp" />
+    <ClCompile Include="Application\BossEnemy\Blaster\BlasterUnitLazer.cpp" />
     <ClCompile Include="Engine\Sound\AudioManager.cpp" />
     <ClCompile Include="Engine\Base\BaseScene\ASceneFactory.cpp" />
     <ClCompile Include="Engine\Base\BaseScene\BaseScene.cpp" />
@@ -182,6 +182,7 @@
     <ClCompile Include="Application\GameManager.cpp" />
     <ClCompile Include="Engine\Base\Pipeline\PipelineManager.cpp" />
     <ClCompile Include="Engine\ModelManager.cpp" />
+    <ClCompile Include="Engine\SoundManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\BossEnemy\ActState.h" />
@@ -207,7 +208,7 @@
     <ClInclude Include="Application\BossEnemy\Blaster\BlasterAimState.h" />
     <ClInclude Include="Application\Bom.h" />
     <ClInclude Include="Application\BossEnemy\Blaster\BlasterTackleState.h" />
-    <ClInclude Include="BlasterUnitLazer.h" />
+    <ClInclude Include="Application\BossEnemy\Blaster\BlasterUnitLazer.h" />
     <ClInclude Include="Engine\Sound\AudioManager.h" />
     <ClInclude Include="Engine\Base\BaseScene\ASceneFactory.h" />
     <ClInclude Include="Engine\Base\BaseScene\BaseScene.h" />
@@ -262,6 +263,7 @@
     <ClInclude Include="Application\GameManager.h" />
     <ClInclude Include="Engine\Base\Pipeline\PipelineManager.h" />
     <ClInclude Include="Engine\ModelManager.h" />
+    <ClInclude Include="Engine\SoundManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DirectXdesu.rc" />

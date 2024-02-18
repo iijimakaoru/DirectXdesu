@@ -97,9 +97,6 @@ void Player::Init(const float playerHP) {
 	bomCoolIcon.reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
 
 	audioManager = AudioManager::GetInstance();
-
-	audioManager->SoundLoadWave("shotSE.wav");
-	audioManager->SoundLoadWave("alertSE.wav");
 }
 
 void Player::Update(
@@ -332,7 +329,7 @@ void Player::Attack() {
 		);
 
 		// SE鳴らし
-		audioManager->SoundPlayWave("shotSE.wav");
+		audioManager->SEPlay_wav("shotSE.wav");
 
 		// クールタイムセット
 		coolTimer = coolTimeSet;
@@ -422,7 +419,7 @@ void Player::HPEffect() {
 	// ピンチ状態のHP演出
 	if (HP < maxHP * 1 / 4) {
 		if (!isCrisis) {
-			audioManager->SoundPlayWave("alertSE.wav");
+			audioManager->BGMPlay_wav("alertSE.wav");
 			isCrisis = true;
 		}
 		hpColor = {1, 0, 0, 1};

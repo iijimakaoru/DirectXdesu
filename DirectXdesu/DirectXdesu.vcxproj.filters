@@ -462,7 +462,7 @@
     <ClCompile Include="Engine\Base\BaseScene\BaseScene.cpp">
       <Filter>ソース ファイル\Engine\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="BlasterUnitLazer.cpp">
+    <ClCompile Include="Application\BossEnemy\Blaster\BlasterUnitLazer.cpp">
       <Filter>ソース ファイル\Application\BossEnemy\Blaster</Filter>
     </ClCompile>
     <ClCompile Include="Engine\ModelManager.cpp">
@@ -470,6 +470,9 @@
     </ClCompile>
     <ClCompile Include="Engine\Base\Pipeline\PipelineManager.cpp">
       <Filter>ソース ファイル\Engine\Base\Pipeline</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\SoundManager.cpp">
+      <Filter>ソース ファイル\Engine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -698,13 +701,16 @@
     <ClInclude Include="Engine\Base\BaseScene\SceneManager.h">
       <Filter>ヘッダー ファイル\Engine\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="BlasterUnitLazer.h">
+    <ClInclude Include="Application\BossEnemy\Blaster\BlasterUnitLazer.h">
       <Filter>ヘッダー ファイル\Application\BossEnemy\Blaster</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Base\Pipeline\PipelineManager.h">
       <Filter>ヘッダー ファイル\Engine\Base\Pipeline</Filter>
     </ClInclude>
     <ClInclude Include="Engine\ModelManager.h">
+      <Filter>ヘッダー ファイル\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\SoundManager.h">
       <Filter>ヘッダー ファイル\Engine</Filter>
     </ClInclude>
   </ItemGroup>

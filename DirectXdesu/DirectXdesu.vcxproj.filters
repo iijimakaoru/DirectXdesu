@@ -471,9 +471,6 @@
     <ClCompile Include="Engine\Base\Pipeline\PipelineManager.cpp">
       <Filter>ソース ファイル\Engine\Base\Pipeline</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\SoundManager.cpp">
-      <Filter>ソース ファイル\Engine</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Input\KInput.h">
@@ -708,9 +705,6 @@
       <Filter>ヘッダー ファイル\Engine\Base\Pipeline</Filter>
     </ClInclude>
     <ClInclude Include="Engine\ModelManager.h">
-      <Filter>ヘッダー ファイル\Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\SoundManager.h">
       <Filter>ヘッダー ファイル\Engine</Filter>
     </ClInclude>
   </ItemGroup>

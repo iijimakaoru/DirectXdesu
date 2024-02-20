@@ -419,7 +419,7 @@ void Player::HPEffect() {
 	// ピンチ状態のHP演出
 	if (HP < maxHP * 1 / 4) {
 		if (!isCrisis) {
-			audioManager->BGMPlay_wav("alertSE.wav");
+			audioManager->SEPlay_wav("alertSE.wav");
 			isCrisis = true;
 		}
 		hpColor = {1, 0, 0, 1};

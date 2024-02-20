@@ -182,7 +182,6 @@
     <ClCompile Include="Application\GameManager.cpp" />
     <ClCompile Include="Engine\Base\Pipeline\PipelineManager.cpp" />
     <ClCompile Include="Engine\ModelManager.cpp" />
-    <ClCompile Include="Engine\SoundManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\BossEnemy\ActState.h" />
@@ -263,7 +262,6 @@
     <ClInclude Include="Application\GameManager.h" />
     <ClInclude Include="Engine\Base\Pipeline\PipelineManager.h" />
     <ClInclude Include="Engine\ModelManager.h" />
-    <ClInclude Include="Engine\SoundManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DirectXdesu.rc" />

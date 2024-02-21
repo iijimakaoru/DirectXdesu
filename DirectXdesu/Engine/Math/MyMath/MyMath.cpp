@@ -410,18 +410,11 @@ namespace MyMathUtility
 		return c0 * t3 + c1 * t2 + c2 * t + c3;
 	}
 
-	size_t GetRandS(size_t min, size_t max) { // 乱数生成器
-	    min = 0;
-	    max = 0;
-	    //static std::random_device rd;
-	    //static std::default_random_engine eng(rd());
-
-	    //// 分布生成器
-	    //std::uniform_real_distribution<size_t> get_rand_uni_real(min, max);
-
-	    //// 乱数を生成
-	    //return get_rand_uni_real(eng);
-	    return size_t();
+    uint32_t GetRandI(const uint32_t& min, const uint32_t& max) {
+	    std::random_device rd;
+	    std::mt19937 gen(rd());
+	    std::uniform_int_distribution<> RandomDist(min, max);
+	    return RandomDist(gen);
     }
 
     float GetRandF(float min, float max)

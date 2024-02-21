@@ -172,7 +172,7 @@ namespace MyMathUtility
 	/// <param name="min"></param>
 	/// <param name="max"></param>
 	/// <returns></returns>
-    size_t GetRandS(size_t min, size_t max);
+    uint32_t GetRandI(const uint32_t& min, const uint32_t& max);
 	float GetRandF(float min, float max);
 
 	/// <summary>

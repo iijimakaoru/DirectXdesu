@@ -81,7 +81,7 @@ void Blaster::Update(ViewProjection* viewPro_, bool isBossMovie_) {
 
 			if (blasterActState) {
 				blasterActState->Update();
-				actSelect = (size_t)MyMathUtility::GetRandF(1, 3);
+				actSelect = (size_t)MyMathUtility::GetRandI(1, 3);
 			}
 		}
 

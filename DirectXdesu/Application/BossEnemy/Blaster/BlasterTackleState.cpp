@@ -94,8 +94,8 @@ void BlasterTackleState::CubeOpenAct() {
 	}
 
 	if (actTimer < actTime) {
-		float posZ = -3.0f;
 		if (actTimer == 0) {
+			float posZ = -3.0f;
 			for (size_t i = 0; i < 8; i++) {
 				if (i > 3) {
 					posZ = -12.0f;

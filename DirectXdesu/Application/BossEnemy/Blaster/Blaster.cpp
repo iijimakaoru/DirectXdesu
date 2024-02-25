@@ -8,6 +8,7 @@
 #include "BlasterAimState.h"
 #include "BlasterStandState.h"
 #include "BlasterTackleState.h"
+#include "BlasterUnitLazer.h"
 #include "Collision.h"
 #include "ImguiManager.h"
 #include "ModelManager.h"
@@ -72,6 +73,9 @@ void Blaster::Update(ViewProjection* viewPro_, bool isBossMovie_) {
 					break;
 				case 2:
 					blasterActState = std::make_unique<BlasterTackleState>();
+					break;
+				case 3:
+					blasterActState = std::make_unique<BlasterUnitLazer>();
 					break;
 				default:
 					blasterActState = std::make_unique<BlasterStandState>();

@@ -33,4 +33,6 @@ private:
 
 	float startTimer = 0;
 	float startTime = 0;
+
+	uint32_t unitCount = 0;
 };

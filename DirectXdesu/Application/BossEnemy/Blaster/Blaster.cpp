@@ -40,8 +40,8 @@ void Blaster::Init(KGPlin* pipeline_, const KMyMath::Vector3& initPos_, KGPlin* 
 	HP = maxHP;
 
 	for (size_t i = 0; i < 8; i++) {
-		units[i].reset(KObject3d::Create(
-		    ModelManager::GetInstance()->GetModels("Blaster_Unit"), pipeline_));
+		units[i].reset(
+		    KObject3d::Create(ModelManager::GetInstance()->GetModels("Blaster_Unit"), pipeline_));
 
 		units[i]->SetParent(&object3d->GetTransform());
 	}
@@ -67,25 +67,26 @@ void Blaster::Update(ViewProjection* viewPro_, bool isBossMovie_) {
 
 		} else {
 			if (blasterActState->GetIsFinish()) {
-				switch (actSelect) {
+				actSelect = (size_t)MyMathUtility::GetRandI(1, 3);
+				/*switch (actSelect) {
 				case 1:
-					blasterActState = std::make_unique<BlasterAimState>();
-					break;
+				    blasterActState = std::make_unique<BlasterAimState>();
+				    break;
 				case 2:
-					blasterActState = std::make_unique<BlasterTackleState>();
-					break;
+				    blasterActState = std::make_unique<BlasterTackleState>();
+				    break;
 				case 3:
-					blasterActState = std::make_unique<BlasterUnitLazer>();
-					break;
+				    blasterActState = std::make_unique<BlasterUnitLazer>();
+				    break;
 				default:
-					blasterActState = std::make_unique<BlasterStandState>();
-					break;
-				}
+				    blasterActState = std::make_unique<BlasterStandState>();
+				    break;
+				}*/
+				blasterActState = std::make_unique<BlasterUnitLazer>();
 			}
 
 			if (blasterActState) {
 				blasterActState->Update();
-				actSelect = (size_t)MyMathUtility::GetRandI(1, 3);
 			}
 		}
 

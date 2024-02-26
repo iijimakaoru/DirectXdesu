@@ -55,7 +55,7 @@ void BlasterUnitLazer::CubeOpenAct() {
 		actTimer++;
 		for (size_t i = 0; i < 8; i++) {
 			blaster->SetUnitsScale(
-			    MyEase::InCubicVec3({1.0f, 1.0f, 1.0f}, {0.0f, 0.0f, 0.0f}, actTimer / actTime), i);
+			    MyEase::InCubicVec3({0.0f, 0.0f, 0.0f}, {1.0f, 1.0f, 1.0f}, actTimer / actTime), i);
 		}
 	} else {
 		actTimer = 0;
@@ -75,30 +75,66 @@ void BlasterUnitLazer::CubeSet() {
 		cubeForm = CubeForm::Alpha;
 		break;
 	case 1:
-		cubeForm = CubeForm::Beta;
+		cubeForm = CubeForm::Alpha;
+		// cubeForm = CubeForm::Beta;
 		break;
 	case 2:
-		cubeForm = CubeForm::Gamma;
+		cubeForm = CubeForm::Alpha;
+		// cubeForm = CubeForm::Gamma;
 		break;
 	default:
-		cubeForm = CubeForm::Gamma;
+		cubeForm = CubeForm::Alpha;
+		// cubeForm = CubeForm::Gamma;
 		break;
 	}
 
 	switch (cubeForm) {
 	case BlasterUnitLazer::Alpha:
 		for (size_t i = 0; i < 8; i++) {
-			blaster->SetUnitsPos({1, 1, -12}, i);
+			float sixteen = 8.0f;
+			KMyMath::Vector2 setPos[8];
+			setPos[0] = {sixteen / 2, sixteen / 2};
+			setPos[1] = {-sixteen / 2, sixteen / 2};
+			setPos[2] = {-sixteen / 2, -sixteen / 2};
+			setPos[3] = {sixteen / 2, -sixteen / 2};
+			setPos[4] = {sixteen, sixteen};
+			setPos[5] = {-sixteen, sixteen};
+			setPos[6] = {-sixteen, -sixteen};
+			setPos[7] = {sixteen, -sixteen};
+
+			blaster->SetUnitsPos({setPos[i].x, setPos[i].y, -12}, i);
 		}
 		break;
 	case BlasterUnitLazer::Beta:
 		for (size_t i = 0; i < 8; i++) {
-			blaster->SetUnitsPos({-1, -1, -12}, i);
+			float sixteen = 8.0f;
+			KMyMath::Vector2 setPos[8];
+			setPos[0] = {sixteen / 2, sixteen / 2};
+			setPos[1] = {-sixteen / 2, sixteen / 2};
+			setPos[2] = {-sixteen / 2, -sixteen / 2};
+			setPos[3] = {sixteen / 2, -sixteen / 2};
+			setPos[4] = {sixteen, sixteen};
+			setPos[5] = {-sixteen, sixteen};
+			setPos[6] = {-sixteen, -sixteen};
+			setPos[7] = {sixteen, -sixteen};
+
+			blaster->SetUnitsPos({setPos[i].x, setPos[i].y, -12}, i);
 		}
 		break;
 	case BlasterUnitLazer::Gamma:
 		for (size_t i = 0; i < 8; i++) {
-			blaster->SetUnitsPos({-1, 1, -12}, i);
+			float sixteen = 8.0f;
+			KMyMath::Vector2 setPos[8];
+			setPos[0] = {sixteen / 2, sixteen / 2};
+			setPos[1] = {-sixteen / 2, sixteen / 2};
+			setPos[2] = {-sixteen / 2, -sixteen / 2};
+			setPos[3] = {sixteen / 2, -sixteen / 2};
+			setPos[4] = {sixteen, sixteen};
+			setPos[5] = {-sixteen, sixteen};
+			setPos[6] = {-sixteen, -sixteen};
+			setPos[7] = {sixteen, -sixteen};
+
+			blaster->SetUnitsPos({setPos[i].x, setPos[i].y, -12}, i);
 		}
 		break;
 	default:
@@ -107,14 +143,24 @@ void BlasterUnitLazer::CubeSet() {
 }
 
 void BlasterUnitLazer::GoCubeAct() {
-	actTime = 60.0f;
+	Blaster* blaster = Blaster::nowBlaster;
+
+	actTime = 30.0f;
 
 	if (actTimer < actTime) {
 		actTimer++;
-		
+		blaster->SetUnitsPos(
+		    MyEase::Lerp3D(
+		        {blaster->GetUnitsPos(unitCount).x, blaster->GetUnitsPos(unitCount).y, -12},
+		        {blaster->GetUnitsPos(unitCount).x, blaster->GetUnitsPos(unitCount).y, -200},
+		        actTimer / actTime),
+		    unitCount);
 	} else {
 		actTimer = 0;
-		actsPhase = End;
+		unitCount++;
+		if (unitCount >= 8) {
+			actsPhase = End;
+		}
 	}
 }
 

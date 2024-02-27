@@ -14,6 +14,7 @@ void ModelManager::Init() {
 	models_["Explotion"] = std::make_unique<MtlObj>("Explosion");
 	models_["Blaster_Core"] = std::make_unique<MtlObj>("BlasterCore");
 	models_["Blaster_Unit"] = std::make_unique<MtlObj>("BlasterUnit");
+	models_["Lazer"] = std::make_unique<MtlObj>("Lazer");
 
 	models_["Ground"] = std::make_unique<MtlObj>("Grand");
 	models_["Bill1"] = std::make_unique<MtlObj>("bill1");

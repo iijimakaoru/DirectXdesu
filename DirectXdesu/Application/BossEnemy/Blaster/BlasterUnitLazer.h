@@ -39,4 +39,6 @@ private:
 	uint32_t stayTime = 30;
 
 	uint32_t unitCount = 0;
+
+
 };

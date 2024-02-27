@@ -77,7 +77,7 @@ void BlasterUnitLazer::CubeSet() {
 	Blaster* blaster = Blaster::nowBlaster;
 
 	uint32_t minForm = 0;
-	uint32_t maxForm = 2;
+	uint32_t maxForm = 3;
 	uint32_t formNum = MyMathUtility::GetRandI(minForm, maxForm);
 
 	switch (formNum) {
@@ -86,22 +86,22 @@ void BlasterUnitLazer::CubeSet() {
 		break;
 	case 1:
 		cubeForm = CubeForm::Alpha;
-		// cubeForm = CubeForm::Beta;
 		break;
 	case 2:
-		cubeForm = CubeForm::Alpha;
-		// cubeForm = CubeForm::Gamma;
+		cubeForm = CubeForm::Beta;
+		break;
+	case 3:
+		cubeForm = CubeForm::Gamma;
 		break;
 	default:
-		cubeForm = CubeForm::Alpha;
-		// cubeForm = CubeForm::Gamma;
+		cubeForm = CubeForm::Gamma;
 		break;
 	}
 
 	switch (cubeForm) {
 	case BlasterUnitLazer::Alpha:
 		for (size_t i = 0; i < 8; i++) {
-			float sixteen = 8.0f;
+			float sixteen = 12.0f;
 			KMyMath::Vector2 setPos[8];
 			setPos[0] = {sixteen / 2, sixteen / 2};
 			setPos[1] = {-sixteen / 2, sixteen / 2};
@@ -117,32 +117,32 @@ void BlasterUnitLazer::CubeSet() {
 		break;
 	case BlasterUnitLazer::Beta:
 		for (size_t i = 0; i < 8; i++) {
-			float sixteen = 8.0f;
+			float sixteen = 12.0f;
 			KMyMath::Vector2 setPos[8];
-			setPos[0] = {sixteen / 2, sixteen / 2};
-			setPos[1] = {-sixteen / 2, sixteen / 2};
-			setPos[2] = {-sixteen / 2, -sixteen / 2};
-			setPos[3] = {sixteen / 2, -sixteen / 2};
-			setPos[4] = {sixteen, sixteen};
-			setPos[5] = {-sixteen, sixteen};
-			setPos[6] = {-sixteen, -sixteen};
-			setPos[7] = {sixteen, -sixteen};
+			setPos[0] = {sixteen, sixteen / 2};
+			setPos[1] = {-sixteen, sixteen / 2};
+			setPos[2] = {-sixteen, -sixteen / 2};
+			setPos[3] = {sixteen, -sixteen / 2};
+			setPos[4] = {sixteen / 2, sixteen};
+			setPos[5] = {-sixteen / 2, sixteen};
+			setPos[6] = {-sixteen / 2, -sixteen};
+			setPos[7] = {sixteen / 2, -sixteen};
 
 			blaster->SetUnitsPos({setPos[i].x, setPos[i].y, -12}, i);
 		}
 		break;
 	case BlasterUnitLazer::Gamma:
 		for (size_t i = 0; i < 8; i++) {
-			float sixteen = 8.0f;
+			float sixteen = 12.0f;
 			KMyMath::Vector2 setPos[8];
-			setPos[0] = {sixteen / 2, sixteen / 2};
-			setPos[1] = {-sixteen / 2, sixteen / 2};
-			setPos[2] = {-sixteen / 2, -sixteen / 2};
-			setPos[3] = {sixteen / 2, -sixteen / 2};
-			setPos[4] = {sixteen, sixteen};
-			setPos[5] = {-sixteen, sixteen};
-			setPos[6] = {-sixteen, -sixteen};
-			setPos[7] = {sixteen, -sixteen};
+			setPos[0] = {sixteen / 2, 0.0f};
+			setPos[1] = {-sixteen / 2, 0.0f};
+			setPos[2] = {0.0f, -sixteen / 2};
+			setPos[3] = {0.0f, sixteen / 2};
+			setPos[4] = {0.0f, sixteen};
+			setPos[5] = {0.0f, -sixteen};
+			setPos[6] = {-sixteen, 0.0f};
+			setPos[7] = {sixteen, 0.0f};
 
 			blaster->SetUnitsPos({setPos[i].x, setPos[i].y, -12}, i);
 		}

@@ -359,18 +359,18 @@ void GameScence::CheckAllCollisions() {
 	// ボスユニットと自機の当たり判定
 	{
 		// 判定対象AとBの座標
-		KMyMath::Vector3 posA, posB;
+		KMyMath::Vector3 posA;
+		std::array<KMyMath::Vector3, 8> posB;
 
 		if (blaster && !blaster->GetIsDead() && isBossBattle && !player->GetIsDead()) {
 			posA = player->GetWorldPos();
 
-			for (uint32_t i = 0; i < 8; i++)
-			{
-				posB = blaster->UnitsGetWorldPos(i);
-			}
+			for (uint32_t i = 0; i < 8; i++) {
+				posB[i] = blaster->UnitsGetWorldPos(i);
 
-			if (MyCollisions::CheckSphereToSphere(posA, posB, 6.0f, 12.0f)) {
-				player->OnCollision(1.0f);
+				if (MyCollisions::CheckSphereToSphere(posA, posB[i], 3.0f, 4.0f)) {
+					player->OnCollision(1.0f);
+				}
 			}
 		}
 	}

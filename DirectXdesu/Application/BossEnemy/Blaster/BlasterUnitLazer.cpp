@@ -58,8 +58,18 @@ void BlasterUnitLazer::CubeOpenAct() {
 			    MyEase::InCubicVec3({0.0f, 0.0f, 0.0f}, {1.0f, 1.0f, 1.0f}, actTimer / actTime), i);
 		}
 	} else {
-		actTimer = 0;
-		actsPhase = GoCube;
+		isStay = true;
+	}
+
+	if (isStay) {
+		if (stayTimer < stayTime) {
+			stayTimer++;
+		} else {
+			isStay = false;
+			actsPhase = GoCube;
+			actTimer = 0;
+			stayTimer = 0;
+		}
 	}
 }
 

@@ -34,5 +34,9 @@ private:
 	float startTimer = 0;
 	float startTime = 0;
 
+	bool isStay = false;
+	uint32_t stayTimer = 0;
+	uint32_t stayTime = 30;
+
 	uint32_t unitCount = 0;
 };

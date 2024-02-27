@@ -1,7 +1,7 @@
 #include "UnitLazer.h"
 
 UnitLazer* UnitLazer::Create(
-    KModel* model_, KModel* expModel_, KGPlin* pipeline_, const KMyMath::Vector3& pos_, const KMyMath::Vector3& rot_) {
+    KModel* model_, KGPlin* pipeline_, const KMyMath::Vector3& pos_, const KMyMath::Vector3& rot_) {
 	// インスタンス生成
 	UnitLazer* lazer = new UnitLazer();
 	if (lazer == nullptr) {
@@ -9,13 +9,13 @@ UnitLazer* UnitLazer::Create(
 	}
 
 	// 初期化
-	lazer->Init(model_, expModel_, pipeline_);
+	lazer->Init(model_, pipeline_);
 	lazer->Set(pos_, rot_);
 
 	return lazer;
 }
 
-void UnitLazer::Init(KModel* model_, KModel* expModel_, KGPlin* pipeline_) {
+void UnitLazer::Init(KModel* model_, KGPlin* pipeline_) {
 	// モデル生成
 	model = model_;
 
@@ -35,7 +35,10 @@ void UnitLazer::Update(ViewProjection* viewPro_, const KMyMath::Vector3& pos_) {
 
 void UnitLazer::Draw() { object3d->Draw(); }
 
-void UnitLazer::Set(const KMyMath::Vector3& pos_, const KMyMath::Vector3& rot_) {}
+void UnitLazer::Set(const KMyMath::Vector3& pos_, const KMyMath::Vector3& rot_) {
+	object3d->SetPos(pos_);
+	object3d->SetRot(rot_);
+}
 
 void UnitLazer::SetIsDead(bool isDead_) { isDead = isDead_; }
 

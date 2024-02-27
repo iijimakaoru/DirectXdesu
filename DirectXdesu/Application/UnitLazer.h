@@ -9,10 +9,10 @@
 class UnitLazer {
 public:
 	static UnitLazer* Create(
-	    KModel* model_, KModel* expModel_, KGPlin* pipeline_, const KMyMath::Vector3& pos_,
+	    KModel* model_, KGPlin* pipeline_, const KMyMath::Vector3& pos_,
 	    const KMyMath::Vector3& rot_);
 
-	void Init(KModel* model_, KModel* expModel_, KGPlin* pipeline_);
+	void Init(KModel* model_, KGPlin* pipeline_);
 
 	void Update(ViewProjection* viewPro_, const KMyMath::Vector3& pos_);
 

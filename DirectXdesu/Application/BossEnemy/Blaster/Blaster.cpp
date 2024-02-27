@@ -68,7 +68,7 @@ void Blaster::Update(ViewProjection* viewPro_, bool isBossMovie_) {
 		} else {
 			if (blasterActState->GetIsFinish()) {
 				actSelect = (size_t)MyMathUtility::GetRandI(1, 2);
-				switch (actSelect) {
+				/*switch (actSelect) {
 				case 1:
 				    blasterActState = std::make_unique<BlasterAimState>();
 				    break;
@@ -81,7 +81,8 @@ void Blaster::Update(ViewProjection* viewPro_, bool isBossMovie_) {
 				default:
 				    blasterActState = std::make_unique<BlasterStandState>();
 				    break;
-				}
+				}*/
+				blasterActState = std::make_unique<BlasterUnitLazer>();
 			}
 
 			if (blasterActState) {
@@ -140,3 +141,15 @@ void Blaster::SetUnitsScale(const KMyMath::Vector3& scale_, size_t num_) {
 }
 
 void Blaster::AddSetPos(const KMyMath::Vector3& pos_) { object3d->AddSetPos(pos_); }
+
+const KMyMath::Vector3 Blaster::UnitsGetWorldPos(uint32_t& i) const { 
+	// ワールド座標格納変数
+	KMyMath::Vector3 result;
+
+	// ワールド行列の平行移動成分取得
+	result.x = units[i]->GetMatWorld().m[3][0];
+	result.y = units[i]->GetMatWorld().m[3][1];
+	result.z = units[i]->GetMatWorld().m[3][2];
+
+	return result;
+}

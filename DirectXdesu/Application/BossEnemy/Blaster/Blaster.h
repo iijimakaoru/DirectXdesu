@@ -90,6 +90,9 @@ public:
 
 	void AddSetPos(const KMyMath::Vector3& pos_);
 
+	// ユニットワールドポス
+	const KMyMath::Vector3 UnitsGetWorldPos(uint32_t& i) const;
+
 private:
 	std::array<std::unique_ptr<KObject3d>, 8> units;
 	std::array<KMyMath::Vector3, 8> unitsPos;

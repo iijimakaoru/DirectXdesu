@@ -67,8 +67,8 @@ void Blaster::Update(ViewProjection* viewPro_, bool isBossMovie_) {
 
 		} else {
 			if (blasterActState->GetIsFinish()) {
-				actSelect = (size_t)MyMathUtility::GetRandI(1, 2);
-				switch (actSelect) {
+				actSelect = (size_t)MyMathUtility::GetRandI(1, 3);
+				/*switch (actSelect) {
 				case 1:
 				    blasterActState = std::make_unique<BlasterAimState>();
 				    break;
@@ -81,7 +81,8 @@ void Blaster::Update(ViewProjection* viewPro_, bool isBossMovie_) {
 				default:
 				    blasterActState = std::make_unique<BlasterStandState>();
 				    break;
-				}
+				}*/
+				blasterActState = std::make_unique<BlasterUnitLazer>();
 			}
 
 			if (blasterActState) {

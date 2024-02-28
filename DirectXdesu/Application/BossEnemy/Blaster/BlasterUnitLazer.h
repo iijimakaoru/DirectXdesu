@@ -26,6 +26,9 @@ private:
 	void GoCubeAct();
 	void EndAct();
 
+	void BulletShot();
+	void LazerTrack();
+
 private:
 	Phase actsPhase;
 
@@ -40,5 +43,5 @@ private:
 
 	uint32_t unitCount = 0;
 
-
+	uint32_t coolTimer = 0;
 };

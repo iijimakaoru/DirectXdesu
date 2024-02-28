@@ -2,6 +2,7 @@
 #include "Bom.h"
 #include "EnemyBullet.h"
 #include "PlayerBullet.h"
+#include "UnitLazer.h"
 
 /**
  * @file BulletManager.h
@@ -59,6 +60,12 @@ public:
 	    const KMyMath::Vector3& pos_, const KMyMath::Vector3& vec_, const KMyMath::Vector3& rot_,
 	    const float bulletSpeed_);
 
+	void UnitLazerSet(const KMyMath::Vector3& pos_, const KMyMath::Vector3& rot_);
+
+	void UnitLaserTrack(const KMyMath::Vector3& pos_, const KMyMath::Vector3& rot_);
+
+	void UnitLazerDelete();
+
 	// インスタンスゲッター
 	static BulletManager* GetInstance();
 
@@ -91,6 +98,9 @@ private:
 
 	// ボム
 	std::list<std::unique_ptr<Bom>> boms;
+
+	// ユニットレーザー
+	std::list<std::unique_ptr<UnitLazer>> unitLazers;
 
 	// パイプライン
 	KGPlin* pipeline = nullptr;

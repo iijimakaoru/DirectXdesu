@@ -14,7 +14,7 @@ public:
 
 	void Init(KModel* model_, KGPlin* pipeline_);
 
-	void Update(ViewProjection* viewPro_, const KMyMath::Vector3& pos_);
+	void Update(ViewProjection* viewPro_);
 
 	void Draw();
 

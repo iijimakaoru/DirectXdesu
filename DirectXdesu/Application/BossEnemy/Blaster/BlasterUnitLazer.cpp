@@ -1,6 +1,7 @@
 #include "BlasterUnitLazer.h"
 #include "Blaster.h"
 #include "BlasterStandState.h"
+#include "BulletManager.h"
 #include "Ease.h"
 #include "MyMath.h"
 
@@ -49,6 +50,7 @@ void BlasterUnitLazer::CubeOpenAct() {
 
 	if (actTimer == 0) {
 		CubeSet();
+		BulletShot();
 	}
 
 	if (actTimer < actTime) {
@@ -62,6 +64,8 @@ void BlasterUnitLazer::CubeOpenAct() {
 	}
 
 	if (isStay) {
+		LazerTrack();
+
 		if (stayTimer < stayTime) {
 			stayTimer++;
 		} else {
@@ -157,6 +161,8 @@ void BlasterUnitLazer::GoCubeAct() {
 
 	actTime = 30.0f;
 
+	LazerTrack();
+
 	if (actTimer < actTime) {
 		actTimer++;
 		blaster->SetUnitsPos(
@@ -175,5 +181,28 @@ void BlasterUnitLazer::GoCubeAct() {
 }
 
 void BlasterUnitLazer::EndAct() {
+	BulletManager::GetInstance()->UnitLazerDelete();
 	Blaster::blasterActState = std::make_unique<BlasterStandState>();
+}
+
+void BlasterUnitLazer::BulletShot() {
+	Blaster* blaster = Blaster::nowBlaster;
+
+	// ワールド座標
+	for (uint32_t i = 0; i < 8; i++) {
+		KMyMath::Vector3 ePos = blaster->UnitsGetWorldPos(i);
+
+		BulletManager::GetInstance()->UnitLazerSet(ePos, {0, 0, 90.0f});
+	}
+}
+
+void BlasterUnitLazer::LazerTrack() {
+	Blaster* blaster = Blaster::nowBlaster;
+
+	// ワールド座標
+	for (uint32_t i = 0; i < 8; i++) {
+		KMyMath::Vector3 ePos = blaster->UnitsGetWorldPos(i);
+
+		BulletManager::GetInstance()->UnitLaserTrack(ePos, {0, 0, 90.0f});
+	}
 }

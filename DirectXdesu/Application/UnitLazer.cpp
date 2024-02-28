@@ -24,12 +24,10 @@ void UnitLazer::Init(KModel* model_, KGPlin* pipeline_) {
 
 	// オブジェクト生成
 	object3d.reset(KObject3d::Create(model, pipeline));
-	object3d->SetScale({10.0f, 10.0f, 10.0f});
+	object3d->SetScale({1.0f, 30.0f, 1.0f});
 }
 
-void UnitLazer::Update(ViewProjection* viewPro_, const KMyMath::Vector3& pos_) {
-	object3d->SetPos(pos_);
-
+void UnitLazer::Update(ViewProjection* viewPro_) {
 	object3d->Update(viewPro_);
 }
 

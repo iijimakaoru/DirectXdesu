@@ -80,7 +80,7 @@ void Bom::Set(
 	vec = MyMathUtility::MakeNormalize(vec) * bulletSpeed_;
 	object3d->SetRot(rot_);
 
-	lifeTimer = 60;
+	lifeTimer = 40;
 
 	isExp = false;
 

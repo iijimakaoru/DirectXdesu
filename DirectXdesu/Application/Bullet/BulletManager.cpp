@@ -141,6 +141,10 @@ const std::list<std::unique_ptr<EnemyBullet>>& BulletManager::GetEnemyBullets() 
 
 const std::list<std::unique_ptr<Bom>>& BulletManager::GetBoms() const { return boms; }
 
+const KMyMath::Vector3 BulletManager::GetLazersPos(size_t i) const {
+	return unitLazers[i]->GetWorldPos();
+}
+
 void BulletManager::DeleteBullet() {
 	// プレイヤーの弾
 	playerBullets.remove_if(

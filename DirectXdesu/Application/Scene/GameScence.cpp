@@ -30,9 +30,7 @@
 
 GameScence::~GameScence() { Final(); };
 
-void GameScence::LoadResources() {
-	
-}
+void GameScence::LoadResources() {}
 
 void GameScence::Init() {
 	BaseScene::Init();
@@ -52,7 +50,7 @@ void GameScence::Init() {
 
 	// カメラ初期化
 	camera->Init(player.get(), {0.0f, 0.0f, -200.0f});
-	//camera->Init(player.get(), {0.0f, 0.0f, 450.0f});
+	// camera->Init(player.get(), {0.0f, 0.0f, 450.0f});
 
 	// エネミーマネージャー生成
 	enemyManager.reset(EnemyManager::Create(
@@ -286,7 +284,7 @@ void GameScence::SpriteDraw() {
 	}
 }
 
-void GameScence::Final() { }
+void GameScence::Final() {}
 
 void GameScence::CheckAllCollisions() {
 	// 自機弾の取得
@@ -369,6 +367,33 @@ void GameScence::CheckAllCollisions() {
 				posB[i] = blaster->UnitsGetWorldPos(i);
 
 				if (MyCollisions::CheckSphereToSphere(posA, posB[i], 3.0f, 4.0f)) {
+					player->OnCollision(1.0f);
+				}
+			}
+		}
+	}
+
+	// レーザーと自機の当たり判定
+	{
+		// 判定対象AとBの座標
+		KMyMath::Vector3 posA;
+		std::array<KMyMath::Vector3, 16> posB;
+
+		if (blaster && !blaster->GetIsDead() && isBossBattle && !player->GetIsDead()) {
+			posA = player->GetWorldPos();
+
+			for (size_t i = 0; i < 8; i++) {
+				size_t j = i + 8;
+				posB[i] = bulletManager->GetLazersPos(i);
+				posB[j] = bulletManager->GetLazersPos(j);
+
+				if (MyCollisions::CheckBoxToBox(
+				        posA, posB[i], {3.0f, 3.0f, 3.0f}, {1.0f, 30.0f, 1.0f})) {
+					player->OnCollision(1.0f);
+				}
+
+				if (MyCollisions::CheckBoxToBox(
+				        posA, posB[j], {3.0f, 3.0f, 3.0f}, {30.0f, 1.0f, 1.0f})) {
 					player->OnCollision(1.0f);
 				}
 			}

@@ -85,6 +85,8 @@ public:
 	// ボムのリスト所得
 	const std::list<std::unique_ptr<Bom>>& GetBoms() const;
 
+	const KMyMath::Vector3 GetLazersPos(size_t i) const;
+
 private:
 	// 弾の削除
 	void DeleteBullet();

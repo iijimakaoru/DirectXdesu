@@ -50,8 +50,7 @@ void BlasterUnitLazer::CubeOpenAct() {
 
 	if (actTimer == 0) {
 		CubeSet();
-		BulletShot();
-		BulletManager::GetInstance()->UnitLazerCall();
+		LazerShot();
 	}
 
 	if (actTimer < actTime) {
@@ -65,10 +64,13 @@ void BlasterUnitLazer::CubeOpenAct() {
 	}
 
 	if (isStay) {
-		LazerTrack();
-
 		if (stayTimer < stayTime) {
 			stayTimer++;
+			BulletManager::GetInstance()->UnitLazerCall();
+			for (size_t i = 0; i < 16; i++) {
+				BulletManager::GetInstance()->LazerOpen(stayTimer / stayTime, i);
+			}
+			LazerTrack();
 		} else {
 			isStay = false;
 			actsPhase = GoCube;
@@ -186,7 +188,7 @@ void BlasterUnitLazer::EndAct() {
 	Blaster::blasterActState = std::make_unique<BlasterStandState>();
 }
 
-void BlasterUnitLazer::BulletShot() {
+void BlasterUnitLazer::LazerShot() {
 	Blaster* blaster = Blaster::nowBlaster;
 
 	// ワールド座標

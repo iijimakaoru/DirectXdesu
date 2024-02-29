@@ -27,6 +27,8 @@ public:
 	// ワールドポジションゲッター
 	KMyMath::Vector3 GetWorldPos();
 
+	void SetScale(const KMyMath::Vector3& scale) const;
+
 private:
 	// オブジェクト
 	std::unique_ptr<KObject3d> object3d;

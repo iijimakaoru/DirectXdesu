@@ -26,7 +26,7 @@ private:
 	void GoCubeAct();
 	void EndAct();
 
-	void BulletShot();
+	void LazerShot();
 	void LazerTrack();
 
 private:
@@ -38,8 +38,8 @@ private:
 	float startTime = 0;
 
 	bool isStay = false;
-	uint32_t stayTimer = 0;
-	uint32_t stayTime = 30;
+	float stayTimer = 0;
+	float stayTime = 30;
 
 	uint32_t unitCount = 0;
 

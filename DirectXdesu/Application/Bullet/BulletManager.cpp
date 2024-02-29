@@ -7,6 +7,7 @@
 #include "BulletManager.h"
 #include "ModelManager.h"
 #include "PipelineManager.h"
+#include "Ease.h"
 
 BulletManager* BulletManager::bulletManager = nullptr;
 
@@ -143,6 +144,12 @@ const std::list<std::unique_ptr<Bom>>& BulletManager::GetBoms() const { return b
 
 const KMyMath::Vector3 BulletManager::GetLazersPos(size_t i) const {
 	return unitLazers[i]->GetWorldPos();
+}
+
+void BulletManager::LazerOpen(const float& timer, size_t i) { 
+	KMyMath::Vector3 start = {0, 0, 0};
+	KMyMath::Vector3 end = {1, 180, 1};
+	unitLazers[i]->SetScale(MyEase::InCubicVec3(start, end, timer));
 }
 
 void BulletManager::DeleteBullet() {

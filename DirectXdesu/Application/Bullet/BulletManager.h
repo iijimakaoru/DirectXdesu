@@ -87,6 +87,8 @@ public:
 
 	const KMyMath::Vector3 GetLazersPos(size_t i) const;
 
+	void LazerOpen(const float& timer,size_t i);
+
 private:
 	// 弾の削除
 	void DeleteBullet();

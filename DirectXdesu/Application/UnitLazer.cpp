@@ -24,7 +24,7 @@ void UnitLazer::Init(KModel* model_, KGPlin* pipeline_) {
 
 	// オブジェクト生成
 	object3d.reset(KObject3d::Create(model, pipeline));
-	object3d->SetScale({1.0f, 30.0f, 1.0f});
+	object3d->SetScale({1.0f, 180.0f, 1.0f});
 
 	isDead = true;
 }
@@ -56,3 +56,5 @@ KMyMath::Vector3 UnitLazer::GetWorldPos() { // ワールド座標格納変数
 
 	return result;
 }
+
+void UnitLazer::SetScale(const KMyMath::Vector3& scale) const { object3d->SetScale(scale); }

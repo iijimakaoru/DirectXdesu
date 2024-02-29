@@ -49,8 +49,8 @@ void GameScence::Init() {
 	sceneManager = SceneManager::GetInstance();
 
 	// カメラ初期化
-	camera->Init(player.get(), {0.0f, 0.0f, -200.0f});
-	// camera->Init(player.get(), {0.0f, 0.0f, 450.0f});
+	//camera->Init(player.get(), {0.0f, 0.0f, -200.0f});
+	 camera->Init(player.get(), {0.0f, 0.0f, 450.0f});
 
 	// エネミーマネージャー生成
 	enemyManager.reset(EnemyManager::Create(
@@ -388,12 +388,12 @@ void GameScence::CheckAllCollisions() {
 				posB[j] = bulletManager->GetLazersPos(j);
 
 				if (MyCollisions::CheckBoxToBox(
-				        posA, posB[i], {3.0f, 3.0f, 3.0f}, {1.0f, 30.0f, 1.0f})) {
+				        posA, posB[i], {3.0f, 3.0f, 3.0f}, {1.0f, 180.0f, 1.0f})) {
 					player->OnCollision(1.0f);
 				}
 
 				if (MyCollisions::CheckBoxToBox(
-				        posA, posB[j], {3.0f, 3.0f, 3.0f}, {30.0f, 1.0f, 1.0f})) {
+				        posA, posB[j], {3.0f, 3.0f, 3.0f}, {180.0f, 1.0f, 1.0f})) {
 					player->OnCollision(1.0f);
 				}
 			}

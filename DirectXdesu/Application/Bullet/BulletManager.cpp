@@ -5,12 +5,19 @@
  */
 
 #include "BulletManager.h"
-#include "PipelineManager.h"
 #include "ModelManager.h"
+#include "PipelineManager.h"
 
 BulletManager* BulletManager::bulletManager = nullptr;
 
-void BulletManager::Init() { pipeline = PipelineManager::GetInstance()->GetObjPipeline(); }
+void BulletManager::Init() {
+	pipeline = PipelineManager::GetInstance()->GetObjPipeline();
+	for (size_t i = 0; i < 16; i++) {
+		unitLazers[i].reset(UnitLazer::Create(
+		    ModelManager::GetInstance()->GetModels("Lazer"), pipeline, {0.0f, 0.0f, 0.0f},
+		    {0.0f, 0.0f, 90.0f}));
+	}
+}
 
 void BulletManager::Update(ViewProjection* viewPro_) {
 	// 弾の削除
@@ -57,8 +64,8 @@ void BulletManager::PlayerBulletShot(
 	// 弾生成
 	std::unique_ptr<PlayerBullet> newBullet;
 	newBullet.reset(PlayerBullet::Create(
-	    ModelManager::GetInstance()->GetModels("P_Bullet"), pipeline, pos, vec_, rot_,
-	    bulletSpeed_, BulletPower_));
+	    ModelManager::GetInstance()->GetModels("P_Bullet"), pipeline, pos, vec_, rot_, bulletSpeed_,
+	    BulletPower_));
 	// 登録
 	playerBullets.push_back(std::move(newBullet));
 }
@@ -69,8 +76,8 @@ void BulletManager::EnemyBulletShot(
 	// 弾生成
 	std::unique_ptr<EnemyBullet> newBullet;
 	newBullet.reset(EnemyBullet::Create(
-	    ModelManager::GetInstance()->GetModels("E_Bullet"), pipeline, pos, vec_, rot_,
-	    bulletSpeed_, BulletPower_));
+	    ModelManager::GetInstance()->GetModels("E_Bullet"), pipeline, pos, vec_, rot_, bulletSpeed_,
+	    BulletPower_));
 	// 登録
 	enemyBullets.push_back(std::move(newBullet));
 }
@@ -86,16 +93,14 @@ void BulletManager::BomShot(
 	boms.push_back(std::move(newBom));
 }
 
-void BulletManager::UnitLazerSet(const KMyMath::Vector3& pos_, const KMyMath::Vector3& rot_) {
-	std::unique_ptr<UnitLazer> newLazer;
-	newLazer.reset(
-	    UnitLazer::Create(ModelManager::GetInstance()->GetModels("Lazer"), pipeline, pos_, rot_));
-	unitLazers.push_back(std::move(newLazer));
+void BulletManager::UnitLazerSet(
+    const KMyMath::Vector3& pos_, const KMyMath::Vector3& rot_, uint32_t& i) {
+	unitLazers[i]->Set(pos_, rot_);
 }
 
-void BulletManager::UnitLaserTrack(const KMyMath::Vector3& pos_, const KMyMath::Vector3& rot_) {
+void BulletManager::UnitLazerCall() {
 	for (std::unique_ptr<UnitLazer>& unitLazer : unitLazers) {
-		unitLazer->Set(pos_, rot_);
+		unitLazer->SetIsDead(false);
 	}
 }
 
@@ -147,7 +152,4 @@ void BulletManager::DeleteBullet() {
 
 	// ボム
 	boms.remove_if([](std::unique_ptr<Bom>& bom_) { return bom_->GetIsDead(); });
-
-	// ユニットレーザー
-	unitLazers.remove_if([](std::unique_ptr<UnitLazer>& unitLazer) { return unitLazer->GetIsDead(); });
 }

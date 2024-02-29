@@ -51,6 +51,7 @@ void BlasterUnitLazer::CubeOpenAct() {
 	if (actTimer == 0) {
 		CubeSet();
 		BulletShot();
+		BulletManager::GetInstance()->UnitLazerCall();
 	}
 
 	if (actTimer < actTime) {
@@ -192,7 +193,10 @@ void BlasterUnitLazer::BulletShot() {
 	for (uint32_t i = 0; i < 8; i++) {
 		KMyMath::Vector3 ePos = blaster->UnitsGetWorldPos(i);
 
-		BulletManager::GetInstance()->UnitLazerSet(ePos, {0, 0, 90.0f});
+		uint32_t j = i + 8;
+
+		BulletManager::GetInstance()->UnitLazerSet(ePos, {0, 0, 0.0f}, i);
+		BulletManager::GetInstance()->UnitLazerSet(ePos, {0, 0, 90.0f}, j);
 	}
 }
 
@@ -203,6 +207,9 @@ void BlasterUnitLazer::LazerTrack() {
 	for (uint32_t i = 0; i < 8; i++) {
 		KMyMath::Vector3 ePos = blaster->UnitsGetWorldPos(i);
 
-		BulletManager::GetInstance()->UnitLaserTrack(ePos, {0, 0, 90.0f});
+		uint32_t j = i + 8;
+
+		BulletManager::GetInstance()->UnitLazerSet(ePos, {0, 0, 0.0f}, i);
+		BulletManager::GetInstance()->UnitLazerSet(ePos, {0, 0, 90.0f}, j);
 	}
 }

@@ -25,13 +25,17 @@ void UnitLazer::Init(KModel* model_, KGPlin* pipeline_) {
 	// オブジェクト生成
 	object3d.reset(KObject3d::Create(model, pipeline));
 	object3d->SetScale({1.0f, 30.0f, 1.0f});
+
+	isDead = true;
 }
 
-void UnitLazer::Update(ViewProjection* viewPro_) {
-	object3d->Update(viewPro_);
-}
+void UnitLazer::Update(ViewProjection* viewPro_) { object3d->Update(viewPro_); }
 
-void UnitLazer::Draw() { object3d->Draw(); }
+void UnitLazer::Draw() {
+	if (!isDead) {
+		object3d->Draw();
+	}
+}
 
 void UnitLazer::Set(const KMyMath::Vector3& pos_, const KMyMath::Vector3& rot_) {
 	object3d->SetPos(pos_);

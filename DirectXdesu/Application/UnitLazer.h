@@ -37,5 +37,5 @@ private:
 	// パイプライン
 	KGPlin* pipeline;
 
-	bool isDead = false;
+	bool isDead;
 };

@@ -60,9 +60,9 @@ public:
 	    const KMyMath::Vector3& pos_, const KMyMath::Vector3& vec_, const KMyMath::Vector3& rot_,
 	    const float bulletSpeed_);
 
-	void UnitLazerSet(const KMyMath::Vector3& pos_, const KMyMath::Vector3& rot_);
+	void UnitLazerSet(const KMyMath::Vector3& pos_, const KMyMath::Vector3& rot_, uint32_t& i);
 
-	void UnitLaserTrack(const KMyMath::Vector3& pos_, const KMyMath::Vector3& rot_);
+	void UnitLazerCall();
 
 	void UnitLazerDelete();
 
@@ -100,7 +100,7 @@ private:
 	std::list<std::unique_ptr<Bom>> boms;
 
 	// ユニットレーザー
-	std::list<std::unique_ptr<UnitLazer>> unitLazers;
+	std::array<std::unique_ptr<UnitLazer>, 16> unitLazers;
 
 	// パイプライン
 	KGPlin* pipeline = nullptr;

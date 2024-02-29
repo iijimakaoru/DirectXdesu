@@ -2,9 +2,9 @@
 #include "BulletManager.h"
 #include "Ease.h"
 #include "ImguiManager.h"
+#include "ModelManager.h"
 #include "ParticleManager.h"
 #include "PipelineManager.h"
-#include "ModelManager.h"
 #include "ScoreManager.h"
 
 const float Player::moveSpeed = 0.48f;
@@ -443,6 +443,11 @@ void Player::DamageEffect() {
 	if (isInvisible) {
 		if (invisibleTimer < invisibleTime) {
 			invisibleTimer++;
+			if (invisibleTimer % 5 == 0) {
+				object3d->SetColor({1, 1, 1, 1.0f});
+			} else {
+				object3d->SetColor({1, 1, 1, 0.5f});
+			}
 		} else {
 			invisibleTimer = 0;
 			isInvisible = false;

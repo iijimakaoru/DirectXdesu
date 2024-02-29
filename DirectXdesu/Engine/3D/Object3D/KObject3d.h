@@ -20,6 +20,7 @@ struct ConstBufferDataB1 {
 };
 
 struct ConstBufferDataB0 {
+	KMyMath::Vector4 color;
 	KMyMath::Matrix4 mat;
 };
 
@@ -63,6 +64,15 @@ private:
 	/// </summary>
 	/// <param name="pipeline_"></param>
 	void SetPipeline(KGPlin* pipeline_);
+
+	// 定数バッファマテリアル
+	void CreateCBMaterial();
+
+	// 頂点、インデックス生成
+	void CreateVertexIndex();
+
+	// 定数バッファトランスフォーム
+	void CreateCBTransform();
 
 public:
 	/// <summary>
@@ -112,12 +122,16 @@ public:
 	void AddSetPos(const KMyMath::Vector3& pos_);
 	void AddSetRot(const KMyMath::Vector3& rot_);
 	void AddSetScale(const KMyMath::Vector3& scale_);
+	void SetColor(const KMyMath::Vector4& color_);
 
 private:
 	KGPlin* pipeline;
 
 	Microsoft::WRL::ComPtr<ID3D12Resource> constBuffB0;
 	Microsoft::WRL::ComPtr<ID3D12Resource> constBuffB1;
+
+	// 定数バッファ(マテリアル)
+	Microsoft::WRL::ComPtr<ID3D12Resource> constBuffMaterial = nullptr;
 
 private:
 	HRESULT result;
@@ -126,4 +140,6 @@ private:
 
 	// 3Dオブジェクトの配列
 	WorldTransfom transform;
+
+	KMyMath::Vector4 color = {1, 1, 1, 1};
 };

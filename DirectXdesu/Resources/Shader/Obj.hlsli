@@ -1,5 +1,6 @@
 cbuffer cbuff0 : register(b0)
 {
+    float4 color;
 	matrix mat;
 };
 
@@ -11,11 +12,11 @@ cbuffer cbuff1 : register(b1)
 	float m_alpha : packoffset(c2.w);
 };
 
-struct VSOutput {
-	// システム用頂点座標
-	float4 svpos : SV_POSITION;
-	// 法線ベクトル
-	float3 normal : NORMAL;
-	// uv値
-	float2 uv : TEXCOORD;
+struct VSOutput
+{
+    float4 svpos : SV_POSITION; // システム用頂点座標
+	
+	float3 normal : NORMAL; // 法線ベクトル
+	
+    float2 uv : TEXCOORD; // uv値
 };

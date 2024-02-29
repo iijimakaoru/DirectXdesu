@@ -82,6 +82,8 @@ void TitleScene::Init()
 	texEaseTimer = 0;
 
 	objEaseTimer = 0;
+
+	audioManager = AudioManager::GetInstance();
 }
 
 void TitleScene::Update()
@@ -108,6 +110,7 @@ void TitleScene::Update()
 			{
 				if (input->IsTrigger(DIK_SPACE) || input->GetPadButtonDown(XINPUT_GAMEPAD_A))
 				{
+					audioManager->SEPlay_wav("selectSE.wav");
 					camera->StartSortie();
 					goGame = true;
 				}
@@ -283,6 +286,9 @@ void TitleScene::StartScene()
 	}
 	else if (startScenePhase == 4)
 	{
+		// フラッシュSE
+		audioManager->SEPlay_wav("flash.wav");
+
 		// フラッシュ！
 		flashAlpha = 1.0f;
 
@@ -305,6 +311,7 @@ void TitleScene::StartScene()
 	// スタート画面
 	else
 	{
+		audioManager->BGMPlay_wav("titleBGM.wav");
 		camera->StartRound();
 		startScene = false;
 	}
@@ -330,6 +337,8 @@ void TitleScene::GoNextScene()
 	// カメラ遷移待ち
 	if (goGamePhase == 0)
 	{
+		audioManager->SoundStopWave("titleBGM.wav");
+
 		phaseTime = 45;
 
 		if (texEaseTimer < texEaseTime)

@@ -205,10 +205,13 @@ void AudioManager::SoundStopWave(const std::string& fileName) {
 void AudioManager::AllLoad() {
 	// BGM
 	SoundLoadWave("BattleBGM.wav");
+	SoundLoadWave("titleBGM.wav");
 
 	// SE
 	SoundLoadWave("shotSE.wav");
 	SoundLoadWave("alertSE.wav");
+	SoundLoadWave("flash.wav");
+	SoundLoadWave("selectSE.wav");
 }
 
  AudioManager* AudioManager::GetInstance() {

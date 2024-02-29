@@ -11,6 +11,8 @@
 #include "Sprite.h"
 #include "TitleCamera.h"
 
+#include "AudioManager.h"
+
 /**
  * @file TitleScene.h
  * @brief タイトルシーン
@@ -131,5 +133,7 @@ private:
 	// フェーズ時間
 	float phaseTimer = 0;
 	float phaseTime = 0;
+
+	AudioManager* audioManager = nullptr;
 };
 

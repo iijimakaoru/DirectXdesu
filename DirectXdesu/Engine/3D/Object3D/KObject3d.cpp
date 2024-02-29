@@ -172,9 +172,13 @@ void KObject3d::AddSetScale(const KMyMath::Vector3& scale_) { transform.scale +=
 void KObject3d::SetColor(const KMyMath::Vector4& color_) { color = color_; }
 
 void KObject3d::SetRGB(const KMyMath::Vector3& rgb) {
-	color.x = rgb.x;
-	color.y = rgb.y;
-	color.z = rgb.z;
+	float maxNum = 255.0f;
+	color.x = rgb.x / maxNum;
+	color.y = rgb.y / maxNum;
+	color.z = rgb.z / maxNum;
 }
 
-void KObject3d::SetAlpha(const float& a) { color.w = a; }
+void KObject3d::SetAlpha(const float& a) {
+	float maxNum = 255.0f;
+	color.w = a / maxNum;
+}

@@ -444,9 +444,9 @@ void Player::DamageEffect() {
 		if (invisibleTimer < invisibleTime) {
 			invisibleTimer++;
 			if (invisibleTimer % 10 == 0) {
-				object3d->SetAlpha(1.0f);
+				object3d->SetAlpha(255.0f);
 			} else {
-				object3d->SetAlpha(0.2f);
+				object3d->SetAlpha(0.50f);
 			}
 		} else {
 			invisibleTimer = 0;

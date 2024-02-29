@@ -75,5 +75,6 @@ private:
 	// ボス限定
 	bool isBomHit = false;
 
-	float expAlpha = 1.0f;
+	KMyMath::Vector3 expRGB = {251, 100, 24};
+	float expAlpha = 255.0f;
 };

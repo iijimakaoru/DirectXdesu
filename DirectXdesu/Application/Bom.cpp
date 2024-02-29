@@ -52,7 +52,8 @@ void Bom::Update(ViewProjection* viewPro_) {
 			KMyMath::Vector3 scale = MyEase::OutCubicVec3(start, end, expTimer / expTime);
 			expObject->SetScale(scale);
 
-			expAlpha = MyEase::InQuadFloat(1.0f, 0.0f, expTimer / expTime);
+			expAlpha = MyEase::InQuadFloat(255.0f, 0.0f, expTimer / expTime);
+			expObject->SetRGB(expRGB);
 			expObject->SetAlpha(expAlpha);
 		} else {
 			isDead = true;

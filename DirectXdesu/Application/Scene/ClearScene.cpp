@@ -240,7 +240,7 @@ void ClearScene::SpriteDraw() {
 
 		MinDamageScoreDraw();
 
-		BossTimeScoreDraw();
+		//BossTimeScoreDraw();
 
 		TotalScoreDraw();
 	}

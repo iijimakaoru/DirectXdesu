@@ -62,9 +62,7 @@ void KObject3d::LoadModel(KModel* model_) { model = model_; }
 
 void KObject3d::SetPipeline(KGPlin* pipeline_) { pipeline = pipeline_; }
 
-void KObject3d::CreateCBMaterial() {
-	
-}
+void KObject3d::CreateCBMaterial() {}
 
 void KObject3d::CreateVertexIndex() {}
 
@@ -172,3 +170,11 @@ void KObject3d::AddSetRot(const KMyMath::Vector3& rot_) { transform.rot += rot_;
 void KObject3d::AddSetScale(const KMyMath::Vector3& scale_) { transform.scale += scale_; }
 
 void KObject3d::SetColor(const KMyMath::Vector4& color_) { color = color_; }
+
+void KObject3d::SetRGB(const KMyMath::Vector3& rgb) {
+	color.x = rgb.x;
+	color.y = rgb.y;
+	color.z = rgb.z;
+}
+
+void KObject3d::SetAlpha(const float& a) { color.w = a; }

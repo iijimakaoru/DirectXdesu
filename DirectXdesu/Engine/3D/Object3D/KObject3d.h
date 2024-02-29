@@ -123,6 +123,8 @@ public:
 	void AddSetRot(const KMyMath::Vector3& rot_);
 	void AddSetScale(const KMyMath::Vector3& scale_);
 	void SetColor(const KMyMath::Vector4& color_);
+	void SetRGB(const KMyMath::Vector3& rgb);
+	void SetAlpha(const float& a);
 
 private:
 	KGPlin* pipeline;

@@ -74,4 +74,6 @@ private:
 
 	// ボス限定
 	bool isBomHit = false;
+
+	float expAlpha = 1.0f;
 };

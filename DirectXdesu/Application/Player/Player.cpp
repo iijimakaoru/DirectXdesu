@@ -443,10 +443,10 @@ void Player::DamageEffect() {
 	if (isInvisible) {
 		if (invisibleTimer < invisibleTime) {
 			invisibleTimer++;
-			if (invisibleTimer % 5 == 0) {
-				object3d->SetColor({1, 1, 1, 1.0f});
+			if (invisibleTimer % 10 == 0) {
+				object3d->SetAlpha(1.0f);
 			} else {
-				object3d->SetColor({1, 1, 1, 0.5f});
+				object3d->SetAlpha(0.2f);
 			}
 		} else {
 			invisibleTimer = 0;

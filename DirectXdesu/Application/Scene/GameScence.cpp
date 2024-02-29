@@ -389,12 +389,12 @@ void GameScence::CheckAllCollisions() {
 
 				if (MyCollisions::CheckBoxToBox(
 				        posA, posB[i], {3.0f, 3.0f, 3.0f}, {1.0f, 180.0f, 1.0f})) {
-					player->OnCollision(1.0f);
+					player->OnCollision(5.0f);
 				}
 
 				if (MyCollisions::CheckBoxToBox(
 				        posA, posB[j], {3.0f, 3.0f, 3.0f}, {180.0f, 1.0f, 1.0f})) {
-					player->OnCollision(1.0f);
+					player->OnCollision(5.0f);
 				}
 			}
 		}

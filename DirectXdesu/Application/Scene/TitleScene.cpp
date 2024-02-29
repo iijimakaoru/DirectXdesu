@@ -201,6 +201,11 @@ void TitleScene::StartScene()
 
 		phaseTimer++;
 
+		if (phaseTimer == 30)
+		{
+			audioManager->SEPlay_wav("flySE.wav");
+		}
+
 		// ポイント１の制御点
 		KMyMath::Vector3 point1_1 = MyEase::Lerp3D(start, p1, phaseTimer / phaseTime);
 		KMyMath::Vector3 point1_2 = MyEase::Lerp3D(p1, end, phaseTimer / phaseTime);
@@ -287,7 +292,7 @@ void TitleScene::StartScene()
 	else if (startScenePhase == 4)
 	{
 		// フラッシュSE
-		audioManager->SEPlay_wav("flash.wav");
+		audioManager->SEPlay_wav("flashSE.wav");
 
 		// フラッシュ！
 		flashAlpha = 1.0f;

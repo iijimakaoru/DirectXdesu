@@ -5,6 +5,7 @@
 #include "KObject3d.h"
 #include "KShader.h"
 #include "TextureManager.h"
+#include "AudioManager.h"
 
 class Bom {
 public:
@@ -77,4 +78,6 @@ private:
 
 	KMyMath::Vector3 expRGB = {251, 100, 24};
 	float expAlpha = 255.0f;
+
+	AudioManager* audioManager = nullptr;
 };

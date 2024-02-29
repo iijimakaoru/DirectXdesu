@@ -30,6 +30,8 @@ void Bom::Init(KModel* model_, KModel* expModel_, KGPlin* pipeline_) {
 	object3d->SetScale({10.0f, 10.0f, 10.0f});
 	expObject.reset(KObject3d::Create(expModel, pipeline));
 	expObject->SetScale({0.0f, 0.0f, 0.0f});
+
+	audioManager = AudioManager::GetInstance();
 }
 
 void Bom::Update(ViewProjection* viewPro_) {
@@ -44,6 +46,10 @@ void Bom::Update(ViewProjection* viewPro_) {
 		}
 	} else {
 		if (expTimer <= expTime) {
+			if (expTimer == 0) {
+				audioManager->SEPlay_wav("bakuhatuSE.wav");
+			}
+
 			expTimer++;
 
 			KMyMath::Vector3 start = {0.0f, 0.0f, 0.0f};

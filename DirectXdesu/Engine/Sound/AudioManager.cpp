@@ -210,8 +210,10 @@ void AudioManager::AllLoad() {
 	// SE
 	SoundLoadWave("shotSE.wav");
 	SoundLoadWave("alertSE.wav");
-	SoundLoadWave("flash.wav");
+	SoundLoadWave("flashSE.wav");
 	SoundLoadWave("selectSE.wav");
+	SoundLoadWave("flySE.wav");
+	SoundLoadWave("bakuhatuSE.wav");
 }
 
  AudioManager* AudioManager::GetInstance() {

@@ -128,6 +128,10 @@ void BulletManager::AllBulletDelete() {
 	for (std::unique_ptr<Bom>& bom : boms) {
 		bom->SetIsDead(true);
 	}
+
+	for (std::unique_ptr<UnitLazer>& unitLazer : unitLazers) {
+		unitLazer->SetIsDead(true);
+	}
 }
 
 void BulletManager::Delete() { delete bulletManager; }

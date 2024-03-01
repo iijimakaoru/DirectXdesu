@@ -14,6 +14,8 @@
 #include "ModelManager.h"
 #include "ScoreManager.h"
 
+#include "BulletManager.h"
+
 Blaster* Blaster::nowBlaster = nullptr;
 
 std::unique_ptr<ActState> Blaster::blasterActState = nullptr;
@@ -91,6 +93,7 @@ void Blaster::Update(ViewProjection* viewPro_, bool isBossMovie_) {
 		}
 
 		if (HP <= min(HP, 0)) {
+			BulletManager::GetInstance()->AllBulletDelete();
 			ScoreManager::GetInstance()->AddBossScore(100000);
 			isDead = true;
 		}

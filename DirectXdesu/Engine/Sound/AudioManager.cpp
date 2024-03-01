@@ -207,6 +207,7 @@ void AudioManager::AllLoad() {
 	SoundLoadWave("BattleBGM.wav");
 	SoundLoadWave("titleBGM.wav");
 	SoundLoadWave("clearBGM.wav");
+	SoundLoadWave("bossBGM.wav");
 
 	// SE
 	SoundLoadWave("shotSE.wav");
@@ -217,6 +218,8 @@ void AudioManager::AllLoad() {
 	SoundLoadWave("bakuhatuSE.wav");
 	SoundLoadWave("chargeSE.wav");
 	SoundLoadWave("mokuhyo.wav");
+	SoundLoadWave("warningSE.wav");
+	SoundLoadWave("bossAwakenSE.wav");
 }
 
  AudioManager* AudioManager::GetInstance() {

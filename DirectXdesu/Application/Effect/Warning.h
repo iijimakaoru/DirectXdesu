@@ -1,5 +1,6 @@
 #pragma once
 #include "Sprite.h"
+#include "AudioManager.h"
 
 /**
  * @file Warning.h
@@ -39,5 +40,7 @@ private:
 
 	// 削除フラグ
 	bool isDelete = false;
+
+	AudioManager* adManager = nullptr;
 };
 

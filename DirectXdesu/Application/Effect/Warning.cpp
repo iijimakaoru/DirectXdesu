@@ -6,7 +6,11 @@ void Warning::Init()
 {
 	warning.reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
 
-	warningTime = 150;
+	adManager = AudioManager::GetInstance();
+
+	warningTime = 240;
+
+	adManager->SEPlay_wav("warningSE.wav", 0.15f);
 }
 
 void Warning::Update()

@@ -220,6 +220,7 @@ void AudioManager::AllLoad() {
 	SoundLoadWave("mokuhyo.wav");
 	SoundLoadWave("warningSE.wav");
 	SoundLoadWave("bossAwakenSE.wav");
+	SoundLoadWave("bomShot.wav");
 }
 
  AudioManager* AudioManager::GetInstance() {

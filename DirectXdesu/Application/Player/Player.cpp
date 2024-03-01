@@ -336,6 +336,8 @@ void Player::Attack() {
 	}
 
 	if (input->GetPadButtonDown(XINPUT_GAMEPAD_B) && isBom) {
+		audioManager->SEPlay_wav("bomShot.wav");
+
 		// 弾スピード
 		const float bulletSpeed = 3.0f;
 		KMyMath::Vector3 bulletVec(0, 0, 1);

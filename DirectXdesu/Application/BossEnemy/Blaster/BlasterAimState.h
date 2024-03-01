@@ -25,5 +25,7 @@ private:
 	float startTimer = 0;
 	float startTime = 0;
 
+	float angleSpeed = 0;
+
 	Phase actsPhase;
 };

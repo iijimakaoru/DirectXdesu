@@ -6,6 +6,7 @@
 #include "PostEffect.h"
 
 #include "Sprite.h"
+#include "AudioManager.h"
 
 /**
  * @file ClearScene.h
@@ -105,4 +106,6 @@ private:
 	float phaseTime = 0;
 
 	bool isGoScene = false;
+
+	AudioManager* adManager = nullptr;
 };

@@ -47,7 +47,7 @@ void Bom::Update(ViewProjection* viewPro_) {
 	} else {
 		if (expTimer <= expTime) {
 			if (expTimer == 0) {
-				audioManager->SEPlay_wav("bakuhatuSE.wav");
+				audioManager->SEPlay_wav("bakuhatuSE.wav",0.75f);
 			}
 
 			expTimer++;

@@ -1126,6 +1126,11 @@ void GameScence::ClearMovie() {
 		clearPhaseTime = 30.0f;
 
 		if (clearPhaseTimer < clearPhaseTime) {
+			if (clearPhaseTimer == 0) {
+				audioManager->SoundStopWave("BattleBGM.wav");
+				audioManager->SEPlay_wav("mokuhyo.wav");
+			}
+
 			clearPhaseTimer++;
 
 			MovieBarIn(clearPhaseTimer / clearPhaseTime);
@@ -1153,7 +1158,7 @@ void GameScence::ClearMovie() {
 	}
 	// フェーズ1
 	else if (clearPhase == 1) {
-		clearPhaseTime = 120.0f;
+		clearPhaseTime = 180.0f;
 
 		if (clearPhaseTimer < clearPhaseTime) {
 			clearPhaseTimer++;
@@ -1184,7 +1189,7 @@ void GameScence::ClearMovie() {
 			end = {-100.0f, 100.0f, player->GetWorldPos().z + 125.0f};
 		}
 
-		clearPhaseTime = 180.0f;
+		clearPhaseTime = 210.0f;
 
 		if (clearPhaseTimer < clearPhaseTime) {
 			clearPhaseTimer++;
@@ -1222,7 +1227,6 @@ void GameScence::ClearMovie() {
 	// 暗転
 	else if (clearPhase == 3) {
 		sceneChange->SceneChangeStart();
-		audioManager->SoundStopWave("BattleBGM.wav");
 		GameManager::GetInstance()->SetIsStartMovie(false);
 		clearPhase++;
 	}

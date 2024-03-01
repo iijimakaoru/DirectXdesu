@@ -73,6 +73,10 @@ void ClearScene::Init() {
 	}
 
 	isGoScene = false;
+
+	adManager = AudioManager::GetInstance();
+
+	adManager->BGMPlay_wav("clearBGM.wav");
 }
 
 void ClearScene::Update() {
@@ -206,6 +210,7 @@ void ClearScene::Update() {
 		// 次のシーンへ
 		if (!sceneChange->GetIsEffect()) {
 			if (input->IsTrigger(DIK_SPACE) || input->GetPadButtonDown(XINPUT_GAMEPAD_A)) {
+				adManager->SoundStopWave("clearBGM.wav");
 				sceneChange->SceneChangeStart();
 			}
 		}

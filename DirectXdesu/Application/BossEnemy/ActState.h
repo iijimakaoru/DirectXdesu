@@ -1,5 +1,6 @@
 #pragma once
 #include <stdint.h>
+#include "AudioManager.h"
 
 class ActState
 {
@@ -18,5 +19,7 @@ protected:
 	// アクション時間
 	float actTimer = 0;
 	float actTime = 0;
+
+	AudioManager* audioManager = nullptr;
 };
 

@@ -5,7 +5,10 @@
 #include "Ease.h"
 #include "Player.h"
 
-BlasterAimState::BlasterAimState() { actsPhase = STAND; }
+BlasterAimState::BlasterAimState() {
+	audioManager = AudioManager::GetInstance();
+	actsPhase = STAND;
+}
 
 void BlasterAimState::Update() {
 	switch (actsPhase) {
@@ -71,7 +74,7 @@ void BlasterAimState::StandAct() {
 void BlasterAimState::ChargeAct() {
 	Blaster* blaster = Blaster::nowBlaster;
 
-	actTime = 60.0f;
+	actTime = 240.0f;
 	startTime = 15.0f;
 
 	if (startTimer < startTime) {
@@ -98,9 +101,15 @@ void BlasterAimState::ChargeAct() {
 			angle = 45.0f;
 		}
 
+		if (actTimer == 0) {
+			audioManager->SEPlay_wav("chargeSE.wav", 0.5f);
+		}
+
 		actTimer++;
 
-		angle += 2.5f;
+		angleSpeed = MyEase::OutCubicFloat(0.0f, 12.0f, actTimer / actTime);
+
+		angle += angleSpeed;
 
 		// 360を超えたら
 		if (angle >= 360) {
@@ -129,12 +138,12 @@ void BlasterAimState::ChargeAct() {
 void BlasterAimState::ShotAct() {
 	Blaster* blaster = Blaster::nowBlaster;
 
-	actTime = 180.0f;
+	actTime = 240.0f;
 
 	if (actTimer < actTime) {
 		actTimer++;
 
-		angle += 6.0f;
+		angle += 12.0f;
 
 		// 360を超えたら
 		if (angle >= 360) {

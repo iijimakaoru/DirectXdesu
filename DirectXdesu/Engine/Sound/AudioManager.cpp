@@ -221,6 +221,8 @@ void AudioManager::AllLoad() {
 	SoundLoadWave("warningSE.wav");
 	SoundLoadWave("bossAwakenSE.wav");
 	SoundLoadWave("bomShot.wav");
+	SoundLoadWave("damageSE.wav");
+	SoundLoadWave("syouBakuhatuSE.wav");
 }
 
  AudioManager* AudioManager::GetInstance() {

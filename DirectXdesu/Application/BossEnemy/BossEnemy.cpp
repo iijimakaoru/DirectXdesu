@@ -38,6 +38,8 @@ void BossEnemy::Init(KGPlin* pipeline_, const KMyMath::Vector3& initPos_, KGPlin
 	isDead = false;
 
 	HPPos = {204.0f, 40.0f};
+
+	audioManager = AudioManager::GetInstance();
 }
 
 void BossEnemy::Draw()
@@ -122,6 +124,7 @@ void BossEnemy::DeadEffect()
 
 		if (expTimer >= max(expTimer, expTime))
 		{
+			audioManager->SEPlay_wav("syouBakuhatuSE.wav",0.15f);
 			ObjParticleManager::GetInstance()->SetSmallExp({ GetWorldPos().x + MyMathUtility::GetRandF(-10.0f,10.0f),
 			GetWorldPos().y + MyMathUtility::GetRandF(-10.0f,10.0f),GetWorldPos().z + MyMathUtility::GetRandF(-10.0f,10.0f) });
 			expTimer = 0;
@@ -130,6 +133,7 @@ void BossEnemy::DeadEffect()
 		// 演出終わり
 		if (fallEffectTimer >= max(fallEffectTimer, fallEffectTime))
 		{
+			audioManager->SEPlay_wav("bakuhatuSE.wav", 0.5f);
 			ObjParticleManager::GetInstance()->SetExp(GetWorldPos());
 			isFallEffectEnd = true;
 		}

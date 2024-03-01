@@ -224,7 +224,7 @@ private:
 	float fallEffectTimer = 0;
 
 	// 爆発クールタイム
-	float expTime = 10;
+	float expTime = 15;
 	float expTimer = 0;
 
 	bool isFallEffectEnd = false;

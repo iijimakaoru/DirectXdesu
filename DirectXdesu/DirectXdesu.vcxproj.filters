@@ -438,9 +438,6 @@
     <ClCompile Include="Engine\Sound\AudioManager.cpp">
       <Filter>ソース ファイル\Engine\Sound</Filter>
     </ClCompile>
-    <ClCompile Include="Application\Bom.cpp">
-      <Filter>ソース ファイル\Application</Filter>
-    </ClCompile>
     <ClCompile Include="Application\BossEnemy\Blaster\BlasterTackleState.cpp">
       <Filter>ソース ファイル\Application\BossEnemy\Blaster</Filter>
     </ClCompile>
@@ -471,11 +468,14 @@
     <ClCompile Include="Engine\Base\Pipeline\PipelineManager.cpp">
       <Filter>ソース ファイル\Engine\Base\Pipeline</Filter>
     </ClCompile>
-    <ClCompile Include="Application\UnitLazer.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Application\BossEnemy\Blaster\BlasterUnitTackle.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\Application\BossEnemy\Blaster</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\Bullet\UnitLazer.cpp">
+      <Filter>ソース ファイル\Application\Bullet</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\Bullet\Bom.cpp">
+      <Filter>ソース ファイル\Application\Bullet</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -680,9 +680,6 @@
     <ClInclude Include="Engine\Sound\AudioManager.h">
       <Filter>ヘッダー ファイル\Engine\Sound</Filter>
     </ClInclude>
-    <ClInclude Include="Application\Bom.h">
-      <Filter>ヘッダー ファイル\Application</Filter>
-    </ClInclude>
     <ClInclude Include="Application\BossEnemy\Blaster\BlasterTackleState.h">
       <Filter>ヘッダー ファイル\Application\BossEnemy\Blaster</Filter>
     </ClInclude>
@@ -713,11 +710,14 @@
     <ClInclude Include="Engine\ModelManager.h">
       <Filter>ヘッダー ファイル\Engine</Filter>
     </ClInclude>
-    <ClInclude Include="Application\UnitLazer.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Application\BossEnemy\Blaster\BlasterUnitTackle.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\Application\BossEnemy\Blaster</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\Bullet\UnitLazer.h">
+      <Filter>ヘッダー ファイル\Application\Bullet</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\Bullet\Bom.h">
+      <Filter>ヘッダー ファイル\Application\Bullet</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -38,7 +38,7 @@ void BlasterAimState::BulletShot() {
 	const float kBulletSpeed = 2.5f;
 
 	// 弾のパワー
-	const float bulletPower = 5.0f;
+	const float bulletPower = 20.0f;
 
 	// 自キャラのワールド座標
 	KMyMath::Vector3 pPos = player->GetWorldPos();
@@ -74,7 +74,7 @@ void BlasterAimState::StandAct() {
 void BlasterAimState::ChargeAct() {
 	Blaster* blaster = Blaster::nowBlaster;
 
-	actTime = 240.0f;
+	actTime = 120.0f;
 	startTime = 15.0f;
 
 	if (startTimer < startTime) {

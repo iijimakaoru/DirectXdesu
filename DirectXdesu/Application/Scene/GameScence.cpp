@@ -49,8 +49,8 @@ void GameScence::Init() {
 	sceneManager = SceneManager::GetInstance();
 
 	// カメラ初期化
-	//camera->Init(player.get(), {0.0f, 0.0f, -200.0f});
-	camera->Init(player.get(), {0.0f, 0.0f, 450.0f});
+	camera->Init(player.get(), {0.0f, 0.0f, -200.0f});
+	//camera->Init(player.get(), {0.0f, 0.0f, 450.0f});
 
 	// エネミーマネージャー生成
 	enemyManager.reset(EnemyManager::Create(
@@ -838,6 +838,7 @@ void GameScence::GoGameOverScene() {
 		if (goOverSceneTimer == goOverSceneTime) {
 			sceneChange->SceneChangeStart();
 			audioManager->SoundStopWave("BattleBGM.wav");
+			audioManager->SoundStopWave("bossBGM.wav");
 			goOverSceneTimer = goOverSceneTime + 1.0f;
 		}
 
@@ -1021,7 +1022,6 @@ void GameScence::BossAppearMovie() {
 
 		if (appearPhaseTimer < appearPhaseTime) {
 			if (appearPhaseTimer == 0) {
-				audioManager->BGMPlay_wav("bossBGM.wav",0.15f);
 				blaster->SetFarstAct();
 			}
 
@@ -1082,6 +1082,7 @@ void GameScence::BossAppearMovie() {
 		appearPhaseTime = 30;
 
 		if (appearPhaseTimer == 0) {
+			audioManager->BGMPlay_wav("bossBGM.wav", 0.15f);
 			sceneChange->SceneChangeStart();
 		}
 

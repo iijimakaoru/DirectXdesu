@@ -382,6 +382,7 @@ void Player::DeadEffect() {
 
 		// 堕ちてる間の爆発
 		if (expTimer >= max(expTimer, expTime)) {
+			audioManager->SEPlay_wav("syouBakuhatuSE.wav", 0.15f);
 			ObjParticleManager::GetInstance()->SetSmallExp(
 			    {GetWorldPos().x + MyMathUtility::GetRandF(-1.0f, 1.0f),
 			     GetWorldPos().y + MyMathUtility::GetRandF(-1.0f, 1.0f),
@@ -391,6 +392,7 @@ void Player::DeadEffect() {
 
 		// 演出終わり
 		if (fallEffectTimer >= max(fallEffectTimer, fallEffectTime)) {
+			audioManager->SEPlay_wav("bakuhatuSE.wav");
 			ObjParticleManager::GetInstance()->SetExp(GetWorldPos());
 			isFallEffectEnd = true;
 		}
@@ -591,6 +593,7 @@ const KMyMath::Vector2& Player::GetPosLimitMin() { return posLimitMin; }
 const bool Player::GetIsInvisible() const { return isInvisible; }
 
 void Player::OnCollision(const float& bulletPower_) {
+	audioManager->SEPlay_wav("damageSE.wav",0.15f);
 	ObjParticleManager::GetInstance()->SetSmallExp(GetWorldPos());
 	if (!muteki) {
 		HP -= bulletPower_;

@@ -248,6 +248,7 @@ private:
 #pragma region ボム関連
 	// ボム個数
 	size_t bomsCount = 3;
+
 	// ボムクールタイム
 	float bomsCoolTime = 120.0f;
 	float bomsCoolTimer = bomsCoolTime;

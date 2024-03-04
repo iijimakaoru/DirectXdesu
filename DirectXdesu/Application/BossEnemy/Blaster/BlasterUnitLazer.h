@@ -8,7 +8,7 @@ public:
 	// 更新
 	void Update() override;
 
-	enum Phase { CubeClose, CubeOpen, GoCube, End };
+	enum Phase { CubeClose,GoPoint, CubeOpen,Wait, GoCube,BackPos, End };
 
 	enum CubeForm { Alpha, Beta, Gamma };
 
@@ -17,6 +17,9 @@ private:
 	/// ユニット消し
 	/// </summary>
 	void CubeCloseAct();
+
+	void GoPointAct();
+
 	/// <summary>
 	/// ユニット出現
 	/// </summary>
@@ -24,6 +27,10 @@ private:
 
 	void CubeSet();
 	void GoCubeAct();
+
+	void WaitAct();
+
+	void BackPosAct();
 	void EndAct();
 
 	void LazerShot();

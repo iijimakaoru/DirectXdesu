@@ -10,7 +10,7 @@ public:
 
 	enum Phase { CubeClose,GoPoint, CubeOpen,Wait, GoCube,BackPos, End };
 
-	enum CubeForm { Alpha, Beta, Gamma };
+	enum CubeForm { Alpha, Beta, Gamma,Sigma };
 
 private:
 	/// <summary>

@@ -66,6 +66,8 @@ public:
 
 	void UnitLazerDelete();
 
+	void UnitLazerRGB(const KMyMath::Vector3& RGB, uint32_t i);
+
 	// インスタンスゲッター
 	static BulletManager* GetInstance();
 

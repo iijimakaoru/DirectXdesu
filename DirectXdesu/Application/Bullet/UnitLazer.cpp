@@ -44,6 +44,8 @@ void UnitLazer::Set(const KMyMath::Vector3& pos_, const KMyMath::Vector3& rot_) 
 
 void UnitLazer::SetIsDead(bool isDead_) { isDead = isDead_; }
 
+void UnitLazer::SetRGB(const KMyMath::Vector3& RGB) { object3d->SetRGB(RGB); }
+
 const bool& UnitLazer::GetIsDead() const { return isDead; }
 
 KMyMath::Vector3 UnitLazer::GetWorldPos() { // ワールド座標格納変数

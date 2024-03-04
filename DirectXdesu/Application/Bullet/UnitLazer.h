@@ -22,6 +22,8 @@ public:
 
 	void SetIsDead(bool isDead_);
 
+	void SetRGB(const KMyMath::Vector3& RGB);
+
 	const bool& GetIsDead() const;
 
 	// ワールドポジションゲッター

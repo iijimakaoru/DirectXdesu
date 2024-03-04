@@ -111,6 +111,11 @@ void BulletManager::UnitLazerDelete() {
 	}
 }
 
+void BulletManager::UnitLazerRGB(const KMyMath::Vector3& RGB, uint32_t i) {
+	unitLazers[i]->SetRGB(RGB);
+	unitLazers[i + 8]->SetRGB(RGB);
+}
+
 BulletManager* BulletManager::GetInstance() {
 	static BulletManager instance;
 	return &instance;

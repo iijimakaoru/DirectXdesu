@@ -20,7 +20,7 @@ FlyEnemy* FlyEnemy::Create(
 	newEnemy->SetStartPos(startPos_);
 	newEnemy->SetEndPos(endPos_);
 	newEnemy->SetSpeed(speed_);
-	newEnemy->object3d->SetPos(startPos_);
+	newEnemy->object3d->GetTransform().SetPos(startPos_);
 
 	return newEnemy;
 }
@@ -28,7 +28,7 @@ FlyEnemy* FlyEnemy::Create(
 void FlyEnemy::Init(KModel* model_, KGPlin* pipeline_) {
 	MobEnemy::Init(model_, pipeline_);
 
-	object3d->SetScale({4.0f, 4.0f, 4.0f});
+	object3d->GetTransform().SetScale({4.0f, 4.0f, 4.0f});
 
 	isAppear = true;
 
@@ -37,19 +37,21 @@ void FlyEnemy::Init(KModel* model_, KGPlin* pipeline_) {
 	coolTime = 120;
 }
 
-void FlyEnemy::Update(ViewProjection* viewPro_, const KMyMath::Vector3& cameraPos_) {
+void FlyEnemy::Update(ViewProjection* viewPro, const KMyMath::Vector3& cameraPos) {
 	// 出現演出
 	if (isAppear) {
 		Appear();
 	} else {
 		if (!isDead && !isDelete) {
-			if (object3d->GetPos().z >= cameraPos_.z) {
+			if (object3d->GetTransform().GetPos().z >= cameraPos.z) {
 				Attack();
 			}
 
 			const float cameraDistance = 50.0f;
 
-			if (object3d->GetPos().z <= min(object3d->GetPos().z, cameraPos_.z - cameraDistance)) {
+			if (object3d->GetTransform().GetPos().z <=
+			    min(object3d->GetTransform().GetPos().z,
+			        cameraPos.z - cameraDistance)) {
 				isDelete = true;
 			}
 		}
@@ -60,9 +62,9 @@ void FlyEnemy::Update(ViewProjection* viewPro_, const KMyMath::Vector3& cameraPo
 		}
 	}
 
-	object3d->AddSetPos({0, 0, moveSpeed});
+	object3d->GetTransform().AddSetPos({0, 0, moveSpeed});
 
-	object3d->Update(viewPro_);
+	object3d->Update(viewPro, cameraPos);
 }
 
 void FlyEnemy::Draw() { MobEnemy::Draw(); }
@@ -102,9 +104,10 @@ void FlyEnemy::Attack() {
 void FlyEnemy::Appear() {
 	easeTimer += 1.0f;
 
-	object3d->SetPos(
+	object3d->GetTransform().SetPos(
 	    {MyEase::InCubicFloat(startPos.x, endPos.x, easeTimer / easeTime),
-	     MyEase::InCubicFloat(startPos.y, endPos.y, easeTimer / easeTime), object3d->GetPos().z});
+	     MyEase::InCubicFloat(startPos.y, endPos.y, easeTimer / easeTime),
+	     object3d->GetTransform().GetPos().z});
 
 	if (easeTimer >= max(easeTimer, easeTime)) {
 		isAppear = false;

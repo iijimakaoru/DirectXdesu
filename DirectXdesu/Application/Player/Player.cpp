@@ -37,8 +37,8 @@ void Player::Init(const float playerHP) {
 	object3d.reset(KObject3d::Create(
 	    ModelManager::GetInstance()->GetModels("Player"),
 	    PipelineManager::GetInstance()->GetObjPipeline()));
-	object3d->SetPos({0, 0, 50});
-	object3d->SetScale({2.0f, 2.0f, 2.0f});
+	object3d->GetTransform().SetPos({0, 0, 50});
+	object3d->GetTransform().SetScale({2.0f, 2.0f, 2.0f});
 
 	// レティクル
 	reticle3d = std::make_unique<Reticle3D>();
@@ -100,7 +100,8 @@ void Player::Init(const float playerHP) {
 }
 
 void Player::Update(
-    ViewProjection* viewPro_, bool isStart_, bool isBossMovie_, bool isClearMovie_) {
+    ViewProjection* viewPro, const KMyMath::Vector3& cameraPos, bool isStart_, bool isBossMovie_,
+    bool isClearMovie_) {
 	ImGui::Begin("Player");
 	ImGui::SetWindowPos({400, 10});
 	ImGui::SetWindowSize({200, 200});
@@ -183,32 +184,34 @@ void Player::Update(
 	}
 
 	// 3Dレティクルの更新
-	KMyMath::Matrix4 nowMatWorld = object3d->GetMatWorld();
+	KMyMath::Matrix4 nowMatWorld = object3d->GetTransform().GetMatWorld();
 	reticle3d->Update(nowMatWorld, GetWorldPos());
 
 	// 2Dレティクルの更新
-	reticle2d->Update(viewPro_, reticle3d->GetWorldPos());
+	reticle2d->Update(viewPro, reticle3d->GetWorldPos());
 
 	// オブジェクトの更新
-	object3d->Update(viewPro_);
+	object3d->Update(viewPro, cameraPos);
 }
 
 void Player::Move() {
 	// 自機が傾いている角度に移動させる
 	KMyMath::Vector3 velocity = {0, 0, 0};
-	velocity.x = (object3d->GetRot().y / rotLimit.y);
-	velocity.y = -(object3d->GetRot().x / rotLimit.x);
+	velocity.x = (object3d->GetTransform().GetRot().y / rotLimit.y);
+	velocity.y = -(object3d->GetTransform().GetRot().x / rotLimit.x);
 
 	// 動け～
-	object3d->AddSetPos({velocity.x * moveSpeed, velocity.y * moveSpeed, 0});
+	object3d->GetTransform().AddSetPos({velocity.x * moveSpeed, velocity.y * moveSpeed, 0});
 
 	// 移動制限
-	object3d->SetPos(
-	    {max(object3d->GetPos().x, posLimitMin.x), max(object3d->GetPos().y, posLimitMin.y),
-	     object3d->GetPos().z});
-	object3d->SetPos(
-	    {min(object3d->GetPos().x, posLimitMax.x), min(object3d->GetPos().y, posLimitMax.y),
-	     object3d->GetPos().z});
+	object3d->GetTransform().SetPos(
+	    {max(object3d->GetTransform().GetPos().x, posLimitMin.x),
+	     max(object3d->GetTransform().GetPos().y, posLimitMin.y),
+	     object3d->GetTransform().GetPos().z});
+	object3d->GetTransform().SetPos(
+	    {min(object3d->GetTransform().GetPos().x, posLimitMax.x),
+	     min(object3d->GetTransform().GetPos().y, posLimitMax.y),
+	     object3d->GetTransform().GetPos().z});
 }
 
 void Player::Rot() {
@@ -231,17 +234,18 @@ void Player::Rot() {
 		rot.y = rotSpeed * cosf(moveAngle) * fabsf(padStickIncline);
 	} else {
 		// 角度修正速度倍率
-		float backSpeedRatio = fabsf(object3d->GetRot().y / (rotLimit.y * 2)) + 0.5f;
+		float backSpeedRatio = fabsf(object3d->GetTransform().GetRot().y / (rotLimit.y * 2)) + 0.5f;
 		// 角度修正速度
 		const float backSpeed = correctionSpeed * backSpeedRatio;
 		// y軸回転の傾きを修正する
 		const float rotMin = 0.5f;
-		if (object3d->GetRot().y > rotMin) {
+		if (object3d->GetTransform().GetRot().y > rotMin) {
 			rot.y -= backSpeed;
-		} else if (object3d->GetRot().y < -rotMin) {
+		} else if (object3d->GetTransform().GetRot().y < -rotMin) {
 			rot.y += backSpeed;
 		} else {
-			object3d->SetRot({object3d->GetRot().x, 0, object3d->GetRot().z});
+			object3d->GetTransform().SetRot(
+			    {object3d->GetTransform().GetRot().x, 0, object3d->GetTransform().GetRot().z});
 		}
 	}
 
@@ -254,17 +258,18 @@ void Player::Rot() {
 		rot.x = rotSpeed * sinf(moveAngle) * fabsf(padStickIncline);
 	} else {
 		// 角度修正速度倍率
-		float backSpeedRatio = fabsf(object3d->GetRot().x / (rotLimit.x * 2)) + 0.5f;
+		float backSpeedRatio = fabsf(object3d->GetTransform().GetRot().x / (rotLimit.x * 2)) + 0.5f;
 		// 角度修正速度
 		const float backSpeed = correctionSpeed * backSpeedRatio;
 		// y軸回転の傾きを修正する
 		const float rotMin = 0.5f;
-		if (object3d->GetRot().x > rotMin) {
+		if (object3d->GetTransform().GetRot().x > rotMin) {
 			rot.x -= backSpeed;
-		} else if (object3d->GetRot().x < -rotMin) {
+		} else if (object3d->GetTransform().GetRot().x < -rotMin) {
 			rot.x += backSpeed;
 		} else {
-			object3d->SetRot({0, object3d->GetRot().y, object3d->GetRot().z});
+			object3d->GetTransform().SetRot(
+			    {0, object3d->GetTransform().GetRot().y, object3d->GetTransform().GetRot().z});
 		}
 	}
 
@@ -287,19 +292,22 @@ void Player::Rot() {
 			}
 		}
 
-		object3d->SetRot(
-		    {object3d->GetRot().x, object3d->GetRot().y, -object3d->GetRot().y + swayZ});
+		object3d->GetTransform().SetRot(
+		    {object3d->GetTransform().GetRot().x, object3d->GetTransform().GetRot().y,
+		     -object3d->GetTransform().GetRot().y + swayZ});
 	}
 
-	object3d->AddSetRot(rot);
+	object3d->GetTransform().AddSetRot(rot);
 
 	// 角度制限
-	object3d->SetRot(
-	    {max(object3d->GetRot().x, -rotLimit.x), max(object3d->GetRot().y, -rotLimit.y),
-	     object3d->GetRot().z});
-	object3d->SetRot(
-	    {min(object3d->GetRot().x, rotLimit.x), min(object3d->GetRot().y, rotLimit.y),
-	     object3d->GetRot().z});
+	object3d->GetTransform().SetRot(
+	    {max(object3d->GetTransform().GetRot().x, -rotLimit.x),
+	     max(object3d->GetTransform().GetRot().y, -rotLimit.y),
+	     object3d->GetTransform().GetRot().z});
+	object3d->GetTransform().SetRot(
+	    {min(object3d->GetTransform().GetRot().x, rotLimit.x),
+	     min(object3d->GetTransform().GetRot().y, rotLimit.y),
+	     object3d->GetTransform().GetRot().z});
 }
 
 void Player::Attack() {
@@ -314,7 +322,8 @@ void Player::Attack() {
 		const float bulletPower = 5.0f;
 
 		// 速度ベクトルを自機の向きに合わせて回転
-		bulletVec = MyMathUtility::TransforNormal(bulletVec, object3d->GetMatWorld());
+		bulletVec =
+		    MyMathUtility::TransforNormal(bulletVec, object3d->GetTransform().GetMatWorld());
 
 		// 正規化
 		bulletVec = MyMathUtility::MakeNormalize(bulletVec);
@@ -323,7 +332,7 @@ void Player::Attack() {
 		BulletManager::GetInstance()->PlayerBulletShot(
 		    GetWorldPos() + (bulletVec * distance), // ポジション＋(角度＊距離)
 		    bulletVec,                              // 弾の進む向き
-		    object3d->GetRot(),                     // 角度取得
+		    object3d->GetTransform().GetRot(),      // 角度取得
 		    bulletSpeed,                            // 弾の速度
 		    bulletPower                             // 弾のパワー
 		);
@@ -346,7 +355,8 @@ void Player::Attack() {
 		const float distance = 20.0f;
 
 		// 速度ベクトルを自機の向きに合わせて回転
-		bulletVec = MyMathUtility::TransforNormal(bulletVec, object3d->GetMatWorld());
+		bulletVec =
+		    MyMathUtility::TransforNormal(bulletVec, object3d->GetTransform().GetMatWorld());
 
 		// 正規化
 		bulletVec = MyMathUtility::MakeNormalize(bulletVec);
@@ -355,7 +365,7 @@ void Player::Attack() {
 		BulletManager::GetInstance()->BomShot(
 		    GetWorldPos() + (bulletVec * distance), // ポジション＋(角度＊距離)
 		    bulletVec,                              // 弾の進む向き
-		    object3d->GetRot(),                     // 角度取得
+		    object3d->GetTransform().GetRot(),      // 角度取得
 		    bulletSpeed                             // 弾の速度
 		);
 
@@ -366,13 +376,13 @@ void Player::Attack() {
 void Player::DeadEffect() {
 	if (!isFallEffectEnd) {
 		// 姿勢制御
-		object3d->SetRot({25.0f, 0.0f, object3d->GetRot().z});
+		object3d->GetTransform().SetRot({25.0f, 0.0f, object3d->GetTransform().GetRot().z});
 
 		// 回転
-		object3d->AddSetRot({0.0f, 0.0f, 10.0f});
+		object3d->GetTransform().AddSetRot({0.0f, 0.0f, 10.0f});
 
 		// 落下
-		object3d->AddSetPos({0.0f, -0.1f, 0.5f});
+		object3d->GetTransform().AddSetPos({0.0f, -0.1f, 0.5f});
 
 		// 時間経過
 		fallEffectTimer++;
@@ -465,7 +475,7 @@ void Player::SudCoolTime() {
 	}
 }
 
-void Player::EndStart() { object3d->SetPos({0, 0, 50}); }
+void Player::EndStart() { object3d->GetTransform().SetPos({0, 0, 50}); }
 
 void Player::StandStartPos() {
 	startEaseTime = 30;
@@ -485,11 +495,11 @@ void Player::StandStartPos() {
 		operationPos = MyEase::OutCubicVec2(
 		    {width + 450.0f, height + 100.0f}, {width, height}, startEaseTimer / startEaseTime);
 
-		object3d->SetPos(
-		    {object3d->GetPos().x, object3d->GetPos().y,
+		object3d->GetTransform().SetPos(
+		    {object3d->GetTransform().GetPos().x, object3d->GetTransform().GetPos().y,
 		     MyEase::OutCubicFloat(-50.0f, 50.0f, startEaseTimer / startEaseTime)});
 
-		object3d->SetRot(
+		object3d->GetTransform().SetRot(
 		    {0.0f, 0.0f, MyEase::InOutCubicFloat(0.0f, 360.0f, startEaseTimer / startEaseTime)});
 	} else {
 		isStartEase = false;
@@ -554,33 +564,31 @@ void Player::UIDraw() {
 	}
 }
 
-void Player::SetParent(const WorldTransfom* parent_) { object3d->SetParent(parent_); }
+void Player::SetParent(const Transform* parent_) { object3d->SetParent(parent_); }
 
-const KMyMath::Vector3& Player::GetPosition() const { return object3d->GetPos(); }
+const KMyMath::Vector3& Player::GetPosition() const { return object3d->GetTransform().GetPos(); }
 
 const KMyMath::Vector3 Player::GetWorldPos() const {
 	// ワールド座標格納変数
 	KMyMath::Vector3 result;
 
 	// ワールド行列の平行移動成分取得
-	result.x = object3d->GetMatWorld().m[3][0];
-	result.y = object3d->GetMatWorld().m[3][1];
-	result.z = object3d->GetMatWorld().m[3][2];
+	result = object3d->GetTransform().GetWorldPos();
 
 	return result;
 }
 
-const KMyMath::Vector3 Player::GetRot() const { return object3d->GetRot(); }
+const KMyMath::Vector3 Player::GetRot() const { return object3d->GetTransform().GetRot(); }
 
 const bool Player::GetIsDead() const { return isDead; }
 
 const bool Player::GetIsFallEffectEnd() const { return isFallEffectEnd; }
 
-void Player::SetPos(const KMyMath::Vector3& pos_) { object3d->SetPos(pos_); }
+void Player::SetPos(const KMyMath::Vector3& pos_) { object3d->GetTransform().SetPos(pos_); }
 
-void Player::SetRot(const KMyMath::Vector3& rot_) { object3d->SetRot(rot_); }
+void Player::SetRot(const KMyMath::Vector3& rot_) { object3d->GetTransform().SetRot(rot_); }
 
-void Player::SetScale(const KMyMath::Vector3& scale_) { object3d->SetScale(scale_); }
+void Player::SetScale(const KMyMath::Vector3& scale_) { object3d->GetTransform().SetScale(scale_); }
 
 const KMyMath::Vector2& Player::GetRotLimit() { return rotLimit; }
 
@@ -593,7 +601,7 @@ const KMyMath::Vector2& Player::GetPosLimitMin() { return posLimitMin; }
 const bool Player::GetIsInvisible() const { return isInvisible; }
 
 void Player::OnCollision(const float& bulletPower_) {
-	audioManager->SEPlay_wav("damageSE.wav",0.15f);
+	audioManager->SEPlay_wav("damageSE.wav", 0.15f);
 	ObjParticleManager::GetInstance()->SetSmallExp(GetWorldPos());
 	if (!muteki) {
 		HP -= bulletPower_;

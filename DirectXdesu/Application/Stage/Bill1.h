@@ -1,10 +1,10 @@
 #pragma once
-#include <memory>
 #include "Camera.h"
-#include "KObject3d.h"
-#include "KModel.h"
 #include "KGPlin.h"
+#include "KModel.h"
+#include "KObject3d.h"
 #include "KShader.h"
+#include <memory>
 
 /**
  * @file Bill1.h
@@ -12,8 +12,7 @@
  * @author 飯島 薫
  */
 
-class Bill1
-{
+class Bill1 {
 public:
 	/// <summary>
 	/// 生成
@@ -38,7 +37,9 @@ public:
 	/// 更新
 	/// </summary>
 	/// <param name="viewPro"></param>
-	void Update(ViewProjection* viewPro, const float& cameraZ, const bool& isAdvance_);
+	void Update(
+	    ViewProjection* viewPro, const KMyMath::Vector3& cameraPos, const float& cameraZ,
+	    const bool& isAdvance_);
 
 	// 描画
 	void Draw();
@@ -58,4 +59,3 @@ private:
 
 	bool isDead = false;
 };
-

@@ -1,6 +1,5 @@
 #pragma once
 #include "Camera.h"
-#include "KObject3d.h"
 
 /**
  * @file RailCamera.h

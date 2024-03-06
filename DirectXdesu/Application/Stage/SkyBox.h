@@ -30,7 +30,7 @@ public:
 	/// 更新
 	/// </summary>
 	/// <param name="camera_"></param>
-	void Update(ViewProjection* viewPro);
+	void Update(ViewProjection* viewPro, const KMyMath::Vector3& cameraPos);
 
 	// 描画
 	// オブジェクト

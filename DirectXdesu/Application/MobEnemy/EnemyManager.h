@@ -22,7 +22,7 @@ public:
 	/// <summary>
 	/// 更新
 	/// </summary>
-	void Update(ViewProjection* viewPro);
+	void Update(ViewProjection* viewPro, const KMyMath::Vector3& cameraPos);
 
 	/// <summary>
 	/// 描画

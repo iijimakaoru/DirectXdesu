@@ -35,7 +35,7 @@ public:
 	/// 更新
 	/// </summary>
 	/// <param name="viewPro"></param>
-	virtual void Update(ViewProjection* viewPro, const KMyMath::Vector3& cameraPos_);
+	virtual void Update(ViewProjection* viewPro, const KMyMath::Vector3& cameraPos);
 
 	// 描画
 	virtual void Draw();
@@ -51,8 +51,6 @@ public:
 
 	// 消去
 	const bool GetIsDelete() const;
-
-	void SetCameraPos(const KMyMath::Vector3& cameraPos_);
 
 	// 自滅
 	void SelfDestruction();
@@ -84,8 +82,6 @@ protected:
 
 	// 自キャラ
 	Player* player = nullptr;
-
-	KMyMath::Vector3 cameraPos;
 
 private:
 	// モデル

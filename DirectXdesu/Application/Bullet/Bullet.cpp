@@ -9,10 +9,10 @@
 void Bullet::Set(
     const KMyMath::Vector3& pos_, const KMyMath::Vector3& vec_, const KMyMath::Vector3& rot_,
     const float bulletSpeed_, const float bulletPower_) {
-	object3d->SetPos(pos_);
+	object3d->GetTransform().SetPos(pos_);
 	this->vec = vec_;
 	vec = MyMathUtility::MakeNormalize(vec) * bulletSpeed_;
-	object3d->SetRot(rot_);
+	object3d->GetTransform().SetRot(rot_);
 
 	lifeTimer = 120;
 
@@ -21,46 +21,33 @@ void Bullet::Set(
 	isDead = false;
 }
 
-void Bullet::Update(ViewProjection* viewPro_)
-{
-	if (!isDead)
-	{
+void Bullet::Update(ViewProjection* viewPro, const KMyMath::Vector3& cameraPos) {
+	if (!isDead) {
 		lifeTimer--;
-		object3d->AddSetPos(vec);
+		object3d->GetTransform().AddSetPos(vec);
 
-		if (lifeTimer <= 0)
-		{
+		if (lifeTimer <= 0) {
 			isDead = true;
 		}
 	}
 
-	object3d->Update(viewPro_);
+	object3d->Update(viewPro, cameraPos);
 }
 
-void Bullet::Draw()
-{
-	if (!isDead)
-	{
+void Bullet::Draw() {
+	if (!isDead) {
 		object3d->Draw();
 	}
 }
 
-void Bullet::OnCollision()
-{
-	isDead = true;
-}
+void Bullet::OnCollision() { isDead = true; }
 
-KMyMath::Vector3 Bullet::GetWorldPos()
-{
-	// ワールド座標格納変数
+const float& Bullet::GetBulletPower() const { return bulletPower; }
+
+const KMyMath::Vector3 Bullet::GetWorldPos() const {
 	KMyMath::Vector3 result;
 
-	// ワールド行列の平行移動成分取得
-	result.x = object3d->GetMatWorld().m[3][0];
-	result.y = object3d->GetMatWorld().m[3][1];
-	result.z = object3d->GetMatWorld().m[3][2];
+	result = object3d->GetTransform().GetWorldPos();
 
 	return result;
 }
-
-const float& Bullet::GetBulletPower() const { return bulletPower; }

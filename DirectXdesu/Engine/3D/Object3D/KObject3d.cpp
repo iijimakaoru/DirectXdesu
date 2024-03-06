@@ -70,27 +70,31 @@ void KObject3d::CreateCBTransform() {}
 
 void KObject3d::TransUpdate() {
 	// マトリックス
-	KMyMath::Matrix4 matScale, matRot, matTrans;
+	KMyMath::Matrix4 matScale, matRot, matTrans, matWorld;
 	matScale = matRot = matTrans = MyMathUtility::MakeIdentity();
 
 	// 親オブジェクト要素
-	matScale = MyMathUtility::MakeScaling(transform.scale);
+	matScale = MyMathUtility::MakeScaling(transform.GetScale());
 	matRot = MyMathUtility::MakeRotation(
-	    {DirectX::XMConvertToRadians(transform.rot.x), DirectX::XMConvertToRadians(transform.rot.y),
-	     DirectX::XMConvertToRadians(transform.rot.z)});
-	matTrans = MyMathUtility::MakeTranslation(transform.pos);
+	    {DirectX::XMConvertToRadians(transform.GetRot().x),
+	     DirectX::XMConvertToRadians(transform.GetRot().y),
+	     DirectX::XMConvertToRadians(transform.GetRot().z)});
+	matTrans = MyMathUtility::MakeTranslation(transform.GetPos());
 
 	// 行列初期化
-	transform.matWorld = MyMathUtility::MakeIdentity();
-	//
-	transform.matWorld *= MyMathUtility::MakeWorld(matTrans, matScale, matRot);
+	transform.SetMatWorld(MyMathUtility::MakeIdentity());
 
-	if (transform.parent) {
-		transform.matWorld *= transform.parent->matWorld;
+	matWorld *= MyMathUtility::MakeWorld(matTrans, matScale, matRot);
+
+	if (transform.GetParent()) {
+		matWorld *= transform.GetParent()->GetMatWorld();
 	}
+
+	//
+	transform.SetMatWorld(matWorld);
 }
 
-void KObject3d::MatUpdate(ViewProjection* viewProjection_) {
+void KObject3d::MatUpdate(ViewProjection* viewPro,const KMyMath::Vector3& cameraPos) {
 	// 定数バッファのマッピング
 	// B1
 	ConstBufferDataB1* constMap1 = nullptr;
@@ -104,17 +108,18 @@ void KObject3d::MatUpdate(ViewProjection* viewProjection_) {
 	// B0
 	ConstBufferDataB0* constMap0 = nullptr;
 	result = constBuffB0->Map(0, nullptr, (void**)&constMap0);
-	constMap0->mat =
-	    transform.matWorld * viewProjection_->GetMatView() * viewProjection_->GetMatPro();
+	constMap0->world = transform.GetMatWorld();
+	constMap0->viewPro = viewPro->GetMatView() * viewPro->GetMatPro();
+	constMap0->cameraPos = cameraPos;
 	constMap0->color = color;
 	constBuffB0->Unmap(0, nullptr);
 	assert(SUCCEEDED(result));
 }
 
-void KObject3d::Update(ViewProjection* viewProjection_) {
+void KObject3d::Update(ViewProjection* viewPro, const KMyMath::Vector3& cameraPos) {
 	TransUpdate();
 
-	MatUpdate(viewProjection_);
+	MatUpdate(viewPro,cameraPos);
 }
 
 void KObject3d::Draw() {
@@ -143,31 +148,11 @@ void KObject3d::Draw(TextureData& texData_) {
 	model->Draw(texData_);
 }
 
-void KObject3d::SetParent(const WorldTransfom* parent_) { transform.parent = parent_; }
+void KObject3d::SetParent(const Transform* parent_) { transform.SetParent(parent_); }
 
 void KObject3d::Finalize() {}
 
-const KMyMath::Vector3& KObject3d::GetPos() const { return transform.pos; }
-
-const KMyMath::Vector3& KObject3d::GetRot() const { return transform.rot; }
-
-const KMyMath::Vector3& KObject3d::GetScale() const { return transform.scale; }
-
-const KMyMath::Matrix4& KObject3d::GetMatWorld() const { return transform.matWorld; }
-
-const WorldTransfom& KObject3d::GetTransform() const { return transform; }
-
-void KObject3d::SetPos(const KMyMath::Vector3& pos_) { transform.pos = pos_; }
-
-void KObject3d::SetRot(const KMyMath::Vector3& rot_) { transform.rot = rot_; }
-
-void KObject3d::SetScale(const KMyMath::Vector3& scale_) { transform.scale = scale_; }
-
-void KObject3d::AddSetPos(const KMyMath::Vector3& pos_) { transform.pos += pos_; }
-
-void KObject3d::AddSetRot(const KMyMath::Vector3& rot_) { transform.rot += rot_; }
-
-void KObject3d::AddSetScale(const KMyMath::Vector3& scale_) { transform.scale += scale_; }
+Transform& KObject3d::GetTransform() { return transform; }
 
 void KObject3d::SetColor(const KMyMath::Vector4& color_) { color = color_; }
 

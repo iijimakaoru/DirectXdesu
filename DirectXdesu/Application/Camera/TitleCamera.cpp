@@ -3,16 +3,15 @@
 
 #include "Ease.h"
 
-void TitleCamera::Init()
-{
+void TitleCamera::Init() {
 	Camera::Init();
 
-	cameraObject->SetPos({ 0.0f,0.0f,-20.0f });
-	cameraObject->SetRot({ 0.0f,0.0f,0.0f });
+	cameraTransform.SetPos({0.0f, 0.0f, -20.0f});
+	cameraTransform.SetRot({0.0f, 0.0f, 0.0f});
 
-	cameraObject->TransUpdate();
+	cameraTransform.TransUpdate();
 
-	KMyMath::Matrix4 nowMatWorld = cameraObject->GetMatWorld();
+	KMyMath::Matrix4 nowMatWorld = cameraTransform.GetMatWorld();
 	viewProjection->SetMatView(MyMathUtility::MakeInverse(nowMatWorld));
 
 	isRound = false;
@@ -28,36 +27,30 @@ void TitleCamera::Init()
 	Camera::Update();
 }
 
-void TitleCamera::Update()
-{
-	if (isRound)
-	{
+void TitleCamera::Update() {
+	if (isRound) {
 		RoundCamera();
-	}
-	else if (isSortie)
-	{
+	} else if (isSortie) {
 		SortieCamera();
 	}
 
-	cameraObject->TransUpdate();
+	cameraTransform.TransUpdate();
 
-	KMyMath::Matrix4 nowMatWorld = cameraObject->GetMatWorld();
+	KMyMath::Matrix4 nowMatWorld = cameraTransform.GetMatWorld();
 	viewProjection->SetMatView(MyMathUtility::MakeInverse(nowMatWorld));
 
 	Camera::Update();
 }
 
-void TitleCamera::RoundCamera()
-{
-	cameraObject->SetPos({ cameraObject->GetPos().x, 4.0f,cameraObject->GetPos().z });
+void TitleCamera::RoundCamera() {
+	cameraTransform.SetPos({cameraTransform.GetPos().x, 4.0f, cameraTransform.GetPos().z});
 
 	// 角度を変更
 	const float rotSpeed = 0.5f;
 	rotAngle += rotSpeed;
 
 	// 360を超えたら
-	if (rotAngle >= 360)
-	{
+	if (rotAngle >= 360) {
 		rotAngle = 0;
 	}
 
@@ -65,55 +58,46 @@ void TitleCamera::RoundCamera()
 
 	const float radian = DirectX::XMConvertToRadians(rotAngle);
 	const float distance = -20;
-	cameraObject->SetPos({ distance * sinf(radian) ,cameraObject->GetPos().y ,distance * cosf(radian) });
+	cameraTransform.SetPos(
+	    {distance * sinf(radian), cameraTransform.GetPos().y, distance * cosf(radian)});
 
-	cameraObject->SetRot({ 2.5f ,rotAngle ,cameraObject->GetRot().z });
+	cameraTransform.SetRot({2.5f, rotAngle, cameraTransform.GetRot().z});
 }
 
-void TitleCamera::StartRound()
-{
-	isRound = true;
-}
+void TitleCamera::StartRound() { isRound = true; }
 
-void TitleCamera::SortieCamera()
-{
-	if (sortiePhase == 0)
-	{
+void TitleCamera::SortieCamera() {
+	if (sortiePhase == 0) {
 		sortiePhaseTime = 45;
 
-		if (sortiePhaseTimer < sortiePhaseTime)
-		{
+		if (sortiePhaseTimer < sortiePhaseTime) {
 			sortiePhaseTimer++;
-		}
-		else
-		{
+		} else {
 			sortiePhase++;
 		}
 
-		cameraObject->SetPos({ cameraObject->GetPos().x,
-			MyEase::OutCubicFloat(3, 0, sortiePhaseTimer / sortiePhaseTime) ,
-			cameraObject->GetPos().z });
+		cameraTransform.SetPos(
+		    {cameraTransform.GetPos().x,
+		     MyEase::OutCubicFloat(3, 0, sortiePhaseTimer / sortiePhaseTime),
+		     cameraTransform.GetPos().z});
 
-		float radian = 
-			MyEase::OutCubicFloat(DirectX::XMConvertToRadians(nowAngle),
-				DirectX::XMConvertToRadians(360 * 2),
-				sortiePhaseTimer / sortiePhaseTime);
+		float radian = MyEase::OutCubicFloat(
+		    DirectX::XMConvertToRadians(nowAngle), DirectX::XMConvertToRadians(360 * 2),
+		    sortiePhaseTimer / sortiePhaseTime);
 		float distance = MyEase::OutCubicFloat(-40, -30, sortiePhaseTimer / sortiePhaseTime);
 
-		cameraObject->SetPos({ distance * sinf(radian) ,cameraObject->GetPos().y ,distance * cosf(radian) });
+		cameraTransform.SetPos(
+		    {distance * sinf(radian), cameraTransform.GetPos().y, distance * cosf(radian)});
 
-		cameraObject->SetRot({ MyEase::OutCubicFloat(2, 0, sortiePhaseTimer / sortiePhaseTime) ,
-			DirectX::XMConvertToDegrees(radian),
-			cameraObject->GetRot().z });
-	}
-	else
-	{
+		cameraTransform.SetRot(
+		    {MyEase::OutCubicFloat(2, 0, sortiePhaseTimer / sortiePhaseTime),
+		     DirectX::XMConvertToDegrees(radian), cameraTransform.GetRot().z});
+	} else {
 		isSortie = false;
 	}
 }
 
-void TitleCamera::StartSortie()
-{
+void TitleCamera::StartSortie() {
 	isRound = false;
 	isSortie = true;
 }

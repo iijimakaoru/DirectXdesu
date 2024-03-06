@@ -8,8 +8,7 @@
  * @author 飯島 薫
  */
 
-class Blaster : public BossEnemy
-{
+class Blaster : public BossEnemy {
 public:
 	static Blaster* nowBlaster;
 
@@ -25,8 +24,7 @@ public:
 	/// <param name="HP"></param>
 	/// <param name="spritePipeline_"></param>
 	/// <returns></returns>
-	static Blaster* Create(KGPlin* pipeline_, const KMyMath::Vector3& pos,
-		KGPlin* spritePipeline_);
+	static Blaster* Create(KGPlin* pipeline_, const KMyMath::Vector3& pos, KGPlin* spritePipeline_);
 
 public:
 	/// <summary>
@@ -37,14 +35,14 @@ public:
 	/// <param name="initPos"></param>
 	/// <param name="HP_"></param>
 	/// <param name="spritePipeline_"></param>
-	void Init(KGPlin* pipeline_, const KMyMath::Vector3& initPos,
-		 KGPlin* spritePipeline_) override;
+	void Init(KGPlin* pipeline_, const KMyMath::Vector3& initPos, KGPlin* spritePipeline_) override;
 
 	/// <summary>
 	/// 更新
 	/// </summary>
 	/// <param name="viewPro"></param>
-	void Update(ViewProjection* viewPro, bool isBossMovie_) override;
+	void Update(
+	    ViewProjection* viewPro, const KMyMath::Vector3& cameraPos, bool isBossMovie_) override;
 
 	/// <summary>
 	/// 描画
@@ -101,4 +99,3 @@ private:
 
 	size_t actSelect = 0;
 };
-

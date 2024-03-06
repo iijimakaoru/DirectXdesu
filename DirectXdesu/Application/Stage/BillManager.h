@@ -22,7 +22,7 @@ public:
 	void Init();
 
 	// 更新
-	void Update(ViewProjection* viewPro, const float& cameraZ);
+	void Update(ViewProjection* viewPro,const KMyMath::Vector3& cameraPos, const float& cameraZ);
 
 	// 描画
 	void Draw();

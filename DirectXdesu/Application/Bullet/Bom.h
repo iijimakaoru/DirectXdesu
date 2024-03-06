@@ -15,7 +15,7 @@ public:
 
 	void Init(KModel* model_, KModel* expModel_, KGPlin* pipeline_);
 
-	void Update(ViewProjection* viewPro_);
+	void Update(ViewProjection* viewPro, const KMyMath::Vector3& cameraPos);
 
 	void Draw();
 
@@ -31,9 +31,6 @@ public:
 
 	const bool& GetIsExp() const;
 
-	// ワールドポジションゲッター
-	KMyMath::Vector3 GetWorldPos();
-
 	const float& GetBomsPower() const;
 
 	const float& GetExpPower() const;
@@ -41,6 +38,8 @@ public:
 	void SetBomHit(bool isBomHit_);
 
 	const bool& GetBomHit() const;
+
+	const KMyMath::Vector3 GetWorldPos() const;
 
 private:
 	// オブジェクト

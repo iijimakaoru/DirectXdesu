@@ -1,19 +1,14 @@
 #include "MobEnemy.h"
+#include "BulletManager.h"
 #include "MyMath.h"
 #include "ParticleManager.h"
-#include "BulletManager.h"
 #include "Player.h"
 
-MobEnemy::MobEnemy()
-{
-}
+MobEnemy::MobEnemy() {}
 
-MobEnemy::~MobEnemy()
-{
-}
+MobEnemy::~MobEnemy() {}
 
-void MobEnemy::Init(KModel* model_, KGPlin* pipeline_)
-{
+void MobEnemy::Init(KModel* model_, KGPlin* pipeline_) {
 	// モデル生成
 	model = model_;
 
@@ -26,37 +21,24 @@ void MobEnemy::Init(KModel* model_, KGPlin* pipeline_)
 	isDead = false;
 }
 
-void MobEnemy::Update(ViewProjection* viewPro_, const KMyMath::Vector3& cameraPos_)
-{
-	cameraPos = cameraPos_;
-
-	object3d->Update(viewPro_);
+void MobEnemy::Update(ViewProjection* viewPro, const KMyMath::Vector3& cameraPos) {
+	object3d->Update(viewPro, cameraPos);
 }
 
-void MobEnemy::Draw()
-{
-	if (!isDead)
-	{
+void MobEnemy::Draw() {
+	if (!isDead) {
 		object3d->Draw();
 	}
 }
 
-void MobEnemy::OnCollision()
-{
+void MobEnemy::OnCollision() {
 	ObjParticleManager::GetInstance()->SetSmallExp(GetWorldPos());
 	isDead = true;
 }
 
 const bool MobEnemy::GetIsDelete() const { return isDelete; }
 
-void MobEnemy::SetCameraPos(const KMyMath::Vector3& cameraPos_) {
-	cameraPos = cameraPos_;
-}
-
-void MobEnemy::SelfDestruction()
-{
-	isDelete = true;
-}
+void MobEnemy::SelfDestruction() { isDelete = true; }
 
 void MobEnemy::Attack() {}
 
@@ -65,9 +47,7 @@ const KMyMath::Vector3 MobEnemy::GetWorldPos() const {
 	KMyMath::Vector3 result;
 
 	// ワールド行列の平行移動成分取得
-	result.x = object3d->GetMatWorld().m[3][0];
-	result.y = object3d->GetMatWorld().m[3][1];
-	result.z = object3d->GetMatWorld().m[3][2];
+	result = object3d->GetTransform().GetWorldPos();
 
 	return result;
 }

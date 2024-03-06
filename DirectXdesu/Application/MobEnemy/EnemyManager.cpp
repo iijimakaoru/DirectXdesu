@@ -27,14 +27,14 @@ void EnemyManager::Init(Player* player_) {
 	player = player_;
 }
 
-void EnemyManager::Update(ViewProjection* viewPro_) {
+void EnemyManager::Update(ViewProjection* viewPro, const KMyMath::Vector3& cameraPos) {
 	// 敵出現
 	UpdateEnemyPopCommands();
 
 	// 雑魚敵の更新
 	for (std::unique_ptr<MobEnemy>& mobEnemy : mobEnemys) {
 		const KMyMath::Vector3 pos = player->GetWorldPos();
-		mobEnemy->Update(viewPro_, pos);
+		mobEnemy->Update(viewPro, cameraPos);
 	}
 
 	// 条件削除

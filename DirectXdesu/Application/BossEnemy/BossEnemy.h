@@ -30,7 +30,7 @@ public:
 	/// 更新
 	/// </summary>
 	/// <param name="viewPro"></param>
-	virtual void Update(ViewProjection* viewPro, bool isBossMovie_) = 0;
+	virtual void Update(ViewProjection* viewPro,const KMyMath::Vector3& cameraPos, bool isBossMovie_) = 0;
 
 	/// <summary>
 	/// 描画

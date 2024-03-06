@@ -38,7 +38,9 @@ public:
 	/// 更新
 	/// </summary>
 	/// <param name="camera_"></param>
-	void Update(ViewProjection* viewPro, bool isStart_, bool isBossMovie_, bool isClearMovie_);
+	void Update(
+	    ViewProjection* viewPro, const KMyMath::Vector3& cameraPos, bool isStart_,
+	    bool isBossMovie_, bool isClearMovie_);
 
 	// 描画
 	// オブジェクト
@@ -63,7 +65,7 @@ public:
 	/// 親子セッター
 	/// </summary>
 	/// <param name="parent"></param>
-	void SetParent(const WorldTransfom* parent);
+	void SetParent(const Transform* parent);
 
 	// ポジションゲッター
 	const KMyMath::Vector3& GetPosition() const;

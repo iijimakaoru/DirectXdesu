@@ -27,19 +27,19 @@ void Bom::Init(KModel* model_, KModel* expModel_, KGPlin* pipeline_) {
 
 	// オブジェクト生成
 	object3d.reset(KObject3d::Create(model, pipeline));
-	object3d->SetScale({10.0f, 10.0f, 10.0f});
+	object3d->GetTransform().SetScale({10.0f, 10.0f, 10.0f});
 	expObject.reset(KObject3d::Create(expModel, pipeline));
-	expObject->SetScale({0.0f, 0.0f, 0.0f});
+	expObject->GetTransform().SetScale({0.0f, 0.0f, 0.0f});
 
 	audioManager = AudioManager::GetInstance();
 }
 
-void Bom::Update(ViewProjection* viewPro_) {
+void Bom::Update(ViewProjection* viewPro, const KMyMath::Vector3& cameraPos) {
 	if (!isExp) {
 		lifeTimer--;
-		object3d->AddSetPos(vec);
+		object3d->GetTransform().AddSetPos(vec);
 
-		expObject->SetPos(object3d->GetPos());
+		expObject->GetTransform().SetPos(object3d->GetTransform().GetPos());
 
 		if (lifeTimer <= 0) {
 			isExp = true;
@@ -47,7 +47,7 @@ void Bom::Update(ViewProjection* viewPro_) {
 	} else {
 		if (expTimer <= expTime) {
 			if (expTimer == 0) {
-				audioManager->SEPlay_wav("bakuhatuSE.wav",0.75f);
+				audioManager->SEPlay_wav("bakuhatuSE.wav", 0.75f);
 			}
 
 			expTimer++;
@@ -56,7 +56,7 @@ void Bom::Update(ViewProjection* viewPro_) {
 			KMyMath::Vector3 end = {75.0f, 75.0f, 75.0f};
 
 			KMyMath::Vector3 scale = MyEase::OutCubicVec3(start, end, expTimer / expTime);
-			expObject->SetScale(scale);
+			expObject->GetTransform().SetScale(scale);
 
 			expAlpha = MyEase::InQuadFloat(255.0f, 0.0f, expTimer / expTime);
 			expObject->SetRGB(expRGB);
@@ -66,8 +66,8 @@ void Bom::Update(ViewProjection* viewPro_) {
 		}
 	}
 
-	object3d->Update(viewPro_);
-	expObject->Update(viewPro_);
+	object3d->Update(viewPro, cameraPos);
+	expObject->Update(viewPro, cameraPos);
 }
 
 void Bom::Draw() {
@@ -81,10 +81,10 @@ void Bom::Draw() {
 void Bom::Set(
     const KMyMath::Vector3& pos_, const KMyMath::Vector3& vec_, const KMyMath::Vector3& rot_,
     const float bulletSpeed_) {
-	object3d->SetPos(pos_);
+	object3d->GetTransform().SetPos(pos_);
 	this->vec = vec_;
 	vec = MyMathUtility::MakeNormalize(vec) * bulletSpeed_;
-	object3d->SetRot(rot_);
+	object3d->GetTransform().SetRot(rot_);
 
 	lifeTimer = 40;
 
@@ -101,18 +101,6 @@ const bool& Bom::GetIsDead() const { return isDead; }
 
 const bool& Bom::GetIsExp() const { return isExp; }
 
-KMyMath::Vector3 Bom::GetWorldPos() {
-	// ワールド座標格納変数
-	KMyMath::Vector3 result;
-
-	// ワールド行列の平行移動成分取得
-	result.x = object3d->GetMatWorld().m[3][0];
-	result.y = object3d->GetMatWorld().m[3][1];
-	result.z = object3d->GetMatWorld().m[3][2];
-
-	return result;
-}
-
 const float& Bom::GetBomsPower() const { return bomPower; }
 
 const float& Bom::GetExpPower() const { return expPower; }
@@ -120,3 +108,11 @@ const float& Bom::GetExpPower() const { return expPower; }
 void Bom::SetBomHit(bool isBomHit_) { isBomHit = isBomHit_; }
 
 const bool& Bom::GetBomHit() const { return isBomHit; }
+
+const KMyMath::Vector3 Bom::GetWorldPos() const {
+	KMyMath::Vector3 result;
+
+	result = object3d->GetTransform().GetWorldPos();
+
+	return result;
+}

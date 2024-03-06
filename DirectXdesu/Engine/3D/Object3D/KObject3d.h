@@ -2,7 +2,8 @@
 #include "KGPlin.h"
 #include "KModel.h"
 #include "Vector3.h"
-#include "ViewProjection.h"
+#include "Camera.h"
+#include "Transform.h"
 
 /**
  * @file KObject3D.h
@@ -21,20 +22,9 @@ struct ConstBufferDataB1 {
 
 struct ConstBufferDataB0 {
 	KMyMath::Vector4 color;
-	KMyMath::Matrix4 mat;
-};
-
-struct WorldTransfom {
-	// アフィン変換
-	KMyMath::Vector3 scale = {1, 1, 1};
-	KMyMath::Vector3 rot = {0, 0, 0};
-	KMyMath::Vector3 pos = {0, 0, 0};
-
-	// ワールド変換行列
-	KMyMath::Matrix4 matWorld = {};
-
-	// 親オブジェクトへのポインタ
-	const WorldTransfom* parent = nullptr;
+	KMyMath::Matrix4 viewPro;
+	KMyMath::Matrix4 world;
+	KMyMath::Vector3 cameraPos;
 };
 
 class KObject3d {
@@ -84,13 +74,13 @@ public:
 	/// 行列更新
 	/// </summary>
 	/// <param name="viewProjection"></param>
-	void MatUpdate(ViewProjection* viewProjection_);
+	void MatUpdate(ViewProjection* viewPro, const KMyMath::Vector3& cameraPos);
 
 	/// <summary>
 	/// 上の複合
 	/// </summary>
 	/// <param name="viewProjection"></param>
-	void Update(ViewProjection* viewProjection_);
+	void Update(ViewProjection* viewPro, const KMyMath::Vector3& cameraPos);
 
 	/// <summary>
 	/// デフォルトテクスチャ描画
@@ -108,20 +98,10 @@ public:
 	void Finalize();
 
 	// ゲッター
-	const KMyMath::Vector3& GetPos() const;
-	const KMyMath::Vector3& GetRot() const;
-	const KMyMath::Vector3& GetScale() const;
-	const KMyMath::Matrix4& GetMatWorld() const;
-	const WorldTransfom& GetTransform() const;
+	Transform& GetTransform();
 
 	// セッター
-	void SetPos(const KMyMath::Vector3& pos_);
-	void SetRot(const KMyMath::Vector3& rot_);
-	void SetScale(const KMyMath::Vector3& scale_);
-	void SetParent(const WorldTransfom* parent_);
-	void AddSetPos(const KMyMath::Vector3& pos_);
-	void AddSetRot(const KMyMath::Vector3& rot_);
-	void AddSetScale(const KMyMath::Vector3& scale_);
+	void SetParent(const Transform* parent_);
 	void SetColor(const KMyMath::Vector4& color_);
 	void SetRGB(const KMyMath::Vector3& rgb);
 	void SetAlpha(const float& a);
@@ -141,7 +121,7 @@ private:
 	KModel* model = nullptr;
 
 	// 3Dオブジェクトの配列
-	WorldTransfom transform;
+	Transform transform;
 
 	KMyMath::Vector4 color = {1, 1, 1, 1};
 };

@@ -17,7 +17,7 @@ void BossEnemy::Init(KGPlin* pipeline_, const KMyMath::Vector3& initPos_, KGPlin
 
 	// オブジェクト生成
 	object3d.reset(KObject3d::Create(model, pipeline));
-	object3d->SetPos(initPos_);
+	object3d->GetTransform().SetPos(initPos_);
 
 	// 体力セット
 	maxHP = 0;
@@ -77,9 +77,7 @@ const KMyMath::Vector3 BossEnemy::GetWorldPos() const
 	KMyMath::Vector3 result;
 
 	// ワールド行列の平行移動成分取得
-	result.x = object3d->GetMatWorld().m[3][0];
-	result.y = object3d->GetMatWorld().m[3][1];
-	result.z = object3d->GetMatWorld().m[3][2];
+	result = object3d->GetTransform().GetWorldPos();
 
 	return result;
 }
@@ -108,13 +106,13 @@ void BossEnemy::DeadEffect()
 	if (!isFallEffectEnd)
 	{
 		// 姿勢制御
-		object3d->SetRot({ 0,0,object3d->GetRot().z });
+		object3d->GetTransform().SetRot({ 0,0,object3d->GetTransform().GetRot().z });
 
 		// 回転
-		object3d->SetRot(MyEase::Lerp3D({ 0.0f,0.0f,0.0f }, { 20.0f,0.0f,20.0f }, fallEffectTimer / fallEffectTime));
+		object3d->GetTransform().SetRot(MyEase::Lerp3D({ 0.0f,0.0f,0.0f }, { 20.0f,0.0f,20.0f }, fallEffectTimer / fallEffectTime));
 
 		// 落下
-		object3d->AddSetPos({ 0.0f,-0.15f,0.0f });
+		object3d->GetTransform().AddSetPos({ 0.0f,-0.15f,0.0f });
 
 		// 時間経過
 		fallEffectTimer++;
@@ -186,15 +184,15 @@ const bool BossEnemy::GetIsFallEffectEnd() const
 
 const KMyMath::Vector3& BossEnemy::GetRot() const
 {
-	return object3d->GetRot();
+	return object3d->GetTransform().GetRot();
 }
 
 void BossEnemy::SetPos(const KMyMath::Vector3& pos_)
 {
-	object3d->SetPos(pos_);
+	object3d->GetTransform().SetPos(pos_);
 }
 
 void BossEnemy::SetRot(const KMyMath::Vector3& rot_)
 {
-	object3d->SetRot(rot_);
+	object3d->GetTransform().SetRot(rot_);
 }

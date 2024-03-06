@@ -20,24 +20,24 @@ void BulletManager::Init() {
 	}
 }
 
-void BulletManager::Update(ViewProjection* viewPro_) {
+void BulletManager::Update(ViewProjection* viewPro, const KMyMath::Vector3& cameraPos) {
 	// 弾の削除
 	DeleteBullet();
 
 	for (std::unique_ptr<PlayerBullet>& playerBullet : playerBullets) {
-		playerBullet->Update(viewPro_);
+		playerBullet->Update(viewPro,cameraPos);
 	}
 
 	for (std::unique_ptr<EnemyBullet>& enemyBullet : enemyBullets) {
-		enemyBullet->Update(viewPro_);
+		enemyBullet->Update(viewPro,cameraPos);
 	}
 
 	for (std::unique_ptr<Bom>& bom : boms) {
-		bom->Update(viewPro_);
+		bom->Update(viewPro,cameraPos);
 	}
 
 	for (std::unique_ptr<UnitLazer>& unitLazer : unitLazers) {
-		unitLazer->Update(viewPro_);
+		unitLazer->Update(viewPro,cameraPos);
 	}
 }
 

@@ -294,9 +294,9 @@ void ObjParticle::Init(
     const KMyMath::Vector3& velocity_, TextureData& tex_) {
 	object3d.reset(KObject3d::Create(model_, pipeline_));
 
-	object3d->SetPos(pos_);
+	object3d->GetTransform().SetPos(pos_);
 
-	object3d->SetScale({0.5f, 0.5f, 0.5f});
+	object3d->GetTransform().SetScale({0.5f, 0.5f, 0.5f});
 
 	velocity = velocity_;
 
@@ -305,18 +305,18 @@ void ObjParticle::Init(
 	texture = tex_;
 }
 
-void ObjParticle::Update(ViewProjection* viewPro_) {
+void ObjParticle::Update(ViewProjection* viewPro_, const KMyMath::Vector3& cameraPos) {
 	if (lifeTimer < lifeTime) {
 		lifeTimer++;
 
-		object3d->AddSetPos(velocity);
+		object3d->GetTransform().AddSetPos(velocity);
 
-		object3d->AddSetRot({30.0f, 30.0f, 30.0f});
+		object3d->GetTransform().AddSetRot({30.0f, 30.0f, 30.0f});
 
 		if (lifeTimer > 40) {
 			if (easeTimer < easeTime) {
 				easeTimer++;
-				object3d->SetScale(MyEase::OutQuadVec3(
+				object3d->GetTransform().SetScale(MyEase::OutQuadVec3(
 				    {0.5f, 0.5f, 0.5f}, {0.0f, 0.0f, 0.0f}, easeTimer / easeTime));
 			}
 		}
@@ -324,7 +324,7 @@ void ObjParticle::Update(ViewProjection* viewPro_) {
 		isDead = true;
 	}
 
-	object3d->Update(viewPro_);
+	object3d->Update(viewPro_, cameraPos);
 }
 
 void ObjParticle::Draw() { object3d->Draw(texture); }
@@ -339,12 +339,12 @@ void ObjParticleManager::Init() {
 	textureData1 = TextureManager::GetInstance()->GetTextures("Cube");
 }
 
-void ObjParticleManager::Update(ViewProjection* viewPro) {
+void ObjParticleManager::Update(ViewProjection* viewPro, const KMyMath::Vector3& cameraPos) {
 	objParticles.remove_if(
 	    [](std::unique_ptr<ObjParticle>& objParticle) { return objParticle->GetIsDead(); });
 
 	for (std::unique_ptr<ObjParticle>& objParticle : objParticles) {
-		objParticle->Update(viewPro);
+		objParticle->Update(viewPro, cameraPos);
 	}
 }
 

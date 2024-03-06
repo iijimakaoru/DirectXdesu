@@ -50,11 +50,11 @@ void TitleScene::Init() {
 
 	// オブジェクト生成
 	object3d.reset(KObject3d::Create(model, PipelineManager::GetInstance()->GetObjPipeline()));
-	object3d->SetScale({0.0f, 0.0f, 0.0f});
+	object3d->GetTransform().SetScale({0.0f, 0.0f, 0.0f});
 
 	skyDome.reset(
 	    KObject3d::Create(skyDomeModel, PipelineManager::GetInstance()->GetObjPipeline()));
-	skyDome->SetScale({200.0f, 200.0f, 200.0f});
+	skyDome->GetTransform().SetScale({200.0f, 200.0f, 200.0f});
 
 	// フラッシュ
 	flash.reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
@@ -107,9 +107,9 @@ void TitleScene::Update() {
 		}
 	}
 
-	object3d->Update(camera->GetViewPro());
+	object3d->Update(camera->GetViewPro(),camera->GetWorldPos());
 
-	skyDome->Update(camera->GetViewPro());
+	skyDome->Update(camera->GetViewPro(),camera->GetWorldPos());
 
 	camera->Update();
 }
@@ -189,15 +189,16 @@ void TitleScene::StartScene() {
 		KMyMath::Vector3 point2_2 = MyEase::Lerp3D(p2, end, phaseTimer / phaseTime);
 		KMyMath::Vector3 point2 = MyEase::Lerp3D(point2_1, point2_2, phaseTimer / phaseTime);
 
-		object3d->SetPos(MyEase::Lerp3D(point1, point2, phaseTimer / phaseTime));
+		object3d->GetTransform().SetPos(MyEase::Lerp3D(point1, point2, phaseTimer / phaseTime));
 
-		object3d->SetRot(
-		    {MyEase::Lerp(0.0f, -45.0f, phaseTimer / phaseTime), 180.0f, object3d->GetRot().z});
+		object3d->GetTransform().SetRot(
+		    {MyEase::Lerp(0.0f, -45.0f, phaseTimer / phaseTime), 180.0f,
+		     object3d->GetTransform().GetRot().z});
 
 		if (objEaseTimer < objEaseTime) {
 			objEaseTimer++;
 
-			object3d->SetScale(
+			object3d->GetTransform().SetScale(
 			    {MyEase::OutCubicFloat(0, 1, objEaseTimer / objEaseTime),
 			     MyEase::OutCubicFloat(0, 1, objEaseTimer / objEaseTime),
 			     MyEase::OutCubicFloat(0, 1, objEaseTimer / objEaseTime)});
@@ -230,10 +231,11 @@ void TitleScene::StartScene() {
 		KMyMath::Vector3 point2_2 = MyEase::Lerp3D(p2, end, phaseTimer / phaseTime);
 		KMyMath::Vector3 point2 = MyEase::Lerp3D(point2_1, point2_2, phaseTimer / phaseTime);
 
-		object3d->SetPos(MyEase::Lerp3D(point1, point2, phaseTimer / phaseTime));
+		object3d->GetTransform().SetPos(MyEase::Lerp3D(point1, point2, phaseTimer / phaseTime));
 
-		object3d->SetRot(
-		    {MyEase::Lerp(45.0f, 0.0f, phaseTimer / phaseTime), 180.0f, object3d->GetRot().z});
+		object3d->GetTransform().SetRot(
+		    {MyEase::Lerp(45.0f, 0.0f, phaseTimer / phaseTime), 180.0f,
+		     object3d->GetTransform().GetRot().z});
 
 		isTitle = true;
 
@@ -248,12 +250,12 @@ void TitleScene::StartScene() {
 
 		phaseTimer++;
 
-		object3d->SetPos(
-		    {object3d->GetPos().x, object3d->GetPos().y,
+		object3d->GetTransform().SetPos(
+		    {object3d->GetTransform().GetPos().x, object3d->GetTransform().GetPos().y,
 		     MyEase::OutCubicFloat(30, 0, phaseTimer / phaseTime)});
 
-		object3d->SetRot(
-		    {object3d->GetRot().x, object3d->GetRot().y,
+		object3d->GetTransform().SetRot(
+		    {object3d->GetTransform().GetRot().x, object3d->GetTransform().GetRot().y,
 		     MyEase::OutCubicFloat(0, 360, phaseTimer / phaseTime)});
 
 		if (phaseTimer > phaseTime) {
@@ -268,9 +270,9 @@ void TitleScene::StartScene() {
 		flashAlpha = 1.0f;
 
 		// オブジェクト情報タイトルどうりに
-		object3d->SetPos({0, 0, 0});
-		object3d->SetRot({0, 0, 0});
-		object3d->SetScale({1, 1, 1});
+		object3d->GetTransform().SetPos({0, 0, 0});
+		object3d->GetTransform().SetRot({0, 0, 0});
+		object3d->GetTransform().SetScale({1, 1, 1});
 
 		// タイトル位置
 		shooterPos.x = 200;
@@ -350,7 +352,7 @@ void TitleScene::GoNextScene() {
 
 			phaseTimer++;
 
-			object3d->SetScale(
+			object3d->GetTransform().SetScale(
 			    {MyEase::OutCubicFloat(1, 0, phaseTimer / phaseTime),
 			     MyEase::OutCubicFloat(1, 0, phaseTimer / phaseTime),
 			     MyEase::OutCubicFloat(1, 0, phaseTimer / phaseTime)});
@@ -365,7 +367,7 @@ void TitleScene::GoNextScene() {
 			KMyMath::Vector3 point2_2 = MyEase::Lerp3D(p2, end, phaseTimer / phaseTime);
 			KMyMath::Vector3 point2 = MyEase::Lerp3D(point2_1, point2_2, phaseTimer / phaseTime);
 
-			object3d->SetPos(MyEase::Lerp3D(point1, point2, phaseTimer / phaseTime));
+			object3d->GetTransform().SetPos(MyEase::Lerp3D(point1, point2, phaseTimer / phaseTime));
 		} else {
 			goGamePhase++;
 			phaseTimer = 0;

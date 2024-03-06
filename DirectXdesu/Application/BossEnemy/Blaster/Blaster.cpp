@@ -49,19 +49,20 @@ void Blaster::Init(KGPlin* pipeline_, const KMyMath::Vector3& initPos_, KGPlin* 
 	}
 
 	// スタート時のユニットの位置
-	units[0]->SetPos({3.0f, 3.0f, 3.0f});
-	units[1]->SetPos({-3.0f, 3.0f, 3.0f});
-	units[2]->SetPos({3.0f, 3.0f, -3.0f});
-	units[3]->SetPos({-3.0f, 3.0f, -3.0f});
-	units[4]->SetPos({3.0f, -3.0f, 3.0f});
-	units[5]->SetPos({-3.0f, -3.0f, 3.0f});
-	units[6]->SetPos({3.0f, -3.0f, -3.0f});
-	units[7]->SetPos({-3.0f, -3.0f, -3.0f});
+	units[0]->GetTransform().SetPos({3.0f, 3.0f, 3.0f});
+	units[1]->GetTransform().SetPos({-3.0f, 3.0f, 3.0f});
+	units[2]->GetTransform().SetPos({3.0f, 3.0f, -3.0f});
+	units[3]->GetTransform().SetPos({-3.0f, 3.0f, -3.0f});
+	units[4]->GetTransform().SetPos({3.0f, -3.0f, 3.0f});
+	units[5]->GetTransform().SetPos({-3.0f, -3.0f, 3.0f});
+	units[6]->GetTransform().SetPos({3.0f, -3.0f, -3.0f});
+	units[7]->GetTransform().SetPos({-3.0f, -3.0f, -3.0f});
 
 	blasterActState = std::make_unique<BlasterStandState>();
 }
 
-void Blaster::Update(ViewProjection* viewPro_, bool isBossMovie_) {
+void Blaster::Update(
+    ViewProjection* viewPro_, const KMyMath::Vector3& cameraPos, bool isBossMovie_) {
 	isBossMovie = isBossMovie_;
 
 	if (!isDead) {
@@ -72,19 +73,19 @@ void Blaster::Update(ViewProjection* viewPro_, bool isBossMovie_) {
 				actSelect = (size_t)MyMathUtility::GetRandI(1, 3);
 				switch (actSelect) {
 				case 1:
-				    blasterActState = std::make_unique<BlasterAimState>();
-				    break;
+					blasterActState = std::make_unique<BlasterAimState>();
+					break;
 				case 2:
-				    blasterActState = std::make_unique<BlasterTackleState>();
-				    break;
+					blasterActState = std::make_unique<BlasterTackleState>();
+					break;
 				case 3:
-				    blasterActState = std::make_unique<BlasterUnitLazer>();
-				    break;
+					blasterActState = std::make_unique<BlasterUnitLazer>();
+					break;
 				default:
-				    blasterActState = std::make_unique<BlasterStandState>();
-				    break;
+					blasterActState = std::make_unique<BlasterStandState>();
+					break;
 				}
-				//blasterActState = std::make_unique<BlasterUnitLazer>();
+				// blasterActState = std::make_unique<BlasterUnitLazer>();
 			}
 
 			if (blasterActState) {
@@ -104,10 +105,10 @@ void Blaster::Update(ViewProjection* viewPro_, bool isBossMovie_) {
 	// HP演出
 	HPEffect();
 
-	object3d->Update(viewPro_);
+	object3d->Update(viewPro_,cameraPos);
 
 	for (size_t i = 0; i < 8; i++) {
-		units[i]->Update(viewPro_);
+		units[i]->Update(viewPro_,cameraPos);
 	}
 }
 
@@ -133,26 +134,30 @@ bool Blaster::CollisionCheck(const KMyMath::Vector3& posA_, const KMyMath::Vecto
 
 void Blaster::SetFarstAct() { blasterActState = std::make_unique<BlasterStandState>(); }
 
-const KMyMath::Vector3 Blaster::GetUnitsPos(size_t num_) const { return units[num_]->GetPos(); }
-
-const KMyMath::Vector3 Blaster::GetUnitsScale(size_t num_) const { return units[num_]->GetScale(); }
-
-void Blaster::SetUnitsPos(const KMyMath::Vector3& pos_, size_t num_) { units[num_]->SetPos(pos_); }
-
-void Blaster::SetUnitsScale(const KMyMath::Vector3& scale_, size_t num_) {
-	units[num_]->SetScale(scale_);
+const KMyMath::Vector3 Blaster::GetUnitsPos(size_t num_) const {
+	return units[num_]->GetTransform().GetPos();
 }
 
-void Blaster::AddSetPos(const KMyMath::Vector3& pos_) { object3d->AddSetPos(pos_); }
+const KMyMath::Vector3 Blaster::GetUnitsScale(size_t num_) const {
+	return units[num_]->GetTransform().GetScale();
+}
 
-const KMyMath::Vector3 Blaster::UnitsGetWorldPos(uint32_t& i) const { 
+void Blaster::SetUnitsPos(const KMyMath::Vector3& pos_, size_t num_) {
+	units[num_]->GetTransform().SetPos(pos_);
+}
+
+void Blaster::SetUnitsScale(const KMyMath::Vector3& scale_, size_t num_) {
+	units[num_]->GetTransform().SetScale(scale_);
+}
+
+void Blaster::AddSetPos(const KMyMath::Vector3& pos_) { object3d->GetTransform().AddSetPos(pos_); }
+
+const KMyMath::Vector3 Blaster::UnitsGetWorldPos(uint32_t& i) const {
 	// ワールド座標格納変数
 	KMyMath::Vector3 result;
 
 	// ワールド行列の平行移動成分取得
-	result.x = units[i]->GetMatWorld().m[3][0];
-	result.y = units[i]->GetMatWorld().m[3][1];
-	result.z = units[i]->GetMatWorld().m[3][2];
+	result = units[i]->GetTransform().GetWorldPos();
 
 	return result;
 }

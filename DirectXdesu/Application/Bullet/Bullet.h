@@ -30,7 +30,7 @@ public:
 	/// 更新
 	/// </summary>
 	/// <param name="viewPro"></param>
-	virtual void Update(ViewProjection* viewPro);
+	virtual void Update(ViewProjection* viewPro, const KMyMath::Vector3& cameraPos);
 
 	// 描画
 	virtual void Draw();
@@ -44,10 +44,9 @@ public:
 	// 衝突時に呼び出し
 	virtual void OnCollision();
 
-	// ワールドポジションゲッター
-	virtual KMyMath::Vector3 GetWorldPos();
-
 	const float& GetBulletPower() const;
+
+	const KMyMath::Vector3 GetWorldPos() const;
 
 protected:
 	// オブジェクト

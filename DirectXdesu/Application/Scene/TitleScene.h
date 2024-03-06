@@ -13,6 +13,8 @@
 
 #include "AudioManager.h"
 
+#include "KObject3d.h"
+
 /**
  * @file TitleScene.h
  * @brief タイトルシーン

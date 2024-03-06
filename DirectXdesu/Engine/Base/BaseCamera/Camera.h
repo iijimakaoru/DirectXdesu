@@ -2,7 +2,7 @@
 #include "ViewProjection.h"
 #include "KWinApp.h"
 #include <memory>
-#include "KObject3d.h"
+#include "Transform.h"
 
 /**
  * @file Camera.h
@@ -15,7 +15,7 @@ class Camera
 protected:
 	std::unique_ptr<ViewProjection> viewProjection = nullptr;
 
-	std::unique_ptr<KObject3d> cameraObject = nullptr;
+	Transform cameraTransform;
 
 public:
 	virtual ~Camera() {}
@@ -30,7 +30,7 @@ public:
 	ViewProjection* GetViewPro();
 
 	// ゲッター
-	const WorldTransfom& GetTransform()const;
+	const Transform& GetTransform()const;
 	const KMyMath::Vector3& GetCameraPos()const;
 	const KMyMath::Vector3& GetCameraRot() const;
 	const KMyMath::Vector3 GetWorldPos() const;

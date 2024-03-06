@@ -15,7 +15,7 @@ AppearEnemy* AppearEnemy::Create(KModel* model_, KGPlin* pipeline_, const KMyMat
 	newEnemy->Init(model_, pipeline_);
 
 	// 初期位置セット
-	newEnemy->object3d->SetPos(pos_);
+	newEnemy->object3d->GetTransform().SetPos(pos_);
 
 	return newEnemy;
 }
@@ -31,7 +31,7 @@ void AppearEnemy::Init(KModel* model_, KGPlin* pipeline_) {
 
 	endScale = {4.0f, 4.0f, 4.0f};
 
-	object3d->SetScale(startScale);
+	object3d->GetTransform().SetScale(startScale);
 
 	isAppear = true;
 
@@ -40,19 +40,21 @@ void AppearEnemy::Init(KModel* model_, KGPlin* pipeline_) {
 	coolTime = 60;
 }
 
-void AppearEnemy::Update(ViewProjection* viewPro_, const KMyMath::Vector3& cameraPos_) {
+void AppearEnemy::Update(ViewProjection* viewPro, const KMyMath::Vector3& cameraPos) {
 	// 出現演出
 	if (isAppear) {
 		Appear();
 	} else {
 		if (!isDead && !isDelete) {
-			if (object3d->GetPos().z >= cameraPos_.z) {
+			if (object3d->GetTransform().GetPos().z >= cameraPos.z) {
 				Attack();
 			}
 
 			const float cameraDistance = 50.0f;
 
-			if (object3d->GetPos().z <= min(object3d->GetPos().z, cameraPos_.z - cameraDistance)) {
+			if (object3d->GetTransform().GetPos().z <=
+			    min(object3d->GetTransform().GetPos().z,
+			        cameraPos.z - cameraDistance)) {
 				isDelete = true;
 			}
 		}
@@ -63,7 +65,7 @@ void AppearEnemy::Update(ViewProjection* viewPro_, const KMyMath::Vector3& camer
 		}
 	}
 
-	object3d->Update(viewPro_);
+	object3d->Update(viewPro,cameraPos);
 }
 
 void AppearEnemy::Draw() { MobEnemy::Draw(); }
@@ -102,10 +104,12 @@ void AppearEnemy::Attack() { // プレイヤー情報
 void AppearEnemy::Appear() {
 	easeTimer += 1.0f;
 
-	object3d->SetScale(MyEase::OutQuadVec3(startScale, endScale, easeTimer / easeTime));
-	object3d->SetRot(
-	    {object3d->GetRot().x, MyEase::OutQuadFloat(0.0f, 360.0f * 2.0f, easeTimer / easeTime),
-	     object3d->GetRot().z});
+	object3d->GetTransform().SetScale(
+	    MyEase::OutQuadVec3(startScale, endScale, easeTimer / easeTime));
+	object3d->GetTransform().SetRot(
+	    {object3d->GetTransform().GetRot().x,
+	     MyEase::OutQuadFloat(0.0f, 360.0f * 2.0f, easeTimer / easeTime),
+	     object3d->GetTransform().GetRot().z});
 
 	if (easeTimer >= max(easeTimer, easeTime)) {
 		isAppear = false;

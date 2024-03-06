@@ -31,5 +31,5 @@ void EnemyBullet::Init(KModel* model_, KGPlin* pipeline_) {
 
 	// オブジェクト生成
 	object3d.reset(KObject3d::Create(model, pipeline));
-	object3d->SetScale({1.0f, 1.0f, 1.0f});
+	object3d->GetTransform().SetScale({1.0f, 1.0f, 1.0f});
 }

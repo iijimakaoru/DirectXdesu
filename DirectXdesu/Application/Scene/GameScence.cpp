@@ -50,7 +50,7 @@ void GameScence::Init() {
 
 	// カメラ初期化
 	camera->Init(player.get(), {0.0f, 0.0f, -200.0f});
-	//camera->Init(player.get(), {0.0f, 0.0f, 470.0f});
+	// camera->Init(player.get(), {0.0f, 0.0f, 470.0f});
 
 	// エネミーマネージャー生成
 	enemyManager.reset(EnemyManager::Create(
@@ -141,7 +141,7 @@ void GameScence::Update() {
 			PlayerDead();
 
 			// エネミーマネージャーの更新
-			enemyManager->Update(camera->GetViewPro());
+			enemyManager->Update(camera->GetViewPro(), camera->GetWorldPos());
 
 			// 天箱を自機に追従
 			skyBox->SetPosZ(player->GetWorldPos().z);
@@ -161,29 +161,32 @@ void GameScence::Update() {
 				}
 			}
 
-			blaster->Update(camera->GetViewPro(), isBossAppearMovie);
+			blaster->Update(camera->GetViewPro(), camera->GetWorldPos(), isBossAppearMovie);
 			Blaster::nowBlaster = blaster.get();
 		}
 
 		// プレイヤーの更新
-		player->Update(camera->GetViewPro(), isStageStart, isBossAppearMovie, isClearMovie);
+		player->Update(
+		    camera->GetViewPro(), camera->GetWorldPos(), isStageStart, isBossAppearMovie,
+		    isClearMovie);
 		Player::nowPlayer = player.get();
 
 		// 弾の更新
-		bulletManager->Update(camera->GetViewPro());
+		bulletManager->Update(camera->GetViewPro(), camera->GetWorldPos());
 
 		// 地面の更新
-		ground->Update(camera->GetViewPro(), camera->GetCameraPos());
+		ground->Update(camera->GetViewPro(), camera->GetWorldPos());
 
 		// スカイボックスの更新
-		skyBox->Update(camera->GetViewPro());
+		skyBox->Update(camera->GetViewPro(), camera->GetWorldPos());
 
 		// パーティクルマネージャーの更新
 		particleManager->Update(camera->GetViewPro());
-		objParticleManager->Update(camera->GetViewPro());
+		objParticleManager->Update(camera->GetViewPro(), camera->GetWorldPos());
 
 		// ビルマネージャー
-		billManager->Update(camera->GetViewPro(), camera->GetCameraPos().z - 20.0f);
+		billManager->Update(
+		    camera->GetViewPro(), camera->GetWorldPos(), camera->GetCameraPos().z - 20.0f);
 
 		// カメラの更新
 		camera->Update(isStageStart, isBossAppearMovie, isClearMovie);

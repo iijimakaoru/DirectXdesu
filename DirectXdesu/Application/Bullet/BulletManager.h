@@ -18,7 +18,7 @@ public:
 	/// 弾の更新
 	/// </summary>
 	/// <param name="viewPro"></param>
-	void Update(ViewProjection* viewPro);
+	void Update(ViewProjection* viewPro, const KMyMath::Vector3& cameraPos);
 
 	/// <summary>
 	/// 弾の描画

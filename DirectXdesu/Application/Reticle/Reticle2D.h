@@ -1,6 +1,6 @@
 #pragma once
 #include "Sprite.h"
-#include "ViewProjection.h"
+#include "Camera.h"
 
 /**
  * @file Reticle2D.h
@@ -19,7 +19,7 @@ public:
 	/// </summary>
 	/// <param name="viewPro"></param>
 	/// <param name="reticle3dPos"></param>
-	void Update(ViewProjection* viewPro,KMyMath::Vector3 reticle3dPos);
+	void Update(ViewProjection* viewPro, KMyMath::Vector3 reticle3dPos);
 
 	// 描画
 	void Draw();

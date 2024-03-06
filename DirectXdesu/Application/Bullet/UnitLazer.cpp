@@ -24,12 +24,14 @@ void UnitLazer::Init(KModel* model_, KGPlin* pipeline_) {
 
 	// オブジェクト生成
 	object3d.reset(KObject3d::Create(model, pipeline));
-	object3d->SetScale({1.0f, 180.0f, 1.0f});
+	object3d->GetTransform().SetScale({1.0f, 180.0f, 1.0f});
 
 	isDead = true;
 }
 
-void UnitLazer::Update(ViewProjection* viewPro_) { object3d->Update(viewPro_); }
+void UnitLazer::Update(ViewProjection* viewPro, const KMyMath::Vector3& cameraPos) {
+	object3d->Update(viewPro, cameraPos);
+}
 
 void UnitLazer::Draw() {
 	if (!isDead) {
@@ -38,8 +40,8 @@ void UnitLazer::Draw() {
 }
 
 void UnitLazer::Set(const KMyMath::Vector3& pos_, const KMyMath::Vector3& rot_) {
-	object3d->SetPos(pos_);
-	object3d->SetRot(rot_);
+	object3d->GetTransform().SetPos(pos_);
+	object3d->GetTransform().SetRot(rot_);
 }
 
 void UnitLazer::SetIsDead(bool isDead_) { isDead = isDead_; }
@@ -52,11 +54,11 @@ KMyMath::Vector3 UnitLazer::GetWorldPos() { // ワールド座標格納変数
 	KMyMath::Vector3 result;
 
 	// ワールド行列の平行移動成分取得
-	result.x = object3d->GetMatWorld().m[3][0];
-	result.y = object3d->GetMatWorld().m[3][1];
-	result.z = object3d->GetMatWorld().m[3][2];
+	result.x = object3d->GetTransform().GetMatWorld().m[3][0];
+	result.y = object3d->GetTransform().GetMatWorld().m[3][1];
+	result.z = object3d->GetTransform().GetMatWorld().m[3][2];
 
 	return result;
 }
 
-void UnitLazer::SetScale(const KMyMath::Vector3& scale) const { object3d->SetScale(scale); }
+void UnitLazer::SetScale(const KMyMath::Vector3& scale) const { object3d->GetTransform().SetScale(scale); }

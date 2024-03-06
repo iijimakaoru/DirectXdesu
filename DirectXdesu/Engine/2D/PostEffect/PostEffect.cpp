@@ -5,7 +5,7 @@ KGPlin* PostEffect::pipeline = nullptr;
 Microsoft::WRL::ComPtr<ID3D12Device> PostEffect::device;
 Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> PostEffect::cmdList;
 KWinApp* PostEffect::window = nullptr;
-const float PostEffect::clearColor[4] = { 0.5f, 0.5f, 0.5f, 0.0f };
+const float PostEffect::clearColor[4] = { 0.0f, 1.0f, 0.0f, 1.0f };
 
 void PostEffect::StaticInit()
 {
@@ -18,22 +18,14 @@ void PostEffect::StaticInit()
 
 void PostEffect::Init()
 {
-	// 定数バッファマテリアル
-	CreateCBMaterial();
-
 	// 頂点
 	CreateVertex();
-
-	// 定数バッファトランスフォーム
-	CreateCBTransform();
 
 	// テクスチャ
 	CreateTextureBuff();
 
 	// 深度バッファ
 	CreateDepthBuff();
-
-	*constMapTransform = MyMathUtility::MakeIdentity();
 }
 
 void PostEffect::DrawCommand()
@@ -45,11 +37,6 @@ void PostEffect::DrawCommand()
 	D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle = descHeapSRV->GetGPUDescriptorHandleForHeapStart();
 	// SRVヒープの先頭にあるSRVをルートパラメータ1番に設定
 	cmdList->SetGraphicsRootDescriptorTable(1, srvGpuHandle);
-
-	// 定数バッファビュー(CBV)の設定コマンド(マテリアル)
-	cmdList->SetGraphicsRootConstantBufferView(0, constBuffMaterial->GetGPUVirtualAddress());
-	// 定数バッファビュー(CBV)の設定コマンド(トランスフォーム)
-	cmdList->SetGraphicsRootConstantBufferView(2, constBuffTransform->GetGPUVirtualAddress());
 
 	// 頂点バッファビューの設定コマンド
 	cmdList->IASetVertexBuffers(0, 1, &vbView);
@@ -116,41 +103,6 @@ void PostEffect::SetPipeline(KGPlin* pipeline_)
 	pipeline = pipeline_;
 }
 
-void PostEffect::CreateCBMaterial()
-{
-	// 定数バッファ生成用
-	D3D12_HEAP_PROPERTIES cbHeapProp{}; // ヒープの設定
-	cbHeapProp.Type = D3D12_HEAP_TYPE_UPLOAD; // GPUへの転送用
-
-	// リソース設定
-	D3D12_RESOURCE_DESC cbResourceDesc{};
-	cbResourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-	cbResourceDesc.Width = (sizeof(KMyMath::Vector4) + 0xff) & ~0xff; // 256バイトアライメント
-	cbResourceDesc.Height = 1;
-	cbResourceDesc.DepthOrArraySize = 1;
-	cbResourceDesc.MipLevels = 1;
-	cbResourceDesc.SampleDesc.Count = 1;
-	cbResourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
-
-	// 定数バッファの生成
-	result = device->CreateCommittedResource(
-		&cbHeapProp, // ヒープ設定
-		D3D12_HEAP_FLAG_NONE,
-		&cbResourceDesc, // リソース設定
-		D3D12_RESOURCE_STATE_GENERIC_READ,
-		nullptr,
-		IID_PPV_ARGS(constBuffMaterial.ReleaseAndGetAddressOf())
-	);
-	assert(SUCCEEDED(result));
-
-	// 定数バッファのマッピング
-	result = constBuffMaterial->Map(0, nullptr, (void**)&constMapMaterial); // マッピング
-	assert(SUCCEEDED(result));
-
-	// 値の代入
-	*constMapMaterial = KMyMath::Vector4(1.0f, 0.5f, 0.5f, 1.0f);
-}
-
 void PostEffect::CreateVertex()
 {
 	// ヒープ設定
@@ -206,38 +158,6 @@ void PostEffect::CreateVertex()
 	vbView.SizeInBytes = sizeVB;
 	// 頂点一つ分のデータサイズ
 	vbView.StrideInBytes = sizeof(Vertex);
-}
-
-void PostEffect::CreateCBTransform()
-{
-	// 定数バッファ生成用
-	D3D12_HEAP_PROPERTIES cbHeapProp{}; // ヒープの設定
-	cbHeapProp.Type = D3D12_HEAP_TYPE_UPLOAD; // GPUへの転送用
-
-	// リソース設定
-	D3D12_RESOURCE_DESC cbResDesc{};
-	cbResDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-	cbResDesc.Width = (sizeof(KMyMath::Matrix4) + 0xff) & ~0xff; // 頂点データ全体のサイズ
-	cbResDesc.Height = 1;
-	cbResDesc.DepthOrArraySize = 1;
-	cbResDesc.MipLevels = 1;
-	cbResDesc.SampleDesc.Count = 1;
-	cbResDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
-
-	// 定数バッファの生成
-	result = device->CreateCommittedResource(
-		&cbHeapProp, // ヒープ設定
-		D3D12_HEAP_FLAG_NONE,
-		&cbResDesc, // リソース設定
-		D3D12_RESOURCE_STATE_GENERIC_READ,
-		nullptr,
-		IID_PPV_ARGS(constBuffTransform.ReleaseAndGetAddressOf())
-	);
-	assert(SUCCEEDED(result));
-
-	// 定数バッファのマッピング
-	result = constBuffTransform->Map(0, nullptr, (void**)&constMapTransform); // マッピング
-	assert(SUCCEEDED(result));
 }
 
 void PostEffect::CreateTextureBuff()

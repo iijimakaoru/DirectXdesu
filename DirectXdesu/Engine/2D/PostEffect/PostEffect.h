@@ -44,14 +44,8 @@ public:
 	void SetPipeline(KGPlin* pipeline_);
 
 private:// クラス内でしか使わない関数
-	// 定数バッファマテリアル
-	void CreateCBMaterial();
-
 	// 頂点生成
 	void CreateVertex();
-
-	// 定数バッファトランスフォーム
-	void CreateCBTransform();
 
 	// テクスチャバッファ
 	void CreateTextureBuff();
@@ -90,18 +84,6 @@ private:
 
 	// インデックスバッファ
 	Microsoft::WRL::ComPtr<ID3D12Resource> indexBuff = nullptr;
-
-	// 定数バッファ
-	Microsoft::WRL::ComPtr<ID3D12Resource> constBuffMaterial = nullptr;
-
-	// 定数バッファのマップ
-	KMyMath::Vector4* constMapMaterial = nullptr;
-
-	// 定数バッファ
-	Microsoft::WRL::ComPtr<ID3D12Resource> constBuffTransform = nullptr;
-
-	// 定数バッファのマップ
-	KMyMath::Matrix4* constMapTransform = nullptr;
 
 	// テクスチャバッファ
 	Microsoft::WRL::ComPtr<ID3D12Resource> texBuff = nullptr;

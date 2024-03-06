@@ -235,13 +235,13 @@ void BlasterUnitLazer::GoCubeAct() {
 		if (unitCount >= 3) {
 			actsPhase = BackPos;
 		} else {
-			actsPhase = CubeClose;
+			actsPhase = CubeOpen;
 		}
 	}
 }
 
 void BlasterUnitLazer::WaitAct() {
-	actTime = 60.0f;
+	actTime = 30.0f;
 
 	if (actTimer < actTime) {
 		actTimer++;

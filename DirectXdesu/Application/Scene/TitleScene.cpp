@@ -29,8 +29,8 @@ void TitleScene::Init() {
 	input = KInput::GetInstance();
 
 	light_.reset(Light::Create());
-	light_->SetLightRGB({0, 0, 1});
-	light_->SetLightDir({0, 1, 0, 0.0f});
+	light_->SetLightRGB({1, 0, 0});
+	light_->SetLightDir({0, -1, 0, 0.0f});
 	KObject3d::SetLight(light_.get());
 
 	// カメラ読み込み

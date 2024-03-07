@@ -40,7 +40,7 @@ void Light::SetLightDir(const DirectX::XMVECTOR& lightDir) {
 	isDirty = true;
 }
 
-void Light::SetLightRGB(const KMyMath::Vector3& lightRGB) {
+void Light::SetLightRGB(const DirectX::XMFLOAT3& lightRGB) {
 	lightRGB_ = lightRGB;
 	isDirty = true;
 }

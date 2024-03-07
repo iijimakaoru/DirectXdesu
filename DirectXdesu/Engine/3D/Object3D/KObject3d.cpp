@@ -89,10 +89,10 @@ void KObject3d::MatUpdate(ViewProjection* viewPro,const KMyMath::Vector3& camera
 	// B0
 	ConstBufferDataB0* constMap0 = nullptr;
 	result = constBuffB0->Map(0, nullptr, (void**)&constMap0);
+	constMap0->color = color;
 	constMap0->world = transform.GetMatWorld();
 	constMap0->viewPro = viewPro->GetMatView() * viewPro->GetMatPro();
 	constMap0->cameraPos = hoge;
-	constMap0->color = color;
 	constBuffB0->Unmap(0, nullptr);
 	assert(SUCCEEDED(result));
 }

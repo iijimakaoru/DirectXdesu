@@ -6,7 +6,7 @@ SamplerState smp : register(s0); // 0番スロットに設定されたサンプラー
 float4 main(VSOutput input) : SV_TARGET
 {
     // テクスチャマッピング
-    float4 texColor = tex.Sample(smp, input.uv);
+    float4 texColor = float4(tex.Sample(smp, input.uv));
     
     // シェーディングによる色
     float4 shaderColor;
@@ -31,8 +31,9 @@ float4 main(VSOutput input) : SV_TARGET
     float3 specular = pow(saturate(dot(reflect, eyeDir)), shininess) * m_specular;
     
     // 全て加算
-    shaderColor.rgb = (ambient + diffuse + reflect) * lightColor;
-    shaderColor.a = m_alpha;
+    shaderColor.rgb = ((ambient + diffuse + reflect)) * lightColor;
     
-    return shaderColor * texColor;
+    texColor.a = color.a;
+    
+    return float4(shaderColor.rgb * texColor.rgb, texColor.a);
 }

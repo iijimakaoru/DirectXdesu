@@ -29,7 +29,7 @@ void TitleScene::Init() {
 	input = KInput::GetInstance();
 
 	light_.reset(Light::Create());
-	light_->SetLightRGB({1, 0, 0});
+	light_->SetLightRGB({1.0f, 1.0f, 1.0f});
 	light_->SetLightDir({0, -1, 0, 0.0f});
 	KObject3d::SetLight(light_.get());
 

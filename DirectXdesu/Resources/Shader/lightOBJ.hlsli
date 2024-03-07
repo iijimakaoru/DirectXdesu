@@ -1,9 +1,9 @@
 cbuffer cbuff0 : register(b0)
 {
+    float4 color;
     matrix viewPro;
     matrix world;
     float3 cameraPos;
-    float4 color;
 }
 
 cbuffer cbuff1 : register(b1)
@@ -27,7 +27,6 @@ struct VSOutput
     float4 worldpos : POSITION; // ワールド座標
     
     float3 normal : NORMAL; // 法線ベクトル
-    //float4 color : COLOR; // 色
 	
     float2 uv : TEXCOORD; // uv値
 };

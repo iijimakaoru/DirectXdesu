@@ -9,7 +9,7 @@ public:
 	// 定数バッファ用データ構造体
 	struct ConstBufferData {
 		DirectX::XMVECTOR lightv;     // ライトの方向ベクトル
-		KMyMath::Vector3 lightColor; // ライトの色
+		DirectX::XMFLOAT3 lightColor; // ライトの色
 	};
 
 public:
@@ -29,7 +29,7 @@ public:
 	void SetLightDir(const DirectX::XMVECTOR& lightDir);
 
 	// 色セット
-	void SetLightRGB(const KMyMath::Vector3& lightRGB);
+	void SetLightRGB(const DirectX::XMFLOAT3& lightRGB);
 
 private:
 	// 定数バッファ生成
@@ -42,7 +42,7 @@ private:
 	// 光線方向(単位ベクトル)
 	DirectX::XMVECTOR lightDir_ = {1, 0, 0, 0};
 	// 色
-	KMyMath::Vector3 lightRGB_ = {1, 1, 1};
+	DirectX::XMFLOAT3 lightRGB_ = {1, 1, 1};
 	// 定数バッファ
 	Microsoft::WRL::ComPtr<ID3D12Resource> constBuff_;
 	// ダーティーフラグ

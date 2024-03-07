@@ -17,10 +17,10 @@ public:
 	static std::unique_ptr<Light> light_;
 
 	struct ConstBufferDataB0 {
+		KMyMath::Vector4 color;
 		KMyMath::Matrix4 viewPro;
 		KMyMath::Matrix4 world;
 		KMyMath::Vector3 cameraPos;
-		KMyMath::Vector4 color;
 	};
 
 public:
@@ -119,5 +119,5 @@ private:
 	// 3Dオブジェクトの配列
 	Transform transform;
 
-	KMyMath::Vector4 color = {1, 1, 1, 1};
+	KMyMath::Vector4 color = {1.0f, 1.0f, 1.0f, 1.0f};
 };

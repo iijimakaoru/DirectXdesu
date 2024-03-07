@@ -16,7 +16,7 @@ cbuffer cbuff1 : register(b1)
 
 cbuffer cbuff2 : register(b2)
 {
-    float3 lightDir;
+    float3 lightv;
     float3 lightColor;
 }
 

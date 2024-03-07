@@ -35,9 +35,8 @@ void Light::Draw(UINT rootParamIndex) {
 	    rootParamIndex, constBuff_->GetGPUVirtualAddress());
 }
 
-void Light::SetLightDir(const KMyMath::Vector4& lightDir) {
-	lightDir_ = lightDir;
-	lightDir_.Normalize();
+void Light::SetLightDir(const DirectX::XMVECTOR& lightDir) {
+	lightDir_ = DirectX::XMVector3Normalize(lightDir);
 	isDirty = true;
 }
 
@@ -63,8 +62,12 @@ void Light::CreateConstBuffer() {
 	cbResourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 	// 定数バッファ生成
 	result = KDirectXCommon::GetInstance()->GetDev()->CreateCommittedResource(
-	    &cbHeapProp, D3D12_HEAP_FLAG_NONE, &cbResourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ,
-	    nullptr, IID_PPV_ARGS(&constBuff_));
+	    &cbHeapProp, // ヒープ設定
+		D3D12_HEAP_FLAG_NONE, 
+		&cbResourceDesc, // リソース設定
+		D3D12_RESOURCE_STATE_GENERIC_READ,
+	    nullptr,
+		IID_PPV_ARGS(&constBuff_));
 	assert(SUCCEEDED(result));
 }
 
@@ -73,7 +76,7 @@ void Light::TransferConstBuffer() {
 	ConstBufferData* constMap = nullptr;
 	result = constBuff_->Map(0, nullptr, (void**)&constMap);
 	if (SUCCEEDED(result)) {
-		constMap->lightv = -lightDir_;
+		constMap->lightv = DirectX::XMVectorNegate(lightDir_);
 		constMap->lightColor = lightRGB_;
 		constBuff_->Unmap(0, nullptr);
 	}

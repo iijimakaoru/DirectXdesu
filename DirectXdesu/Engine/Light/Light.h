@@ -2,12 +2,13 @@
 #include "MyMath.h"
 #include <d3d12.h>
 #include <wrl.h>
+#include <DirectXMath.h>
 
 class Light {
 public:
 	// 定数バッファ用データ構造体
 	struct ConstBufferData {
-		KMyMath::Vector4 lightv;     // ライトの方向ベクトル
+		DirectX::XMVECTOR lightv;     // ライトの方向ベクトル
 		KMyMath::Vector3 lightColor; // ライトの色
 	};
 
@@ -25,7 +26,7 @@ public:
 	void Draw(UINT rootParamIndex);
 
 	// 方向セット
-	void SetLightDir(const KMyMath::Vector4& lightDir);
+	void SetLightDir(const DirectX::XMVECTOR& lightDir);
 
 	// 色セット
 	void SetLightRGB(const KMyMath::Vector3& lightRGB);
@@ -38,12 +39,12 @@ private:
 	void TransferConstBuffer();
 
 private:
-	// 定数バッファ
-	Microsoft::WRL::ComPtr<ID3D12Resource> constBuff_;
 	// 光線方向(単位ベクトル)
-	KMyMath::Vector4 lightDir_ = {1, 0, 0, 0};
+	DirectX::XMVECTOR lightDir_ = {1, 0, 0, 0};
 	// 色
 	KMyMath::Vector3 lightRGB_ = {1, 1, 1};
+	// 定数バッファ
+	Microsoft::WRL::ComPtr<ID3D12Resource> constBuff_;
 	// ダーティーフラグ
 	bool isDirty = false;
 };

@@ -14,13 +14,13 @@
 
 class KObject3d {
 public:
-	static Light* light_;
+	static std::unique_ptr<Light> light_;
 
 	struct ConstBufferDataB0 {
-		KMyMath::Vector4 color;
 		KMyMath::Matrix4 viewPro;
 		KMyMath::Matrix4 world;
 		KMyMath::Vector3 cameraPos;
+		KMyMath::Vector4 color;
 	};
 
 public:

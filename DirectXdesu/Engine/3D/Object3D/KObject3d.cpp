@@ -1,7 +1,7 @@
 #include "KObject3d.h"
 #include "KDirectXCommon.h"
 
-Light* KObject3d::light_ = nullptr;
+std::unique_ptr<Light> KObject3d::light_ = nullptr;
 
 void KObject3d::StaticInit() {}
 
@@ -19,6 +19,8 @@ KObject3d* KObject3d::Create(KModel* model_, KGPlin* pipeline_) {
 
 	return object3d;
 }
+
+void KObject3d::SetLight(Light* light) { light_.reset(light); }
 
 void KObject3d::Initialize() {
 	// ヒープ設定
@@ -48,8 +50,6 @@ void KObject3d::Initialize() {
 void KObject3d::LoadModel(KModel* model_) { model = model_; }
 
 void KObject3d::SetPipeline(KGPlin* pipeline_) { pipeline = pipeline_; }
-
-void KObject3d::SetLight(Light* light) { KObject3d::light_ = light; }
 
 void KObject3d::CreateCBMaterial() {}
 

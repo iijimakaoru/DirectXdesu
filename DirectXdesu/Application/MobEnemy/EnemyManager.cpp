@@ -2,14 +2,13 @@
 #include "AppearEnemy.h"
 #include "CanonEnemy.h"
 #include "FlyEnemy.h"
+#include "ModelManager.h"
+#include "PipelineManager.h"
 #include "Player.h"
 #include "RailCamera.h"
 #include "ScoreManager.h"
-#include "ModelManager.h"
-#include "PipelineManager.h"
 
-EnemyManager* EnemyManager::Create(
-    const std::string fileName_, Player* player_) {
+EnemyManager* EnemyManager::Create(const std::string fileName_, Player* player_) {
 	// インスタンス
 	EnemyManager* instance = new EnemyManager();
 	if (instance == nullptr) {
@@ -146,10 +145,10 @@ void EnemyManager::UpdateEnemyPopCommands() {
 				// 生成
 				newMEnemy.reset(FlyEnemy::Create(
 				    ModelManager::GetInstance()->GetModels("MobEnemy1"), // モデルセット
-				    PipelineManager::GetInstance()->GetObjPipeline(), // パイプラインセット
-				    {x, y, z},             // 生成場所
-				    {_x, _y},              // 最終地点
-				    RailCamera::GetSpeed() // 移動スピード
+				    PipelineManager::GetInstance()->GetObjPipeline(),	 // パイプラインセット
+					{x, y, z},											 // 生成場所
+				    {_x, _y},											 // 最終地点
+				    RailCamera::GetSpeed()								 // 移動スピード
 				    ));
 
 				// 自機狙い弾用にプレイヤーセット
@@ -161,8 +160,8 @@ void EnemyManager::UpdateEnemyPopCommands() {
 				// 生成
 				newMEnemy.reset(CanonEnemy::Create(
 				    ModelManager::GetInstance()->GetModels("MobEnemy1"), // モデルセット
-				    PipelineManager::GetInstance()->GetObjPipeline(), // パイプラインセット
-				    {x, y, z} // 出現位置
+				    PipelineManager::GetInstance()->GetObjPipeline(),	 // パイプラインセット
+				    {x, y, z}											 // 出現位置
 				    ));
 
 				// 自機狙い弾用にプレイヤーセット
@@ -174,8 +173,8 @@ void EnemyManager::UpdateEnemyPopCommands() {
 				// 生成
 				newMEnemy.reset(AppearEnemy::Create(
 				    ModelManager::GetInstance()->GetModels("MobEnemy1"), // モデルセット
-				    PipelineManager::GetInstance()->GetObjPipeline(), // パイプラインセット
-				    {x, y, z} // 出現位置
+				    PipelineManager::GetInstance()->GetObjPipeline(),	 // パイプラインセット
+				    {x, y, z}											 // 出現位置
 				    ));
 
 				// 自機狙い弾用にプレイヤーセット

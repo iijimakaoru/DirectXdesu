@@ -38,6 +38,10 @@ void GameScence::Init() {
 	// インスタンス
 	input = KInput::GetInstance();
 
+	light_.reset(Light::Create());
+	light_->SetLightRGB({1, 1, 1});
+	KObject3d::SetLight(light_.get());
+
 	// プレイヤー生成
 	float playersHPInit = 50.0f;
 	player.reset(Player::Create(playersHPInit));
@@ -69,17 +73,17 @@ void GameScence::Init() {
 
 	// 弾マネージャー
 	bulletManager = BulletManager::GetInstance();
-	bulletManager->Init();
+	bulletManager->Init(light_.get());
 
 	// パーティクル
 	particleManager = ParticleManager::GetInstance();
 	particleManager->Init();
 	objParticleManager = ObjParticleManager::GetInstance();
-	objParticleManager->Init();
+	objParticleManager->Init(light_.get());
 
 	// ビル
 	billManager = std::make_unique<BillManager>();
-	billManager->Init();
+	billManager->Init(light_.get());
 
 	for (size_t i = 0; i < 2; i++) {
 		movieBar[i].reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
@@ -192,6 +196,8 @@ void GameScence::Update() {
 		camera->Update(isStageStart, isBossAppearMovie, isClearMovie);
 
 		ScoreManager::GetInstance()->Update();
+
+		light_->Update();
 
 		// ボス登場警告
 		if (bossWarning) {

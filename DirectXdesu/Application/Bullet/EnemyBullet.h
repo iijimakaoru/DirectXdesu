@@ -20,8 +20,9 @@ public:
 	/// <param name="bulletSpeed"></param>
 	/// <returns></returns>
 	static EnemyBullet* Create(
-	    KModel* model, KGPlin* pipeline_, const KMyMath::Vector3& pos, const KMyMath::Vector3& vec_,
-	    const KMyMath::Vector3& rot_, const float bulletSpeed, const float BulletPower_);
+	    KModel* model, KGPlin* pipeline_, const KMyMath::Vector3& pos,
+	    const KMyMath::Vector3& vec_, const KMyMath::Vector3& rot_, const float bulletSpeed,
+	    const float BulletPower_);
 
 public:
 	// 初期化

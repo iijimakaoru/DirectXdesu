@@ -4,6 +4,7 @@
 #include "Vector3.h"
 #include "Camera.h"
 #include "Transform.h"
+#include "Light.h"
 
 /**
  * @file KObject3D.h
@@ -11,23 +12,17 @@
  * @author 飯島 薫
  */
 
-struct ConstBufferDataB1 {
-	KMyMath::Vector3 ambient;
-	float pad1;
-	KMyMath::Vector3 diffuse;
-	float pad2;
-	KMyMath::Vector3 specular;
-	float alpha;
-};
-
-struct ConstBufferDataB0 {
-	KMyMath::Vector4 color;
-	KMyMath::Matrix4 viewPro;
-	KMyMath::Matrix4 world;
-	KMyMath::Vector3 cameraPos;
-};
-
 class KObject3d {
+public:
+	static Light* light_;
+
+	struct ConstBufferDataB0 {
+		KMyMath::Vector4 color;
+		KMyMath::Matrix4 viewPro;
+		KMyMath::Matrix4 world;
+		KMyMath::Vector3 cameraPos;
+	};
+
 public:
 	static void StaticInit();
 
@@ -38,6 +33,8 @@ public:
 	/// <param name="pipeline_"></param>
 	/// <returns></returns>
 	static KObject3d* Create(KModel* model_, KGPlin* pipeline_);
+
+	static void SetLight(Light* light);
 
 private:
 	// 初期化
@@ -110,7 +107,6 @@ private:
 	KGPlin* pipeline;
 
 	Microsoft::WRL::ComPtr<ID3D12Resource> constBuffB0;
-	Microsoft::WRL::ComPtr<ID3D12Resource> constBuffB1;
 
 	// 定数バッファ(マテリアル)
 	Microsoft::WRL::ComPtr<ID3D12Resource> constBuffMaterial = nullptr;

@@ -1,9 +1,9 @@
 #pragma once
-#include "KObject3d.h"
 #include "KModel.h"
-#include "ViewProjection.h"
-#include "TextureManager.h"
+#include "KObject3d.h"
 #include "Sprite.h"
+#include "TextureManager.h"
+#include "ViewProjection.h"
 
 #include "ActState.h"
 
@@ -13,8 +13,7 @@
  * @author 飯島 薫
  */
 
-class BossEnemy
-{
+class BossEnemy {
 public:
 	/// <summary>
 	/// 初期化
@@ -23,14 +22,15 @@ public:
 	/// <param name="pipeline_"></param>
 	/// <param name="initPos"></param>
 	/// <param name="HP"></param>
-	virtual void Init(KGPlin* pipeline_,const KMyMath::Vector3& initPos,
-		KGPlin* spritePipeline_);
+	virtual void Init(
+	    KGPlin* pipeline_, const KMyMath::Vector3& initPos, KGPlin* spritePipeline_);
 
 	/// <summary>
 	/// 更新
 	/// </summary>
 	/// <param name="viewPro"></param>
-	virtual void Update(ViewProjection* viewPro,const KMyMath::Vector3& cameraPos, bool isBossMovie_) = 0;
+	virtual void
+	    Update(ViewProjection* viewPro, const KMyMath::Vector3& cameraPos, bool isBossMovie_) = 0;
 
 	/// <summary>
 	/// 描画
@@ -136,4 +136,3 @@ protected:
 
 	AudioManager* audioManager = nullptr;
 };
-

@@ -28,6 +28,10 @@ void TitleScene::Init() {
 	// インスタンス
 	input = KInput::GetInstance();
 
+	light_.reset(Light::Create());
+	light_->SetLightRGB({1, 1, 1});
+	KObject3d::SetLight(light_.get());
+
 	// カメラ読み込み
 	camera = std::make_unique<TitleCamera>();
 	camera->Init();
@@ -110,6 +114,8 @@ void TitleScene::Update() {
 	object3d->Update(camera->GetViewPro(),camera->GetWorldPos());
 
 	skyDome->Update(camera->GetViewPro(),camera->GetWorldPos());
+
+	light_->Update();
 
 	camera->Update();
 }

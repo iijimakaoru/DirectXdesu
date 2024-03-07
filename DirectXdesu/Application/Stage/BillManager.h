@@ -6,6 +6,7 @@
 #include "KObject3d.h"
 #include "KShader.h"
 #include <memory>
+#include "Light.h"
 
 /**
  * @file BillManager.h
@@ -19,7 +20,7 @@ public:
 	~BillManager();
 
 	// 初期化
-	void Init();
+	void Init(Light* light);
 
 	// 更新
 	void Update(ViewProjection* viewPro,const KMyMath::Vector3& cameraPos, const float& cameraZ);
@@ -49,4 +50,6 @@ private:
 	bool isAdvance = false;
 
 	bool isStopCreate = false;
+
+	Light* light_ = nullptr;
 };

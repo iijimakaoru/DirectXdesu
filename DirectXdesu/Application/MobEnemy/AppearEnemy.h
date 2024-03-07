@@ -16,7 +16,8 @@ public:
 	/// <param name="model_">使用するモデル</param>
 	/// <param name="pos">初期位置</param>
 	/// <returns></returns>
-	static AppearEnemy* Create(KModel* model_,KGPlin* pipeline_, const KMyMath::Vector3& pos);
+	static AppearEnemy*
+	    Create(KModel* model_, KGPlin* pipeline_, const KMyMath::Vector3& pos);
 
 public:
 	AppearEnemy();
@@ -26,7 +27,7 @@ public:
 	/// 初期化
 	/// </summary>
 	/// <param name="model_"></param>
-	void Init(KModel* model_, KGPlin* pipeline_);
+	void Init(KModel* model_, KGPlin* pipeline);
 
 	/// <summary>
 	/// 更新

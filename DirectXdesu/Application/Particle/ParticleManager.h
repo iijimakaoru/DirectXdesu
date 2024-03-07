@@ -203,7 +203,8 @@ public:
 	/// </summary>
 	/// <returns></returns>
 	static ObjParticle* Create(const KMyMath::Vector3& pos_, 
-		KModel* model_, KGPlin* pipeline_, const KMyMath::Vector3& velocity, TextureData& tex);
+		KModel* model_, KGPlin* pipeline_,
+	    const KMyMath::Vector3& velocity, TextureData& tex);
 
 	/// <summary>
 	/// 初期化
@@ -212,7 +213,8 @@ public:
 	/// <param name="model_"></param>
 	/// <param name="pipeline_"></param>
 	void Init(const KMyMath::Vector3& pos_, 
-		KModel* model_, KGPlin* pipeline_, const KMyMath::Vector3& velocity, TextureData& tex);
+		KModel* model_, KGPlin* pipeline_,
+	    const KMyMath::Vector3& velocity, TextureData& tex);
 
 	/// <summary>
 	/// 更新
@@ -261,7 +263,7 @@ public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void Init();
+	void Init(Light* light);
 
 	/// <summary>
 	/// 更新
@@ -305,6 +307,8 @@ private:
 
 	// テクスチャ
 	TextureData textureData1;
+
+	Light* light_ = nullptr;
 
 private:
 	ObjParticleManager() = default;

@@ -20,7 +20,8 @@ public:
 	/// <param name="model_"></param>
 	/// <param name="objPipeline_"></param>
 	/// <returns></returns>
-	static Bill1* Create(KModel* model_, KGPlin* objPipeline_, const KMyMath::Vector2& pos);
+	static Bill1*
+	    Create(KModel* model_, KGPlin* objPipeline_, const KMyMath::Vector2& pos);
 
 public:
 	Bill1();

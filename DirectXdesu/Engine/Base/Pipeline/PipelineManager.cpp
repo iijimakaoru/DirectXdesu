@@ -8,7 +8,7 @@ PipelineManager* PipelineManager::GetInstance() {
 
 void PipelineManager::Init() {
 	// Obj
-	objShader.Init(L"Resources/Shader/ObjVS.hlsl", L"Resources/Shader/ObjPS.hlsl");
+	objShader.Init(L"Resources/Shader/lightOBJVS.hlsl", L"Resources/Shader/lightOBJPS.hlsl");
 	objPipeline.reset(KGPlin::Create(objShader, "Obj"));
 
 	// Sprite

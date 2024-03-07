@@ -3,6 +3,7 @@
 #include "EnemyBullet.h"
 #include "PlayerBullet.h"
 #include "UnitLazer.h"
+#include "Light.h"
 
 /**
  * @file BulletManager.h
@@ -12,7 +13,7 @@
 
 class BulletManager {
 public:
-	void Init();
+	void Init(Light* light);
 
 	/// <summary>
 	/// 弾の更新
@@ -113,6 +114,8 @@ private:
 
 	// インスタンス
 	static BulletManager* bulletManager;
+
+	Light* light_;
 
 private:
 	BulletManager() = default;

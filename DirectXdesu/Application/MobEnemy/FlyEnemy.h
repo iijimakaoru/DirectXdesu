@@ -19,7 +19,9 @@ public:
 	/// <param name="endPos_"></param>
 	/// <param name="speed_"></param>
 	/// <returns></returns>
-	static FlyEnemy* Create(KModel* model_, KGPlin* pipeline_, const KMyMath::Vector3& startPos_, const KMyMath::Vector2& endPos_, const float& speed_);
+	static FlyEnemy* Create(
+	    KModel* model_, KGPlin* pipeline_, const KMyMath::Vector3& startPos_,
+	    const KMyMath::Vector2& endPos_, const float& speed_);
 
 public:
 	/// <summary>

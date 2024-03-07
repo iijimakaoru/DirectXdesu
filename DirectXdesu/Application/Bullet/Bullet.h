@@ -4,6 +4,7 @@
 #include "KModel.h"
 #include "KObject3d.h"
 #include "KShader.h"
+#include "Light.h"
 #include "TextureManager.h"
 #include <memory>
 

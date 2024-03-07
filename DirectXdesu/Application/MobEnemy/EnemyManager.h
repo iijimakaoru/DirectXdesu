@@ -2,6 +2,7 @@
 #include <list>
 #include <memory>
 #include "MobEnemy.h"
+#include "Light.h"
 
 class Player;
 
@@ -53,6 +54,8 @@ private:
 
 	// プレイヤー情報格納
 	Player* player = nullptr;
+
+	Light* light_ = nullptr;
 
 private:
 	// 雑魚

@@ -5,14 +5,17 @@
  */
 
 #include "BulletManager.h"
+#include "Ease.h"
 #include "ModelManager.h"
 #include "PipelineManager.h"
-#include "Ease.h"
 
 BulletManager* BulletManager::bulletManager = nullptr;
 
-void BulletManager::Init() {
+void BulletManager::Init(Light* light) {
 	pipeline = PipelineManager::GetInstance()->GetObjPipeline();
+
+	light_ = light;
+
 	for (size_t i = 0; i < 16; i++) {
 		unitLazers[i].reset(UnitLazer::Create(
 		    ModelManager::GetInstance()->GetModels("Lazer"), pipeline, {0.0f, 0.0f, 0.0f},
@@ -25,19 +28,19 @@ void BulletManager::Update(ViewProjection* viewPro, const KMyMath::Vector3& came
 	DeleteBullet();
 
 	for (std::unique_ptr<PlayerBullet>& playerBullet : playerBullets) {
-		playerBullet->Update(viewPro,cameraPos);
+		playerBullet->Update(viewPro, cameraPos);
 	}
 
 	for (std::unique_ptr<EnemyBullet>& enemyBullet : enemyBullets) {
-		enemyBullet->Update(viewPro,cameraPos);
+		enemyBullet->Update(viewPro, cameraPos);
 	}
 
 	for (std::unique_ptr<Bom>& bom : boms) {
-		bom->Update(viewPro,cameraPos);
+		bom->Update(viewPro, cameraPos);
 	}
 
 	for (std::unique_ptr<UnitLazer>& unitLazer : unitLazers) {
-		unitLazer->Update(viewPro,cameraPos);
+		unitLazer->Update(viewPro, cameraPos);
 	}
 }
 
@@ -65,8 +68,8 @@ void BulletManager::PlayerBulletShot(
 	// 弾生成
 	std::unique_ptr<PlayerBullet> newBullet;
 	newBullet.reset(PlayerBullet::Create(
-	    ModelManager::GetInstance()->GetModels("P_Bullet"), pipeline, pos, vec_, rot_, bulletSpeed_,
-	    BulletPower_));
+	    ModelManager::GetInstance()->GetModels("P_Bullet"), pipeline, pos, vec_, rot_,
+	    bulletSpeed_, BulletPower_));
 	// 登録
 	playerBullets.push_back(std::move(newBullet));
 }
@@ -77,8 +80,8 @@ void BulletManager::EnemyBulletShot(
 	// 弾生成
 	std::unique_ptr<EnemyBullet> newBullet;
 	newBullet.reset(EnemyBullet::Create(
-	    ModelManager::GetInstance()->GetModels("E_Bullet"), pipeline, pos, vec_, rot_, bulletSpeed_,
-	    BulletPower_));
+	    ModelManager::GetInstance()->GetModels("E_Bullet"), pipeline, pos, vec_, rot_,
+	    bulletSpeed_, BulletPower_));
 	// 登録
 	enemyBullets.push_back(std::move(newBullet));
 }
@@ -155,7 +158,7 @@ const KMyMath::Vector3 BulletManager::GetLazersPos(size_t i) const {
 	return unitLazers[i]->GetWorldPos();
 }
 
-void BulletManager::LazerOpen(const float& timer, size_t i) { 
+void BulletManager::LazerOpen(const float& timer, size_t i) {
 	KMyMath::Vector3 start = {0, 0, 0};
 	KMyMath::Vector3 end = {1, 180, 1};
 	unitLazers[i]->SetScale(MyEase::InCubicVec3(start, end, timer));

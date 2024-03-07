@@ -137,5 +137,7 @@ private:
 	float phaseTime = 0;
 
 	AudioManager* audioManager = nullptr;
+
+	std::unique_ptr<Light> light_ = nullptr;
 };
 

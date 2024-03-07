@@ -1,7 +1,8 @@
 #include "Bill1.h"
 #include "RailCamera.h"
 
-Bill1* Bill1::Create(KModel* model_, KGPlin* objPipeline_, const KMyMath::Vector2& pos_) {
+Bill1* Bill1::Create(
+    KModel* model_, KGPlin* objPipeline_, const KMyMath::Vector2& pos_) {
 	// インスタンス
 	Bill1* instance = new Bill1();
 	if (instance == nullptr) {

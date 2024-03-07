@@ -30,19 +30,37 @@ public:
 		ObjMaterialInfo();
 	};
 
+	struct ConstBufferDataB1 {
+		KMyMath::Vector3 ambient;
+		float pad1;
+		KMyMath::Vector3 diffuse;
+		float pad2;
+		KMyMath::Vector3 specular;
+		float alpha;
+	};
+
+public:
 	// マテリアル読み込み
 	void LoadMaterial(const std::string& directoryPath, const std::string& filename);
 
+	void Init();
+
+	void CreateConstBuffer();
+
+	void Update();
+
 	// 描画
-	void Draw();
+	void Draw(UINT rootParamIndex);
 
 	// 描画(テクスチャ指定)
-	void Draw(TextureData texData);
+	void Draw(UINT rootParamIndex, TextureData texData);
 
 	// モデル生成
 	void CreateModel();
 
 public:
+	Microsoft::WRL::ComPtr<ID3D12Resource> constBuffB1;
+
 	// 頂点データ
 	std::vector<VertexPosNormalUV> vertices;
 	// インデックスデータ
@@ -55,7 +73,6 @@ public:
 	ObjMaterialInfo objMtl;
 
 private:
-	
 };
 
 class Cube : public KModel {

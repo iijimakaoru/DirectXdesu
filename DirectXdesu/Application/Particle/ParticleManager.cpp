@@ -10,8 +10,8 @@
 
 #include "Ease.h"
 
-#include "PipelineManager.h"
 #include "ModelManager.h"
+#include "PipelineManager.h"
 
 /// <summary>
 /// 静的メンバ変数の実体
@@ -331,12 +331,14 @@ void ObjParticle::Draw() { object3d->Draw(texture); }
 
 ObjParticleManager* ObjParticleManager::objParticleManager = nullptr;
 
-void ObjParticleManager::Init() {
+void ObjParticleManager::Init(Light* light) {
 	// キューブ生成
 	model = ModelManager::GetInstance()->GetModels("Cube");
 
 	// テクスチャ
 	textureData1 = TextureManager::GetInstance()->GetTextures("Cube");
+
+	light_ = light;
 }
 
 void ObjParticleManager::Update(ViewProjection* viewPro, const KMyMath::Vector3& cameraPos) {

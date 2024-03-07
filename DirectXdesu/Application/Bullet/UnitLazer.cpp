@@ -1,7 +1,8 @@
 #include "UnitLazer.h"
 
 UnitLazer* UnitLazer::Create(
-    KModel* model_, KGPlin* pipeline_, const KMyMath::Vector3& pos_, const KMyMath::Vector3& rot_) {
+    KModel* model_, KGPlin* pipeline_, const KMyMath::Vector3& pos_,
+    const KMyMath::Vector3& rot_) {
 	// インスタンス生成
 	UnitLazer* lazer = new UnitLazer();
 	if (lazer == nullptr) {
@@ -61,4 +62,6 @@ KMyMath::Vector3 UnitLazer::GetWorldPos() { // ワールド座標格納変数
 	return result;
 }
 
-void UnitLazer::SetScale(const KMyMath::Vector3& scale) const { object3d->GetTransform().SetScale(scale); }
+void UnitLazer::SetScale(const KMyMath::Vector3& scale) const {
+	object3d->GetTransform().SetScale(scale);
+}

@@ -1,18 +1,21 @@
 #include "BillManager.h"
-#include "PipelineManager.h"
 #include "ModelManager.h"
+#include "PipelineManager.h"
 
 BillManager::BillManager() {}
 
 BillManager::~BillManager() {}
 
-void BillManager::Init() {
+void BillManager::Init(Light* light) {
 	billtimer = 0;
 
 	isAdvance = false;
+
+	light_ = light;
 }
 
-void BillManager::Update(ViewProjection* viewPro_,const KMyMath::Vector3& cameraPos, const float& cameraZ_) {
+void BillManager::Update(
+    ViewProjection* viewPro_, const KMyMath::Vector3& cameraPos, const float& cameraZ_) {
 	bill1s.remove_if([](std::unique_ptr<Bill1>& bill1) { return bill1->GetIsDead(); });
 
 	if (!isStopCreate) {
@@ -20,7 +23,7 @@ void BillManager::Update(ViewProjection* viewPro_,const KMyMath::Vector3& camera
 	}
 
 	for (std::unique_ptr<Bill1>& bill1 : bill1s) {
-		bill1->Update(viewPro_,cameraPos, cameraZ_, isAdvance);
+		bill1->Update(viewPro_, cameraPos, cameraZ_, isAdvance);
 	}
 }
 
@@ -35,8 +38,7 @@ void BillManager::LeftSet(const float cameraZ_) {
 	std::unique_ptr<Bill1> newBill1;
 	newBill1.reset(Bill1::Create(
 	    ModelManager::GetInstance()->GetModels("Bill1"),
-	    PipelineManager::GetInstance()->GetObjPipeline(),
-	    {-60, cameraZ_}));
+	    PipelineManager::GetInstance()->GetObjPipeline(), {-60, cameraZ_}));
 	bill1s.push_back(std::move(newBill1));
 }
 

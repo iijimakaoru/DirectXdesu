@@ -31,7 +31,7 @@ void Light::Update() {
 
 void Light::Draw(UINT rootParamIndex) {
 	// 定数バッファビューをセット
-	KDirectXCommon::GetInstance()->GetCmdlist()->SetComputeRootConstantBufferView(
+	KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootConstantBufferView(
 	    rootParamIndex, constBuff_->GetGPUVirtualAddress());
 }
 

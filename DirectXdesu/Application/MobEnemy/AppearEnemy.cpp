@@ -4,7 +4,8 @@
 #include "ScoreManager.h"
 #include "Player.h"
 
-AppearEnemy* AppearEnemy::Create(KModel* model_, KGPlin* pipeline_, const KMyMath::Vector3& pos_) {
+AppearEnemy* AppearEnemy::Create(
+    KModel* model_, KGPlin* pipeline_, const KMyMath::Vector3& pos_) {
 	// インスタンス生成
 	AppearEnemy* newEnemy = new AppearEnemy();
 	if (newEnemy == nullptr) {

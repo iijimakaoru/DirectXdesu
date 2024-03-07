@@ -24,7 +24,8 @@ public:
 	/// <param name="HP"></param>
 	/// <param name="spritePipeline_"></param>
 	/// <returns></returns>
-	static Blaster* Create(KGPlin* pipeline_, const KMyMath::Vector3& pos, KGPlin* spritePipeline_);
+	static Blaster* Create(
+	    KGPlin* pipeline_, const KMyMath::Vector3& pos, KGPlin* spritePipeline_);
 
 public:
 	/// <summary>
@@ -35,7 +36,8 @@ public:
 	/// <param name="initPos"></param>
 	/// <param name="HP_"></param>
 	/// <param name="spritePipeline_"></param>
-	void Init(KGPlin* pipeline_, const KMyMath::Vector3& initPos, KGPlin* spritePipeline_) override;
+	void Init(
+	    KGPlin* pipeline_, const KMyMath::Vector3& initPos, KGPlin* spritePipeline_) override;
 
 	/// <summary>
 	/// 更新

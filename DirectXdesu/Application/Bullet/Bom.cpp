@@ -2,8 +2,9 @@
 #include "Ease.h"
 
 Bom* Bom::Create(
-    KModel* model_, KModel* expModel_, KGPlin* pipeline_, const KMyMath::Vector3& pos_,
-    const KMyMath::Vector3& vec_, const KMyMath::Vector3& rot_, const float bulletSpeed_) {
+    KModel* model_, KModel* expModel_, KGPlin* pipeline_,
+    const KMyMath::Vector3& pos_, const KMyMath::Vector3& vec_, const KMyMath::Vector3& rot_,
+    const float bulletSpeed_) {
 	// インスタンス生成
 	Bom* bom = new Bom();
 	if (bom == nullptr) {

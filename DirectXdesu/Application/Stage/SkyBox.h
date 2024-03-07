@@ -1,8 +1,8 @@
 #pragma once
 #include "Camera.h"
-#include "KObject3d.h"
-#include "KModel.h"
 #include "KGPlin.h"
+#include "KModel.h"
+#include "KObject3d.h"
 
 /**
  * @file SkyBox.h
@@ -10,8 +10,7 @@
  * @author 飯島 薫
  */
 
-class SkyBox
-{
+class SkyBox {
 public:
 	/// <summary>
 	/// 生成
@@ -52,4 +51,3 @@ private:
 	// パイプライン
 	KGPlin* objPipeline;
 };
-

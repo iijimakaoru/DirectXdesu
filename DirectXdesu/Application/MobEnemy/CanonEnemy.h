@@ -7,8 +7,7 @@
  * @author 飯島 薫
  */
 
-class CanonEnemy : public MobEnemy
-{
+class CanonEnemy : public MobEnemy {
 public:
 	/// <summary>
 	/// 生成
@@ -16,7 +15,8 @@ public:
 	/// <param name="model_">使用するモデル</param>
 	/// <param name="pos">初期位置</param>
 	/// <returns></returns>
-	static CanonEnemy* Create(KModel* model_, KGPlin* pipeline_, const KMyMath::Vector3& pos);
+	static CanonEnemy*
+	    Create(KModel* model_, KGPlin* pipeline_, const KMyMath::Vector3& pos);
 
 public:
 	/// <summary>
@@ -67,4 +67,3 @@ private:
 	// 最初のスケール
 	KMyMath::Vector3 startPos;
 };
-

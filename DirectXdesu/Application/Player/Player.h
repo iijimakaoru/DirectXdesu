@@ -11,6 +11,7 @@
 #include "Reticle3D.h"
 
 #include "AudioManager.h"
+#include "Light.h"
 
 /**
  * @file Player.h

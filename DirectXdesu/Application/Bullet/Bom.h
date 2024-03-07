@@ -1,17 +1,18 @@
 #pragma once
+#include "AudioManager.h"
 #include "Camera.h"
 #include "KGPlin.h"
 #include "KModel.h"
 #include "KObject3d.h"
 #include "KShader.h"
 #include "TextureManager.h"
-#include "AudioManager.h"
 
 class Bom {
 public:
 	static Bom* Create(
-	    KModel* model_, KModel* expModel_, KGPlin* pipeline_, const KMyMath::Vector3& pos_,
-	    const KMyMath::Vector3& vec_, const KMyMath::Vector3& rot_, const float bulletSpeed_);
+	    KModel* model_, KModel* expModel_, KGPlin* pipeline_,
+	    const KMyMath::Vector3& pos_, const KMyMath::Vector3& vec_, const KMyMath::Vector3& rot_,
+	    const float bulletSpeed_);
 
 	void Init(KModel* model_, KModel* expModel_, KGPlin* pipeline_);
 
@@ -20,8 +21,8 @@ public:
 	void Draw();
 
 	void
-	    Set(const KMyMath::Vector3& pos_, const KMyMath::Vector3& vec_, const KMyMath::Vector3& rot_,
-	        const float bulletSpeed_);
+	    Set(const KMyMath::Vector3& pos_, const KMyMath::Vector3& vec_,
+	        const KMyMath::Vector3& rot_, const float bulletSpeed_);
 
 	void OnCollision();
 

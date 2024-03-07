@@ -5,12 +5,12 @@
  */
 
 #include "BossEnemy.h"
-#include "ParticleManager.h"
-#include "Ease.h"
 #include "Collision.h"
+#include "Ease.h"
+#include "ParticleManager.h"
 
-void BossEnemy::Init(KGPlin* pipeline_, const KMyMath::Vector3& initPos_, KGPlin* spritePipeline_)
-{
+void BossEnemy::Init(
+    KGPlin* pipeline_, const KMyMath::Vector3& initPos_, KGPlin* spritePipeline_) {
 	// パイプライン生成
 	pipeline = pipeline_;
 	spritePipeline = spritePipeline_;
@@ -42,15 +42,10 @@ void BossEnemy::Init(KGPlin* pipeline_, const KMyMath::Vector3& initPos_, KGPlin
 	audioManager = AudioManager::GetInstance();
 }
 
-void BossEnemy::Draw()
-{
-	object3d->Draw();
-}
+void BossEnemy::Draw() { object3d->Draw(); }
 
-void BossEnemy::UIDraw()
-{
-	if (isBossMovie || isDead)
-	{
+void BossEnemy::UIDraw() {
+	if (isBossMovie || isDead) {
 		return;
 	}
 
@@ -61,18 +56,17 @@ void BossEnemy::UIDraw()
 	const float sizeX = hpTexSize.x / maxHP;
 	const float sizeY = hpTexSize.y;
 
-	HPBarUI->Draw(
-	    hpbarTex, {width / 2.0f, HPPos.y}, {1.0f, 1.0f}, 0, {1.0f, 1.0f, 1.0f, 1.0f});
+	HPBarUI->Draw(hpbarTex, {width / 2.0f, HPPos.y}, {1.0f, 1.0f}, 0, {1.0f, 1.0f, 1.0f, 1.0f});
 
 	const KMyMath::Vector2 HPUIPos = {(width / 2) - (hpTexSize.x / 2), HPPos.y};
 
-	HPrectUI->Draw(hpTex, HPUIPos, { oldHP * sizeX,sizeY }, 0, { 1,0,0,0.3f }, false, false, { 0,0.5f });
+	HPrectUI->Draw(
+	    hpTex, HPUIPos, {oldHP * sizeX, sizeY}, 0, {1, 0, 0, 0.3f}, false, false, {0, 0.5f});
 
-	HPUI->Draw(hpTex, HPUIPos, { HP * sizeX,sizeY }, 0, { 1,0,0,1 }, false, false, { 0,0.5f });
+	HPUI->Draw(hpTex, HPUIPos, {HP * sizeX, sizeY}, 0, {1, 0, 0, 1}, false, false, {0, 0.5f});
 }
 
-const KMyMath::Vector3 BossEnemy::GetWorldPos() const
-{
+const KMyMath::Vector3 BossEnemy::GetWorldPos() const {
 	// ワールド座標格納変数
 	KMyMath::Vector3 result;
 
@@ -82,8 +76,7 @@ const KMyMath::Vector3 BossEnemy::GetWorldPos() const
 	return result;
 }
 
-void BossEnemy::OnCollision(const float& damage)
-{
+void BossEnemy::OnCollision(const float& damage) {
 	ObjParticleManager::GetInstance()->SetExp(GetWorldPos());
 	HP -= damage;
 	hpEase = true;
@@ -91,46 +84,43 @@ void BossEnemy::OnCollision(const float& damage)
 	hpEaseTimer = 0;
 }
 
-bool BossEnemy::CollisionCheck(const KMyMath::Vector3& posA_, const KMyMath::Vector3& posB_)
-{
-	if (MyCollisions::CheckSphereToSphere(posA_, posB_, 1, 1))
-	{
+bool BossEnemy::CollisionCheck(const KMyMath::Vector3& posA_, const KMyMath::Vector3& posB_) {
+	if (MyCollisions::CheckSphereToSphere(posA_, posB_, 1, 1)) {
 		return true;
 	}
 
 	return false;
 }
 
-void BossEnemy::DeadEffect()
-{
-	if (!isFallEffectEnd)
-	{
+void BossEnemy::DeadEffect() {
+	if (!isFallEffectEnd) {
 		// 姿勢制御
-		object3d->GetTransform().SetRot({ 0,0,object3d->GetTransform().GetRot().z });
+		object3d->GetTransform().SetRot({0, 0, object3d->GetTransform().GetRot().z});
 
 		// 回転
-		object3d->GetTransform().SetRot(MyEase::Lerp3D({ 0.0f,0.0f,0.0f }, { 20.0f,0.0f,20.0f }, fallEffectTimer / fallEffectTime));
+		object3d->GetTransform().SetRot(MyEase::Lerp3D(
+		    {0.0f, 0.0f, 0.0f}, {20.0f, 0.0f, 20.0f}, fallEffectTimer / fallEffectTime));
 
 		// 落下
-		object3d->GetTransform().AddSetPos({ 0.0f,-0.15f,0.0f });
+		object3d->GetTransform().AddSetPos({0.0f, -0.15f, 0.0f});
 
 		// 時間経過
 		fallEffectTimer++;
 
-		// 
+		//
 		expTimer++;
 
-		if (expTimer >= max(expTimer, expTime))
-		{
-			audioManager->SEPlay_wav("syouBakuhatuSE.wav",0.15f);
-			ObjParticleManager::GetInstance()->SetSmallExp({ GetWorldPos().x + MyMathUtility::GetRandF(-10.0f,10.0f),
-			GetWorldPos().y + MyMathUtility::GetRandF(-10.0f,10.0f),GetWorldPos().z + MyMathUtility::GetRandF(-10.0f,10.0f) });
+		if (expTimer >= max(expTimer, expTime)) {
+			audioManager->SEPlay_wav("syouBakuhatuSE.wav", 0.15f);
+			ObjParticleManager::GetInstance()->SetSmallExp(
+			    {GetWorldPos().x + MyMathUtility::GetRandF(-10.0f, 10.0f),
+			     GetWorldPos().y + MyMathUtility::GetRandF(-10.0f, 10.0f),
+			     GetWorldPos().z + MyMathUtility::GetRandF(-10.0f, 10.0f)});
 			expTimer = 0;
 		}
 
 		// 演出終わり
-		if (fallEffectTimer >= max(fallEffectTimer, fallEffectTime))
-		{
+		if (fallEffectTimer >= max(fallEffectTimer, fallEffectTime)) {
 			audioManager->SEPlay_wav("bakuhatuSE.wav", 0.5f);
 			ObjParticleManager::GetInstance()->SetExp(GetWorldPos());
 			isFallEffectEnd = true;
@@ -138,28 +128,20 @@ void BossEnemy::DeadEffect()
 	}
 }
 
-void BossEnemy::HPEffect()
-{
-	if (hpEase)
-	{
-		if (oldHpTimer < oldHpTime)
-		{
+void BossEnemy::HPEffect() {
+	if (hpEase) {
+		if (oldHpTimer < oldHpTime) {
 			oldHpTimer++;
-		}
-		else
-		{
+		} else {
 			hpEaseTimer++;
 
 			oldHP = MyEase::OutCubicFloat(startHpEase, HP, hpEaseTimer / hpEaseTime);
 
-			if (hpEaseTimer > hpEaseTime)
-			{
+			if (hpEaseTimer > hpEaseTime) {
 				hpEase = false;
 			}
 		}
-	}
-	else
-	{
+	} else {
 		oldHP = HP;
 		startHpEase = oldHP;
 		oldHpTimer = 0;
@@ -167,32 +149,14 @@ void BossEnemy::HPEffect()
 	}
 }
 
-const bool BossEnemy::GetIsHPE() const
-{
-	return isHPE;
-}
+const bool BossEnemy::GetIsHPE() const { return isHPE; }
 
-const bool BossEnemy::GetIsDead() const
-{
-	return isDead;
-}
+const bool BossEnemy::GetIsDead() const { return isDead; }
 
-const bool BossEnemy::GetIsFallEffectEnd() const
-{
-	return isFallEffectEnd;
-}
+const bool BossEnemy::GetIsFallEffectEnd() const { return isFallEffectEnd; }
 
-const KMyMath::Vector3& BossEnemy::GetRot() const
-{
-	return object3d->GetTransform().GetRot();
-}
+const KMyMath::Vector3& BossEnemy::GetRot() const { return object3d->GetTransform().GetRot(); }
 
-void BossEnemy::SetPos(const KMyMath::Vector3& pos_)
-{
-	object3d->GetTransform().SetPos(pos_);
-}
+void BossEnemy::SetPos(const KMyMath::Vector3& pos_) { object3d->GetTransform().SetPos(pos_); }
 
-void BossEnemy::SetRot(const KMyMath::Vector3& rot_)
-{
-	object3d->GetTransform().SetRot(rot_);
-}
+void BossEnemy::SetRot(const KMyMath::Vector3& rot_) { object3d->GetTransform().SetRot(rot_); }

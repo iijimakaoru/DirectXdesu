@@ -28,6 +28,8 @@
 
 #include "AudioManager.h"
 
+#include "Light.h"
+
 /**
  * @file GameScene.h
  * @brief ゲームシーン
@@ -219,4 +221,6 @@ private:
 #pragma endregion
 
 	AudioManager* audioManager;
+
+	std::unique_ptr<Light> light_ = nullptr;
 };

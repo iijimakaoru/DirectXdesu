@@ -1,6 +1,8 @@
 #include "KObject3d.h"
 #include "KDirectXCommon.h"
 
+Light* KObject3d::light_ = nullptr;
+
 void KObject3d::StaticInit() {}
 
 KObject3d* KObject3d::Create(KModel* model_, KGPlin* pipeline_) {
@@ -11,9 +13,9 @@ KObject3d* KObject3d::Create(KModel* model_, KGPlin* pipeline_) {
 	}
 
 	// 初期化
-	object3d->Initialize();
 	object3d->LoadModel(model_);
 	object3d->SetPipeline(pipeline_);
+	object3d->Initialize();
 
 	return object3d;
 }
@@ -22,23 +24,6 @@ void KObject3d::Initialize() {
 	// ヒープ設定
 	D3D12_HEAP_PROPERTIES heapProp{};
 	heapProp.Type = D3D12_HEAP_TYPE_UPLOAD;
-
-	// 定数バッファB1
-	// リソース設定
-	D3D12_RESOURCE_DESC b1ResourceDesc{};
-	b1ResourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-	b1ResourceDesc.Width = (sizeof(ConstBufferDataB1) + 0xff) & ~0xff;
-	b1ResourceDesc.Height = 1;
-	b1ResourceDesc.DepthOrArraySize = 1;
-	b1ResourceDesc.MipLevels = 1;
-	b1ResourceDesc.SampleDesc.Count = 1;
-	b1ResourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
-
-	// 定数バッファの生成
-	result = KDirectXCommon::GetInstance()->GetDev()->CreateCommittedResource(
-	    &heapProp, D3D12_HEAP_FLAG_NONE, &b1ResourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ,
-	    nullptr, IID_PPV_ARGS(&constBuffB1));
-	assert(SUCCEEDED(result));
 
 	// 定数バッファB0
 	// リソース設定
@@ -56,11 +41,15 @@ void KObject3d::Initialize() {
 	    &heapProp, D3D12_HEAP_FLAG_NONE, &b0ResourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ,
 	    nullptr, IID_PPV_ARGS(&constBuffB0));
 	assert(SUCCEEDED(result));
+
+	model->Init();
 }
 
 void KObject3d::LoadModel(KModel* model_) { model = model_; }
 
 void KObject3d::SetPipeline(KGPlin* pipeline_) { pipeline = pipeline_; }
+
+void KObject3d::SetLight(Light* light) { KObject3d::light_ = light; }
 
 void KObject3d::CreateCBMaterial() {}
 
@@ -96,15 +85,6 @@ void KObject3d::TransUpdate() {
 
 void KObject3d::MatUpdate(ViewProjection* viewPro,const KMyMath::Vector3& cameraPos) {
 	// 定数バッファのマッピング
-	// B1
-	ConstBufferDataB1* constMap1 = nullptr;
-	result = constBuffB1->Map(0, nullptr, (void**)&constMap1);
-	constMap1->ambient = model->objMtl.ambient;
-	constMap1->diffuse = model->objMtl.diffuse;
-	constMap1->specular = model->objMtl.specular;
-	constMap1->alpha = model->objMtl.alpha;
-	constBuffB1->Unmap(0, nullptr);
-	assert(SUCCEEDED(result));
 	// B0
 	ConstBufferDataB0* constMap0 = nullptr;
 	result = constBuffB0->Map(0, nullptr, (void**)&constMap0);
@@ -119,6 +99,8 @@ void KObject3d::MatUpdate(ViewProjection* viewPro,const KMyMath::Vector3& camera
 void KObject3d::Update(ViewProjection* viewPro, const KMyMath::Vector3& cameraPos) {
 	TransUpdate();
 
+	model->Update();
+
 	MatUpdate(viewPro,cameraPos);
 }
 
@@ -128,11 +110,11 @@ void KObject3d::Draw() {
 
 	// 定数バッファビューをセット
 	KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootConstantBufferView(
-	    1, constBuffB0->GetGPUVirtualAddress());
-	KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootConstantBufferView(
-	    2, constBuffB1->GetGPUVirtualAddress());
+	    0, constBuffB0->GetGPUVirtualAddress());
 
-	model->Draw();
+	light_->Draw(3);
+
+	model->Draw(1);
 }
 
 void KObject3d::Draw(TextureData& texData_) {
@@ -141,11 +123,11 @@ void KObject3d::Draw(TextureData& texData_) {
 
 	// 定数バッファビューをセット
 	KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootConstantBufferView(
-	    1, constBuffB0->GetGPUVirtualAddress());
-	KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootConstantBufferView(
-	    2, constBuffB1->GetGPUVirtualAddress());
+	    0, constBuffB0->GetGPUVirtualAddress());
 
-	model->Draw(texData_);
+	light_->Draw(3);
+
+	model->Draw(1,texData_);
 }
 
 void KObject3d::SetParent(const Transform* parent_) { transform.SetParent(parent_); }

@@ -199,31 +199,19 @@ void KGPlin::CreatePipelineAll(KShader shader, std::string shaderName) {
 		descriptorRange.OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
 
 		// ルートパラメータの設定
-		D3D12_ROOT_PARAMETER rootParams[4] = {};
+		CD3DX12_ROOT_PARAMETER rootParams[4] = {};
 
 		// テクスチャレジスタ0番
-		rootParams[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE; // 種類
-		rootParams[0].DescriptorTable.pDescriptorRanges = &descriptorRange;
-		rootParams[0].DescriptorTable.NumDescriptorRanges = 1; // デスクリプタレンジ数
-		rootParams[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL; // 全てのシェーダーから見える
+		rootParams[0].InitAsConstantBufferView(0, 0, D3D12_SHADER_VISIBILITY_ALL);
 
 		// 定数バッファ0番
-		rootParams[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV; // 種類
-		rootParams[1].Descriptor.ShaderRegister = 0;                 // 定数バッファ番号
-		rootParams[1].Descriptor.RegisterSpace = 0;                  // デフォルト値
-		rootParams[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL; // 全てのシェーダーから見える
+		rootParams[1].InitAsConstantBufferView(1, 0, D3D12_SHADER_VISIBILITY_ALL);
 
 		// 定数バッファ1番
-		rootParams[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV; // 種類
-		rootParams[2].Descriptor.ShaderRegister = 1;                 // 定数バッファ番号
-		rootParams[2].Descriptor.RegisterSpace = 0;                  // デフォルト値
-		rootParams[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL; // 全てのシェーダーから見える
+		rootParams[2].InitAsDescriptorTable(1, &descriptorRange, D3D12_SHADER_VISIBILITY_ALL);
 
 		// 定数バッファ2番
-		rootParams[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV; // 種類
-		rootParams[3].Descriptor.ShaderRegister = 2;                 // 定数バッファ番号
-		rootParams[3].Descriptor.RegisterSpace = 0;                  // デフォルト値
-		rootParams[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL; // 全てのシェーダーから見える
+		rootParams[3].InitAsConstantBufferView(2, 0, D3D12_SHADER_VISIBILITY_ALL);
 
 		// テクスチャサンブラーの設定
 		D3D12_STATIC_SAMPLER_DESC samplerDesc{};

@@ -20,7 +20,8 @@ Blaster* Blaster::nowBlaster = nullptr;
 
 std::unique_ptr<ActState> Blaster::blasterActState = nullptr;
 
-Blaster* Blaster::Create(KGPlin* pipeline_, const KMyMath::Vector3& pos_, KGPlin* spritePipeline_) {
+Blaster* Blaster::Create(
+    KGPlin* pipeline_, const KMyMath::Vector3& pos_, KGPlin* spritePipeline_) {
 	// インスタンス生成
 	Blaster* blaster = new Blaster();
 	if (blaster == nullptr) {
@@ -33,7 +34,8 @@ Blaster* Blaster::Create(KGPlin* pipeline_, const KMyMath::Vector3& pos_, KGPlin
 	return blaster;
 }
 
-void Blaster::Init(KGPlin* pipeline_, const KMyMath::Vector3& initPos_, KGPlin* spritePipeline_) {
+void Blaster::Init(
+    KGPlin* pipeline_, const KMyMath::Vector3& initPos_, KGPlin* spritePipeline_) {
 	model = ModelManager::GetInstance()->GetModels("Blaster_Core");
 
 	BossEnemy::Init(pipeline_, initPos_, spritePipeline_);
@@ -42,8 +44,8 @@ void Blaster::Init(KGPlin* pipeline_, const KMyMath::Vector3& initPos_, KGPlin* 
 	HP = maxHP;
 
 	for (size_t i = 0; i < 8; i++) {
-		units[i].reset(
-		    KObject3d::Create(ModelManager::GetInstance()->GetModels("Blaster_Unit"), pipeline_));
+		units[i].reset(KObject3d::Create(
+		    ModelManager::GetInstance()->GetModels("Blaster_Unit"), pipeline_));
 
 		units[i]->SetParent(&object3d->GetTransform());
 	}
@@ -105,10 +107,10 @@ void Blaster::Update(
 	// HP演出
 	HPEffect();
 
-	object3d->Update(viewPro_,cameraPos);
+	object3d->Update(viewPro_, cameraPos);
 
 	for (size_t i = 0; i < 8; i++) {
-		units[i]->Update(viewPro_,cameraPos);
+		units[i]->Update(viewPro_, cameraPos);
 	}
 }
 

@@ -29,8 +29,8 @@ void TitleScene::Init() {
 	input = KInput::GetInstance();
 
 	light_.reset(Light::Create());
-	light_->SetLightRGB({1, 0, 0});
-	light_->SetLightDir({0.73f, -30.0f, -0.21f, 0.0f});
+	light_->SetLightRGB({0, 0, 1});
+	light_->SetLightDir({0, 1, 0, 0.0f});
 	KObject3d::SetLight(light_.get());
 
 	// カメラ読み込み
@@ -114,9 +114,9 @@ void TitleScene::Update() {
 
 	light_->Update();
 
-	object3d->Update(camera->GetViewPro(),camera->GetViewPro()->GetEye());
+	object3d->Update(camera->GetViewPro(),camera->GetWorldPos());
 
-	skyDome->Update(camera->GetViewPro(), camera->GetViewPro()->GetEye());
+	skyDome->Update(camera->GetViewPro(), camera->GetWorldPos());
 
 	camera->Update();
 }

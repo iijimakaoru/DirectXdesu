@@ -24,7 +24,7 @@ VSOutput main(float4 pos : POSITION, float3 normal : NORMAL, float2 uv : TEXCOOR
     
     // ‘S‚Ä‰ÁŽZ
     output.color.rgb = (ambient + diffuse + reflect) * lightColor;
-    output.color.a = color.a * m_alpha;
+    output.color.a = m_alpha;
     output.uv = uv;
     
     return output;

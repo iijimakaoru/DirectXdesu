@@ -32,8 +32,7 @@ float4 main(VSOutput input) : SV_TARGET
     
     // ‘S‚Ä‰ÁŽZ
     shaderColor.rgb = ((ambient + diffuse + reflect)) * lightColor;
+    shaderColor.a = color.a * m_alpha;
     
-    texColor.a = color.a;
-    
-    return float4(shaderColor.rgb * texColor.rgb, texColor.a);
+    return (shaderColor * texColor);
 }

@@ -86,6 +86,20 @@ void TitleScene::Init() {
 }
 
 void TitleScene::Update() {
+	ImGui::Begin("Light");
+	ImGui::SetWindowPos({0, 0});
+	ImGui::SetWindowSize({200, 200});
+	ImGui::SliderFloat("LightColorR", &lightRGB.x, 0, 1, "%.1f");
+	ImGui::SliderFloat("LightColorG", &lightRGB.y, 0, 1, "%.1f");
+	ImGui::SliderFloat("LightColorB", &lightRGB.z, 0, 1, "%.1f");
+	ImGui::SliderFloat("LightDirX", &lightDir.x, -1, 1, "%.1f");
+	ImGui::SliderFloat("LightDirY", &lightDir.y, -1, 1, "%.1f");
+	ImGui::SliderFloat("LightDirZ", &lightDir.z, -1, 1, "%.1f");
+	ImGui::End();
+
+	light_->SetLightRGB({lightRGB.x, lightRGB.y, lightRGB.z});
+	light_->SetLightDir({lightDir.x, lightDir.y, lightDir.z, 0.0f});
+
 	if (startScene) {
 		StartScene();
 	} else {
@@ -114,7 +128,7 @@ void TitleScene::Update() {
 
 	light_->Update();
 
-	object3d->Update(camera->GetViewPro(),camera->GetWorldPos());
+	object3d->Update(camera->GetViewPro(), camera->GetWorldPos());
 
 	skyDome->Update(camera->GetViewPro(), camera->GetWorldPos());
 

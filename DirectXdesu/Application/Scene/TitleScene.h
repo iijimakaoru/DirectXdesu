@@ -139,5 +139,8 @@ private:
 	AudioManager* audioManager = nullptr;
 
 	std::unique_ptr<Light> light_ = nullptr;
+
+	KMyMath::Vector3 lightRGB = {1, 1, 1};
+	KMyMath::Vector3 lightDir = {0, -1, 0};
 };
 

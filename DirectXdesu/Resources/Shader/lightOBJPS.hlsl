@@ -18,7 +18,7 @@ float4 main(VSOutput input) : SV_TARGET
     float3 eyeDir = normalize(cameraPos - input.worldpos.xyz);
     
     // ライトに向かうベクトルと法線の内積
-    float3 dotLightNormal = dot(lightv, input.normal);
+    float3 dotLightNormal = dot(lightv, input.normal.xyz);
     
     // 反射光ベクトル
     float3 reflect = normalize(-lightv + 2 * dotLightNormal * input.normal);

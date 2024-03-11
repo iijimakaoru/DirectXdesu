@@ -13,6 +13,8 @@
 #include "AudioManager.h"
 #include "Light.h"
 
+#include "Shake.h"
+
 /**
  * @file Player.h
  * @brief 自機
@@ -270,4 +272,6 @@ private:
 	bool muteki = false;
 
 	AudioManager* audioManager = nullptr;
+
+	Shake2D hpShake;
 };

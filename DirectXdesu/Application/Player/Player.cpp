@@ -183,6 +183,8 @@ void Player::Update(
 		DamageEffect();
 	}
 
+	hpShake.Update();
+
 	// 3Dレティクルの更新
 	KMyMath::Matrix4 nowMatWorld = object3d->GetTransform().GetMatWorld();
 	reticle3d->Update(nowMatWorld, GetWorldPos());
@@ -532,16 +534,19 @@ void Player::UIDraw() {
 	KMyMath::Vector2 HPsize = {286 / maxHP, 17};
 
 	// HPバー描画
-	HPBarUI->Draw(hpbarTex, HPPos + HPBarUIPos, HPSize, 0, {1, 1, 1, 1}, false, false, {0, 1});
+	HPBarUI->Draw(
+	    hpbarTex, (HPPos + HPBarUIPos) + hpShake.GetShakePos(), HPSize, 0, {1, 1, 1, 1}, false,
+	    false, {0, 1});
 
 	// HP減少値描画
 	HPrectUI->Draw(
-	    hpTex, HPPos + HPUIPos, {oldHP * HPsize.x, HPsize.y}, 0,
+	    hpTex, (HPPos + HPUIPos) + hpShake.GetShakePos(), {oldHP * HPsize.x, HPsize.y}, 0,
 	    {hpColor.x, hpColor.y, hpColor.z, 0.3f}, false, false, {0, 1});
 
 	// HP描画
 	HPUI->Draw(
-	    hpTex, HPPos + HPUIPos, {HP * HPsize.x, HPsize.y}, 0, {hpColor.x, hpColor.y, hpColor.z, 1},
+	    hpTex, (HPPos + HPUIPos) + hpShake.GetShakePos(), {HP * HPsize.x, HPsize.y}, 0,
+	    {hpColor.x, hpColor.y, hpColor.z, 1},
 	    false, false, {0, 1});
 
 	// ボムアイコン描画
@@ -612,5 +617,6 @@ void Player::OnCollision(const float& bulletPower_) {
 	isDamageEffect = true;
 	dAlpha = 1;
 	isInvisible = true;
+	hpShake.SetShake(5, -5, 30.0f);
 	ScoreManager::GetInstance()->AddDamageCount();
 }

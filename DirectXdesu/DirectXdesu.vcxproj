@@ -186,6 +186,7 @@
     <ClCompile Include="Application\Bullet\UnitLazer.cpp" />
     <ClCompile Include="Engine\Light\Light.cpp" />
     <ClCompile Include="Engine\3D\Transform.cpp" />
+    <ClCompile Include="Application\Effect\Shake.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\BossEnemy\ActState.h" />
@@ -270,6 +271,7 @@
     <ClInclude Include="Application\Bullet\UnitLazer.h" />
     <ClInclude Include="Engine\Light\Light.h" />
     <ClInclude Include="Engine\3D\Transform.h" />
+    <ClInclude Include="Application\Effect\Shake.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DirectXdesu.rc" />

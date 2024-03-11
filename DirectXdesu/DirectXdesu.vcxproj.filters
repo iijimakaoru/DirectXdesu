@@ -496,7 +496,7 @@
       <Filter>ソース ファイル\Engine\3d\Transform</Filter>
     </ClCompile>
     <ClCompile Include="Application\Effect\Shake.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\Application</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -747,7 +747,7 @@
       <Filter>ヘッダー ファイル\Engine\3d\Transform</Filter>
     </ClInclude>
     <ClInclude Include="Application\Effect\Shake.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\Application</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

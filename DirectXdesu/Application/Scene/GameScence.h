@@ -30,6 +30,8 @@
 
 #include "Light.h"
 
+#include "GameManager.h"
+
 /**
  * @file GameScene.h
  * @brief ゲームシーン
@@ -37,6 +39,15 @@
  */
 
 class GameScence : public BaseScene {
+public:
+	enum Scene {
+		Start = 0,
+		Boss = 1,
+		Clear = 2,
+		Over = 3,
+		Game = 4
+	};
+
 public:
 	GameScence(){};
 	~GameScence();
@@ -71,6 +82,12 @@ private:
 
 	// クリアムービー
 	void ClearMovie();
+
+	// ゲームプレイ中
+	void GamePlay();
+
+	// 全シーン共通
+	void AllScene();
 
 	// ムービーバー初期化
 	void MovieBarInInit();
@@ -222,8 +239,12 @@ private:
 
 	AudioManager* audioManager;
 
+	GameManager* gameManager_;
+
 	std::unique_ptr<Light> light_ = nullptr;
 
 	KMyMath::Vector3 lightRGB = {1, 1, 1};
 	KMyMath::Vector3 lightDir = {0, -1, 0};
+
+	Scene scene = Start;
 };

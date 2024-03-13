@@ -496,7 +496,7 @@
       <Filter>ソース ファイル\Engine\3d\Transform</Filter>
     </ClCompile>
     <ClCompile Include="Application\Effect\Shake.cpp">
-      <Filter>ソース ファイル\Application</Filter>
+      <Filter>ソース ファイル\Application\Effect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -747,7 +747,7 @@
       <Filter>ヘッダー ファイル\Engine\3d\Transform</Filter>
     </ClInclude>
     <ClInclude Include="Application\Effect\Shake.h">
-      <Filter>ヘッダー ファイル\Application</Filter>
+      <Filter>ヘッダー ファイル\Application\Effect</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -777,6 +777,7 @@
     <None Include="Resources\Shader\lightOBJ.hlsli">
       <Filter>シェーダー</Filter>
     </None>
+    <None Include="Resources\Shader\Vignette.hlsli" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shader\BasicPS.hlsl">
@@ -824,5 +825,7 @@
     <FxCompile Include="Resources\Shader\lightOBJVS.hlsl">
       <Filter>シェーダー</Filter>
     </FxCompile>
+    <FxCompile Include="Resources\Shader\VignetteVS.hlsl" />
+    <FxCompile Include="Resources\Shader\VignettePS.hlsl" />
   </ItemGroup>
 </Project>

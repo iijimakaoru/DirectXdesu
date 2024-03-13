@@ -128,6 +128,7 @@
     <ClCompile Include="Application\BossEnemy\Blaster\BlasterTackleState.cpp" />
     <ClCompile Include="Application\BossEnemy\Blaster\BlasterUnitLazer.cpp" />
     <ClCompile Include="Application\BossEnemy\Blaster\BlasterUnitTackle.cpp" />
+    <ClCompile Include="Application\BossStart.cpp" />
     <ClCompile Include="Engine\Sound\AudioManager.cpp" />
     <ClCompile Include="Engine\Base\BaseScene\ASceneFactory.cpp" />
     <ClCompile Include="Engine\Base\BaseScene\BaseScene.cpp" />
@@ -187,6 +188,8 @@
     <ClCompile Include="Engine\Light\Light.cpp" />
     <ClCompile Include="Engine\3D\Transform.cpp" />
     <ClCompile Include="Application\Effect\Shake.cpp" />
+    <ClCompile Include="Application\Movie.cpp" />
+    <ClCompile Include="Application\StageStart.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\BossEnemy\ActState.h" />
@@ -214,6 +217,7 @@
     <ClInclude Include="Application\BossEnemy\Blaster\BlasterTackleState.h" />
     <ClInclude Include="Application\BossEnemy\Blaster\BlasterUnitLazer.h" />
     <ClInclude Include="Application\BossEnemy\Blaster\BlasterUnitTackle.h" />
+    <ClInclude Include="Application\BossStart.h" />
     <ClInclude Include="Engine\Sound\AudioManager.h" />
     <ClInclude Include="Engine\Base\BaseScene\ASceneFactory.h" />
     <ClInclude Include="Engine\Base\BaseScene\BaseScene.h" />
@@ -272,6 +276,8 @@
     <ClInclude Include="Engine\Light\Light.h" />
     <ClInclude Include="Engine\3D\Transform.h" />
     <ClInclude Include="Application\Effect\Shake.h" />
+    <ClInclude Include="Application\Movie.h" />
+    <ClInclude Include="Application\StageStart.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DirectXdesu.rc" />

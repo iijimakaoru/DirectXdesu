@@ -12,6 +12,9 @@ class Player;
 class RailCamera : public Camera
 {
 public:
+	static RailCamera* nowRailCamera;
+
+public:
 	RailCamera() 
 	{
 		

@@ -31,6 +31,7 @@
 #include "Light.h"
 
 #include "GameManager.h"
+#include "Movie.h"
 
 /**
  * @file GameScene.h
@@ -67,9 +68,6 @@ private:
 
 	// 自機死亡
 	void PlayerDead();
-
-	// スタート演出のムービー
-	void StageStartMovie();
 
 	// ゲームオーバーシーンへ
 	void GoGameOverScene();
@@ -158,12 +156,6 @@ private:
 #pragma region ステージスタートムービー
 	// フラグ
 	bool isStageStart = false;
-
-	// フェーズ
-	uint32_t startPhase = 0;
-
-	float startPhaseTimer = 0;
-	float startPhaseTime = 0;
 #pragma endregion
 
 #pragma region ボス出現ムービー
@@ -247,4 +239,6 @@ private:
 	KMyMath::Vector3 lightDir = {0, -1, 0};
 
 	Scene scene = Start;
+
+	std::unique_ptr<Movie> movie_ = nullptr;
 };

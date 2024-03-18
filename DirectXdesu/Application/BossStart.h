@@ -1,8 +1,10 @@
 #pragma once
 #include "Movie.h"
 #include "BulletManager.h"
+#include "AudioManager.h"
+#include "SceneChange.h"
 
-class BossStart : public Movie {
+class BossStart : public BaseMovie {
 public:
 	enum CameraPhase {
 		WaitBlackOut = 0,
@@ -23,8 +25,28 @@ public:
 
 private:
 	void WaitBlackOutPhase();
+	 
+	void DescentPhase();
+
+	void ApproachPhase();
+
+	void OpenUnitPhase();
+
+	void DistantPhase();
+	 
+	void BlackOutPhase();
+
+	void SetBossPhase();
+
+	void ExitPhase();
+
+	void BreakTimePhase1();
+
+	void BreakTimePhase2();
 
 private:
 	CameraPhase cameraPhase = WaitBlackOut;
 	BulletManager* bulletManager_ = nullptr;
+	AudioManager* audioManager_ = nullptr;
+	SceneChange* sceneChange_ = nullptr;
 };

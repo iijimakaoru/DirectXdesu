@@ -43,9 +43,9 @@ void StageStart::LookDownPhase() {
 		cameraPhase = Exit;
 	}
 
-	phaseTime = 180.0f;
+	phaseTime_ = 180.0f;
 
-	if (phaseTimer == 0) {
+	if (phaseTimer_ == 0) {
 		MovieBarInInit();
 
 		// 自機とカメラの距離
@@ -63,8 +63,8 @@ void StageStart::LookDownPhase() {
 		camera->SetCameraPos(crashCameraPos);
 	}
 
-	if (phaseTimer < phaseTime) {
-		phaseTimer++;
+	if (phaseTimer_ < phaseTime_) {
+		phaseTimer_++;
 
 		const float startPosY = 20.0f;
 		const float endPosY = 10.0f;
@@ -76,19 +76,19 @@ void StageStart::LookDownPhase() {
 		    {camera->GetCameraPos().x,
 		     MyEase::Lerp(
 		         player->GetWorldPos().y + startPosY, player->GetWorldPos().y + endPosY,
-		         phaseTimer / phaseTime),
+		         phaseTimer_ / phaseTime_),
 		     MyEase::Lerp(
 		         player->GetWorldPos().z + startPosZ, player->GetWorldPos().z + endPosZ,
-		         phaseTimer / phaseTime)});
+		         phaseTimer_ / phaseTime_)});
 
 		const float startRotX = 20.0f;
 		const float endRotX = 10.0f;
 
 		camera->SetCameraRot(
-		    {MyEase::Lerp(startRotX, endRotX, phaseTimer / phaseTime),
+		    {MyEase::Lerp(startRotX, endRotX, phaseTimer_ / phaseTime_),
 		     camera->GetCameraRot().y, camera->GetCameraRot().z});
 	} else {
-		phaseTimer = 0;
+		phaseTimer_ = 0;
 		cameraPhase = TopRight;
 	}
 }
@@ -101,9 +101,9 @@ void StageStart::TopRightPhase() {
 		cameraPhase = Exit;
 	}
 
-	phaseTime = 180.0f;
+	phaseTime_ = 180.0f;
 
-	if (phaseTimer == 0) {
+	if (phaseTimer_ == 0) {
 		// 自機とカメラの距離
 		const KMyMath::Vector3 playerDistance = {2.5f, 2.5f, 3.5f};
 
@@ -119,8 +119,8 @@ void StageStart::TopRightPhase() {
 		camera->SetCameraPos(crashCameraPos);
 	}
 
-	if (phaseTimer < phaseTime) {
-		phaseTimer++;
+	if (phaseTimer_ < phaseTime_) {
+		phaseTimer_++;
 
 		const float startPosZ = 3.5f;
 		const float endPosZ = 1.5f;
@@ -129,9 +129,9 @@ void StageStart::TopRightPhase() {
 		    {camera->GetCameraPos().x, camera->GetCameraPos().y,
 		     MyEase::Lerp(
 		         player->GetWorldPos().z + startPosZ, player->GetWorldPos().z + endPosZ,
-		         phaseTimer / phaseTime)});
+		         phaseTimer_ / phaseTime_)});
 	} else {
-		phaseTimer = 0;
+		phaseTimer_ = 0;
 		cameraPhase = Back;
 	}
 }
@@ -144,9 +144,9 @@ void StageStart::BackPhase() {
 		cameraPhase = Exit;
 	}
 
-	phaseTime = 180.0f;
+	phaseTime_ = 180.0f;
 
-	if (phaseTimer == 0) {
+	if (phaseTimer_ == 0) {
 		// 自機とカメラの距離
 		const KMyMath::Vector3 playerDistance = {-2.0f, -1.8f, -3.5f};
 
@@ -162,25 +162,25 @@ void StageStart::BackPhase() {
 		camera->SetCameraPos(crashCameraPos);
 	}
 
-	if (phaseTimer < phaseTime) {
-		phaseTimer++;
+	if (phaseTimer_ < phaseTime_) {
+		phaseTimer_++;
 
 		const float startPosX = 2.0f;
 		const float endPosX = 1.5f;
 		camera->SetCameraPos(
 		    {MyEase::Lerp(
 		         player->GetWorldPos().x - startPosX, player->GetWorldPos().x - endPosX,
-		         phaseTimer / phaseTime),
+		         phaseTimer_ / phaseTime_),
 		     camera->GetCameraPos().y, camera->GetCameraPos().z});
 
 		const float startRotY = 35.0f;
 		const float endRotY = 27.5f;
 		camera->SetCameraRot(
 		    {camera->GetCameraRot().x,
-		     MyEase::Lerp(startRotY, endRotY, phaseTimer / phaseTime),
+		     MyEase::Lerp(startRotY, endRotY, phaseTimer_ / phaseTime_),
 		     camera->GetCameraRot().z});
 	} else {
-		phaseTimer = 0;
+		phaseTimer_ = 0;
 		cameraPhase = Center;
 	}
 }
@@ -193,9 +193,9 @@ void StageStart::CenterPhase() {
 		cameraPhase = Exit;
 	}
 
-	phaseTime = 120.0f;
+	phaseTime_ = 120.0f;
 
-	if (phaseTimer == 0) {
+	if (phaseTimer_ == 0) {
 		// 自機とカメラの距離
 		const KMyMath::Vector3 playerDistance = {0.0f, 1.0f, 10.0f};
 
@@ -211,11 +211,11 @@ void StageStart::CenterPhase() {
 		camera->SetCameraPos(crashCameraPos);
 	}
 
-	if (phaseTimer < phaseTime) {
-		phaseTimer++;
+	if (phaseTimer_ < phaseTime_) {
+		phaseTimer_++;
 
 		// ムービーバーを上下へ
-		MovieBarOut(phaseTimer / phaseTime);
+		MovieBarOut(phaseTimer_ / phaseTime_);
 
 		const float startPosZ = 10.0f;
 		const float endPosZ = 30.0f;
@@ -224,34 +224,33 @@ void StageStart::CenterPhase() {
 		    {camera->GetCameraPos().x, camera->GetCameraPos().y,
 		     MyEase::OutCubicFloat(
 		         player->GetWorldPos().z + startPosZ, player->GetWorldPos().z + endPosZ,
-		         phaseTimer / phaseTime)});
+		         phaseTimer_ / phaseTime_)});
 	} else {
-		phaseTimer = 0;
+		phaseTimer_ = 0;
 		cameraPhase = Come;
 	}
 }
 
 void StageStart::ComePhase() {
-	RailCamera* camera = RailCamera::nowRailCamera;
 	Player* player = Player::nowPlayer;
 
 	if (input_->GetPadButtonDown(XINPUT_GAMEPAD_START) || gameManager_->GetIsStartMovie()) {
 		cameraPhase = Exit;
 	}
 
-	phaseTime = 60;
+	phaseTime_ = 60;
 
-	if (phaseTimer < phaseTime) {
-		phaseTimer++;
+	if (phaseTimer_ < phaseTime_) {
+		phaseTimer_++;
 
 		const float startPosZ = 50.0f;
 		const float endPosZ = 100.0f;
 
 		player->SetPos(
 		    {player->GetPosition().x, player->GetPosition().y,
-		     MyEase::OutCubicFloat(startPosZ, endPosZ, phaseTimer / phaseTime)});
+		     MyEase::OutCubicFloat(startPosZ, endPosZ, phaseTimer_ / phaseTime_)});
 	} else {
-		phaseTimer = 0;
+		phaseTimer_ = 0;
 		cameraPhase = Exit;
 	}
 }

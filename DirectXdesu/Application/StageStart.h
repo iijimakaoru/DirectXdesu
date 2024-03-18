@@ -1,7 +1,7 @@
 #pragma once
 #include "Movie.h"
 
-class StageStart : public Movie {
+class StageStart : public BaseMovie {
 public:
 	enum CameraPhase { LookDown = 0, TopRight = 1, Back = 2, Center = 3, Come = 4, Exit = 5 };
 

@@ -7,8 +7,10 @@
 #include <stdint.h>
 #include "Ease.h"
 
-class Movie {
+class BaseMovie {
 public:
+	virtual ~BaseMovie();
+
 	void Init();
 
 	virtual void Update() = 0;
@@ -39,6 +41,6 @@ private:
 protected:
 	KInput* input_ = nullptr;
 	GameManager* gameManager_ = nullptr;
-	float phaseTimer = 0;
-	float phaseTime = 0;
+	float phaseTimer_ = 0;
+	float phaseTime_ = 0;
 };

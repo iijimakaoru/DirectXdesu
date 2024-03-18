@@ -42,11 +42,8 @@
 class GameScence : public BaseScene {
 public:
 	enum Scene {
-		Start = 0,
-		Boss = 1,
-		Clear = 2,
-		Over = 3,
-		Game = 4
+		Games = 0,
+		Movies = 1
 	};
 
 public:
@@ -72,9 +69,6 @@ private:
 	// ゲームオーバーシーンへ
 	void GoGameOverScene();
 
-	// ボス出現演出
-	void BossAppearMovie();
-
 	// ボス撃破
 	void BossBreakMovie();
 
@@ -86,16 +80,6 @@ private:
 
 	// 全シーン共通
 	void AllScene();
-
-	// ムービーバー初期化
-	void MovieBarInInit();
-	void MovieBarOutInit();
-
-	// ムービーバーにょっき
-	void MovieBarOut(const float timer_);
-
-	// ムービーバーにょっき
-	void MovieBarIn(const float timer_);
 
 	void PoseAction();
 
@@ -161,16 +145,6 @@ private:
 #pragma region ボス出現ムービー
 	// ボス出現ムービーフラグ
 	bool isBossAppearMovie = false;
-
-	// フェーズ
-	uint32_t appearPhase = 0;
-
-	float appearPhaseTimer = 0;
-	float appearPhaseTime = 0;
-
-	// 暗転待ち時間
-	float bWaitTimer = 0;
-	float bWaitTime = 30;
 #pragma endregion
 
 	// 警告演出フラグ
@@ -238,7 +212,7 @@ private:
 	KMyMath::Vector3 lightRGB = {1, 1, 1};
 	KMyMath::Vector3 lightDir = {0, -1, 0};
 
-	Scene scene = Start;
+	Scene scene = Scene::Movies;
 
-	std::unique_ptr<Movie> movie_ = nullptr;
+	std::unique_ptr<BaseMovie> movie_ = nullptr;
 };

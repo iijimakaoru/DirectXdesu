@@ -1,7 +1,6 @@
 #include "StageStart.h"
-#include "RailCamera.h"
 #include "Player.h"
-
+#include "RailCamera.h"
 
 StageStart::StageStart() {
 	input_ = KInput::GetInstance();
@@ -33,15 +32,17 @@ void StageStart::Update() {
 	default:
 		break;
 	}
+
+	if (cameraPhase < Exit) {
+		if (input_->GetPadButtonDown(XINPUT_GAMEPAD_START) || gameManager_->GetIsStartMovie()) {
+			cameraPhase = Exit;
+		}
+	}
 }
 
 void StageStart::LookDownPhase() {
 	RailCamera* camera = RailCamera::nowRailCamera;
 	Player* player = Player::nowPlayer;
-
-	if (input_->GetPadButtonDown(XINPUT_GAMEPAD_START) || gameManager_->GetIsStartMovie()) {
-		cameraPhase = Exit;
-	}
 
 	phaseTime_ = 180.0f;
 
@@ -85,8 +86,8 @@ void StageStart::LookDownPhase() {
 		const float endRotX = 10.0f;
 
 		camera->SetCameraRot(
-		    {MyEase::Lerp(startRotX, endRotX, phaseTimer_ / phaseTime_),
-		     camera->GetCameraRot().y, camera->GetCameraRot().z});
+		    {MyEase::Lerp(startRotX, endRotX, phaseTimer_ / phaseTime_), camera->GetCameraRot().y,
+		     camera->GetCameraRot().z});
 	} else {
 		phaseTimer_ = 0;
 		cameraPhase = TopRight;
@@ -96,10 +97,6 @@ void StageStart::LookDownPhase() {
 void StageStart::TopRightPhase() {
 	RailCamera* camera = RailCamera::nowRailCamera;
 	Player* player = Player::nowPlayer;
-
-	if (input_->GetPadButtonDown(XINPUT_GAMEPAD_START) || gameManager_->GetIsStartMovie()) {
-		cameraPhase = Exit;
-	}
 
 	phaseTime_ = 180.0f;
 
@@ -140,10 +137,6 @@ void StageStart::BackPhase() {
 	RailCamera* camera = RailCamera::nowRailCamera;
 	Player* player = Player::nowPlayer;
 
-	if (input_->GetPadButtonDown(XINPUT_GAMEPAD_START) || gameManager_->GetIsStartMovie()) {
-		cameraPhase = Exit;
-	}
-
 	phaseTime_ = 180.0f;
 
 	if (phaseTimer_ == 0) {
@@ -176,8 +169,7 @@ void StageStart::BackPhase() {
 		const float startRotY = 35.0f;
 		const float endRotY = 27.5f;
 		camera->SetCameraRot(
-		    {camera->GetCameraRot().x,
-		     MyEase::Lerp(startRotY, endRotY, phaseTimer_ / phaseTime_),
+		    {camera->GetCameraRot().x, MyEase::Lerp(startRotY, endRotY, phaseTimer_ / phaseTime_),
 		     camera->GetCameraRot().z});
 	} else {
 		phaseTimer_ = 0;
@@ -188,10 +180,6 @@ void StageStart::BackPhase() {
 void StageStart::CenterPhase() {
 	RailCamera* camera = RailCamera::nowRailCamera;
 	Player* player = Player::nowPlayer;
-
-	if (input_->GetPadButtonDown(XINPUT_GAMEPAD_START) || gameManager_->GetIsStartMovie()) {
-		cameraPhase = Exit;
-	}
 
 	phaseTime_ = 120.0f;
 
@@ -233,10 +221,6 @@ void StageStart::CenterPhase() {
 
 void StageStart::ComePhase() {
 	Player* player = Player::nowPlayer;
-
-	if (input_->GetPadButtonDown(XINPUT_GAMEPAD_START) || gameManager_->GetIsStartMovie()) {
-		cameraPhase = Exit;
-	}
 
 	phaseTime_ = 60;
 

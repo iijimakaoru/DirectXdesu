@@ -33,6 +33,14 @@ void StageClrar::Update() {
 	default:
 		break;
 	}
+
+	if (cameraPhase < BlackOut) {
+		if (input_->GetPadButtonDown(XINPUT_GAMEPAD_START)) {
+			cameraPhase = BlackOut;
+			audioManager_->SoundStopWave("mokuhyo.wav");
+			phaseTimer_ = 0;
+		}
+	}
 }
 
 void StageClrar::InsertPhase() {

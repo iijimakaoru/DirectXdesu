@@ -27,6 +27,7 @@
 #include "ModelManager.h"
 
 #include "BossStart.h"
+#include "StageClrar.h"
 #include "StageStart.h"
 
 GameScence::~GameScence() { Final(); };
@@ -56,7 +57,7 @@ void GameScence::Init() {
 	sceneManager = SceneManager::GetInstance();
 
 	// カメラ初期化
-	//camera->Init(player.get(), {0.0f, 0.0f, -200.0f});
+	// camera->Init(player.get(), {0.0f, 0.0f, -200.0f});
 	camera->Init(player.get(), {0.0f, 0.0f, 470.0f});
 
 	// エネミーマネージャー生成
@@ -137,32 +138,12 @@ void GameScence::Update() {
 	light_->SetLightRGB({lightRGB.x, lightRGB.y, lightRGB.z});
 	light_->SetLightDir({lightDir.x, lightDir.y, lightDir.z, 0.0f});
 
-	/*switch (scene) {
-	case GameScence::Start:
-	    billManager->SetIsStopCreate(true);
-
-	    isStageStart = false;
-	    scene = Game;
-	    break;
-	case GameScence::Boss:
-	    BossAppearMovie();
-	    break;
-	case GameScence::Clear:
-	    ClearMovie();
-	    break;
-	case GameScence::Over:
-	    GoGameOverScene();
-	    break;
-	case GameScence::Game:
-	    GamePlay();
-	    break;
-	default:
-	    break;
-	}*/
-
 	switch (scene) {
 	case GameScence::Games:
 		GamePlay();
+		break;
+	case GameScence::Over:
+		GoGameOverScene();
 		break;
 	case GameScence::Movies:
 		movie_->Update();
@@ -604,155 +585,29 @@ void GameScence::PlayerDead() {
 		// 撃墜ムービーへ
 		isOverMovie = true;
 	}
+
+	if (player->GetIsFallEffectEnd()) {
+		scene = Over;
+		isGoOverScene = true;
+	}
 }
 
 void GameScence::GoGameOverScene() {
-	if (player->GetIsFallEffectEnd()) {
-		isGoOverScene = true;
+	goOverSceneTimer++;
+	if (goOverSceneTimer == goOverSceneTime) {
+		sceneChange->SceneChangeStart();
+		audioManager->SoundStopWave("BattleBGM.wav");
+		audioManager->SoundStopWave("bossBGM.wav");
+		goOverSceneTimer = goOverSceneTime + 1.0f;
 	}
 
-	if (isGoOverScene) {
-		goOverSceneTimer++;
-		if (goOverSceneTimer == goOverSceneTime) {
-			sceneChange->SceneChangeStart();
-			audioManager->SoundStopWave("BattleBGM.wav");
-			audioManager->SoundStopWave("bossBGM.wav");
-			goOverSceneTimer = goOverSceneTime + 1.0f;
-		}
-
-		if (sceneChange->GetIsChange()) {
-			sceneManager->ChangeScene("GAME");
-			bulletManager->AllBulletDelete();
-		}
+	if (sceneChange->GetIsChange()) {
+		sceneManager->ChangeScene("GAME");
+		bulletManager->AllBulletDelete();
 	}
 }
 
 void GameScence::BossBreakMovie() {}
-
-void GameScence::ClearMovie() {
-	// スキップ
-	if (clearPhase < 3) {
-		if (input->GetPadButtonDown(XINPUT_GAMEPAD_START)) {
-			clearPhaseTimer = 0;
-			clearPhase = 3;
-		}
-	}
-
-	// フェーズ0
-	if (clearPhase == 0) {
-		clearPhaseTime = 30.0f;
-
-		if (clearPhaseTimer < clearPhaseTime) {
-			if (clearPhaseTimer == 0) {
-				audioManager->SoundStopWave("bossBGM.wav");
-				audioManager->SEPlay_wav("mokuhyo.wav");
-			}
-
-			clearPhaseTimer++;
-
-			player->SetPos(MyEase::InCubicVec3(
-			    player->GetWorldPos(), {0.0f, 0.0f, player->GetWorldPos().z},
-			    clearPhaseTimer / clearPhaseTime));
-			player->SetRot(MyEase::InCubicVec3(
-			    player->GetRot(), {0.0f, 0.0f, 0.0f}, clearPhaseTimer / clearPhaseTime));
-
-			const KMyMath::Vector3 dhistans = {0.0f, 0.0f, -40.0f};
-
-			const KMyMath::Vector3 playerPos = {0.0f, 0.0f, player->GetWorldPos().z};
-
-			const KMyMath::Vector3 cameraPos = playerPos + dhistans;
-
-			camera->SetCameraPos(MyEase::InOutCubicVec3(
-			    camera->GetCameraPos(), cameraPos, clearPhaseTimer / clearPhaseTime));
-
-			camera->SetCameraRot({0.0f, 0.0f, 0.0f});
-		} else {
-			clearPhaseTimer = 0;
-			clearPhase++;
-		}
-	}
-	// フェーズ1
-	else if (clearPhase == 1) {
-		clearPhaseTime = 180.0f;
-
-		if (clearPhaseTimer < clearPhaseTime) {
-			clearPhaseTimer++;
-
-			// 角度を変更
-			float rotAngle =
-			    MyEase::InOutCubicFloat(0.0f, -60.0f, clearPhaseTimer / clearPhaseTime);
-
-			const float radian = DirectX::XMConvertToRadians(rotAngle);
-			const float distance = -30;
-
-			const KMyMath::Vector3 cameraPos = {
-			    (distance * sinf(radian)), 0.0f, (distance * cosf(radian))};
-			camera->SetCameraPos(player->GetWorldPos() + cameraPos);
-
-			camera->SetCameraRot({0.0f, rotAngle, 0.0f});
-		} else {
-			clearPhaseTimer = 0;
-			clearPhase++;
-		}
-	}
-	// フェーズ2
-	else if (clearPhase == 2) {
-		if (clearPhaseTimer == 0) {
-			start = {0.0f, 0.0f, player->GetWorldPos().z};
-			p1 = {-20.0f, 0.0f, player->GetWorldPos().z + 75.0f};
-			p2 = {-50.0f, 75.0f, player->GetWorldPos().z + 100.0f};
-			end = {-100.0f, 100.0f, player->GetWorldPos().z + 125.0f};
-		}
-
-		clearPhaseTime = 210.0f;
-
-		if (clearPhaseTimer < clearPhaseTime) {
-			clearPhaseTimer++;
-
-			// ポイント１の制御点
-			KMyMath::Vector3 point1_1 =
-			    MyEase::OutCubicVec3(start, p1, clearPhaseTimer / clearPhaseTime);
-			KMyMath::Vector3 point1_2 =
-			    MyEase::OutCubicVec3(p1, end, clearPhaseTimer / clearPhaseTime);
-			KMyMath::Vector3 point1 =
-			    MyEase::OutCubicVec3(point1_1, point1_2, clearPhaseTimer / clearPhaseTime);
-
-			// ポイント２の制御点
-			KMyMath::Vector3 point2_1 =
-			    MyEase::OutCubicVec3(start, p2, clearPhaseTimer / clearPhaseTime);
-			KMyMath::Vector3 point2_2 =
-			    MyEase::OutCubicVec3(p2, end, clearPhaseTimer / clearPhaseTime);
-			KMyMath::Vector3 point2 =
-			    MyEase::OutCubicVec3(point2_1, point2_2, clearPhaseTimer / clearPhaseTime);
-
-			player->SetPos(MyEase::OutCubicVec3(point1, point2, clearPhaseTimer / clearPhaseTime));
-			player->SetScale(MyEase::InCubicVec3(
-			    {2.0f, 2.0f, 2.0f}, {0.0f, 0.0f, 0.0f}, clearPhaseTimer / clearPhaseTime));
-			player->SetRot(MyEase::OutCubicVec3(
-			    {0.0f, 0.0f, 0.0f}, {-45.0f, -45.0f, 45.0f}, clearPhaseTimer / clearPhaseTime));
-
-			camera->SetCameraRot(
-			    {MyEase::OutCubicFloat(0.0f, -15.0f, clearPhaseTimer / clearPhaseTime),
-			     camera->GetCameraRot().y, camera->GetCameraRot().z});
-		} else {
-			clearPhaseTimer = 0;
-			clearPhase++;
-		}
-	}
-	// 暗転
-	else if (clearPhase == 3) {
-		sceneChange->SceneChangeStart();
-		gameManager_->SetIsStartMovie(false);
-		clearPhase++;
-	}
-	// リザルトシーンへ
-	else {
-		if (sceneChange->GetIsChange()) {
-			sceneManager->ChangeScene("CLEAR");
-			bulletManager->AllBulletDelete();
-		}
-	}
-}
 
 void GameScence::GamePlay() {
 	gameManager_->SetIsStartMovie(true);
@@ -796,8 +651,9 @@ void GameScence::AllScene() {
 				// ボスバトル開始
 				isBossBattle = true;
 			}
-			
+
 			scene = Games;
+			movie_->SetIsFinish(false);
 		}
 
 		// ボスの更新
@@ -808,7 +664,8 @@ void GameScence::AllScene() {
 					player->SetParent(nullptr);
 					player->SetPos(player->GetWorldPos());
 					isClearMovie = true;
-					// scene = Clear;
+					movie_ = std::make_unique<StageClrar>();
+					scene = Movies;
 					goClearMovieTimer = goClearMovieTime + 1.0f;
 				}
 			}

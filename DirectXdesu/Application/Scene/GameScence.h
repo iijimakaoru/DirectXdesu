@@ -43,7 +43,8 @@ class GameScence : public BaseScene {
 public:
 	enum Scene {
 		Games = 0,
-		Movies = 1
+		Over = 1,
+		Movies = 2
 	};
 
 public:
@@ -71,9 +72,6 @@ private:
 
 	// ボス撃破
 	void BossBreakMovie();
-
-	// クリアムービー
-	void ClearMovie();
 
 	// ゲームプレイ中
 	void GamePlay();
@@ -159,16 +157,6 @@ private:
 #pragma region クリア演出
 	// クリアムービーフラグ
 	bool isClearMovie = false;
-
-	uint32_t clearPhase = 0;
-
-	float clearPhaseTime = 0;
-	float clearPhaseTimer = 0;
-
-	KMyMath::Vector3 start;
-	KMyMath::Vector3 p1;
-	KMyMath::Vector3 p2;
-	KMyMath::Vector3 end;
 #pragma endregion
 
 #pragma region オーバー演出

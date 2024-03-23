@@ -190,6 +190,7 @@
     <ClCompile Include="Application\Effect\Shake.cpp" />
     <ClCompile Include="Application\Movie.cpp" />
     <ClCompile Include="Application\StageStart.cpp" />
+    <ClCompile Include="Application\StageClrar.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\BossEnemy\ActState.h" />
@@ -278,6 +279,7 @@
     <ClInclude Include="Application\Effect\Shake.h" />
     <ClInclude Include="Application\Movie.h" />
     <ClInclude Include="Application\StageStart.h" />
+    <ClInclude Include="Application\StageClrar.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DirectXdesu.rc" />

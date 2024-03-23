@@ -1,8 +1,7 @@
 #include "BossStart.h"
-#include "RailCamera.h"
-#include "Player.h"
 #include "Blaster.h"
-
+#include "Player.h"
+#include "RailCamera.h"
 
 BossStart::BossStart() {
 	SetIsFinish(false);
@@ -10,6 +9,7 @@ BossStart::BossStart() {
 	sceneChange_ = SceneChange::GetInstance();
 	audioManager_ = AudioManager::GetInstance();
 	bulletManager_ = BulletManager::GetInstance();
+	input_ = KInput::GetInstance();
 }
 
 void BossStart::Update() {
@@ -46,6 +46,13 @@ void BossStart::Update() {
 		break;
 	default:
 		break;
+	}
+
+	if (cameraPhase < BlackOut) {
+		if (input_->GetPadButtonDown(XINPUT_GAMEPAD_START)) {
+			cameraPhase = BlackOut;
+			phaseTimer_ = 0;
+		}
 	}
 }
 

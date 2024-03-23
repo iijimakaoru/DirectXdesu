@@ -8,6 +8,7 @@ StageClrar::StageClrar() {
 	sceneChange_ = SceneChange::GetInstance();
 	sceneManager_ = SceneManager::GetInstance();
 	bulletManager_ = BulletManager::GetInstance();
+	input_ = KInput::GetInstance();
 	phaseTimer_ = 0;
 	cameraPhase = CameraPhase::Insert;
 }

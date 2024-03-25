@@ -2,6 +2,14 @@
 #include "Player.h"
 #include "RailCamera.h"
 
+void (StageClear::*StageClear::phase[])() = {
+	&StageClear::InsertPhase,
+	&StageClear::RoundPhase,
+	&StageClear::FlyPhase,
+	&StageClear::BlackOutPhase,
+	&StageClear::GoResultPhase
+};
+
 StageClear::StageClear() {
 	audioManager_ = AudioManager::GetInstance();
 	gameManager_ = GameManager::GetInstance();
@@ -14,26 +22,10 @@ StageClear::StageClear() {
 }
 
 void StageClear::Update() {
-	switch (cameraPhase) {
-	case StageClear::Insert:
-		InsertPhase();
-		break;
-	case StageClear::Round:
-		RoundPhase();
-		break;
-	case StageClear::Fly:
-		FlyPhase();
-		break;
-	case StageClear::BlackOut:
-		BlackOutPhase();
-		break;
-	case StageClear::GoResult:
-		GoResultPhase();
-		break;
-	default:
-		break;
-	}
+	// 関数テーブル更新
+	(this->*phase[cameraPhase])();
 
+	// スキップ
 	if (cameraPhase < BlackOut) {
 		if (input_->GetPadButtonDown(XINPUT_GAMEPAD_START)) {
 			cameraPhase = BlackOut;

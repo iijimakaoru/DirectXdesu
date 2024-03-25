@@ -20,6 +20,9 @@ public:
 	void Update() override;
 
 private:
+	// メンバ関数ポインタ
+	static void (StageClear::*phase[])();
+
 	void InsertPhase();
 
 	void RoundPhase();

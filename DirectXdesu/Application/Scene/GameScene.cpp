@@ -1,4 +1,4 @@
-#include "GameScence.h"
+#include "GameScene.h"
 #include "KInput.h"
 
 #include "MyMath.h"
@@ -30,11 +30,11 @@
 #include "StageClear.h"
 #include "StageStart.h"
 
-GameScence::~GameScence() { Final(); };
+GameScene::~GameScene() { Final(); };
 
-void GameScence::LoadResources() {}
+void GameScene::LoadResources() {}
 
-void GameScence::Init() {
+void GameScene::Init() {
 	BaseScene::Init();
 
 	// インスタンス
@@ -123,7 +123,7 @@ void GameScence::Init() {
 	movie_ = std::make_unique<StageStart>();
 }
 
-void GameScence::Update() {
+void GameScene::Update() {
 	ImGui::Begin("Light");
 	ImGui::SetWindowPos({0, 300});
 	ImGui::SetWindowSize({200, 200});
@@ -139,13 +139,13 @@ void GameScence::Update() {
 	light_->SetLightDir({lightDir.x, lightDir.y, lightDir.z, 0.0f});
 
 	switch (scene) {
-	case GameScence::Games:
+	case GameScene::Games:
 		GamePlay();
 		break;
-	case GameScence::Over:
+	case GameScene::Over:
 		GoGameOverScene();
 		break;
-	case GameScence::Movies:
+	case GameScene::Movies:
 		movie_->Update();
 		break;
 	default:
@@ -155,7 +155,7 @@ void GameScence::Update() {
 	AllScene();
 }
 
-void GameScence::ObjDraw() {
+void GameScene::ObjDraw() {
 	// 地面描画
 	ground->Draw();
 
@@ -184,7 +184,7 @@ void GameScence::ObjDraw() {
 	// billManager->Draw();
 }
 
-void GameScence::SpriteDraw() {
+void GameScene::SpriteDraw() {
 	// ボス登場警告演出
 	if (bossWarning) {
 		bossWarning->Draw();
@@ -238,9 +238,9 @@ void GameScence::SpriteDraw() {
 	}
 }
 
-void GameScence::Final() {}
+void GameScene::Final() {}
 
-void GameScence::CheckAllCollisions() {
+void GameScene::CheckAllCollisions() {
 	// 自機弾の取得
 	const std::list<std::unique_ptr<PlayerBullet>>& playerBullets =
 	    bulletManager->GetPlayerBullets();
@@ -504,7 +504,7 @@ void GameScence::CheckAllCollisions() {
 	}
 }
 
-void GameScence::BossBattleStart() {
+void GameScene::BossBattleStart() {
 	if (isWarnning) {
 		return;
 	}
@@ -572,7 +572,7 @@ void GameScence::BossBattleStart() {
 	}
 }
 
-void GameScence::PlayerDead() {
+void GameScene::PlayerDead() {
 	if (player->GetIsDead() && !isCallDeadCamera) {
 		// 撃墜カメラ呼び出し
 		camera->CallCrash();
@@ -592,7 +592,7 @@ void GameScence::PlayerDead() {
 	}
 }
 
-void GameScence::GoGameOverScene() {
+void GameScene::GoGameOverScene() {
 	goOverSceneTimer++;
 	if (goOverSceneTimer == goOverSceneTime) {
 		sceneChange->SceneChangeStart();
@@ -607,9 +607,9 @@ void GameScence::GoGameOverScene() {
 	}
 }
 
-void GameScence::BossBreakMovie() {}
+void GameScene::BossBreakMovie() {}
 
-void GameScence::GamePlay() {
+void GameScene::GamePlay() {
 	gameManager_->SetIsStartMovie(true);
 
 	if (input->GetPadButtonDown(XINPUT_GAMEPAD_START)) {
@@ -638,7 +638,7 @@ void GameScence::GamePlay() {
 	}
 }
 
-void GameScence::AllScene() {
+void GameScene::AllScene() {
 	if (!isPose) {
 		// ムービーが終わったらゲームシーンへ
 		if (movie_->GetIsFinish()) {
@@ -714,7 +714,7 @@ void GameScence::AllScene() {
 	}
 }
 
-void GameScence::PoseAction() {
+void GameScene::PoseAction() {
 
 	float width = static_cast<float>(KWinApp::GetInstance()->GetWindowSizeW());
 	float height = static_cast<float>(KWinApp::GetInstance()->GetWindowSizeH());
@@ -760,4 +760,4 @@ void GameScence::PoseAction() {
 	}
 }
 
-const bool GameScence::GetIsStart() const { return isStageStart; }
+const bool GameScene::GetIsStart() const { return isStageStart; }

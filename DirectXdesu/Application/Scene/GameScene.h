@@ -39,7 +39,7 @@
  * @author 飯島 薫
  */
 
-class GameScence : public BaseScene {
+class GameScene : public BaseScene {
 public:
 	enum Scene {
 		Games = 0,
@@ -48,8 +48,8 @@ public:
 	};
 
 public:
-	GameScence(){};
-	~GameScence();
+	GameScene(){};
+	~GameScene();
 	void LoadResources() override;
 	void Init() override;
 	void Update() override;

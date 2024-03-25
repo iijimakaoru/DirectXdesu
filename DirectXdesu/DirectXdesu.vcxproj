@@ -142,7 +142,7 @@
     <ClCompile Include="Engine\3D\Object3D\FbxObject3D.cpp" />
     <ClCompile Include="Engine\Base\RunGame\Framework.cpp" />
     <ClCompile Include="Application\Camera\GameCamera.cpp" />
-    <ClCompile Include="Application\Scene\GameScence.cpp" />
+    <ClCompile Include="Application\Scene\GameScene.cpp" />
     <ClCompile Include="Engine\Imgui\ImguiManager.cpp" />
     <ClCompile Include="Engine\Base\Depth\KDepthStencilBuffer.cpp" />
     <ClCompile Include="Engine\Base\Descriptor\KDescriptorHeap.cpp" />
@@ -232,7 +232,7 @@
     <ClInclude Include="Engine\3D\Object3D\FbxObject3D.h" />
     <ClInclude Include="Engine\Base\RunGame\Framework.h" />
     <ClInclude Include="Application\Camera\GameCamera.h" />
-    <ClInclude Include="Application\Scene\GameScence.h" />
+    <ClInclude Include="Application\Scene\GameScene.h" />
     <ClInclude Include="Engine\Imgui\ImguiManager.h" />
     <ClInclude Include="Engine\Base\Depth\KDepthStencilBuffer.h" />
     <ClInclude Include="Engine\Base\Descriptor\KDescriptorHeap.h" />

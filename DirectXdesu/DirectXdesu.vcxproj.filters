@@ -267,7 +267,7 @@
     <ClCompile Include="Engine\Math\Quaternion\Quaternion.cpp">
       <Filter>ソース ファイル\Engine\Math</Filter>
     </ClCompile>
-    <ClCompile Include="Application\Scene\GameScence.cpp">
+    <ClCompile Include="Application\Scene\GameScene.cpp">
       <Filter>ソース ファイル\Application\Scene</Filter>
     </ClCompile>
     <ClCompile Include="Application\Scene\TitleScene.cpp">
@@ -572,7 +572,7 @@
     <ClInclude Include="Application\Camera\GameCamera.h">
       <Filter>ヘッダー ファイル\Application\Camera</Filter>
     </ClInclude>
-    <ClInclude Include="Application\Scene\GameScence.h">
+    <ClInclude Include="Application\Scene\GameScene.h">
       <Filter>ヘッダー ファイル\Application\Scene</Filter>
     </ClInclude>
     <ClInclude Include="Application\Scene\TitleScene.h">

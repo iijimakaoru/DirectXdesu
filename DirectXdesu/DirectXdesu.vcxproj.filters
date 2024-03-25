@@ -244,6 +244,12 @@
     <Filter Include="ヘッダー ファイル\Engine\3d\Transform">
       <UniqueIdentifier>{27b55d0d-37ec-4209-b233-0d694dcc946f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Application\Movie">
+      <UniqueIdentifier>{403cdc20-d460-49cd-b3b9-7a90caaa9e30}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Application\Movie">
+      <UniqueIdentifier>{59cf5ec5-1af3-4983-a746-502c4fb2bc58}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Math\Vector2\Vector2.cpp">
@@ -498,17 +504,17 @@
     <ClCompile Include="Application\Effect\Shake.cpp">
       <Filter>ソース ファイル\Application\Effect</Filter>
     </ClCompile>
-    <ClCompile Include="Application\BossStart.cpp">
-      <Filter>ソース ファイル\Application</Filter>
+    <ClCompile Include="Application\Movie\BossStart.cpp">
+      <Filter>ソース ファイル\Application\Movie</Filter>
     </ClCompile>
-    <ClCompile Include="Application\Movie.cpp">
-      <Filter>ソース ファイル\Application</Filter>
+    <ClCompile Include="Application\Movie\Movie.cpp">
+      <Filter>ソース ファイル\Application\Movie</Filter>
     </ClCompile>
-    <ClCompile Include="Application\StageStart.cpp">
-      <Filter>ソース ファイル\Application</Filter>
+    <ClCompile Include="Application\Movie\StageStart.cpp">
+      <Filter>ソース ファイル\Application\Movie</Filter>
     </ClCompile>
-    <ClCompile Include="Application\StageClear.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="Application\Movie\StageClear.cpp">
+      <Filter>ソース ファイル\Application\Movie</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -761,17 +767,17 @@
     <ClInclude Include="Application\Effect\Shake.h">
       <Filter>ヘッダー ファイル\Application\Effect</Filter>
     </ClInclude>
-    <ClInclude Include="Application\BossStart.h">
-      <Filter>ヘッダー ファイル\Application</Filter>
+    <ClInclude Include="Application\Movie\BossStart.h">
+      <Filter>ヘッダー ファイル\Application\Movie</Filter>
     </ClInclude>
-    <ClInclude Include="Application\Movie.h">
-      <Filter>ヘッダー ファイル\Application</Filter>
+    <ClInclude Include="Application\Movie\Movie.h">
+      <Filter>ヘッダー ファイル\Application\Movie</Filter>
     </ClInclude>
-    <ClInclude Include="Application\StageStart.h">
-      <Filter>ヘッダー ファイル\Application</Filter>
+    <ClInclude Include="Application\Movie\StageStart.h">
+      <Filter>ヘッダー ファイル\Application\Movie</Filter>
     </ClInclude>
-    <ClInclude Include="Application\StageClear.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="Application\Movie\StageClear.h">
+      <Filter>ヘッダー ファイル\Application\Movie</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

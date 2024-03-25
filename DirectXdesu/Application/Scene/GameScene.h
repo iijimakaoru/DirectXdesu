@@ -191,7 +191,7 @@ private:
 	KMyMath::Vector2 operationPos;
 #pragma endregion
 
-	AudioManager* audioManager;
+	AudioManager* audioManager_;
 
 	std::unique_ptr<Light> light_ = nullptr;
 
@@ -201,4 +201,6 @@ private:
 	Scene scene = Scene::Movies;
 
 	std::unique_ptr<BaseMovie> movie_ = nullptr;
+
+	GameManager* gameManager_ = nullptr;
 };

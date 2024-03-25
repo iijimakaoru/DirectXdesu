@@ -114,9 +114,9 @@ void GameScene::Init() {
 	ScoreManager::GetInstance()->ResetScore();
 	ScoreManager::GetInstance()->SetDamageCountMax((size_t)playersHPInit);
 
-	audioManager = AudioManager::GetInstance();
+	audioManager_ = AudioManager::GetInstance();
 
-	audioManager->BGMPlay_wav("BattleBGM.wav", 0.15f);
+	audioManager_->BGMPlay_wav("BattleBGM.wav", 0.15f);
 
 	gameManager_ = GameManager::GetInstance();
 
@@ -523,7 +523,7 @@ void GameScene::BossBattleStart() {
 		}
 
 		// ステージBGM停止
-		audioManager->SoundStopWave("BattleBGM.wav");
+		audioManager_->SoundStopWave("BattleBGM.wav");
 
 		// カメラ前進止める
 		camera->SetIsAdvance(false);
@@ -596,8 +596,8 @@ void GameScene::GoGameOverScene() {
 	goOverSceneTimer++;
 	if (goOverSceneTimer == goOverSceneTime) {
 		sceneChange->SceneChangeStart();
-		audioManager->SoundStopWave("BattleBGM.wav");
-		audioManager->SoundStopWave("bossBGM.wav");
+		audioManager_->SoundStopWave("BattleBGM.wav");
+		audioManager_->SoundStopWave("bossBGM.wav");
 		goOverSceneTimer = goOverSceneTime + 1.0f;
 	}
 
@@ -747,8 +747,8 @@ void GameScene::PoseAction() {
 		selectBarPos = backTitlePos;
 
 		if (input->GetPadButton(XINPUT_GAMEPAD_A)) {
-			audioManager->SoundStopWave("BattleBGM.wav");
-			audioManager->SoundStopWave("bossBGM.wav");
+			audioManager_->SoundStopWave("BattleBGM.wav");
+			audioManager_->SoundStopWave("bossBGM.wav");
 			sceneChange->SceneChangeStart();
 		}
 	}

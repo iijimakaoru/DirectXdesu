@@ -616,15 +616,6 @@ void GameScence::BossBattleStart() {
 			return;
 		}
 
-		// ボス配置
-		const float bossDistance = 150;
-		const KMyMath::Vector3 bossBasePos = {0.0f, 120.0f, bossBattleStartPos + bossDistance};
-
-		// 生成
-		blaster.reset(Blaster::Create(
-		    PipelineManager::GetInstance()->GetObjPipeline(), bossBasePos,
-		    PipelineManager::GetInstance()->GetSpritePipeline()));
-
 		//
 		sceneChange->SceneChangeStart();
 
@@ -897,6 +888,15 @@ void GameScence::BossAppearMovie() {
 		if (appearPhaseTimer < appearPhaseTime) {
 			appearPhaseTimer++;
 		} else {
+			// ボス配置
+			const float bossDistance = 150;
+			const KMyMath::Vector3 bossBasePos = {0.0f, 120.0f, bossBattleStartPos + bossDistance};
+
+			// 生成
+			blaster.reset(Blaster::Create(
+			    PipelineManager::GetInstance()->GetObjPipeline(), bossBasePos,
+			    PipelineManager::GetInstance()->GetSpritePipeline()));
+
 			// すべての弾削除
 			bulletManager->AllBulletDelete();
 			// プレイヤーとカメラの親子関係解消

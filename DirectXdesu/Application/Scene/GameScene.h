@@ -30,16 +30,26 @@
 
 #include "Light.h"
 
+#include "GameManager.h"
+#include "Movie.h"
+
 /**
  * @file GameScene.h
  * @brief ゲームシーン
  * @author 飯島 薫
  */
 
-class GameScence : public BaseScene {
+class GameScene : public BaseScene {
 public:
-	GameScence(){};
-	~GameScence();
+	enum Scene {
+		Games = 0,
+		Over = 1,
+		Movies = 2
+	};
+
+public:
+	GameScene(){};
+	~GameScene();
 	void LoadResources() override;
 	void Init() override;
 	void Update() override;
@@ -57,30 +67,17 @@ private:
 	// 自機死亡
 	void PlayerDead();
 
-	// スタート演出のムービー
-	void StageStartMovie();
-
 	// ゲームオーバーシーンへ
 	void GoGameOverScene();
-
-	// ボス出現演出
-	void BossAppearMovie();
 
 	// ボス撃破
 	void BossBreakMovie();
 
-	// クリアムービー
-	void ClearMovie();
+	// ゲームプレイ中
+	void GamePlay();
 
-	// ムービーバー初期化
-	void MovieBarInInit();
-	void MovieBarOutInit();
-
-	// ムービーバーにょっき
-	void MovieBarOut(const float timer_);
-
-	// ムービーバーにょっき
-	void MovieBarIn(const float timer_);
+	// 全シーン共通
+	void AllScene();
 
 	void PoseAction();
 
@@ -141,27 +138,11 @@ private:
 #pragma region ステージスタートムービー
 	// フラグ
 	bool isStageStart = false;
-
-	// フェーズ
-	uint32_t startPhase = 0;
-
-	float startPhaseTimer = 0;
-	float startPhaseTime = 0;
 #pragma endregion
 
 #pragma region ボス出現ムービー
 	// ボス出現ムービーフラグ
 	bool isBossAppearMovie = false;
-
-	// フェーズ
-	uint32_t appearPhase = 0;
-
-	float appearPhaseTimer = 0;
-	float appearPhaseTime = 0;
-
-	// 暗転待ち時間
-	float bWaitTimer = 0;
-	float bWaitTime = 30;
 #pragma endregion
 
 	// 警告演出フラグ
@@ -176,16 +157,6 @@ private:
 #pragma region クリア演出
 	// クリアムービーフラグ
 	bool isClearMovie = false;
-
-	uint32_t clearPhase = 0;
-
-	float clearPhaseTime = 0;
-	float clearPhaseTimer = 0;
-
-	KMyMath::Vector3 start;
-	KMyMath::Vector3 p1;
-	KMyMath::Vector3 p2;
-	KMyMath::Vector3 end;
 #pragma endregion
 
 #pragma region オーバー演出
@@ -226,4 +197,8 @@ private:
 
 	KMyMath::Vector3 lightRGB = {1, 1, 1};
 	KMyMath::Vector3 lightDir = {0, -1, 0};
+
+	Scene scene = Scene::Movies;
+
+	std::unique_ptr<BaseMovie> movie_ = nullptr;
 };

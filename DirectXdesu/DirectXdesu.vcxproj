@@ -63,7 +63,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)Engine\2D\PostEffect;$(ProjectDir)Engine\2D\Sprite;$(ProjectDir)Engine\2D\Texture;$(ProjectDir)Engine\2D\Vertex;$(ProjectDir)Engine\3D\Loader;$(ProjectDir)Engine\3D\Model;$(ProjectDir)Engine\3D\Object3D;$(ProjectDir)Engine\Base\BaseCamera;$(ProjectDir)Engine\Base\BaseScene;$(ProjectDir)Engine\Base\Depth;$(ProjectDir)Engine\Base\Descriptor;$(ProjectDir)Engine\Base\DirectXCommon;$(ProjectDir)Engine\Base\Pipeline;$(ProjectDir)Engine\Base\RenderTarget;$(ProjectDir)Engine\Base\RunGame;$(ProjectDir)Engine\Base\View;$(ProjectDir)Engine\Base\Window;$(ProjectDir)Engine\Collision;$(ProjectDir)Engine\Imgui;$(ProjectDir)Engine\Input;$(ProjectDir)Engine\Level;$(ProjectDir)Engine\Math\Ease;$(ProjectDir)Engine\Sound;$(ProjectDir)Application\Camera;$(ProjectDir)Application\Scene;$(ProjectDir)Engine\Math\Matrix4;$(ProjectDir)Engine\Math\MyMath;$(ProjectDir)Engine\Math\Quaternion;$(ProjectDir)Engine\Math\Vector2;$(ProjectDir)Engine\Math\Vector3;$(ProjectDir)Engine\Math\Vector4;$(ProjectDir)DirectXdesu;$(ProjectDir)Application;$(ProjectDir)Application\Particle;$(ProjectDir)Engine\Base;$(ProjectDir)Application\Stage;$(ProjectDir)Application\Reticle;$(ProjectDir)Application\Player;$(ProjectDir)Application\MobEnemy;$(ProjectDir)Application\Effect;$(ProjectDir)Application\Bullet;$(ProjectDir)Application\BossEnemy;$(ProjectDir)Application\BossEnemy\Blaster;$(ProjectDir)Application\Score;$(ProjectDir)Engine\Camera;$(ProjectDir)Engine\Scene;$(ProjectDir)Engine\Particle;$(ProjectDir)Engine;$(ProjectDir)Engine\Light;$(ProjectDir)Engine\3D;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Engine\2D\PostEffect;$(ProjectDir)Engine\2D\Sprite;$(ProjectDir)Engine\2D\Texture;$(ProjectDir)Engine\2D\Vertex;$(ProjectDir)Engine\3D\Loader;$(ProjectDir)Engine\3D\Model;$(ProjectDir)Engine\3D\Object3D;$(ProjectDir)Engine\Base\BaseCamera;$(ProjectDir)Engine\Base\BaseScene;$(ProjectDir)Engine\Base\Depth;$(ProjectDir)Engine\Base\Descriptor;$(ProjectDir)Engine\Base\DirectXCommon;$(ProjectDir)Engine\Base\Pipeline;$(ProjectDir)Engine\Base\RenderTarget;$(ProjectDir)Engine\Base\RunGame;$(ProjectDir)Engine\Base\View;$(ProjectDir)Engine\Base\Window;$(ProjectDir)Engine\Collision;$(ProjectDir)Engine\Imgui;$(ProjectDir)Engine\Input;$(ProjectDir)Engine\Level;$(ProjectDir)Engine\Math\Ease;$(ProjectDir)Engine\Sound;$(ProjectDir)Application\Camera;$(ProjectDir)Application\Scene;$(ProjectDir)Engine\Math\Matrix4;$(ProjectDir)Engine\Math\MyMath;$(ProjectDir)Engine\Math\Quaternion;$(ProjectDir)Engine\Math\Vector2;$(ProjectDir)Engine\Math\Vector3;$(ProjectDir)Engine\Math\Vector4;$(ProjectDir)DirectXdesu;$(ProjectDir)Application;$(ProjectDir)Application\Particle;$(ProjectDir)Engine\Base;$(ProjectDir)Application\Stage;$(ProjectDir)Application\Reticle;$(ProjectDir)Application\Player;$(ProjectDir)Application\MobEnemy;$(ProjectDir)Application\Effect;$(ProjectDir)Application\Bullet;$(ProjectDir)Application\BossEnemy;$(ProjectDir)Application\BossEnemy\Blaster;$(ProjectDir)Application\Score;$(ProjectDir)Engine\Camera;$(ProjectDir)Engine\Scene;$(ProjectDir)Engine\Particle;$(ProjectDir)Engine;$(ProjectDir)Engine\Light;$(ProjectDir)Engine\3D;$(ProjectDir)Application\Movie;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpp20</LanguageStandard>
@@ -128,6 +128,7 @@
     <ClCompile Include="Application\BossEnemy\Blaster\BlasterTackleState.cpp" />
     <ClCompile Include="Application\BossEnemy\Blaster\BlasterUnitLazer.cpp" />
     <ClCompile Include="Application\BossEnemy\Blaster\BlasterUnitTackle.cpp" />
+    <ClCompile Include="Application\Movie\BossStart.cpp" />
     <ClCompile Include="Engine\Sound\AudioManager.cpp" />
     <ClCompile Include="Engine\Base\BaseScene\ASceneFactory.cpp" />
     <ClCompile Include="Engine\Base\BaseScene\BaseScene.cpp" />
@@ -141,7 +142,7 @@
     <ClCompile Include="Engine\3D\Object3D\FbxObject3D.cpp" />
     <ClCompile Include="Engine\Base\RunGame\Framework.cpp" />
     <ClCompile Include="Application\Camera\GameCamera.cpp" />
-    <ClCompile Include="Application\Scene\GameScence.cpp" />
+    <ClCompile Include="Application\Scene\GameScene.cpp" />
     <ClCompile Include="Engine\Imgui\ImguiManager.cpp" />
     <ClCompile Include="Engine\Base\Depth\KDepthStencilBuffer.cpp" />
     <ClCompile Include="Engine\Base\Descriptor\KDescriptorHeap.cpp" />
@@ -187,6 +188,9 @@
     <ClCompile Include="Engine\Light\Light.cpp" />
     <ClCompile Include="Engine\3D\Transform.cpp" />
     <ClCompile Include="Application\Effect\Shake.cpp" />
+    <ClCompile Include="Application\Movie\Movie.cpp" />
+    <ClCompile Include="Application\Movie\StageStart.cpp" />
+    <ClCompile Include="Application\Movie\StageClear.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\BossEnemy\ActState.h" />
@@ -214,6 +218,7 @@
     <ClInclude Include="Application\BossEnemy\Blaster\BlasterTackleState.h" />
     <ClInclude Include="Application\BossEnemy\Blaster\BlasterUnitLazer.h" />
     <ClInclude Include="Application\BossEnemy\Blaster\BlasterUnitTackle.h" />
+    <ClInclude Include="Application\Movie\BossStart.h" />
     <ClInclude Include="Engine\Sound\AudioManager.h" />
     <ClInclude Include="Engine\Base\BaseScene\ASceneFactory.h" />
     <ClInclude Include="Engine\Base\BaseScene\BaseScene.h" />
@@ -227,7 +232,7 @@
     <ClInclude Include="Engine\3D\Object3D\FbxObject3D.h" />
     <ClInclude Include="Engine\Base\RunGame\Framework.h" />
     <ClInclude Include="Application\Camera\GameCamera.h" />
-    <ClInclude Include="Application\Scene\GameScence.h" />
+    <ClInclude Include="Application\Scene\GameScene.h" />
     <ClInclude Include="Engine\Imgui\ImguiManager.h" />
     <ClInclude Include="Engine\Base\Depth\KDepthStencilBuffer.h" />
     <ClInclude Include="Engine\Base\Descriptor\KDescriptorHeap.h" />
@@ -272,6 +277,9 @@
     <ClInclude Include="Engine\Light\Light.h" />
     <ClInclude Include="Engine\3D\Transform.h" />
     <ClInclude Include="Application\Effect\Shake.h" />
+    <ClInclude Include="Application\Movie\Movie.h" />
+    <ClInclude Include="Application\Movie\StageStart.h" />
+    <ClInclude Include="Application\Movie\StageClear.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DirectXdesu.rc" />

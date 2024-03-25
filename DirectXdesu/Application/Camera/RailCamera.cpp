@@ -3,6 +3,8 @@
 #include "Player.h"
 #include "Ease.h"
 
+RailCamera* RailCamera::nowRailCamera = nullptr;
+
 const float RailCamera::moveSpeedPlayerMagnification = 8.0f;
 
 const float RailCamera::advanceSpeed = 0.5f;

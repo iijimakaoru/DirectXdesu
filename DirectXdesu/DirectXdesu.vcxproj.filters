@@ -244,6 +244,12 @@
     <Filter Include="ヘッダー ファイル\Engine\3d\Transform">
       <UniqueIdentifier>{27b55d0d-37ec-4209-b233-0d694dcc946f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Application\Movie">
+      <UniqueIdentifier>{403cdc20-d460-49cd-b3b9-7a90caaa9e30}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Application\Movie">
+      <UniqueIdentifier>{59cf5ec5-1af3-4983-a746-502c4fb2bc58}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Math\Vector2\Vector2.cpp">
@@ -267,7 +273,7 @@
     <ClCompile Include="Engine\Math\Quaternion\Quaternion.cpp">
       <Filter>ソース ファイル\Engine\Math</Filter>
     </ClCompile>
-    <ClCompile Include="Application\Scene\GameScence.cpp">
+    <ClCompile Include="Application\Scene\GameScene.cpp">
       <Filter>ソース ファイル\Application\Scene</Filter>
     </ClCompile>
     <ClCompile Include="Application\Scene\TitleScene.cpp">
@@ -498,6 +504,18 @@
     <ClCompile Include="Application\Effect\Shake.cpp">
       <Filter>ソース ファイル\Application\Effect</Filter>
     </ClCompile>
+    <ClCompile Include="Application\Movie\BossStart.cpp">
+      <Filter>ソース ファイル\Application\Movie</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\Movie\Movie.cpp">
+      <Filter>ソース ファイル\Application\Movie</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\Movie\StageStart.cpp">
+      <Filter>ソース ファイル\Application\Movie</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\Movie\StageClear.cpp">
+      <Filter>ソース ファイル\Application\Movie</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Input\KInput.h">
@@ -560,7 +578,7 @@
     <ClInclude Include="Application\Camera\GameCamera.h">
       <Filter>ヘッダー ファイル\Application\Camera</Filter>
     </ClInclude>
-    <ClInclude Include="Application\Scene\GameScence.h">
+    <ClInclude Include="Application\Scene\GameScene.h">
       <Filter>ヘッダー ファイル\Application\Scene</Filter>
     </ClInclude>
     <ClInclude Include="Application\Scene\TitleScene.h">
@@ -748,6 +766,18 @@
     </ClInclude>
     <ClInclude Include="Application\Effect\Shake.h">
       <Filter>ヘッダー ファイル\Application\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\Movie\BossStart.h">
+      <Filter>ヘッダー ファイル\Application\Movie</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\Movie\Movie.h">
+      <Filter>ヘッダー ファイル\Application\Movie</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\Movie\StageStart.h">
+      <Filter>ヘッダー ファイル\Application\Movie</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\Movie\StageClear.h">
+      <Filter>ヘッダー ファイル\Application\Movie</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

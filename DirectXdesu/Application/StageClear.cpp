@@ -1,8 +1,8 @@
-#include "StageClrar.h"
+#include "StageClear.h"
 #include "Player.h"
 #include "RailCamera.h"
 
-StageClrar::StageClrar() {
+StageClear::StageClear() {
 	audioManager_ = AudioManager::GetInstance();
 	gameManager_ = GameManager::GetInstance();
 	sceneChange_ = SceneChange::GetInstance();
@@ -13,21 +13,21 @@ StageClrar::StageClrar() {
 	cameraPhase = CameraPhase::Insert;
 }
 
-void StageClrar::Update() {
+void StageClear::Update() {
 	switch (cameraPhase) {
-	case StageClrar::Insert:
+	case StageClear::Insert:
 		InsertPhase();
 		break;
-	case StageClrar::Round:
+	case StageClear::Round:
 		RoundPhase();
 		break;
-	case StageClrar::Fly:
+	case StageClear::Fly:
 		FlyPhase();
 		break;
-	case StageClrar::BlackOut:
+	case StageClear::BlackOut:
 		BlackOutPhase();
 		break;
-	case StageClrar::GoResult:
+	case StageClear::GoResult:
 		GoResultPhase();
 		break;
 	default:
@@ -43,7 +43,7 @@ void StageClrar::Update() {
 	}
 }
 
-void StageClrar::InsertPhase() {
+void StageClear::InsertPhase() {
 	RailCamera* camera = RailCamera::nowRailCamera;
 	Player* player = Player::nowPlayer;
 
@@ -79,7 +79,7 @@ void StageClrar::InsertPhase() {
 	}
 }
 
-void StageClrar::RoundPhase() {
+void StageClear::RoundPhase() {
 	RailCamera* camera = RailCamera::nowRailCamera;
 	Player* player = Player::nowPlayer;
 
@@ -105,7 +105,7 @@ void StageClrar::RoundPhase() {
 	}
 }
 
-void StageClrar::FlyPhase() {
+void StageClear::FlyPhase() {
 	RailCamera* camera = RailCamera::nowRailCamera;
 	Player* player = Player::nowPlayer;
 
@@ -148,13 +148,13 @@ void StageClrar::FlyPhase() {
 	}
 }
 
-void StageClrar::BlackOutPhase() {
+void StageClear::BlackOutPhase() {
 	sceneChange_->SceneChangeStart();
 	gameManager_->SetIsStartMovie(false);
 	cameraPhase = CameraPhase::GoResult;
 }
 
-void StageClrar::GoResultPhase() {
+void StageClear::GoResultPhase() {
 	if (sceneChange_->GetIsChange()) {
 		sceneManager_->ChangeScene("CLEAR");
 		bulletManager_->AllBulletDelete();

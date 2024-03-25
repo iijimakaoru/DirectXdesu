@@ -27,7 +27,7 @@
 #include "ModelManager.h"
 
 #include "BossStart.h"
-#include "StageClrar.h"
+#include "StageClear.h"
 #include "StageStart.h"
 
 GameScence::~GameScence() { Final(); };
@@ -664,7 +664,7 @@ void GameScence::AllScene() {
 					player->SetParent(nullptr);
 					player->SetPos(player->GetWorldPos());
 					isClearMovie = true;
-					movie_ = std::make_unique<StageClrar>();
+					movie_ = std::make_unique<StageClear>();
 					scene = Movies;
 					goClearMovieTimer = goClearMovieTime + 1.0f;
 				}

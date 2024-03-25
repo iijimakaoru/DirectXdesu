@@ -5,7 +5,7 @@
 #include "SceneChange.h"
 #include "BulletManager.h"
 
-class StageClrar : public BaseMovie {
+class StageClear : public BaseMovie {
 public:
 	enum CameraPhase {
 		Insert = 0,
@@ -15,7 +15,7 @@ public:
 		GoResult = 4
 	};
 
-	StageClrar();
+	StageClear();
 
 	void Update() override;
 

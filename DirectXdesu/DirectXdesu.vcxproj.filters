@@ -507,7 +507,7 @@
     <ClCompile Include="Application\StageStart.cpp">
       <Filter>ソース ファイル\Application</Filter>
     </ClCompile>
-    <ClCompile Include="Application\StageClrar.cpp">
+    <ClCompile Include="Application\StageClear.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -770,7 +770,7 @@
     <ClInclude Include="Application\StageStart.h">
       <Filter>ヘッダー ファイル\Application</Filter>
     </ClInclude>
-    <ClInclude Include="Application\StageClrar.h">
+    <ClInclude Include="Application\StageClear.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

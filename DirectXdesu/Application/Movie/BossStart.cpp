@@ -3,6 +3,19 @@
 #include "Player.h"
 #include "RailCamera.h"
 
+void (BossStart::*BossStart::phase[])() = {
+    &BossStart::WaitBlackOutPhase, 
+	&BossStart::DescentPhase,  
+	&BossStart::ApproachPhase,
+    &BossStart::BreakTimePhase1,   
+	&BossStart::OpenUnitPhase, 
+	&BossStart::BreakTimePhase2,
+    &BossStart::DistantPhase,      
+	&BossStart::BlackOutPhase, 
+	&BossStart::SetBossPhase,
+    &BossStart::ExitPhase
+};
+
 BossStart::BossStart() {
 	SetIsFinish(false);
 	cameraPhase = WaitBlackOut;
@@ -13,41 +26,10 @@ BossStart::BossStart() {
 }
 
 void BossStart::Update() {
-	switch (cameraPhase) {
-	case BossStart::WaitBlackOut:
-		WaitBlackOutPhase();
-		break;
-	case BossStart::Descent:
-		DescentPhase();
-		break;
-	case BossStart::Approach:
-		ApproachPhase();
-		break;
-	case BossStart::BreakTime1:
-		BreakTimePhase1();
-		break;
-	case BossStart::OpenUnit:
-		OpenUnitPhase();
-		break;
-	case BossStart::BreakTime2:
-		BreakTimePhase2();
-		break;
-	case BossStart::Distant:
-		DistantPhase();
-		break;
-	case BossStart::BlackOut:
-		BlackOutPhase();
-		break;
-	case BossStart::SetBoss:
-		SetBossPhase();
-		break;
-	case BossStart::Exit:
-		ExitPhase();
-		break;
-	default:
-		break;
-	}
+	// 関数テーブル更新
+	(this->*phase[cameraPhase])();
 
+	// スキップ
 	if (cameraPhase < BlackOut) {
 		if (input_->GetPadButtonDown(XINPUT_GAMEPAD_START)) {
 			cameraPhase = BlackOut;

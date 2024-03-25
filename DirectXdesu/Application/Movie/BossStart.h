@@ -24,6 +24,9 @@ public:
 	void Update() override;
 
 private:
+	// メンバ関数ポインタ
+	static void (BossStart::*phase[])();
+
 	void WaitBlackOutPhase();
 	 
 	void DescentPhase();

@@ -2,6 +2,15 @@
 #include "Player.h"
 #include "RailCamera.h"
 
+void (StageStart::*StageStart::phase[])() = {
+    &StageStart::LookDownPhase,
+    &StageStart::TopRightPhase,
+	&StageStart::BackPhase,
+    &StageStart::CenterPhase,
+	&StageStart::ComePhase,
+	&StageStart::ExitPhase
+};
+
 StageStart::StageStart() {
 	input_ = KInput::GetInstance();
 	gameManager_ = GameManager::GetInstance();
@@ -10,29 +19,10 @@ StageStart::StageStart() {
 }
 
 void StageStart::Update() {
-	switch (cameraPhase) {
-	case StageStart::LookDown:
-		LookDownPhase();
-		break;
-	case StageStart::TopRight:
-		TopRightPhase();
-		break;
-	case StageStart::Back:
-		BackPhase();
-		break;
-	case StageStart::Center:
-		CenterPhase();
-		break;
-	case StageStart::Come:
-		ComePhase();
-		break;
-	case StageStart::Exit:
-		ExitPhase();
-		break;
-	default:
-		break;
-	}
+	// 関数テーブル更新
+	(this->*phase[cameraPhase])();
 
+	// スキップ
 	if (cameraPhase < Exit) {
 		if (input_->GetPadButtonDown(XINPUT_GAMEPAD_START) || gameManager_->GetIsStartMovie()) {
 			cameraPhase = Exit;

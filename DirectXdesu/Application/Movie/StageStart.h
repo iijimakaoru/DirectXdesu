@@ -10,6 +10,9 @@ public:
 	void Update() override;
 
 private:
+	// メンバ関数ポインタ
+	static void (StageStart::*phase[])();
+
 	void LookDownPhase();
 	void TopRightPhase();
 	void BackPhase();

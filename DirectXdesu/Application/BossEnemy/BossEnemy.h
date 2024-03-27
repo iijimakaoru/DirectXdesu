@@ -7,13 +7,16 @@
 
 #include "ActState.h"
 
+#include "Collider.h"
+
 /**
  * @file BossEnemy.h
  * @brief ボスの基底クラス
  * @author 飯島 薫
  */
 
-class BossEnemy {
+class BossEnemy: public Collider
+{
 public:
 	/// <summary>
 	/// 初期化
@@ -45,7 +48,9 @@ public:
 	virtual const KMyMath::Vector3 GetWorldPos() const;
 
 	// 当たった時の処理
-	virtual void OnCollision(const float& damage);
+	void OnCollision() override;
+
+	KMyMath::Vector3 GetWorldPosition() override;
 
 	// 当たり判定範囲
 	virtual bool CollisionCheck(const KMyMath::Vector3& posA, const KMyMath::Vector3& posB);

@@ -605,12 +605,10 @@ const KMyMath::Vector2& Player::GetPosLimitMin() { return posLimitMin; }
 
 const bool Player::GetIsInvisible() const { return isInvisible; }
 
-void Player::OnCollision(const float& bulletPower_) {
+void Player::OnCollision() {
 	audioManager->SEPlay_wav("damageSE.wav", 0.15f);
 	ObjParticleManager::GetInstance()->SetSmallExp(GetWorldPos());
-	if (!muteki) {
-		HP -= bulletPower_;
-	}
+	HP -= 1;
 	hpEase = true;
 	oldHpTimer = 0;
 	hpEaseTimer = 0;
@@ -619,4 +617,14 @@ void Player::OnCollision(const float& bulletPower_) {
 	isInvisible = true;
 	hpShake.SetShake(5, -5, 30.0f);
 	ScoreManager::GetInstance()->AddDamageCount();
+}
+
+KMyMath::Vector3 Player::GetWorldPosition() {
+	// ワールド座標格納変数
+	KMyMath::Vector3 result;
+
+	// ワールド行列の平行移動成分取得
+	result = object3d->GetTransform().GetWorldPos();
+
+	return result;
 }

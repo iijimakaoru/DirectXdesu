@@ -42,6 +42,16 @@ void Bullet::Draw() {
 
 void Bullet::OnCollision() { isDead = true; }
 
+KMyMath::Vector3 Bullet::GetWorldPosition() { 
+	// ワールド座標格納変数
+	KMyMath::Vector3 result;
+
+	// ワールド行列の平行移動成分取得
+	result = object3d->GetTransform().GetWorldPos();
+
+	return result;
+}
+
 const float& Bullet::GetBulletPower() const { return bulletPower; }
 
 const KMyMath::Vector3 Bullet::GetWorldPos() const {

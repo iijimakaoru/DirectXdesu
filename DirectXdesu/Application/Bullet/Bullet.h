@@ -7,6 +7,7 @@
 #include "Light.h"
 #include "TextureManager.h"
 #include <memory>
+#include "Collider.h"
 
 /**
  * @file Bullet.h
@@ -14,7 +15,7 @@
  * @author 飯島 薫
  */
 
-class Bullet {
+class Bullet : public Collider {
 public:
 	// 初期化
 	virtual void Init(KModel* model_, KGPlin* pipeline_) = 0;
@@ -42,8 +43,10 @@ public:
 	// セッター
 	virtual void SetIsDead(bool isDead_) { isDead = isDead_; }
 
-	// 衝突時に呼び出し
-	virtual void OnCollision();
+	// 当たった時の処理
+	void OnCollision() override;
+
+	KMyMath::Vector3 GetWorldPosition() override;
 
 	const float& GetBulletPower() const;
 

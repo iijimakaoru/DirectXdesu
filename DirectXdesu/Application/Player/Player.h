@@ -15,6 +15,8 @@
 
 #include "Shake.h"
 
+#include "Collider.h"
+
 /**
  * @file Player.h
  * @brief 自機
@@ -24,7 +26,8 @@
 /// <summary>
 /// 自キャラ
 /// </summary>
-class Player {
+class Player : public Collider
+{
 public:
 	/// <summary>
 	/// 生成
@@ -55,9 +58,6 @@ public:
 	// UI
 	void UIDraw();
 
-	// 衝突時に呼び出し
-	void OnCollision(const float& bulletPower_);
-
 	// スタートエフェクト終わり
 	void EndStart();
 
@@ -84,6 +84,12 @@ public:
 
 	// 死亡演出が終わったか
 	const bool GetIsFallEffectEnd() const;
+
+public:
+	// 衝突時に呼び出し
+	void OnCollision() override;
+
+	KMyMath::Vector3 GetWorldPosition() override;
 
 public:
 	// ゲッター

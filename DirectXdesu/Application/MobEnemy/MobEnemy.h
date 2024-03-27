@@ -5,6 +5,7 @@
 #include "KModel.h"
 #include "KGPlin.h"
 #include "KShader.h"
+#include "Collider.h"
 
 /**
  * @file MobEnemy.h
@@ -14,7 +15,7 @@
 
 class Player;
 
-class MobEnemy
+class MobEnemy : public Collider
 {
 public:
 	enum EnemysType
@@ -40,9 +41,6 @@ public:
 	// 描画
 	virtual void Draw();
 
-	// 衝突時に呼び出し
-	virtual void OnCollision();
-
 	// 死亡判定
 	const bool GetIsDead()const
 	{
@@ -65,6 +63,11 @@ public:
 
 	// プレイヤーポインタセッター
 	virtual void SetPlayer(Player* player_) { player = player_; }
+
+	// 衝突時に呼び出し
+	void OnCollision() override;
+
+	KMyMath::Vector3 GetWorldPosition() override;
 
 protected:
 	// オブジェクト

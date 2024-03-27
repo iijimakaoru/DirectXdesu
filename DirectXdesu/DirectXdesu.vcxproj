@@ -129,6 +129,7 @@
     <ClCompile Include="Application\BossEnemy\Blaster\BlasterUnitLazer.cpp" />
     <ClCompile Include="Application\BossEnemy\Blaster\BlasterUnitTackle.cpp" />
     <ClCompile Include="Application\Movie\BossStart.cpp" />
+    <ClCompile Include="Engine\Collision\Collider.cpp" />
     <ClCompile Include="Engine\Collision\BaseCollider.cpp" />
     <ClCompile Include="Engine\Sound\AudioManager.cpp" />
     <ClCompile Include="Engine\Base\BaseScene\ASceneFactory.cpp" />
@@ -221,6 +222,7 @@
     <ClInclude Include="Application\BossEnemy\Blaster\BlasterUnitLazer.h" />
     <ClInclude Include="Application\BossEnemy\Blaster\BlasterUnitTackle.h" />
     <ClInclude Include="Application\Movie\BossStart.h" />
+    <ClInclude Include="Engine\Collision\Collider.h" />
     <ClInclude Include="Engine\Collision\BaseCollider.h" />
     <ClInclude Include="Engine\Collision\CollisionInfo.h" />
     <ClInclude Include="Engine\Collision\CollisionTypes.h" />

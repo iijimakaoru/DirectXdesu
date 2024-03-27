@@ -61,6 +61,8 @@ private:
 	// 衝突判定
 	void CheckAllCollisions();
 
+	void CheckCollisionPair(Collider* colliderA, Collider* colliderB);
+
 	// ボスバトル開始
 	void BossBattleStart();
 

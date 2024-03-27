@@ -76,12 +76,22 @@ const KMyMath::Vector3 BossEnemy::GetWorldPos() const {
 	return result;
 }
 
-void BossEnemy::OnCollision(const float& damage) {
+void BossEnemy::OnCollision() {
 	ObjParticleManager::GetInstance()->SetExp(GetWorldPos());
-	HP -= damage;
+	HP -= 20;
 	hpEase = true;
 	oldHpTimer = 0;
 	hpEaseTimer = 0;
+}
+
+KMyMath::Vector3 BossEnemy::GetWorldPosition() { 
+	// ワールド座標格納変数
+	KMyMath::Vector3 result;
+
+	// ワールド行列の平行移動成分取得
+	result = object3d->GetTransform().GetWorldPos();
+
+	return result;
 }
 
 bool BossEnemy::CollisionCheck(const KMyMath::Vector3& posA_, const KMyMath::Vector3& posB_) {

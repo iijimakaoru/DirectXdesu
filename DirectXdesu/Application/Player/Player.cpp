@@ -34,11 +34,11 @@ void Player::Init(const float playerHP) {
 	input = KInput::GetInstance();
 
 	// オブジェクト生成
-	object3d.reset(KObject3d::Create(
-	    ModelManager::GetInstance()->GetModels("Player"),
-	    PipelineManager::GetInstance()->GetObjPipeline()));
-	object3d->GetTransform().SetPos({0, 0, 50});
-	object3d->GetTransform().SetScale({2.0f, 2.0f, 2.0f});
+	LoadModel(ModelManager::GetInstance()->GetModels("Player"));
+	SetPipeline(PipelineManager::GetInstance()->GetObjPipeline());
+	Initialize();
+	transform.SetPos({0, 0, 50});
+	transform.SetScale({2.0f, 2.0f, 2.0f});
 
 	// レティクル
 	reticle3d = std::make_unique<Reticle3D>();
@@ -186,34 +186,34 @@ void Player::Update(
 	hpShake.Update();
 
 	// 3Dレティクルの更新
-	KMyMath::Matrix4 nowMatWorld = object3d->GetTransform().GetMatWorld();
+	KMyMath::Matrix4 nowMatWorld = transform.GetMatWorld();
 	reticle3d->Update(nowMatWorld, GetWorldPos());
 
 	// 2Dレティクルの更新
 	reticle2d->Update(viewPro, reticle3d->GetWorldPos());
 
 	// オブジェクトの更新
-	object3d->Update(viewPro, cameraPos);
+	KObject3d::Update(viewPro, cameraPos);
 }
 
 void Player::Move() {
 	// 自機が傾いている角度に移動させる
 	KMyMath::Vector3 velocity = {0, 0, 0};
-	velocity.x = (object3d->GetTransform().GetRot().y / rotLimit.y);
-	velocity.y = -(object3d->GetTransform().GetRot().x / rotLimit.x);
+	velocity.x = (transform.GetRot().y / rotLimit.y);
+	velocity.y = -(transform.GetRot().x / rotLimit.x);
 
 	// 動け～
-	object3d->GetTransform().AddSetPos({velocity.x * moveSpeed, velocity.y * moveSpeed, 0});
+	transform.AddSetPos({velocity.x * moveSpeed, velocity.y * moveSpeed, 0});
 
 	// 移動制限
-	object3d->GetTransform().SetPos(
-	    {max(object3d->GetTransform().GetPos().x, posLimitMin.x),
-	     max(object3d->GetTransform().GetPos().y, posLimitMin.y),
-	     object3d->GetTransform().GetPos().z});
-	object3d->GetTransform().SetPos(
-	    {min(object3d->GetTransform().GetPos().x, posLimitMax.x),
-	     min(object3d->GetTransform().GetPos().y, posLimitMax.y),
-	     object3d->GetTransform().GetPos().z});
+	transform.SetPos(
+	    {max(transform.GetPos().x, posLimitMin.x),
+	     max(transform.GetPos().y, posLimitMin.y),
+	     transform.GetPos().z});
+	transform.SetPos(
+	    {min(transform.GetPos().x, posLimitMax.x),
+	     min(transform.GetPos().y, posLimitMax.y),
+	     transform.GetPos().z});
 }
 
 void Player::Rot() {
@@ -236,18 +236,17 @@ void Player::Rot() {
 		rot.y = rotSpeed * cosf(moveAngle) * fabsf(padStickIncline);
 	} else {
 		// 角度修正速度倍率
-		float backSpeedRatio = fabsf(object3d->GetTransform().GetRot().y / (rotLimit.y * 2)) + 0.5f;
+		float backSpeedRatio = fabsf(transform.GetRot().y / (rotLimit.y * 2)) + 0.5f;
 		// 角度修正速度
 		const float backSpeed = correctionSpeed * backSpeedRatio;
 		// y軸回転の傾きを修正する
 		const float rotMin = 0.5f;
-		if (object3d->GetTransform().GetRot().y > rotMin) {
+		if (transform.GetRot().y > rotMin) {
 			rot.y -= backSpeed;
-		} else if (object3d->GetTransform().GetRot().y < -rotMin) {
+		} else if (transform.GetRot().y < -rotMin) {
 			rot.y += backSpeed;
 		} else {
-			object3d->GetTransform().SetRot(
-			    {object3d->GetTransform().GetRot().x, 0, object3d->GetTransform().GetRot().z});
+			transform.SetRot({transform.GetRot().x, 0, transform.GetRot().z});
 		}
 	}
 
@@ -260,18 +259,17 @@ void Player::Rot() {
 		rot.x = rotSpeed * sinf(moveAngle) * fabsf(padStickIncline);
 	} else {
 		// 角度修正速度倍率
-		float backSpeedRatio = fabsf(object3d->GetTransform().GetRot().x / (rotLimit.x * 2)) + 0.5f;
+		float backSpeedRatio = fabsf(transform.GetRot().x / (rotLimit.x * 2)) + 0.5f;
 		// 角度修正速度
 		const float backSpeed = correctionSpeed * backSpeedRatio;
 		// y軸回転の傾きを修正する
 		const float rotMin = 0.5f;
-		if (object3d->GetTransform().GetRot().x > rotMin) {
+		if (transform.GetRot().x > rotMin) {
 			rot.x -= backSpeed;
-		} else if (object3d->GetTransform().GetRot().x < -rotMin) {
+		} else if (transform.GetRot().x < -rotMin) {
 			rot.x += backSpeed;
 		} else {
-			object3d->GetTransform().SetRot(
-			    {0, object3d->GetTransform().GetRot().y, object3d->GetTransform().GetRot().z});
+			transform.SetRot({0, transform.GetRot().y, transform.GetRot().z});
 		}
 	}
 
@@ -294,22 +292,21 @@ void Player::Rot() {
 			}
 		}
 
-		object3d->GetTransform().SetRot(
-		    {object3d->GetTransform().GetRot().x, object3d->GetTransform().GetRot().y,
-		     -object3d->GetTransform().GetRot().y + swayZ});
+		transform.SetRot(
+		    {transform.GetRot().x, transform.GetRot().y, -transform.GetRot().y + swayZ});
 	}
 
-	object3d->GetTransform().AddSetRot(rot);
+	transform.AddSetRot(rot);
 
 	// 角度制限
-	object3d->GetTransform().SetRot(
-	    {max(object3d->GetTransform().GetRot().x, -rotLimit.x),
-	     max(object3d->GetTransform().GetRot().y, -rotLimit.y),
-	     object3d->GetTransform().GetRot().z});
-	object3d->GetTransform().SetRot(
-	    {min(object3d->GetTransform().GetRot().x, rotLimit.x),
-	     min(object3d->GetTransform().GetRot().y, rotLimit.y),
-	     object3d->GetTransform().GetRot().z});
+	transform.SetRot(
+	    {max(transform.GetRot().x, -rotLimit.x),
+	     max(transform.GetRot().y, -rotLimit.y),
+	     transform.GetRot().z});
+	transform.SetRot(
+	    {min(transform.GetRot().x, rotLimit.x),
+	     min(transform.GetRot().y, rotLimit.y),
+	     transform.GetRot().z});
 }
 
 void Player::Attack() {
@@ -324,8 +321,7 @@ void Player::Attack() {
 		const float bulletPower = 5.0f;
 
 		// 速度ベクトルを自機の向きに合わせて回転
-		bulletVec =
-		    MyMathUtility::TransforNormal(bulletVec, object3d->GetTransform().GetMatWorld());
+		bulletVec = MyMathUtility::TransforNormal(bulletVec, transform.GetMatWorld());
 
 		// 正規化
 		bulletVec = MyMathUtility::MakeNormalize(bulletVec);
@@ -334,7 +330,7 @@ void Player::Attack() {
 		BulletManager::GetInstance()->PlayerBulletShot(
 		    GetWorldPos() + (bulletVec * distance), // ポジション＋(角度＊距離)
 		    bulletVec,                              // 弾の進む向き
-		    object3d->GetTransform().GetRot(),      // 角度取得
+		    transform.GetRot(),                     // 角度取得
 		    bulletSpeed,                            // 弾の速度
 		    bulletPower                             // 弾のパワー
 		);
@@ -357,8 +353,7 @@ void Player::Attack() {
 		const float distance = 20.0f;
 
 		// 速度ベクトルを自機の向きに合わせて回転
-		bulletVec =
-		    MyMathUtility::TransforNormal(bulletVec, object3d->GetTransform().GetMatWorld());
+		bulletVec = MyMathUtility::TransforNormal(bulletVec, transform.GetMatWorld());
 
 		// 正規化
 		bulletVec = MyMathUtility::MakeNormalize(bulletVec);
@@ -367,7 +362,7 @@ void Player::Attack() {
 		BulletManager::GetInstance()->BomShot(
 		    GetWorldPos() + (bulletVec * distance), // ポジション＋(角度＊距離)
 		    bulletVec,                              // 弾の進む向き
-		    object3d->GetTransform().GetRot(),      // 角度取得
+		    transform.GetRot(),                     // 角度取得
 		    bulletSpeed                             // 弾の速度
 		);
 
@@ -378,13 +373,13 @@ void Player::Attack() {
 void Player::DeadEffect() {
 	if (!isFallEffectEnd) {
 		// 姿勢制御
-		object3d->GetTransform().SetRot({25.0f, 0.0f, object3d->GetTransform().GetRot().z});
+		transform.SetRot({25.0f, 0.0f, transform.GetRot().z});
 
 		// 回転
-		object3d->GetTransform().AddSetRot({0.0f, 0.0f, 10.0f});
+		transform.AddSetRot({0.0f, 0.0f, 10.0f});
 
 		// 落下
-		object3d->GetTransform().AddSetPos({0.0f, -0.1f, 0.5f});
+		transform.AddSetPos({0.0f, -0.1f, 0.5f});
 
 		// 時間経過
 		fallEffectTimer++;
@@ -460,9 +455,9 @@ void Player::DamageEffect() {
 		if (invisibleTimer < invisibleTime) {
 			invisibleTimer++;
 			if (invisibleTimer % 10 == 0) {
-				object3d->SetAlpha(255.0f);
+				SetAlpha(255.0f);
 			} else {
-				object3d->SetAlpha(0.50f);
+				SetAlpha(0.50f);
 			}
 		} else {
 			invisibleTimer = 0;
@@ -477,7 +472,7 @@ void Player::SudCoolTime() {
 	}
 }
 
-void Player::EndStart() { object3d->GetTransform().SetPos({0, 0, 50}); }
+void Player::EndStart() { transform.SetPos({0, 0, 50}); }
 
 void Player::StandStartPos() {
 	startEaseTime = 30;
@@ -497,11 +492,11 @@ void Player::StandStartPos() {
 		operationPos = MyEase::OutCubicVec2(
 		    {width + 450.0f, height + 100.0f}, {width, height}, startEaseTimer / startEaseTime);
 
-		object3d->GetTransform().SetPos(
-		    {object3d->GetTransform().GetPos().x, object3d->GetTransform().GetPos().y,
+		transform.SetPos(
+		    {transform.GetPos().x, transform.GetPos().y,
 		     MyEase::OutCubicFloat(-50.0f, 50.0f, startEaseTimer / startEaseTime)});
 
-		object3d->GetTransform().SetRot(
+		transform.SetRot(
 		    {0.0f, 0.0f, MyEase::InOutCubicFloat(0.0f, 360.0f, startEaseTimer / startEaseTime)});
 	} else {
 		isStartEase = false;
@@ -513,7 +508,7 @@ void Player::Debug() {}
 void Player::ObjDraw() {
 	// 機体描画
 	if (!isFallEffectEnd) {
-		object3d->Draw();
+		Draw();
 	}
 }
 
@@ -546,8 +541,7 @@ void Player::UIDraw() {
 	// HP描画
 	HPUI->Draw(
 	    hpTex, (HPPos + HPUIPos) + hpShake.GetShakePos(), {HP * HPsize.x, HPsize.y}, 0,
-	    {hpColor.x, hpColor.y, hpColor.z, 1},
-	    false, false, {0, 1});
+	    {hpColor.x, hpColor.y, hpColor.z, 1}, false, false, {0, 1});
 
 	// ボムアイコン描画
 	bomIcon->Draw(
@@ -569,31 +563,29 @@ void Player::UIDraw() {
 	}
 }
 
-void Player::SetParent(const Transform* parent_) { object3d->SetParent(parent_); }
-
-const KMyMath::Vector3& Player::GetPosition() const { return object3d->GetTransform().GetPos(); }
+const KMyMath::Vector3& Player::GetPosition() const { return transform.GetPos(); }
 
 const KMyMath::Vector3 Player::GetWorldPos() const {
 	// ワールド座標格納変数
 	KMyMath::Vector3 result;
 
 	// ワールド行列の平行移動成分取得
-	result = object3d->GetTransform().GetWorldPos();
+	result = transform.GetWorldPos();
 
 	return result;
 }
 
-const KMyMath::Vector3 Player::GetRot() const { return object3d->GetTransform().GetRot(); }
+const KMyMath::Vector3 Player::GetRot() const { return transform.GetRot(); }
 
 const bool Player::GetIsDead() const { return isDead; }
 
 const bool Player::GetIsFallEffectEnd() const { return isFallEffectEnd; }
 
-void Player::SetPos(const KMyMath::Vector3& pos_) { object3d->GetTransform().SetPos(pos_); }
+void Player::SetPos(const KMyMath::Vector3& pos_) { transform.SetPos(pos_); }
 
-void Player::SetRot(const KMyMath::Vector3& rot_) { object3d->GetTransform().SetRot(rot_); }
+void Player::SetRot(const KMyMath::Vector3& rot_) { transform.SetRot(rot_); }
 
-void Player::SetScale(const KMyMath::Vector3& scale_) { object3d->GetTransform().SetScale(scale_); }
+void Player::SetScale(const KMyMath::Vector3& scale_) { transform.SetScale(scale_); }
 
 const KMyMath::Vector2& Player::GetRotLimit() { return rotLimit; }
 

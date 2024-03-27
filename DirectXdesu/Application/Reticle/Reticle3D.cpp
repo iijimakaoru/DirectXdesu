@@ -2,8 +2,7 @@
 
 void Reticle3D::Init()
 {
-	// オブジェクト生成
-	object = std::make_unique<KObject3d>();
+	
 }
 
 void Reticle3D::Update(KMyMath::Matrix4& m_, KMyMath::Vector3 pPos_)
@@ -21,10 +20,10 @@ void Reticle3D::Update(KMyMath::Matrix4& m_, KMyMath::Vector3 pPos_)
 	offset = MyMathUtility::MakeNormalize(offset) * kDistancePlayerTo3DReticle;
 
 	// 3Dレティクルの座標設定
-	object->GetTransform().SetPos(pPos_ + offset);
+	transform.SetPos(pPos_ + offset);
 
 	// 座標更新
-	object->TransUpdate();
+	transform.TransUpdate();
 }
 
 KMyMath::Vector3 Reticle3D::GetWorldPos()
@@ -33,7 +32,7 @@ KMyMath::Vector3 Reticle3D::GetWorldPos()
 	KMyMath::Vector3 result;
 
 	// ワールド行列の平行移動成分取得
-	result = object->GetTransform().GetWorldPos();
+	result = transform.GetWorldPos();
 
 	return result;
 }

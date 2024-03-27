@@ -24,7 +24,7 @@
 /// <summary>
 /// 自キャラ
 /// </summary>
-class Player {
+class Player : public KObject3d {
 public:
 	/// <summary>
 	/// 生成
@@ -63,12 +63,6 @@ public:
 
 	// 定位置へ
 	void StandStartPos();
-
-	/// <summary>
-	/// 親子セッター
-	/// </summary>
-	/// <param name="parent"></param>
-	void SetParent(const Transform* parent);
 
 	// ポジションゲッター
 	const KMyMath::Vector3& GetPosition() const;
@@ -132,9 +126,6 @@ private:
 #pragma region 大元の変数
 	// Input
 	KInput* input = nullptr;
-
-	// オブジェクト
-	std::unique_ptr<KObject3d> object3d;
 #pragma endregion
 
 #pragma region 回転用変数

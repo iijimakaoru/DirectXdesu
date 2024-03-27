@@ -21,7 +21,7 @@ public:
 	KObject3d() = default;
 
 	// デストラクタ
-	~KObject3d();
+	virtual ~KObject3d();
 
 public:
 	static std::unique_ptr<Light> light_;
@@ -44,7 +44,7 @@ public:
 
 	static void SetLight(Light* light);
 
-private:
+public:
 	// 初期化
 	void Initialize();
 
@@ -101,6 +101,8 @@ public:
 	void SetAlpha(const float& a);
 
 private:
+	HRESULT result_;
+
 	KGPlin* pipeline;
 
 	Microsoft::WRL::ComPtr<ID3D12Resource> constBuffB0;
@@ -108,9 +110,7 @@ private:
 	// 定数バッファ(マテリアル)
 	Microsoft::WRL::ComPtr<ID3D12Resource> constBuffMaterial = nullptr;
 
-private:
-	HRESULT result;
-
+protected:
 	KModel* model = nullptr;
 
 	// 3Dオブジェクトの配列

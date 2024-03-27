@@ -22,5 +22,5 @@ public:
 	KMyMath::Vector3 GetWorldPos();
 
 private:
-	std::unique_ptr<KObject3d> object = nullptr;
+	Transform transform;
 };

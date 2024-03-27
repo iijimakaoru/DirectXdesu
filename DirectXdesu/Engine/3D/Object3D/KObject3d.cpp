@@ -40,10 +40,10 @@ void KObject3d::Initialize() {
 	b0ResourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 
 	// 定数バッファの生成
-	result = KDirectXCommon::GetInstance()->GetDev()->CreateCommittedResource(
+	result_ = KDirectXCommon::GetInstance()->GetDev()->CreateCommittedResource(
 	    &heapProp, D3D12_HEAP_FLAG_NONE, &b0ResourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ,
 	    nullptr, IID_PPV_ARGS(&constBuffB0));
-	assert(SUCCEEDED(result));
+	assert(SUCCEEDED(result_));
 
 	model->Init();
 }
@@ -83,13 +83,13 @@ void KObject3d::MatUpdate(ViewProjection* viewPro, const KMyMath::Vector3& camer
 	// 定数バッファのマッピング
 	// B0
 	ConstBufferDataB0* constMap0 = nullptr;
-	result = constBuffB0->Map(0, nullptr, (void**)&constMap0);
+	result_ = constBuffB0->Map(0, nullptr, (void**)&constMap0);
 	constMap0->color = color;
 	constMap0->world = transform.GetMatWorld();
 	constMap0->viewPro = viewPro->GetMatView() * viewPro->GetMatPro();
 	constMap0->cameraPos = hoge;
 	constBuffB0->Unmap(0, nullptr);
-	assert(SUCCEEDED(result));
+	assert(SUCCEEDED(result_));
 }
 
 void KObject3d::Update(ViewProjection* viewPro, const KMyMath::Vector3& cameraPos) {

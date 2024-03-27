@@ -24,6 +24,9 @@ EnemyBullet* EnemyBullet::Create(
 }
 
 void EnemyBullet::Init(KModel* model_, KGPlin* pipeline_) {
+	SetCollisionAttribute(Collider::Attribute::Enemys);
+	SetCollisionMask(Collider::Attribute::Players);
+
 	// モデル生成
 	model = model_;
 

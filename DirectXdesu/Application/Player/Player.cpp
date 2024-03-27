@@ -30,6 +30,9 @@ Player* Player::Create(const float playerHP) {
 }
 
 void Player::Init(const float playerHP) {
+	SetCollisionAttribute(Collider::Attribute::Players);
+	SetCollisionMask(Collider::Attribute::Enemys);
+
 	// 入力インスタンス
 	input = KInput::GetInstance();
 

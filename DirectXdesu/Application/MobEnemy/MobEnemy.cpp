@@ -9,6 +9,9 @@ MobEnemy::MobEnemy() {}
 MobEnemy::~MobEnemy() {}
 
 void MobEnemy::Init(KModel* model_, KGPlin* pipeline_) {
+	SetCollisionAttribute(Collider::Attribute::Enemys);
+	SetCollisionMask(Collider::Attribute::Players);
+
 	// モデル生成
 	model = model_;
 

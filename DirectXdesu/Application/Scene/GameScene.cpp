@@ -255,7 +255,10 @@ void GameScene::CheckAllCollisions() {
 	const std::list<std::unique_ptr<EnemyBullet>>& enemyBullets = bulletManager->GetEnemyBullets();
 
 	// ボム
-	// const std::list<std::unique_ptr<Bom>>& boms = bulletManager->GetBoms();
+	const std::list<std::unique_ptr<Bom>>& boms = bulletManager->GetBoms();
+
+	// 爆発
+	const std::list<std::unique_ptr<Explosion>>& explosions = bulletManager->GetExplosion();
 
 	// 敵の取得
 	const std::list<std::unique_ptr<MobEnemy>>& mobEnemys = enemyManager->GetMobEnemys();
@@ -281,9 +284,16 @@ void GameScene::CheckAllCollisions() {
 		collisionManager_->AddCollider(playerBullet.get());
 	}
 
-	/*for (const std::unique_ptr<Bom>& bom : boms) {
-	    collisionManager_->AddCollider();
-	}*/
+	// ボム
+	for (const std::unique_ptr<Bom>& bom : boms) {
+		bom->SetRadius(5.0f);
+	    collisionManager_->AddCollider(bom.get());
+	}
+
+	for (const std::unique_ptr<Explosion>& explosion : explosions) {
+		explosion->SetRadius(32.5f);
+		collisionManager_->AddCollider(explosion.get());
+	}
 
 	// 敵弾
 	for (const std::unique_ptr<EnemyBullet>& enemyBullet : enemyBullets) {

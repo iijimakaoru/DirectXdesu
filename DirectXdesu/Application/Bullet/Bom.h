@@ -1,20 +1,20 @@
 #pragma once
 #include "AudioManager.h"
 #include "Camera.h"
+#include "Collider.h"
 #include "KGPlin.h"
 #include "KModel.h"
 #include "KObject3d.h"
 #include "KShader.h"
 #include "TextureManager.h"
 
-class Bom {
+class Bom : public Collider {
 public:
 	static Bom* Create(
-	    KModel* model_, KModel* expModel_, KGPlin* pipeline_,
-	    const KMyMath::Vector3& pos_, const KMyMath::Vector3& vec_, const KMyMath::Vector3& rot_,
-	    const float bulletSpeed_);
+	    KModel* model_, KGPlin* pipeline_, const KMyMath::Vector3& pos_,
+	    const KMyMath::Vector3& vec_, const KMyMath::Vector3& rot_, const float bulletSpeed_);
 
-	void Init(KModel* model_, KModel* expModel_, KGPlin* pipeline_);
+	void Init(KModel* model_, KGPlin* pipeline_);
 
 	void Update(ViewProjection* viewPro, const KMyMath::Vector3& cameraPos);
 
@@ -24,7 +24,9 @@ public:
 	    Set(const KMyMath::Vector3& pos_, const KMyMath::Vector3& vec_,
 	        const KMyMath::Vector3& rot_, const float bulletSpeed_);
 
-	void OnCollision();
+	void OnCollision() override;
+
+	KMyMath::Vector3 GetWorldPosition() override;
 
 	void SetIsDead(bool isDead_);
 
@@ -45,13 +47,9 @@ public:
 private:
 	// オブジェクト
 	std::unique_ptr<KObject3d> object3d;
-	std::unique_ptr<KObject3d> expObject;
 
 	// モデル
 	KModel* model;
-
-	// 爆発モデル
-	KModel* expModel;
 
 	// パイプライン
 	KGPlin* pipeline;
@@ -67,17 +65,11 @@ private:
 
 	float lifeTimer = 0.0f;
 
-	float expTimer = 0.0f;
-	float expTime = 30.0f;
-
 	const float bomPower = 10;
 	const float expPower = 20;
 
 	// ボス限定
 	bool isBomHit = false;
-
-	KMyMath::Vector3 expRGB = {251, 100, 24};
-	float expAlpha = 255.0f;
 
 	AudioManager* audioManager = nullptr;
 };

@@ -4,6 +4,7 @@
 #include "PlayerBullet.h"
 #include "UnitLazer.h"
 #include "Light.h"
+#include "Explosion.h"
 
 /**
  * @file BulletManager.h
@@ -61,6 +62,8 @@ public:
 	    const KMyMath::Vector3& pos_, const KMyMath::Vector3& vec_, const KMyMath::Vector3& rot_,
 	    const float bulletSpeed_);
 
+	void ExpCall(const KMyMath::Vector3& pos, const float time);
+
 	void UnitLazerSet(const KMyMath::Vector3& pos_, const KMyMath::Vector3& rot_, uint32_t& i);
 
 	void UnitLazerCall();
@@ -88,6 +91,9 @@ public:
 	// ボムのリスト所得
 	const std::list<std::unique_ptr<Bom>>& GetBoms() const;
 
+	// 爆発のリスト取得
+	const std::list<std::unique_ptr<Explosion>>& GetExplosion() const;
+
 	const KMyMath::Vector3 GetLazersPos(size_t i) const;
 
 	void LazerOpen(const float& timer,size_t i);
@@ -105,6 +111,9 @@ private:
 
 	// ボム
 	std::list<std::unique_ptr<Bom>> boms;
+
+	// 爆発
+	std::list<std::unique_ptr<Explosion>> explosions_;
 
 	// ユニットレーザー
 	std::array<std::unique_ptr<UnitLazer>, 16> unitLazers;

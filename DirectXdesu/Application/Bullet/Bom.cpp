@@ -1,10 +1,10 @@
 #include "Bom.h"
+#include "BulletManager.h"
 #include "Ease.h"
 
 Bom* Bom::Create(
-    KModel* model_, KModel* expModel_, KGPlin* pipeline_,
-    const KMyMath::Vector3& pos_, const KMyMath::Vector3& vec_, const KMyMath::Vector3& rot_,
-    const float bulletSpeed_) {
+    KModel* model_, KGPlin* pipeline_, const KMyMath::Vector3& pos_, const KMyMath::Vector3& vec_,
+    const KMyMath::Vector3& rot_, const float bulletSpeed_) {
 	// インスタンス生成
 	Bom* bom = new Bom();
 	if (bom == nullptr) {
@@ -12,16 +12,18 @@ Bom* Bom::Create(
 	}
 
 	// 初期化
-	bom->Init(model_, expModel_, pipeline_);
+	bom->Init(model_, pipeline_);
 	bom->Set(pos_, vec_, rot_, bulletSpeed_);
 
 	return bom;
 }
 
-void Bom::Init(KModel* model_, KModel* expModel_, KGPlin* pipeline_) {
+void Bom::Init(KModel* model_, KGPlin* pipeline_) {
+	SetCollisionAttribute(Collider::Attribute::Players);
+	SetCollisionMask(Collider::Attribute::Enemys);
+
 	// モデル生成
 	model = model_;
-	expModel = expModel_;
 
 	// パイプライン生成
 	pipeline = pipeline_;
@@ -29,55 +31,23 @@ void Bom::Init(KModel* model_, KModel* expModel_, KGPlin* pipeline_) {
 	// オブジェクト生成
 	object3d.reset(KObject3d::Create(model, pipeline));
 	object3d->GetTransform().SetScale({10.0f, 10.0f, 10.0f});
-	expObject.reset(KObject3d::Create(expModel, pipeline));
-	expObject->GetTransform().SetScale({0.0f, 0.0f, 0.0f});
 
 	audioManager = AudioManager::GetInstance();
 }
 
 void Bom::Update(ViewProjection* viewPro, const KMyMath::Vector3& cameraPos) {
-	if (!isExp) {
-		lifeTimer--;
-		object3d->GetTransform().AddSetPos(vec);
+	lifeTimer--;
+	object3d->GetTransform().AddSetPos(vec);
 
-		expObject->GetTransform().SetPos(object3d->GetTransform().GetPos());
-
-		if (lifeTimer <= 0) {
-			isExp = true;
-		}
-	} else {
-		if (expTimer <= expTime) {
-			if (expTimer == 0) {
-				audioManager->SEPlay_wav("bakuhatuSE.wav", 0.75f);
-			}
-
-			expTimer++;
-
-			KMyMath::Vector3 start = {0.0f, 0.0f, 0.0f};
-			KMyMath::Vector3 end = {75.0f, 75.0f, 75.0f};
-
-			KMyMath::Vector3 scale = MyEase::OutCubicVec3(start, end, expTimer / expTime);
-			expObject->GetTransform().SetScale(scale);
-
-			expAlpha = MyEase::InQuadFloat(255.0f, 0.0f, expTimer / expTime);
-			expObject->SetRGB(expRGB);
-			expObject->SetAlpha(expAlpha);
-		} else {
-			isDead = true;
-		}
+	if (lifeTimer <= 0 || isExp) {
+		BulletManager::GetInstance()->ExpCall(object3d->GetTransform().GetWorldPos(), 30.0f);
+		isDead = true;
 	}
 
 	object3d->Update(viewPro, cameraPos);
-	expObject->Update(viewPro, cameraPos);
 }
 
-void Bom::Draw() {
-	if (!isExp) {
-		object3d->Draw();
-	} else {
-		expObject->Draw();
-	}
-}
+void Bom::Draw() { object3d->Draw(); }
 
 void Bom::Set(
     const KMyMath::Vector3& pos_, const KMyMath::Vector3& vec_, const KMyMath::Vector3& rot_,
@@ -95,6 +65,16 @@ void Bom::Set(
 }
 
 void Bom::OnCollision() { isExp = true; }
+
+KMyMath::Vector3 Bom::GetWorldPosition() {
+	// ワールド座標格納変数
+	KMyMath::Vector3 result;
+
+	// ワールド行列の平行移動成分取得
+	result = object3d->GetTransform().GetWorldPos();
+
+	return result;
+}
 
 void Bom::SetIsDead(bool isDead_) { isDead = isDead_; }
 

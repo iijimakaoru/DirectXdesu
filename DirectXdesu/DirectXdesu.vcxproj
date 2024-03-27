@@ -195,6 +195,7 @@
     <ClCompile Include="Application\Movie\StageStart.cpp" />
     <ClCompile Include="Application\Movie\StageClear.cpp" />
     <ClCompile Include="Engine\Collision\SphereCollider.cpp" />
+    <ClCompile Include="Application\Bullet\Explosion.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\BossEnemy\ActState.h" />
@@ -290,6 +291,7 @@
     <ClInclude Include="Application\Movie\StageStart.h" />
     <ClInclude Include="Application\Movie\StageClear.h" />
     <ClInclude Include="Engine\Collision\SphereCollider.h" />
+    <ClInclude Include="Application\Bullet\Explosion.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DirectXdesu.rc" />

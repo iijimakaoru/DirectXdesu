@@ -39,6 +39,10 @@ void BulletManager::Update(ViewProjection* viewPro, const KMyMath::Vector3& came
 		bom->Update(viewPro, cameraPos);
 	}
 
+	for (std::unique_ptr<Explosion>& explosion : explosions_) {
+		explosion->Update(viewPro, cameraPos);
+	}
+
 	for (std::unique_ptr<UnitLazer>& unitLazer : unitLazers) {
 		unitLazer->Update(viewPro, cameraPos);
 	}
@@ -57,6 +61,10 @@ void BulletManager::Draw() {
 		bom->Draw();
 	}
 
+	for (std::unique_ptr<Explosion>& explosion : explosions_) {
+		explosion->Draw();
+	}
+
 	for (std::unique_ptr<UnitLazer>& unitLazer : unitLazers) {
 		unitLazer->Draw();
 	}
@@ -68,8 +76,8 @@ void BulletManager::PlayerBulletShot(
 	// 弾生成
 	std::unique_ptr<PlayerBullet> newBullet;
 	newBullet.reset(PlayerBullet::Create(
-	    ModelManager::GetInstance()->GetModels("P_Bullet"), pipeline, pos, vec_, rot_,
-	    bulletSpeed_, BulletPower_));
+	    ModelManager::GetInstance()->GetModels("P_Bullet"), pipeline, pos, vec_, rot_, bulletSpeed_,
+	    BulletPower_));
 	// 登録
 	playerBullets.push_back(std::move(newBullet));
 }
@@ -80,8 +88,8 @@ void BulletManager::EnemyBulletShot(
 	// 弾生成
 	std::unique_ptr<EnemyBullet> newBullet;
 	newBullet.reset(EnemyBullet::Create(
-	    ModelManager::GetInstance()->GetModels("E_Bullet"), pipeline, pos, vec_, rot_,
-	    bulletSpeed_, BulletPower_));
+	    ModelManager::GetInstance()->GetModels("E_Bullet"), pipeline, pos, vec_, rot_, bulletSpeed_,
+	    BulletPower_));
 	// 登録
 	enemyBullets.push_back(std::move(newBullet));
 }
@@ -91,10 +99,15 @@ void BulletManager::BomShot(
     const float bulletSpeed_) {
 	std::unique_ptr<Bom> newBom;
 	newBom.reset(Bom::Create(
-	    ModelManager::GetInstance()->GetModels("P_Bullet"),
-	    ModelManager::GetInstance()->GetModels("Explotion"), pipeline, pos_, vec_, rot_,
+	    ModelManager::GetInstance()->GetModels("P_Bullet"), pipeline, pos_, vec_, rot_,
 	    bulletSpeed_));
 	boms.push_back(std::move(newBom));
+}
+
+void BulletManager::ExpCall(const KMyMath::Vector3& pos, const float time) {
+	std::unique_ptr<Explosion> newExplosion;
+	newExplosion.reset(Explosion::Create(pos, time));
+	explosions_.push_back(std::move(newExplosion));
 }
 
 void BulletManager::UnitLazerSet(
@@ -137,6 +150,10 @@ void BulletManager::AllBulletDelete() {
 		bom->SetIsDead(true);
 	}
 
+	for (std::unique_ptr<Explosion>& explosion : explosions_) {
+		explosion->SetIsDead(true);
+	}
+
 	for (std::unique_ptr<UnitLazer>& unitLazer : unitLazers) {
 		unitLazer->SetIsDead(true);
 	}
@@ -153,6 +170,10 @@ const std::list<std::unique_ptr<EnemyBullet>>& BulletManager::GetEnemyBullets() 
 }
 
 const std::list<std::unique_ptr<Bom>>& BulletManager::GetBoms() const { return boms; }
+
+const std::list<std::unique_ptr<Explosion>>& BulletManager::GetExplosion() const {
+	return explosions_;
+}
 
 const KMyMath::Vector3 BulletManager::GetLazersPos(size_t i) const {
 	return unitLazers[i]->GetWorldPos();
@@ -175,4 +196,8 @@ void BulletManager::DeleteBullet() {
 
 	// ボム
 	boms.remove_if([](std::unique_ptr<Bom>& bom_) { return bom_->GetIsDead(); });
+
+	// 爆発
+	explosions_.remove_if(
+	    [](std::unique_ptr<Explosion>& explosion) { return explosion->GetIsDead(); });
 }

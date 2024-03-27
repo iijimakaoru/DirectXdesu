@@ -6,8 +6,6 @@ std::unique_ptr<Light> KObject3d::light_ = nullptr;
 
 KObject3d::~KObject3d() { Finalize(); }
 
-void KObject3d::StaticInit() {}
-
 KObject3d* KObject3d::Create(KModel* model_, KGPlin* pipeline_) {
 	// インスタンス生成
 	KObject3d* object3d = new KObject3d();
@@ -53,12 +51,6 @@ void KObject3d::Initialize() {
 void KObject3d::LoadModel(KModel* model_) { model = model_; }
 
 void KObject3d::SetPipeline(KGPlin* pipeline_) { pipeline = pipeline_; }
-
-void KObject3d::CreateCBMaterial() {}
-
-void KObject3d::CreateVertexIndex() {}
-
-void KObject3d::CreateCBTransform() {}
 
 void KObject3d::TransUpdate() {
 	// マトリックス

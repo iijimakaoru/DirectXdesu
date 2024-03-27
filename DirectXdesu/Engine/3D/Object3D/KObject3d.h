@@ -17,6 +17,9 @@ class BaseCollider;
 
 class KObject3d {
 public:
+	// コンストラクタ
+	KObject3d() = default;
+
 	// デストラクタ
 	~KObject3d();
 
@@ -31,8 +34,6 @@ public:
 	};
 
 public:
-	static void StaticInit();
-
 	/// <summary>
 	/// 生成
 	/// </summary>
@@ -58,15 +59,6 @@ private:
 	/// </summary>
 	/// <param name="pipeline_"></param>
 	void SetPipeline(KGPlin* pipeline_);
-
-	// 定数バッファマテリアル
-	void CreateCBMaterial();
-
-	// 頂点、インデックス生成
-	void CreateVertexIndex();
-
-	// 定数バッファトランスフォーム
-	void CreateCBTransform();
 
 public:
 	/// <summary>

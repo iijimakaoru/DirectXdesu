@@ -121,6 +121,8 @@ void GameScene::Init() {
 	gameManager_ = GameManager::GetInstance();
 
 	movie_ = std::make_unique<StageStart>();
+
+	collisionManager_ = new CollisionManager();
 }
 
 void GameScene::Update() {
@@ -238,9 +240,12 @@ void GameScene::SpriteDraw() {
 	}
 }
 
-void GameScene::Final() {}
+void GameScene::Final() { delete collisionManager_; }
 
 void GameScene::CheckAllCollisions() {
+	// 登録当たり判定を削除
+	collisionManager_->Reset();
+
 #pragma region 準備処理
 	// 自機弾の取得
 	const std::list<std::unique_ptr<PlayerBullet>>& playerBullets =
@@ -249,250 +254,44 @@ void GameScene::CheckAllCollisions() {
 	// 敵弾の取得
 	const std::list<std::unique_ptr<EnemyBullet>>& enemyBullets = bulletManager->GetEnemyBullets();
 
-	//// ボム
+	// ボム
 	// const std::list<std::unique_ptr<Bom>>& boms = bulletManager->GetBoms();
 
 	// 敵の取得
 	const std::list<std::unique_ptr<MobEnemy>>& mobEnemys = enemyManager->GetMobEnemys();
 
-	// コライダー
-	std::list<Collider*> colliders;
-	// コライダーをリストに登録
+	// 当たり判定を登録
 	// 自機
-	colliders.push_back(player.get());
-
-	// 自弾
-	for (const std::unique_ptr<PlayerBullet>& playerBullet : playerBullets) {
-		colliders.push_back(playerBullet.get());
-	}
+	collisionManager_->AddCollider(player.get());
 
 	// 雑魚敵
 	for (const std::unique_ptr<MobEnemy>& mobEnemy : mobEnemys) {
-		colliders.push_back(mobEnemy.get());
+		mobEnemy->SetRadius(6.0f);
+		collisionManager_->AddCollider(mobEnemy.get());
 	}
+
+	// ボス
+	if (blaster) {
+		blaster->SetRadius(12.0f);
+		collisionManager_->AddCollider(blaster.get());
+	}
+
+	// 自弾
+	for (const std::unique_ptr<PlayerBullet>& playerBullet : playerBullets) {
+		collisionManager_->AddCollider(playerBullet.get());
+	}
+
+	/*for (const std::unique_ptr<Bom>& bom : boms) {
+	    collisionManager_->AddCollider();
+	}*/
 
 	// 敵弾
 	for (const std::unique_ptr<EnemyBullet>& enemyBullet : enemyBullets) {
-		colliders.push_back(enemyBullet.get());
+		collisionManager_->AddCollider(enemyBullet.get());
 	}
 #pragma endregion
 
-#pragma region 総当たり判定
-	std::list<Collider*>::iterator itrA = colliders.begin();
-
-	for (; itrA != colliders.end(); ++itrA) {
-		Collider* colA = *itrA;
-
-		std::list<Collider*>::iterator itrB = itrA;
-		itrB++;
-
-		for (; itrB != colliders.end(); ++itrB) {
-			Collider* colB = *itrB;
-
-			CheckCollisionPair(colA, colB);
-		}
-	}
-#pragma endregion
-
-	// 敵弾と自機の当たり判定
-	/*{
-	    for (const std::unique_ptr<EnemyBullet>& enemyBullet : enemyBullets) {
-	        CheckCollisionPair(player.get(), enemyBullet.get());
-	    }
-	}*/
-
-	// ボスと自機の当たり判定
-	//{
-	//	// 判定対象AとBの座標
-	//	KMyMath::Vector3 posA, posB;
-
-	//	if (blaster && !blaster->GetIsDead() && isBossBattle && !player->GetIsDead()) {
-	//		posA = player->GetWorldPos();
-
-	//		posB = blaster->GetWorldPos();
-
-	//		if (MyCollisions::CheckSphereToSphere(posA, posB, 6.0f, 12.0f)) {
-	//			player->OnCollision(10.0f);
-	//		}
-	//	}
-	//}
-
-	// ボスユニットと自機の当たり判定
-	//{
-	//	// 判定対象AとBの座標
-	//	KMyMath::Vector3 posA;
-	//	std::array<KMyMath::Vector3, 8> posB;
-
-	//	if (blaster && !blaster->GetIsDead() && isBossBattle && !player->GetIsDead()) {
-	//		posA = player->GetWorldPos();
-
-	//		for (uint32_t i = 0; i < 8; i++) {
-	//			posB[i] = blaster->UnitsGetWorldPos(i);
-
-	//			if (MyCollisions::CheckSphereToSphere(posA, posB[i], 3.0f, 4.0f)) {
-	//				player->OnCollision(1.0f);
-	//			}
-	//		}
-	//	}
-	//}
-
-	// レーザーと自機の当たり判定
-	//{
-	//	// 判定対象AとBの座標
-	//	KMyMath::Vector3 posA;
-	//	std::array<KMyMath::Vector3, 16> posB;
-
-	//	if (blaster && !blaster->GetIsDead() && isBossBattle && !player->GetIsDead()) {
-	//		posA = player->GetWorldPos();
-
-	//		for (size_t i = 0; i < 8; i++) {
-	//			size_t j = i + 8;
-	//			posB[i] = bulletManager->GetLazersPos(i);
-	//			posB[j] = bulletManager->GetLazersPos(j);
-
-	//			if (MyCollisions::CheckBoxToBox(
-	//			        posA, posB[i], {3.0f, 3.0f, 3.0f}, {1.0f, 180.0f, 1.0f})) {
-	//				player->OnCollision(5.0f);
-	//			}
-
-	//			if (MyCollisions::CheckBoxToBox(
-	//			        posA, posB[j], {3.0f, 3.0f, 3.0f}, {180.0f, 1.0f, 1.0f})) {
-	//				player->OnCollision(5.0f);
-	//			}
-	//		}
-	//	}
-	//}
-
-	// 自弾と敵の当たり判定
-	/*{
-	    for (const std::unique_ptr<PlayerBullet>& playerBullet : playerBullets) {
-	        for (const std::unique_ptr<MobEnemy>& mobEnemy : mobEnemys) {
-	            CheckCollisionPair(playerBullet.get(), mobEnemy.get());
-	        }
-	    }
-	}*/
-
-	// 自弾とボスの判定
-	//{
-	//	for (const std::unique_ptr<PlayerBullet>& bullet : playerBullets) {
-	//		//
-	// 弾が無いorボスがいないorボスが死んでるorボスバトルが始まってなかったorプレイヤーが死んでいたらスキップ
-	//		if (!bullet || !blaster || blaster->GetIsDead() || !isBossBattle ||
-	//		    player->GetIsDead()) {
-	//			return;
-	//		}
-
-	//		CheckCollisionPair(blaster.get(), bullet.get());
-	//	}
-	//}
-
-	// ボムと敵の当たり判定
-	//{
-	//	// 判定対象AとBの座標
-	//	KMyMath::Vector3 posA, posB;
-
-	//	for (const std::unique_ptr<MobEnemy>& mobEnemy : mobEnemys) {
-	//		if (!mobEnemy) {
-	//			return;
-	//		}
-
-	//		// 敵の座標
-	//		posA = mobEnemy->GetWorldPos();
-
-	//		for (const std::unique_ptr<Bom>& bom : boms) {
-	//			if (!bom) {
-	//				return;
-	//			}
-
-	//			// 弾の座標
-	//			posB = bom->GetWorldPos();
-
-	//			// 球同士の交差判定
-	//			const float enemyRange = 6.0f;
-	//			const float bulletRange = 4.0f;
-	//			if (MyCollisions::CheckSphereToSphere(posA, posB, enemyRange, bulletRange)) {
-	//				// 弾消去
-	//				bom->OnCollision();
-
-	//				// 敵消去
-	//				mobEnemy->OnCollision();
-	//			}
-
-	//			if (bom->GetIsExp()) {
-	//				const float ExpRange = 75.0f;
-
-	//				if (MyCollisions::CheckSphereToSphere(posA, posB, enemyRange, ExpRange)) {
-	//					// 敵消去
-	//					mobEnemy->OnCollision();
-	//				}
-	//			}
-	//		}
-	//	}
-	//}
-
-	// ボムとボスの当たり判定
-	//{
-	//	// 判定対象AとBの座標
-	//	KMyMath::Vector3 posA, posB;
-
-	//	for (const std::unique_ptr<Bom>& bom : boms) {
-	//		//
-	// 弾が無いorボスがいないorボスが死んでるorボスバトルが始まってなかったorプレイヤーが死んでいたらスキップ
-	//		if (!bom || !blaster || blaster->GetIsDead() || !isBossBattle || player->GetIsDead() ||
-	//		    bom->GetBomHit()) {
-	//			return;
-	//		}
-
-	//		// 弾の座標
-	//		posA = bom->GetWorldPos();
-
-	//		// ボスの座標
-	//		posB = blaster->GetWorldPos();
-
-	//		// 球同士の交差判定
-	//		if (MyCollisions::CheckSphereToSphere(posA, posB, 4, 8)) {
-	//			// 弾消去
-	//			bom->OnCollision();
-
-	//			// ボスダメージ
-	//			blaster->OnCollision(bom->GetBomsPower());
-	//		}
-
-	//		if (bom->GetIsExp()) {
-	//			const float ExpRange = 75.0f;
-
-	//			if (MyCollisions::CheckSphereToSphere(posA, posB, ExpRange, 8)) {
-	//				// ボスダメージ
-	//				blaster->OnCollision(bom->GetExpPower());
-
-	//				// 多段ヒット防止
-	//				bom->SetBomHit(true);
-	//			}
-	//		}
-	//	}
-	//}
-}
-
-void GameScene::CheckCollisionPair(Collider* colliderA, Collider* colliderB) {
-	// 衝突フィルタリング
-	if (!(colliderA->GetCollisionAttribute() & colliderB->GetCollisionMask()) ||
-	    !(colliderB->GetCollisionAttribute() & colliderA->GetCollisionMask())) {
-		return;
-	}
-
-	// ワールドポジション
-	KMyMath::Vector3 colAPos = colliderA->GetWorldPosition();
-	KMyMath::Vector3 colBPos = colliderB->GetWorldPosition();
-
-	// 半径
-	float colARadius = colliderA->GetRadius();
-	float colBRadius = colliderB->GetRadius();
-
-	if (MyCollisions::CheckSphereToSphere(colAPos, colBPos, colARadius, colBRadius)) {
-		colliderA->OnCollision();
-
-		colliderB->OnCollision();
-	}
+	collisionManager_->CheckAllCollisions();
 }
 
 void GameScene::BossBattleStart() {

@@ -32,6 +32,7 @@
 
 #include "GameManager.h"
 #include "Movie.h"
+#include "CollisionManager.h"
 
 /**
  * @file GameScene.h
@@ -60,8 +61,6 @@ public:
 private:
 	// 衝突判定
 	void CheckAllCollisions();
-
-	void CheckCollisionPair(Collider* colliderA, Collider* colliderB);
 
 	// ボスバトル開始
 	void BossBattleStart();
@@ -205,4 +204,6 @@ private:
 	std::unique_ptr<BaseMovie> movie_ = nullptr;
 
 	GameManager* gameManager_ = nullptr;
+
+	CollisionManager* collisionManager_ = nullptr;
 };

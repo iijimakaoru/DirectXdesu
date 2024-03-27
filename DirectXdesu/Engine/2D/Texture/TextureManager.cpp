@@ -211,14 +211,17 @@ TextureManager* TextureManager::GetInstance() {
 }
 
 void TextureManager::LoadTextures() {
+	// タイトル
 	textures["MESI"] = TextureManager::Load("Resources/texture/MESI.png");
 	textures["SHOOTER"] = TextureManager::Load("Resources/texture/SHOOTER.png");
 	textures["Mold"] = TextureManager::Load("Resources/texture/BattleShipMold.png");
 
+	// ポーズ
 	textures["Pose"] = TextureManager::Load("Resources/texture/pose.png");
 	textures["Back"] = TextureManager::Load("Resources/texture/BackTitle.png");
 	textures["Operation"] = TextureManager::Load("Resources/texture/Operation.png");
 
+	// リザルト
 	textures["Result"] = TextureManager::Load("Resources/texture/ResultText.png");
 	textures["Bord"] = TextureManager::Load("Resources/texture/ScoreBord.png");
 	textures["R_Back"] = TextureManager::Load("Resources/texture/ResultBack.png");
@@ -255,9 +258,20 @@ void TextureManager::LoadTextures() {
 	// ボーナス時間バースプライト
 	textures["BonusBar"] = TextureManager::Load("Resources/texture/scoreBonusBar.png");
 
+	// 万能1x1白テクスチャ
 	textures["White1x1"] = TextureManager::Load("Resources/texture/white1x1.png");
 
+	// キューブ用仮テクスチャ
 	textures["Cube"] = TextureManager::Load("Resources/texture/kariPlayerColor.png");
+
+	// プレイヤーのHPバー(枠)
+	textures["PlayerHPBar"] = TextureManager::Load("Resources/texture/PlayerHPBar2.png");
+
+	// ボムアイコン
+	textures["BomIcon"] = TextureManager::Load("Resources/texture/BomIcon.png");
+
+	// 操作説明
+	textures["Setumei"] = TextureManager::Load("Resources/texture/setumei.png");
 }
 
 TextureData& TextureManager::GetTextures(std::string mapName) { return textures[mapName]; }

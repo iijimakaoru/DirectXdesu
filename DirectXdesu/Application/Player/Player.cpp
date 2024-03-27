@@ -57,13 +57,13 @@ void Player::Init(const float playerHP) {
 	HPrectUI.reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
 
 	// HPテクスチャ読み込み
-	hpTex = TextureManager::Load("Resources/texture/white1x1.png");
+	hpTex = TextureManager::GetInstance()->GetTextures("White1x1");
 
 	// HPゲージ
 	HPBarUI.reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
 
 	// HPゲージテクスチャ読み込み
-	hpbarTex = TextureManager::Load("Resources/texture/PlayerHPBar2.png");
+	hpbarTex = TextureManager::GetInstance()->GetTextures("PlayerHPBar");
 
 	// 死亡フラグ
 	isDead = false;
@@ -84,14 +84,14 @@ void Player::Init(const float playerHP) {
 
 	// 操作説明
 	operation.reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
-	operationTex = TextureManager::Load("Resources/texture/setumei.png");
+	operationTex = TextureManager::GetInstance()->GetTextures("Setumei");
 	operationPos = {
 	    KWinApp::GetInstance()->GetWindowSizeW() + 450.0f,
 	    KWinApp::GetInstance()->GetWindowSizeH() + 100.0f};
 
 	// ボムアイコン
 	bomIcon.reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
-	bomIconTex = TextureManager::Load("Resources/texture/BomIcon.png");
+	bomIconTex = TextureManager::GetInstance()->GetTextures("BomIcon");
 
 	// ボムクールタイム
 	bomCoolIcon.reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));

@@ -5,6 +5,7 @@
 #include "Camera.h"
 #include "Transform.h"
 #include "Light.h"
+#include "CollisionInfo.h"
 
 /**
  * @file KObject3D.h
@@ -12,7 +13,13 @@
  * @author 飯島 薫
  */
 
+class BaseCollider;
+
 class KObject3d {
+public:
+	// デストラクタ
+	~KObject3d();
+
 public:
 	static std::unique_ptr<Light> light_;
 
@@ -90,8 +97,6 @@ public:
 	/// <param name="texture"></param>
 	void Draw(TextureData& texData_);
 
-	~KObject3d() { Finalize(); }
-
 	void Finalize();
 
 	// ゲッター
@@ -120,4 +125,6 @@ private:
 	Transform transform;
 
 	KMyMath::Vector4 color = {1.0f, 1.0f, 1.0f, 1.0f};
+
+	BaseCollider* baseCollider_ = nullptr;
 };

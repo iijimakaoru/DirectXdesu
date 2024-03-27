@@ -1,7 +1,10 @@
 #include "KObject3d.h"
 #include "KDirectXCommon.h"
+#include "BaseCollider.h"
 
 std::unique_ptr<Light> KObject3d::light_ = nullptr;
+
+KObject3d::~KObject3d() { Finalize(); }
 
 void KObject3d::StaticInit() {}
 
@@ -83,7 +86,7 @@ void KObject3d::TransUpdate() {
 	transform.SetMatWorld(matWorld);
 }
 
-void KObject3d::MatUpdate(ViewProjection* viewPro,const KMyMath::Vector3& cameraPos) {
+void KObject3d::MatUpdate(ViewProjection* viewPro, const KMyMath::Vector3& cameraPos) {
 	KMyMath::Vector3 hoge = cameraPos;
 	// 定数バッファのマッピング
 	// B0
@@ -102,7 +105,7 @@ void KObject3d::Update(ViewProjection* viewPro, const KMyMath::Vector3& cameraPo
 
 	model->Update();
 
-	MatUpdate(viewPro,cameraPos);
+	MatUpdate(viewPro, cameraPos);
 }
 
 void KObject3d::Draw() {
@@ -128,12 +131,12 @@ void KObject3d::Draw(TextureData& texData_) {
 
 	light_->Draw(3);
 
-	model->Draw(1,texData_);
+	model->Draw(1, texData_);
 }
 
 void KObject3d::SetParent(const Transform* parent_) { transform.SetParent(parent_); }
 
-void KObject3d::Finalize() {}
+void KObject3d::Finalize() { delete baseCollider_; }
 
 Transform& KObject3d::GetTransform() { return transform; }
 

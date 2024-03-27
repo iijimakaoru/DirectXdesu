@@ -43,6 +43,10 @@ namespace MyMathUtility
 	/// <returns></returns>
 	float Vector3Length(const KMyMath::Vector3& v);
 
+	float Vector3Dot(const KMyMath::Vector3& v1, const KMyMath::Vector3& v2);
+
+	KMyMath::Vector3 Vector3Cross(const KMyMath::Vector3& v1, const KMyMath::Vector3& v2);
+
 	/// <summary>
 	/// Vector3正規化
 	/// </summary>

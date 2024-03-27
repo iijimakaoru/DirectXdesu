@@ -12,24 +12,24 @@ class Collision {
 public:
 	// 球と平面の当たり判定
 	static bool CheckSphere2Plane(
-	    const Sphere& sphere, const Plane& plane, DirectX::XMVECTOR* inter = nullptr);
+	    const Sphere& sphere, const Plane& plane, KMyMath::Vector3* inter = nullptr);
 	static void ClosestPtPoint2Triangle(
-	    const DirectX::XMVECTOR& point, const ColTriangle& triangle, DirectX::XMVECTOR* closet);
+	    const KMyMath::Vector3& point, const ColTriangle& triangle, KMyMath::Vector3* closet);
 	// 球と三角形の当たり判定
 	static bool CheckSphere2Triangle(
-	    const Sphere& sphere, const ColTriangle& triangle, DirectX::XMVECTOR* inter = nullptr);
+	    const Sphere& sphere, const ColTriangle& triangle, KMyMath::Vector3* inter = nullptr);
 	// レイと平面の当たり判定
 	static bool CheckRay2Plane(
 	    const Ray& ray, const Plane& plane, float* distance = nullptr,
-	    DirectX::XMVECTOR* inter = nullptr);
+	    KMyMath::Vector3* inter = nullptr);
 	// レイと三角形の当たり判定
 	static bool CheckRay2Triangle(
 	    const Ray& ray, const ColTriangle& triangle, float* distance = nullptr,
-	    DirectX::XMVECTOR* inter = nullptr);
+	    KMyMath::Vector3* inter = nullptr);
 	// レイと球の当たり判定
 	static bool CheckRay2Sphere(
 	    const Ray& ray, const Sphere& sphere, float* distance = nullptr,
-	    DirectX::XMVECTOR* inter = nullptr);
+	    KMyMath::Vector3* inter = nullptr);
 };
 
 namespace MyCollisions {

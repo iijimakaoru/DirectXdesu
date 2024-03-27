@@ -57,8 +57,8 @@ void GameScene::Init() {
 	sceneManager = SceneManager::GetInstance();
 
 	// カメラ初期化
-	//camera->Init(player.get(), {0.0f, 0.0f, -200.0f});
-	camera->Init(player.get(), {0.0f, 0.0f, 470.0f});
+	camera->Init(player.get(), {0.0f, 0.0f, -200.0f});
+	//camera->Init(player.get(), {0.0f, 0.0f, 470.0f});
 
 	// エネミーマネージャー生成
 	enemyManager.reset(EnemyManager::Create(

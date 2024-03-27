@@ -13,7 +13,19 @@ namespace MyMathUtility
 	float Vector3Length(const KMyMath::Vector3& v)
 	{
 		return static_cast<float>(std::sqrt(v.x * v.x + v.y * v.y + v.z * v.z));
-	}
+    }
+
+    float Vector3Dot(const KMyMath::Vector3& v1, const KMyMath::Vector3& v2) {
+	    return (v1.x * v2.x) + (v1.y * v2.y) + (v1.z * v2.z);
+    }
+
+    KMyMath::Vector3 Vector3Cross(const KMyMath::Vector3& v1, const KMyMath::Vector3& v2) {
+	    KMyMath::Vector3 vec3;
+	    vec3.x = v1.y * v2.z - v2.y * v1.z;
+	    vec3.y = v1.z * v2.x - v1.x * v2.z;
+	    vec3.z = v1.x * v2.y - v2.x * v1.y;
+	    return vec3;
+    }
 
 	KMyMath::Vector3 MakeNormalize(KMyMath::Vector3 v)
 	{

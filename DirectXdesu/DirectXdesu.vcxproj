@@ -129,6 +129,7 @@
     <ClCompile Include="Application\BossEnemy\Blaster\BlasterUnitLazer.cpp" />
     <ClCompile Include="Application\BossEnemy\Blaster\BlasterUnitTackle.cpp" />
     <ClCompile Include="Application\Movie\BossStart.cpp" />
+    <ClCompile Include="Engine\Collision\BaseCollider.cpp" />
     <ClCompile Include="Engine\Sound\AudioManager.cpp" />
     <ClCompile Include="Engine\Base\BaseScene\ASceneFactory.cpp" />
     <ClCompile Include="Engine\Base\BaseScene\BaseScene.cpp" />
@@ -191,6 +192,7 @@
     <ClCompile Include="Application\Movie\Movie.cpp" />
     <ClCompile Include="Application\Movie\StageStart.cpp" />
     <ClCompile Include="Application\Movie\StageClear.cpp" />
+    <ClCompile Include="Engine\Collision\SphereCollider.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\BossEnemy\ActState.h" />
@@ -219,6 +221,9 @@
     <ClInclude Include="Application\BossEnemy\Blaster\BlasterUnitLazer.h" />
     <ClInclude Include="Application\BossEnemy\Blaster\BlasterUnitTackle.h" />
     <ClInclude Include="Application\Movie\BossStart.h" />
+    <ClInclude Include="Engine\Collision\BaseCollider.h" />
+    <ClInclude Include="Engine\Collision\CollisionInfo.h" />
+    <ClInclude Include="Engine\Collision\CollisionTypes.h" />
     <ClInclude Include="Engine\Sound\AudioManager.h" />
     <ClInclude Include="Engine\Base\BaseScene\ASceneFactory.h" />
     <ClInclude Include="Engine\Base\BaseScene\BaseScene.h" />
@@ -280,6 +285,7 @@
     <ClInclude Include="Application\Movie\Movie.h" />
     <ClInclude Include="Application\Movie\StageStart.h" />
     <ClInclude Include="Application\Movie\StageClear.h" />
+    <ClInclude Include="Engine\Collision\SphereCollider.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DirectXdesu.rc" />

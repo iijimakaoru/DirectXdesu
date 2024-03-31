@@ -12,7 +12,7 @@
 void BossEnemy::Init(
     KGPlin* pipeline_, const KMyMath::Vector3& initPos_, KGPlin* spritePipeline_) {
 	SetCollisionAttribute(Collider::Attribute::Enemys);
-	SetCollisionMask(Collider::Attribute::Players);
+	SetCollisionMask((uint32_t)~Collider::Attribute::Enemys);
 
 	// パイプライン生成
 	pipeline = pipeline_;

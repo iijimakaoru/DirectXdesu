@@ -31,7 +31,7 @@ Player* Player::Create(const float playerHP) {
 
 void Player::Init(const float playerHP) {
 	SetCollisionAttribute(Collider::Attribute::Players);
-	SetCollisionMask(Collider::Attribute::Enemys);
+	SetCollisionMask((uint32_t)~Collider::Attribute::Players);
 
 	// 入力インスタンス
 	input = KInput::GetInstance();

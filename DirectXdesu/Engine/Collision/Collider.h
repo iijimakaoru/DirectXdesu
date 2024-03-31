@@ -4,8 +4,8 @@
 class Collider {
 public:
 	enum Attribute {
-		Players    = 0b1,
-		Enemys  = 0b1 << 1
+		Players       = 0b1,
+		Enemys        = 0b1 << 1,
 	};
 
 	// 当たった時の処理

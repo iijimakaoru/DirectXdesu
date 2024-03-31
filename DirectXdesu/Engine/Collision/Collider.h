@@ -6,6 +6,8 @@ public:
 	enum Attribute {
 		Players       = 0b1,
 		Enemys        = 0b1 << 1,
+		PlayersBullet = 0b0101,
+		EnemysBullet  = 0b0110,
 	};
 
 	// 当たった時の処理

@@ -17,8 +17,8 @@ Explosion* Explosion::Create(const KMyMath::Vector3& pos, const float time) {
 }
 
 void Explosion::Init() {
-	SetCollisionAttribute(Collider::Attribute::Players);
-	SetCollisionMask(Collider::Attribute::Enemys);
+	SetCollisionAttribute(Collider::Attribute::PlayersBullet);
+	SetCollisionMask((uint32_t) ~Collider::Attribute::Players);
 
 	object3d_.reset(KObject3d::Create(
 	    ModelManager::GetInstance()->GetModels("Explotion"),

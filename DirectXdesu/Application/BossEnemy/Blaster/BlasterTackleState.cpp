@@ -238,6 +238,8 @@ void BlasterTackleState::StandTackleAct() {
 void BlasterTackleState::GoTackleAct() {
 	Blaster* blaster = Blaster::nowBlaster;
 
+	blaster->SetIsMuteki(true);
+
 	actTime = 90.0f;
 
 	if (actTimer < actTime) {
@@ -285,6 +287,8 @@ void BlasterTackleState::GoTackleAct() {
 
 void BlasterTackleState::BackPosAct() {
 	Blaster* blaster = Blaster::nowBlaster;
+
+	blaster->SetIsMuteki(false);
 
 	actTime = 90.0f;
 

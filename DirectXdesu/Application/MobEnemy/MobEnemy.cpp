@@ -10,7 +10,7 @@ MobEnemy::~MobEnemy() {}
 
 void MobEnemy::Init(KModel* model_, KGPlin* pipeline_) {
 	SetCollisionAttribute(Collider::Attribute::Enemys);
-	SetCollisionMask((uint32_t)~Collider::Attribute::Enemys);
+	SetCollisionMask((uint32_t)~Collider::Attribute::EnemysBullet);
 
 	// モデル生成
 	model = model_;

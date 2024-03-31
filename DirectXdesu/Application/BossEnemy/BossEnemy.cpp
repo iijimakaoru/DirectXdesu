@@ -80,6 +80,9 @@ const KMyMath::Vector3 BossEnemy::GetWorldPos() const {
 }
 
 void BossEnemy::OnCollision() {
+	if (isMuteki_) {
+		return;
+	}
 	ObjParticleManager::GetInstance()->SetExp(GetWorldPos());
 	HP -= 20;
 	hpEase = true;
@@ -173,3 +176,5 @@ const KMyMath::Vector3& BossEnemy::GetRot() const { return object3d->GetTransfor
 void BossEnemy::SetPos(const KMyMath::Vector3& pos_) { object3d->GetTransform().SetPos(pos_); }
 
 void BossEnemy::SetRot(const KMyMath::Vector3& rot_) { object3d->GetTransform().SetRot(rot_); }
+
+void BossEnemy::SetIsMuteki(bool isMuteki) { isMuteki_ = isMuteki; }

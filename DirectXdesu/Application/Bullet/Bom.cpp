@@ -19,7 +19,7 @@ Bom* Bom::Create(
 }
 
 void Bom::Init(KModel* model_, KGPlin* pipeline_) {
-	SetCollisionAttribute(Collider::Attribute::Players);
+	SetCollisionAttribute(Collider::Attribute::PlayersBullet);
 	SetCollisionMask((uint32_t)~Collider::Attribute::Players);
 
 	// モデル生成

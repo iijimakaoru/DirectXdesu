@@ -80,6 +80,8 @@ public:
 	void SetPos(const KMyMath::Vector3& pos_);
 	void SetRot(const KMyMath::Vector3& rot_);
 
+	void SetIsMuteki(bool isMuteki);
+
 protected:
 	// トランスフォーム
 	std::unique_ptr<KObject3d> object3d = nullptr;
@@ -138,6 +140,8 @@ protected:
 
 	bool isFallEffectEnd = false;
 #pragma endregion
+
+	bool isMuteki_ = false;
 
 	AudioManager* audioManager = nullptr;
 };

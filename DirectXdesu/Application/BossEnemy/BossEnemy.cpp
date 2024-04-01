@@ -90,7 +90,7 @@ void BossEnemy::OnCollision(Collider* collider) {
 	}
 	// 弾
 	else if (partner->GetCollisionAttribute() == Collider::Attribute::PlayersBullet) {
-		HP -= 10;
+		HP -= 5;
 	}
 
 	ObjParticleManager::GetInstance()->SetExp(GetWorldPos());

@@ -301,6 +301,52 @@ void GameScene::CheckAllCollisions() {
 	}
 #pragma endregion
 
+	// ボスユニットと自機の当たり判定
+	{
+		// 判定対象AとBの座標
+		KMyMath::Vector3 posA;
+		std::array<KMyMath::Vector3, 8> posB;
+
+		if (blaster && !blaster->GetIsDead() && isBossBattle && !player->GetIsDead()) {
+			posA = player->GetWorldPos();
+
+			for (uint32_t i = 0; i < 8; i++) {
+				posB[i] = blaster->UnitsGetWorldPos(i);
+
+				if (MyCollisions::CheckSphereToSphere(posA, posB[i], 3.0f, 4.0f)) {
+					player->OnCollision(player.get());
+				}
+			}
+		}
+	}
+
+	// レーザーと自機の当たり判定
+	{
+		// 判定対象AとBの座標
+		KMyMath::Vector3 posA;
+		std::array<KMyMath::Vector3, 16> posB;
+
+		if (blaster && !blaster->GetIsDead() && isBossBattle && !player->GetIsDead()) {
+			posA = player->GetWorldPos();
+
+			for (size_t i = 0; i < 8; i++) {
+				size_t j = i + 8;
+				posB[i] = bulletManager->GetLazersPos(i);
+				posB[j] = bulletManager->GetLazersPos(j);
+
+				if (MyCollisions::CheckBoxToBox(
+				        posA, posB[i], {3.0f, 3.0f, 3.0f}, {1.0f, 180.0f, 1.0f})) {
+					player->OnCollision(player.get());
+				}
+
+				if (MyCollisions::CheckBoxToBox(
+				        posA, posB[j], {3.0f, 3.0f, 3.0f}, {180.0f, 1.0f, 1.0f})) {
+					player->OnCollision(player.get());
+				}
+			}
+		}
+	}
+
 	collisionManager_->CheckAllCollisions();
 }
 

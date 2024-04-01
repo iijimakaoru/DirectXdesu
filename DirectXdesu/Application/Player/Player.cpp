@@ -549,8 +549,7 @@ void Player::UIDraw() {
 	// HP描画
 	HPUI->Draw(
 	    hpTex, (HPPos + HPUIPos) + hpShake.GetShakePos(), {HP * HPsize.x, HPsize.y}, 0,
-	    {hpColor.x, hpColor.y, hpColor.z, 1},
-	    false, false, {0, 1});
+	    {hpColor.x, hpColor.y, hpColor.z, 1}, false, false, {0, 1});
 
 	// ボムアイコン描画
 	bomIcon->Draw(
@@ -613,8 +612,17 @@ void Player::OnCollision(Collider* collider) {
 	audioManager->SEPlay_wav("damageSE.wav", 0.15f);
 	ObjParticleManager::GetInstance()->SetSmallExp(GetWorldPos());
 
-	if (partner) {
-		HP -= 1;
+	// ボスとの判定
+	if (partner->GetCollisionAttribute() == Collider::Attribute::Bosss) {
+		HP -= 5;
+	}
+	// 弾の判定
+	else if (partner->GetCollisionAttribute() == Collider::Attribute::EnemysBullet) {
+		HP -= 2;
+	}
+	// それ以外(レーザー)
+	else {
+		HP -= 5;
 	}
 
 	hpEase = true;

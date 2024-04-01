@@ -608,10 +608,15 @@ const KMyMath::Vector2& Player::GetPosLimitMin() { return posLimitMin; }
 
 const bool Player::GetIsInvisible() const { return isInvisible; }
 
-void Player::OnCollision() {
+void Player::OnCollision(Collider* collider) {
+	Collider* partner = collider;
 	audioManager->SEPlay_wav("damageSE.wav", 0.15f);
 	ObjParticleManager::GetInstance()->SetSmallExp(GetWorldPos());
-	HP -= 1;
+
+	if (partner) {
+		HP -= 1;
+	}
+
 	hpEase = true;
 	oldHpTimer = 0;
 	hpEaseTimer = 0;

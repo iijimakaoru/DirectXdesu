@@ -44,7 +44,7 @@ public:
 	virtual void SetIsDead(bool isDead_) { isDead = isDead_; }
 
 	// 当たった時の処理
-	void OnCollision() override;
+	void OnCollision(Collider* collider) override;
 
 	KMyMath::Vector3 GetWorldPosition() override;
 

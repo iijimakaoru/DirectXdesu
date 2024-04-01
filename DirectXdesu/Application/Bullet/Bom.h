@@ -24,7 +24,7 @@ public:
 	    Set(const KMyMath::Vector3& pos_, const KMyMath::Vector3& vec_,
 	        const KMyMath::Vector3& rot_, const float bulletSpeed_);
 
-	void OnCollision() override;
+	void OnCollision(Collider* collider) override;
 
 	KMyMath::Vector3 GetWorldPosition() override;
 

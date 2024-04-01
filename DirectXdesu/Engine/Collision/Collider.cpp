@@ -4,6 +4,10 @@ void Collider::SetRadius(const float& radius) { radius_ = radius; }
 
 const float& Collider::GetRadius() const { return radius_; }
 
+const bool& Collider::GetIsHit() const { return isHit_; }
+
+void Collider::SetIsHit(bool isHit) { isHit_ = isHit; }
+
 void Collider::SetCollisionAttribute(uint32_t collisionAttribute) {
 	collisionAttribute_ = collisionAttribute;
 }

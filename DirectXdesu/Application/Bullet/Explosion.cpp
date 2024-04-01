@@ -17,8 +17,8 @@ Explosion* Explosion::Create(const KMyMath::Vector3& pos, const float time) {
 }
 
 void Explosion::Init() {
-	SetCollisionAttribute(Collider::Attribute::PlayersBullet);
-	SetCollisionMask((uint32_t) ~Collider::Attribute::Players);
+	SetCollisionAttribute(Collider::Attribute::PlayersBom);
+	SetCollisionMask((uint32_t)~Collider::Attribute::Players);
 
 	object3d_.reset(KObject3d::Create(
 	    ModelManager::GetInstance()->GetModels("Explotion"),
@@ -56,8 +56,8 @@ void Explosion::Update(ViewProjection* viewPro, const KMyMath::Vector3& cameraPo
 
 void Explosion::Draw() { object3d_->Draw(); }
 
-void Explosion::Set(const KMyMath::Vector3& pos, const float time) { 
-	isDead_ = false; 
+void Explosion::Set(const KMyMath::Vector3& pos, const float time) {
+	isDead_ = false;
 	object3d_->GetTransform().SetPos(pos);
 	expTime_ = time;
 }
@@ -66,7 +66,12 @@ void Explosion::SetIsDead(bool isDead) { isDead_ = isDead; }
 
 const bool& Explosion::GetIsDead() const { return isDead_; }
 
-void Explosion::OnCollision() {}
+void Explosion::OnCollision(Collider* collider) {
+	Collider* partner = collider;
+	if (partner->GetCollisionAttribute() == Collider::Attribute::Bosss) {
+		SetIsHit(true);
+	}
+}
 
 KMyMath::Vector3 Explosion::GetWorldPosition() {
 	// ワールド座標格納変数

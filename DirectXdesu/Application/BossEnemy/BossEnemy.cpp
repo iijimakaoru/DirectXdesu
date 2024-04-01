@@ -9,10 +9,9 @@
 #include "Ease.h"
 #include "ParticleManager.h"
 
-void BossEnemy::Init(
-    KGPlin* pipeline_, const KMyMath::Vector3& initPos_, KGPlin* spritePipeline_) {
-	SetCollisionAttribute(Collider::Attribute::Enemys);
-	SetCollisionMask((uint32_t)~Collider::Attribute::Enemys);
+void BossEnemy::Init(KGPlin* pipeline_, const KMyMath::Vector3& initPos_, KGPlin* spritePipeline_) {
+	SetCollisionAttribute(Collider::Attribute::Bosss);
+	SetCollisionMask((uint32_t)~Collider::Attribute::EnemysBullet);
 
 	// パイプライン生成
 	pipeline = pipeline_;
@@ -79,18 +78,28 @@ const KMyMath::Vector3 BossEnemy::GetWorldPos() const {
 	return result;
 }
 
-void BossEnemy::OnCollision() {
+void BossEnemy::OnCollision(Collider* collider) {
 	if (isMuteki_) {
 		return;
 	}
+	Collider* partner = collider;
+
+	// ボム
+	if (partner->GetCollisionAttribute() == Collider::Attribute::PlayersBom) {
+		HP -= 50;
+	}
+	// 弾
+	else if (partner->GetCollisionAttribute() == Collider::Attribute::PlayersBullet) {
+		HP -= 10;
+	}
+
 	ObjParticleManager::GetInstance()->SetExp(GetWorldPos());
-	HP -= 20;
 	hpEase = true;
 	oldHpTimer = 0;
 	hpEaseTimer = 0;
 }
 
-KMyMath::Vector3 BossEnemy::GetWorldPosition() { 
+KMyMath::Vector3 BossEnemy::GetWorldPosition() {
 	// ワールド座標格納変数
 	KMyMath::Vector3 result;
 

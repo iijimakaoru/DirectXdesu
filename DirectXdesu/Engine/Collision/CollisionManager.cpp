@@ -36,9 +36,11 @@ void CollisionManager::CheckCollisionPair(Collider* colliderA, Collider* collide
 	float colBRadius = colliderB->GetRadius();
 
 	if (MyCollisions::CheckSphereToSphere(colAPos, colBPos, colARadius, colBRadius)) {
-		colliderA->OnCollision();
+		if (!colliderA->GetIsHit() && !colliderB->GetIsHit()) {
+			colliderA->OnCollision(colliderB);
 
-		colliderB->OnCollision();
+			colliderB->OnCollision(colliderA);
+		}
 	}
 }
 

@@ -64,7 +64,13 @@ void Bom::Set(
 	isDead = false;
 }
 
-void Bom::OnCollision() { isExp = true; }
+void Bom::OnCollision(Collider* collider) {
+	Collider* partner = collider;
+
+	if (partner) {
+		isExp = true;
+	}
+}
 
 KMyMath::Vector3 Bom::GetWorldPosition() {
 	// ワールド座標格納変数

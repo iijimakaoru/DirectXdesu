@@ -19,7 +19,7 @@ public:
 
 	const bool& GetIsDead() const;
 
-	void OnCollision() override;
+	void OnCollision(Collider* collider) override;
 
 	KMyMath::Vector3 GetWorldPosition() override;
 

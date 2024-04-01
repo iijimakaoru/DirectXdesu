@@ -40,9 +40,15 @@ void Bullet::Draw() {
 	}
 }
 
-void Bullet::OnCollision() { isDead = true; }
+void Bullet::OnCollision(Collider* collider) {
+	Collider* partner = collider;
+	if (partner) {
+	}
 
-KMyMath::Vector3 Bullet::GetWorldPosition() { 
+	isDead = true;
+}
+
+KMyMath::Vector3 Bullet::GetWorldPosition() {
 	// ワールド座標格納変数
 	KMyMath::Vector3 result;
 

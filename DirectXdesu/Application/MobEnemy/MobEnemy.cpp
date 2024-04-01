@@ -34,12 +34,17 @@ void MobEnemy::Draw() {
 	}
 }
 
-void MobEnemy::OnCollision() {
+void MobEnemy::OnCollision(Collider* collider) {
+	Collider* partner = collider;
+
+	if (partner) {
+	}
+
 	ObjParticleManager::GetInstance()->SetSmallExp(GetWorldPos());
 	isDead = true;
 }
 
-KMyMath::Vector3 MobEnemy::GetWorldPosition() { 
+KMyMath::Vector3 MobEnemy::GetWorldPosition() {
 	// ワールド座標格納変数
 	KMyMath::Vector3 result;
 

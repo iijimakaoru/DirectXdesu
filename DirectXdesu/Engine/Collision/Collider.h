@@ -4,14 +4,18 @@
 class Collider {
 public:
 	enum Attribute {
-		Players       = 0b1,
-		Enemys        = 0b1 << 1,
-		PlayersBullet = 0b0101,
-		EnemysBullet  = 0b0110,
+		Players       = 0x00000001,
+		PlayersBullet = 0x00001001,
+		PlayersBom    = 0x00010001,
+		Enemys        = 0x00000010,
+		EnemysBullet  = 0x00001010,
+		Bosss         = 0x00000100,
+		BosssBullet   = 0x00001100,
+		BosssLazer    = 0x00010100,
 	};
 
 	// 当たった時の処理
-	virtual void OnCollision(){};
+	virtual void OnCollision(Collider* collider) = 0;
 
 	// ワールドポジション
 	virtual KMyMath::Vector3 GetWorldPosition() = 0;
@@ -21,6 +25,10 @@ public:
 
 	// 半径取得
 	const float& GetRadius() const;
+
+	// 当たったか
+	const bool& GetIsHit() const;
+	void SetIsHit(bool isHit);
 
 	// 衝突属性(自分)付与
 	void SetCollisionAttribute(uint32_t collisionAttribute);
@@ -43,4 +51,6 @@ private:
 
 	// 半径
 	float radius_ = 1.0f;
+
+	bool isHit_ = false;
 };

@@ -48,7 +48,7 @@ public:
 	virtual const KMyMath::Vector3 GetWorldPos() const;
 
 	// 当たった時の処理
-	void OnCollision() override;
+	void OnCollision(Collider* collider) override;
 
 	KMyMath::Vector3 GetWorldPosition() override;
 

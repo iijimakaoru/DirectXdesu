@@ -23,6 +23,7 @@ BossStart::BossStart() {
 	audioManager_ = AudioManager::GetInstance();
 	bulletManager_ = BulletManager::GetInstance();
 	input_ = KInput::GetInstance();
+	BaseMovie::Init();
 }
 
 void BossStart::Update() {
@@ -45,6 +46,8 @@ void BossStart::WaitBlackOutPhase() {
 
 	if (phaseTimer_ < phaseTime_) {
 		phaseTimer_++;
+
+		MovieBarIn(phaseTimer_ / phaseTime_);
 	} else {
 		// すべての弾削除
 		bulletManager_->AllBulletDelete();
@@ -64,8 +67,6 @@ void BossStart::DescentPhase() {
 	Blaster* blaster = Blaster::nowBlaster;
 
 	phaseTime_ = 90.0f;
-
-	MovieBarInInit();
 
 	if (phaseTimer_ < phaseTime_) {
 		phaseTimer_++;

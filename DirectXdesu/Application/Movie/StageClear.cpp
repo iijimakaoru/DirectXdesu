@@ -17,6 +17,7 @@ StageClear::StageClear() {
 	sceneManager_ = SceneManager::GetInstance();
 	bulletManager_ = BulletManager::GetInstance();
 	input_ = KInput::GetInstance();
+	BaseMovie::Init();
 	phaseTimer_ = 0;
 	cameraPhase = CameraPhase::Insert;
 }
@@ -48,6 +49,8 @@ void StageClear::InsertPhase() {
 		}
 
 		phaseTimer_++;
+
+		MovieBarIn(phaseTimer_ / phaseTime_);
 
 		player->SetPos(MyEase::InCubicVec3(
 		    player->GetWorldPos(), {0.0f, 0.0f, player->GetWorldPos().z},

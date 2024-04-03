@@ -165,12 +165,6 @@ private:
 	bool isOverMovie = false;
 #pragma endregion
 
-#pragma region ムービー中
-	//
-	std::array<std::unique_ptr<Sprite>, 2> movieBar;
-	std::array<KMyMath::Vector2, 2> movieBarPos;
-#pragma endregion
-
 #pragma region ポーズ
 	bool isPose = false;
 

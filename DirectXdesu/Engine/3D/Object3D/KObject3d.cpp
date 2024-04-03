@@ -1,6 +1,5 @@
 #include "KObject3d.h"
 #include "KDirectXCommon.h"
-#include "BaseCollider.h"
 
 std::unique_ptr<Light> KObject3d::light_ = nullptr;
 
@@ -136,7 +135,7 @@ void KObject3d::Draw(TextureData& texData_) {
 
 void KObject3d::SetParent(const Transform* parent_) { transform.SetParent(parent_); }
 
-void KObject3d::Finalize() { delete baseCollider_; }
+void KObject3d::Finalize() {  }
 
 Transform& KObject3d::GetTransform() { return transform; }
 

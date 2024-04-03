@@ -5,15 +5,12 @@
 #include "Camera.h"
 #include "Transform.h"
 #include "Light.h"
-#include "CollisionInfo.h"
 
 /**
  * @file KObject3D.h
  * @brief オブジェクト3D
  * @author 飯島 薫
  */
-
-class BaseCollider;
 
 class KObject3d {
 public:
@@ -125,6 +122,4 @@ private:
 	Transform transform;
 
 	KMyMath::Vector4 color = {1.0f, 1.0f, 1.0f, 1.0f};
-
-	BaseCollider* baseCollider_ = nullptr;
 };

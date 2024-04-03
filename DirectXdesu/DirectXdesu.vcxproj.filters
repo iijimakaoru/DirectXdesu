@@ -516,12 +516,6 @@
     <ClCompile Include="Application\Movie\StageClear.cpp">
       <Filter>ソース ファイル\Application\Movie</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Collision\BaseCollider.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Collision\SphereCollider.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Collision\Collider.cpp">
       <Filter>ソース ファイル\Engine\Collision</Filter>
     </ClCompile>
@@ -794,16 +788,7 @@
     <ClInclude Include="Application\Movie\StageClear.h">
       <Filter>ヘッダー ファイル\Application\Movie</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Collision\BaseCollider.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Collision\CollisionTypes.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Collision\CollisionInfo.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Collision\SphereCollider.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Collision\Collider.h">

@@ -15,6 +15,7 @@ StageStart::StageStart() {
 	input_ = KInput::GetInstance();
 	gameManager_ = GameManager::GetInstance();
 	SetIsFinish(false);
+	BaseMovie::Init();
 	cameraPhase = LookDown;
 }
 

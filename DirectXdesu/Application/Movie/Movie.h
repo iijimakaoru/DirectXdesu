@@ -18,24 +18,20 @@ public:
 	void Draw();
 
 	// ムービーバー初期化
-	void MovieBarInInit();
-	void MovieBarOutInit();
+	virtual void MovieBarInInit();
+	virtual void MovieBarOutInit();
 
 	// ムービーバーにょっき
-	void MovieBarOut(const float timer_);
+	virtual void MovieBarOut(const float timer_);
 
 	// ムービーバーにょっき
-	void MovieBarIn(const float timer_);
+	virtual void MovieBarIn(const float timer_);
 
 	const bool& GetIsFinish() const;
 
 	void SetIsFinish(bool isFinish);
 
 private:
-	//
-	std::array<std::unique_ptr<Sprite>, 2> movieBar;
-	std::array<KMyMath::Vector2, 2> movieBarPos;
-
 	bool isFinish_ = false;
 
 protected:
@@ -43,4 +39,8 @@ protected:
 	GameManager* gameManager_ = nullptr;
 	float phaseTimer_ = 0;
 	float phaseTime_ = 0;
+
+	//
+	std::array<std::unique_ptr<Sprite>, 2> movieBar;
+	std::array<KMyMath::Vector2, 2> movieBarPos;
 };

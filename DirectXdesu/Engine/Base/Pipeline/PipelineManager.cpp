@@ -8,8 +8,8 @@ PipelineManager* PipelineManager::GetInstance() {
 
 void PipelineManager::Init() {
 	// Obj
-	objShader.Init(L"Resources/Shader/lightOBJVS.hlsl", L"Resources/Shader/lightOBJPS.hlsl");
-	objPipeline.reset(KGPlin::Create(objShader, "Obj"));
+	shaders_["Obj"].Init(L"Resources/Shader/lightOBJVS.hlsl", L"Resources/Shader/lightOBJPS.hlsl");
+	pipelines_["Obj"].reset(KGPlin::Create(shaders_["Obj"], "Obj"));
 
 	// Sprite
 	spriteShader.Init(L"Resources/Shader/SpriteVS.hlsl", L"Resources/Shader/SpritePS.hlsl");
@@ -24,10 +24,10 @@ void PipelineManager::Init() {
 	postPipeline.reset(KGPlin::Create(postShader, "PostEffect"));
 }
 
-KGPlin* PipelineManager::GetObjPipeline() { return objPipeline.get(); }
-
 KGPlin* PipelineManager::GetSpritePipeline() { return spritePipeline.get(); }
 
 KGPlin* PipelineManager::GetFbxPipeline() { return fbxPipeline.get(); }
 
 KGPlin* PipelineManager::GetPostPipeline() { return postPipeline.get(); }
+
+KGPlin* PipelineManager::GetPipeline(std::string pipelineName) { return pipelines_[pipelineName].get(); }

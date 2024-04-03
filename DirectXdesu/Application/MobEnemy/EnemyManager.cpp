@@ -145,7 +145,7 @@ void EnemyManager::UpdateEnemyPopCommands() {
 				// 生成
 				newMEnemy.reset(FlyEnemy::Create(
 				    ModelManager::GetInstance()->GetModels("MobEnemy1"), // モデルセット
-				    PipelineManager::GetInstance()->GetObjPipeline(),	 // パイプラインセット
+				    PipelineManager::GetInstance()->GetPipeline("Obj"), // パイプラインセット
 					{x, y, z},											 // 生成場所
 				    {_x, _y},											 // 最終地点
 				    RailCamera::GetSpeed()								 // 移動スピード
@@ -160,7 +160,7 @@ void EnemyManager::UpdateEnemyPopCommands() {
 				// 生成
 				newMEnemy.reset(CanonEnemy::Create(
 				    ModelManager::GetInstance()->GetModels("MobEnemy1"), // モデルセット
-				    PipelineManager::GetInstance()->GetObjPipeline(),	 // パイプラインセット
+				    PipelineManager::GetInstance()->GetPipeline("Obj"), // パイプラインセット
 				    {x, y, z}											 // 出現位置
 				    ));
 
@@ -173,7 +173,7 @@ void EnemyManager::UpdateEnemyPopCommands() {
 				// 生成
 				newMEnemy.reset(AppearEnemy::Create(
 				    ModelManager::GetInstance()->GetModels("MobEnemy1"), // モデルセット
-				    PipelineManager::GetInstance()->GetObjPipeline(),	 // パイプラインセット
+				    PipelineManager::GetInstance()->GetPipeline("Obj"), // パイプラインセット
 				    {x, y, z}											 // 出現位置
 				    ));
 

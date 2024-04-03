@@ -12,7 +12,7 @@
 BulletManager* BulletManager::bulletManager = nullptr;
 
 void BulletManager::Init(Light* light) {
-	pipeline = PipelineManager::GetInstance()->GetObjPipeline();
+	pipeline = PipelineManager::GetInstance()->GetPipeline("Obj");
 
 	light_ = light;
 

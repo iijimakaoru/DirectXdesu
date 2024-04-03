@@ -22,7 +22,7 @@ void Explosion::Init() {
 
 	object3d_.reset(KObject3d::Create(
 	    ModelManager::GetInstance()->GetModels("Explotion"),
-	    PipelineManager::GetInstance()->GetObjPipeline()));
+	    PipelineManager::GetInstance()->GetPipeline("Obj")));
 	object3d_->GetTransform().SetScale({0.0f, 0.0f, 0.0f});
 
 	audioManager_ = AudioManager::GetInstance();

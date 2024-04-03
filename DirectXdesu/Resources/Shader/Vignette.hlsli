@@ -1,10 +1,6 @@
 cbuffer cbuff0 : register(b0)
 {
-    float3 color;
-    float2 center;
-    float power;
-    float2 winSize;
-    float2 size;
+    
 }
 
 // 頂点シェーダーからピクセルシェーダーへのやり取りに使用する構造体

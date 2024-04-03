@@ -54,11 +54,11 @@ void TitleScene::Init() {
 	pushAPos = {width / 2, height * 4 / 5};
 
 	// オブジェクト生成
-	object3d.reset(KObject3d::Create(model, PipelineManager::GetInstance()->GetObjPipeline()));
+	object3d.reset(KObject3d::Create(model, PipelineManager::GetInstance()->GetPipeline("Obj")));
 	object3d->GetTransform().SetScale({0.0f, 0.0f, 0.0f});
 
 	skyDome.reset(
-	    KObject3d::Create(skyDomeModel, PipelineManager::GetInstance()->GetObjPipeline()));
+	    KObject3d::Create(skyDomeModel, PipelineManager::GetInstance()->GetPipeline("Obj")));
 	skyDome->GetTransform().SetScale({200.0f, 200.0f, 200.0f});
 
 	// フラッシュ

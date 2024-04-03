@@ -361,7 +361,7 @@ void ObjParticleManager::SetExp(const KMyMath::Vector3& pos_) {
 	for (size_t i = 0; i < 40; i++) {
 		// 生成
 		newParticle.reset(ObjParticle::Create(
-		    pos_, model, PipelineManager::GetInstance()->GetObjPipeline(),
+		    pos_, model, PipelineManager::GetInstance()->GetPipeline("Obj"),
 		    {MyMathUtility::GetRandF(-1.0f, 1.0f), MyMathUtility::GetRandF(-1.0f, 1.0f),
 		     MyMathUtility::GetRandF(-1.0f, 1.0f)},
 		    textureData1));
@@ -375,7 +375,7 @@ void ObjParticleManager::SetSmallExp(const KMyMath::Vector3& pos_) {
 	for (size_t i = 0; i < 10; i++) {
 		// 生成
 		newParticle.reset(ObjParticle::Create(
-		    pos_, model, PipelineManager::GetInstance()->GetObjPipeline(),
+		    pos_, model, PipelineManager::GetInstance()->GetPipeline("Obj"),
 		    {MyMathUtility::GetRandF(-0.25f, 0.25f), MyMathUtility::GetRandF(-0.25f, 0.25f),
 		     MyMathUtility::GetRandF(-0.25f, 0.25f)},
 		    textureData1));

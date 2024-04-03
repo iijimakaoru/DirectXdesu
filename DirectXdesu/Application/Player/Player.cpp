@@ -39,7 +39,7 @@ void Player::Init(const float playerHP) {
 	// オブジェクト生成
 	object3d.reset(KObject3d::Create(
 	    ModelManager::GetInstance()->GetModels("Player"),
-	    PipelineManager::GetInstance()->GetObjPipeline()));
+	    PipelineManager::GetInstance()->GetPipeline("Obj")));
 	object3d->GetTransform().SetPos({0, 0, 50});
 	object3d->GetTransform().SetScale({2.0f, 2.0f, 2.0f});
 

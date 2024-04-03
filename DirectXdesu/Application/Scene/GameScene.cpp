@@ -73,7 +73,7 @@ void GameScene::Init() {
 	// スカイボックス
 	skyBox.reset(SkyBox::Create(
 	    ModelManager::GetInstance()->GetModels("SkyDorm"),
-	    PipelineManager::GetInstance()->GetObjPipeline(), 50));
+	    PipelineManager::GetInstance()->GetPipeline("Obj"), 50));
 
 	// 弾マネージャー
 	bulletManager = BulletManager::GetInstance();
@@ -392,7 +392,7 @@ void GameScene::BossBattleStart() {
 
 		// 生成
 		blaster.reset(Blaster::Create(
-		    PipelineManager::GetInstance()->GetObjPipeline(), bossBasePos,
+		    PipelineManager::GetInstance()->GetPipeline("Obj"), bossBasePos,
 		    PipelineManager::GetInstance()->GetSpritePipeline()));
 
 		Blaster::nowBlaster = blaster.get();

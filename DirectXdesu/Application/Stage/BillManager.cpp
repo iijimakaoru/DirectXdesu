@@ -38,7 +38,7 @@ void BillManager::LeftSet(const float cameraZ_) {
 	std::unique_ptr<Bill1> newBill1;
 	newBill1.reset(Bill1::Create(
 	    ModelManager::GetInstance()->GetModels("Bill1"),
-	    PipelineManager::GetInstance()->GetObjPipeline(), {-60, cameraZ_}));
+	    PipelineManager::GetInstance()->GetPipeline("Obj"), {-60, cameraZ_}));
 	bill1s.push_back(std::move(newBill1));
 }
 
@@ -61,6 +61,6 @@ void BillManager::RightSet(const float cameraZ_) {
 	std::unique_ptr<Bill1> newBill1;
 	newBill1.reset(Bill1::Create(
 	    ModelManager::GetInstance()->GetModels("Bill1"),
-	    PipelineManager::GetInstance()->GetObjPipeline(), {60, cameraZ_}));
+	    PipelineManager::GetInstance()->GetPipeline("Obj"), {60, cameraZ_}));
 	bill1s.push_back(std::move(newBill1));
 }

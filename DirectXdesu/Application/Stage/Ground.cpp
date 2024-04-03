@@ -9,7 +9,7 @@ void Ground::Init(Player* player_) {
 	for (size_t i = 0; i < 2; i++) {
 		object3d[i].reset(KObject3d::Create(
 		    ModelManager::GetInstance()->GetModels("Ground"),
-		    PipelineManager::GetInstance()->GetObjPipeline()));
+		    PipelineManager::GetInstance()->GetPipeline("Obj")));
 		object3d[i]->GetTransform().SetPos({0.0f, -20.0f, 0.0f});
 		object3d[i]->GetTransform().SetScale({1.0f, 1.0f, 1.0f});
 	}

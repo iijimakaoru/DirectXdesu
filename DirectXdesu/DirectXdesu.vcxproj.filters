@@ -828,7 +828,9 @@
     <None Include="Resources\Shader\lightOBJ.hlsli">
       <Filter>シェーダー</Filter>
     </None>
-    <None Include="Resources\Shader\Vignette.hlsli" />
+    <None Include="Resources\Shader\Vignette.hlsli">
+      <Filter>シェーダー</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shader\BasicPS.hlsl">
@@ -876,7 +878,11 @@
     <FxCompile Include="Resources\Shader\lightOBJVS.hlsl">
       <Filter>シェーダー</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\Shader\VignetteVS.hlsl" />
-    <FxCompile Include="Resources\Shader\VignettePS.hlsl" />
+    <FxCompile Include="Resources\Shader\VignettePS.hlsl">
+      <Filter>シェーダー</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\VignetteVS.hlsl">
+      <Filter>シェーダー</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

@@ -265,6 +265,7 @@ void GameScene::CheckAllCollisions() {
 
 	// 当たり判定を登録
 	// 自機
+	player->SetRadius(3.0f);
 	collisionManager_->AddCollider(player.get());
 
 	// 雑魚敵

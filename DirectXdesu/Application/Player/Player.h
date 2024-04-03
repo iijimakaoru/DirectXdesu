@@ -224,7 +224,7 @@ private:
 
 #pragma region 被弾演出
 	bool isDamageEffect = false;
-	std::unique_ptr<Sprite> damage = nullptr;
+	std::unique_ptr<Sprite> damageEffect = nullptr;
 	TextureData damageTex;
 	float dAlpha = 0;
 #pragma endregion

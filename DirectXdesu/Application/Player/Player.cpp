@@ -77,7 +77,7 @@ void Player::Init(const float playerHP) {
 	isCrisis = false;
 
 	// ダメージエフェクト
-	damage.reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
+	damageEffect.reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
 
 	// ダメージエフェクトテクスチャ読み込み
 	damageTex = TextureManager::Load("Resources/texture/damage.png");
@@ -158,6 +158,7 @@ void Player::Update(
 	} else {
 		// 死亡条件
 		if (HP <= min(HP, 0)) {
+			HP = 0;
 			isDead = true;
 		}
 
@@ -567,7 +568,7 @@ void Player::UIDraw() {
 
 	// ダメージエフェクト描画
 	if (isDamageEffect) {
-		damage->Draw(damageTex, {1280 / 2, 720 / 2}, {1, 1}, 0.0f, {1, 0, 0, dAlpha});
+		damageEffect->Draw(damageTex, {1280 / 2, 720 / 2}, {1, 1}, 0.0f, {1, 0, 0, dAlpha});
 	}
 }
 
@@ -612,18 +613,22 @@ void Player::OnCollision(Collider* collider) {
 	audioManager->SEPlay_wav("damageSE.wav", 0.15f);
 	ObjParticleManager::GetInstance()->SetSmallExp(GetWorldPos());
 
+	float damage = 0;
+
 	// ボスとの判定
 	if (partner->GetCollisionAttribute() == Collider::Attribute::Bosss) {
-		HP -= 5;
+		damage = 5;
 	}
 	// 弾の判定
 	else if (partner->GetCollisionAttribute() == Collider::Attribute::EnemysBullet) {
-		HP -= 2;
+		damage = 2;
 	}
 	// それ以外(レーザー)
 	else {
-		HP -= 5;
+		damage = 5;
 	}
+
+	HP -= damage;
 
 	hpEase = true;
 	oldHpTimer = 0;

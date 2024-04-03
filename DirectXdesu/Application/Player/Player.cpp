@@ -60,7 +60,7 @@ void Player::Init(const float playerHP) {
 	HPrectUI.reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
 
 	// HPテクスチャ読み込み
-	hpTex = TextureManager::Load("Resources/texture/white1x1.png");
+	hpTex = TextureManager::GetInstance()->GetTextures("White1x1");
 
 	// HPゲージ
 	HPBarUI.reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));

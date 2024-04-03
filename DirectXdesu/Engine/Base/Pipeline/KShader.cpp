@@ -71,44 +71,6 @@ D3D12_SHADER_BYTECODE* KShader::GetPSBytecode()
 	return &psBytecode;
 }
 
-void KShader::SpritePSNormal()
-{
-	// ピクセルシェーダの読み込みとコンパイル
-	result = D3DCompileFromFile(
-		L"Resources/Shader/SpritePS.hlsl",
-		nullptr,
-		D3D_COMPILE_STANDARD_FILE_INCLUDE,
-		"main", "ps_5_0",
-		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,
-		0,
-		&psBlob, &errorBlob);
-}
-
-void KShader::SpriteVSNormal()
-{
-	// 頂点シェーダーの読み込みとコンパイル
-	result = D3DCompileFromFile(
-		L"Resources/Shader/SpriteVS.hlsl",
-		nullptr,
-		D3D_COMPILE_STANDARD_FILE_INCLUDE,
-		"main", "vs_5_0",
-		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,
-		0,
-		&vsBlob, &errorBlob);
-}
-
-void KShader::SpriteVSLoadCompile()
-{
-	SpriteVSNormal();
-	Error();
-}
-
-void KShader::SpritePSLoadCompile()
-{
-	SpritePSNormal();
-	Error();
-}
-
 KShader::KShader()
 {
 }

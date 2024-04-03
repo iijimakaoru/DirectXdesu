@@ -17,6 +17,8 @@
 #include <xmemory>
 #pragma warning(pop)
 
+#include <map>
+
 #pragma comment(lib, "dxgi.lib")
 
 /**
@@ -29,12 +31,6 @@ class KShader
 {
 public:
 	template<class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
-
-	// Spriteシェーダー
-	void SpriteVSNormal();
-	void SpriteVSLoadCompile();
-	void SpritePSNormal();
-	void SpritePSLoadCompile();
 
 	// シェーダー
 	KShader();
@@ -62,6 +58,8 @@ private:
 	ComPtr<ID3D10Blob> gsBlob = nullptr; // ジオメトリシェーダーオブジェクト
 	ComPtr<ID3D10Blob> psBlob = nullptr; // ピクセルシェーダーオブジェクト
 	ComPtr<ID3D10Blob> errorBlob = nullptr; // エラーオブジェクト
+
+	//std::map<std::string, ComPtr<ID3D10Blob>> blob;
 
 	// シェーダーバイトコード
 	D3D12_SHADER_BYTECODE vsBytecode{}; // 頂点シェーダーバイトコード

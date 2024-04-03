@@ -11,33 +11,33 @@ ScoreManager* ScoreManager::GetInstance() {
 void ScoreManager::Init() {
 	// スコアスプライトズ
 	for (size_t i = 0; i < 6; i++) {
-		score[i].reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
+		score[i].reset(Sprite::Create(PipelineManager::GetInstance()->GetPipeline("Sprite")));
 	}
 
 	// 加算スコアスプライトズ
 	for (size_t i = 0; i < 4; i++) {
-		addScore[i].reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
+		addScore[i].reset(Sprite::Create(PipelineManager::GetInstance()->GetPipeline("Sprite")));
 	}
 
 	// ボーナスカウントスプライトズ
 	for (size_t i = 0; i < 2; i++) {
-		bonusCountS[i].reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
+		bonusCountS[i].reset(Sprite::Create(PipelineManager::GetInstance()->GetPipeline("Sprite")));
 	}
 
 	// 「Score」文字
-	scores.reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
+	scores.reset(Sprite::Create(PipelineManager::GetInstance()->GetPipeline("Sprite")));
 
 	// 「HIT」文字
-	hits.reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
+	hits.reset(Sprite::Create(PipelineManager::GetInstance()->GetPipeline("Sprite")));
 
 	// 「X」文字
-	xS.reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
+	xS.reset(Sprite::Create(PipelineManager::GetInstance()->GetPipeline("Sprite")));
 
 	// ボーナス時間バースプライト
-	bonusBar.reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
+	bonusBar.reset(Sprite::Create(PipelineManager::GetInstance()->GetPipeline("Sprite")));
 
 	// ボーナス時間ゲージスプライト
-	bonusGage.reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
+	bonusGage.reset(Sprite::Create(PipelineManager::GetInstance()->GetPipeline("Sprite")));
 }
 
 void ScoreManager::Update() {

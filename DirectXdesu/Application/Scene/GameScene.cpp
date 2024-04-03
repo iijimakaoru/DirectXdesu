@@ -93,15 +93,15 @@ void GameScene::Init() {
 
 	isStageStart = true;
 
-	poseBack.reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
+	poseBack.reset(Sprite::Create(PipelineManager::GetInstance()->GetPipeline("Sprite")));
 
-	selectBar.reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
+	selectBar.reset(Sprite::Create(PipelineManager::GetInstance()->GetPipeline("Sprite")));
 
-	poseTexS.reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
+	poseTexS.reset(Sprite::Create(PipelineManager::GetInstance()->GetPipeline("Sprite")));
 
-	backTitleS.reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
+	backTitleS.reset(Sprite::Create(PipelineManager::GetInstance()->GetPipeline("Sprite")));
 
-	operationS.reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
+	operationS.reset(Sprite::Create(PipelineManager::GetInstance()->GetPipeline("Sprite")));
 
 	// ボスバトル開始座標
 	bossBattleStartPos = 500;
@@ -393,7 +393,7 @@ void GameScene::BossBattleStart() {
 		// 生成
 		blaster.reset(Blaster::Create(
 		    PipelineManager::GetInstance()->GetPipeline("Obj"), bossBasePos,
-		    PipelineManager::GetInstance()->GetSpritePipeline()));
+		    PipelineManager::GetInstance()->GetPipeline("Sprite")));
 
 		Blaster::nowBlaster = blaster.get();
 

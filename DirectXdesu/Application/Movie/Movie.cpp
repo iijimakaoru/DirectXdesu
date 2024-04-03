@@ -5,7 +5,7 @@ BaseMovie::~BaseMovie() {}
 
 void BaseMovie::Init() {
 	for (size_t i = 0; i < 2; i++) {
-		movieBar[i].reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
+		movieBar[i].reset(Sprite::Create(PipelineManager::GetInstance()->GetPipeline("Sprite")));
 	}
 }
 

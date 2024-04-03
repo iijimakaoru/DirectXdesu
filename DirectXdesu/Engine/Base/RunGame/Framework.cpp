@@ -53,7 +53,7 @@ void Framework::Init() {
 	// ポストエフェクトテスト
 	postEffect = std::make_unique<PostEffect>();
 	postEffect->Init();
-	postEffect->SetPipeline(PipelineManager::GetInstance()->GetPostPipeline());
+	postEffect->SetPipeline(PipelineManager::GetInstance()->GetPipeline("PostEffect"));
 
 	sceneChange = SceneChange::GetInstance();
 	sceneChange->Init();

@@ -8,7 +8,7 @@ void SceneChange::Init()
 {
 	blackTex = TextureManager::GetInstance()->GetTextures("White1x1");
 
-	black.reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
+	black.reset(Sprite::Create(PipelineManager::GetInstance()->GetPipeline("Sprite")));
 }
 
 void SceneChange::Update()

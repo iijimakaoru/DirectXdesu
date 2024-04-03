@@ -6,7 +6,7 @@ void Reticle2D::Init() {
 	// テクスチャ生成
 	texData = TextureManager::Load("Resources/texture/reticle.png");
 
-	reticle.reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
+	reticle.reset(Sprite::Create(PipelineManager::GetInstance()->GetPipeline("Sprite")));
 }
 
 void Reticle2D::Update(ViewProjection* viewPro, KMyMath::Vector3 reticle3dPos_) {

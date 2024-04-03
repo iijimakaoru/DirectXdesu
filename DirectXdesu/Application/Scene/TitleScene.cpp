@@ -41,16 +41,16 @@ void TitleScene::Init() {
 
 	// タイトル名
 	titlePos = {width / 2, height * 1 / 3};
-	mesi.reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
+	mesi.reset(Sprite::Create(PipelineManager::GetInstance()->GetPipeline("Sprite")));
 
-	shooter.reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
+	shooter.reset(Sprite::Create(PipelineManager::GetInstance()->GetPipeline("Sprite")));
 	shooterScale = {1.0f, 1.0f};
 
-	mold.reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
+	mold.reset(Sprite::Create(PipelineManager::GetInstance()->GetPipeline("Sprite")));
 	moldScale = {1.6f, 1.6f};
 
 	// プッシュA
-	pushA.reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
+	pushA.reset(Sprite::Create(PipelineManager::GetInstance()->GetPipeline("Sprite")));
 	pushAPos = {width / 2, height * 4 / 5};
 
 	// オブジェクト生成
@@ -62,7 +62,7 @@ void TitleScene::Init() {
 	skyDome->GetTransform().SetScale({200.0f, 200.0f, 200.0f});
 
 	// フラッシュ
-	flash.reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
+	flash.reset(Sprite::Create(PipelineManager::GetInstance()->GetPipeline("Sprite")));
 
 	flashAlpha = 0;
 

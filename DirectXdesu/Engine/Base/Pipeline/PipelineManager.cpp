@@ -12,22 +12,17 @@ void PipelineManager::Init() {
 	pipelines_["Obj"].reset(KGPlin::Create(shaders_["Obj"], "Obj"));
 
 	// Sprite
-	spriteShader.Init(L"Resources/Shader/SpriteVS.hlsl", L"Resources/Shader/SpritePS.hlsl");
-	spritePipeline.reset(KGPlin::Create(spriteShader, "Sprite"));
+	shaders_["Sprite"].Init(L"Resources/Shader/SpriteVS.hlsl", L"Resources/Shader/SpritePS.hlsl");
+	pipelines_["Sprite"].reset(KGPlin::Create(shaders_["Sprite"], "Sprite"));
 
 	// fbx
-	fbxShader.Init(L"Resources/Shader/FbxVS.hlsl", L"Resources/Shader/FbxPS.hlsl");
-	fbxPipeline.reset(KGPlin::Create(fbxShader, "Fbx"));
+	shaders_["Fbx"].Init(L"Resources/Shader/FbxVS.hlsl", L"Resources/Shader/FbxPS.hlsl");
+	pipelines_["Fbx"].reset(KGPlin::Create(shaders_["Fbx"], "Fbx"));
 
 	// post
-	postShader.Init(L"Resources/Shader/PostEffectVS.hlsl", L"Resources/Shader/PostEffectPS.hlsl");
-	postPipeline.reset(KGPlin::Create(postShader, "PostEffect"));
+	shaders_["PostEffect"].Init(
+	    L"Resources/Shader/PostEffectVS.hlsl", L"Resources/Shader/PostEffectPS.hlsl");
+	pipelines_["PostEffect"].reset(KGPlin::Create(shaders_["PostEffect"], "PostEffect"));
 }
-
-KGPlin* PipelineManager::GetSpritePipeline() { return spritePipeline.get(); }
-
-KGPlin* PipelineManager::GetFbxPipeline() { return fbxPipeline.get(); }
-
-KGPlin* PipelineManager::GetPostPipeline() { return postPipeline.get(); }
 
 KGPlin* PipelineManager::GetPipeline(std::string pipelineName) { return pipelines_[pipelineName].get(); }

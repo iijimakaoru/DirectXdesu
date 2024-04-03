@@ -33,10 +33,10 @@ void GameOverScene::Init()
 	sceneManager = SceneManager::GetInstance();
 
 	// タイトル名
-	over.reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
+	over.reset(Sprite::Create(PipelineManager::GetInstance()->GetPipeline("Sprite")));
 
 	// プッシュA
-	pushA.reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
+	pushA.reset(Sprite::Create(PipelineManager::GetInstance()->GetPipeline("Sprite")));
 }
 
 void GameOverScene::Update()

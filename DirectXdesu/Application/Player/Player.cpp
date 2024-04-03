@@ -54,16 +54,16 @@ void Player::Init(const float playerHP) {
 	HP = maxHP;
 
 	// HPバー
-	HPUI.reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
+	HPUI.reset(Sprite::Create(PipelineManager::GetInstance()->GetPipeline("Sprite")));
 
 	// HP減少値バー
-	HPrectUI.reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
+	HPrectUI.reset(Sprite::Create(PipelineManager::GetInstance()->GetPipeline("Sprite")));
 
 	// HPテクスチャ読み込み
 	hpTex = TextureManager::GetInstance()->GetTextures("White1x1");
 
 	// HPゲージ
-	HPBarUI.reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
+	HPBarUI.reset(Sprite::Create(PipelineManager::GetInstance()->GetPipeline("Sprite")));
 
 	// HPゲージテクスチャ読み込み
 	hpbarTex = TextureManager::Load("Resources/texture/PlayerHPBar2.png");
@@ -77,7 +77,7 @@ void Player::Init(const float playerHP) {
 	isCrisis = false;
 
 	// ダメージエフェクト
-	damageEffect.reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
+	damageEffect.reset(Sprite::Create(PipelineManager::GetInstance()->GetPipeline("Sprite")));
 
 	// ダメージエフェクトテクスチャ読み込み
 	damageTex = TextureManager::Load("Resources/texture/damage.png");
@@ -86,18 +86,18 @@ void Player::Init(const float playerHP) {
 	dAlpha = 0;
 
 	// 操作説明
-	operation.reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
+	operation.reset(Sprite::Create(PipelineManager::GetInstance()->GetPipeline("Sprite")));
 	operationTex = TextureManager::Load("Resources/texture/setumei.png");
 	operationPos = {
 	    KWinApp::GetInstance()->GetWindowSizeW() + 450.0f,
 	    KWinApp::GetInstance()->GetWindowSizeH() + 100.0f};
 
 	// ボムアイコン
-	bomIcon.reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
+	bomIcon.reset(Sprite::Create(PipelineManager::GetInstance()->GetPipeline("Sprite")));
 	bomIconTex = TextureManager::Load("Resources/texture/BomIcon.png");
 
 	// ボムクールタイム
-	bomCoolIcon.reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
+	bomCoolIcon.reset(Sprite::Create(PipelineManager::GetInstance()->GetPipeline("Sprite")));
 
 	audioManager = AudioManager::GetInstance();
 }

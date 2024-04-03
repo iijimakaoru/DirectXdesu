@@ -4,7 +4,7 @@
 
 void Warning::Init()
 {
-	warning.reset(Sprite::Create(PipelineManager::GetInstance()->GetSpritePipeline()));
+	warning.reset(Sprite::Create(PipelineManager::GetInstance()->GetPipeline("Sprite")));
 
 	adManager = AudioManager::GetInstance();
 

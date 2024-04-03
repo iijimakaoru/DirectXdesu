@@ -347,6 +347,7 @@ void GameScene::CheckAllCollisions() {
 		}
 	}
 
+	// 総当たり判定(球と球)
 	collisionManager_->CheckAllCollisions();
 }
 

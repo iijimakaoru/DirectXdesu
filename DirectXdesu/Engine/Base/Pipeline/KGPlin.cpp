@@ -1,20 +1,20 @@
 #include "KGPlin.h"
 #include "KDirectXCommon.h"
 
-void KGPlin::SetShader(KShader shader) {
+void KGPlin::SetShader(KShader& shader) {
 	// Vertex
-	piplineDesc.VS.pShaderBytecode = shader.GetVSBlob()->GetBufferPointer();
-	piplineDesc.VS.BytecodeLength = shader.GetVSBlob()->GetBufferSize();
+	pipelineDesc.VS.pShaderBytecode = shader.GetVSBlob()->GetBufferPointer();
+	pipelineDesc.VS.BytecodeLength = shader.GetVSBlob()->GetBufferSize();
 
 	// GS
 	if (shader.GetGSBlob() && shader.GetGSBytecode()) {
-		piplineDesc.GS.pShaderBytecode = shader.GetGSBlob()->GetBufferPointer();
-		piplineDesc.GS.BytecodeLength = shader.GetGSBlob()->GetBufferSize();
+		pipelineDesc.GS.pShaderBytecode = shader.GetGSBlob()->GetBufferPointer();
+		pipelineDesc.GS.BytecodeLength = shader.GetGSBlob()->GetBufferSize();
 	}
 
 	// Pixcel
-	piplineDesc.PS.pShaderBytecode = shader.GetPSBlob()->GetBufferPointer();
-	piplineDesc.PS.BytecodeLength = shader.GetPSBlob()->GetBufferSize();
+	pipelineDesc.PS.pShaderBytecode = shader.GetPSBlob()->GetBufferPointer();
+	pipelineDesc.PS.BytecodeLength = shader.GetPSBlob()->GetBufferSize();
 }
 
 void KGPlin::SetRootParam(
@@ -130,6 +130,45 @@ void KGPlin::Blending(D3D12_BLEND_DESC& blenddesc, const int mord) {
 	}
 }
 
+void KGPlin::RenderBlending(D3D12_RENDER_TARGET_BLEND_DESC& blendDesc, const int mord) {
+	//	共通設定
+	if (mord != NONE) {
+		blendDesc.RenderTargetWriteMask =
+		    D3D12_COLOR_WRITE_ENABLE_ALL; // RBGA全てのチャンネルを描画
+		blendDesc.BlendEnable = true;
+		blendDesc.BlendOpAlpha = D3D12_BLEND_OP_ADD;
+		blendDesc.SrcBlendAlpha = D3D12_BLEND_ONE;
+		blendDesc.DestBlendAlpha = D3D12_BLEND_ZERO;
+	} else {
+		blendDesc.BlendEnable = false;
+	}
+
+	switch (mord) {
+	case ADD:
+		blendDesc.BlendOp = D3D12_BLEND_OP_ADD;
+		blendDesc.SrcBlend = D3D12_BLEND_ONE;
+		blendDesc.DestBlend = D3D12_BLEND_ONE;
+		break;	 
+	case SUB:	 
+		blendDesc.BlendOp = D3D12_BLEND_OP_REV_SUBTRACT;
+		blendDesc.SrcBlend = D3D12_BLEND_ONE;
+		blendDesc.DestBlend = D3D12_BLEND_ONE;
+		break;	 
+	case INV:	 
+		blendDesc.BlendOp = D3D12_BLEND_OP_ADD;
+		blendDesc.SrcBlend = D3D12_BLEND_INV_DEST_COLOR;
+		blendDesc.DestBlend = D3D12_BLEND_ZERO;
+		break;
+	case ALPHA:
+		blendDesc.BlendOp = D3D12_BLEND_OP_ADD;
+		blendDesc.SrcBlend = D3D12_BLEND_SRC_ALPHA;
+		blendDesc.DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
+		break;
+	default:
+		break;
+	}
+}
+
 void KGPlin::CreatePipelineAll(KShader shader, std::string shaderName) {
 	HRESULT result;
 
@@ -160,36 +199,36 @@ void KGPlin::CreatePipelineAll(KShader shader, std::string shaderName) {
 		};
 
 		// サンプルマスクの設定
-		piplineDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
+		pipelineDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
 
 		// ラスタライザの設定
-		piplineDesc.RasterizerState.CullMode = D3D12_CULL_MODE_BACK;  // 背面をカリング
-		piplineDesc.RasterizerState.FillMode = D3D12_FILL_MODE_SOLID; // ポリゴン塗りつぶし
-		piplineDesc.RasterizerState.DepthClipEnable = true;           // 深度クリッピング
+		pipelineDesc.RasterizerState.CullMode = D3D12_CULL_MODE_BACK;  // 背面をカリング
+		pipelineDesc.RasterizerState.FillMode = D3D12_FILL_MODE_SOLID; // ポリゴン塗りつぶし
+		pipelineDesc.RasterizerState.DepthClipEnable = true;           // 深度クリッピング
 
 		// ブレンド設定
 		D3D12_BLEND_DESC blenddesc = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
 		Blending(blenddesc, ALPHA);
 
-		piplineDesc.BlendState = blenddesc;
+		pipelineDesc.BlendState = blenddesc;
 
 		// 頂点レイアウトの設定
-		piplineDesc.InputLayout.pInputElementDescs = inputLayout;
-		piplineDesc.InputLayout.NumElements = _countof(inputLayout);
+		pipelineDesc.InputLayout.pInputElementDescs = inputLayout;
+		pipelineDesc.InputLayout.NumElements = _countof(inputLayout);
 
 		// 図形の形状設定
-		piplineDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+		pipelineDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 
 		// 深度ステンシルステート
-		piplineDesc.DepthStencilState.DepthEnable = true; // 深度テスト
-		piplineDesc.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL; // 書き込み許可
-		piplineDesc.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_LESS; // 小さければ合格
-		piplineDesc.DSVFormat = DXGI_FORMAT_D32_FLOAT; // 深度値フォーマット
+		pipelineDesc.DepthStencilState.DepthEnable = true; // 深度テスト
+		pipelineDesc.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL; // 書き込み許可
+		pipelineDesc.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_LESS; // 小さければ合格
+		pipelineDesc.DSVFormat = DXGI_FORMAT_D32_FLOAT; // 深度値フォーマット
 
 		// その他の設定
-		piplineDesc.NumRenderTargets = 1;
-		piplineDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
-		piplineDesc.SampleDesc.Count = 1;
+		pipelineDesc.NumRenderTargets = 1;
+		pipelineDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+		pipelineDesc.SampleDesc.Count = 1;
 
 		// デスクリプタレンジの設定
 		D3D12_DESCRIPTOR_RANGE descriptorRange{};
@@ -246,9 +285,9 @@ void KGPlin::CreatePipelineAll(KShader shader, std::string shaderName) {
 		assert(SUCCEEDED(result));
 
 		// パイプラインにルートシグネチャをセット
-		piplineDesc.pRootSignature = rootSignature.Get();
+		pipelineDesc.pRootSignature = rootSignature.Get();
 
-		result = device->CreateGraphicsPipelineState(&piplineDesc, IID_PPV_ARGS(&pipelineState));
+		result = device->CreateGraphicsPipelineState(&pipelineDesc, IID_PPV_ARGS(&pipelineState));
 		assert(SUCCEEDED(result));
 	}
 	// Spriteシェーダー
@@ -272,33 +311,33 @@ void KGPlin::CreatePipelineAll(KShader shader, std::string shaderName) {
 #pragma endregion
 #pragma region パイプラインステート設定変数の宣言と各種項目の設定
 		// サンプルマスクの設定
-		piplineDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
+		pipelineDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
 
 		// ラスタライザの設定
-		piplineDesc.RasterizerState.CullMode = D3D12_CULL_MODE_NONE; // 背面をカリングしない
-		piplineDesc.RasterizerState.FillMode = D3D12_FILL_MODE_SOLID;
-		piplineDesc.RasterizerState.DepthClipEnable = true;
+		pipelineDesc.RasterizerState.CullMode = D3D12_CULL_MODE_NONE; // 背面をカリングしない
+		pipelineDesc.RasterizerState.FillMode = D3D12_FILL_MODE_SOLID;
+		pipelineDesc.RasterizerState.DepthClipEnable = true;
 
 		// 頂点レイアウトの設定
-		piplineDesc.InputLayout.pInputElementDescs = inputLayout;
-		piplineDesc.InputLayout.NumElements = _countof(inputLayout);
+		pipelineDesc.InputLayout.pInputElementDescs = inputLayout;
+		pipelineDesc.InputLayout.NumElements = _countof(inputLayout);
 
 		// 図形の形状設定
-		piplineDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+		pipelineDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 
 		// その他の設定
-		piplineDesc.NumRenderTargets = 1;
-		piplineDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
-		piplineDesc.SampleDesc.Count = 1;
+		pipelineDesc.NumRenderTargets = 1;
+		pipelineDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+		pipelineDesc.SampleDesc.Count = 1;
 
 		// 深度ステンシルステート
-		piplineDesc.DepthStencilState.DepthEnable = false; // 深度テスト
+		pipelineDesc.DepthStencilState.DepthEnable = false; // 深度テスト
 
 		// ブレンド設定
 		D3D12_BLEND_DESC blenddesc = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
 		Blending(blenddesc, ALPHA);
 
-		piplineDesc.BlendState = blenddesc;
+		pipelineDesc.BlendState = blenddesc;
 
 		// デスクリプタレンジの設定
 		D3D12_DESCRIPTOR_RANGE descriptorRange{};
@@ -362,10 +401,10 @@ void KGPlin::CreatePipelineAll(KShader shader, std::string shaderName) {
 		assert(SUCCEEDED(result));
 
 		// パイプラインにルートシグネチャをセット
-		piplineDesc.pRootSignature = rootSignature.Get();
+		pipelineDesc.pRootSignature = rootSignature.Get();
 #pragma endregion
 #pragma region グラフィックスパイプラインステートの生成
-		result = device->CreateGraphicsPipelineState(&piplineDesc, IID_PPV_ARGS(&pipelineState));
+		result = device->CreateGraphicsPipelineState(&pipelineDesc, IID_PPV_ARGS(&pipelineState));
 		assert(SUCCEEDED(result));
 #pragma endregion
 	}
@@ -391,13 +430,13 @@ void KGPlin::CreatePipelineAll(KShader shader, std::string shaderName) {
 		};
 
 		// サンプルマスク
-		piplineDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK; // 標準設定
+		pipelineDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK; // 標準設定
 
 		// ラスタライザステート
-		piplineDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
+		pipelineDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
 
 		// デプスステンシルステート
-		piplineDesc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
+		pipelineDesc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
 
 		// レンダーターゲットのブレンド設定
 		D3D12_RENDER_TARGET_BLEND_DESC blenddesc{};
@@ -413,21 +452,21 @@ void KGPlin::CreatePipelineAll(KShader shader, std::string shaderName) {
 		blenddesc.DestBlendAlpha = D3D12_BLEND_ZERO;
 
 		// ブレンドステートの設定
-		piplineDesc.BlendState.RenderTarget[0] = blenddesc;
+		pipelineDesc.BlendState.RenderTarget[0] = blenddesc;
 
 		// 深度バッファのフォーマット
-		piplineDesc.DSVFormat = DXGI_FORMAT_D32_FLOAT;
+		pipelineDesc.DSVFormat = DXGI_FORMAT_D32_FLOAT;
 
 		// 頂点レイアウトの設定
-		piplineDesc.InputLayout.pInputElementDescs = inputLayout;
-		piplineDesc.InputLayout.NumElements = _countof(inputLayout);
+		pipelineDesc.InputLayout.pInputElementDescs = inputLayout;
+		pipelineDesc.InputLayout.NumElements = _countof(inputLayout);
 
 		// 図形の形状設定（三角形）
-		piplineDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+		pipelineDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 
-		piplineDesc.NumRenderTargets = 1;                            // 描画対象は1つ
-		piplineDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB; // 0～255指定のRGBA(SRGB版)
-		piplineDesc.SampleDesc.Count = 1; // 1ピクセルにつき1回サンプリング
+		pipelineDesc.NumRenderTargets = 1;                            // 描画対象は1つ
+		pipelineDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB; // 0～255指定のRGBA(SRGB版)
+		pipelineDesc.SampleDesc.Count = 1; // 1ピクセルにつき1回サンプリング
 
 		// デスクリプタレンジ
 		CD3DX12_DESCRIPTOR_RANGE descRangeSRV;
@@ -469,11 +508,11 @@ void KGPlin::CreatePipelineAll(KShader shader, std::string shaderName) {
 			assert(0);
 		}
 
-		piplineDesc.pRootSignature = rootSignature.Get();
+		pipelineDesc.pRootSignature = rootSignature.Get();
 
 		// グラフィックスパイプラインの生成
 		result = device->CreateGraphicsPipelineState(
-		    &piplineDesc, IID_PPV_ARGS(pipelineState.ReleaseAndGetAddressOf()));
+		    &pipelineDesc, IID_PPV_ARGS(pipelineState.ReleaseAndGetAddressOf()));
 		if (FAILED(result)) {
 			assert(0);
 		}
@@ -497,62 +536,34 @@ void KGPlin::CreatePipelineAll(KShader shader, std::string shaderName) {
 		};
 
 		// サンプルマスク
-		piplineDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK; // 標準設定
+		pipelineDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK; // 標準設定
 
 		// ラスタライザステート
-		piplineDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
-		piplineDesc.RasterizerState.CullMode = D3D12_CULL_MODE_NONE;
-
-		// デプスステンシルステート
-		piplineDesc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
-		piplineDesc.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_ALWAYS; // 常に上書き
-
-		// レンダーターゲットのブレンド設定
-		D3D12_RENDER_TARGET_BLEND_DESC blenddesc{};
-		blenddesc.RenderTargetWriteMask =
-		    D3D12_COLOR_WRITE_ENABLE_ALL; // RBGA全てのチャンネルを描画
-		blenddesc.BlendEnable = true;
-		blenddesc.BlendOp = D3D12_BLEND_OP_ADD;
-		blenddesc.SrcBlend = D3D12_BLEND_SRC_ALPHA;
-		blenddesc.DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
-
-		blenddesc.BlendOpAlpha = D3D12_BLEND_OP_ADD;
-		blenddesc.SrcBlendAlpha = D3D12_BLEND_ONE;
-		blenddesc.DestBlendAlpha = D3D12_BLEND_ZERO;
-
-		// ブレンドステートの設定
-		piplineDesc.BlendState.RenderTarget[0] = blenddesc;
-
-		// 深度バッファのフォーマット
-		piplineDesc.DSVFormat = DXGI_FORMAT_D32_FLOAT;
-
-		// 頂点レイアウトの設定
-		piplineDesc.InputLayout.pInputElementDescs = inputLayout;
-		piplineDesc.InputLayout.NumElements = _countof(inputLayout);
-
-		// 図形の形状設定（三角形）
-		piplineDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-
-		piplineDesc.NumRenderTargets = 1;                            // 描画対象は1つ
-		piplineDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB; // 0～255指定のRGBA(SRGB版)
-		piplineDesc.SampleDesc.Count = 1; // 1ピクセルにつき1回サンプリング
+		pipelineDesc.RasterizerState.FillMode = D3D12_FILL_MODE_SOLID;
+		pipelineDesc.RasterizerState.CullMode = D3D12_CULL_MODE_NONE;
+		pipelineDesc.RasterizerState.DepthClipEnable = true;
 
 		// デスクリプタレンジ
-		CD3DX12_DESCRIPTOR_RANGE descRangeSRV;
-		descRangeSRV.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0);
+		CD3DX12_DESCRIPTOR_RANGE descRangeSRV0;
+		descRangeSRV0.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0); // t0レジスタ
+		CD3DX12_DESCRIPTOR_RANGE descRangeSRV1;
+		descRangeSRV1.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 1); // t1レジスタ
 
 		// ルートパラメータ
-		CD3DX12_ROOT_PARAMETER rootparams[2] = {};
-
-		// CBV(座標変換行列用)
+		CD3DX12_ROOT_PARAMETER rootparams[3] = {};
+		// テクスチャバッファ1番
 		rootparams[0].InitAsConstantBufferView(0, 0, D3D12_SHADER_VISIBILITY_ALL);
-
-		// SRV(テクスチャ)
-		rootparams[1].InitAsDescriptorTable(1, &descRangeSRV, D3D12_SHADER_VISIBILITY_ALL);
+		// 定数バッファ0番
+		rootparams[1].InitAsDescriptorTable(1, &descRangeSRV0, D3D12_SHADER_VISIBILITY_ALL);
+		// 定数バッファ1番
+		rootparams[2].InitAsDescriptorTable(1, &descRangeSRV1, D3D12_SHADER_VISIBILITY_ALL);
 
 		// スタティックサンプラー
 		CD3DX12_STATIC_SAMPLER_DESC samplerDesc =
-		    CD3DX12_STATIC_SAMPLER_DESC(0, D3D12_FILTER_MIN_MAG_MIP_POINT);
+		    CD3DX12_STATIC_SAMPLER_DESC(0, D3D12_FILTER_MIN_MAG_MIP_LINEAR);
+		samplerDesc.AddressU = D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
+		samplerDesc.AddressV = D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
+		samplerDesc.AddressW = D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
 
 		// ルートシグネチャの設定
 		CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC rootSignatureDesc;
@@ -578,11 +589,26 @@ void KGPlin::CreatePipelineAll(KShader shader, std::string shaderName) {
 			assert(0);
 		}
 
-		piplineDesc.pRootSignature = rootSignature.Get();
+		pipelineDesc.pRootSignature = rootSignature.Get();
+
+		// 頂点レイアウトの設定
+		pipelineDesc.InputLayout.pInputElementDescs = inputLayout;
+		pipelineDesc.InputLayout.NumElements = _countof(inputLayout);
+
+		// 図形の形状設定（三角形）
+		pipelineDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+
+		pipelineDesc.NumRenderTargets = 1;                            // 描画対象は1つ
+		pipelineDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB; // 0～255指定のRGBA(SRGB版)
+		pipelineDesc.SampleDesc.Count = 1; // 1ピクセルにつき1回サンプリング
+
+		// レンダーターゲットのブレンド設定
+		D3D12_RENDER_TARGET_BLEND_DESC& blendDesc = pipelineDesc.BlendState.RenderTarget[0];
+		RenderBlending(blendDesc, BlendMord::ALPHA);
 
 		// グラフィックスパイプラインの生成
 		result = device->CreateGraphicsPipelineState(
-		    &piplineDesc, IID_PPV_ARGS(pipelineState.ReleaseAndGetAddressOf()));
+		    &pipelineDesc, IID_PPV_ARGS(pipelineState.ReleaseAndGetAddressOf()));
 		if (FAILED(result)) {
 			assert(0);
 		}
@@ -599,13 +625,13 @@ void KGPlin::CreatePipelineAll(KShader shader, std::string shaderName) {
 		};
 
 		// サンプルマスク
-		piplineDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK; // 標準設定
+		pipelineDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK; // 標準設定
 
 		// ラスタライザステート
-		piplineDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
+		pipelineDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
 
 		// デプスステンシルステート
-		piplineDesc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
+		pipelineDesc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
 
 		// レンダーターゲットのブレンド設定
 		D3D12_RENDER_TARGET_BLEND_DESC blenddesc{};
@@ -622,20 +648,20 @@ void KGPlin::CreatePipelineAll(KShader shader, std::string shaderName) {
 		blenddesc.DestBlendAlpha = D3D12_BLEND_ZERO;
 
 		// ブレンドステートの設定
-		piplineDesc.BlendState.RenderTarget[0] = blenddesc;
+		pipelineDesc.BlendState.RenderTarget[0] = blenddesc;
 
 		// 深度バッファのフォーマット
-		piplineDesc.DSVFormat = DXGI_FORMAT_D32_FLOAT;
+		pipelineDesc.DSVFormat = DXGI_FORMAT_D32_FLOAT;
 
 		// 頂点レイアウトの設定
-		piplineDesc.InputLayout.pInputElementDescs = inputLayout;
-		piplineDesc.InputLayout.NumElements = _countof(inputLayout);
+		pipelineDesc.InputLayout.pInputElementDescs = inputLayout;
+		pipelineDesc.InputLayout.NumElements = _countof(inputLayout);
 
 		// 図形の形状設定（三角形）
-		piplineDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT;
-		piplineDesc.NumRenderTargets = 1;                            // 描画対象は1つ
-		piplineDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB; // 0～255指定のRGBA
-		piplineDesc.SampleDesc.Count = 1; // 1ピクセルにつき1回サンプリング
+		pipelineDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT;
+		pipelineDesc.NumRenderTargets = 1;                            // 描画対象は1つ
+		pipelineDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB; // 0～255指定のRGBA
+		pipelineDesc.SampleDesc.Count = 1; // 1ピクセルにつき1回サンプリング
 
 		// デスクリプタレンジ
 		CD3DX12_DESCRIPTOR_RANGE descRangeSRV;
@@ -668,13 +694,13 @@ void KGPlin::CreatePipelineAll(KShader shader, std::string shaderName) {
 		    IID_PPV_ARGS(rootSignature.ReleaseAndGetAddressOf()));
 		assert(SUCCEEDED(result));
 
-		piplineDesc.pRootSignature = rootSignature.Get();
+		pipelineDesc.pRootSignature = rootSignature.Get();
 
-		piplineDesc.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
+		pipelineDesc.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
 
 		// グラフィックスパイプラインの生成
 		result = device->CreateGraphicsPipelineState(
-		    &piplineDesc, IID_PPV_ARGS(pipelineState.ReleaseAndGetAddressOf()));
+		    &pipelineDesc, IID_PPV_ARGS(pipelineState.ReleaseAndGetAddressOf()));
 		assert(SUCCEEDED(result));
 	}
 	// Vignetteシェーダー
@@ -682,7 +708,7 @@ void KGPlin::CreatePipelineAll(KShader shader, std::string shaderName) {
 		D3D12_INPUT_ELEMENT_DESC inputLayout[] = {
 		    {
              // xy座標
-		        "POSITION",           // セマンティック名
+		        "POSITION", // セマンティック名
 		        0, // 同じセマンティック名が複数あるときに使うインデックス
 		        DXGI_FORMAT_R32G32B32_FLOAT, // 要素数とビット数を表す
 		        0, // 入力スロットインデックス
@@ -690,21 +716,29 @@ void KGPlin::CreatePipelineAll(KShader shader, std::string shaderName) {
 		        D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, // 入力データ種別
 		        0 // 一度に描画するインスタンス数
 		    },
-		    {// uv座標(1行で書いたほうが見やすい)
-		     "TEXCOORD", 0,      DXGI_FORMAT_R32G32_FLOAT,                   0,                D3D12_APPEND_ALIGNED_ELEMENT,
-		     D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,		                                                                                                                                                    0		                                                     },
+		    {
+             // uv座標(1行で書いたほうが見やすい)
+		        "TEXCOORD", // セマンティック名
+		        0, // 同じセマンティック名が複数あるときに使うインデックス
+		        DXGI_FORMAT_R32G32_FLOAT,    // 要素数とビット数を表す
+		        0,    // 入力スロットインデックス
+		        D3D12_APPEND_ALIGNED_ELEMENT,    // データのオフセット
+		        D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,    // 入力データ種別
+		        0 // 一度に描画するインスタンス数
+		    },
 		};
 
 		// サンプルマスク
-		piplineDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK; // 標準設定
+		pipelineDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK; // 標準設定
 
 		// ラスタライザステート
-		piplineDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
-		piplineDesc.RasterizerState.CullMode = D3D12_CULL_MODE_NONE;
+		pipelineDesc.RasterizerState.CullMode = D3D12_CULL_MODE_NONE;
+		pipelineDesc.RasterizerState.FillMode = D3D12_FILL_MODE_SOLID;
+		pipelineDesc.RasterizerState.DepthClipEnable = true;
 
 		// デプスステンシルステート
-		piplineDesc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
-		piplineDesc.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_ALWAYS; // 常に上書き
+		pipelineDesc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
+		pipelineDesc.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_ALWAYS; // 常に上書き
 
 		// レンダーターゲットのブレンド設定
 		D3D12_RENDER_TARGET_BLEND_DESC blenddesc{};
@@ -720,25 +754,22 @@ void KGPlin::CreatePipelineAll(KShader shader, std::string shaderName) {
 		blenddesc.DestBlendAlpha = D3D12_BLEND_ZERO;
 
 		// ブレンドステートの設定
-		piplineDesc.BlendState.RenderTarget[0] = blenddesc;
-
-		// 深度バッファのフォーマット
-		piplineDesc.DSVFormat = DXGI_FORMAT_D32_FLOAT;
+		pipelineDesc.BlendState.RenderTarget[0] = blenddesc;
 
 		// 頂点レイアウトの設定
-		piplineDesc.InputLayout.pInputElementDescs = inputLayout;
-		piplineDesc.InputLayout.NumElements = _countof(inputLayout);
+		pipelineDesc.InputLayout.pInputElementDescs = inputLayout;
+		pipelineDesc.InputLayout.NumElements = _countof(inputLayout);
 
 		// 図形の形状設定（三角形）
-		piplineDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+		pipelineDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 
-		piplineDesc.NumRenderTargets = 1;                            // 描画対象は1つ
-		piplineDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB; // 0～255指定のRGBA(SRGB版)
-		piplineDesc.SampleDesc.Count = 1; // 1ピクセルにつき1回サンプリング
+		pipelineDesc.NumRenderTargets = 1;                            // 描画対象は1つ
+		pipelineDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB; // 0～255指定のRGBA(SRGB版)
+		pipelineDesc.SampleDesc.Count = 1; // 1ピクセルにつき1回サンプリング
 
 		// デスクリプタレンジ
-		CD3DX12_DESCRIPTOR_RANGE descRangeSRV;
-		descRangeSRV.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0);
+		CD3DX12_DESCRIPTOR_RANGE descRangeSRV0;
+		descRangeSRV0.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0);
 
 		// ルートパラメータ
 		CD3DX12_ROOT_PARAMETER rootparams[2] = {};
@@ -747,11 +778,14 @@ void KGPlin::CreatePipelineAll(KShader shader, std::string shaderName) {
 		rootparams[0].InitAsConstantBufferView(0, 0, D3D12_SHADER_VISIBILITY_ALL);
 
 		// SRV(テクスチャ)
-		rootparams[1].InitAsDescriptorTable(1, &descRangeSRV, D3D12_SHADER_VISIBILITY_ALL);
+		rootparams[1].InitAsDescriptorTable(1, &descRangeSRV0, D3D12_SHADER_VISIBILITY_ALL);
 
 		// スタティックサンプラー
 		CD3DX12_STATIC_SAMPLER_DESC samplerDesc =
-		    CD3DX12_STATIC_SAMPLER_DESC(0, D3D12_FILTER_MIN_MAG_MIP_POINT);
+		    CD3DX12_STATIC_SAMPLER_DESC(0, D3D12_FILTER_MIN_MAG_MIP_LINEAR);
+		samplerDesc.AddressU = D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
+		samplerDesc.AddressV = D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
+		samplerDesc.AddressW = D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
 
 		// ルートシグネチャの設定
 		CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC rootSignatureDesc;
@@ -772,16 +806,16 @@ void KGPlin::CreatePipelineAll(KShader shader, std::string shaderName) {
 		// ルートシグネチャの生成
 		result = device->CreateRootSignature(
 		    0, rootSigBlob->GetBufferPointer(), rootSigBlob->GetBufferSize(),
-		    IID_PPV_ARGS(rootSignature.ReleaseAndGetAddressOf()));
+		    IID_PPV_ARGS(&rootSignature));
 		if (FAILED(result)) {
 			assert(0);
 		}
 
-		piplineDesc.pRootSignature = rootSignature.Get();
+		pipelineDesc.pRootSignature = rootSignature.Get();
 
 		// グラフィックスパイプラインの生成
 		result = device->CreateGraphicsPipelineState(
-		    &piplineDesc, IID_PPV_ARGS(pipelineState.ReleaseAndGetAddressOf()));
+		    &pipelineDesc, IID_PPV_ARGS(pipelineState.ReleaseAndGetAddressOf()));
 		if (FAILED(result)) {
 			assert(0);
 		}

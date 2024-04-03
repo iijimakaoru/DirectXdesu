@@ -23,6 +23,11 @@ void PipelineManager::Init() {
 	shaders_["PostEffect"].Init(
 	    L"Resources/Shader/PostEffectVS.hlsl", L"Resources/Shader/PostEffectPS.hlsl");
 	pipelines_["PostEffect"].reset(KGPlin::Create(shaders_["PostEffect"], "PostEffect"));
+
+	// Vignette
+	shaders_["Vignette"].Init(
+	    L"Resources/Shader/VignetteVS.hlsl", L"Resources/Shader/VignettePS.hlsl");
+	//pipelines_["Vignette"].reset(KGPlin::Create(shaders_["Vignette"], "Vignette"));
 }
 
 KGPlin* PipelineManager::GetPipeline(std::string pipelineName) { return pipelines_[pipelineName].get(); }

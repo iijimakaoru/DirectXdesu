@@ -22,7 +22,8 @@ private:
 	template<class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
 
 private:
-	D3D12_GRAPHICS_PIPELINE_STATE_DESC piplineDesc;
+	// グラフィックスパイプライン
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC pipelineDesc;
 
 	// パイプラインステート
 	ComPtr<ID3D12PipelineState> pipelineState;
@@ -34,7 +35,7 @@ private:
 	/// シェーダーセット
 	/// </summary>
 	/// <param name="shader"></param>
-	void SetShader(KShader shader);
+	void SetShader(KShader& shader);
 
 	/// <summary>
 	/// ルートパラメータセット
@@ -65,6 +66,8 @@ private:
 	/// <param name="blenddesc"></param>
 	/// <param name="mord"></param>
 	void Blending(D3D12_BLEND_DESC& blenddesc, const int mord = ALPHA);
+
+	void RenderBlending(D3D12_RENDER_TARGET_BLEND_DESC& blendDesc, const int mord = ALPHA);
 
 public:
 	/// <summary>

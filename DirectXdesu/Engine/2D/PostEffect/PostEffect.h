@@ -2,6 +2,7 @@
 #include "MyMath.h"
 #include "KGPlin.h"
 #include "KWinApp.h"
+#include "PipelineManager.h"
 
 /**
  * @file PostEffect.h
@@ -9,41 +10,35 @@
  * @author 飯島 薫
  */
 
-class PostEffect
+class BasePostEffect
 {
 public:// 静的メンバ関数
-	//　静的初期化
+	// 静的初期化
 	static void StaticInit();
 
 public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void Init();
+	virtual void Init();
 
 	/// <summary>
 	/// 描画情報
 	/// </summary>
-	void DrawCommand();
+	virtual void DrawCommand();
 
 	// シーン描画前処理
-	void PreDrawScene();
+	virtual void PreDrawScene();
 
 	// シーン描画後処理
-	void PostDrawScene();
+	virtual void PostDrawScene();
 
 	/// <summary>
 	/// 描画
 	/// </summary>
-	void Draw();
+	virtual void Draw();
 
-	/// <summary>
-	/// パイプラインセッター
-	/// </summary>
-	/// <param name="pipeline_"></param>
-	void SetPipeline(KGPlin* pipeline_);
-
-private:// クラス内でしか使わない関数
+public:// クラス内でしか使わない関数
 	// 頂点生成
 	void CreateVertex();
 
@@ -59,7 +54,7 @@ private:// クラス内でしか使わない関数
 	// RTV用デスクリプタヒープ
 	void CreateRTVDescHeap();
 
-private:
+protected:
 	struct Vertex
 	{
 		KMyMath::Vector3 pos;
@@ -102,7 +97,7 @@ private:
 
 	Vertex vertices_[4];
 
-private:// 静的メンバ変数
+protected:// 静的メンバ変数
 	// デバイス
 	static Microsoft::WRL::ComPtr<ID3D12Device> device;
 
@@ -117,5 +112,7 @@ private:// 静的メンバ変数
 
 	// 画面クリアカラー
 	static const float clearColor[4];
+
+	static PipelineManager* pipelineManager;
 };
 

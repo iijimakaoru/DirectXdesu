@@ -194,6 +194,8 @@
     <ClCompile Include="Application\Movie\StageStart.cpp" />
     <ClCompile Include="Application\Movie\StageClear.cpp" />
     <ClCompile Include="Application\Bullet\Explosion.cpp" />
+    <ClCompile Include="Engine\2D\PostEffect\TestPostEffect.cpp" />
+    <ClCompile Include="Engine\2D\PostEffect\VignettePostEffect.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\BossEnemy\ActState.h" />
@@ -287,6 +289,8 @@
     <ClInclude Include="Application\Movie\StageStart.h" />
     <ClInclude Include="Application\Movie\StageClear.h" />
     <ClInclude Include="Application\Bullet\Explosion.h" />
+    <ClInclude Include="Engine\2D\PostEffect\TestPostEffect.h" />
+    <ClInclude Include="Engine\2D\PostEffect\VignettePostEffect.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DirectXdesu.rc" />

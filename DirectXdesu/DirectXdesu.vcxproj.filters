@@ -525,6 +525,12 @@
     <ClCompile Include="Application\Bullet\Explosion.cpp">
       <Filter>ソース ファイル\Application\Bullet</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\2D\PostEffect\TestPostEffect.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\2D\PostEffect\VignettePostEffect.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Input\KInput.h">
@@ -799,6 +805,12 @@
     </ClInclude>
     <ClInclude Include="Application\Bullet\Explosion.h">
       <Filter>ヘッダー ファイル\Application\Bullet</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\2D\PostEffect\TestPostEffect.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\2D\PostEffect\VignettePostEffect.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

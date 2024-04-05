@@ -32,7 +32,7 @@ void Framework::Init() {
 
 	// 静的初期化
 	Sprite::StaticInit();
-	PostEffect::StaticInit();
+	BasePostEffect::StaticInit();
 
 	// シーンマネージャー生成
 	sceneManager = SceneManager::GetInstance();
@@ -51,9 +51,8 @@ void Framework::Init() {
 	imguiMane.Init();
 
 	// ポストエフェクトテスト
-	postEffect = std::make_unique<PostEffect>();
+	postEffect = std::make_unique<TestPostEffect>();
 	postEffect->Init();
-	postEffect->SetPipeline(PipelineManager::GetInstance()->GetPipeline("Vignette"));
 
 	sceneChange = SceneChange::GetInstance();
 	sceneChange->Init();

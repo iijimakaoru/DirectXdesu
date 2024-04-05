@@ -27,7 +27,7 @@ void PipelineManager::Init() {
 	// Vignette
 	shaders_["Vignette"].Init(
 	    L"Resources/Shader/VignetteVS.hlsl", L"Resources/Shader/VignettePS.hlsl");
-	//pipelines_["Vignette"].reset(KGPlin::Create(shaders_["Vignette"], "Vignette"));
+	pipelines_["Vignette"].reset(KGPlin::Create(shaders_["Vignette"], "Vignette"));
 }
 
 KGPlin* PipelineManager::GetPipeline(std::string pipelineName) { return pipelines_[pipelineName].get(); }

@@ -59,8 +59,6 @@ private:
 	ComPtr<ID3D10Blob> psBlob = nullptr; // ピクセルシェーダーオブジェクト
 	ComPtr<ID3D10Blob> errorBlob = nullptr; // エラーオブジェクト
 
-	//std::map<std::string, ComPtr<ID3D10Blob>> blob;
-
 	// シェーダーバイトコード
 	D3D12_SHADER_BYTECODE vsBytecode{}; // 頂点シェーダーバイトコード
 	D3D12_SHADER_BYTECODE hsBytecode{}; // ハルシェーダーバイトコード
@@ -77,6 +75,7 @@ public:
 	ID3D10Blob* GetDSBlob();
 	ID3D10Blob* GetGSBlob();
 	ID3D10Blob* GetPSBlob();
+	ID3D10Blob* GetErrorBlob();
 	D3D12_SHADER_BYTECODE* GetVSBytecode();
 	D3D12_SHADER_BYTECODE* GetHSBytecode();
 	D3D12_SHADER_BYTECODE* GetDSBytecode();

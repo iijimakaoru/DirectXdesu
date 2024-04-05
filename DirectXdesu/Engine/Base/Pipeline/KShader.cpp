@@ -1,19 +1,16 @@
 #include "KShader.h"
-#include <string>
 #include <assert.h>
+#include <string>
 
-void KShader::Error() 
-{
+void KShader::Error() {
 	// エラーがでたら
-	if (FAILED(result)) 
-	{
+	if (FAILED(result)) {
 		// erroeBlobからエラー内容をstring型にコピー
 		std::string error;
 		error.resize(errorBlob->GetBufferSize());
 
-		std::copy_n((char*)errorBlob->GetBufferPointer(),
-			errorBlob->GetBufferSize(),
-			error.begin());
+		std::copy_n(
+		    (char*)errorBlob->GetBufferPointer(), errorBlob->GetBufferSize(), error.begin());
 		error += "\n";
 		// エラー内容を出力ウィンドウに表示
 		OutputDebugStringA(error.c_str());
@@ -21,72 +18,42 @@ void KShader::Error()
 	}
 }
 
-ID3D10Blob* KShader::GetVSBlob()
-{
-	return vsBlob.Get();
-}
+ID3D10Blob* KShader::GetVSBlob() { return vsBlob.Get(); }
 
-ID3D10Blob* KShader::GetHSBlob()
-{
-	return hsBlob.Get();
-}
+ID3D10Blob* KShader::GetHSBlob() { return hsBlob.Get(); }
 
-ID3D10Blob* KShader::GetDSBlob()
-{
-	return dsBlob.Get();
-}
+ID3D10Blob* KShader::GetDSBlob() { return dsBlob.Get(); }
 
-ID3D10Blob* KShader::GetGSBlob()
-{
-	return gsBlob.Get();
-}
+ID3D10Blob* KShader::GetGSBlob() { return gsBlob.Get(); }
 
-ID3D10Blob* KShader::GetPSBlob()
-{
-	return psBlob.Get();
-}
+ID3D10Blob* KShader::GetPSBlob() { return psBlob.Get(); }
 
-D3D12_SHADER_BYTECODE* KShader::GetVSBytecode()
-{
-	return &vsBytecode;
-}
+ID3D10Blob* KShader::GetErrorBlob() { return errorBlob.Get(); }
 
-D3D12_SHADER_BYTECODE* KShader::GetHSBytecode()
-{
-	return &hsBytecode;
-}
+D3D12_SHADER_BYTECODE* KShader::GetVSBytecode() { return &vsBytecode; }
 
-D3D12_SHADER_BYTECODE* KShader::GetDSBytecode()
-{
-	return &dsBytecode;
-}
+D3D12_SHADER_BYTECODE* KShader::GetHSBytecode() { return &hsBytecode; }
 
-D3D12_SHADER_BYTECODE* KShader::GetGSBytecode()
-{
-	return &gsBytecode;
-}
+D3D12_SHADER_BYTECODE* KShader::GetDSBytecode() { return &dsBytecode; }
 
-D3D12_SHADER_BYTECODE* KShader::GetPSBytecode()
-{
-	return &psBytecode;
-}
+D3D12_SHADER_BYTECODE* KShader::GetGSBytecode() { return &gsBytecode; }
 
-KShader::KShader()
-{
-}
+D3D12_SHADER_BYTECODE* KShader::GetPSBytecode() { return &psBytecode; }
 
-void KShader::Init(LPCWSTR VSFileName, LPCWSTR PSFileName, LPCSTR pEntryPoint, LPCWSTR GSFileName, LPCWSTR DSFileName, LPCWSTR HSFileName)
-{
+KShader::KShader() {}
+
+void KShader::Init(
+    LPCWSTR VSFileName, LPCWSTR PSFileName, LPCSTR pEntryPoint, LPCWSTR GSFileName,
+    LPCWSTR DSFileName, LPCWSTR HSFileName) {
 #pragma region VertexShader
 	//	頂点シェーダファイル読み込み＆コンパイル
 	result = D3DCompileFromFile(
-		VSFileName,									// シェーダファイル名
-		nullptr,
-		D3D_COMPILE_STANDARD_FILE_INCLUDE,					// インクルード可能にする
-		pEntryPoint, "vs_5_0",									// エントリーポイント名、シェーダーモデル指定
-		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,	// デバッグ用設定
-		0,
-		&vsBlob, &errorBlob);
+	    VSFileName, // シェーダファイル名
+	    nullptr,
+	    D3D_COMPILE_STANDARD_FILE_INCLUDE, // インクルード可能にする
+	    pEntryPoint, "vs_5_0", // エントリーポイント名、シェーダーモデル指定
+	    D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, // デバッグ用設定
+	    0, &vsBlob, &errorBlob);
 
 	// エラーなら
 	Error();
@@ -96,17 +63,15 @@ void KShader::Init(LPCWSTR VSFileName, LPCWSTR PSFileName, LPCSTR pEntryPoint, L
 #pragma endregion
 
 #pragma region HS
-	if (HSFileName != nullptr) 
-	{
+	if (HSFileName != nullptr) {
 		//	頂点シェーダファイル読み込み＆コンパイル
 		result = D3DCompileFromFile(
-			HSFileName,									// シェーダファイル名
-			nullptr,
-			D3D_COMPILE_STANDARD_FILE_INCLUDE,					// インクルード可能にする
-			pEntryPoint, "hs_5_0",									// エントリーポイント名、シェーダーモデル指定
-			D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,	// デバッグ用設定
-			0,
-			&hsBlob, &errorBlob);
+		    HSFileName, // シェーダファイル名
+		    nullptr,
+		    D3D_COMPILE_STANDARD_FILE_INCLUDE, // インクルード可能にする
+		    pEntryPoint, "hs_5_0", // エントリーポイント名、シェーダーモデル指定
+		    D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, // デバッグ用設定
+		    0, &hsBlob, &errorBlob);
 
 		// エラーなら
 		Error();
@@ -117,17 +82,15 @@ void KShader::Init(LPCWSTR VSFileName, LPCWSTR PSFileName, LPCSTR pEntryPoint, L
 #pragma endregion
 
 #pragma region DS
-	if (DSFileName != nullptr) 
-	{
+	if (DSFileName != nullptr) {
 		//	頂点シェーダファイル読み込み＆コンパイル
 		result = D3DCompileFromFile(
-			DSFileName,									// シェーダファイル名
-			nullptr,
-			D3D_COMPILE_STANDARD_FILE_INCLUDE,					// インクルード可能にする
-			pEntryPoint, "ds_5_0",									// エントリーポイント名、シェーダーモデル指定
-			D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,	// デバッグ用設定
-			0,
-			&dsBlob, &errorBlob);
+		    DSFileName, // シェーダファイル名
+		    nullptr,
+		    D3D_COMPILE_STANDARD_FILE_INCLUDE, // インクルード可能にする
+		    pEntryPoint, "ds_5_0", // エントリーポイント名、シェーダーモデル指定
+		    D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, // デバッグ用設定
+		    0, &dsBlob, &errorBlob);
 
 		// エラーなら
 		Error();
@@ -138,17 +101,15 @@ void KShader::Init(LPCWSTR VSFileName, LPCWSTR PSFileName, LPCSTR pEntryPoint, L
 #pragma endregion
 
 #pragma region GS
-	if (GSFileName != nullptr) 
-	{
+	if (GSFileName != nullptr) {
 		//	頂点シェーダファイル読み込み＆コンパイル
 		result = D3DCompileFromFile(
-			GSFileName,									// シェーダファイル名
-			nullptr,
-			D3D_COMPILE_STANDARD_FILE_INCLUDE,					// インクルード可能にする
-			pEntryPoint, "gs_5_0",									// エントリーポイント名、シェーダーモデル指定
-			D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,	// デバッグ用設定
-			0,
-			&gsBlob, &errorBlob);
+		    GSFileName, // シェーダファイル名
+		    nullptr,
+		    D3D_COMPILE_STANDARD_FILE_INCLUDE, // インクルード可能にする
+		    pEntryPoint, "gs_5_0", // エントリーポイント名、シェーダーモデル指定
+		    D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, // デバッグ用設定
+		    0, &gsBlob, &errorBlob);
 
 		// エラーなら
 		Error();
@@ -161,13 +122,12 @@ void KShader::Init(LPCWSTR VSFileName, LPCWSTR PSFileName, LPCSTR pEntryPoint, L
 #pragma region PixelShader
 	// ピクセルシェーダの読み込みとコンパイル
 	result = D3DCompileFromFile(
-		PSFileName, // シェーダファイル名
-		nullptr,
-		D3D_COMPILE_STANDARD_FILE_INCLUDE, // インクルード可能にする
-		pEntryPoint, "ps_5_0", // エントリーポイント名、シェーダーモデル指定
-		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, // デバッグ用設定
-		0,
-		&psBlob, &errorBlob);
+	    PSFileName, // シェーダファイル名
+	    nullptr,
+	    D3D_COMPILE_STANDARD_FILE_INCLUDE, // インクルード可能にする
+	    pEntryPoint, "ps_5_0", // エントリーポイント名、シェーダーモデル指定
+	    D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, // デバッグ用設定
+	    0, &psBlob, &errorBlob);
 
 	// エラーなら
 	Error();

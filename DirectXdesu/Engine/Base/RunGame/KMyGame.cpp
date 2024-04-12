@@ -18,18 +18,19 @@ void KMyGame::Update() { Framework::Update(); }
 
 void KMyGame::Draw() {
 	// レンダーテクスチャへの描画
-	postEffect->PreDrawScene();
+	postEffectManager->PreDraw();
 
 	// シーンマネージャーの描画
 	sceneManager->Draw();
 
-	postEffect->PostDrawScene();
+	postEffectManager->PostDraw();
 
 	// 描画開始
 	dx->PreDraw();
 
 	// ポストエフェクト描画
-	postEffect->Draw();
+	//postEffect->Draw();
+	postEffectManager->Draw();
 
 	// Imgui描画
 #ifdef _DEBUG

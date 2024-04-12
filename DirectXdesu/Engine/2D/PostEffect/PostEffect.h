@@ -97,15 +97,15 @@ protected:
 
 	Vertex vertices_[4];
 
+	// パイプライン
+	KGPlin* pipeline = nullptr;
+
 protected:// 静的メンバ変数
 	// デバイス
 	static Microsoft::WRL::ComPtr<ID3D12Device> device;
 
 	// コマンドリスト
 	static Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> cmdList;
-
-	// パイプライン
-	static KGPlin* pipeline;
 
 	// ウィンドウ
 	static KWinApp* window;

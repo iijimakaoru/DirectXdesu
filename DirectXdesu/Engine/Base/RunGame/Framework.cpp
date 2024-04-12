@@ -51,8 +51,8 @@ void Framework::Init() {
 	imguiMane.Init();
 
 	// ポストエフェクトテスト
-	postEffect = std::make_unique<TestPostEffect>();
-	postEffect->Init();
+	postEffectManager = std::make_unique<PostEffectManager>();
+	postEffectManager->Init();
 
 	sceneChange = SceneChange::GetInstance();
 	sceneChange->Init();

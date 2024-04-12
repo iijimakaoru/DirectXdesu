@@ -185,7 +185,7 @@
     <ClCompile Include="Application\Score\ScoreManager.cpp" />
     <ClCompile Include="Application\GameManager.cpp" />
     <ClCompile Include="Engine\Base\Pipeline\PipelineManager.cpp" />
-    <ClCompile Include="Engine\ModelManager.cpp" />
+    <ClCompile Include="Engine\3D\Model\ModelManager.cpp" />
     <ClCompile Include="Application\Bullet\UnitLazer.cpp" />
     <ClCompile Include="Engine\Light\Light.cpp" />
     <ClCompile Include="Engine\3D\Transform.cpp" />
@@ -196,6 +196,7 @@
     <ClCompile Include="Application\Bullet\Explosion.cpp" />
     <ClCompile Include="Engine\2D\PostEffect\TestPostEffect.cpp" />
     <ClCompile Include="Engine\2D\PostEffect\VignettePostEffect.cpp" />
+    <ClCompile Include="Engine\2D\PostEffect\PostEffectManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\BossEnemy\ActState.h" />
@@ -280,7 +281,7 @@
     <ClInclude Include="Application\Score\ScoreManager.h" />
     <ClInclude Include="Application\GameManager.h" />
     <ClInclude Include="Engine\Base\Pipeline\PipelineManager.h" />
-    <ClInclude Include="Engine\ModelManager.h" />
+    <ClInclude Include="Engine\3D\Model\ModelManager.h" />
     <ClInclude Include="Application\Bullet\UnitLazer.h" />
     <ClInclude Include="Engine\Light\Light.h" />
     <ClInclude Include="Engine\3D\Transform.h" />
@@ -291,6 +292,7 @@
     <ClInclude Include="Application\Bullet\Explosion.h" />
     <ClInclude Include="Engine\2D\PostEffect\TestPostEffect.h" />
     <ClInclude Include="Engine\2D\PostEffect\VignettePostEffect.h" />
+    <ClInclude Include="Engine\2D\PostEffect\PostEffectManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DirectXdesu.rc" />

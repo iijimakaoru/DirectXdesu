@@ -1,7 +1,6 @@
 #include "PostEffect.h"
 
 // 静的メンバ変数の実体
-KGPlin* BasePostEffect::pipeline = nullptr;
 Microsoft::WRL::ComPtr<ID3D12Device> BasePostEffect::device;
 Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> BasePostEffect::cmdList;
 KWinApp* BasePostEffect::window = nullptr;

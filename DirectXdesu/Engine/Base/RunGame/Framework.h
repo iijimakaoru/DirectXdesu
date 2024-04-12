@@ -6,13 +6,13 @@
 #include "SceneManager.h"
 #include "ImguiManager.h"
 #include "ASceneFactory.h"
-#include "PostEffect.h"
-#include "TestPostEffect.h"
 #include "VignettePostEffect.h"
 #include "TextureManager.h"
 #include "SceneChange.h"
 
 #include "AudioManager.h"
+
+#include "PostEffectManager.h"
 
 /**
  * @file Framework.h
@@ -64,7 +64,7 @@ protected:
 	ImguiManager imguiMane;
 
 	// ポストエフェクト
-	std::unique_ptr<TestPostEffect> postEffect = nullptr;
+	std::unique_ptr<PostEffectManager> postEffectManager = nullptr;
 
 	SceneChange* sceneChange = nullptr;
 

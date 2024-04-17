@@ -74,6 +74,7 @@ void Player::Init(const float playerHP) {
 	// ダメージ演出フラグ
 	isDamageEffect = false;
 
+	// ピンチフラグ
 	isCrisis = false;
 
 	// ダメージエフェクト

@@ -1,6 +1,9 @@
 #include "PostEffectManager.h"
 
 void PostEffectManager::Init() {
+	multiPostEffect_ = std::make_unique<MultiPostEffect>();
+	multiPostEffect_->Init();
+
 	testPostEffect_ = std::make_unique<TestPostEffect>();
 	testPostEffect_->Init();
 
@@ -9,19 +12,31 @@ void PostEffectManager::Init() {
 }
 
 void PostEffectManager::Draw() {
-	testPostEffect_->Draw();
+	multiPostEffect_->Draw();
 
 	//vignettePostEffect_->Draw();
 }
 
-void PostEffectManager::PreDraw() { 
+void PostEffectManager::PreDraw(SceneManager* scene) { 
 	testPostEffect_->PreDrawScene();
+	scene->Draw();
+	testPostEffect_->PostDrawScene();
 
-	//vignettePostEffect_->PreDrawScene();
+	vignettePostEffect_->PreDrawScene();
+	scene->Draw();
+	vignettePostEffect_->PostDrawScene();
+
+	multiPostEffect_->PreDrawScene(0);
+	testPostEffect_->Draw();
+	multiPostEffect_->PostDrawScene(0);
+
+	multiPostEffect_->PreDrawScene(1);
+	vignettePostEffect_->Draw();
+	multiPostEffect_->PostDrawScene(1);
 }
 
 void PostEffectManager::PostDraw() {
-	testPostEffect_->PostDrawScene();
+	
 
-	//vignettePostEffect_->PostDrawScene();
+	
 }

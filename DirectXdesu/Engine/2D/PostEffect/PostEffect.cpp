@@ -4,7 +4,6 @@
 Microsoft::WRL::ComPtr<ID3D12Device> BasePostEffect::device;
 Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> BasePostEffect::cmdList;
 KWinApp* BasePostEffect::window = nullptr;
-const float BasePostEffect::clearColor[4] = {0.0f, 0.0f, 0.0f, 0.0f};
 PipelineManager* BasePostEffect::pipelineManager = nullptr;
 
 void BasePostEffect::StaticInit() {
@@ -17,7 +16,21 @@ void BasePostEffect::StaticInit() {
 	cmdList = KDirectXCommon::GetInstance()->GetCmdlist();
 }
 
-void BasePostEffect::Init() {}
+void BasePostEffect::Init() {
+	clearColor[0] = {0.0f};
+	clearColor[1] = {0.0f};
+	clearColor[2] = {0.0f};
+	clearColor[3] = {0.0f};
+
+	// 頂点
+	CreateVertex();
+
+	// テクスチャ
+	CreateTextureBuff();
+
+	// 深度バッファ
+	CreateDescHeap();
+}
 
 void BasePostEffect::DrawCommand() {}
 
@@ -140,7 +153,7 @@ void BasePostEffect::CreateTextureBuff() {
 	    &srvDesc, descHeapSRV->GetCPUDescriptorHandleForHeapStart());
 }
 
-void BasePostEffect::CreateDepthBuff() {
+void BasePostEffect::CreateDescHeap() {
 	// RTV用デスクリプタヒープ作成
 	CreateRTVDescHeap();
 

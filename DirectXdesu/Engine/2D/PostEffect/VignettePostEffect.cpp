@@ -1,14 +1,7 @@
 #include "VignettePostEffect.h"
 
 void VignettePostEffect::Init() {
-	// 頂点
-	CreateVertex();
-
-	// テクスチャ
-	CreateTextureBuff();
-
-	// 深度バッファ
-	CreateDepthBuff();
+	BasePostEffect::Init();
 
 	// パイプラインセット
 	pipeline = pipelineManager->GetPipeline("Vignette");

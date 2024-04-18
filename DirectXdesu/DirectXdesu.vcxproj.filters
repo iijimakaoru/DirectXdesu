@@ -534,6 +534,9 @@
     <ClCompile Include="Engine\2D\PostEffect\PostEffectManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\2D\PostEffect\MultiPostEffect.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Input\KInput.h">
@@ -818,6 +821,9 @@
     <ClInclude Include="Engine\2D\PostEffect\PostEffectManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\2D\PostEffect\MultiPostEffect.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DirectXdesu.rc">
@@ -849,6 +855,7 @@
     <None Include="Resources\Shader\Vignette.hlsli">
       <Filter>シェーダー</Filter>
     </None>
+    <None Include="Resources\Shader\MultiTextureHeader.hlsli" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shader\BasicPS.hlsl">
@@ -902,5 +909,7 @@
     <FxCompile Include="Resources\Shader\VignetteVS.hlsl">
       <Filter>シェーダー</Filter>
     </FxCompile>
+    <FxCompile Include="Resources\Shader\MultiTextureVS.hlsl" />
+    <FxCompile Include="Resources\Shader\MultiTexturePS.hlsl" />
   </ItemGroup>
 </Project>

@@ -28,6 +28,11 @@ void PipelineManager::Init() {
 	shaders_["Vignette"].Init(
 	    L"Resources/Shader/VignetteVS.hlsl", L"Resources/Shader/VignettePS.hlsl");
 	pipelines_["Vignette"].reset(KGPlin::Create(shaders_["Vignette"], "Vignette"));
+
+	// MultiTexture
+	shaders_["MultiTexture"].Init(
+	    L"Resources/Shader/MultiTextureVS.hlsl", L"Resources/Shader/MultiTexturePS.hlsl");
+	pipelines_["MultiTexture"].reset(KGPlin::Create(shaders_["MultiTexture"], "MultiTexture"));
 }
 
 KGPlin* PipelineManager::GetPipeline(std::string pipelineName) { return pipelines_[pipelineName].get(); }

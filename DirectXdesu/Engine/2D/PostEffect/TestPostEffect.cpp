@@ -1,14 +1,7 @@
 #include "TestPostEffect.h"
 
 void TestPostEffect::Init() {
-	// 頂点
-	CreateVertex();
-
-	// テクスチャ
-	CreateTextureBuff();
-
-	// 深度バッファ
-	CreateDepthBuff();
+	BasePostEffect::Init();
 
 	// パイプラインセット
 	pipeline = pipelineManager->GetPipeline("PostEffect");

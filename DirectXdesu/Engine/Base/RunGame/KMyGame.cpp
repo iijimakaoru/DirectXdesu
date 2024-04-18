@@ -18,12 +18,10 @@ void KMyGame::Update() { Framework::Update(); }
 
 void KMyGame::Draw() {
 	// レンダーテクスチャへの描画
-	postEffectManager->PreDraw();
+	postEffectManager->PreDraw(sceneManager);
 
 	// シーンマネージャーの描画
-	sceneManager->Draw();
-
-	postEffectManager->PostDraw();
+	//sceneManager->Draw();
 
 	// 描画開始
 	dx->PreDraw();

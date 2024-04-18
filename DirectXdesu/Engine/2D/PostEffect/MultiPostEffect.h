@@ -1,44 +1,22 @@
 #pragma once
-#include "MyMath.h"
 #include "KGPlin.h"
 #include "KWinApp.h"
+#include "MyMath.h"
 #include "PipelineManager.h"
 
-/**
- * @file PostEffect.h
- * @brief ポストエフェクト
- * @author 飯島 薫
- */
-
-class BasePostEffect
-{
-public:// 静的メンバ関数
-	// 静的初期化
-	static void StaticInit();
-
+class MultiPostEffect {
 public:
-	/// <summary>
-	/// 初期化
-	/// </summary>
-	virtual void Init();
+	void Init();
 
-	/// <summary>
-	/// 描画情報
-	/// </summary>
-	virtual void DrawCommand();
+	void PreDrawScene(uint32_t num);
 
-	// シーン描画前処理
-	virtual void PreDrawScene();
+	void DrawCommand();
 
-	// シーン描画後処理
-	virtual void PostDrawScene();
+	void Draw();
 
-	/// <summary>
-	/// 描画
-	/// </summary>
-	virtual void Draw();
+	void PostDrawScene(uint32_t num);
 
-private:// クラス内でしか使わない関数
+private:
 	// 頂点生成
 	void CreateVertex();
 
@@ -46,6 +24,8 @@ private:// クラス内でしか使わない関数
 	void CreateTextureBuff();
 
 	// 深度バッファ
+	void CreateDepthBuff();
+
 	void CreateDescHeap();
 
 	// DSV用デスクリプタヒープ
@@ -54,9 +34,8 @@ private:// クラス内でしか使わない関数
 	// RTV用デスクリプタヒープ
 	void CreateRTVDescHeap();
 
-protected:
-	struct Vertex
-	{
+private:
+	struct Vertex {
 		KMyMath::Vector3 pos;
 		KMyMath::Vector2 uv;
 	};
@@ -73,7 +52,7 @@ protected:
 	Microsoft::WRL::ComPtr<ID3D12Resource> indexBuff = nullptr;
 
 	// テクスチャバッファ
-	Microsoft::WRL::ComPtr<ID3D12Resource> texBuff = nullptr;
+	Microsoft::WRL::ComPtr<ID3D12Resource> texBuff[2];
 
 	// デスクリプタヒープ
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> descHeapSRV;
@@ -95,16 +74,15 @@ protected:
 	// 画面クリアカラー
 	float clearColor[4];
 
-protected:// 静的メンバ変数
+private: // 静的メンバ変数
 	// デバイス
-	static Microsoft::WRL::ComPtr<ID3D12Device> device;
+	Microsoft::WRL::ComPtr<ID3D12Device> device;
 
 	// コマンドリスト
-	static Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> cmdList;
+	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> cmdList;
 
 	// ウィンドウ
-	static KWinApp* window;
+	KWinApp* window;
 
-	static PipelineManager* pipelineManager;
+	PipelineManager* pipelineManager;
 };
-

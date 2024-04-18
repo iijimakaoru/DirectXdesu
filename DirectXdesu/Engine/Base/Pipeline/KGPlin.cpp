@@ -783,6 +783,98 @@ void KGPlin::CreatePipelineAll(KShader shader, std::string shaderName) {
 			assert(0);
 		}
 	}
+	// マルチテクスチャ
+	else if (shaderName == "MultiTexture") {
+		D3D12_INPUT_ELEMENT_DESC inputLayout[] = {
+		    {
+             // xy座標
+		        "POSITION",           // セマンティック名
+		        0, // 同じセマンティック名が複数あるときに使うインデックス
+		        DXGI_FORMAT_R32G32B32_FLOAT, // 要素数とビット数を表す
+		        0, // 入力スロットインデックス
+		        D3D12_APPEND_ALIGNED_ELEMENT, // データのオフセット
+		        D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, // 入力データ種別
+		        0 // 一度に描画するインスタンス数
+		    },
+		    {// uv座標(1行で書いたほうが見やすい)
+		     "TEXCOORD", 0,      DXGI_FORMAT_R32G32_FLOAT,                   0,                D3D12_APPEND_ALIGNED_ELEMENT,
+		     D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,		                                                                                                                                                    0		                                                     },
+		};
+
+		// サンプルマスク
+		pipelineDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK; // 標準設定
+
+		// ラスタライザステート
+		pipelineDesc.RasterizerState.FillMode = D3D12_FILL_MODE_SOLID;
+		pipelineDesc.RasterizerState.CullMode = D3D12_CULL_MODE_NONE;
+		pipelineDesc.RasterizerState.DepthClipEnable = true;
+
+		// デスクリプタレンジ
+		CD3DX12_DESCRIPTOR_RANGE descRangeSRV0;
+		descRangeSRV0.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0); // t0レジスタ
+		CD3DX12_DESCRIPTOR_RANGE descRangeSRV1;
+		descRangeSRV1.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 1); // t1レジスタ
+
+		// ルートパラメータ
+		CD3DX12_ROOT_PARAMETER rootparams[3] = {};
+		// テクスチャバッファ1番
+		rootparams[0].InitAsConstantBufferView(0, 0, D3D12_SHADER_VISIBILITY_ALL);
+		// 定数バッファ0番
+		rootparams[1].InitAsDescriptorTable(1, &descRangeSRV0, D3D12_SHADER_VISIBILITY_ALL);
+		// 定数バッファ1番
+		rootparams[2].InitAsDescriptorTable(1, &descRangeSRV1, D3D12_SHADER_VISIBILITY_ALL);
+
+		// スタティックサンプラー
+		CD3DX12_STATIC_SAMPLER_DESC samplerDesc =
+		    CD3DX12_STATIC_SAMPLER_DESC(0, D3D12_FILTER_MIN_MAG_MIP_LINEAR);
+		samplerDesc.AddressU = D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
+		samplerDesc.AddressV = D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
+		samplerDesc.AddressW = D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
+
+		// ルートシグネチャの設定
+		CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC rootSignatureDesc;
+		rootSignatureDesc.Init_1_0(
+		    _countof(rootparams), rootparams, 1, &samplerDesc,
+		    D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+
+		// バージョン自動判定のシリアライズ
+		result = D3DX12SerializeVersionedRootSignature(
+		    &rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1_0, &rootSigBlob, &errorBlob);
+		if (FAILED(result)) {
+			assert(0);
+		}
+
+		// ルートシグネチャの生成
+		result = device->CreateRootSignature(
+		    0, rootSigBlob->GetBufferPointer(), rootSigBlob->GetBufferSize(),
+		    IID_PPV_ARGS(&rootSignature));
+		if (FAILED(result)) {
+			assert(0);
+		}
+
+		pipelineDesc.pRootSignature = rootSignature.Get();
+
+		// 頂点レイアウトの設定
+		pipelineDesc.InputLayout.pInputElementDescs = inputLayout;
+		pipelineDesc.InputLayout.NumElements = _countof(inputLayout);
+
+		// 図形の形状設定（三角形）
+		pipelineDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+
+		pipelineDesc.NumRenderTargets = 1;                            // 描画対象は1つ
+		pipelineDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB; // 0～255指定のRGBA(SRGB版)
+		pipelineDesc.SampleDesc.Count = 1; // 1ピクセルにつき1回サンプリング
+
+		// レンダーターゲットのブレンド設定
+		D3D12_RENDER_TARGET_BLEND_DESC& blendDesc = pipelineDesc.BlendState.RenderTarget[0];
+		RenderBlending(blendDesc, BlendMord::ADD);
+
+		// グラフィックスパイプラインの生成
+		result = device->CreateGraphicsPipelineState(&pipelineDesc, IID_PPV_ARGS(&pipelineState));
+		if (FAILED(result)) {
+			assert(0);
+		}
+	}
 	// なんもシェーダー入ってないとき
 	else {
 		assert(0);

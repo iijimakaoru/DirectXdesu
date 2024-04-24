@@ -1,8 +1,8 @@
 #pragma once
-#include "TestPostEffect.h"
-#include "VignettePostEffect.h"
 #include "MultiPostEffect.h"
 #include "SceneManager.h"
+#include "TestPostEffect.h"
+#include "VignettePostEffect.h"
 
 class PostEffectManager {
 public:
@@ -14,8 +14,12 @@ public:
 
 	void PostDraw();
 
+	enum PMode { Normal, Vignette };
+
+public:
+	static PMode postMode;
+
 private:
 	std::unique_ptr<TestPostEffect> testPostEffect_ = nullptr;
 	std::unique_ptr<VignettePostEffect> vignettePostEffect_ = nullptr;
-	std::unique_ptr<MultiPostEffect> multiPostEffect_ = nullptr;
 };

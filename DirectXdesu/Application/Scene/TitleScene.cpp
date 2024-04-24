@@ -12,6 +12,8 @@
 #include "ModelManager.h"
 #include "PipelineManager.h"
 
+#include "PostEffectManager.h"
+
 TitleScene::~TitleScene() { Final(); }
 
 void TitleScene::LoadResources() {
@@ -114,6 +116,7 @@ void TitleScene::Update() {
 			if (!sceneChange->GetIsEffect()) {
 				if (input->IsTrigger(DIK_SPACE) || input->GetPadButtonDown(XINPUT_GAMEPAD_A)) {
 					audioManager->SEPlay_wav("selectSE.wav");
+					flashAlpha = 0.0f;
 					camera->StartSortie();
 					goGame = true;
 				}

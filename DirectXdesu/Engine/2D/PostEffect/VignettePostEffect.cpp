@@ -3,6 +3,8 @@
 void VignettePostEffect::Init() {
 	BasePostEffect::Init();
 
+	CreateConstBuff();
+
 	// パイプラインセット
 	pipeline = pipelineManager->GetPipeline("Vignette");
 }
@@ -15,7 +17,8 @@ void VignettePostEffect::DrawCommand() {
 	D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle = descHeapSRV->GetGPUDescriptorHandleForHeapStart();
 	// SRVヒープの先頭にあるSRVをルートパラメータ1番に設定
 	cmdList->SetGraphicsRootDescriptorTable(1, srvGpuHandle);
-
+	// 定数バッファビュー(CBV)の設定コマンド
+	cmdList->SetGraphicsRootConstantBufferView(0, constBuff->GetGPUVirtualAddress());
 	// 頂点バッファビューの設定コマンド
 	cmdList->IASetVertexBuffers(0, 1, &vbView);
 }
@@ -73,4 +76,38 @@ void VignettePostEffect::Draw() {
 
 	// 描画コマンド
 	cmdList->DrawInstanced(_countof(vertices_), 1, 0, 0);
+}
+
+void VignettePostEffect::CreateConstBuff() {
+	// 定数バッファ生成用
+	D3D12_HEAP_PROPERTIES cbHeapProp{};       // ヒープの設定
+	cbHeapProp.Type = D3D12_HEAP_TYPE_UPLOAD; // GPUへの転送用
+
+	// リソース設定
+	D3D12_RESOURCE_DESC cbResourceDesc{};
+	cbResourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
+	cbResourceDesc.Width = (sizeof(ConstBuff) + 0xff) & ~0xff; // 256バイトアライメント
+	cbResourceDesc.Height = 1;
+	cbResourceDesc.DepthOrArraySize = 1;
+	cbResourceDesc.MipLevels = 1;
+	cbResourceDesc.SampleDesc.Count = 1;
+	cbResourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+
+	// 定数バッファの生成
+	result = device->CreateCommittedResource(
+	    &cbHeapProp, // ヒープ設定
+	    D3D12_HEAP_FLAG_NONE,
+	    &cbResourceDesc, // リソース設定
+	    D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
+	    IID_PPV_ARGS(&constBuff));
+	assert(SUCCEEDED(result));
+
+	// 定数バッファのマッピング
+	ConstBuff* constMap;
+	result = constBuff->Map(0, nullptr, (void**)&constMap); // マッピング
+	// 値の代入
+	constMap->colorRGB = KMyMath::Vector3(1.0f, 0.0f, 0.0f);
+	constMap->vignetteNum = 0.4f;
+	constBuff->Unmap(0, nullptr);
+	assert(SUCCEEDED(result));
 }

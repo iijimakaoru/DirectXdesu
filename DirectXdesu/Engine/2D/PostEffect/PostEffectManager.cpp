@@ -1,6 +1,6 @@
 #include "PostEffectManager.h"
 
-PostEffectManager::PMode PostEffectManager::postMode = PostEffectManager::PMode::Vignette;
+PostEffectManager::PMode PostEffectManager::postMode = PostEffectManager::PMode::Normal;
 
 void PostEffectManager::Init() {
 	testPostEffect_ = std::make_unique<TestPostEffect>();

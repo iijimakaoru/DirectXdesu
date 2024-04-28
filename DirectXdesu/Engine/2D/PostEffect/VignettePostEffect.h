@@ -22,4 +22,16 @@ public:
 	/// 描画
 	/// </summary>
 	void Draw() override;
+
+	struct ConstBuff {
+		KMyMath::Vector3 colorRGB;
+		float vignetteNum;
+	};
+
+private:
+	void CreateConstBuff();
+
+private:
+	// 定数バッファ
+	Microsoft::WRL::ComPtr<ID3D12Resource> constBuff = nullptr;
 };

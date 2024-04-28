@@ -10,9 +10,9 @@ float4 main(VSOutput input) : SV_TARGET
     
     //‰~‚Ì”ÍˆÍ‚ðŒvŽZ
     float vignette = length(float2(0.5,0.5) - input.uv);
-    vignette = clamp(vignette - 0.4, 0, 1);
+    vignette = clamp(vignette - vignetteNum, 0, 1);
     
-    textureColor.rgb += (vignette) * float3(1.0, 0.0, 0.0);
+    textureColor.rgb += (vignette) * colorRGB;
 
     return float4(textureColor.rgb, 1.0);
 }

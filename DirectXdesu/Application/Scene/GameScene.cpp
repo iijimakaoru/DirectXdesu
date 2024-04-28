@@ -105,6 +105,7 @@ void GameScene::Init() {
 
 	// ボスバトル開始座標
 	bossBattleStartPos = 500;
+	bossBattleTime = 1000;
 
 	ScoreManager::GetInstance()->Init();
 	ScoreManager::GetInstance()->ResetScore();
@@ -455,6 +456,8 @@ void GameScene::GamePlay() {
 	}
 
 	if (!isPose) {
+		bossBattleTimer++;
+
 		// ボスバトル開始判定
 		BossBattleStart();
 

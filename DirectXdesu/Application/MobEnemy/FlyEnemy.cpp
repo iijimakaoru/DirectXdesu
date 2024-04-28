@@ -6,7 +6,8 @@
 
 FlyEnemy* FlyEnemy::Create(
     KModel* model_, KGPlin* pipeline_, const KMyMath::Vector3& startPos_,
-    const KMyMath::Vector2& endPos_, const float& speed_) {
+    const KMyMath::Vector2& endPos_, const float& speed_, const uint32_t& lifeTime_,
+    const KMyMath::Vector2& wStartPos_, const KMyMath::Vector2& wEndPos_) {
 	// インスタンス生成
 	FlyEnemy* newEnemy = new FlyEnemy();
 	if (newEnemy == nullptr) {
@@ -19,7 +20,10 @@ FlyEnemy* FlyEnemy::Create(
 	// 初期位置セット
 	newEnemy->SetStartPos(startPos_);
 	newEnemy->SetEndPos(endPos_);
+	newEnemy->SetWStartPos(wStartPos_);
+	newEnemy->SetWEndPos(wEndPos_);
 	newEnemy->SetSpeed(speed_);
+	newEnemy->SetLifeTime(lifeTime_);
 	newEnemy->object3d->GetTransform().SetPos(startPos_);
 
 	return newEnemy;
@@ -39,27 +43,23 @@ void FlyEnemy::Init(KModel* model_, KGPlin* pipeline_) {
 
 void FlyEnemy::Update(ViewProjection* viewPro, const KMyMath::Vector3& cameraPos) {
 	// 出現演出
-	if (isAppear) {
+	switch (enemyMode) {
+	case FlyEnemy::AppearMode:
 		Appear();
-	} else {
-		if (!isDead && !isDelete) {
-			if (object3d->GetTransform().GetPos().z >= cameraPos.z) {
-				Attack();
-			}
-
-			const float cameraDistance = 50.0f;
-
-			if (object3d->GetTransform().GetPos().z <=
-			    min(object3d->GetTransform().GetPos().z,
-			        cameraPos.z - cameraDistance)) {
-				isDelete = true;
-			}
-		}
-
-		if (isDead) {
-			ScoreManager::GetInstance()->AddMobScore(100);
-			ScoreManager::GetInstance()->AddDestoryCount();
-		}
+		break;
+	case FlyEnemy::BattleMode:
+		Battle(cameraPos);
+		break;
+	case FlyEnemy::WithdrawalMode:
+		Withdrawal();
+		break;
+	default:
+		break;
+	}
+	
+	if (isDead) {
+		ScoreManager::GetInstance()->AddMobScore(100);
+		ScoreManager::GetInstance()->AddDestoryCount();
 	}
 
 	object3d->GetTransform().AddSetPos({0, 0, moveSpeed});
@@ -110,12 +110,45 @@ void FlyEnemy::Appear() {
 	     object3d->GetTransform().GetPos().z});
 
 	if (easeTimer >= max(easeTimer, easeTime)) {
-		isAppear = false;
+		enemyMode = BattleMode;
+		easeTimer = 0;
+	}
+}
+
+void FlyEnemy::Battle(const KMyMath::Vector3& cameraPos) {
+	if (!isDead && !isDelete) {
+		lifeTimer++;
+		if (object3d->GetTransform().GetPos().z >= cameraPos.z) {
+			Attack();
+		}
+
+		if (lifeTimer >= lifeTime) {
+			enemyMode = WithdrawalMode;
+		}
+	}
+}
+
+void FlyEnemy::Withdrawal() {
+	easeTimer += 1.0f;
+
+	object3d->GetTransform().SetPos(
+	    {MyEase::InCubicFloat(wStartPos.x, wEndPos.x, easeTimer / easeTime),
+	     MyEase::InCubicFloat(wStartPos.y, wEndPos.y, easeTimer / easeTime),
+	     object3d->GetTransform().GetPos().z});
+
+	if (easeTimer >= max(easeTimer, easeTime)) {
+		isDelete = true;
 	}
 }
 
 void FlyEnemy::SetStartPos(const KMyMath::Vector3& startPos_) { startPos = startPos_; }
 
+void FlyEnemy::SetWStartPos(const KMyMath::Vector2& wStartPos_) { wStartPos = wStartPos_; }
+
 void FlyEnemy::SetEndPos(const KMyMath::Vector2& endPos_) { endPos = endPos_; }
 
+void FlyEnemy::SetWEndPos(const KMyMath::Vector2& wEndPos_) { wEndPos = wEndPos_; }
+
 void FlyEnemy::SetSpeed(const float& speed_) { moveSpeed = speed_; }
+
+void FlyEnemy::SetLifeTime(const uint32_t& lifeTime_) { lifeTime = lifeTime_; }

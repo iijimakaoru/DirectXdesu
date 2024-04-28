@@ -134,21 +134,36 @@ void EnemyManager::UpdateEnemyPopCommands() {
 
 			// 該当するタイプの敵生成
 			if (enemyType == MobEnemy::EnemysType::Fly) {
+				// 出現終点
 				// x座標
 				getline(line_stream, word, ',');
-				float _x = static_cast<float>(std::atof(word.c_str()));
-
+				float aX = static_cast<float>(std::atof(word.c_str()));
 				// y座標
 				getline(line_stream, word, ',');
-				float _y = static_cast<float>(std::atof(word.c_str()));
+				float aY = static_cast<float>(std::atof(word.c_str()));
+
+				// 生存時間
+				getline(line_stream, word, ',');
+				uint32_t fLifeTime = static_cast<uint32_t>(std::atof(word.c_str()));
+
+				// 撤退終点
+				// x座標
+				getline(line_stream, word, ',');
+				float wX = static_cast<float>(std::atof(word.c_str()));
+				// y座標
+				getline(line_stream, word, ',');
+				float wY = static_cast<float>(std::atof(word.c_str()));
 
 				// 生成
 				newMEnemy.reset(FlyEnemy::Create(
 				    ModelManager::GetInstance()->GetModels("MobEnemy1"), // モデルセット
 				    PipelineManager::GetInstance()->GetPipeline("Obj"), // パイプラインセット
 					{x, y, z},											 // 生成場所
-				    {_x, _y},											 // 最終地点
-				    RailCamera::GetSpeed()								 // 移動スピード
+				    {aX, aY},											 // 最終地点
+				    RailCamera::GetSpeed(),								 // 移動スピード
+					fLifeTime,											 //	生存時間
+				    {aX, aY},											 // 撤退始点
+				    {wX, wY}                                             // 撤退始点
 				    ));
 
 				// 自機狙い弾用にプレイヤーセット

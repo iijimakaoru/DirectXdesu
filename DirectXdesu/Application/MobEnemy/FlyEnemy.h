@@ -7,9 +7,10 @@
  * @author 飯島 薫
  */
 
-class FlyEnemy : public MobEnemy
-{
+class FlyEnemy : public MobEnemy {
 public:
+	enum Mode { AppearMode, BattleMode, WithdrawalMode };
+
 	/// <summary>
 	/// 生成
 	/// </summary>
@@ -21,7 +22,8 @@ public:
 	/// <returns></returns>
 	static FlyEnemy* Create(
 	    KModel* model_, KGPlin* pipeline_, const KMyMath::Vector3& startPos_,
-	    const KMyMath::Vector2& endPos_, const float& speed_);
+	    const KMyMath::Vector2& endPos_, const float& speed_, const uint32_t& lifeTime_,
+	    const KMyMath::Vector2& wStartPos_, const KMyMath::Vector2& wEndPos_);
 
 public:
 	/// <summary>
@@ -52,18 +54,30 @@ public:
 	/// </summary>
 	void Appear();
 
+	/// <summary>
+	/// 戦闘
+	/// </summary>
+	void Battle(const KMyMath::Vector3& cameraPos);
+
+	/// <summary>
+	/// 撤退
+	/// </summary>
+	void Withdrawal();
+
 private:
 	/// <summary>
 	/// スタートポジション
 	/// </summary>
 	/// <param name="startPos_"></param>
 	void SetStartPos(const KMyMath::Vector3& startPos_);
+	void SetWStartPos(const KMyMath::Vector2& wStartPos_);
 
 	/// <summary>
 	/// エンドポジション
 	/// </summary>
 	/// <param name="endPos_"></param>
 	void SetEndPos(const KMyMath::Vector2& endPos_);
+	void SetWEndPos(const KMyMath::Vector2& wEndPos_);
 
 	/// <summary>
 	/// スピードセット
@@ -71,21 +85,29 @@ private:
 	/// <param name="speed"></param>
 	void SetSpeed(const float& speed);
 
+	void SetLifeTime(const uint32_t& lifeTime_);
+
 private:
+	Mode enemyMode = Mode::AppearMode;
+
 	// イージングタイマー
 	float easeTimer = 0;
 
 	// 上限
 	const float easeTime = 30;
 
-	// 最初のスケール
+	// 最初の場所
 	KMyMath::Vector3 startPos;
+	KMyMath::Vector2 wStartPos;
 
-	// 最終スケール
+	// 最終の場所
 	KMyMath::Vector2 endPos;
+	KMyMath::Vector2 wEndPos;
 
 	// 出現演出中かどうか
 	bool isAppear = false;
+
+	bool isWithdrawal = false;
 
 	// スピード
 	float moveSpeed = 0;
@@ -94,4 +116,3 @@ private:
 	uint32_t lifeTime = 0;
 	uint32_t lifeTimer = 0;
 };
-

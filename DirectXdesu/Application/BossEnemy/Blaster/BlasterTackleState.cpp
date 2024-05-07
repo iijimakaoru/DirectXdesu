@@ -1,8 +1,8 @@
 #include "BlasterTackleState.h"
 #include "Blaster.h"
+#include "BlasterStandState.h"
 #include "Ease.h"
 #include "Player.h"
-#include "BlasterStandState.h"
 
 BlasterTackleState::BlasterTackleState() { actsPhase = CubeClose; }
 
@@ -47,6 +47,9 @@ void BlasterTackleState::TackleVec() {
 
 	// 差分ベクトル
 	tackleVec = pPos - ePos;
+
+	// 2Dレティクルの更新
+	blaster->reticle2d->Update(blaster->viewPro, pPos);
 }
 
 void BlasterTackleState::Tackle() {
@@ -287,6 +290,7 @@ void BlasterTackleState::GoTackleAct() {
 
 void BlasterTackleState::BackPosAct() {
 	Blaster* blaster = Blaster::nowBlaster;
+	blaster->isReticle = false;
 
 	blaster->SetIsMuteki(false);
 

@@ -60,12 +60,17 @@ void Blaster::Init(
 	units[6]->GetTransform().SetPos({3.0f, -3.0f, -3.0f});
 	units[7]->GetTransform().SetPos({-3.0f, -3.0f, -3.0f});
 
+	// レティクル
+	reticle2d = std::make_unique<Reticle2D>();
+	reticle2d->Init();
+
 	blasterActState = std::make_unique<BlasterStandState>();
 }
 
 void Blaster::Update(
     ViewProjection* viewPro_, const KMyMath::Vector3& cameraPos, bool isBossMovie_) {
 	isBossMovie = isBossMovie_;
+	viewPro = viewPro_;
 
 	if (!isDead) {
 		if (isBossMovie) {
@@ -79,6 +84,7 @@ void Blaster::Update(
 					break;
 				case 2:
 					blasterActState = std::make_unique<BlasterTackleState>();
+					isReticle = true;
 					break;
 				case 3:
 					blasterActState = std::make_unique<BlasterUnitLazer>();
@@ -123,6 +129,32 @@ void Blaster::Draw() {
 
 	for (size_t i = 0; i < 8; i++) {
 		units[i]->Draw();
+	}
+}
+
+void Blaster::UIDraw() {
+	if (isBossMovie || isDead) {
+		return;
+	}
+
+	float width = static_cast<float>(KWinApp::GetInstance()->GetWindowSizeW());
+
+	const KMyMath::Vector2 hpTexSize = {672.0f, 22.0f};
+
+	const float sizeX = hpTexSize.x / maxHP;
+	const float sizeY = hpTexSize.y;
+
+	HPBarUI->Draw(hpbarTex, {width / 2.0f, HPPos.y}, {1.0f, 1.0f}, 0, {1.0f, 1.0f, 1.0f, 1.0f});
+
+	const KMyMath::Vector2 HPUIPos = {(width / 2) - (hpTexSize.x / 2), HPPos.y};
+
+	HPrectUI->Draw(
+	    hpTex, HPUIPos, {oldHP * sizeX, sizeY}, 0, {1, 0, 0, 0.3f}, false, false, {0, 0.5f});
+
+	HPUI->Draw(hpTex, HPUIPos, {HP * sizeX, sizeY}, 0, {1, 0, 0, 1}, false, false, {0, 0.5f});
+
+	if (isReticle) {
+		reticle2d->Draw();
 	}
 }
 

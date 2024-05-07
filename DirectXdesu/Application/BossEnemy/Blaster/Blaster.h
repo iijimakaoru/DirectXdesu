@@ -1,6 +1,8 @@
 #pragma once
 #include "BossEnemy.h"
 #include "KInput.h"
+#include "Reticle2D.h"
+#include "Reticle3D.h"
 
 /**
  * @file Blaster.h
@@ -24,8 +26,7 @@ public:
 	/// <param name="HP"></param>
 	/// <param name="spritePipeline_"></param>
 	/// <returns></returns>
-	static Blaster* Create(
-	    KGPlin* pipeline_, const KMyMath::Vector3& pos, KGPlin* spritePipeline_);
+	static Blaster* Create(KGPlin* pipeline_, const KMyMath::Vector3& pos, KGPlin* spritePipeline_);
 
 public:
 	/// <summary>
@@ -36,8 +37,7 @@ public:
 	/// <param name="initPos"></param>
 	/// <param name="HP_"></param>
 	/// <param name="spritePipeline_"></param>
-	void Init(
-	    KGPlin* pipeline_, const KMyMath::Vector3& initPos, KGPlin* spritePipeline_) override;
+	void Init(KGPlin* pipeline_, const KMyMath::Vector3& initPos, KGPlin* spritePipeline_) override;
 
 	/// <summary>
 	/// 更新
@@ -50,6 +50,8 @@ public:
 	/// 描画
 	/// </summary>
 	void Draw() override;
+
+	void UIDraw() override;
 
 	/// <summary>
 	/// 当たり判定
@@ -100,4 +102,11 @@ private:
 	bool isStand = false;
 
 	size_t actSelect = 0;
+public:
+	// 最終的なレティクル
+	std::unique_ptr<Reticle2D> reticle2d = nullptr;
+	bool isReticle = true;
+
+	//
+	ViewProjection* viewPro = nullptr;
 };

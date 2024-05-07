@@ -23,6 +23,12 @@ public:
 	/// </summary>
 	void Draw() override;
 
+	void Update();
+
+	static void SetRGB(const KMyMath::Vector3& RGB);
+
+	static void SetVignetteNum(const float& num);
+
 	struct ConstBuff {
 		KMyMath::Vector3 colorRGB;
 		float vignetteNum;
@@ -34,4 +40,8 @@ private:
 private:
 	// 定数バッファ
 	Microsoft::WRL::ComPtr<ID3D12Resource> constBuff = nullptr;
+
+public:
+	static KMyMath::Vector3 colorRGB;
+	static float vignetteNum;
 };

@@ -8,6 +8,8 @@ class PostEffectManager {
 public:
 	void Init();
 
+	void Update();
+
 	void Draw();
 
 	void PreDraw(SceneManager* scene);
@@ -15,6 +17,8 @@ public:
 	void PostDraw();
 
 	enum PMode { Normal, Vignette };
+
+	static void SetPostMode(const PMode& pMode);
 
 public:
 	static PMode postMode;

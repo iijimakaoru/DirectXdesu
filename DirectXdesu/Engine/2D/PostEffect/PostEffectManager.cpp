@@ -10,6 +10,8 @@ void PostEffectManager::Init() {
 	vignettePostEffect_->Init();
 }
 
+void PostEffectManager::Update() { vignettePostEffect_->Update(); }
+
 void PostEffectManager::Draw() {
 	switch (postMode) {
 	case PostEffectManager::Normal:
@@ -23,7 +25,7 @@ void PostEffectManager::Draw() {
 	}
 }
 
-void PostEffectManager::PreDraw(SceneManager* scene) { 
+void PostEffectManager::PreDraw(SceneManager* scene) {
 	switch (postMode) {
 	case PostEffectManager::Normal:
 		testPostEffect_->PreDrawScene();
@@ -40,8 +42,6 @@ void PostEffectManager::PreDraw(SceneManager* scene) {
 	}
 }
 
-void PostEffectManager::PostDraw() {
-	
+void PostEffectManager::PostDraw() {}
 
-	
-}
+void PostEffectManager::SetPostMode(const PMode& pMode) { postMode = pMode; }

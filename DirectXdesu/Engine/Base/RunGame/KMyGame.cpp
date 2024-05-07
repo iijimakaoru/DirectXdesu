@@ -14,20 +14,23 @@ void KMyGame::Init() {
 	SceneManager::GetInstance()->ChangeScene("TITLE");
 }
 
-void KMyGame::Update() { Framework::Update(); }
+void KMyGame::Update() {
+	Framework::Update();
+	postEffectManager->Update();
+}
 
 void KMyGame::Draw() {
 	// レンダーテクスチャへの描画
 	postEffectManager->PreDraw(sceneManager);
 
 	// シーンマネージャーの描画
-	//sceneManager->Draw();
+	// sceneManager->Draw();
 
 	// 描画開始
 	dx->PreDraw();
 
 	// ポストエフェクト描画
-	//postEffect->Draw();
+	// postEffect->Draw();
 	postEffectManager->Draw();
 
 	// Imgui描画

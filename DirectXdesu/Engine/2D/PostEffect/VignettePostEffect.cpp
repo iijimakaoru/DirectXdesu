@@ -1,5 +1,8 @@
 #include "VignettePostEffect.h"
 
+KMyMath::Vector3 VignettePostEffect::colorRGB = {1, 0, 0};
+float VignettePostEffect::vignetteNum = 0.1f;
+
 void VignettePostEffect::Init() {
 	BasePostEffect::Init();
 
@@ -78,6 +81,12 @@ void VignettePostEffect::Draw() {
 	cmdList->DrawInstanced(_countof(vertices_), 1, 0, 0);
 }
 
+void VignettePostEffect::Update() { CreateConstBuff(); }
+
+void VignettePostEffect::SetRGB(const KMyMath::Vector3& RGB) { colorRGB = RGB; }
+
+void VignettePostEffect::SetVignetteNum(const float& num) { vignetteNum = num; }
+
 void VignettePostEffect::CreateConstBuff() {
 	// 定数バッファ生成用
 	D3D12_HEAP_PROPERTIES cbHeapProp{};       // ヒープの設定
@@ -98,16 +107,15 @@ void VignettePostEffect::CreateConstBuff() {
 	    &cbHeapProp, // ヒープ設定
 	    D3D12_HEAP_FLAG_NONE,
 	    &cbResourceDesc, // リソース設定
-	    D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
-	    IID_PPV_ARGS(&constBuff));
+	    D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&constBuff));
 	assert(SUCCEEDED(result));
 
 	// 定数バッファのマッピング
 	ConstBuff* constMap;
 	result = constBuff->Map(0, nullptr, (void**)&constMap); // マッピング
 	// 値の代入
-	constMap->colorRGB = KMyMath::Vector3(1.0f, 0.0f, 0.0f);
-	constMap->vignetteNum = 0.4f;
+	constMap->colorRGB = colorRGB;
+	constMap->vignetteNum = vignetteNum;
 	constBuff->Unmap(0, nullptr);
 	assert(SUCCEEDED(result));
 }

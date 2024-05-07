@@ -7,6 +7,9 @@
 #include "PipelineManager.h"
 #include "ScoreManager.h"
 
+#include "PostEffectManager.h"
+#include "VignettePostEffect.h"
+
 const float Player::moveSpeed = 0.48f;
 const KMyMath::Vector2 Player::rotLimit = {35.0f, 25.0f};
 const KMyMath::Vector2 Player::posLimitMin = {-15.0f, -4.0f};
@@ -453,10 +456,12 @@ void Player::HPEffect() {
 void Player::DamageEffect() {
 	// ダメージエフェクト処理
 	if (isDamageEffect) {
-		dAlpha -= 0.1f;
+		dAlpha += 0.02f;
+		VignettePostEffect::SetVignetteNum(dAlpha);
 
-		if (dAlpha < 0) {
+		if (dAlpha > 0.8f) {
 			isDamageEffect = false;
+			PostEffectManager::SetPostMode(PostEffectManager::Normal);
 		}
 	}
 
@@ -566,11 +571,6 @@ void Player::UIDraw() {
 	operation->Draw(
 	    operationTex, operationPos, {1.0f, 1.0f}, 0.0f, {1.0f, 1.0f, 1.0f, 1.0f}, false, false,
 	    {1.0f, 1.0f});
-
-	// ダメージエフェクト描画
-	if (isDamageEffect) {
-		damageEffect->Draw(damageTex, {1280 / 2, 720 / 2}, {1, 1}, 0.0f, {1, 0, 0, dAlpha});
-	}
 }
 
 void Player::SetParent(const Transform* parent_) { object3d->SetParent(parent_); }
@@ -635,7 +635,9 @@ void Player::OnCollision(Collider* collider) {
 	oldHpTimer = 0;
 	hpEaseTimer = 0;
 	isDamageEffect = true;
-	dAlpha = 1;
+	dAlpha = 0.1f;
+	VignettePostEffect::SetVignetteNum(dAlpha);
+	PostEffectManager::SetPostMode(PostEffectManager::Vignette);
 	isInvisible = true;
 	hpShake.SetShake(5, -5, 30.0f);
 	ScoreManager::GetInstance()->AddDamageCount();

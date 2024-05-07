@@ -138,16 +138,6 @@ private:
 	// 死亡カメラ呼び出しフラグ
 	bool isCallDeadCamera = false;
 
-#pragma region ステージスタートムービー
-	// フラグ
-	bool isStageStart = false;
-#pragma endregion
-
-#pragma region ボス出現ムービー
-	// ボス出現ムービーフラグ
-	bool isBossAppearMovie = false;
-#pragma endregion
-
 	// 警告演出フラグ
 	bool isWarnning = false;
 
@@ -156,16 +146,6 @@ private:
 
 	// ボスバトル開始座標
 	float bossBattleStartPos = 1000;
-
-#pragma region クリア演出
-	// クリアムービーフラグ
-	bool isClearMovie = false;
-#pragma endregion
-
-#pragma region オーバー演出
-	// ゲームオーバームービーフラグ
-	bool isOverMovie = false;
-#pragma endregion
 
 #pragma region ポーズ
 	bool isPose = false;

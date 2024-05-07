@@ -10,6 +10,8 @@
 #include "PostEffectManager.h"
 #include "VignettePostEffect.h"
 
+#include "GameManager.h"
+
 const float Player::moveSpeed = 0.48f;
 const KMyMath::Vector2 Player::rotLimit = {35.0f, 25.0f};
 const KMyMath::Vector2 Player::posLimitMin = {-15.0f, -4.0f};
@@ -106,9 +108,7 @@ void Player::Init(const float playerHP) {
 	audioManager = AudioManager::GetInstance();
 }
 
-void Player::Update(
-    ViewProjection* viewPro, const KMyMath::Vector3& cameraPos, bool isStart_, bool isBossMovie_,
-    bool isClearMovie_) {
+void Player::Update(ViewProjection* viewPro, const KMyMath::Vector3& cameraPos) {
 	ImGui::Begin("Player");
 	ImGui::SetWindowPos({400, 10});
 	ImGui::SetWindowSize({200, 200});
@@ -135,31 +135,20 @@ void Player::Update(
 	    (float)KWinApp::GetInstance()->GetWindowSizeH(), "%.1f");
 	ImGui::End();
 
-	isStartMovie = isStart_;
-	isBossMovie = isBossMovie_;
-	isClearMovie = isClearMovie_;
-
 	SudCoolTime();
 
-	if (bomsCoolTimer >= 1) {
-		bomsCoolTimer--;
-		bomIconAlpha = 0.5f;
-		isBom = false;
-	} else {
-		bomIconAlpha = 1.0f;
-		isBom = true;
-	}
+	BomsCoolTime();
 
 	// スタート演出中の処理
-	if (isStartMovie) {
+	if (GameManager::GetInstance()->GetMovieFlag("All")) {
 
-	} else if (isBossMovie) {
-
-	} else if (isClearMovie) {
-
-	} else if (isStartEase) {
+	}
+	// スタートイージング
+	else if (isStartEase) {
 		StandStartPos();
-	} else {
+	} 
+	// ゲーム中
+	else {
 		// 死亡条件
 		if (HP <= min(HP, 0)) {
 			HP = 0;
@@ -179,7 +168,8 @@ void Player::Update(
 #ifdef _DEBUG
 			Debug();
 #endif // _DEBUG
-		} else {
+		} 
+		else {
 			// 死亡演出
 			DeadEffect();
 		}
@@ -518,6 +508,17 @@ void Player::StandStartPos() {
 	}
 }
 
+void Player::BomsCoolTime() {
+	if (bomsCoolTimer >= 1) {
+		bomsCoolTimer--;
+		bomIconAlpha = 0.5f;
+		isBom = false;
+	} else {
+		bomIconAlpha = 1.0f;
+		isBom = true;
+	}
+}
+
 void Player::Debug() {}
 
 void Player::ObjDraw() {
@@ -527,20 +528,9 @@ void Player::ObjDraw() {
 	}
 }
 
-void Player::SpriteDraw() {
-	// レティクル描画
-	if (isStartMovie || isDead || isBossMovie || isStartEase || isClearMovie) {
-		return;
-	}
-
-	reticle2d->Draw();
-}
+void Player::SpriteDraw() { reticle2d->Draw(); }
 
 void Player::UIDraw() {
-	if (isStartMovie || isBossMovie || isClearMovie) {
-		return;
-	}
-
 	KMyMath::Vector2 HPsize = {286 / maxHP, 17};
 
 	// HPバー描画

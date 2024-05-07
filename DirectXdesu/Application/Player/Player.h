@@ -26,8 +26,7 @@
 /// <summary>
 /// 自キャラ
 /// </summary>
-class Player : public Collider
-{
+class Player : public Collider {
 public:
 	/// <summary>
 	/// 生成
@@ -44,9 +43,7 @@ public:
 	/// 更新
 	/// </summary>
 	/// <param name="camera_"></param>
-	void Update(
-	    ViewProjection* viewPro, const KMyMath::Vector3& cameraPos, bool isStart_,
-	    bool isBossMovie_, bool isClearMovie_);
+	void Update(ViewProjection* viewPro, const KMyMath::Vector3& cameraPos);
 
 	// 描画
 	// オブジェクト
@@ -63,6 +60,8 @@ public:
 
 	// 定位置へ
 	void StandStartPos();
+
+	void BomsCoolTime();
 
 	/// <summary>
 	/// 親子セッター
@@ -245,10 +244,6 @@ private:
 	float startEaseTimer = 0;
 	float startEaseTime = 0;
 #pragma endregion
-
-	bool isStartMovie = false;
-	bool isBossMovie = false;
-	bool isClearMovie = false;
 
 #pragma region 操作説明
 	std::unique_ptr<Sprite> operation;

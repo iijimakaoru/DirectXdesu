@@ -58,7 +58,7 @@ void GameScene::Init() {
 
 	// カメラ初期化
 	camera->Init(player.get(), {0.0f, 0.0f, -200.0f});
-	//camera->Init(player.get(), {0.0f, 0.0f, 470.0f});
+	// camera->Init(player.get(), {0.0f, 0.0f, 470.0f});
 
 	// エネミーマネージャー生成
 	enemyManager.reset(EnemyManager::Create(
@@ -91,7 +91,7 @@ void GameScene::Init() {
 
 	isCallDeadCamera = false;
 
-	isStageStart = true;
+	GameManager::GetInstance()->SetMovieFlag(true, "Start");
 
 	poseBack.reset(Sprite::Create(PipelineManager::GetInstance()->GetPipeline("Sprite")));
 
@@ -184,26 +184,39 @@ void GameScene::ObjDraw() {
 }
 
 void GameScene::SpriteDraw() {
-	// ボス登場警告演出
-	if (bossWarning) {
-		bossWarning->Draw();
-	}
+	switch (scene) {
+	case GameScene::Games:
+		// ボス登場警告演出
+		if (bossWarning) {
+			bossWarning->Draw();
+		}
 
-	// UI描画
-	player->UIDraw();
+		if (blaster) {
+			// ボスUI描画
+			blaster->UIDraw();
+		}
 
-	if (blaster) {
-		// ボスUI描画
-		blaster->UIDraw();
-	}
+		// 2D情報描画
+		player->SpriteDraw();
 
-	// 2D情報描画
-	player->SpriteDraw();
+		// UI描画
+		player->UIDraw();
 
-	if (isOverMovie || isClearMovie || isStageStart || isBossAppearMovie) {
-		movie_->Draw();
-	} else {
+		// スコア描画
 		ScoreManager::GetInstance()->Draw();
+		break;
+	case GameScene::Over:
+		// UI描画
+		player->UIDraw();
+
+		// スコア描画
+		ScoreManager::GetInstance()->Draw();
+		break;
+	case GameScene::Movies:
+		movie_->Draw();
+		break;
+	default:
+		break;
 	}
 
 	if (isPose) {
@@ -275,7 +288,7 @@ void GameScene::CheckAllCollisions() {
 	// ボム
 	for (const std::unique_ptr<Bom>& bom : boms) {
 		bom->SetRadius(5.0f);
-	    collisionManager_->AddCollider(bom.get());
+		collisionManager_->AddCollider(bom.get());
 	}
 
 	for (const std::unique_ptr<Explosion>& explosion : explosions) {
@@ -345,7 +358,7 @@ void GameScene::BossBattleStart() {
 	}
 
 	// ボスバトルが始まってればスキップ
-	if (isBossBattle || isBossAppearMovie) {
+	if (isBossBattle || GameManager::GetInstance()->GetMovieFlag("Boss")) {
 		return;
 	}
 
@@ -399,7 +412,7 @@ void GameScene::BossBattleStart() {
 		Blaster::nowBlaster = blaster.get();
 
 		// ボス出現ムービーへ
-		isBossAppearMovie = true;
+		GameManager::GetInstance()->SetMovieFlag(true, "Boss");
 		movie_ = std::make_unique<BossStart>();
 		scene = Movies;
 
@@ -418,7 +431,7 @@ void GameScene::PlayerDead() {
 		// 全ての敵を消去
 		enemyManager->AllEnemyDelete();
 		// 撃墜ムービーへ
-		isOverMovie = true;
+		GameManager::GetInstance()->SetMovieFlag(true, "Over");
 	}
 
 	if (player->GetIsFallEffectEnd()) {
@@ -479,12 +492,12 @@ void GameScene::AllScene() {
 	if (!isPose) {
 		// ムービーが終わったらゲームシーンへ
 		if (movie_->GetIsFinish()) {
-			if (isStageStart) {
-				isStageStart = false;
+			if (gameManager_->GetMovieFlag("Start")) {
+				gameManager_->SetMovieFlag(false, "Start");
 			}
 
-			if (isBossAppearMovie) {
-				isBossAppearMovie = false;
+			if (gameManager_->GetMovieFlag("Boss")) {
+				gameManager_->SetMovieFlag(false, "Boss");
 				// ボスバトル開始
 				isBossBattle = true;
 			}
@@ -500,21 +513,20 @@ void GameScene::AllScene() {
 				if (goClearMovieTimer == goClearMovieTime) {
 					player->SetParent(nullptr);
 					player->SetPos(player->GetWorldPos());
-					isClearMovie = true;
+					gameManager_->SetMovieFlag(true, "Clear");
 					movie_ = std::make_unique<StageClear>();
 					scene = Movies;
 					goClearMovieTimer = goClearMovieTime + 1.0f;
 				}
 			}
 
-			blaster->Update(camera->GetViewPro(), camera->GetWorldPos(), isBossAppearMovie);
+			blaster->Update(
+			    camera->GetViewPro(), camera->GetWorldPos(), gameManager_->GetMovieFlag("Boss"));
 			Blaster::nowBlaster = blaster.get();
 		}
 
 		// プレイヤーの更新
-		player->Update(
-		    camera->GetViewPro(), camera->GetWorldPos(), isStageStart, isBossAppearMovie,
-		    isClearMovie);
+		player->Update(camera->GetViewPro(), camera->GetWorldPos());
 		Player::nowPlayer = player.get();
 
 		// 弾の更新
@@ -535,7 +547,9 @@ void GameScene::AllScene() {
 		    camera->GetViewPro(), camera->GetWorldPos(), camera->GetCameraPos().z - 20.0f);
 
 		// カメラの更新
-		camera->Update(isStageStart, isBossAppearMovie, isClearMovie);
+		camera->Update(
+		    gameManager_->GetMovieFlag("Start"), gameManager_->GetMovieFlag("Boss"),
+		    gameManager_->GetMovieFlag("Clear"));
 		RailCamera::nowRailCamera = camera.get();
 
 		ScoreManager::GetInstance()->Update();
@@ -549,6 +563,8 @@ void GameScene::AllScene() {
 	} else {
 		PoseAction();
 	}
+
+	gameManager_->Update();
 }
 
 void GameScene::PoseAction() {
@@ -596,5 +612,3 @@ void GameScene::PoseAction() {
 		bulletManager->AllBulletDelete();
 	}
 }
-
-const bool GameScene::GetIsStart() const { return isStageStart; }

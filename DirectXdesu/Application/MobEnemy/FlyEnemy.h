@@ -94,7 +94,7 @@ private:
 	float easeTimer = 0;
 
 	// 上限
-	const float easeTime = 30;
+	const float easeTime = 60;
 
 	// 最初の場所
 	KMyMath::Vector3 startPos;

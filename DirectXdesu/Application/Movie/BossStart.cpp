@@ -249,7 +249,7 @@ void BossStart::SetBossPhase() {
 	blaster->SetFarstAct();
 	MovieBarOutInit();
 	// ボス配置
-	blaster->SetPos({blaster->GetWorldPos().x, 20.0f, blaster->GetWorldPos().z});
+	blaster->SetPos({0.0f, 20.0f, 650.0f});
 	blaster->SetRot({0.0f, 0.0f, 0.0f});
 	// カメラ配置
 	camera->SetCameraPos({0.0f, 0.0f, 500.0f});

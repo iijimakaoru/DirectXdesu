@@ -100,7 +100,7 @@ void GameScene::Init() {
 	operationS.reset(Sprite::Create(PipelineManager::GetInstance()->GetPipeline("Sprite")));
 
 	// ボスバトル開始座標
-	bossBattleStartPos = 1000;
+	bossBattleStartPos = 900;
 
 	ScoreManager::GetInstance()->Init();
 	ScoreManager::GetInstance()->ResetScore();

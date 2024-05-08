@@ -82,10 +82,6 @@ private:
 
 	void PoseAction();
 
-public:
-	// フラグゲッター
-	const bool GetIsStart() const;
-
 private:
 	// インプット
 	KInput* input = nullptr;
@@ -101,10 +97,6 @@ private:
 
 	// 簡易地面
 	std::unique_ptr<Ground> ground = nullptr;
-
-	// ボスバトル
-	int32_t bossBattleTimer = 0;
-	int32_t bossBattleTime = 0;
 
 	// MS01_Blaster
 	std::unique_ptr<Blaster> blaster = nullptr;

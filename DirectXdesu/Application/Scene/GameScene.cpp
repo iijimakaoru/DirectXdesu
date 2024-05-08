@@ -57,8 +57,8 @@ void GameScene::Init() {
 	sceneManager = SceneManager::GetInstance();
 
 	// カメラ初期化
-	//camera->Init(player.get(), {0.0f, 0.0f, -200.0f});
-	camera->Init(player.get(), {0.0f, 0.0f, 470.0f});
+	camera->Init(player.get(), {0.0f, 0.0f, -200.0f});
+	//camera->Init(player.get(), {0.0f, 0.0f, 470.0f});
 
 	// エネミーマネージャー生成
 	enemyManager.reset(EnemyManager::Create(
@@ -94,18 +94,13 @@ void GameScene::Init() {
 	GameManager::GetInstance()->SetMovieFlag(true, "Start");
 
 	poseBack.reset(Sprite::Create(PipelineManager::GetInstance()->GetPipeline("Sprite")));
-
 	selectBar.reset(Sprite::Create(PipelineManager::GetInstance()->GetPipeline("Sprite")));
-
 	poseTexS.reset(Sprite::Create(PipelineManager::GetInstance()->GetPipeline("Sprite")));
-
 	backTitleS.reset(Sprite::Create(PipelineManager::GetInstance()->GetPipeline("Sprite")));
-
 	operationS.reset(Sprite::Create(PipelineManager::GetInstance()->GetPipeline("Sprite")));
 
 	// ボスバトル開始座標
-	bossBattleStartPos = 500;
-	bossBattleTime = 1000;
+	bossBattleStartPos = 1000;
 
 	ScoreManager::GetInstance()->Init();
 	ScoreManager::GetInstance()->ResetScore();
@@ -469,8 +464,6 @@ void GameScene::GamePlay() {
 	}
 
 	if (!isPose) {
-		bossBattleTimer++;
-
 		// ボスバトル開始判定
 		BossBattleStart();
 

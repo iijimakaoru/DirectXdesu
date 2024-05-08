@@ -146,7 +146,7 @@ void Player::Update(ViewProjection* viewPro, const KMyMath::Vector3& cameraPos) 
 	// スタートイージング
 	else if (isStartEase) {
 		StandStartPos();
-	} 
+	}
 	// ゲーム中
 	else {
 		// 死亡条件
@@ -168,8 +168,7 @@ void Player::Update(ViewProjection* viewPro, const KMyMath::Vector3& cameraPos) 
 #ifdef _DEBUG
 			Debug();
 #endif // _DEBUG
-		} 
-		else {
+		} else {
 			// 死亡演出
 			DeadEffect();
 		}
@@ -619,7 +618,9 @@ void Player::OnCollision(Collider* collider) {
 		damage = 5;
 	}
 
-	HP -= damage;
+	if (!muteki) {
+		HP -= damage;
+	}
 
 	hpEase = true;
 	oldHpTimer = 0;

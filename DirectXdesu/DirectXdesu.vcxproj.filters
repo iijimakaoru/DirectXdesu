@@ -250,6 +250,12 @@
     <Filter Include="ヘッダー ファイル\Application\Movie">
       <UniqueIdentifier>{59cf5ec5-1af3-4983-a746-502c4fb2bc58}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Engine\2d\Sprites\PostEffect">
+      <UniqueIdentifier>{0b50b264-86ed-44d8-8d5b-386d7e85889d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Engine\2d\Sprites\PostEffect">
+      <UniqueIdentifier>{ddfe394d-35bf-4bb6-992b-1b701dd21fc7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Math\Vector2\Vector2.cpp">
@@ -281,9 +287,6 @@
     </ClCompile>
     <ClCompile Include="Engine\Imgui\ImguiManager.cpp">
       <Filter>ソース ファイル\Engine\Imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\2D\PostEffect\PostEffect.cpp">
-      <Filter>ソース ファイル\Engine\2d\Sprites</Filter>
     </ClCompile>
     <ClCompile Include="Engine\2D\Sprite\Sprite.cpp">
       <Filter>ソース ファイル\Engine\2d\Sprites</Filter>
@@ -480,9 +483,6 @@
     <ClCompile Include="Application\BossEnemy\Blaster\BlasterUnitLazer.cpp">
       <Filter>ソース ファイル\Application\BossEnemy\Blaster</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\3D\Model\ModelManager.cpp">
-      <Filter>ソース ファイル\Engine</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Base\Pipeline\PipelineManager.cpp">
       <Filter>ソース ファイル\Engine\Base\Pipeline</Filter>
     </ClCompile>
@@ -525,17 +525,23 @@
     <ClCompile Include="Application\Bullet\Explosion.cpp">
       <Filter>ソース ファイル\Application\Bullet</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\2D\PostEffect\TestPostEffect.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="Engine\2D\PostEffect\MultiPostEffect.cpp">
+      <Filter>ソース ファイル\Engine\2d\Sprites\PostEffect</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\2D\PostEffect\VignettePostEffect.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="Engine\2D\PostEffect\PostEffect.cpp">
+      <Filter>ソース ファイル\Engine\2d\Sprites\PostEffect</Filter>
     </ClCompile>
     <ClCompile Include="Engine\2D\PostEffect\PostEffectManager.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\Engine\2d\Sprites\PostEffect</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\2D\PostEffect\MultiPostEffect.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="Engine\2D\PostEffect\TestPostEffect.cpp">
+      <Filter>ソース ファイル\Engine\2d\Sprites\PostEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\2D\PostEffect\VignettePostEffect.cpp">
+      <Filter>ソース ファイル\Engine\2d\Sprites\PostEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\3D\Model\ModelManager.cpp">
+      <Filter>ソース ファイル\Engine\3d</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -767,9 +773,6 @@
     <ClInclude Include="Engine\Base\Pipeline\PipelineManager.h">
       <Filter>ヘッダー ファイル\Engine\Base\Pipeline</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\3D\Model\ModelManager.h">
-      <Filter>ヘッダー ファイル\Engine</Filter>
-    </ClInclude>
     <ClInclude Include="Application\BossEnemy\Blaster\BlasterUnitTackle.h">
       <Filter>ヘッダー ファイル\Application\BossEnemy\Blaster</Filter>
     </ClInclude>
@@ -812,17 +815,20 @@
     <ClInclude Include="Application\Bullet\Explosion.h">
       <Filter>ヘッダー ファイル\Application\Bullet</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\2D\PostEffect\TestPostEffect.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\2D\PostEffect\VignettePostEffect.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="Engine\2D\PostEffect\MultiPostEffect.h">
+      <Filter>ヘッダー ファイル\Engine\2d\Sprites\PostEffect</Filter>
     </ClInclude>
     <ClInclude Include="Engine\2D\PostEffect\PostEffectManager.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\Engine\2d\Sprites\PostEffect</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\2D\PostEffect\MultiPostEffect.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="Engine\2D\PostEffect\TestPostEffect.h">
+      <Filter>ヘッダー ファイル\Engine\2d\Sprites\PostEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\3D\Model\ModelManager.h">
+      <Filter>ヘッダー ファイル\Engine\3d</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\2D\PostEffect\VignettePostEffect.h">
+      <Filter>ヘッダー ファイル\Engine\2d\Sprites\PostEffect</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

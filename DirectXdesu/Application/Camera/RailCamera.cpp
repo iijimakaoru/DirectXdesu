@@ -1,7 +1,7 @@
 #include "RailCamera.h"
+#include "Ease.h"
 #include "MyMath.h"
 #include "Player.h"
-#include "Ease.h"
 
 RailCamera* RailCamera::nowRailCamera = nullptr;
 
@@ -9,8 +9,7 @@ const float RailCamera::moveSpeedPlayerMagnification = 8.0f;
 
 const float RailCamera::advanceSpeed = 0.5f;
 
-void RailCamera::Init(Player* player_, const KMyMath::Vector3& startPos_)
-{
+void RailCamera::Init(Player* player_, const KMyMath::Vector3& startPos_) {
 	Camera::Init();
 
 	startPos = startPos_;
@@ -29,35 +28,22 @@ void RailCamera::Init(Player* player_, const KMyMath::Vector3& startPos_)
 	Camera::Update();
 }
 
-void RailCamera::Update(bool isStart_, bool isBossMovie_,bool isClearMovie_)
-{
+void RailCamera::Update(bool isStart_, bool isBossMovie_, bool isClearMovie_) {
 	moveLimitMax = Player::GetPosLimitMax();
 	moveLimitMin = Player::GetPosLimitMin();
 
-	if (isStart_)
-	{
-		
-	}
-	else if (isBossMovie_)
-	{
+	if (isStart_) {
 
-	}
-	else if (isClearMovie_)
-	{
+	} else if (isBossMovie_) {
 
-	}
-	else if (isCrash)
-	{
+	} else if (isClearMovie_) {
+
+	} else if (isCrash) {
 		Crash();
-	}
-	else if (isStageClear)
-	{
+	} else if (isStageClear) {
 
-	}
-	else
-	{
-		if (!Player::isStartEase)
-		{
+	} else {
+		if (!Player::isStartEase) {
 			SetRot();
 		}
 
@@ -72,8 +58,7 @@ void RailCamera::Update(bool isStart_, bool isBossMovie_,bool isClearMovie_)
 	Camera::Update();
 }
 
-void RailCamera::Move()
-{
+void RailCamera::Move() {
 	// 移動速度
 	KMyMath::Vector3 velocity;
 	// カメラが傾いてる角度へ移動
@@ -82,8 +67,7 @@ void RailCamera::Move()
 	velocity.x = moveSpeed * (cameraTransform.GetRot().y / rotLimit.y);
 	velocity.y = moveSpeed * -(cameraTransform.GetRot().x / rotLimit.x);
 
-	if (isAdvance)
-	{
+	if (isAdvance) {
 		velocity.z = advanceSpeed;
 	}
 
@@ -99,10 +83,9 @@ void RailCamera::Move()
 	     min(cameraTransform.GetPos().y, moveLimitMax.y), cameraTransform.GetPos().z});
 }
 
-void RailCamera::Crash()
-{
-	//自機とカメラの距離
-	const KMyMath::Vector3 playerDistance = { 40.0f, 0.0f, 40.0f };
+void RailCamera::Crash() {
+	// 自機とカメラの距離
+	const KMyMath::Vector3 playerDistance = {40.0f, 0.0f, 40.0f};
 
 	// カメラの場所
 	const KMyMath::Vector3 crashCameraPos = player->GetWorldPos() + playerDistance;
@@ -114,34 +97,24 @@ void RailCamera::Crash()
 	cameraTransform.SetPos(crashCameraPos);
 }
 
-void RailCamera::SetRot()
-{
+void RailCamera::SetRot() {
 	// 回転
-	const KMyMath::Vector3 PlayerRotDivNum = { 5,5,8 };
+	const KMyMath::Vector3 PlayerRotDivNum = {5, 5, 8};
 	cameraTransform.SetRot(
-	    {player->GetRot().x / PlayerRotDivNum.x,
-		player->GetRot().y / PlayerRotDivNum.y ,
-		-player->GetRot().y / PlayerRotDivNum.z });
+	    {player->GetRot().x / PlayerRotDivNum.x, player->GetRot().y / PlayerRotDivNum.y,
+	     -player->GetRot().y / PlayerRotDivNum.z});
 }
 
-void RailCamera::SetIsAdvance(bool isAdvance_)
-{
-	isAdvance = isAdvance_;
-}
+void RailCamera::SetIsAdvance(bool isAdvance_) { isAdvance = isAdvance_; }
 
-const float RailCamera::GetSpeed()
-{
-	return advanceSpeed;
-}
+const float RailCamera::GetSpeed() { return advanceSpeed; }
 
-void RailCamera::CallCrash()
-{
+void RailCamera::CallCrash() {
 	// 墜落状態にする
 	isCrash = true;
 }
 
-void RailCamera::EndStart()
-{
+void RailCamera::EndStart() {
 	cameraTransform.SetPos(startPos);
-	cameraTransform.SetRot({ 0,0,0 });
+	cameraTransform.SetRot({0, 0, 0});
 }

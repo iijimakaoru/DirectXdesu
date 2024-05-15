@@ -138,8 +138,8 @@ void GameScene::Update() {
 	switch (scene) {
 	case GameScene::Games:
 		// プレイヤーとカメラの親子関係解消
-		player->SetParent(&rail_->GetTransform());
-		camera->SetParent(&rail_->GetTransform());
+		player->SetPosZ(rail_->GetTransform().GetPos().z);
+		camera->SetPosZ(rail_->GetTransform().GetPos().z);
 		GamePlay();
 		break;
 	case GameScene::Over:
@@ -147,8 +147,6 @@ void GameScene::Update() {
 		break;
 	case GameScene::Movies:
 		// プレイヤーとカメラの親子関係解消
-		player->SetParent(nullptr);
-		camera->SetParent(nullptr);
 		movie_->Update();
 		break;
 	default:

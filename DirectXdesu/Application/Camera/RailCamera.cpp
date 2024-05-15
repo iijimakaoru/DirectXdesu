@@ -5,7 +5,7 @@
 
 RailCamera* RailCamera::nowRailCamera = nullptr;
 
-const float RailCamera::moveSpeedPlayerMagnification = 8.0f;
+const float RailCamera::moveSpeedPlayerMagnification = 1.0f;
 
 const float RailCamera::advanceSpeed = 0.5f;
 
@@ -27,8 +27,8 @@ void RailCamera::Init(Player* player_) {
 }
 
 void RailCamera::Update(bool isStart_, bool isBossMovie_, bool isClearMovie_) {
-	moveLimitMax = Player::GetPosLimitMax();
-	moveLimitMin = Player::GetPosLimitMin();
+	moveLimitMax = {Player::GetPosLimitMax().x * 2/3, Player::GetPosLimitMax().y / 2};
+	moveLimitMin = {Player::GetPosLimitMin().x * 2/3, Player::GetPosLimitMin().y / 2};
 
 	if (isStart_) {
 
@@ -103,6 +103,12 @@ void RailCamera::SetRot() {
 void RailCamera::SetIsAdvance(bool isAdvance_) { isAdvance = isAdvance_; }
 
 void RailCamera::SetParent(const Transform* parent) { cameraTransform.SetParent(parent); }
+
+void RailCamera::SetPosZ(const float& zPos) {
+	cameraTransform.SetPos({cameraTransform.GetPos().x,
+		cameraTransform.GetPos().y,
+		zPos - 50.0f});
+}
 
 void RailCamera::CallCrash() {
 	// 墜落状態にする

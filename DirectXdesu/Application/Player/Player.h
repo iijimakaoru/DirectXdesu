@@ -84,6 +84,8 @@ public:
 	// 死亡演出が終わったか
 	const bool GetIsFallEffectEnd() const;
 
+	void SetPosZ(const float zPos);
+
 public:
 	// 衝突時に呼び出し
 	void OnCollision(Collider* collider) override;

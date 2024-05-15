@@ -52,6 +52,8 @@ public:
 
 	void SetParent(const Transform* parent);
 
+	void SetPosZ(const float& zPos);
+
 private:
 	/// <summary>
 	/// 壊れた時のカメラワーク

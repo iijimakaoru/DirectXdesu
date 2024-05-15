@@ -12,10 +12,10 @@
 
 #include "GameManager.h"
 
-const float Player::moveSpeed = 0.48f;
+const float Player::moveSpeed = 1.0f;
 const KMyMath::Vector2 Player::rotLimit = {35.0f, 25.0f};
-const KMyMath::Vector2 Player::posLimitMin = {-18.0f, -4.0f};
-const KMyMath::Vector2 Player::posLimitMax = {18.0f, Player::posLimitMin.y + 12.0f};
+const KMyMath::Vector2 Player::posLimitMin = {-32.0f, -14.0f};
+const KMyMath::Vector2 Player::posLimitMax = {32.0f, 18.0f};
 
 Player* Player::nowPlayer = nullptr;
 
@@ -581,6 +581,13 @@ const KMyMath::Vector3 Player::GetRot() const { return object3d->GetTransform().
 const bool Player::GetIsDead() const { return isDead; }
 
 const bool Player::GetIsFallEffectEnd() const { return isFallEffectEnd; }
+
+void Player::SetPosZ(const float zPos) {
+	object3d->GetTransform().SetPos(
+	    {object3d->GetTransform().GetPos().x,
+		object3d->GetTransform().GetPos().y,
+		zPos});
+}
 
 void Player::SetPos(const KMyMath::Vector3& pos_) { object3d->GetTransform().SetPos(pos_); }
 

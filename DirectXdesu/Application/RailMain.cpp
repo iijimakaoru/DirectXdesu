@@ -12,6 +12,8 @@ void RailMain::Update() {
 		velocity.z = advanceSpeed;
 	}
 
+	transform_.AddSetPos(velocity);
+
 	transform_.TransUpdate();
 }
 

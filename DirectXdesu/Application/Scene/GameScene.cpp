@@ -57,8 +57,8 @@ void GameScene::Init() {
 	sceneManager = SceneManager::GetInstance();
 
 	// カメラ初期化
-	camera->Init(player.get(), {0.0f, 0.0f, -200.0f});
-	//camera->Init(player.get(), {0.0f, 0.0f, 470.0f});
+	//camera->Init(player.get(), {0.0f, 0.0f, -200.0f});
+	camera->Init(player.get(), {0.0f, 0.0f, 750.0f});
 
 	// エネミーマネージャー生成
 	enemyManager.reset(EnemyManager::Create(
@@ -473,8 +473,10 @@ void GameScene::GamePlay() {
 		// 自機が死んだとき
 		PlayerDead();
 
-		// エネミーマネージャーの更新
-		enemyManager->Update(camera->GetViewPro(), camera->GetWorldPos());
+		if (!blaster) {
+			// エネミーマネージャーの更新
+			enemyManager->Update(camera->GetViewPro(), camera->GetWorldPos());
+		}
 
 		// 天箱を自機に追従
 		skyBox->SetPosZ(player->GetWorldPos().z);

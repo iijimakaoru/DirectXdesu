@@ -64,7 +64,12 @@ void BlasterTackleState::Tackle() {
 void BlasterTackleState::CubeCloseAct() {
 	Blaster* blaster = Blaster::nowBlaster;
 
+	blaster->reticle2d->SetScale({0, 0});
+
 	actTime = 15.0f;
+
+	// 照準合わせ
+	TackleVec();
 
 	if (actTimer < actTime) {
 		actTimer++;
@@ -83,6 +88,9 @@ void BlasterTackleState::CubeOpenAct() {
 
 	actTime = 60.0f;
 	startTime = 15.0f;
+
+	// 照準合わせ
+	TackleVec();
 
 	// キューブ出現
 	if (startTimer < startTime) {
@@ -110,13 +118,6 @@ void BlasterTackleState::CubeOpenAct() {
 		}
 
 		actTimer++;
-
-		angle += 2.5f;
-
-		// 360を超えたら
-		if (angle >= 360) {
-			angle = 0;
-		}
 
 		const float radian = DirectX::XMConvertToRadians(angle);
 		float distance = 8.0f;
@@ -166,12 +167,17 @@ void BlasterTackleState::AimAct() {
 
 		actTimer++;
 
-		angle += 15.0;
+		float rotSpeed = MyEase::InQuadFloat(0.0f, 30.0f, actTimer / actTime);
+
+		angle += rotSpeed;
 
 		// 360を超えたら
 		if (angle >= 360) {
 			angle = 0;
 		}
+
+		blaster->reticle2d->SetScale(
+		    MyEase::Lerp2D({12.0f, 12.0f}, {1.0f, 1.0f}, actTimer / actTime));
 
 		const float radian = DirectX::XMConvertToRadians(angle);
 		float distance = 8.0f;
@@ -212,7 +218,7 @@ void BlasterTackleState::StandTackleAct() {
 
 		actTimer++;
 
-		angle += 15.0;
+		angle += 30.0;
 
 		// 360を超えたら
 		if (angle >= 360) {

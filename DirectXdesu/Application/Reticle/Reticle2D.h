@@ -27,6 +27,15 @@ public:
 	// ポジションゲッター
 	const KMyMath::Vector2 GetPos() const;
 
+	// 回転
+	void SetRot(const float& rot);
+
+	// スケール
+	void SetScale(const KMyMath::Vector2& scale);
+
+	// 色
+	void SetColor(const KMyMath::Vector3& rgb_);
+
 protected:
 	// スプライト
 	std::unique_ptr<Sprite> reticle = nullptr;
@@ -36,9 +45,9 @@ protected:
 
 	KMyMath::Vector2 position;
 
-	KMyMath::Vector2 scale;
+	KMyMath::Vector2 scale_;
 
 	KMyMath::Vector4 color;
 
-	float rot;
+	float rot_;
 };

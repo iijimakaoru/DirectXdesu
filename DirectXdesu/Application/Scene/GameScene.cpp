@@ -53,15 +53,12 @@ void GameScene::Init() {
 	camera = std::make_unique<RailCamera>();
 	RailCamera::nowRailCamera = camera.get();
 
-	rail_ = std::make_unique<RailMain>();
-	rail_->Init({0.0f, 0.0f, -200.0f});
-
 	// シーンマネージャーインスタンス
 	sceneManager = SceneManager::GetInstance();
 
 	// カメラ初期化
-	//camera->Init(player.get(), {0.0f, 0.0f, -200.0f});
-	camera->Init(player.get(), {0.0f, 0.0f, 750.0f});
+	camera->Init(player.get(), {0.0f, 0.0f, -200.0f});
+	//camera->Init(player.get(), {0.0f, 0.0f, 750.0f});
 
 	// エネミーマネージャー生成
 	enemyManager.reset(EnemyManager::Create(

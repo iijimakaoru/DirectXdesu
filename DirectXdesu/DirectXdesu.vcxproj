@@ -198,7 +198,6 @@
     <ClCompile Include="Engine\2D\PostEffect\VignettePostEffect.cpp" />
     <ClCompile Include="Engine\2D\PostEffect\PostEffectManager.cpp" />
     <ClCompile Include="Engine\2D\PostEffect\MultiPostEffect.cpp" />
-    <ClCompile Include="Application\RailMain.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\BossEnemy\ActState.h" />
@@ -296,7 +295,6 @@
     <ClInclude Include="Engine\2D\PostEffect\VignettePostEffect.h" />
     <ClInclude Include="Engine\2D\PostEffect\PostEffectManager.h" />
     <ClInclude Include="Engine\2D\PostEffect\MultiPostEffect.h" />
-    <ClInclude Include="Application\RailMain.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DirectXdesu.rc" />

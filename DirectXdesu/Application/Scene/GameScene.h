@@ -34,8 +34,6 @@
 #include "Movie.h"
 #include "CollisionManager.h"
 
-#include "RailMain.h"
-
 /**
  * @file GameScene.h
  * @brief ゲームシーン
@@ -90,8 +88,6 @@ private:
 
 	// カメラ
 	std::unique_ptr<RailCamera> camera = nullptr;
-
-	std::unique_ptr<RailMain> rail_ = nullptr;
 
 	// プレイヤー
 	std::unique_ptr<Player> player = nullptr;

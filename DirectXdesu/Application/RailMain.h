@@ -7,6 +7,8 @@ public:
 
 	void Update();
 
+	const Transform& GetTransform() const;
+
 public:
 	// 前進スピード
 	static const float advanceSpeed;

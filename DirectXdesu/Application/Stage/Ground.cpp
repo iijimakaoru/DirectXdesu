@@ -3,6 +3,7 @@
 #include "PipelineManager.h"
 #include "Player.h"
 #include "RailCamera.h"
+#include "RailMain.h"
 
 void Ground::Init(Player* player_) {
 	// オブジェクト生成
@@ -40,9 +41,9 @@ void Ground::Update(ViewProjection* viewPro, const KMyMath::Vector3& cameraPos) 
 		}
 
 		if (isAdvance) {
-			object3d[i]->GetTransform().AddSetPos({0.0f, 0.0f, -RailCamera::GetSpeed() * 2.0f});
+			object3d[i]->GetTransform().AddSetPos({0.0f, 0.0f, -RailMain::advanceSpeed * 2.0f});
 		} else {
-			object3d[i]->GetTransform().AddSetPos({0.0f, 0.0f, -RailCamera::GetSpeed()});
+			object3d[i]->GetTransform().AddSetPos({0.0f, 0.0f, -RailMain::advanceSpeed});
 		}
 
 		object3d[i]->Update(viewPro, cameraPos);

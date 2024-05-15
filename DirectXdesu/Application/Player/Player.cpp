@@ -14,8 +14,8 @@
 
 const float Player::moveSpeed = 0.48f;
 const KMyMath::Vector2 Player::rotLimit = {35.0f, 25.0f};
-const KMyMath::Vector2 Player::posLimitMin = {-15.0f, -4.0f};
-const KMyMath::Vector2 Player::posLimitMax = {15.0f, Player::posLimitMin.y + 12.0f};
+const KMyMath::Vector2 Player::posLimitMin = {-18.0f, -4.0f};
+const KMyMath::Vector2 Player::posLimitMax = {18.0f, Player::posLimitMin.y + 12.0f};
 
 Player* Player::nowPlayer = nullptr;
 

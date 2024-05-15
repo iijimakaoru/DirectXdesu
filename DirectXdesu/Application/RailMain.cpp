@@ -14,3 +14,5 @@ void RailMain::Update() {
 
 	transform_.TransUpdate();
 }
+
+const Transform& RailMain::GetTransform() const { return transform_; }

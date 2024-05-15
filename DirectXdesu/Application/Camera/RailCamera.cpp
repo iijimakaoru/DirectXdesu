@@ -9,10 +9,8 @@ const float RailCamera::moveSpeedPlayerMagnification = 8.0f;
 
 const float RailCamera::advanceSpeed = 0.5f;
 
-void RailCamera::Init(Player* player_, const KMyMath::Vector3& startPos_) {
+void RailCamera::Init(Player* player_) {
 	Camera::Init();
-
-	startPos = startPos_;
 
 	cameraTransform.TransUpdate();
 
@@ -67,10 +65,6 @@ void RailCamera::Move() {
 	velocity.x = moveSpeed * (cameraTransform.GetRot().y / rotLimit.y);
 	velocity.y = moveSpeed * -(cameraTransform.GetRot().x / rotLimit.x);
 
-	if (isAdvance) {
-		velocity.z = advanceSpeed;
-	}
-
 	// 移動
 	cameraTransform.AddSetPos(velocity);
 
@@ -108,8 +102,6 @@ void RailCamera::SetRot() {
 
 void RailCamera::SetIsAdvance(bool isAdvance_) { isAdvance = isAdvance_; }
 
-const float RailCamera::GetSpeed() { return advanceSpeed; }
-
 void RailCamera::SetParent(const Transform* parent) { cameraTransform.SetParent(parent); }
 
 void RailCamera::CallCrash() {
@@ -118,6 +110,6 @@ void RailCamera::CallCrash() {
 }
 
 void RailCamera::EndStart() {
-	cameraTransform.SetPos(startPos);
+	cameraTransform.SetPos({0, 0, 0});
 	cameraTransform.SetRot({0, 0, 0});
 }

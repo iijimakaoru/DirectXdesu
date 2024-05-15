@@ -1,8 +1,8 @@
 #include "Bill1.h"
 #include "RailCamera.h"
+#include "RailMain.h"
 
-Bill1* Bill1::Create(
-    KModel* model_, KGPlin* objPipeline_, const KMyMath::Vector2& pos_) {
+Bill1* Bill1::Create(KModel* model_, KGPlin* objPipeline_, const KMyMath::Vector2& pos_) {
 	// インスタンス
 	Bill1* instance = new Bill1();
 	if (instance == nullptr) {
@@ -37,9 +37,9 @@ void Bill1::Update(
     ViewProjection* viewPro, const KMyMath::Vector3& cameraPos, const float& cameraZ_,
     const bool& isAdvance_) {
 	if (isAdvance_) {
-		object->GetTransform().AddSetPos({0, 0, -RailCamera::GetSpeed() * 2.0f});
+		object->GetTransform().AddSetPos({0, 0, -RailMain::advanceSpeed * 2.0f});
 	} else {
-		object->GetTransform().AddSetPos({0, 0, -RailCamera::GetSpeed()});
+		object->GetTransform().AddSetPos({0, 0, -RailMain::advanceSpeed});
 	}
 
 	if (object->GetTransform().GetPos().z <= cameraZ_) {

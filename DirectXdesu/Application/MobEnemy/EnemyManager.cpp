@@ -7,6 +7,7 @@
 #include "Player.h"
 #include "RailCamera.h"
 #include "ScoreManager.h"
+#include "RailMain.h"
 
 EnemyManager* EnemyManager::Create(const std::string fileName_, Player* player_) {
 	// インスタンス
@@ -160,7 +161,7 @@ void EnemyManager::UpdateEnemyPopCommands() {
 				    PipelineManager::GetInstance()->GetPipeline("Obj"), // パイプラインセット
 					{x, y, z},											 // 生成場所
 				    {aX, aY},											 // 最終地点
-				    RailCamera::GetSpeed(),								 // 移動スピード
+				    RailMain::advanceSpeed,                             // 移動スピード
 					fLifeTime,											 //	生存時間
 				    {aX, aY},											 // 撤退始点
 				    {wX, wY}                                             // 撤退始点

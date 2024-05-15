@@ -60,8 +60,8 @@ void GameScene::Init() {
 	sceneManager = SceneManager::GetInstance();
 
 	// カメラ初期化
-	//camera->Init(player.get(), {0.0f, 0.0f, -200.0f});
-	camera->Init(player.get(), {0.0f, 0.0f, 750.0f});
+	camera->Init(player.get());
+	// camera->Init(player.get(), {0.0f, 0.0f, 750.0f});
 
 	// エネミーマネージャー生成
 	enemyManager.reset(EnemyManager::Create(
@@ -138,7 +138,8 @@ void GameScene::Update() {
 	switch (scene) {
 	case GameScene::Games:
 		// プレイヤーとカメラの親子関係解消
-		player->SetParent(&camera->GetTransform());
+		player->SetParent(&rail_->GetTransform());
+		camera->SetParent(&rail_->GetTransform());
 		GamePlay();
 		break;
 	case GameScene::Over:
@@ -147,6 +148,7 @@ void GameScene::Update() {
 	case GameScene::Movies:
 		// プレイヤーとカメラの親子関係解消
 		player->SetParent(nullptr);
+		camera->SetParent(nullptr);
 		movie_->Update();
 		break;
 	default:
@@ -365,7 +367,7 @@ void GameScene::BossBattleStart() {
 	}
 
 	if (!bossWarning) {
-		bool isBossBattleStart = camera->GetCameraPos().z >= bossBattleStartPos;
+		bool isBossBattleStart = rail_->GetTransform().GetPos().z >= bossBattleStartPos;
 
 		// スタート位置にいなかったらスキップ
 		if (!isBossBattleStart) {
@@ -487,6 +489,8 @@ void GameScene::GamePlay() {
 
 		// 天箱を自機に追従
 		skyBox->SetPosZ(player->GetWorldPos().z);
+
+		rail_->Update();
 	}
 }
 

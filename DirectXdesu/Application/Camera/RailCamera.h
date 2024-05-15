@@ -24,7 +24,7 @@ public:
 	/// 初期化
 	/// </summary>
 	/// <param name="player_"></param>
-	void Init(Player* player_, const KMyMath::Vector3& startPos);
+	void Init(Player* player_);
 
 	// 更新
 	void Update(bool isStart_, bool isBossMovie_, bool isClearMovie_);
@@ -49,12 +49,6 @@ public:
 	/// スタートカメラワークが終わった時の処理
 	/// </summary>
 	void EndStart();
-
-	/// <summary>
-	/// カメラ速度ゲッター
-	/// </summary>
-	/// <returns></returns>
-	static const float GetSpeed();
 
 	void SetParent(const Transform* parent);
 

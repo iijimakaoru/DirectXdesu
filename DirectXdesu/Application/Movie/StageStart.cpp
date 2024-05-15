@@ -238,7 +238,5 @@ void StageStart::ExitPhase() {
 	camera->EndStart();
 	player->EndStart();
 	Player::isStartEase = true;
-	// 親子関係接続
-	player->SetParent(&camera->GetTransform());
 	SetIsFinish(true);
 }

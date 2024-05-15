@@ -40,6 +40,7 @@ void BossStart::Update() {
 }
 
 void BossStart::WaitBlackOutPhase() {
+	RailCamera* camera = RailCamera::nowRailCamera;
 	Player* player = Player::nowPlayer;
 
 	phaseTime_ = 30;
@@ -51,10 +52,8 @@ void BossStart::WaitBlackOutPhase() {
 	} else {
 		// すべての弾削除
 		bulletManager_->AllBulletDelete();
-		// プレイヤーとカメラの親子関係解消
-		player->SetParent(nullptr);
 		// 現在位置まで連れてくる
-		player->SetPos({0.0f, 0.0f, player->GetWorldPos().z});
+		player->SetPos({0.0f, 0.0f, camera->GetWorldPos().z + 50.0f});
 		// 回転角度初期化
 		player->SetRot({0.0f, 0.0f, 0.0f});
 		phaseTimer_ = 0;
@@ -254,8 +253,6 @@ void BossStart::SetBossPhase() {
 	// カメラ配置
 	camera->SetCameraPos({0.0f, 0.0f, 500.0f});
 	camera->SetCameraRot({0.0f, 0.0f, 0.0f});
-	// プレイヤーとカメラの親子関係解消
-	player->SetParent(&camera->GetTransform());
 	// 現在位置まで連れてくる
 	player->SetPos({0.0f, 0.0f, 50.0f});
 	phaseTimer_ = 0;

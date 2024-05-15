@@ -53,6 +53,9 @@ void GameScene::Init() {
 	camera = std::make_unique<RailCamera>();
 	RailCamera::nowRailCamera = camera.get();
 
+	rail_ = std::make_unique<RailMain>();
+	rail_->Init({0.0f, 0.0f, -200.0f});
+
 	// シーンマネージャーインスタンス
 	sceneManager = SceneManager::GetInstance();
 
@@ -134,12 +137,16 @@ void GameScene::Update() {
 
 	switch (scene) {
 	case GameScene::Games:
+		// プレイヤーとカメラの親子関係解消
+		player->SetParent(&camera->GetTransform());
 		GamePlay();
 		break;
 	case GameScene::Over:
 		GoGameOverScene();
 		break;
 	case GameScene::Movies:
+		// プレイヤーとカメラの親子関係解消
+		player->SetParent(nullptr);
 		movie_->Update();
 		break;
 	default:

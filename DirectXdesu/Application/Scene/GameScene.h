@@ -34,6 +34,8 @@
 #include "Movie.h"
 #include "CollisionManager.h"
 
+#include "RailMain.h"
+
 /**
  * @file GameScene.h
  * @brief ゲームシーン
@@ -88,6 +90,8 @@ private:
 
 	// カメラ
 	std::unique_ptr<RailCamera> camera = nullptr;
+
+	std::unique_ptr<RailMain> rail_ = nullptr;
 
 	// プレイヤー
 	std::unique_ptr<Player> player = nullptr;
@@ -160,18 +164,23 @@ private:
 	KMyMath::Vector2 operationPos;
 #pragma endregion
 
+	// オーディオ
 	AudioManager* audioManager_;
 
+	// ライト
 	std::unique_ptr<Light> light_ = nullptr;
-
 	KMyMath::Vector3 lightRGB = {1, 1, 1};
 	KMyMath::Vector3 lightDir = {0, -1, 0};
 
+	// プレイシーン
 	Scene scene = Scene::Movies;
 
+	// ムービー
 	std::unique_ptr<BaseMovie> movie_ = nullptr;
 
+	// ゲームマネージャー
 	GameManager* gameManager_ = nullptr;
 
+	// 当たり判定マネージャー
 	CollisionManager* collisionManager_ = nullptr;
 };

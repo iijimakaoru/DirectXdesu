@@ -56,6 +56,8 @@ public:
 	/// <returns></returns>
 	static const float GetSpeed();
 
+	void SetParent(const Transform* parent);
+
 private:
 	/// <summary>
 	/// 壊れた時のカメラワーク

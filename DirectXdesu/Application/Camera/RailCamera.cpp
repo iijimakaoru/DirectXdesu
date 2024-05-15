@@ -101,13 +101,16 @@ void RailCamera::SetRot() {
 	// 回転
 	const KMyMath::Vector3 PlayerRotDivNum = {5, 5, 8};
 	cameraTransform.SetRot(
-	    {player->GetRot().x / PlayerRotDivNum.x, player->GetRot().y / PlayerRotDivNum.y,
+	    {player->GetRot().x / PlayerRotDivNum.x, 
+		player->GetRot().y / PlayerRotDivNum.y,
 	     -player->GetRot().y / PlayerRotDivNum.z});
 }
 
 void RailCamera::SetIsAdvance(bool isAdvance_) { isAdvance = isAdvance_; }
 
 const float RailCamera::GetSpeed() { return advanceSpeed; }
+
+void RailCamera::SetParent(const Transform* parent) { cameraTransform.SetParent(parent); }
 
 void RailCamera::CallCrash() {
 	// 墜落状態にする

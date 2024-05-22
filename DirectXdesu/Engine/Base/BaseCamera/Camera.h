@@ -15,6 +15,8 @@ class Camera
 protected:
 	std::unique_ptr<ViewProjection> viewProjection = nullptr;
 
+	KMyMath::Matrix4 matView{};
+
 	Transform cameraTransform;
 
 public:
@@ -26,10 +28,13 @@ public:
 	// 更新
 	virtual void Update();
 
+	void ViewUpdate();
+
 	// ビュープロジェクションゲッター
 	ViewProjection* GetViewPro();
 
 	// ゲッター
+	const KMyMath::Matrix4& GetMatView() const;
 	const Transform& GetTransform()const;
 	const KMyMath::Vector3& GetCameraPos()const;
 	const KMyMath::Vector3& GetCameraRot() const;

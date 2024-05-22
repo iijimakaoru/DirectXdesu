@@ -17,10 +17,10 @@ void BasePostEffect::StaticInit() {
 }
 
 void BasePostEffect::Init() {
-	clearColor[0] = {0.0f};
-	clearColor[1] = {0.0f};
-	clearColor[2] = {0.0f};
-	clearColor[3] = {0.0f};
+	clearColor[0] = {1.0f};
+	clearColor[1] = {1.0f};
+	clearColor[2] = {1.0f};
+	clearColor[3] = {1.0f};
 
 	// 頂点
 	CreateVertex();

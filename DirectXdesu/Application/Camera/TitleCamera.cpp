@@ -12,7 +12,7 @@ void TitleCamera::Init() {
 	cameraTransform.TransUpdate();
 
 	KMyMath::Matrix4 nowMatWorld = cameraTransform.GetMatWorld();
-	viewProjection->SetMatView(MyMathUtility::MakeInverse(nowMatWorld));
+	matView = MyMathUtility::MakeInverse(nowMatWorld);
 
 	isRound = false;
 
@@ -37,7 +37,7 @@ void TitleCamera::Update() {
 	cameraTransform.TransUpdate();
 
 	KMyMath::Matrix4 nowMatWorld = cameraTransform.GetMatWorld();
-	viewProjection->SetMatView(MyMathUtility::MakeInverse(nowMatWorld));
+	matView = MyMathUtility::MakeInverse(nowMatWorld);
 
 	Camera::Update();
 }

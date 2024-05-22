@@ -17,7 +17,7 @@ void RailCamera::Init(Player* player_, const KMyMath::Vector3& startPos_) {
 	cameraTransform.TransUpdate();
 
 	KMyMath::Matrix4 nowMatWorld = cameraTransform.GetMatWorld();
-	viewProjection->SetMatView(MyMathUtility::MakeInverse(nowMatWorld));
+	matView = MyMathUtility::MakeInverse(nowMatWorld);
 
 	isCrash = false;
 
@@ -53,7 +53,7 @@ void RailCamera::Update(bool isStart_, bool isBossMovie_, bool isClearMovie_) {
 	cameraTransform.TransUpdate();
 
 	KMyMath::Matrix4 nowMatWorld = cameraTransform.GetMatWorld();
-	viewProjection->SetMatView(MyMathUtility::MakeInverse(nowMatWorld));
+	matView = MyMathUtility::MakeInverse(nowMatWorld);
 
 	Camera::Update();
 }

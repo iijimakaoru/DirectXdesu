@@ -75,7 +75,7 @@ public:
 	/// 行列更新
 	/// </summary>
 	/// <param name="viewProjection"></param>
-	void MatUpdate(ViewProjection* viewPro, const KMyMath::Vector3& cameraPos);
+	void MatUpdate(KMyMath::Matrix4& matView, ViewProjection* viewPro, const KMyMath::Vector3& cameraPos);
 
 	/// <summary>
 	/// 上の複合

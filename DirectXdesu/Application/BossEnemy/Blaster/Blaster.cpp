@@ -79,7 +79,7 @@ void Blaster::Update(
 		} else {
 			if (blasterActState->GetIsFinish()) {
 				actSelect = (size_t)MyMathUtility::GetRandI(1, 3);
-				/*switch (actSelect) {
+				switch (actSelect) {
 				case 1:
 					blasterActState = std::make_unique<BlasterAimState>();
 					break;
@@ -93,9 +93,7 @@ void Blaster::Update(
 				default:
 					blasterActState = std::make_unique<BlasterStandState>();
 					break;
-				}*/
-				blasterActState = std::make_unique<BlasterTackleState>();
-				isReticle = true;
+				}
 			}
 
 			if (blasterActState) {

@@ -861,7 +861,9 @@
     <None Include="Resources\Shader\Vignette.hlsli">
       <Filter>シェーダー</Filter>
     </None>
-    <None Include="Resources\Shader\MultiTextureHeader.hlsli" />
+    <None Include="Resources\Shader\MultiTextureHeader.hlsli">
+      <Filter>シェーダー</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shader\BasicPS.hlsl">
@@ -915,7 +917,11 @@
     <FxCompile Include="Resources\Shader\VignetteVS.hlsl">
       <Filter>シェーダー</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\Shader\MultiTextureVS.hlsl" />
-    <FxCompile Include="Resources\Shader\MultiTexturePS.hlsl" />
+    <FxCompile Include="Resources\Shader\MultiTexturePS.hlsl">
+      <Filter>シェーダー</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\MultiTextureVS.hlsl">
+      <Filter>シェーダー</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

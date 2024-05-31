@@ -64,6 +64,7 @@ void Blaster::Init(
 	reticle2d = std::make_unique<Reticle2D>();
 	reticle2d->Init();
 	reticle2d->SetColor({1, 0, 0});
+	reticle2d->SetScale({0, 0});
 
 	blasterActState = std::make_unique<BlasterStandState>();
 }

@@ -23,9 +23,6 @@ void KMyGame::Draw() {
 	// レンダーテクスチャへの描画
 	postEffectManager->PreDraw(sceneManager);
 
-	// シーンマネージャーの描画
-	// sceneManager->Draw();
-
 	// 描画開始
 	dx->PreDraw();
 

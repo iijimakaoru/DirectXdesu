@@ -543,6 +543,9 @@
     <ClCompile Include="Engine\3D\Model\ModelManager.cpp">
       <Filter>ソース ファイル\Engine\3d</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\2D\PostEffect\GaussianBlur.cpp">
+      <Filter>ソース ファイル\Engine\2d\Sprites\PostEffect</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Input\KInput.h">
@@ -830,6 +833,9 @@
     <ClInclude Include="Engine\2D\PostEffect\VignettePostEffect.h">
       <Filter>ヘッダー ファイル\Engine\2d\Sprites\PostEffect</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\2D\PostEffect\GaussianBlur.h">
+      <Filter>ヘッダー ファイル\Engine\2d\Sprites\PostEffect</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DirectXdesu.rc">
@@ -862,6 +868,9 @@
       <Filter>シェーダー</Filter>
     </None>
     <None Include="Resources\Shader\MultiTextureHeader.hlsli">
+      <Filter>シェーダー</Filter>
+    </None>
+    <None Include="Resources\Shader\GaussianBlur.hlsli">
       <Filter>シェーダー</Filter>
     </None>
   </ItemGroup>
@@ -921,6 +930,12 @@
       <Filter>シェーダー</Filter>
     </FxCompile>
     <FxCompile Include="Resources\Shader\MultiTextureVS.hlsl">
+      <Filter>シェーダー</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\GaussianBlurPS.hlsl">
+      <Filter>シェーダー</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\GaussianBlurVS.hlsl">
       <Filter>シェーダー</Filter>
     </FxCompile>
   </ItemGroup>

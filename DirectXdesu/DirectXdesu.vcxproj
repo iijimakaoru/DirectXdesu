@@ -198,6 +198,7 @@
     <ClCompile Include="Engine\2D\PostEffect\VignettePostEffect.cpp" />
     <ClCompile Include="Engine\2D\PostEffect\PostEffectManager.cpp" />
     <ClCompile Include="Engine\2D\PostEffect\MultiPostEffect.cpp" />
+    <ClCompile Include="Engine\2D\PostEffect\GaussianBlur.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\BossEnemy\ActState.h" />
@@ -295,11 +296,13 @@
     <ClInclude Include="Engine\2D\PostEffect\VignettePostEffect.h" />
     <ClInclude Include="Engine\2D\PostEffect\PostEffectManager.h" />
     <ClInclude Include="Engine\2D\PostEffect\MultiPostEffect.h" />
+    <ClInclude Include="Engine\2D\PostEffect\GaussianBlur.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DirectXdesu.rc" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\Shader\GaussianBlur.hlsli" />
     <None Include="Resources\Shader\lightOBJ.hlsli" />
     <None Include="Resources\Shader\Basic.hlsli" />
     <None Include="Resources\Shader\FBX.hlsli" />
@@ -328,6 +331,14 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
     </FxCompile>
     <FxCompile Include="Resources\Shader\FBXVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\GaussianBlurPS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\GaussianBlurVS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>

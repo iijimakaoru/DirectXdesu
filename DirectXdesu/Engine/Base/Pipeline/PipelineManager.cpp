@@ -33,6 +33,11 @@ void PipelineManager::Init() {
 	shaders_["MultiTexture"].Init(
 	    L"Resources/Shader/MultiTextureVS.hlsl", L"Resources/Shader/MultiTexturePS.hlsl");
 	pipelines_["MultiTexture"].reset(KGPlin::Create(shaders_["MultiTexture"], "MultiTexture"));
+
+	// GaussianBlur
+	shaders_["GaussianBlur"].Init(
+	    L"Resources/Shader/GaussianBlurVS.hlsl", L"Resources/Shader/GaussianBlurPS.hlsl");
+	pipelines_["GaussianBlur"].reset(KGPlin::Create(shaders_["GaussianBlur"], "PostEffect"));
 }
 
 KGPlin* PipelineManager::GetPipeline(std::string pipelineName) { return pipelines_[pipelineName].get(); }

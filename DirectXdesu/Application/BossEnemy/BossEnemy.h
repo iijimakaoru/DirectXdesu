@@ -94,18 +94,18 @@ protected:
 	KGPlin* spritePipeline = nullptr;
 
 	// 死んでるか
-	bool isDead = false;
+	bool isDead_ = false;
 
 	// ボスムービーフラグ
-	bool isBossMovie = false;
+	bool isBossMovie_ = false;
 
 #pragma region HP
 	// 最大体力
-	float maxHP;
+	float maxHP_;
 
 	// 現体力
 	float HP;
-	float oldHP;
+	float oldHP_;
 	float startHpEase;
 
 	uint32_t oldHpTimer = 0;
@@ -116,14 +116,14 @@ protected:
 	const float hpEaseTime = 15;
 
 	// HP
-	std::unique_ptr<Sprite> HPUI = nullptr;
-	TextureData hpTex;
-	std::unique_ptr<Sprite> HPrectUI = nullptr;
-	KMyMath::Vector2 HPPos = {0, 0};
+	std::unique_ptr<Sprite> HPUI_ = nullptr;
+	TextureData hpTex_;
+	std::unique_ptr<Sprite> HPrectUI_ = nullptr;
+	KMyMath::Vector2 HPPos_ = {0, 0};
 
 	// HPバー
-	std::unique_ptr<Sprite> HPBarUI = nullptr;
-	TextureData hpbarTex;
+	std::unique_ptr<Sprite> HPBarUI_ = nullptr;
+	TextureData hpbarTex_;
 
 	uint32_t easeTimer = 0;
 	bool isHPE = false;

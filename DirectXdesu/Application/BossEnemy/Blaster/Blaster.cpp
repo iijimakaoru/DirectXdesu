@@ -40,8 +40,8 @@ void Blaster::Init(
 
 	BossEnemy::Init(pipeline_, initPos_, spritePipeline_);
 
-	maxHP = 300;
-	HP = maxHP;
+	maxHP_ = 300;
+	HP = maxHP_;
 
 	for (size_t i = 0; i < 8; i++) {
 		units[i].reset(KObject3d::Create(
@@ -70,29 +70,29 @@ void Blaster::Init(
 }
 
 void Blaster::Update(
-    ViewProjection* viewPro_, const KMyMath::Vector3& cameraPos, bool isBossMovie_) {
-	isBossMovie = isBossMovie_;
+    ViewProjection* viewPro_, const KMyMath::Vector3& cameraPos, bool isBossMovie) {
+	isBossMovie_ = isBossMovie;
 	viewPro = viewPro_;
 
-	if (!isDead) {
-		if (isBossMovie) {
+	if (!isDead_) {
+		if (isBossMovie_) {
 
 		} else {
 			if (blasterActState->GetIsFinish()) {
-				actSelect = (size_t)MyMathUtility::GetRandI(1, 3);
-				switch (actSelect) {
-				case 1:
+				nActState_ = (NActState)MyMathUtility::GetRandI(Aim, Unit);
+				
+				switch (nActState_) {
+				case Blaster::Aim:
 					blasterActState = std::make_unique<BlasterAimState>();
 					break;
-				case 2:
+				case Blaster::Tackle:
 					blasterActState = std::make_unique<BlasterTackleState>();
 					isReticle = true;
 					break;
-				case 3:
+				case Blaster::Unit:
 					blasterActState = std::make_unique<BlasterUnitLazer>();
 					break;
 				default:
-					blasterActState = std::make_unique<BlasterStandState>();
 					break;
 				}
 			}
@@ -105,7 +105,7 @@ void Blaster::Update(
 		if (HP <= min(HP, 0)) {
 			BulletManager::GetInstance()->AllBulletDelete();
 			ScoreManager::GetInstance()->AddBossScore(100000);
-			isDead = true;
+			isDead_ = true;
 		}
 	} else {
 		DeadEffect();
@@ -134,7 +134,7 @@ void Blaster::Draw() {
 }
 
 void Blaster::UIDraw() {
-	if (isBossMovie || isDead) {
+	if (isBossMovie_ || isDead_) {
 		return;
 	}
 
@@ -142,17 +142,17 @@ void Blaster::UIDraw() {
 
 	const KMyMath::Vector2 hpTexSize = {672.0f, 22.0f};
 
-	const float sizeX = hpTexSize.x / maxHP;
+	const float sizeX = hpTexSize.x / maxHP_;
 	const float sizeY = hpTexSize.y;
 
-	HPBarUI->Draw(hpbarTex, {width / 2.0f, HPPos.y}, {1.0f, 1.0f}, 0, {1.0f, 1.0f, 1.0f, 1.0f});
+	HPBarUI_->Draw(hpbarTex_, {width / 2.0f, HPPos_.y}, {1.0f, 1.0f}, 0, {1.0f, 1.0f, 1.0f, 1.0f});
 
-	const KMyMath::Vector2 HPUIPos = {(width / 2) - (hpTexSize.x / 2), HPPos.y};
+	const KMyMath::Vector2 HPUIPos = {(width / 2) - (hpTexSize.x / 2), HPPos_.y};
 
-	HPrectUI->Draw(
-	    hpTex, HPUIPos, {oldHP * sizeX, sizeY}, 0, {1, 0, 0, 0.3f}, false, false, {0, 0.5f});
+	HPrectUI_->Draw(
+	    hpTex_, HPUIPos, {oldHP_ * sizeX, sizeY}, 0, {1, 0, 0, 0.3f}, false, false, {0, 0.5f});
 
-	HPUI->Draw(hpTex, HPUIPos, {HP * sizeX, sizeY}, 0, {1, 0, 0, 1}, false, false, {0, 0.5f});
+	HPUI_->Draw(hpTex_, HPUIPos, {HP * sizeX, sizeY}, 0, {1, 0, 0, 1}, false, false, {0, 0.5f});
 
 	if (isReticle) {
 		reticle2d->Draw();

@@ -16,6 +16,8 @@ public:
 
 	static std::unique_ptr<ActState> blasterActState;
 
+	enum NActState {Aim,Tackle,Unit};
+
 public:
 	/// <summary>
 	/// 生成
@@ -102,6 +104,9 @@ private:
 	bool isStand = false;
 
 	size_t actSelect = 0;
+
+	NActState nActState_;
+
 public:
 	// 最終的なレティクル
 	std::unique_ptr<Reticle2D> reticle2d = nullptr;

@@ -22,24 +22,24 @@ void BossEnemy::Init(KGPlin* pipeline_, const KMyMath::Vector3& initPos_, KGPlin
 	object3d->GetTransform().SetPos(initPos_);
 
 	// 体力セット
-	maxHP = 0;
-	HP = maxHP;
+	maxHP_ = 0;
+	HP = maxHP_;
 
-	HPUI.reset(Sprite::Create(spritePipeline));
+	HPUI_.reset(Sprite::Create(spritePipeline));
 
-	HPrectUI.reset(Sprite::Create(spritePipeline));
+	HPrectUI_.reset(Sprite::Create(spritePipeline));
 
-	hpTex = TextureManager::Load("Resources/texture/white1x1.png");
+	hpTex_ = TextureManager::Load("Resources/texture/white1x1.png");
 
-	HPBarUI.reset(Sprite::Create(spritePipeline));
+	HPBarUI_.reset(Sprite::Create(spritePipeline));
 
-	hpbarTex = TextureManager::Load("Resources/texture/BossHPBar3.png");
+	hpbarTex_ = TextureManager::Load("Resources/texture/BossHPBar3.png");
 
 	isHPE = true;
 
-	isDead = false;
+	isDead_ = false;
 
-	HPPos = {204.0f, 40.0f};
+	HPPos_ = {204.0f, 40.0f};
 
 	audioManager = AudioManager::GetInstance();
 }
@@ -47,7 +47,7 @@ void BossEnemy::Init(KGPlin* pipeline_, const KMyMath::Vector3& initPos_, KGPlin
 void BossEnemy::Draw() { object3d->Draw(); }
 
 void BossEnemy::UIDraw() {
-	if (isBossMovie || isDead) {
+	if (isBossMovie_ || isDead_) {
 		return;
 	}
 
@@ -55,17 +55,17 @@ void BossEnemy::UIDraw() {
 
 	const KMyMath::Vector2 hpTexSize = {672.0f, 22.0f};
 
-	const float sizeX = hpTexSize.x / maxHP;
+	const float sizeX = hpTexSize.x / maxHP_;
 	const float sizeY = hpTexSize.y;
 
-	HPBarUI->Draw(hpbarTex, {width / 2.0f, HPPos.y}, {1.0f, 1.0f}, 0, {1.0f, 1.0f, 1.0f, 1.0f});
+	HPBarUI_->Draw(hpbarTex_, {width / 2.0f, HPPos_.y}, {1.0f, 1.0f}, 0, {1.0f, 1.0f, 1.0f, 1.0f});
 
-	const KMyMath::Vector2 HPUIPos = {(width / 2) - (hpTexSize.x / 2), HPPos.y};
+	const KMyMath::Vector2 HPUIPos = {(width / 2) - (hpTexSize.x / 2), HPPos_.y};
 
-	HPrectUI->Draw(
-	    hpTex, HPUIPos, {oldHP * sizeX, sizeY}, 0, {1, 0, 0, 0.3f}, false, false, {0, 0.5f});
+	HPrectUI_->Draw(
+	    hpTex_, HPUIPos, {oldHP_ * sizeX, sizeY}, 0, {1, 0, 0, 0.3f}, false, false, {0, 0.5f});
 
-	HPUI->Draw(hpTex, HPUIPos, {HP * sizeX, sizeY}, 0, {1, 0, 0, 1}, false, false, {0, 0.5f});
+	HPUI_->Draw(hpTex_, HPUIPos, {HP * sizeX, sizeY}, 0, {1, 0, 0, 1}, false, false, {0, 0.5f});
 }
 
 const KMyMath::Vector3 BossEnemy::GetWorldPos() const {
@@ -160,15 +160,15 @@ void BossEnemy::HPEffect() {
 		} else {
 			hpEaseTimer++;
 
-			oldHP = MyEase::OutCubicFloat(startHpEase, HP, hpEaseTimer / hpEaseTime);
+			oldHP_ = MyEase::OutCubicFloat(startHpEase, HP, hpEaseTimer / hpEaseTime);
 
 			if (hpEaseTimer > hpEaseTime) {
 				hpEase = false;
 			}
 		}
 	} else {
-		oldHP = HP;
-		startHpEase = oldHP;
+		oldHP_ = HP;
+		startHpEase = oldHP_;
 		oldHpTimer = 0;
 		hpEaseTimer = 0;
 	}
@@ -176,7 +176,7 @@ void BossEnemy::HPEffect() {
 
 const bool BossEnemy::GetIsHPE() const { return isHPE; }
 
-const bool BossEnemy::GetIsDead() const { return isDead; }
+const bool BossEnemy::GetIsDead() const { return isDead_; }
 
 const bool BossEnemy::GetIsFallEffectEnd() const { return isFallEffectEnd; }
 

@@ -46,38 +46,38 @@ void GameScene::Init() {
 
 	// プレイヤー生成
 	float playersHPInit = 50.0f;
-	player.reset(Player::Create(playersHPInit));
-	Player::nowPlayer = player.get();
+	player_.reset(Player::Create(playersHPInit));
+	Player::nowPlayer = player_.get();
 
 	// カメラ生成
-	camera = std::make_unique<RailCamera>();
-	RailCamera::nowRailCamera = camera.get();
+	camera_ = std::make_unique<RailCamera>();
+	RailCamera::nowRailCamera = camera_.get();
 
 	// シーンマネージャーインスタンス
 	sceneManager = SceneManager::GetInstance();
 
 	// カメラ初期化
 	//camera->Init(player.get(), {0.0f, 0.0f, -200.0f});
-	camera->Init(player.get(), {0.0f, 0.0f, 750.0f});
+	camera_->Init(player_.get(), {0.0f, 0.0f, 750.0f});
 
 	// エネミーマネージャー生成
 	enemyManager.reset(EnemyManager::Create(
 	    "Resources/csv/enemyPop.csv", // ステージのcsvを読み込む
-	    player.get()                  // プレイヤー情報
+	    player_.get()                  // プレイヤー情報
 	    ));
 
 	// 地面
-	ground = std::make_unique<Ground>();
-	ground->Init(player.get());
+	ground_ = std::make_unique<Ground>();
+	ground_->Init(player_.get());
 
 	// スカイボックス
-	skyBox.reset(SkyBox::Create(
+	skyBox_.reset(SkyBox::Create(
 	    ModelManager::GetInstance()->GetModels("SkyDorm"),
 	    PipelineManager::GetInstance()->GetPipeline("Obj"), 50));
 
 	// 弾マネージャー
-	bulletManager = BulletManager::GetInstance();
-	bulletManager->Init(light_.get());
+	bulletManager_ = BulletManager::GetInstance();
+	bulletManager_->Init(light_.get());
 
 	// パーティクル
 	particleManager = ParticleManager::GetInstance();
@@ -93,11 +93,11 @@ void GameScene::Init() {
 
 	GameManager::GetInstance()->SetMovieFlag(true, "Start");
 
-	poseBack.reset(Sprite::Create(PipelineManager::GetInstance()->GetPipeline("Sprite")));
-	selectBar.reset(Sprite::Create(PipelineManager::GetInstance()->GetPipeline("Sprite")));
-	poseTexS.reset(Sprite::Create(PipelineManager::GetInstance()->GetPipeline("Sprite")));
-	backTitleS.reset(Sprite::Create(PipelineManager::GetInstance()->GetPipeline("Sprite")));
-	operationS.reset(Sprite::Create(PipelineManager::GetInstance()->GetPipeline("Sprite")));
+	poseBack_.reset(Sprite::Create(PipelineManager::GetInstance()->GetPipeline("Sprite")));
+	selectBar_.reset(Sprite::Create(PipelineManager::GetInstance()->GetPipeline("Sprite")));
+	poseTexS_.reset(Sprite::Create(PipelineManager::GetInstance()->GetPipeline("Sprite")));
+	backTitleS_.reset(Sprite::Create(PipelineManager::GetInstance()->GetPipeline("Sprite")));
+	operationS_.reset(Sprite::Create(PipelineManager::GetInstance()->GetPipeline("Sprite")));
 
 	// ボスバトル開始座標
 	bossBattleStartPos = 900;
@@ -121,21 +121,21 @@ void GameScene::Update() {
 	ImGui::Begin("Light");
 	ImGui::SetWindowPos({0, 300});
 	ImGui::SetWindowSize({200, 200});
-	ImGui::SliderFloat("LightColorR", &lightRGB.x, 0, 1, "%.1f");
-	ImGui::SliderFloat("LightColorG", &lightRGB.y, 0, 1, "%.1f");
-	ImGui::SliderFloat("LightColorB", &lightRGB.z, 0, 1, "%.1f");
-	ImGui::SliderFloat("LightDirX", &lightDir.x, -1, 1, "%.1f");
-	ImGui::SliderFloat("LightDirY", &lightDir.y, -1, 1, "%.1f");
-	ImGui::SliderFloat("LightDirZ", &lightDir.z, -1, 1, "%.1f");
+	ImGui::SliderFloat("LightColorR", &lightRGB_.x, 0, 1, "%.1f");
+	ImGui::SliderFloat("LightColorG", &lightRGB_.y, 0, 1, "%.1f");
+	ImGui::SliderFloat("LightColorB", &lightRGB_.z, 0, 1, "%.1f");
+	ImGui::SliderFloat("LightDirX", &lightDir_.x, -1, 1, "%.1f");
+	ImGui::SliderFloat("LightDirY", &lightDir_.y, -1, 1, "%.1f");
+	ImGui::SliderFloat("LightDirZ", &lightDir_.z, -1, 1, "%.1f");
 	ImGui::End();
 
-	light_->SetLightRGB({lightRGB.x, lightRGB.y, lightRGB.z});
-	light_->SetLightDir({lightDir.x, lightDir.y, lightDir.z, 0.0f});
+	light_->SetLightRGB({lightRGB_.x, lightRGB_.y, lightRGB_.z});
+	light_->SetLightDir({lightDir_.x, lightDir_.y, lightDir_.z, 0.0f});
 
-	switch (scene) {
+	switch (scene_) {
 	case GameScene::Games:
 		// プレイヤーとカメラの親子関係解消
-		player->SetParent(&camera->GetTransform());
+		player_->SetParent(&camera_->GetTransform());
 		GamePlay();
 		break;
 	case GameScene::Over:
@@ -143,7 +143,7 @@ void GameScene::Update() {
 		break;
 	case GameScene::Movies:
 		// プレイヤーとカメラの親子関係解消
-		player->SetParent(nullptr);
+		player_->SetParent(nullptr);
 		movie_->Update();
 		break;
 	default:
@@ -155,24 +155,24 @@ void GameScene::Update() {
 
 void GameScene::ObjDraw() {
 	// 地面描画
-	ground->Draw();
+	ground_->Draw();
 
 	// モブエネミー描画
 	enemyManager->Draw();
 
 	// ボス描画
-	if (blaster) {
-		blaster->Draw();
+	if (blaster_) {
+		blaster_->Draw();
 	}
 
 	// プレイヤー描画
-	player->ObjDraw();
+	player_->ObjDraw();
 
 	// スカイボックス描画
-	skyBox->ObjDraw();
+	skyBox_->ObjDraw();
 
 	// 弾の描画
-	bulletManager->Draw();
+	bulletManager_->Draw();
 
 	// パーティクルの描画
 	particleManager->Draw();
@@ -183,30 +183,30 @@ void GameScene::ObjDraw() {
 }
 
 void GameScene::SpriteDraw() {
-	switch (scene) {
+	switch (scene_) {
 	case GameScene::Games:
 		// ボス登場警告演出
-		if (bossWarning) {
-			bossWarning->Draw();
+		if (bossWarning_) {
+			bossWarning_->Draw();
 		}
 
-		if (blaster) {
+		if (blaster_) {
 			// ボスUI描画
-			blaster->UIDraw();
+			blaster_->UIDraw();
 		}
 
 		// 2D情報描画
-		player->SpriteDraw();
+		player_->SpriteDraw();
 
 		// UI描画
-		player->UIDraw();
+		player_->UIDraw();
 
 		// スコア描画
 		ScoreManager::GetInstance()->Draw();
 		break;
 	case GameScene::Over:
 		// UI描画
-		player->UIDraw();
+		player_->UIDraw();
 
 		// スコア描画
 		ScoreManager::GetInstance()->Draw();
@@ -222,20 +222,20 @@ void GameScene::SpriteDraw() {
 		float width = static_cast<float>(KWinApp::GetInstance()->GetWindowSizeW());
 		float height = static_cast<float>(KWinApp::GetInstance()->GetWindowSizeH());
 
-		poseBack->Draw(
+		poseBack_->Draw(
 		    TextureManager::GetInstance()->GetTextures("White1x1"), {0, 0}, {width, height}, 0.0f,
 		    {0, 0, 0, 0.7f}, false, false, {0, 0});
 
-		poseTexPos = {width / 2, height * 1 / 4};
-		poseTexS->Draw(
-		    TextureManager::GetInstance()->GetTextures("Pose"), poseTexPos, {1.5f, 1.5f});
+		poseTexPos_ = {width / 2, height * 1 / 4};
+		poseTexS_->Draw(
+		    TextureManager::GetInstance()->GetTextures("Pose"), poseTexPos_, {1.5f, 1.5f});
 
-		selectBar->Draw(
-		    TextureManager::GetInstance()->GetTextures("White1x1"), selectBarPos, {200.0f, 34.0f},
+		selectBar_->Draw(
+		    TextureManager::GetInstance()->GetTextures("White1x1"), selectBarPos_, {200.0f, 34.0f},
 		    0.0f, {0.5f, 0.5f, 0.5f, 0.8f});
 
-		operationS->Draw(TextureManager::GetInstance()->GetTextures("Operation"), operationPos);
-		backTitleS->Draw(TextureManager::GetInstance()->GetTextures("Back"), backTitlePos);
+		operationS_->Draw(TextureManager::GetInstance()->GetTextures("Operation"), operationPos_);
+		backTitleS_->Draw(TextureManager::GetInstance()->GetTextures("Back"), backTitlePos_);
 	}
 }
 
@@ -248,24 +248,24 @@ void GameScene::CheckAllCollisions() {
 #pragma region 準備処理
 	// 自機弾の取得
 	const std::list<std::unique_ptr<PlayerBullet>>& playerBullets =
-	    bulletManager->GetPlayerBullets();
+	    bulletManager_->GetPlayerBullets();
 
 	// 敵弾の取得
-	const std::list<std::unique_ptr<EnemyBullet>>& enemyBullets = bulletManager->GetEnemyBullets();
+	const std::list<std::unique_ptr<EnemyBullet>>& enemyBullets = bulletManager_->GetEnemyBullets();
 
 	// ボム
-	const std::list<std::unique_ptr<Bom>>& boms = bulletManager->GetBoms();
+	const std::list<std::unique_ptr<Bom>>& boms = bulletManager_->GetBoms();
 
 	// 爆発
-	const std::list<std::unique_ptr<Explosion>>& explosions = bulletManager->GetExplosion();
+	const std::list<std::unique_ptr<Explosion>>& explosions = bulletManager_->GetExplosion();
 
 	// 敵の取得
 	const std::list<std::unique_ptr<MobEnemy>>& mobEnemys = enemyManager->GetMobEnemys();
 
 	// 当たり判定を登録
 	// 自機
-	player->SetRadius(3.0f);
-	collisionManager_->AddCollider(player.get());
+	player_->SetRadius(3.0f);
+	collisionManager_->AddCollider(player_.get());
 
 	// 雑魚敵
 	for (const std::unique_ptr<MobEnemy>& mobEnemy : mobEnemys) {
@@ -274,9 +274,9 @@ void GameScene::CheckAllCollisions() {
 	}
 
 	// ボス
-	if (blaster) {
-		blaster->SetRadius(12.0f);
-		collisionManager_->AddCollider(blaster.get());
+	if (blaster_) {
+		blaster_->SetRadius(12.0f);
+		collisionManager_->AddCollider(blaster_.get());
 	}
 
 	// 自弾
@@ -307,14 +307,14 @@ void GameScene::CheckAllCollisions() {
 		KMyMath::Vector3 posA;
 		std::array<KMyMath::Vector3, 8> posB;
 
-		if (blaster && !blaster->GetIsDead() && isBossBattle && !player->GetIsDead()) {
-			posA = player->GetWorldPos();
+		if (blaster_ && !blaster_->GetIsDead() && isBossBattle_ && !player_->GetIsDead()) {
+			posA = player_->GetWorldPos();
 
 			for (uint32_t i = 0; i < 8; i++) {
-				posB[i] = blaster->UnitsGetWorldPos(i);
+				posB[i] = blaster_->UnitsGetWorldPos(i);
 
 				if (MyCollisions::CheckSphereToSphere(posA, posB[i], 3.0f, 4.0f)) {
-					player->OnCollision(player.get());
+					player_->OnCollision(player_.get());
 				}
 			}
 		}
@@ -326,22 +326,22 @@ void GameScene::CheckAllCollisions() {
 		KMyMath::Vector3 posA;
 		std::array<KMyMath::Vector3, 16> posB;
 
-		if (blaster && !blaster->GetIsDead() && isBossBattle && !player->GetIsDead()) {
-			posA = player->GetWorldPos();
+		if (blaster_ && !blaster_->GetIsDead() && isBossBattle_ && !player_->GetIsDead()) {
+			posA = player_->GetWorldPos();
 
 			for (size_t i = 0; i < 8; i++) {
 				size_t j = i + 8;
-				posB[i] = bulletManager->GetLazersPos(i);
-				posB[j] = bulletManager->GetLazersPos(j);
+				posB[i] = bulletManager_->GetLazersPos(i);
+				posB[j] = bulletManager_->GetLazersPos(j);
 
 				if (MyCollisions::CheckBoxToBox(
 				        posA, posB[i], {3.0f, 3.0f, 3.0f}, {1.0f, 180.0f, 1.0f})) {
-					player->OnCollision(player.get());
+					player_->OnCollision(player_.get());
 				}
 
 				if (MyCollisions::CheckBoxToBox(
 				        posA, posB[j], {3.0f, 3.0f, 3.0f}, {180.0f, 1.0f, 1.0f})) {
-					player->OnCollision(player.get());
+					player_->OnCollision(player_.get());
 				}
 			}
 		}
@@ -357,12 +357,12 @@ void GameScene::BossBattleStart() {
 	}
 
 	// ボスバトルが始まってればスキップ
-	if (isBossBattle || GameManager::GetInstance()->GetMovieFlag("Boss")) {
+	if (isBossBattle_ || GameManager::GetInstance()->GetMovieFlag("Boss")) {
 		return;
 	}
 
-	if (!bossWarning) {
-		bool isBossBattleStart = camera->GetCameraPos().z >= bossBattleStartPos;
+	if (!bossWarning_) {
+		bool isBossBattleStart = camera_->GetCameraPos().z >= bossBattleStartPos;
 
 		// スタート位置にいなかったらスキップ
 		if (!isBossBattleStart) {
@@ -373,23 +373,23 @@ void GameScene::BossBattleStart() {
 		audioManager_->SoundStopWave("BattleBGM.wav");
 
 		// カメラ前進止める
-		camera->SetIsAdvance(false);
+		camera_->SetIsAdvance(false);
 
 		// ビルを全部動かす状態へ
 		billManager->SetIsAdvance(true);
 
 		// 地面を動かす状態へ
-		ground->SetIsAdvance(true);
+		ground_->SetIsAdvance(true);
 
 		// ボス登場警告作成
-		bossWarning = std::make_unique<Warning>();
-		bossWarning->Init();
+		bossWarning_ = std::make_unique<Warning>();
+		bossWarning_->Init();
 
 		// 敵を全削除
 		enemyManager->AllEnemyDelete();
 	} else {
 		// 演出が終わってないときは抜ける
-		if (!bossWarning->GetIsDelete()) {
+		if (!bossWarning_->GetIsDelete()) {
 			return;
 		}
 
@@ -397,44 +397,44 @@ void GameScene::BossBattleStart() {
 		sceneChange->SceneChangeStart();
 
 		// ボス登場警告解放
-		bossWarning.reset();
+		bossWarning_.reset();
 
 		// ボス配置
 		const float bossDistance = 150;
 		const KMyMath::Vector3 bossBasePos = {0.0f, 120.0f, bossBattleStartPos + bossDistance};
 
 		// 生成
-		blaster.reset(Blaster::Create(
+		blaster_.reset(Blaster::Create(
 		    PipelineManager::GetInstance()->GetPipeline("Obj"), bossBasePos,
 		    PipelineManager::GetInstance()->GetPipeline("Sprite")));
 
-		Blaster::nowBlaster = blaster.get();
+		Blaster::nowBlaster = blaster_.get();
 
 		// ボス出現ムービーへ
 		GameManager::GetInstance()->SetMovieFlag(true, "Boss");
 		movie_ = std::make_unique<BossStart>();
-		scene = Movies;
+		scene_ = Movies;
 
 		isWarnning = true;
 	}
 }
 
 void GameScene::PlayerDead() {
-	if (player->GetIsDead() && !isCallDeadCamera) {
+	if (player_->GetIsDead() && !isCallDeadCamera) {
 		// 撃墜カメラ呼び出し
-		camera->CallCrash();
+		camera_->CallCrash();
 		isCallDeadCamera = true;
 		// プレイヤーとカメラの接続解除
-		player->SetParent(nullptr);
-		player->SetPos(player->GetWorldPos());
+		player_->SetParent(nullptr);
+		player_->SetPos(player_->GetWorldPos());
 		// 全ての敵を消去
 		enemyManager->AllEnemyDelete();
 		// 撃墜ムービーへ
 		GameManager::GetInstance()->SetMovieFlag(true, "Over");
 	}
 
-	if (player->GetIsFallEffectEnd()) {
-		scene = Over;
+	if (player_->GetIsFallEffectEnd()) {
+		scene_ = Over;
 		isGoOverScene = true;
 	}
 }
@@ -450,7 +450,7 @@ void GameScene::GoGameOverScene() {
 
 	if (sceneChange->GetIsChange()) {
 		sceneManager->ChangeScene("GAME");
-		bulletManager->AllBulletDelete();
+		bulletManager_->AllBulletDelete();
 	}
 }
 
@@ -477,13 +477,13 @@ void GameScene::GamePlay() {
 		// 自機が死んだとき
 		PlayerDead();
 
-		if (!blaster) {
+		if (!blaster_) {
 			// エネミーマネージャーの更新
-			enemyManager->Update(camera->GetViewPro(), camera->GetWorldPos());
+			enemyManager->Update(camera_->GetViewPro(), camera_->GetWorldPos());
 		}
 
 		// 天箱を自機に追従
-		skyBox->SetPosZ(player->GetWorldPos().z);
+		skyBox_->SetPosZ(player_->GetWorldPos().z);
 	}
 }
 
@@ -498,66 +498,66 @@ void GameScene::AllScene() {
 			if (gameManager_->GetMovieFlag("Boss")) {
 				gameManager_->SetMovieFlag(false, "Boss");
 				// ボスバトル開始
-				isBossBattle = true;
+				isBossBattle_ = true;
 			}
 
-			scene = Games;
+			scene_ = Games;
 			movie_->SetIsFinish(false);
 		}
 
 		// ボスの更新
-		if (blaster) {
-			if (blaster->GetIsFallEffectEnd()) {
+		if (blaster_) {
+			if (blaster_->GetIsFallEffectEnd()) {
 				goClearMovieTimer++;
 				if (goClearMovieTimer == goClearMovieTime) {
-					player->SetParent(nullptr);
-					player->SetPos(player->GetWorldPos());
+					player_->SetParent(nullptr);
+					player_->SetPos(player_->GetWorldPos());
 					gameManager_->SetMovieFlag(true, "Clear");
 					movie_ = std::make_unique<StageClear>();
-					scene = Movies;
+					scene_ = Movies;
 					goClearMovieTimer = goClearMovieTime + 1.0f;
 				}
 			}
 
-			blaster->Update(
-			    camera->GetViewPro(), camera->GetWorldPos(), gameManager_->GetMovieFlag("Boss"));
-			Blaster::nowBlaster = blaster.get();
+			blaster_->Update(
+			    camera_->GetViewPro(), camera_->GetWorldPos(), gameManager_->GetMovieFlag("Boss"));
+			Blaster::nowBlaster = blaster_.get();
 		}
 
 		// プレイヤーの更新
-		player->Update(camera->GetViewPro(), camera->GetWorldPos());
-		Player::nowPlayer = player.get();
+		player_->Update(camera_->GetViewPro(), camera_->GetWorldPos());
+		Player::nowPlayer = player_.get();
 
 		// 弾の更新
-		bulletManager->Update(camera->GetViewPro(), camera->GetWorldPos());
+		bulletManager_->Update(camera_->GetViewPro(), camera_->GetWorldPos());
 
 		// 地面の更新
-		ground->Update(camera->GetViewPro(), camera->GetWorldPos());
+		ground_->Update(camera_->GetViewPro(), camera_->GetWorldPos());
 
 		// スカイボックスの更新
-		skyBox->Update(camera->GetViewPro(), camera->GetWorldPos());
+		skyBox_->Update(camera_->GetViewPro(), camera_->GetWorldPos());
 
 		// パーティクルマネージャーの更新
-		particleManager->Update(camera->GetViewPro());
-		objParticleManager->Update(camera->GetViewPro(), camera->GetWorldPos());
+		particleManager->Update(camera_->GetViewPro());
+		objParticleManager->Update(camera_->GetViewPro(), camera_->GetWorldPos());
 
 		// ビルマネージャー
 		billManager->Update(
-		    camera->GetViewPro(), camera->GetWorldPos(), camera->GetCameraPos().z - 20.0f);
+		    camera_->GetViewPro(), camera_->GetWorldPos(), camera_->GetCameraPos().z - 20.0f);
 
 		// カメラの更新
-		camera->Update(
+		camera_->Update(
 		    gameManager_->GetMovieFlag("Start"), gameManager_->GetMovieFlag("Boss"),
 		    gameManager_->GetMovieFlag("Clear"));
-		RailCamera::nowRailCamera = camera.get();
+		RailCamera::nowRailCamera = camera_.get();
 
 		ScoreManager::GetInstance()->Update();
 
 		light_->Update();
 
 		// ボス登場警告
-		if (bossWarning) {
-			bossWarning->Update();
+		if (bossWarning_) {
+			bossWarning_->Update();
 		}
 	} else {
 		PoseAction();
@@ -571,8 +571,8 @@ void GameScene::PoseAction() {
 	float width = static_cast<float>(KWinApp::GetInstance()->GetWindowSizeW());
 	float height = static_cast<float>(KWinApp::GetInstance()->GetWindowSizeH());
 
-	operationPos = {width / 2, (height / 2) - 60.0f};
-	backTitlePos = {width / 2, height / 2};
+	operationPos_ = {width / 2, (height / 2) - 60.0f};
+	backTitlePos_ = {width / 2, height / 2};
 
 	if (input->GetLStickDown()) {
 		if (isOperation) {
@@ -589,14 +589,14 @@ void GameScene::PoseAction() {
 	}
 
 	if (isOperation) {
-		selectBarPos = operationPos;
+		selectBarPos_ = operationPos_;
 
 		if (input->GetPadButton(XINPUT_GAMEPAD_A)) {
 		}
 	}
 
 	if (isBackTitle) {
-		selectBarPos = backTitlePos;
+		selectBarPos_ = backTitlePos_;
 
 		if (input->GetPadButton(XINPUT_GAMEPAD_A)) {
 			audioManager_->SoundStopWave("BattleBGM.wav");
@@ -608,6 +608,6 @@ void GameScene::PoseAction() {
 	if (sceneChange->GetIsChange()) {
 		gameManager_->SetIsStartMovie(false);
 		sceneManager->ChangeScene("TITLE");
-		bulletManager->AllBulletDelete();
+		bulletManager_->AllBulletDelete();
 	}
 }

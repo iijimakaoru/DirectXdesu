@@ -87,29 +87,29 @@ private:
 	KInput* input = nullptr;
 
 	// カメラ
-	std::unique_ptr<RailCamera> camera = nullptr;
+	std::unique_ptr<RailCamera> camera_ = nullptr;
 
 	// プレイヤー
-	std::unique_ptr<Player> player = nullptr;
+	std::unique_ptr<Player> player_ = nullptr;
 
 	// 敵の弾モデル
-	std::unique_ptr<KModel> enemysBulletModel = nullptr;
+	std::unique_ptr<KModel> enemysBulletModel_ = nullptr;
 
 	// 簡易地面
-	std::unique_ptr<Ground> ground = nullptr;
+	std::unique_ptr<Ground> ground_ = nullptr;
 
 	// MS01_Blaster
-	std::unique_ptr<Blaster> blaster = nullptr;
+	std::unique_ptr<Blaster> blaster_ = nullptr;
 
 	// 登場警告
-	std::unique_ptr<Warning> bossWarning = nullptr;
-	bool isBossBattle = false;
+	std::unique_ptr<Warning> bossWarning_ = nullptr;
+	bool isBossBattle_ = false;
 
 	// バレットマネージャー
-	BulletManager* bulletManager = nullptr;
+	BulletManager* bulletManager_ = nullptr;
 
 	// スカイボックス
-	std::unique_ptr<SkyBox> skyBox = nullptr;
+	std::unique_ptr<SkyBox> skyBox_ = nullptr;
 
 	// パーティクル
 	ParticleManager* particleManager = nullptr;
@@ -145,19 +145,19 @@ private:
 	bool isOperation = true;
 	bool isBackTitle = false;
 
-	std::unique_ptr<Sprite> poseBack;
+	std::unique_ptr<Sprite> poseBack_;
 
-	std::unique_ptr<Sprite> selectBar;
-	KMyMath::Vector2 selectBarPos;
+	std::unique_ptr<Sprite> selectBar_;
+	KMyMath::Vector2 selectBarPos_;
 
-	std::unique_ptr<Sprite> poseTexS;
-	KMyMath::Vector2 poseTexPos;
+	std::unique_ptr<Sprite> poseTexS_;
+	KMyMath::Vector2 poseTexPos_;
 
-	std::unique_ptr<Sprite> backTitleS;
-	KMyMath::Vector2 backTitlePos;
+	std::unique_ptr<Sprite> backTitleS_;
+	KMyMath::Vector2 backTitlePos_;
 
-	std::unique_ptr<Sprite> operationS;
-	KMyMath::Vector2 operationPos;
+	std::unique_ptr<Sprite> operationS_;
+	KMyMath::Vector2 operationPos_;
 #pragma endregion
 
 	// オーディオ
@@ -165,11 +165,11 @@ private:
 
 	// ライト
 	std::unique_ptr<Light> light_ = nullptr;
-	KMyMath::Vector3 lightRGB = {1, 1, 1};
-	KMyMath::Vector3 lightDir = {0, -1, 0};
+	KMyMath::Vector3 lightRGB_ = {1, 1, 1};
+	KMyMath::Vector3 lightDir_ = {0, -1, 0};
 
 	// プレイシーン
-	Scene scene = Scene::Movies;
+	Scene scene_ = Scene::Movies;
 
 	// ムービー
 	std::unique_ptr<BaseMovie> movie_ = nullptr;

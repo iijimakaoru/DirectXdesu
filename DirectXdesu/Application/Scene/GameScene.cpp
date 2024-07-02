@@ -134,12 +134,11 @@ void GameScene::Update() {
 
 	switch (scene_) {
 	case GameScene::Games:
-		// プレイヤーとカメラの親子関係解消
 		player_->SetParent(&camera_->GetTransform());
 		GamePlay();
 		break;
 	case GameScene::Over:
-		GoGameOverScene();
+		GameOverMovie();
 		break;
 	case GameScene::Movies:
 		// プレイヤーとカメラの親子関係解消
@@ -420,22 +419,28 @@ void GameScene::BossBattleStart() {
 }
 
 void GameScene::PlayerDead() {
-	if (player_->GetIsDead() && !isCallDeadCamera) {
+	if (player_->GetIsDead()) {
+		// 全ての敵を消去
+		enemyManager->AllEnemyDelete();
+		scene_ = Over;
+	}
+}
+
+void GameScene::GameOverMovie()
+{
+	if (!isCallDeadCamera) {
 		// 撃墜カメラ呼び出し
 		camera_->CallCrash();
 		isCallDeadCamera = true;
 		// プレイヤーとカメラの接続解除
 		player_->SetParent(nullptr);
 		player_->SetPos(player_->GetWorldPos());
-		// 全ての敵を消去
-		enemyManager->AllEnemyDelete();
 		// 撃墜ムービーへ
 		GameManager::GetInstance()->SetMovieFlag(true, "Over");
 	}
 
 	if (player_->GetIsFallEffectEnd()) {
-		scene_ = Over;
-		isGoOverScene = true;
+		GoGameOverScene();
 	}
 }
 

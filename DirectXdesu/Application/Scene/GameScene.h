@@ -68,6 +68,8 @@ private:
 	// 自機死亡
 	void PlayerDead();
 
+	void GameOverMovie();
+
 	// ゲームオーバーシーンへ
 	void GoGameOverScene();
 

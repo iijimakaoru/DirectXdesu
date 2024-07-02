@@ -91,8 +91,6 @@ void GameScene::Init() {
 
 	isCallDeadCamera = false;
 
-	GameManager::GetInstance()->SetMovieFlag(true, "Start");
-
 	poseBack_.reset(Sprite::Create(PipelineManager::GetInstance()->GetPipeline("Sprite")));
 	selectBar_.reset(Sprite::Create(PipelineManager::GetInstance()->GetPipeline("Sprite")));
 	poseTexS_.reset(Sprite::Create(PipelineManager::GetInstance()->GetPipeline("Sprite")));
@@ -111,6 +109,7 @@ void GameScene::Init() {
 	audioManager_->BGMPlay_wav("BattleBGM.wav", 0.15f);
 
 	gameManager_ = GameManager::GetInstance();
+	gameManager_->SetMovieFlag(true, "Start");
 
 	movie_ = std::make_unique<StageStart>();
 

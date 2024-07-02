@@ -1,6 +1,7 @@
 #include "StageClear.h"
 #include "Player.h"
 #include "RailCamera.h"
+#include "GameManager.h"
 
 void (StageClear::*StageClear::phase[])() = {
 	&StageClear::InsertPhase,
@@ -151,6 +152,7 @@ void StageClear::BlackOutPhase() {
 
 void StageClear::GoResultPhase() {
 	if (sceneChange_->GetIsChange()) {
+		GameManager::GetInstance()->Init();
 		sceneManager_->ChangeScene("CLEAR");
 		bulletManager_->AllBulletDelete();
 	}

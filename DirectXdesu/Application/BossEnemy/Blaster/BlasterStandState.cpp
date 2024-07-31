@@ -4,6 +4,8 @@
 
 BlasterStandState::BlasterStandState()
 {
+	Blaster* blaster = Blaster::nowBlaster;
+	blaster->SetDefensePower(0.5f);
 	isFinish = false;
 	actsPhase = CubeClose;
 }

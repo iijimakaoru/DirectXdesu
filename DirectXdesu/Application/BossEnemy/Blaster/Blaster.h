@@ -63,6 +63,9 @@ public:
 	/// <returns></returns>
 	bool CollisionCheck(const KMyMath::Vector3& posA, const KMyMath::Vector3& posB) override;
 
+	// 当たった時の処理
+	void OnCollision(Collider* collider) override;
+
 	void SetFarstAct() override;
 
 	/// <summary>

@@ -6,6 +6,8 @@
 #include "Player.h"
 
 BlasterAimState::BlasterAimState() {
+	Blaster* blaster = Blaster::nowBlaster;
+	blaster->SetDefensePower(0.5f);
 	audioManager = AudioManager::GetInstance();
 	actsPhase = STAND;
 }

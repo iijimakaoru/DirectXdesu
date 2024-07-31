@@ -47,9 +47,6 @@ public:
 	/// <returns></returns>
 	virtual const KMyMath::Vector3 GetWorldPos() const;
 
-	// 当たった時の処理
-	void OnCollision(Collider* collider) override;
-
 	KMyMath::Vector3 GetWorldPosition() override;
 
 	// 当たり判定範囲
@@ -82,6 +79,8 @@ public:
 
 	void SetIsMuteki(bool isMuteki);
 
+	void SetDefensePower(const float& power);
+
 protected:
 	// トランスフォーム
 	std::unique_ptr<KObject3d> object3d = nullptr;
@@ -98,6 +97,9 @@ protected:
 
 	// ボスムービーフラグ
 	bool isBossMovie_ = false;
+
+	// 耐性値
+	float defensePower_ = 1.0f;
 
 #pragma region HP
 	// 最大体力

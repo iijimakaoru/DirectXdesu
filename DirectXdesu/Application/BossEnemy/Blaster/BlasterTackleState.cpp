@@ -4,7 +4,11 @@
 #include "Ease.h"
 #include "Player.h"
 
-BlasterTackleState::BlasterTackleState() { actsPhase = CubeClose; }
+BlasterTackleState::BlasterTackleState() {
+	Blaster* blaster = Blaster::nowBlaster;
+	blaster->SetDefensePower(0.0f); 
+	actsPhase = CubeClose; 
+}
 
 void BlasterTackleState::Update() {
 	switch (actsPhase) {

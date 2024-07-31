@@ -5,7 +5,11 @@
 #include "Ease.h"
 #include "MyMath.h"
 
-BlasterUnitLazer::BlasterUnitLazer() { actsPhase = CubeClose; }
+BlasterUnitLazer::BlasterUnitLazer() {
+	Blaster* blaster = Blaster::nowBlaster;
+	blaster->SetDefensePower(2.0f); 
+	actsPhase = CubeClose; 
+}
 
 void BlasterUnitLazer::Update() {
 	switch (actsPhase) {

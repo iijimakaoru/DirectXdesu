@@ -78,27 +78,6 @@ const KMyMath::Vector3 BossEnemy::GetWorldPos() const {
 	return result;
 }
 
-void BossEnemy::OnCollision(Collider* collider) {
-	if (isMuteki_) {
-		return;
-	}
-	Collider* partner = collider;
-
-	// ボム
-	if (partner->GetCollisionAttribute() == Collider::Attribute::PlayersBom) {
-		HP -= 50;
-	}
-	// 弾
-	else if (partner->GetCollisionAttribute() == Collider::Attribute::PlayersBullet) {
-		HP -= 5;
-	}
-
-	ObjParticleManager::GetInstance()->SetExp(GetWorldPos());
-	hpEase = true;
-	oldHpTimer = 0;
-	hpEaseTimer = 0;
-}
-
 KMyMath::Vector3 BossEnemy::GetWorldPosition() {
 	// ワールド座標格納変数
 	KMyMath::Vector3 result;
@@ -187,3 +166,7 @@ void BossEnemy::SetPos(const KMyMath::Vector3& pos_) { object3d->GetTransform().
 void BossEnemy::SetRot(const KMyMath::Vector3& rot_) { object3d->GetTransform().SetRot(rot_); }
 
 void BossEnemy::SetIsMuteki(bool isMuteki) { isMuteki_ = isMuteki; }
+
+void BossEnemy::SetDefensePower(const float& power){
+	defensePower_ = power;
+}

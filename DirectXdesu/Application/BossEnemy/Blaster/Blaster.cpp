@@ -15,6 +15,7 @@
 #include "ScoreManager.h"
 
 #include "BulletManager.h"
+#include "ParticleManager.h"
 
 Blaster* Blaster::nowBlaster = nullptr;
 
@@ -40,7 +41,7 @@ void Blaster::Init(
 
 	BossEnemy::Init(pipeline_, initPos_, spritePipeline_);
 
-	maxHP_ = 300;
+	maxHP_ = 1000;
 	HP = maxHP_;
 
 	for (size_t i = 0; i < 8; i++) {
@@ -65,8 +66,6 @@ void Blaster::Init(
 	reticle2d->Init();
 	reticle2d->SetColor({1, 0, 0});
 	reticle2d->SetScale({0, 0});
-
-	blasterActState = std::make_unique<BlasterStandState>();
 }
 
 void Blaster::Update(
@@ -76,7 +75,7 @@ void Blaster::Update(
 
 	if (!isDead_) {
 		if (isBossMovie_) {
-
+			blasterActState = std::make_unique<BlasterStandState>();
 		} else {
 			if (blasterActState->GetIsFinish()) {
 				nActState_ = (NActState)MyMathUtility::GetRandI(Aim, Unit);
@@ -165,6 +164,28 @@ bool Blaster::CollisionCheck(const KMyMath::Vector3& posA_, const KMyMath::Vecto
 	}
 
 	return false;
+}
+
+void Blaster::OnCollision(Collider* collider)
+{
+	if (isMuteki_) {
+		return;
+	}
+	Collider* partner = collider;
+
+	// ボム
+	if (partner->GetCollisionAttribute() == Collider::Attribute::PlayersBom) {
+		HP -= 50 * defensePower_;
+	}
+	// 弾
+	else if (partner->GetCollisionAttribute() == Collider::Attribute::PlayersBullet) {
+		HP -= 5 * defensePower_;
+	}
+
+	ObjParticleManager::GetInstance()->SetExp(GetWorldPos());
+	hpEase = true;
+	oldHpTimer = 0;
+	hpEaseTimer = 0;
 }
 
 void Blaster::SetFarstAct() { blasterActState = std::make_unique<BlasterStandState>(); }

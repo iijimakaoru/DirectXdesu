@@ -31,13 +31,5 @@ private:
 
 	// カメラ
 	std::unique_ptr<Camera> camera = nullptr;
-
-	// クリアスプライト
-	std::unique_ptr<Sprite> over = nullptr;
-	TextureData overTex;
-
-	// 次のシーンへのキー
-	std::unique_ptr<Sprite> pushA = nullptr;
-	TextureData pushATex;
 };
 

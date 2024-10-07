@@ -360,9 +360,6 @@
     <ClCompile Include="Engine\Base\View\ViewProjection.cpp">
       <Filter>ソース ファイル\Engine\Base\View</Filter>
     </ClCompile>
-    <ClCompile Include="Application\Camera\RailCamera.cpp">
-      <Filter>ソース ファイル\Application\Camera</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\2D\Texture\TextureManager.cpp">
       <Filter>ソース ファイル\Engine\Base\TextureManager</Filter>
     </ClCompile>
@@ -384,83 +381,14 @@
     <ClCompile Include="Engine\Base\RunGame\main.cpp">
       <Filter>ソース ファイル\Engine\Base\RunGame</Filter>
     </ClCompile>
-    <ClCompile Include="Application\MobEnemy\AppearEnemy.cpp">
-      <Filter>ソース ファイル\Application\MobEnemy</Filter>
-    </ClCompile>
-    <ClCompile Include="Application\MobEnemy\MobEnemy.cpp">
-      <Filter>ソース ファイル\Application\MobEnemy</Filter>
-    </ClCompile>
-    <ClCompile Include="Application\MobEnemy\CanonEnemy.cpp">
-      <Filter>ソース ファイル\Application\MobEnemy</Filter>
-    </ClCompile>
-    <ClCompile Include="Application\MobEnemy\FlyEnemy.cpp">
-      <Filter>ソース ファイル\Application\MobEnemy</Filter>
-    </ClCompile>
-    <ClCompile Include="Application\Bullet\BulletManager.cpp">
-      <Filter>ソース ファイル\Application\Bullet</Filter>
-    </ClCompile>
-    <ClCompile Include="Application\Bullet\Bullet.cpp">
-      <Filter>ソース ファイル\Application\Bullet</Filter>
-    </ClCompile>
-    <ClCompile Include="Application\Bullet\PlayerBullet.cpp">
-      <Filter>ソース ファイル\Application\Bullet</Filter>
-    </ClCompile>
-    <ClCompile Include="Application\Effect\Warning.cpp">
-      <Filter>ソース ファイル\Application\Effect</Filter>
-    </ClCompile>
-    <ClCompile Include="Application\BossEnemy\BossEnemy.cpp">
-      <Filter>ソース ファイル\Application\BossEnemy</Filter>
-    </ClCompile>
-    <ClCompile Include="Application\Bullet\EnemyBullet.cpp">
-      <Filter>ソース ファイル\Application\Bullet</Filter>
-    </ClCompile>
-    <ClCompile Include="Application\Reticle\Reticle2D.cpp">
-      <Filter>ソース ファイル\Application\Reticle</Filter>
-    </ClCompile>
-    <ClCompile Include="Application\Reticle\Reticle3D.cpp">
-      <Filter>ソース ファイル\Application\Reticle</Filter>
-    </ClCompile>
-    <ClCompile Include="Application\Stage\Ground.cpp">
-      <Filter>ソース ファイル\Application\Stage</Filter>
-    </ClCompile>
-    <ClCompile Include="Application\Stage\BillManager.cpp">
-      <Filter>ソース ファイル\Application\Stage</Filter>
-    </ClCompile>
-    <ClCompile Include="Application\Stage\Bill1.cpp">
-      <Filter>ソース ファイル\Application\Stage</Filter>
-    </ClCompile>
     <ClCompile Include="Application\Stage\SkyBox.cpp">
       <Filter>ソース ファイル\Application\Stage</Filter>
-    </ClCompile>
-    <ClCompile Include="Application\Player\Player.cpp">
-      <Filter>ソース ファイル\Application\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="Application\MobEnemy\EnemyManager.cpp">
-      <Filter>ソース ファイル\Application\MobEnemy</Filter>
-    </ClCompile>
-    <ClCompile Include="Application\BossEnemy\Blaster\Blaster.cpp">
-      <Filter>ソース ファイル\Application\BossEnemy\Blaster</Filter>
-    </ClCompile>
-    <ClCompile Include="Application\BossEnemy\Blaster\BlasterStandState.cpp">
-      <Filter>ソース ファイル\Application\BossEnemy\Blaster</Filter>
-    </ClCompile>
-    <ClCompile Include="Application\BossEnemy\ActState.cpp">
-      <Filter>ソース ファイル\Application\BossEnemy</Filter>
-    </ClCompile>
-    <ClCompile Include="Application\BossEnemy\Blaster\BlasterAimState.cpp">
-      <Filter>ソース ファイル\Application\BossEnemy\Blaster</Filter>
-    </ClCompile>
-    <ClCompile Include="Application\Score\ScoreManager.cpp">
-      <Filter>ソース ファイル\Application\Score</Filter>
     </ClCompile>
     <ClCompile Include="Application\GameManager.cpp">
       <Filter>ソース ファイル\Application</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Sound\AudioManager.cpp">
       <Filter>ソース ファイル\Engine\Sound</Filter>
-    </ClCompile>
-    <ClCompile Include="Application\BossEnemy\Blaster\BlasterTackleState.cpp">
-      <Filter>ソース ファイル\Application\BossEnemy\Blaster</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Base\BaseCamera\Camera.cpp">
       <Filter>ソース ファイル\Engine\Camera</Filter>
@@ -480,20 +408,8 @@
     <ClCompile Include="Engine\Base\BaseScene\BaseScene.cpp">
       <Filter>ソース ファイル\Engine\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="Application\BossEnemy\Blaster\BlasterUnitLazer.cpp">
-      <Filter>ソース ファイル\Application\BossEnemy\Blaster</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Base\Pipeline\PipelineManager.cpp">
       <Filter>ソース ファイル\Engine\Base\Pipeline</Filter>
-    </ClCompile>
-    <ClCompile Include="Application\BossEnemy\Blaster\BlasterUnitTackle.cpp">
-      <Filter>ソース ファイル\Application\BossEnemy\Blaster</Filter>
-    </ClCompile>
-    <ClCompile Include="Application\Bullet\UnitLazer.cpp">
-      <Filter>ソース ファイル\Application\Bullet</Filter>
-    </ClCompile>
-    <ClCompile Include="Application\Bullet\Bom.cpp">
-      <Filter>ソース ファイル\Application\Bullet</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Light\Light.cpp">
       <Filter>ソース ファイル\Engine\Base\Light</Filter>
@@ -504,16 +420,7 @@
     <ClCompile Include="Application\Effect\Shake.cpp">
       <Filter>ソース ファイル\Application\Effect</Filter>
     </ClCompile>
-    <ClCompile Include="Application\Movie\BossStart.cpp">
-      <Filter>ソース ファイル\Application\Movie</Filter>
-    </ClCompile>
     <ClCompile Include="Application\Movie\Movie.cpp">
-      <Filter>ソース ファイル\Application\Movie</Filter>
-    </ClCompile>
-    <ClCompile Include="Application\Movie\StageStart.cpp">
-      <Filter>ソース ファイル\Application\Movie</Filter>
-    </ClCompile>
-    <ClCompile Include="Application\Movie\StageClear.cpp">
       <Filter>ソース ファイル\Application\Movie</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Collision\Collider.cpp">
@@ -521,9 +428,6 @@
     </ClCompile>
     <ClCompile Include="Engine\Collision\CollisionManager.cpp">
       <Filter>ソース ファイル\Engine\Collision</Filter>
-    </ClCompile>
-    <ClCompile Include="Application\Bullet\Explosion.cpp">
-      <Filter>ソース ファイル\Application\Bullet</Filter>
     </ClCompile>
     <ClCompile Include="Engine\2D\PostEffect\MultiPostEffect.cpp">
       <Filter>ソース ファイル\Engine\2d\Sprites\PostEffect</Filter>
@@ -650,9 +554,6 @@
     <ClInclude Include="Engine\Base\View\ViewProjection.h">
       <Filter>ヘッダー ファイル\Engine\Base\View</Filter>
     </ClInclude>
-    <ClInclude Include="Application\Camera\RailCamera.h">
-      <Filter>ヘッダー ファイル\Application\Camera</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\2D\Texture\TextureManager.h">
       <Filter>ヘッダー ファイル\Engine\Base\TextureManager</Filter>
     </ClInclude>
@@ -671,83 +572,14 @@
     <ClInclude Include="Engine\Base\BaseScene\SceneChange.h">
       <Filter>ヘッダー ファイル\Application\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="Application\MobEnemy\MobEnemy.h">
-      <Filter>ヘッダー ファイル\Application\MobEnemy</Filter>
-    </ClInclude>
-    <ClInclude Include="Application\MobEnemy\FlyEnemy.h">
-      <Filter>ヘッダー ファイル\Application\MobEnemy</Filter>
-    </ClInclude>
-    <ClInclude Include="Application\MobEnemy\AppearEnemy.h">
-      <Filter>ヘッダー ファイル\Application\MobEnemy</Filter>
-    </ClInclude>
-    <ClInclude Include="Application\MobEnemy\CanonEnemy.h">
-      <Filter>ヘッダー ファイル\Application\MobEnemy</Filter>
-    </ClInclude>
-    <ClInclude Include="Application\Bullet\Bullet.h">
-      <Filter>ヘッダー ファイル\Application\Bullet</Filter>
-    </ClInclude>
-    <ClInclude Include="Application\Bullet\BulletManager.h">
-      <Filter>ヘッダー ファイル\Application\Bullet</Filter>
-    </ClInclude>
-    <ClInclude Include="Application\Bullet\PlayerBullet.h">
-      <Filter>ヘッダー ファイル\Application\Bullet</Filter>
-    </ClInclude>
-    <ClInclude Include="Application\Bullet\EnemyBullet.h">
-      <Filter>ヘッダー ファイル\Application\Bullet</Filter>
-    </ClInclude>
-    <ClInclude Include="Application\Effect\Warning.h">
-      <Filter>ヘッダー ファイル\Application\Effect</Filter>
-    </ClInclude>
-    <ClInclude Include="Application\BossEnemy\BossEnemy.h">
-      <Filter>ヘッダー ファイル\Application\BossEnemy</Filter>
-    </ClInclude>
-    <ClInclude Include="Application\Player\Player.h">
-      <Filter>ヘッダー ファイル\Application\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="Application\Stage\Bill1.h">
-      <Filter>ヘッダー ファイル\Application\Stage</Filter>
-    </ClInclude>
-    <ClInclude Include="Application\Stage\BillManager.h">
-      <Filter>ヘッダー ファイル\Application\Stage</Filter>
-    </ClInclude>
-    <ClInclude Include="Application\Stage\Ground.h">
-      <Filter>ヘッダー ファイル\Application\Stage</Filter>
-    </ClInclude>
     <ClInclude Include="Application\Stage\SkyBox.h">
       <Filter>ヘッダー ファイル\Application\Stage</Filter>
-    </ClInclude>
-    <ClInclude Include="Application\Reticle\Reticle2D.h">
-      <Filter>ヘッダー ファイル\Application\Reticle</Filter>
-    </ClInclude>
-    <ClInclude Include="Application\Reticle\Reticle3D.h">
-      <Filter>ヘッダー ファイル\Application\Reticle</Filter>
-    </ClInclude>
-    <ClInclude Include="Application\MobEnemy\EnemyManager.h">
-      <Filter>ヘッダー ファイル\Application\MobEnemy</Filter>
-    </ClInclude>
-    <ClInclude Include="Application\BossEnemy\Blaster\Blaster.h">
-      <Filter>ヘッダー ファイル\Application\BossEnemy\Blaster</Filter>
-    </ClInclude>
-    <ClInclude Include="Application\BossEnemy\Blaster\BlasterStandState.h">
-      <Filter>ヘッダー ファイル\Application\BossEnemy\Blaster</Filter>
-    </ClInclude>
-    <ClInclude Include="Application\BossEnemy\ActState.h">
-      <Filter>ヘッダー ファイル\Application\BossEnemy</Filter>
-    </ClInclude>
-    <ClInclude Include="Application\BossEnemy\Blaster\BlasterAimState.h">
-      <Filter>ヘッダー ファイル\Application\BossEnemy\Blaster</Filter>
-    </ClInclude>
-    <ClInclude Include="Application\Score\ScoreManager.h">
-      <Filter>ヘッダー ファイル\Application\Score</Filter>
     </ClInclude>
     <ClInclude Include="Application\GameManager.h">
       <Filter>ヘッダー ファイル\Application</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Sound\AudioManager.h">
       <Filter>ヘッダー ファイル\Engine\Sound</Filter>
-    </ClInclude>
-    <ClInclude Include="Application\BossEnemy\Blaster\BlasterTackleState.h">
-      <Filter>ヘッダー ファイル\Application\BossEnemy\Blaster</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Base\BaseCamera\Camera.h">
       <Filter>ヘッダー ファイル\Engine\Camera</Filter>
@@ -767,20 +599,8 @@
     <ClInclude Include="Engine\Base\BaseScene\SceneManager.h">
       <Filter>ヘッダー ファイル\Engine\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="Application\BossEnemy\Blaster\BlasterUnitLazer.h">
-      <Filter>ヘッダー ファイル\Application\BossEnemy\Blaster</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Base\Pipeline\PipelineManager.h">
       <Filter>ヘッダー ファイル\Engine\Base\Pipeline</Filter>
-    </ClInclude>
-    <ClInclude Include="Application\BossEnemy\Blaster\BlasterUnitTackle.h">
-      <Filter>ヘッダー ファイル\Application\BossEnemy\Blaster</Filter>
-    </ClInclude>
-    <ClInclude Include="Application\Bullet\UnitLazer.h">
-      <Filter>ヘッダー ファイル\Application\Bullet</Filter>
-    </ClInclude>
-    <ClInclude Include="Application\Bullet\Bom.h">
-      <Filter>ヘッダー ファイル\Application\Bullet</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Light\Light.h">
       <Filter>ヘッダー ファイル\Engine\Base\Light</Filter>
@@ -791,16 +611,7 @@
     <ClInclude Include="Application\Effect\Shake.h">
       <Filter>ヘッダー ファイル\Application\Effect</Filter>
     </ClInclude>
-    <ClInclude Include="Application\Movie\BossStart.h">
-      <Filter>ヘッダー ファイル\Application\Movie</Filter>
-    </ClInclude>
     <ClInclude Include="Application\Movie\Movie.h">
-      <Filter>ヘッダー ファイル\Application\Movie</Filter>
-    </ClInclude>
-    <ClInclude Include="Application\Movie\StageStart.h">
-      <Filter>ヘッダー ファイル\Application\Movie</Filter>
-    </ClInclude>
-    <ClInclude Include="Application\Movie\StageClear.h">
       <Filter>ヘッダー ファイル\Application\Movie</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Collision\Collider.h">
@@ -811,9 +622,6 @@
     </ClInclude>
     <ClInclude Include="Engine\Collision\CollisionTypes.h">
       <Filter>ヘッダー ファイル\Engine\Collision</Filter>
-    </ClInclude>
-    <ClInclude Include="Application\Bullet\Explosion.h">
-      <Filter>ヘッダー ファイル\Application\Bullet</Filter>
     </ClInclude>
     <ClInclude Include="Engine\2D\PostEffect\MultiPostEffect.h">
       <Filter>ヘッダー ファイル\Engine\2d\Sprites\PostEffect</Filter>

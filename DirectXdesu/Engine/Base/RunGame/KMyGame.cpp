@@ -1,5 +1,4 @@
 #include "KMyGame.h"
-#include "BulletManager.h"
 #include "SceneFactory.h"
 
 void KMyGame::Init() {
@@ -40,6 +39,4 @@ void KMyGame::Draw() {
 
 void KMyGame::Final() {
 	Framework::Final();
-
-	BulletManager::GetInstance()->Delete();
 }

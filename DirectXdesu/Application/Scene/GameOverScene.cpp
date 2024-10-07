@@ -15,11 +15,7 @@ GameOverScene::~GameOverScene()
 
 void GameOverScene::LoadResources()
 {
-	// ゲームオーバーテクスチャ
-	overTex = TextureManager::Load("Resources/texture/kariGameOver.png");
-
-	// プッシュAテクスチャ
-	pushATex = TextureManager::Load("Resources/texture/kariNextScene.png");
+	
 }
 
 void GameOverScene::Init()
@@ -31,12 +27,6 @@ void GameOverScene::Init()
 	camera = std::make_unique<DebugCamera>();
 
 	sceneManager = SceneManager::GetInstance();
-
-	// タイトル名
-	over.reset(Sprite::Create(PipelineManager::GetInstance()->GetPipeline("Sprite")));
-
-	// プッシュA
-	pushA.reset(Sprite::Create(PipelineManager::GetInstance()->GetPipeline("Sprite")));
 }
 
 void GameOverScene::Update()
@@ -65,12 +55,7 @@ void GameOverScene::ObjDraw()
 
 void GameOverScene::SpriteDraw()
 {
-	const float width = static_cast<float>(KWinApp::GetInstance()->GetWindowSizeW());
-	const float height = static_cast<float>(KWinApp::GetInstance()->GetWindowSizeH());
-
-	over->Draw(overTex, { width / 2, height * 1 / 3 }, { 1,1 });
-
-	pushA->Draw(pushATex, { width / 2, height * 2 / 3 }, { 1,1 });
+	
 }
 
 void GameOverScene::Final()

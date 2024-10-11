@@ -56,4 +56,7 @@ private:
 	std::unique_ptr<Light> light_ = nullptr;
 	KMyMath::Vector3 lightRGB_ = {1, 1, 1};
 	KMyMath::Vector3 lightDir_ = {0, -1, 0};
+
+	std::unique_ptr<KModel> hogeModel_ = nullptr;
+	std::unique_ptr<KObject3d> hogeObject_ = nullptr;
 };

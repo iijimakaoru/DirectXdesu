@@ -5,8 +5,8 @@ ViewProjection::ViewProjection(){}
 
 void ViewProjection::Initialize() 
 {
-	eye = { 0, 0, 0 };
-	target = { 0, 0, 0 };
+	eye = { 0, 0, -50 };
+	target = { 0, 0, 10 };
 	up = { 0, 1, 0 };
 	nearZ = 0.1f;
 	farZ = 1000.0f;

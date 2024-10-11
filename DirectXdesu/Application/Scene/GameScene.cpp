@@ -11,6 +11,7 @@
 #include "Ease.h"
 #include "PipelineManager.h"
 #include "ModelManager.h"
+#include "TextureManager.h"
 
 GameScene::~GameScene() { Final(); };
 
@@ -29,6 +30,13 @@ void GameScene::Init() {
 	// カメラ生成
 	camera_ = std::make_unique<GameCamera>();
 
+	hogeModel_ = std::make_unique<Cube>();
+	hogeModel_->Init();
+	
+	hogeObject_.reset(KObject3d::Create(hogeModel_.get(),
+		PipelineManager::GetInstance()->GetPipeline("Obj")));
+	
+
 	// シーンマネージャーインスタンス
 	sceneManager = SceneManager::GetInstance();
 
@@ -41,10 +49,15 @@ void GameScene::Init() {
 void GameScene::Update() {
 	light_->SetLightRGB({lightRGB_.x, lightRGB_.y, lightRGB_.z});
 	light_->SetLightDir({lightDir_.x, lightDir_.y, lightDir_.z, 0.0f});
+
+	hogeObject_->GetTransform().AddSetRot({ 0,0,1 });
+	hogeObject_->Update(camera_->GetViewPro(),camera_->GetWorldPos());
+
+	camera_->Update();
 }
 
 void GameScene::ObjDraw() {
-	
+	hogeObject_->Draw(TextureManager::GetInstance()->GetTextures("MESI"));
 }
 
 void GameScene::SpriteDraw() {

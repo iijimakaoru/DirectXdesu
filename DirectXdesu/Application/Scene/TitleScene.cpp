@@ -88,39 +88,14 @@ void TitleScene::Init() {
 }
 
 void TitleScene::Update() {
-	ImGui::Begin("Light");
-	ImGui::SetWindowPos({0, 0});
-	ImGui::SetWindowSize({200, 200});
-	ImGui::SliderFloat("LightColorR", &lightRGB.x, 0, 1, "%.1f");
-	ImGui::SliderFloat("LightColorG", &lightRGB.y, 0, 1, "%.1f");
-	ImGui::SliderFloat("LightColorB", &lightRGB.z, 0, 1, "%.1f");
-	ImGui::SliderFloat("LightDirX", &lightDir.x, -1, 1, "%.1f");
-	ImGui::SliderFloat("LightDirY", &lightDir.y, -1, 1, "%.1f");
-	ImGui::SliderFloat("LightDirZ", &lightDir.z, -1, 1, "%.1f");
-	ImGui::End();
-
 	light_->SetLightRGB({lightRGB.x, lightRGB.y, lightRGB.z});
 	light_->SetLightDir({lightDir.x, lightDir.y, lightDir.z, 0.0f});
 
 	if (startScene) {
 		StartScene();
 	} else {
-		if (goGame) {
-			GoNextScene();
-		} else {
-			if (flashAlpha > 0) {
-				flashAlpha -= 0.1f;
-			}
-
-			// 次のシーンへ
-			if (!sceneChange->GetIsEffect()) {
-				if (input->IsTrigger(DIK_SPACE) || input->GetPadButtonDown(XINPUT_GAMEPAD_A)) {
-					audioManager->SEPlay_wav("selectSE.wav");
-					flashAlpha = 0.0f;
-					camera->StartSortie();
-					goGame = true;
-				}
-			}
+		if (flashAlpha > 0) {
+			flashAlpha -= 0.1f;
 		}
 
 		if (sceneChange->GetIsChange()) {

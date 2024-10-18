@@ -864,6 +864,9 @@
     <None Include="Resources\Shader\MultiTextureHeader.hlsli">
       <Filter>シェーダー</Filter>
     </None>
+    <None Include="Resources\Shader\GPUParticleHeader.hlsli">
+      <Filter>シェーダー</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shader\BasicPS.hlsl">
@@ -921,6 +924,15 @@
       <Filter>シェーダー</Filter>
     </FxCompile>
     <FxCompile Include="Resources\Shader\MultiTextureVS.hlsl">
+      <Filter>シェーダー</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\GPUParticleVS.hlsl">
+      <Filter>シェーダー</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\GPUParticlePS.hlsl">
+      <Filter>シェーダー</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\GPUParticleCS.hlsl">
       <Filter>シェーダー</Filter>
     </FxCompile>
   </ItemGroup>

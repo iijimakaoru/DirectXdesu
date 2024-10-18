@@ -10,6 +10,7 @@ struct VSOutput
 	float4 pos : POSITION; // システム用頂点座標
 	float scale : TEXCOORD;
 };
+
 // ジオメトリシェーダーからピクセルシェーダーへのやり取りに使用する構造体
 struct GSOutput
 {

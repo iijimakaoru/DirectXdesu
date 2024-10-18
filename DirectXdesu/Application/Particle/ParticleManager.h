@@ -9,11 +9,28 @@
 #include <forward_list>
 #pragma warning(pop)
 
+#include <stdfloat>
+
 /**
  * @file ParticleManager.h
  * @brief パーティクルのマネージャー
  * @author 飯島 薫
  */
+
+struct ParticleCS {
+	KMyMath::Vector3 translate;
+	KMyMath::Vector3 scale;
+	float lifeTime;
+	KMyMath::Vector3 velocity;
+	float currentTime;
+	KMyMath::Vector4 color;
+};
+
+struct PreView
+{
+	KMyMath::Matrix4 viewProjection;
+	KMyMath::Matrix4 billbordMatrix;
+};
 
 class Particles
 {

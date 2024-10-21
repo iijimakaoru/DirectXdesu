@@ -935,5 +935,8 @@
     <FxCompile Include="Resources\Shader\GPUParticleCS.hlsl">
       <Filter>シェーダー</Filter>
     </FxCompile>
+    <FxCompile Include="Resources\Shader\GPUParticleGS.hlsl">
+      <Filter>シェーダー</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

@@ -1,4 +1,44 @@
-float4 main() : SV_TARGET
+#include "GPUParticleHeader.hlsli"
+
+cbuffer objectData : register(b0)
 {
-	return float4(1.0f, 1.0f, 1.0f, 1.0f);
+    matrix world;
+    matrix view;
+    matrix projection;
+    float aspectRatio;
+}
+
+cbuffer timeData : register(b1)
+{
+    float deltaTime;
+    float totalTime;
+}
+
+cbuffer particleData : register(b2)
+{
+    int emitCount;
+    int maxParticles;
+    int gridSize;
+    float3 velocity;
+    float3 acceleration;
+    float4 startColor;
+    float4 endColor;
+    float lifeTime;
+}
+
+struct GS_OUTPUT
+{
+    float4 Position : SV_POSITION;
+    float4 Color : COLOR;
+    float2 UV : TEXCOORD;
+};
+
+float4 main(GS_OUTPUT input) : SV_TARGET
+{
+    input.UV = input.UV * 2 - 1;
+
+    float fade = saturate(distance(float2(0, 0), input.UV));
+    float3 color = lerp(input.Color.rgb, float3(0, 0, 0), fade * fade);
+
+    return float4(color, 1);
 }

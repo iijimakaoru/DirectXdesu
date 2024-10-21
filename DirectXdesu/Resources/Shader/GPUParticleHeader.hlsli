@@ -1,29 +1,32 @@
-// 頂点シェーダーからピクセルシェーダーへのやり取りに使用する構造体
-struct VSOutput
-{
-    float4 position;
-    float2 texcoord;
-    float4 color;
-};
-
-struct VSInput
-{
-    float3 position;
-    float2 texcoord;
-};
-
 struct Particle
 {
-    float3 translate;
-    float3 scale;
-    float lifeTime;
-    float3 velocity;
-    float currentTime;
-    float4 color;
+    float4 Color;
+    float3 Position;
+    float Age;
+    float3 Velocity;
+    float Size;
+    float Alive;
+    float3 Padding;
 };
 
-struct PreView
+struct ParticleDraw
 {
-    float4x4 viewProjection;
-    float4x4 billbordMatrix;
+    uint Index;
 };
+
+float CalculateGridPosition(uint index, int gridSize)
+{
+    float3 gridPosition;
+
+    gridSize += 1;
+
+    gridPosition.x = index % gridSize;
+
+    index /= gridSize;
+    gridPosition.y = index % gridSize;
+
+    index /= gridSize;
+    gridPosition.z = index;
+
+    return gridPosition;
+}

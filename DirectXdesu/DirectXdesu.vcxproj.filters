@@ -864,7 +864,10 @@
     <None Include="Resources\Shader\MultiTextureHeader.hlsli">
       <Filter>シェーダー</Filter>
     </None>
-    <None Include="Resources\Shader\GPUParticleHeader.hlsli">
+    <None Include="Resources\Shader\GPUParticle\GPUParticleHeader.hlsli">
+      <Filter>シェーダー</Filter>
+    </None>
+    <None Include="Resources\Shader\GPUParticle\SimplexNoise.hlsli">
       <Filter>シェーダー</Filter>
     </None>
   </ItemGroup>
@@ -926,17 +929,18 @@
     <FxCompile Include="Resources\Shader\MultiTextureVS.hlsl">
       <Filter>シェーダー</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\Shader\GPUParticleVS.hlsl">
+    <FxCompile Include="Resources\Shader\GPUParticle\GPUParticleVS.hlsl">
       <Filter>シェーダー</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\Shader\GPUParticlePS.hlsl">
+    <FxCompile Include="Resources\Shader\GPUParticle\GPUParticlePS.hlsl">
       <Filter>シェーダー</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\Shader\GPUParticleCS.hlsl">
+    <FxCompile Include="Resources\Shader\GPUParticle\GPUParticleGS.hlsl">
       <Filter>シェーダー</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\Shader\GPUParticleGS.hlsl">
-      <Filter>シェーダー</Filter>
-    </FxCompile>
+    <FxCompile Include="Resources\Shader\GPUParticle\UpdateCS.hlsl" />
+    <FxCompile Include="Resources\Shader\GPUParticle\CopyDrawCountCS.hlsl" />
+    <FxCompile Include="Resources\Shader\GPUParticle\DeadListInitCS.hlsl" />
+    <FxCompile Include="Resources\Shader\GPUParticle\EmitCS.hlsl" />
   </ItemGroup>
 </Project>

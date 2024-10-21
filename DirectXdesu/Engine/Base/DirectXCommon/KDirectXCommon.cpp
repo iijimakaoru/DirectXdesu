@@ -391,7 +391,7 @@ void KDirectXCommon::EnbleDebugLayer()
 	if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(debugController.ReleaseAndGetAddressOf()))))
 	{
 		debugController->EnableDebugLayer();
-		//debugController->SetEnableGPUBasedValidation(true);
+		debugController->SetEnableGPUBasedValidation(true);
 	}
 }
 

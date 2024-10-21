@@ -64,6 +64,10 @@ void TitleScene::Init() {
 		DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f)
 	);
 
+	BuildUAV();
+	BuildRootSignature();
+	BuildShadersAndInputLayout();
+
 	camera->StartRound();
 }
 
@@ -120,7 +124,8 @@ void TitleScene::BuildUAV()
 		UINT64 particlePoolByteSize = sizeof(Particle) * emitter->GetMaxParticles();
 		CD3DX12_HEAP_PROPERTIES heap = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
 		CD3DX12_RESOURCE_DESC resouceDesc = 
-			CD3DX12_RESOURCE_DESC::Buffer(particlePoolByteSize, D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS);
+			CD3DX12_RESOURCE_DESC::Buffer(particlePoolByteSize, 
+				D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS);
 		ThrowIfFailed(device->CreateCommittedResource(
 			&heap,
 			D3D12_HEAP_FLAG_NONE,
@@ -395,6 +400,24 @@ void TitleScene::BuildRootSignature()
 		&particleCommandSingatureDescription,
 		NULL,
 		IID_PPV_ARGS(particleCommandSignature.GetAddressOf())));
+}
+
+void TitleScene::BuildShadersAndInputLayout()
+{
+	Shaders["VS"] = d3dUtil::CompileShader(L"Resources/Shader/GPUParticle/GPUParticleVS.hlsl",
+		nullptr,"main","vs_5_0");
+	Shaders["GS"] = d3dUtil::CompileShader(L"Resources/Shader/GPUParticle/GPUParticleGS.hlsl",
+		nullptr, "main", "gs_5_0");
+	Shaders["PS"] = d3dUtil::CompileShader(L"Resources/Shader/GPUParticle/GPUParticlePS.hlsl",
+		nullptr, "main", "ps_5_0");
+	Shaders["EmitCS"] = d3dUtil::CompileShader(L"Resources/Shader/GPUParticle/EmitCS.hlsl",
+		nullptr, "main", "cs_5_0");
+	Shaders["UpdateCS"] = d3dUtil::CompileShader(L"Resources/Shader/GPUParticle/UpdateCS.hlsl",
+		nullptr, "main", "cs_5_0");
+	Shaders["CopyDrawCountCS"] = d3dUtil::CompileShader(L"Resources/Shader/GPUParticle/CopyDrawCountCS.hlsl",
+		nullptr, "main", "cs_5_0");
+	Shaders["DeadListInitCS"] = d3dUtil::CompileShader(L"Resources/Shader/GPUParticle/DeadListInitCS.hlsl",
+		nullptr, "main", "cs_5_0");
 }
 
 std::array<const CD3DX12_STATIC_SAMPLER_DESC, 6> TitleScene::GetStaticSamplers()

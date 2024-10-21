@@ -115,18 +115,18 @@ void TitleScene::BuildUAV()
 		uavHeapDesc.NumDescriptors = 6;
 		uavHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
 		uavHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-		device->CreateDescriptorHeap(&uavHeapDesc, IID_PPV_ARGS(&UAVHeap));
+		ThrowIfFailed(device->CreateDescriptorHeap(&uavHeapDesc, IID_PPV_ARGS(&UAVHeap)));
 
 		UINT64 particlePoolByteSize = sizeof(Particle) * emitter->GetMaxParticles();
 		CD3DX12_HEAP_PROPERTIES heap = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
 		CD3DX12_RESOURCE_DESC resouceDesc = CD3DX12_RESOURCE_DESC::Buffer(particlePoolByteSize, D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS);
-		device->CreateCommittedResource(
+		ThrowIfFailed(device->CreateCommittedResource(
 			&heap,
 			D3D12_HEAP_FLAG_NONE,
 			&resouceDesc,
 			D3D12_RESOURCE_STATE_UNORDERED_ACCESS,
 			nullptr,
-			IID_PPV_ARGS(&RWParticlePool));
+			IID_PPV_ARGS(&RWParticlePool)));
 		RWParticlePool->SetName(L"ParticlePool");
 
 		D3D12_UNORDERED_ACCESS_VIEW_DESC particlePoolUAVDescription = {};
@@ -175,16 +175,17 @@ void TitleScene::BuildUAV()
 		UINT64 countBufferOffset = AlignForUavCounter((UINT)deadListByteSize);
 
 		CD3DX12_HEAP_PROPERTIES heap = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
-		CD3DX12_RESOURCE_DESC resouceDesc = CD3DX12_RESOURCE_DESC::Buffer(countBufferOffset + sizeof(UINT), 
+		CD3DX12_RESOURCE_DESC resouceDesc = 
+			CD3DX12_RESOURCE_DESC::Buffer(countBufferOffset + sizeof(UINT), 
 			D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS);
-		device->CreateCommittedResource(
+		ThrowIfFailed(device->CreateCommittedResource(
 			&heap,
 			D3D12_HEAP_FLAG_NONE,
 			&resouceDesc,
 			D3D12_RESOURCE_STATE_UNORDERED_ACCESS,
 			nullptr,
 			IID_PPV_ARGS(&ACDeadList)
-		);
+		));
 		ACDeadList->SetName(L"ACDeadList");
 
 		D3D12_UNORDERED_ACCESS_VIEW_DESC drawlistUAVDescription = {};
@@ -244,14 +245,14 @@ void TitleScene::BuildUAV()
 		CD3DX12_HEAP_PROPERTIES heap = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
 		CD3DX12_RESOURCE_DESC resouceDesc = CD3DX12_RESOURCE_DESC::Buffer(countBufferOffset + sizeof(UINT),
 			D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS);
-		device->CreateCommittedResource(
+		ThrowIfFailed(device->CreateCommittedResource(
 			&heap,
 			D3D12_HEAP_FLAG_NONE,
 			&resouceDesc,
 			D3D12_RESOURCE_STATE_UNORDERED_ACCESS,
 			nullptr,
 			IID_PPV_ARGS(&RWDrawArgs)
-		);
+		));
 		RWDrawArgs.Get()->SetName(L"DrawArgs");
 
 		D3D12_UNORDERED_ACCESS_VIEW_DESC drawArgsUAVDescription = {};

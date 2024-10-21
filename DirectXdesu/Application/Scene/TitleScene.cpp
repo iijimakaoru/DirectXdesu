@@ -119,7 +119,8 @@ void TitleScene::BuildUAV()
 
 		UINT64 particlePoolByteSize = sizeof(Particle) * emitter->GetMaxParticles();
 		CD3DX12_HEAP_PROPERTIES heap = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
-		CD3DX12_RESOURCE_DESC resouceDesc = CD3DX12_RESOURCE_DESC::Buffer(particlePoolByteSize, D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS);
+		CD3DX12_RESOURCE_DESC resouceDesc = 
+			CD3DX12_RESOURCE_DESC::Buffer(particlePoolByteSize, D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS);
 		ThrowIfFailed(device->CreateCommittedResource(
 			&heap,
 			D3D12_HEAP_FLAG_NONE,
@@ -145,28 +146,17 @@ void TitleScene::BuildUAV()
 		particlePoolSRVDescription.Buffer.NumElements = emitter->GetMaxParticles();
 		particlePoolSRVDescription.Buffer.StructureByteStride = sizeof(Particle);
 
-		ParticlePoolCPUUAV = CD3DX12_CPU_DESCRIPTOR_HANDLE(
-			UAVHeap->GetCPUDescriptorHandleForHeapStart(),
-			0,
-			directXCommon->GetCBVSRVUAVDescriptorSize());
+		ParticlePoolCPUUAV = 
+			CD3DX12_CPU_DESCRIPTOR_HANDLE(UAVHeap->GetCPUDescriptorHandleForHeapStart(), 0, directXCommon->GetCBVSRVUAVDescriptorSize());
 		ParticlePoolGPUUAV = 
-			CD3DX12_GPU_DESCRIPTOR_HANDLE(
-				UAVHeap->GetGPUDescriptorHandleForHeapStart(),
-				0, 
-				directXCommon->GetCBVSRVUAVDescriptorSize());
-		device->CreateUnorderedAccessView(RWParticlePool.Get(),
-			nullptr, &particlePoolUAVDescription, ParticlePoolCPUUAV);
+			CD3DX12_GPU_DESCRIPTOR_HANDLE(UAVHeap->GetGPUDescriptorHandleForHeapStart(), 0, directXCommon->GetCBVSRVUAVDescriptorSize());
+		device->CreateUnorderedAccessView(RWParticlePool.Get(), nullptr, &particlePoolUAVDescription, ParticlePoolCPUUAV);
 
-		ParticlePoolCPUSRV = CD3DX12_CPU_DESCRIPTOR_HANDLE(
-			UAVHeap->GetCPUDescriptorHandleForHeapStart(),
-			4,
-			directXCommon->GetCBVSRVUAVDescriptorSize());
-		ParticlePoolGPUSRV = CD3DX12_GPU_DESCRIPTOR_HANDLE(
-			UAVHeap->GetGPUDescriptorHandleForHeapStart(),
-			4,
-			directXCommon->GetCBVSRVUAVDescriptorSize());
-		device->CreateShaderResourceView(RWParticlePool.Get(),
-			&particlePoolSRVDescription, ParticlePoolCPUUAV);
+		ParticlePoolCPUSRV = 
+			CD3DX12_CPU_DESCRIPTOR_HANDLE(UAVHeap->GetCPUDescriptorHandleForHeapStart(), 4, directXCommon->GetCBVSRVUAVDescriptorSize());
+		ParticlePoolGPUSRV = 
+			CD3DX12_GPU_DESCRIPTOR_HANDLE(UAVHeap->GetGPUDescriptorHandleForHeapStart(), 4, directXCommon->GetCBVSRVUAVDescriptorSize());
+		device->CreateShaderResourceView(RWParticlePool.Get(), &particlePoolSRVDescription, ParticlePoolCPUUAV);
 	}
 
 	// Dead List
@@ -175,9 +165,8 @@ void TitleScene::BuildUAV()
 		UINT64 countBufferOffset = AlignForUavCounter((UINT)deadListByteSize);
 
 		CD3DX12_HEAP_PROPERTIES heap = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
-		CD3DX12_RESOURCE_DESC resouceDesc = 
-			CD3DX12_RESOURCE_DESC::Buffer(countBufferOffset + sizeof(UINT), 
-			D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS);
+		CD3DX12_RESOURCE_DESC resouceDesc =
+			CD3DX12_RESOURCE_DESC::Buffer(countBufferOffset + sizeof(UINT), D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS);
 		ThrowIfFailed(device->CreateCommittedResource(
 			&heap,
 			D3D12_HEAP_FLAG_NONE,
@@ -188,24 +177,53 @@ void TitleScene::BuildUAV()
 		));
 		ACDeadList->SetName(L"ACDeadList");
 
-		D3D12_UNORDERED_ACCESS_VIEW_DESC drawlistUAVDescription = {};
-		drawlistUAVDescription.Format = DXGI_FORMAT_UNKNOWN;
-		drawlistUAVDescription.Buffer.FirstElement = 0;
-		drawlistUAVDescription.Buffer.NumElements = emitter->GetMaxParticles();
-		drawlistUAVDescription.Buffer.StructureByteStride = sizeof(Particle);
-		drawlistUAVDescription.Buffer.CounterOffsetInBytes = countBufferOffset;
-		drawlistUAVDescription.Buffer.Flags = D3D12_BUFFER_UAV_FLAG_NONE;
-		drawlistUAVDescription.ViewDimension = D3D12_UAV_DIMENSION_BUFFER;
+		D3D12_UNORDERED_ACCESS_VIEW_DESC deadListUAVDescription = {};
+		deadListUAVDescription.Format = DXGI_FORMAT_UNKNOWN;
+		deadListUAVDescription.Buffer.FirstElement = 0;
+		deadListUAVDescription.Buffer.NumElements = emitter->GetMaxParticles();
+		deadListUAVDescription.Buffer.StructureByteStride = sizeof(unsigned	int);
+		deadListUAVDescription.Buffer.CounterOffsetInBytes = countBufferOffset;
+		deadListUAVDescription.ViewDimension = D3D12_UAV_DIMENSION_BUFFER;
 
-		DrawListCPUUAV = CD3DX12_CPU_DESCRIPTOR_HANDLE(
-			UAVHeap->GetCPUDescriptorHandleForHeapStart(),
-			2,
-			directXCommon->GetCBVSRVUAVDescriptorSize());
-		DrawListGPUUAV = CD3DX12_GPU_DESCRIPTOR_HANDLE(
-			UAVHeap->GetGPUDescriptorHandleForHeapStart(),
-			2,
-			directXCommon->GetCBVSRVUAVDescriptorSize());
-		device->CreateUnorderedAccessView(RWDrawList.Get(), RWDrawList.Get(), &drawlistUAVDescription, DrawListCPUUAV);
+		ACDeadListCPUUAV = 
+			CD3DX12_CPU_DESCRIPTOR_HANDLE(UAVHeap->GetCPUDescriptorHandleForHeapStart(), 1, directXCommon->GetCBVSRVUAVDescriptorSize());
+		ACDeadListGPUUAV = 
+			CD3DX12_GPU_DESCRIPTOR_HANDLE(UAVHeap->GetGPUDescriptorHandleForHeapStart(), 1, directXCommon->GetCBVSRVUAVDescriptorSize());
+		device->CreateUnorderedAccessView(ACDeadList.Get(), ACDeadList.Get(), &deadListUAVDescription, ACDeadListCPUUAV);
+	}
+
+	// Draw List
+	{
+		UINT64 drawListByteSize = sizeof(ParticleSort) * emitter->GetMaxParticles();
+		UINT64 countBufferOffset = AlignForUavCounter((UINT)drawListByteSize);
+
+		CD3DX12_HEAP_PROPERTIES heap = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
+		CD3DX12_RESOURCE_DESC resouceDesc =
+			CD3DX12_RESOURCE_DESC::Buffer(countBufferOffset + sizeof(UINT), D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS);
+		ThrowIfFailed(device->CreateCommittedResource(
+			&heap,
+			D3D12_HEAP_FLAG_NONE,
+			&resouceDesc,
+			D3D12_RESOURCE_STATE_UNORDERED_ACCESS,
+			nullptr,
+			IID_PPV_ARGS(&RWDrawList)
+		));
+		RWDrawList->SetName(L"DrawList");
+
+		D3D12_UNORDERED_ACCESS_VIEW_DESC drawListUAVDescription = {};
+		drawListUAVDescription.Format = DXGI_FORMAT_UNKNOWN;
+		drawListUAVDescription.Buffer.FirstElement = 0;
+		drawListUAVDescription.Buffer.NumElements = emitter->GetMaxParticles();
+		drawListUAVDescription.Buffer.StructureByteStride = sizeof(ParticleSort);
+		drawListUAVDescription.Buffer.CounterOffsetInBytes = countBufferOffset;
+		drawListUAVDescription.Buffer.Flags = D3D12_BUFFER_UAV_FLAG_NONE;
+		drawListUAVDescription.ViewDimension = D3D12_UAV_DIMENSION_BUFFER;
+
+		DrawListCPUUAV = 
+			CD3DX12_CPU_DESCRIPTOR_HANDLE(UAVHeap->GetCPUDescriptorHandleForHeapStart(), 2, directXCommon->GetCBVSRVUAVDescriptorSize());
+		DrawListGPUUAV = 
+			CD3DX12_GPU_DESCRIPTOR_HANDLE(UAVHeap->GetGPUDescriptorHandleForHeapStart(), 2, directXCommon->GetCBVSRVUAVDescriptorSize());
+		device->CreateUnorderedAccessView(RWDrawList.Get(), RWDrawList.Get(), &drawListUAVDescription, DrawListCPUUAV);
 
 		D3D12_SHADER_RESOURCE_VIEW_DESC drawListSRVDescription = {};
 		drawListSRVDescription.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
@@ -215,26 +233,22 @@ void TitleScene::BuildUAV()
 		drawListSRVDescription.Buffer.NumElements = emitter->GetMaxParticles();
 		drawListSRVDescription.Buffer.StructureByteStride = sizeof(ParticleSort);
 
-		DrawListCPUSRV = CD3DX12_CPU_DESCRIPTOR_HANDLE(
-			UAVHeap->GetCPUDescriptorHandleForHeapStart(),
-			5,
-			directXCommon->GetCBVSRVUAVDescriptorSize());
-		DrawListGPUSRV = CD3DX12_GPU_DESCRIPTOR_HANDLE(
-			UAVHeap->GetGPUDescriptorHandleForHeapStart(),
-			5,
-			directXCommon->GetCBVSRVUAVDescriptorSize());
+		DrawListCPUSRV = 
+			CD3DX12_CPU_DESCRIPTOR_HANDLE(UAVHeap->GetCPUDescriptorHandleForHeapStart(), 5, directXCommon->GetCBVSRVUAVDescriptorSize());
+		DrawListGPUSRV = 
+			CD3DX12_GPU_DESCRIPTOR_HANDLE(UAVHeap->GetGPUDescriptorHandleForHeapStart(), 5, directXCommon->GetCBVSRVUAVDescriptorSize());
 		device->CreateShaderResourceView(RWDrawList.Get(), &drawListSRVDescription, DrawListCPUSRV);
 
 		heap = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
 		resouceDesc = CD3DX12_RESOURCE_DESC::Buffer(countBufferOffset + sizeof(UINT));
-		device->CreateCommittedResource(
+		ThrowIfFailed(device->CreateCommittedResource(
 			&heap,
 			D3D12_HEAP_FLAG_NONE,
 			&resouceDesc,
 			D3D12_RESOURCE_STATE_GENERIC_READ,
 			nullptr,
 			IID_PPV_ARGS(&DrawListUploadBuffer)
-		);
+		));
 	}
 
 	// Draw Args
@@ -243,8 +257,8 @@ void TitleScene::BuildUAV()
 		UINT64 countBufferOffset = AlignForUavCounter((UINT)drawArgsByteSize);
 
 		CD3DX12_HEAP_PROPERTIES heap = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
-		CD3DX12_RESOURCE_DESC resouceDesc = CD3DX12_RESOURCE_DESC::Buffer(countBufferOffset + sizeof(UINT),
-			D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS);
+		CD3DX12_RESOURCE_DESC resouceDesc = 
+			CD3DX12_RESOURCE_DESC::Buffer(countBufferOffset + sizeof(UINT),D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS);
 		ThrowIfFailed(device->CreateCommittedResource(
 			&heap,
 			D3D12_HEAP_FLAG_NONE,
@@ -264,14 +278,10 @@ void TitleScene::BuildUAV()
 		drawArgsUAVDescription.Buffer.Flags = D3D12_BUFFER_UAV_FLAG_NONE;
 		drawArgsUAVDescription.ViewDimension = D3D12_UAV_DIMENSION_BUFFER;
 
-		DrawArgsCPUUAV = CD3DX12_CPU_DESCRIPTOR_HANDLE(
-			UAVHeap->GetCPUDescriptorHandleForHeapStart(),
-			3,
-			directXCommon->GetCBVSRVUAVDescriptorSize());
-		DrawArgsGPUUAV = CD3DX12_GPU_DESCRIPTOR_HANDLE(
-			UAVHeap->GetGPUDescriptorHandleForHeapStart(),
-			3,
-			directXCommon->GetCBVSRVUAVDescriptorSize());
+		DrawArgsCPUUAV = 
+			CD3DX12_CPU_DESCRIPTOR_HANDLE(UAVHeap->GetCPUDescriptorHandleForHeapStart(),3,directXCommon->GetCBVSRVUAVDescriptorSize());
+		DrawArgsGPUUAV = 
+			CD3DX12_GPU_DESCRIPTOR_HANDLE(UAVHeap->GetGPUDescriptorHandleForHeapStart(),3,directXCommon->GetCBVSRVUAVDescriptorSize());
 		device->CreateUnorderedAccessView(RWDrawArgs.Get(), RWDrawArgs.Get(), &drawArgsUAVDescription, DrawArgsCPUUAV);
 	}
 }

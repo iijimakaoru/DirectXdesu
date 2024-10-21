@@ -47,6 +47,10 @@ public:
 
 	void BuildUAV();
 
+	void BuildRootSignature();
+
+	std::array<const CD3DX12_STATIC_SAMPLER_DESC, 6> GetStaticSamplers();
+
 	// We pack the UAV counter into the same buffer as the commands rather than create
 	// a separate 64K resource/heap for it. The counter must be aligned on 4K boundaries,
 	// so we pad the command buffer (if necessary) such that the counter will be placed

@@ -285,3 +285,171 @@ void TitleScene::BuildUAV()
 		device->CreateUnorderedAccessView(RWDrawArgs.Get(), RWDrawArgs.Get(), &drawArgsUAVDescription, DrawArgsCPUUAV);
 	}
 }
+
+void TitleScene::BuildRootSignature()
+{
+	ID3D12Device* device = KDirectXCommon::GetInstance()->GetDev();
+
+	// default root signature
+	{
+		CD3DX12_DESCRIPTOR_RANGE srvTable0;
+		srvTable0.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0);
+
+		CD3DX12_DESCRIPTOR_RANGE srvTable1;
+		srvTable1.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 1);
+
+		CD3DX12_ROOT_PARAMETER slotRootParameter[5];
+
+		slotRootParameter[0].InitAsConstantBufferView(0);
+		slotRootParameter[1].InitAsConstantBufferView(1);
+		slotRootParameter[2].InitAsConstantBufferView(2);
+		slotRootParameter[3].InitAsDescriptorTable(1, &srvTable0);
+		slotRootParameter[4].InitAsDescriptorTable(1, &srvTable1);
+
+		auto staticSamplers = GetStaticSamplers();
+
+		CD3DX12_ROOT_SIGNATURE_DESC rootSigDesc(5, slotRootParameter,
+			(UINT)staticSamplers.size(),
+			staticSamplers.data(),
+			D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+
+		Microsoft::WRL::ComPtr<ID3D10Blob> serializedRootSig = nullptr;
+		Microsoft::WRL::ComPtr<ID3D10Blob> errorBlob = nullptr;
+		HRESULT hr = D3D12SerializeRootSignature(&rootSigDesc, D3D_ROOT_SIGNATURE_VERSION_1,
+			serializedRootSig.GetAddressOf(), errorBlob.GetAddressOf());
+
+		if (errorBlob != nullptr) 
+		{
+			::OutputDebugStringA((char*)errorBlob->GetBufferPointer());
+		}
+		ThrowIfFailed(hr);
+
+		ThrowIfFailed(device->CreateRootSignature(
+			0,
+			serializedRootSig->GetBufferPointer(),
+			serializedRootSig->GetBufferSize(),
+			IID_PPV_ARGS(rootSignature.GetAddressOf())
+		));
+	}
+
+	// particle root signature
+	{
+		CD3DX12_DESCRIPTOR_RANGE uavTable0;
+		uavTable0.Init(D3D12_DESCRIPTOR_RANGE_TYPE_UAV, 1, 0);
+
+		CD3DX12_DESCRIPTOR_RANGE uavTable1;
+		uavTable1.Init(D3D12_DESCRIPTOR_RANGE_TYPE_UAV, 1, 1);
+
+		CD3DX12_DESCRIPTOR_RANGE uavTable2;
+		uavTable2.Init(D3D12_DESCRIPTOR_RANGE_TYPE_UAV, 1, 2);
+
+		CD3DX12_DESCRIPTOR_RANGE uavTable3;
+		uavTable3.Init(D3D12_DESCRIPTOR_RANGE_TYPE_UAV, 1, 3);
+
+		// Root parameter can be a table, root descriptor or root constants.
+		CD3DX12_ROOT_PARAMETER slotRootParameter[7];
+
+		// Perfomance TIP: Order from most frequent to least frequent.
+		slotRootParameter[0].InitAsConstantBufferView(0);
+		slotRootParameter[1].InitAsConstantBufferView(1);
+		slotRootParameter[2].InitAsConstantBufferView(2);
+		slotRootParameter[3].InitAsDescriptorTable(1, &uavTable0);
+		slotRootParameter[4].InitAsDescriptorTable(1, &uavTable1);
+		slotRootParameter[5].InitAsDescriptorTable(1, &uavTable2);
+		slotRootParameter[6].InitAsDescriptorTable(1, &uavTable3);
+
+		// A root signature is an array of root parameters.
+		CD3DX12_ROOT_SIGNATURE_DESC rootSigDesc(7, slotRootParameter,
+			0, nullptr,
+			D3D12_ROOT_SIGNATURE_FLAG_NONE);
+
+		// create a root signature with a single slot which points to a descriptor range consisting of a single constant buffer
+		Microsoft::WRL::ComPtr<ID3DBlob> serializedRootSig = nullptr;
+		Microsoft::WRL::ComPtr<ID3DBlob> errorBlob = nullptr;
+		HRESULT hr = D3D12SerializeRootSignature(&rootSigDesc, D3D_ROOT_SIGNATURE_VERSION_1,
+			serializedRootSig.GetAddressOf(), errorBlob.GetAddressOf());
+
+		if (errorBlob != nullptr)
+		{
+			::OutputDebugStringA((char*)errorBlob->GetBufferPointer());
+		}
+		ThrowIfFailed(hr);
+
+		ThrowIfFailed(device->CreateRootSignature(
+			0,
+			serializedRootSig->GetBufferPointer(),
+			serializedRootSig->GetBufferSize(),
+			IID_PPV_ARGS(particleRootSignature.GetAddressOf())));
+	}
+
+	// particle commnd signature
+	D3D12_INDIRECT_ARGUMENT_DESC Args[1];
+	Args[0].Type = D3D12_INDIRECT_ARGUMENT_TYPE_DRAW;
+
+	D3D12_COMMAND_SIGNATURE_DESC particleCommandSingatureDescription = {};
+	particleCommandSingatureDescription.ByteStride = 36;
+	particleCommandSingatureDescription.NumArgumentDescs = 1;
+	particleCommandSingatureDescription.pArgumentDescs = Args;
+
+	ThrowIfFailed(device->CreateCommandSignature(
+		&particleCommandSingatureDescription,
+		NULL,
+		IID_PPV_ARGS(particleCommandSignature.GetAddressOf())));
+}
+
+std::array<const CD3DX12_STATIC_SAMPLER_DESC, 6> TitleScene::GetStaticSamplers()
+{
+	// Applications usually only need a handful of samplers.  So just define them all up front
+	// and keep them available as part of the root signature.  
+
+	const CD3DX12_STATIC_SAMPLER_DESC pointWrap(
+		0, // shaderRegister
+		D3D12_FILTER_MIN_MAG_MIP_POINT, // filter
+		D3D12_TEXTURE_ADDRESS_MODE_WRAP,  // addressU
+		D3D12_TEXTURE_ADDRESS_MODE_WRAP,  // addressV
+		D3D12_TEXTURE_ADDRESS_MODE_WRAP); // addressW
+
+	const CD3DX12_STATIC_SAMPLER_DESC pointClamp(
+		1, // shaderRegister
+		D3D12_FILTER_MIN_MAG_MIP_POINT, // filter
+		D3D12_TEXTURE_ADDRESS_MODE_CLAMP,  // addressU
+		D3D12_TEXTURE_ADDRESS_MODE_CLAMP,  // addressV
+		D3D12_TEXTURE_ADDRESS_MODE_CLAMP); // addressW
+
+	const CD3DX12_STATIC_SAMPLER_DESC linearWrap(
+		2, // shaderRegister
+		D3D12_FILTER_MIN_MAG_MIP_LINEAR, // filter
+		D3D12_TEXTURE_ADDRESS_MODE_WRAP,  // addressU
+		D3D12_TEXTURE_ADDRESS_MODE_WRAP,  // addressV
+		D3D12_TEXTURE_ADDRESS_MODE_WRAP); // addressW
+
+	const CD3DX12_STATIC_SAMPLER_DESC linearClamp(
+		3, // shaderRegister
+		D3D12_FILTER_MIN_MAG_MIP_LINEAR, // filter
+		D3D12_TEXTURE_ADDRESS_MODE_CLAMP,  // addressU
+		D3D12_TEXTURE_ADDRESS_MODE_CLAMP,  // addressV
+		D3D12_TEXTURE_ADDRESS_MODE_CLAMP); // addressW
+
+	const CD3DX12_STATIC_SAMPLER_DESC anisotropicWrap(
+		4, // shaderRegister
+		D3D12_FILTER_ANISOTROPIC, // filter
+		D3D12_TEXTURE_ADDRESS_MODE_WRAP,  // addressU
+		D3D12_TEXTURE_ADDRESS_MODE_WRAP,  // addressV
+		D3D12_TEXTURE_ADDRESS_MODE_WRAP,  // addressW
+		0.0f,                             // mipLODBias
+		8);                               // maxAnisotropy
+
+	const CD3DX12_STATIC_SAMPLER_DESC anisotropicClamp(
+		5, // shaderRegister
+		D3D12_FILTER_ANISOTROPIC, // filter
+		D3D12_TEXTURE_ADDRESS_MODE_CLAMP,  // addressU
+		D3D12_TEXTURE_ADDRESS_MODE_CLAMP,  // addressV
+		D3D12_TEXTURE_ADDRESS_MODE_CLAMP,  // addressW
+		0.0f,                              // mipLODBias
+		8);                                // maxAnisotropy
+
+	return {
+		pointWrap, pointClamp,
+		linearWrap, linearClamp,
+		anisotropicWrap, anisotropicClamp };
+}

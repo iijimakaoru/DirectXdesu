@@ -130,6 +130,7 @@
     <ClCompile Include="Application\BossEnemy\Blaster\BlasterUnitTackle.cpp" />
     <ClCompile Include="Application\Movie\BossStart.cpp" />
     <ClCompile Include="Application\Particle\Emitter.cpp" />
+    <ClCompile Include="Engine\Base\DirectXCommon\d3dUtil.cpp" />
     <ClCompile Include="Engine\Collision\CollisionManager.cpp" />
     <ClCompile Include="Engine\Collision\Collider.cpp" />
     <ClCompile Include="Engine\Sound\AudioManager.cpp" />
@@ -199,6 +200,7 @@
     <ClCompile Include="Engine\2D\PostEffect\VignettePostEffect.cpp" />
     <ClCompile Include="Engine\2D\PostEffect\PostEffectManager.cpp" />
     <ClCompile Include="Engine\2D\PostEffect\MultiPostEffect.cpp" />
+    <ClCompile Include="Engine\Math\MyMath\MathHelper.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\BossEnemy\ActState.h" />
@@ -228,6 +230,7 @@
     <ClInclude Include="Application\BossEnemy\Blaster\BlasterUnitTackle.h" />
     <ClInclude Include="Application\Movie\BossStart.h" />
     <ClInclude Include="Application\Particle\Emitter.h" />
+    <ClInclude Include="Engine\Base\DirectXCommon\d3dUtil.h" />
     <ClInclude Include="Engine\Collision\CollisionManager.h" />
     <ClInclude Include="Engine\Collision\Collider.h" />
     <ClInclude Include="Engine\Collision\CollisionTypes.h" />
@@ -297,6 +300,7 @@
     <ClInclude Include="Engine\2D\PostEffect\VignettePostEffect.h" />
     <ClInclude Include="Engine\2D\PostEffect\PostEffectManager.h" />
     <ClInclude Include="Engine\2D\PostEffect\MultiPostEffect.h" />
+    <ClInclude Include="Engine\Math\MyMath\MathHelper.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DirectXdesu.rc" />

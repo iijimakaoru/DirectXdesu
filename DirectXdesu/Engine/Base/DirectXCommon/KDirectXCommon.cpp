@@ -164,7 +164,12 @@ void KDirectXCommon::SetBackScreenColor(float R, float G, float B, float A)
 
 ID3D12Device* KDirectXCommon::GetDev() const
 {
-	return dev.Get();
+	return device_.Get();
+}
+
+Microsoft::WRL::ComPtr<ID3D12Device> KDirectXCommon::GetComDevice()
+{
+	return device_;
 }
 
 ID3D12GraphicsCommandList* KDirectXCommon::GetCmdlist()
@@ -237,7 +242,7 @@ HRESULT KDirectXCommon::InitDXGIDevice()
 
 	for (size_t i = 0; i < _countof(levels); i++) {
 		// 採用したアダプターでデバイスを生成
-		result = D3D12CreateDevice(tmpAdapter.Get(), levels[i], IID_PPV_ARGS(dev.GetAddressOf()));
+		result = D3D12CreateDevice(tmpAdapter.Get(), levels[i], IID_PPV_ARGS(device_.GetAddressOf()));
 		if (result == S_OK) {
 			// デバイスを生成できた時点でループを抜ける
 			featureLevel = levels[i];
@@ -260,7 +265,7 @@ HRESULT KDirectXCommon::CreateFinalRenderTarget()
 	//スワップチェーンのバッファを処理
 	for (size_t i = 0; i < backBuffers.size(); i++)
 	{
-		backBuffers[i] = std::make_unique<KRenderTargetBuffer>(dev.Get(), rtvHeap.get());
+		backBuffers[i] = std::make_unique<KRenderTargetBuffer>(device_.Get(), rtvHeap.get());
 
 		//生成
 		backBuffers[i]->Create(swapChain.Get(), static_cast<UINT>(i));
@@ -303,7 +308,7 @@ HRESULT KDirectXCommon::CreateSwapChain()
 HRESULT KDirectXCommon::InitCommand()
 {
 	//コマンドアロケータを生成
-	result = dev->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(cmdAllocater.ReleaseAndGetAddressOf()));
+	result = device_->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(cmdAllocater.ReleaseAndGetAddressOf()));
 	if (FAILED(result))
 	{
 		return result;
@@ -312,7 +317,7 @@ HRESULT KDirectXCommon::InitCommand()
 	//コマンドリストを生成
 	if (cmdAllocater != 0)
 	{
-		result = dev->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, cmdAllocater.Get(), nullptr, IID_PPV_ARGS(cmdList.ReleaseAndGetAddressOf()));
+		result = device_->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, cmdAllocater.Get(), nullptr, IID_PPV_ARGS(cmdList.ReleaseAndGetAddressOf()));
 		if (FAILED(result))
 		{
 			return result;
@@ -325,7 +330,7 @@ HRESULT KDirectXCommon::InitCommand()
 
 	//コマンドキューの設定＆生成
 	D3D12_COMMAND_QUEUE_DESC commandQueueDesc{};
-	result = dev->CreateCommandQueue(&commandQueueDesc, IID_PPV_ARGS(cmdQueue.ReleaseAndGetAddressOf()));
+	result = device_->CreateCommandQueue(&commandQueueDesc, IID_PPV_ARGS(cmdQueue.ReleaseAndGetAddressOf()));
 
 	if (FAILED(result))
 	{
@@ -338,7 +343,7 @@ HRESULT KDirectXCommon::InitCommand()
 HRESULT KDirectXCommon::CreateFence()
 {
 	//フェンスの生成
-	result = dev->CreateFence(fenceVal, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(fence.ReleaseAndGetAddressOf()));
+	result = device_->CreateFence(fenceVal, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(fence.ReleaseAndGetAddressOf()));
 
 	return result;
 }
@@ -350,7 +355,7 @@ HRESULT KDirectXCommon::CreateDepthBuffer()
 	dsvHeap->Initialize();
 
 	//深度バッファ生成
-	depthBuff = std::make_unique<KDepthStencilBuffer>(dev.Get(), dsvHeap.get());
+	depthBuff = std::make_unique<KDepthStencilBuffer>(device_.Get(), dsvHeap.get());
 	depthBuff->Create(static_cast<UINT>(KWinApp::GetInstance()->GetWindowSizeW()),
 		static_cast<UINT>(KWinApp::GetInstance()->GetWindowSizeH()),
 		DXGI_FORMAT_D32_FLOAT);
@@ -371,7 +376,7 @@ void KDirectXCommon::EnbleDebugLayer()
 void KDirectXCommon::EnbleInfoQueue()
 {
 	Microsoft::WRL::ComPtr<ID3D12InfoQueue> infoQueue;
-	result = dev->QueryInterface(IID_PPV_ARGS(&infoQueue));
+	result = device_->QueryInterface(IID_PPV_ARGS(&infoQueue));
 	if (SUCCEEDED(result))
 	{
 		// ヤバい

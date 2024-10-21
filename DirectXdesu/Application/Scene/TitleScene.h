@@ -15,6 +15,9 @@
 
 #include "KObject3d.h"
 
+#include "Emitter.h"
+
+#include "d3dUtil.h"
 /**
  * @file TitleScene.h
  * @brief タイトルシーン
@@ -41,6 +44,18 @@ public:
 
 	// タイトルコール
 	void TitleCall();
+
+	void BuildUAV();
+
+	// We pack the UAV counter into the same buffer as the commands rather than create
+	// a separate 64K resource/heap for it. The counter must be aligned on 4K boundaries,
+	// so we pad the command buffer (if necessary) such that the counter will be placed
+	// at a valid location in the buffer.
+	static inline UINT AlignForUavCounter(UINT bufferSize)
+	{
+		const UINT alignment = D3D12_UAV_COUNTER_PLACEMENT_ALIGNMENT;
+		return (bufferSize + (alignment - 1)) & ~(alignment - 1);
+	}
 private:
 	// インプット
 	KInput* input = nullptr;
@@ -68,56 +83,44 @@ private:
 	const float width = static_cast<float>(KWinApp::GetInstance()->GetWindowSizeW());
 	const float height = static_cast<float>(KWinApp::GetInstance()->GetWindowSizeH());
 
-#pragma region タイトル始めの演出変数
-	// シーン始まったフラグ
-	bool startScene = false;
-
-	// 演出のフェーズ
-	uint32_t startScenePhase = 0;
-
-	// ベジエ曲線１
-	KMyMath::Vector3 start = { 0,-30,180 };
-	KMyMath::Vector3 p1 = { 0,-30,20 };
-	KMyMath::Vector3 p2 = { 0,-30,-40 };
-	KMyMath::Vector3 end = { 0,60,-60 };
-
-	// オブジェクト拡大タイマー
-	float objEaseTimer = 0;
-	const float objEaseTime = 20;
-
-	// フラッシュ
-	std::unique_ptr<Sprite> flash = nullptr;
-
-	float flashAlpha = 0;
-
-	// タイトル文字の演出
-	uint32_t titlePhase = 0;
-	float titlePhaseTimer = 0;
-	float titlePhaseTime = 0;
-	bool isTitle = false;
-#pragma endregion
-
-#pragma region 次のシーンへの移行演出変数
-	// 次のシーンへいくフラグ
-	bool goGame = false;
-
-	// 演出のフェーズ
-	uint32_t goGamePhase = 0;
-
-	// テキスト吹き飛ばしタイマー
-	float texEaseTimer = 0;
-	const float texEaseTime = 10;
-#pragma endregion
-
-	// フェーズ時間
-	float phaseTimer = 0;
-	float phaseTime = 0;
-
 	AudioManager* audioManager = nullptr;
 
 	std::unique_ptr<Light> light_ = nullptr;
 
 	KMyMath::Vector3 lightRGB = {1, 1, 1};
 	KMyMath::Vector3 lightDir = {0, -1, 0};
+
+	Emitter* emitter;
+
+	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> UAVHeap = nullptr;
+
+	Microsoft::WRL::ComPtr<ID3D12Resource> RWParticlePool = nullptr;
+	Microsoft::WRL::ComPtr<ID3D12Resource> ACDeadList = nullptr;
+	Microsoft::WRL::ComPtr<ID3D12Resource> RWDrawList = nullptr;
+	Microsoft::WRL::ComPtr<ID3D12Resource> RWDrawArgs = nullptr;
+
+	Microsoft::WRL::ComPtr<ID3D12Resource> DrawListUploadBuffer = nullptr;
+
+	CD3DX12_CPU_DESCRIPTOR_HANDLE ParticlePoolCPUSRV;
+	CD3DX12_GPU_DESCRIPTOR_HANDLE ParticlePoolGPUSRV;
+
+	CD3DX12_CPU_DESCRIPTOR_HANDLE ParticlePoolCPUUAV;
+	CD3DX12_GPU_DESCRIPTOR_HANDLE ParticlePoolGPUUAV;
+
+	CD3DX12_CPU_DESCRIPTOR_HANDLE ACDeadListCPUUAV;
+	CD3DX12_GPU_DESCRIPTOR_HANDLE ACDeadListGPUUAV;
+
+	CD3DX12_CPU_DESCRIPTOR_HANDLE DrawListCPUSRV;
+	CD3DX12_GPU_DESCRIPTOR_HANDLE DrawListGPUSRV;
+
+	CD3DX12_CPU_DESCRIPTOR_HANDLE DrawListCPUUAV;
+	CD3DX12_GPU_DESCRIPTOR_HANDLE DrawListGPUUAV;
+
+	CD3DX12_CPU_DESCRIPTOR_HANDLE DrawArgsCPUUAV;
+	CD3DX12_GPU_DESCRIPTOR_HANDLE DrawArgsGPUUAV;
+
+	UINT RTVDescriptorSize = 0;
+	UINT DSVDescriptorSize = 0;
+	UINT CBVSRVUAVDescriptorSize = 0;
 };
 

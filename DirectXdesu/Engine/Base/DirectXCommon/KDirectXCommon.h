@@ -72,6 +72,7 @@ public:
 
 	// デバイス取得
 	ID3D12Device* GetDev() const;
+	Microsoft::WRL::ComPtr<ID3D12Device> GetComDevice();
 
 	// コマンドリスト取得
 	ID3D12GraphicsCommandList* GetCmdlist();
@@ -128,7 +129,7 @@ private:
 	HRESULT result;
 
 	// DirectX12デバイス
-	ComPtr<ID3D12Device> dev;
+	ComPtr<ID3D12Device> device_;
 
 	// DXGI
 	ComPtr<IDXGIFactory6> dxgiFactory;

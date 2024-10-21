@@ -406,7 +406,7 @@ void KDirectXCommon::EnbleInfoQueue()
 		// 普通
 		infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_ERROR, true);
 		// 警告
-		infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_WARNING, true);
+		//infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_WARNING, true);
 
 		//抑制するエラー
 		D3D12_MESSAGE_ID denyIds[] =

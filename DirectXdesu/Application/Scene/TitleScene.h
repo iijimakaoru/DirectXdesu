@@ -48,29 +48,6 @@ private:
 	// カメラ
 	std::unique_ptr<TitleCamera> camera = nullptr;
 
-	// タイトルスプライト
-	KMyMath::Vector2 titlePos = { 0,0 };
-
-	std::unique_ptr<Sprite> mesi = nullptr;
-	KMyMath::Vector2 mesiPos = { -150,-30 };
-	KMyMath::Vector2 mesiScale = { 0,0 };
-
-	std::unique_ptr<Sprite> shooter = nullptr;
-	KMyMath::Vector2 shooterPos = { 1200,40 };
-	KMyMath::Vector2 shooterScale = { 1,1 };
-
-	std::unique_ptr<Sprite> mold = nullptr;
-	KMyMath::Vector2 moldPos = { -1200,0 };
-	KMyMath::Vector2 moldScale = { 1,1 };
-
-	// 次のシーンへのキー
-	std::unique_ptr<Sprite> pushA = nullptr;
-	float Aalpha = 1.0f;
-	float AalphaTimer = 0;
-	float AalphaTime = 60;
-
-	KMyMath::Vector2 pushAPos = { 0,0 };
-
 #pragma region プレイヤー機体
 	// オブジェクト
 	std::unique_ptr<KObject3d> object3d = nullptr;

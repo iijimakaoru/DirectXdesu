@@ -92,6 +92,10 @@ private:
 
 	Emitter* emitter;
 
+	Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature = nullptr;
+	Microsoft::WRL::ComPtr<ID3D12RootSignature> particleRootSignature = nullptr;
+	Microsoft::WRL::ComPtr<ID3D12CommandSignature> particleCommandSignature = nullptr;
+
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> UAVHeap = nullptr;
 
 	Microsoft::WRL::ComPtr<ID3D12Resource> RWParticlePool = nullptr;
@@ -119,8 +123,10 @@ private:
 	CD3DX12_CPU_DESCRIPTOR_HANDLE DrawArgsCPUUAV;
 	CD3DX12_GPU_DESCRIPTOR_HANDLE DrawArgsGPUUAV;
 
-	UINT RTVDescriptorSize = 0;
-	UINT DSVDescriptorSize = 0;
-	UINT CBVSRVUAVDescriptorSize = 0;
+	std::unordered_map<std::string, Microsoft::WRL::ComPtr<ID3DBlob>> Shaders;
+	std::unordered_map<std::string, Microsoft::WRL::ComPtr<ID3D12PipelineState>> PSOs;
+
+	//TimeConstants MainTimeCB;
+	//ParticleConstants MainParticleCB;
 };
 

@@ -201,6 +201,7 @@
     <ClCompile Include="Engine\2D\PostEffect\PostEffectManager.cpp" />
     <ClCompile Include="Engine\2D\PostEffect\MultiPostEffect.cpp" />
     <ClCompile Include="Engine\Math\MyMath\MathHelper.cpp" />
+    <ClCompile Include="Engine\Base\DirectXCommon\FrameResource.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\BossEnemy\ActState.h" />
@@ -301,6 +302,7 @@
     <ClInclude Include="Engine\2D\PostEffect\PostEffectManager.h" />
     <ClInclude Include="Engine\2D\PostEffect\MultiPostEffect.h" />
     <ClInclude Include="Engine\Math\MyMath\MathHelper.h" />
+    <ClInclude Include="Engine\Base\DirectXCommon\FrameResource.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DirectXdesu.rc" />

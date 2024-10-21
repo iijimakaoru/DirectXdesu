@@ -106,7 +106,8 @@ void TitleScene::TitleCall() {
 
 void TitleScene::BuildUAV()
 {
-	ID3D12Device* device = KDirectXCommon::GetInstance()->GetDev();
+	KDirectXCommon* directXCommon = KDirectXCommon::GetInstance();
+	ID3D12Device* device = directXCommon->GetDev();
 
 	// Particle Pool
 	{
@@ -144,13 +145,26 @@ void TitleScene::BuildUAV()
 		particlePoolSRVDescription.Buffer.NumElements = emitter->GetMaxParticles();
 		particlePoolSRVDescription.Buffer.StructureByteStride = sizeof(Particle);
 
-		ParticlePoolCPUUAV = CD3DX12_CPU_DESCRIPTOR_HANDLE(UAVHeap->GetCPUDescriptorHandleForHeapStart(), 0, CBVSRVUAVDescriptorSize);
-		ParticlePoolGPUUAV = CD3DX12_GPU_DESCRIPTOR_HANDLE(UAVHeap->GetGPUDescriptorHandleForHeapStart(), 0, CBVSRVUAVDescriptorSize);
+		ParticlePoolCPUUAV = CD3DX12_CPU_DESCRIPTOR_HANDLE(
+			UAVHeap->GetCPUDescriptorHandleForHeapStart(),
+			0,
+			directXCommon->GetCBVSRVUAVDescriptorSize());
+		ParticlePoolGPUUAV = 
+			CD3DX12_GPU_DESCRIPTOR_HANDLE(
+				UAVHeap->GetGPUDescriptorHandleForHeapStart(),
+				0, 
+				directXCommon->GetCBVSRVUAVDescriptorSize());
 		device->CreateUnorderedAccessView(RWParticlePool.Get(),
 			nullptr, &particlePoolUAVDescription, ParticlePoolCPUUAV);
 
-		ParticlePoolCPUSRV = CD3DX12_CPU_DESCRIPTOR_HANDLE(UAVHeap->GetCPUDescriptorHandleForHeapStart(), 4, CBVSRVUAVDescriptorSize);
-		ParticlePoolGPUSRV = CD3DX12_GPU_DESCRIPTOR_HANDLE(UAVHeap->GetGPUDescriptorHandleForHeapStart(), 4, CBVSRVUAVDescriptorSize);
+		ParticlePoolCPUSRV = CD3DX12_CPU_DESCRIPTOR_HANDLE(
+			UAVHeap->GetCPUDescriptorHandleForHeapStart(),
+			4,
+			directXCommon->GetCBVSRVUAVDescriptorSize());
+		ParticlePoolGPUSRV = CD3DX12_GPU_DESCRIPTOR_HANDLE(
+			UAVHeap->GetGPUDescriptorHandleForHeapStart(),
+			4,
+			directXCommon->GetCBVSRVUAVDescriptorSize());
 		device->CreateShaderResourceView(RWParticlePool.Get(),
 			&particlePoolSRVDescription, ParticlePoolCPUUAV);
 	}
@@ -182,8 +196,14 @@ void TitleScene::BuildUAV()
 		drawlistUAVDescription.Buffer.Flags = D3D12_BUFFER_UAV_FLAG_NONE;
 		drawlistUAVDescription.ViewDimension = D3D12_UAV_DIMENSION_BUFFER;
 
-		DrawListCPUUAV = CD3DX12_CPU_DESCRIPTOR_HANDLE(UAVHeap->GetCPUDescriptorHandleForHeapStart(), 2, CBVSRVUAVDescriptorSize);
-		DrawListGPUUAV = CD3DX12_GPU_DESCRIPTOR_HANDLE(UAVHeap->GetGPUDescriptorHandleForHeapStart(), 2, CBVSRVUAVDescriptorSize);
+		DrawListCPUUAV = CD3DX12_CPU_DESCRIPTOR_HANDLE(
+			UAVHeap->GetCPUDescriptorHandleForHeapStart(),
+			2,
+			directXCommon->GetCBVSRVUAVDescriptorSize());
+		DrawListGPUUAV = CD3DX12_GPU_DESCRIPTOR_HANDLE(
+			UAVHeap->GetGPUDescriptorHandleForHeapStart(),
+			2,
+			directXCommon->GetCBVSRVUAVDescriptorSize());
 		device->CreateUnorderedAccessView(RWDrawList.Get(), RWDrawList.Get(), &drawlistUAVDescription, DrawListCPUUAV);
 
 		D3D12_SHADER_RESOURCE_VIEW_DESC drawListSRVDescription = {};
@@ -194,8 +214,14 @@ void TitleScene::BuildUAV()
 		drawListSRVDescription.Buffer.NumElements = emitter->GetMaxParticles();
 		drawListSRVDescription.Buffer.StructureByteStride = sizeof(ParticleSort);
 
-		DrawListCPUSRV = CD3DX12_CPU_DESCRIPTOR_HANDLE(UAVHeap->GetCPUDescriptorHandleForHeapStart(), 5, CBVSRVUAVDescriptorSize);
-		DrawListGPUSRV = CD3DX12_GPU_DESCRIPTOR_HANDLE(UAVHeap->GetGPUDescriptorHandleForHeapStart(), 5, CBVSRVUAVDescriptorSize);
+		DrawListCPUSRV = CD3DX12_CPU_DESCRIPTOR_HANDLE(
+			UAVHeap->GetCPUDescriptorHandleForHeapStart(),
+			5,
+			directXCommon->GetCBVSRVUAVDescriptorSize());
+		DrawListGPUSRV = CD3DX12_GPU_DESCRIPTOR_HANDLE(
+			UAVHeap->GetGPUDescriptorHandleForHeapStart(),
+			5,
+			directXCommon->GetCBVSRVUAVDescriptorSize());
 		device->CreateShaderResourceView(RWDrawList.Get(), &drawListSRVDescription, DrawListCPUSRV);
 
 		heap = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
@@ -237,8 +263,14 @@ void TitleScene::BuildUAV()
 		drawArgsUAVDescription.Buffer.Flags = D3D12_BUFFER_UAV_FLAG_NONE;
 		drawArgsUAVDescription.ViewDimension = D3D12_UAV_DIMENSION_BUFFER;
 
-		DrawArgsCPUUAV = CD3DX12_CPU_DESCRIPTOR_HANDLE(UAVHeap->GetCPUDescriptorHandleForHeapStart(), 3, CBVSRVUAVDescriptorSize);
-		DrawArgsGPUUAV = CD3DX12_GPU_DESCRIPTOR_HANDLE(UAVHeap->GetGPUDescriptorHandleForHeapStart(), 3, CBVSRVUAVDescriptorSize);
+		DrawArgsCPUUAV = CD3DX12_CPU_DESCRIPTOR_HANDLE(
+			UAVHeap->GetCPUDescriptorHandleForHeapStart(),
+			3,
+			directXCommon->GetCBVSRVUAVDescriptorSize());
+		DrawArgsGPUUAV = CD3DX12_GPU_DESCRIPTOR_HANDLE(
+			UAVHeap->GetGPUDescriptorHandleForHeapStart(),
+			3,
+			directXCommon->GetCBVSRVUAVDescriptorSize());
 		device->CreateUnorderedAccessView(RWDrawArgs.Get(), RWDrawArgs.Get(), &drawArgsUAVDescription, DrawArgsCPUUAV);
 	}
 }

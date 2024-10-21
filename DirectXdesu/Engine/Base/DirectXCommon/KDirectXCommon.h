@@ -94,6 +94,10 @@ public:
 	// バックバッファの数を取得
 	size_t GetBackBufferCount() const;
 
+	UINT GetRTVDescriptorSize();
+	UINT GetDSVDescriptorSize();
+	UINT GetCBVSRVUAVDescriptorSize();
+
 private:
 	// DXGI初期化
 	HRESULT InitDXGIDevice();
@@ -197,5 +201,9 @@ private:
 
 	// コマンドキューの設定
 	D3D12_COMMAND_QUEUE_DESC cmdQueueDesc{};
+
+	UINT RTVDescriptorSize = 0;
+	UINT DSVDescriptorSize = 0;
+	UINT CBVSRVUAVDescriptorSize = 0;
 };
 

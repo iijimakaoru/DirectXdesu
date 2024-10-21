@@ -203,6 +203,21 @@ size_t KDirectXCommon::GetBackBufferCount() const
 	return backBuffers.size();
 }
 
+UINT KDirectXCommon::GetRTVDescriptorSize()
+{
+	return RTVDescriptorSize;
+}
+
+UINT KDirectXCommon::GetDSVDescriptorSize()
+{
+	return DSVDescriptorSize;
+}
+
+UINT KDirectXCommon::GetCBVSRVUAVDescriptorSize()
+{
+	return CBVSRVUAVDescriptorSize;
+}
+
 HRESULT KDirectXCommon::InitDXGIDevice()
 {
 	//DXGIファクトリー
@@ -249,6 +264,13 @@ HRESULT KDirectXCommon::InitDXGIDevice()
 			break;
 		}
 	}
+
+	RTVDescriptorSize =
+		device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+	DSVDescriptorSize =
+		device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
+	CBVSRVUAVDescriptorSize =
+		device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 
 	return result;
 }

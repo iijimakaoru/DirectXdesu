@@ -555,9 +555,6 @@
     <ClCompile Include="Engine\Base\DirectXCommon\FrameResource.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Base\DirectXCommon\UploadBuffer.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Input\KInput.h">

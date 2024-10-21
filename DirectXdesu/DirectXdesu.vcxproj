@@ -202,7 +202,6 @@
     <ClCompile Include="Engine\2D\PostEffect\MultiPostEffect.cpp" />
     <ClCompile Include="Engine\Math\MyMath\MathHelper.cpp" />
     <ClCompile Include="Engine\Base\DirectXCommon\FrameResource.cpp" />
-    <ClCompile Include="Engine\Base\DirectXCommon\UploadBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\BossEnemy\ActState.h" />

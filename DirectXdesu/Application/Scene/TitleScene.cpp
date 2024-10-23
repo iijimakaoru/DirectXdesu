@@ -14,6 +14,8 @@
 
 #include "PostEffectManager.h"
 
+const int gNumberFrameResources = 3;
+
 TitleScene::~TitleScene() { Final(); }
 
 void TitleScene::LoadResources() {
@@ -65,8 +67,15 @@ void TitleScene::Init() {
 	);
 
 	BuildUAV();
+
+	KDirectXCommon::GetInstance()->CloseCommnd();
+
+	KDirectXCommon::GetInstance()->BeginCommnd();
+
 	BuildRootSignature();
 	BuildShadersAndInputLayout();
+	BuildFrameResources();
+	BuildPSOs();
 
 	camera->StartRound();
 }
@@ -130,9 +139,11 @@ void TitleScene::BuildUAV()
 			&heap,
 			D3D12_HEAP_FLAG_NONE,
 			&resouceDesc,
-			D3D12_RESOURCE_STATE_UNORDERED_ACCESS,
+			D3D12_RESOURCE_STATE_COMMON,
 			nullptr,
 			IID_PPV_ARGS(&RWParticlePool)));
+		directXCommon->Transition(RWParticlePool.Get(), 
+			D3D12_RESOURCE_STATE_COMMON, D3D12_RESOURCE_STATE_UNORDERED_ACCESS);
 		RWParticlePool->SetName(L"ParticlePool");
 
 		D3D12_UNORDERED_ACCESS_VIEW_DESC particlePoolUAVDescription = {};
@@ -176,7 +187,7 @@ void TitleScene::BuildUAV()
 			&heap,
 			D3D12_HEAP_FLAG_NONE,
 			&resouceDesc,
-			D3D12_RESOURCE_STATE_UNORDERED_ACCESS,
+			D3D12_RESOURCE_STATE_COMMON,
 			nullptr,
 			IID_PPV_ARGS(&ACDeadList)
 		));
@@ -209,7 +220,7 @@ void TitleScene::BuildUAV()
 			&heap,
 			D3D12_HEAP_FLAG_NONE,
 			&resouceDesc,
-			D3D12_RESOURCE_STATE_UNORDERED_ACCESS,
+			D3D12_RESOURCE_STATE_COMMON,
 			nullptr,
 			IID_PPV_ARGS(&RWDrawList)
 		));
@@ -268,7 +279,7 @@ void TitleScene::BuildUAV()
 			&heap,
 			D3D12_HEAP_FLAG_NONE,
 			&resouceDesc,
-			D3D12_RESOURCE_STATE_UNORDERED_ACCESS,
+			D3D12_RESOURCE_STATE_COMMON,
 			nullptr,
 			IID_PPV_ARGS(&RWDrawArgs)
 		));
@@ -418,6 +429,108 @@ void TitleScene::BuildShadersAndInputLayout()
 		nullptr, "main", "cs_5_0");
 	Shaders["DeadListInitCS"] = d3dUtil::CompileShader(L"Resources/Shader/GPUParticle/DeadListInitCS.hlsl",
 		nullptr, "main", "cs_5_0");
+}
+
+void TitleScene::BuildPSOs()
+{
+	ID3D12Device* device = KDirectXCommon::GetInstance()->GetDev();
+
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC opaquePSODescription;
+	ZeroMemory(&opaquePSODescription, sizeof(D3D12_GRAPHICS_PIPELINE_STATE_DESC));
+	opaquePSODescription.pRootSignature = rootSignature.Get();
+	opaquePSODescription.VS =
+	{
+		reinterpret_cast<BYTE*>(Shaders["VS"]->GetBufferPointer()),
+		Shaders["VS"]->GetBufferSize()
+	};
+	opaquePSODescription.PS =
+	{
+		reinterpret_cast<BYTE*>(Shaders["PS"]->GetBufferPointer()),
+		Shaders["PS"]->GetBufferSize()
+	};
+	opaquePSODescription.GS =
+	{
+		reinterpret_cast<BYTE*>(Shaders["GS"]->GetBufferPointer()),
+		Shaders["GS"]->GetBufferSize()
+	};
+
+	D3D12_RENDER_TARGET_BLEND_DESC transparencyBlendDesc = {};
+	transparencyBlendDesc.BlendEnable = true;
+	transparencyBlendDesc.BlendOp = D3D12_BLEND_OP_ADD;
+	transparencyBlendDesc.SrcBlend = D3D12_BLEND_ONE;
+	transparencyBlendDesc.DestBlend = D3D12_BLEND_ONE;
+	transparencyBlendDesc.BlendOpAlpha = D3D12_BLEND_OP_ADD;
+	transparencyBlendDesc.SrcBlendAlpha = D3D12_BLEND_ONE;
+	transparencyBlendDesc.DestBlendAlpha = D3D12_BLEND_ONE;
+	transparencyBlendDesc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
+
+	D3D12_DEPTH_STENCIL_DESC depth = {};
+	depth.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
+	depth.DepthFunc = D3D12_COMPARISON_FUNC_LESS;
+	depth.DepthEnable = true;
+
+	opaquePSODescription.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
+	opaquePSODescription.RasterizerState.FillMode = D3D12_FILL_MODE_SOLID;
+	opaquePSODescription.BlendState.RenderTarget[0] = transparencyBlendDesc;
+	opaquePSODescription.DepthStencilState = depth;
+	opaquePSODescription.SampleMask = UINT_MAX;
+	opaquePSODescription.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT;
+	opaquePSODescription.NumRenderTargets = 1;
+	opaquePSODescription.RTVFormats[0] = BackBufferFormat;
+	opaquePSODescription.SampleDesc.Count = xMsaaState ? 4 : 1;
+	opaquePSODescription.SampleDesc.Quality = xMsaaState ? (xMsaaQuality - 1) : 0;
+	opaquePSODescription.DSVFormat = DepthStencilFormat;
+	ThrowIfFailed(device->CreateGraphicsPipelineState(&opaquePSODescription, IID_PPV_ARGS(&PSOs["opaque"])));
+
+	D3D12_COMPUTE_PIPELINE_STATE_DESC particleEmitPSO = {};
+	particleEmitPSO.pRootSignature = particleRootSignature.Get();
+	particleEmitPSO.CS =
+	{
+		reinterpret_cast<BYTE*>(Shaders["EmitCS"]->GetBufferPointer()),
+		Shaders["EmitCS"]->GetBufferSize()
+	};
+	particleEmitPSO.Flags = D3D12_PIPELINE_STATE_FLAG_NONE;
+	ThrowIfFailed(device->CreateComputePipelineState(&particleEmitPSO, IID_PPV_ARGS(&PSOs["particleEmit"])));
+
+	D3D12_COMPUTE_PIPELINE_STATE_DESC particleUpdatePSO = {};
+	particleUpdatePSO.pRootSignature = particleRootSignature.Get();
+	particleUpdatePSO.CS =
+	{
+		reinterpret_cast<BYTE*>(Shaders["UpdateCS"]->GetBufferPointer()),
+		Shaders["UpdateCS"]->GetBufferSize()
+	};
+	particleUpdatePSO.Flags = D3D12_PIPELINE_STATE_FLAG_NONE;
+	ThrowIfFailed(device->CreateComputePipelineState(&particleUpdatePSO, IID_PPV_ARGS(&PSOs["particleUpdate"])));
+
+	D3D12_COMPUTE_PIPELINE_STATE_DESC particleDrawPSO = {};
+	particleDrawPSO.pRootSignature = particleRootSignature.Get();
+	particleDrawPSO.CS =
+	{
+		reinterpret_cast<BYTE*>(Shaders["CopyDrawCountCS"]->GetBufferPointer()),
+		Shaders["CopyDrawCountCS"]->GetBufferSize()
+	};
+	particleDrawPSO.Flags = D3D12_PIPELINE_STATE_FLAG_NONE;
+	ThrowIfFailed(device->CreateComputePipelineState(&particleDrawPSO, IID_PPV_ARGS(&PSOs["particleDraw"])));
+
+	D3D12_COMPUTE_PIPELINE_STATE_DESC particleDeadListPSO = {};
+	particleDeadListPSO.pRootSignature = particleRootSignature.Get();
+	particleDeadListPSO.CS =
+	{
+		reinterpret_cast<BYTE*>(Shaders["DeadListInitCS"]->GetBufferPointer()),
+		Shaders["DeadListInitCS"]->GetBufferSize()
+	};
+	particleDeadListPSO.Flags = D3D12_PIPELINE_STATE_FLAG_NONE;
+	ThrowIfFailed(device->CreateComputePipelineState(&particleDeadListPSO, IID_PPV_ARGS(&PSOs["particleDeadList"])));
+}
+
+void TitleScene::BuildFrameResources()
+{
+	ID3D12Device* device = KDirectXCommon::GetInstance()->GetDev();
+
+	for (int i = 0; i < gNumberFrameResources; ++i)
+	{
+		FrameResources.push_back(std::make_unique<FrameResource>(device, 1, 1, 1));
+	}
 }
 
 std::array<const CD3DX12_STATIC_SAMPLER_DESC, 6> TitleScene::GetStaticSamplers()

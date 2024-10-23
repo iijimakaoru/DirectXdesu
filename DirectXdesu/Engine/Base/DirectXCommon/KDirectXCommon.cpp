@@ -406,7 +406,7 @@ void KDirectXCommon::EnbleInfoQueue()
 		// 普通
 		infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_ERROR, true);
 		// 警告
-		//infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_WARNING, true);
+		infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_WARNING, true);
 
 		//抑制するエラー
 		D3D12_MESSAGE_ID denyIds[] =
@@ -427,6 +427,46 @@ void KDirectXCommon::EnbleInfoQueue()
 		filter.DenyList.pSeverityList = severities;
 		//指定したエラーの表示を抑制する
 		infoQueue->PushStorageFilter(&filter);
+	}
+}
+
+void KDirectXCommon::BeginCommnd()
+{
+	//キューをクリア
+	result = cmdAllocater->Reset();
+	assert(SUCCEEDED(result));
+	//コマンドリストを貯める準備
+	if (cmdList != 0)
+	{
+		result = cmdList->Reset(cmdAllocater.Get(), nullptr);
+		assert(SUCCEEDED(result));
+	}
+	else
+	{
+		assert(SUCCEEDED(0));
+	}
+}
+
+void KDirectXCommon::CloseCommnd()
+{
+	//命令のクローズ
+	result = cmdList->Close();
+	assert(SUCCEEDED(result));
+	//コマンドリストの実行
+	ID3D12CommandList* commandListts[] = { cmdList.Get() };
+	cmdQueue->ExecuteCommandLists(1, commandListts);
+
+	//コマンド実行完了を待つ
+	cmdQueue->Signal(fence.Get(), ++fenceVal);
+	if (fence->GetCompletedValue() != fenceVal)
+	{
+		HANDLE event = CreateEvent(nullptr, false, false, nullptr);
+		fence->SetEventOnCompletion(fenceVal, event);
+		if (event != 0)
+		{
+			WaitForSingleObject(event, INFINITE);
+			CloseHandle(event);
+		}
 	}
 }
 

@@ -18,6 +18,8 @@
 #include "Emitter.h"
 
 #include "d3dUtil.h"
+
+#include "FrameResource.h"
 /**
  * @file TitleScene.h
  * @brief タイトルシーン
@@ -46,10 +48,10 @@ public:
 	void TitleCall();
 
 	void BuildUAV();
-
 	void BuildRootSignature();
-
 	void BuildShadersAndInputLayout();
+	void BuildPSOs();
+	void BuildFrameResources();
 
 	std::array<const CD3DX12_STATIC_SAMPLER_DESC, 6> GetStaticSamplers();
 
@@ -97,6 +99,16 @@ private:
 	KMyMath::Vector3 lightDir = {0, -1, 0};
 
 	Emitter* emitter;
+
+	bool      xMsaaState = false;    // 4X MSAA enabled
+	UINT      xMsaaQuality = 0;      // quality level of 4X MSAA
+
+	DXGI_FORMAT BackBufferFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
+	DXGI_FORMAT DepthStencilFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
+
+	std::vector<std::unique_ptr<FrameResource>> FrameResources;
+	FrameResource* currentFrameResource = nullptr;
+	int currentFrameResourceIndex = 0;
 
 	Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature = nullptr;
 	Microsoft::WRL::ComPtr<ID3D12RootSignature> particleRootSignature = nullptr;

@@ -98,6 +98,9 @@ public:
 	UINT GetDSVDescriptorSize();
 	UINT GetCBVSRVUAVDescriptorSize();
 
+	void BeginCommnd();
+	void CloseCommnd();
+
 private:
 	// DXGI初期化
 	HRESULT InitDXGIDevice();

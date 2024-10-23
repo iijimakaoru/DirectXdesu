@@ -14,7 +14,7 @@ void ImguiManager::Init()
     KDescriptorHeap::DescriptorHeapViewHandle handl = dx->GetSRVDescriptorHeap()->AddSRV();
 
     ImGui_ImplDX12_Init(
-        dx->GetDev(),
+        dx->GetDevice(),
         static_cast<int>(dx->GetBackBufferCount()),
         DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, dx->GetSRVDescriptorHeap()->GetHeap(),
         handl.cpuHandle,
@@ -48,7 +48,7 @@ void ImguiManager::Begin()
 
 void ImguiManager::Draw()
 {
-    ID3D12GraphicsCommandList* commandlist = dx->GetCmdlist();
+    ID3D12GraphicsCommandList* commandlist = dx->GetCommandList();
 
     //デスクリプタヒープの配列をセットするコマンド
     ID3D12DescriptorHeap* ppHeaps[] = { dx->GetSRVDescriptorHeap()->GetHeap() };

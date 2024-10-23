@@ -9,11 +9,11 @@ PipelineManager* BasePostEffect::pipelineManager = nullptr;
 void BasePostEffect::StaticInit() {
 	pipelineManager = PipelineManager::GetInstance();
 
-	device = KDirectXCommon::GetInstance()->GetDev();
+	device = KDirectXCommon::GetInstance()->GetDevice();
 
 	window = KWinApp::GetInstance();
 
-	cmdList = KDirectXCommon::GetInstance()->GetCmdlist();
+	cmdList = KDirectXCommon::GetInstance()->GetCommandList();
 }
 
 void BasePostEffect::Init() {

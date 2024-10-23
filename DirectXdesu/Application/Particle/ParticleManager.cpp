@@ -50,10 +50,10 @@ void Particles::Add(
 
 void Particles::StaticInitialize() {
 	// デバイスセット
-	Particles::device = KDirectXCommon::GetInstance()->GetDev();
+	Particles::device = KDirectXCommon::GetInstance()->GetDevice();
 
 	// コマンドリストをセット
-	Particles::cmdList = KDirectXCommon::GetInstance()->GetCmdlist();
+	Particles::cmdList = KDirectXCommon::GetInstance()->GetCommandList();
 
 	// パイプライン初期化
 	InitializeGraphicsPipeline();

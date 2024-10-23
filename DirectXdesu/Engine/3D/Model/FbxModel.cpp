@@ -10,7 +10,7 @@ void FbxModel::CreateBuffer()
 {
 	HRESULT result;
 
-	ID3D12Device* device = KDirectXCommon::GetInstance()->GetDev();
+	ID3D12Device* device = KDirectXCommon::GetInstance()->GetDevice();
 
 	// 頂点データ全体のサイズ = 頂点データ一つ分のサイズ * 頂点データの要素数
 	UINT sizeVB = static_cast<UINT>(sizeof(VertexPosNormalUVSkin) * vertices.size());
@@ -140,7 +140,7 @@ void FbxModel::LoadTexture()
 
 void FbxModel::Draw()
 {
-	ID3D12GraphicsCommandList* cmdList = KDirectXCommon::GetInstance()->GetCmdlist();
+	ID3D12GraphicsCommandList* cmdList = KDirectXCommon::GetInstance()->GetCommandList();
 
 	// 頂点バッファビューの設定
 	cmdList->IASetVertexBuffers(0, 1, &vbView);

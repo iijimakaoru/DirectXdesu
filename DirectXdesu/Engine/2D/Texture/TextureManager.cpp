@@ -7,7 +7,7 @@ std::string TextureManager::DefaultTextureDirectoryPath = "Resource/";
 void TextureManager::Init() {
 	HRESULT result;
 
-	device = KDirectXCommon::GetInstance()->GetDev();
+	device = KDirectXCommon::GetInstance()->GetDevice();
 
 	// デスクリプタレンジの設定
 	descriptorRange.NumDescriptors = 1; // 1度の描画に使うテクスチャの数

@@ -42,7 +42,7 @@ void KObject3d::Initialize() {
 
 	// 定数バッファの生成
 	result = 
-		KDirectXCommon::GetInstance()->GetDev()->CreateCommittedResource(
+		KDirectXCommon::GetInstance()->GetDevice()->CreateCommittedResource(
 	    &heapProp, 
 		D3D12_HEAP_FLAG_NONE, 
 		&b0ResourceDesc, 
@@ -117,7 +117,7 @@ void KObject3d::Draw() {
 	pipeline->Update(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	// 定数バッファビューをセット
-	KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootConstantBufferView(
+	KDirectXCommon::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(
 	    0, constBuffB0->GetGPUVirtualAddress());
 
 	light_->Draw(3);
@@ -130,7 +130,7 @@ void KObject3d::Draw(TextureData& texData_) {
 	pipeline->Update(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	// 定数バッファビューをセット
-	KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootConstantBufferView(
+	KDirectXCommon::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(
 	    0, constBuffB0->GetGPUVirtualAddress());
 
 	light_->Draw(3);

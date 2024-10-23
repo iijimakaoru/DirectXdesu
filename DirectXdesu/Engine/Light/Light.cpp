@@ -31,7 +31,7 @@ void Light::Update() {
 
 void Light::Draw(UINT rootParamIndex) {
 	// 定数バッファビューをセット
-	KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootConstantBufferView(
+	KDirectXCommon::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(
 	    rootParamIndex, constBuff_->GetGPUVirtualAddress());
 }
 
@@ -61,7 +61,7 @@ void Light::CreateConstBuffer() {
 	cbResourceDesc.SampleDesc.Count = 1;
 	cbResourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 	// 定数バッファ生成
-	result = KDirectXCommon::GetInstance()->GetDev()->CreateCommittedResource(
+	result = KDirectXCommon::GetInstance()->GetDevice()->CreateCommittedResource(
 	    &cbHeapProp, // ヒープ設定
 		D3D12_HEAP_FLAG_NONE, 
 		&cbResourceDesc, // リソース設定

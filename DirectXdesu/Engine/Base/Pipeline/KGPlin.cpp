@@ -84,7 +84,7 @@ void KGPlin::SetRootSignature(UINT rootParamNum) {
 	    &rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1_0, rootSigBlob.ReleaseAndGetAddressOf(),
 	    errorBlob.ReleaseAndGetAddressOf());
 	assert(SUCCEEDED(result));
-	result = KDirectXCommon::GetInstance()->GetDev()->CreateRootSignature(
+	result = KDirectXCommon::GetInstance()->GetDevice()->CreateRootSignature(
 	    0, rootSigBlob->GetBufferPointer(), rootSigBlob->GetBufferSize(),
 	    IID_PPV_ARGS(rootSignature.ReleaseAndGetAddressOf()));
 	assert(SUCCEEDED(result));
@@ -172,7 +172,7 @@ void KGPlin::RenderBlending(D3D12_RENDER_TARGET_BLEND_DESC& blendDesc, const int
 void KGPlin::CreatePipelineAll(KShader shader, std::string shaderName) {
 	HRESULT result;
 
-	ID3D12Device* device = KDirectXCommon::GetInstance()->GetDev();
+	ID3D12Device* device = KDirectXCommon::GetInstance()->GetDevice();
 
 	// シェーダー設定
 	SetShader(shader);
@@ -893,10 +893,10 @@ KGPlin* KGPlin::Create(KShader shader, std::string shaderName) {
 
 void KGPlin::Update(D3D12_PRIMITIVE_TOPOLOGY primitive) {
 	// パイプラインステートとルートシグネチャの設定コマンド
-	KDirectXCommon::GetInstance()->GetCmdlist()->SetPipelineState(pipelineState.Get());
-	KDirectXCommon::GetInstance()->GetCmdlist()->IASetPrimitiveTopology(primitive);
+	KDirectXCommon::GetInstance()->GetCommandList()->SetPipelineState(pipelineState.Get());
+	KDirectXCommon::GetInstance()->GetCommandList()->IASetPrimitiveTopology(primitive);
 }
 
 void KGPlin::Setting() {
-	KDirectXCommon::GetInstance()->GetCmdlist()->SetGraphicsRootSignature(rootSignature.Get());
+	KDirectXCommon::GetInstance()->GetCommandList()->SetGraphicsRootSignature(rootSignature.Get());
 }

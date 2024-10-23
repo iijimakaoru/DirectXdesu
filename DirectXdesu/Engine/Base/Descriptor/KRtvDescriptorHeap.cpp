@@ -3,7 +3,7 @@
 
 void KRtvDescriptorHeap::Initialize()
 {
-	device = KDirectXCommon::GetInstance()->GetDev();
+	device = KDirectXCommon::GetInstance()->GetDevice();
 	HRESULT result = 0;
 
 	// デスクリプタヒープの設定

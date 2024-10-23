@@ -71,11 +71,11 @@ public:
 	void SetBackScreenColor(float R, float G, float B, float A);
 
 	// デバイス取得
-	ID3D12Device* GetDev() const;
+	ID3D12Device* GetDevice() const;
 	Microsoft::WRL::ComPtr<ID3D12Device> GetComDevice();
 
 	// コマンドリスト取得
-	ID3D12GraphicsCommandList* GetCmdlist();
+	ID3D12GraphicsCommandList* GetCommandList();
 
 	float fps = 0;
 
@@ -100,6 +100,8 @@ public:
 
 	void BeginCommnd();
 	void CloseCommnd();
+
+	ID3D12CommandAllocator* GetCommandAllocator();
 
 private:
 	// DXGI初期化

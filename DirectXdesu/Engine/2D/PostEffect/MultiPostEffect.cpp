@@ -3,11 +3,11 @@
 void MultiPostEffect::Init() {
 	pipelineManager = PipelineManager::GetInstance();
 
-	device = KDirectXCommon::GetInstance()->GetDev();
+	device = KDirectXCommon::GetInstance()->GetDevice();
 
 	window = KWinApp::GetInstance();
 
-	cmdList = KDirectXCommon::GetInstance()->GetCmdlist();
+	cmdList = KDirectXCommon::GetInstance()->GetCommandList();
 
 	clearColor[0] = {0.0f};
 	clearColor[1] = {0.0f};

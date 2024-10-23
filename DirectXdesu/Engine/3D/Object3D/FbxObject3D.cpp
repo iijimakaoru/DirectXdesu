@@ -13,7 +13,7 @@ void FbxObject3D::Init()
 	CD3DX12_RESOURCE_DESC buff = CD3DX12_RESOURCE_DESC::Buffer((sizeof(ConstBufferDataTransform) + 0xff) & ~0xff);
 
 	// 定数バッファの生成
-	result = KDirectXCommon::GetInstance()->GetDev()->CreateCommittedResource(
+	result = KDirectXCommon::GetInstance()->GetDevice()->CreateCommittedResource(
 		&heapProp,
 		D3D12_HEAP_FLAG_NONE,
 		&buff,
@@ -24,7 +24,7 @@ void FbxObject3D::Init()
 
 	CD3DX12_RESOURCE_DESC buffSkin = CD3DX12_RESOURCE_DESC::Buffer((sizeof(ConstBufferDataSkin) + 0xff) & ~0xff);
 
-	result = KDirectXCommon::GetInstance()->GetDev()->CreateCommittedResource(
+	result = KDirectXCommon::GetInstance()->GetDevice()->CreateCommittedResource(
 		&heapProp,
 		D3D12_HEAP_FLAG_NONE,
 		&buffSkin,
@@ -110,7 +110,7 @@ void FbxObject3D::Update(ViewProjection* viewProjection)
 
 void FbxObject3D::Draw()
 {
-	ID3D12GraphicsCommandList* cmdList = KDirectXCommon::GetInstance()->GetCmdlist();
+	ID3D12GraphicsCommandList* cmdList = KDirectXCommon::GetInstance()->GetCommandList();
 	if (model == nullptr)
 	{
 		return;

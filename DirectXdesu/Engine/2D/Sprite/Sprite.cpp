@@ -7,9 +7,9 @@ Microsoft::WRL::ComPtr<ID3D12Device> Sprite::device;
 Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> Sprite::cmdList;
 
 void Sprite::StaticInit() {
-	device = KDirectXCommon::GetInstance()->GetDev();
+	device = KDirectXCommon::GetInstance()->GetDevice();
 
-	cmdList = KDirectXCommon::GetInstance()->GetCmdlist();
+	cmdList = KDirectXCommon::GetInstance()->GetCommandList();
 
 	float width = static_cast<float>(KWinApp::GetInstance()->GetWindowSizeW());
 	float height = static_cast<float>(KWinApp::GetInstance()->GetWindowSizeH());

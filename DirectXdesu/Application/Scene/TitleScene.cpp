@@ -77,6 +77,12 @@ void TitleScene::Init() {
 	BuildFrameResources();
 	BuildPSOs();
 
+	/*hrowIfFailed(CommandListAllocator->Reset());
+
+	ThrowIfFailed(CommandList->Reset(CommandListAllocator.Get(), PSOs["particleDeadList"].Get()));
+
+	CommandList->SetComputeRootSignature(particleRootSignature.Get());*/
+
 	camera->StartRound();
 }
 
@@ -120,7 +126,7 @@ void TitleScene::TitleCall() {
 void TitleScene::BuildUAV()
 {
 	KDirectXCommon* directXCommon = KDirectXCommon::GetInstance();
-	ID3D12Device* device = directXCommon->GetDev();
+	ID3D12Device* device = directXCommon->GetDevice();
 
 	// Particle Pool
 	{
@@ -304,7 +310,7 @@ void TitleScene::BuildUAV()
 
 void TitleScene::BuildRootSignature()
 {
-	ID3D12Device* device = KDirectXCommon::GetInstance()->GetDev();
+	ID3D12Device* device = KDirectXCommon::GetInstance()->GetDevice();
 
 	// default root signature
 	{
@@ -433,7 +439,7 @@ void TitleScene::BuildShadersAndInputLayout()
 
 void TitleScene::BuildPSOs()
 {
-	ID3D12Device* device = KDirectXCommon::GetInstance()->GetDev();
+	ID3D12Device* device = KDirectXCommon::GetInstance()->GetDevice();
 
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC opaquePSODescription;
 	ZeroMemory(&opaquePSODescription, sizeof(D3D12_GRAPHICS_PIPELINE_STATE_DESC));
@@ -525,7 +531,7 @@ void TitleScene::BuildPSOs()
 
 void TitleScene::BuildFrameResources()
 {
-	ID3D12Device* device = KDirectXCommon::GetInstance()->GetDev();
+	ID3D12Device* device = KDirectXCommon::GetInstance()->GetDevice();
 
 	for (int i = 0; i < gNumberFrameResources; ++i)
 	{

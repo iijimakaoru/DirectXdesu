@@ -162,7 +162,7 @@ void KDirectXCommon::SetBackScreenColor(float R, float G, float B, float A)
 	clearColor[3] = A;
 }
 
-ID3D12Device* KDirectXCommon::GetDev() const
+ID3D12Device* KDirectXCommon::GetDevice() const
 {
 	return device_.Get();
 }
@@ -172,7 +172,7 @@ Microsoft::WRL::ComPtr<ID3D12Device> KDirectXCommon::GetComDevice()
 	return device_;
 }
 
-ID3D12GraphicsCommandList* KDirectXCommon::GetCmdlist()
+ID3D12GraphicsCommandList* KDirectXCommon::GetCommandList()
 {
 	return cmdList.Get();
 }
@@ -468,6 +468,11 @@ void KDirectXCommon::CloseCommnd()
 			CloseHandle(event);
 		}
 	}
+}
+
+ID3D12CommandAllocator* KDirectXCommon::GetCommandAllocator()
+{
+	return nullptr;
 }
 
 void KDirectXCommon::InitFixFPS()

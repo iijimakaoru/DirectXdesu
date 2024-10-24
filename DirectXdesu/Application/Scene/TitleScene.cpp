@@ -142,6 +142,9 @@ void TitleScene::Init() {
 }
 
 void TitleScene::Update() {
+	KDirectXCommon* directXCommon = KDirectXCommon::GetInstance();
+	ID3D12Fence* fence = directXCommon->GetFence();
+
 	timer_.UpdateTimer();
 	timer_.UpdateTitleBarStats();
 
@@ -155,12 +158,148 @@ void TitleScene::Update() {
 	skyDome->Update(camera->GetViewPro(), camera->GetWorldPos());
 
 	camera->Update();
+
+	// Cycle through the circular frame resource array.
+	currentFrameResourceIndex = (currentFrameResourceIndex + 1) % gNumberFrameResources;
+	currentFrameResource = FrameResources[currentFrameResourceIndex].get();
+
+	// Has the GPU finished processing the commands of the current frame resource?
+	// If not, wait until the GPU has completed commands up to this fence point.
+	if (currentFrameResource->Fence != 0 && fence->GetCompletedValue() < currentFrameResource->Fence)
+	{
+		HANDLE eventHandle = CreateEventEx(nullptr, (LPCWSTR)false, false, EVENT_ALL_ACCESS);
+		ThrowIfFailed(fence->SetEventOnCompletion(currentFrameResource->Fence, eventHandle));
+		WaitForSingleObject(eventHandle, INFINITE);
+		CloseHandle(eventHandle);
+	}
+
+	emitter->Update(timer_.GetTotalTime());
+	UpdateMainPassCB(timer_);
 }
 
 void TitleScene::ObjDraw() {
 	object3d->Draw();
 
 	skyDome->Draw();
+
+	KDirectXCommon* directXCommon = KDirectXCommon::GetInstance();
+	ID3D12GraphicsCommandList* commndList = directXCommon->GetCommandList();
+	ID3D12CommandQueue* commndQueue = directXCommon->GetCommandQueue();
+
+	auto currentCommandListAllocator = currentFrameResource->commandListAllocator;
+
+	ThrowIfFailed(commndList->Close());
+
+	// reuse the memory associated with command recording
+	// we can only reset when the associated command lists have finished execution on the GPU
+	ThrowIfFailed(currentCommandListAllocator->Reset());
+
+	ThrowIfFailed(commndList->Reset(currentCommandListAllocator.Get(), PSOs["opaque"].Get()));
+
+	commndList->SetPipelineState(PSOs["particleEmit"].Get());
+	commndList->SetComputeRootSignature(particleRootSignature.Get());
+
+	ID3D12DescriptorHeap* descriptorHeaps[] = { UAVHeap.Get() };
+	commndList->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);
+
+	auto objectCB = currentFrameResource->ObjectCB->Resource();
+	commndList->SetComputeRootConstantBufferView(0, objectCB->GetGPUVirtualAddress());
+
+	auto timeCB = currentFrameResource->TimeCB->Resource();
+	commndList->SetComputeRootConstantBufferView(1, timeCB->GetGPUVirtualAddress());
+
+	auto particleCB = currentFrameResource->ParticleCB->Resource();
+	commndList->SetComputeRootConstantBufferView(2, particleCB->GetGPUVirtualAddress());
+
+	commndList->SetComputeRootDescriptorTable(3, ParticlePoolGPUUAV);
+	commndList->SetComputeRootDescriptorTable(4, ACDeadListGPUUAV);
+	commndList->SetComputeRootDescriptorTable(5, DrawListGPUUAV);
+	commndList->SetComputeRootDescriptorTable(6, DrawArgsGPUUAV);
+
+	while (emitter->GetEmitTimeCounter() >= emitter->GetTimeBetweenEmit())
+	{
+		emitter->SetEmitCount((int)(emitter->GetEmitTimeCounter() / emitter->GetTimeBetweenEmit()));
+
+		emitter->SetEmitCount(min(emitter->GetEmitCount(), 65535));
+		emitter->SetEmitTimeCounter(fmod(emitter->GetEmitTimeCounter(), emitter->GetTimeBetweenEmit()));
+
+		UpdateMainPassCB(timer_);
+
+		commndList->Dispatch(emitter->GetEmitCount(), 1, 1);
+	}
+
+	CD3DX12_RESOURCE_BARRIER resourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(RWDrawList.Get(),
+		D3D12_RESOURCE_STATE_UNORDERED_ACCESS, D3D12_RESOURCE_STATE_COPY_DEST);
+	commndList->ResourceBarrier(1, &resourceBarrier);
+
+	commndList->CopyResource(RWDrawList.Get(), DrawListUploadBuffer.Get());
+
+	resourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(RWDrawList.Get(),
+		D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_UNORDERED_ACCESS);
+	commndList->ResourceBarrier(1, &resourceBarrier);
+
+	commndList->SetPipelineState(PSOs["particleUpdate"].Get());
+	commndList->SetComputeRootSignature(particleRootSignature.Get());
+	commndList->Dispatch(emitter->GetMaxParticles(), 1, 1);
+
+	resourceBarrier = CD3DX12_RESOURCE_BARRIER::UAV(RWDrawList.Get());
+	commndList->ResourceBarrier(1, &resourceBarrier);
+
+	commndList->SetPipelineState(PSOs["particleDraw"].Get());
+	commndList->SetComputeRootSignature(particleRootSignature.Get());
+	commndList->Dispatch(1, 1, 1);
+
+	commndList->SetPipelineState(PSOs["opaque"].Get());
+
+	commndList->SetGraphicsRootSignature(rootSignature.Get());
+
+	commndList->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
+
+	commndList->SetGraphicsRootConstantBufferView(0, objectCB->GetGPUVirtualAddress());
+	commndList->SetGraphicsRootConstantBufferView(1, timeCB->GetGPUVirtualAddress());
+	commndList->SetGraphicsRootConstantBufferView(2, particleCB->GetGPUVirtualAddress());
+
+	commndList->SetGraphicsRootDescriptorTable(3, ParticlePoolGPUSRV);
+	commndList->SetGraphicsRootDescriptorTable(4, DrawListGPUSRV);
+
+	resourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(RWDrawArgs.Get(),
+		D3D12_RESOURCE_STATE_UNORDERED_ACCESS, D3D12_RESOURCE_STATE_INDIRECT_ARGUMENT);
+	commndList->ResourceBarrier(1, &resourceBarrier);
+
+	commndList->ExecuteIndirect(
+		particleCommandSignature.Get(),
+		1,
+		RWDrawArgs.Get(),
+		0,
+		nullptr,
+		0);
+
+	resourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(RWDrawArgs.Get(),
+		D3D12_RESOURCE_STATE_INDIRECT_ARGUMENT, D3D12_RESOURCE_STATE_UNORDERED_ACCESS);
+	commndList->ResourceBarrier(1, &resourceBarrier);
+
+	// indicate a state transition on the resource usage
+	/*commndList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(),
+		D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));*/
+
+	// done recording commands
+	ThrowIfFailed(commndList->Close());
+
+	// add the command list to the queue for execution
+	ID3D12CommandList* cmdsLists[] = { commndList };
+	commndQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
+
+	//// wwap the back and front buffers
+	//ThrowIfFailed(directXCommon->GetSwapChain()->Present(0, 0));
+	//currentBackBuffer = (currentBackBuffer + 1) % SwapChainBufferCount;
+
+	//// advance the fence value to mark commands up to this fence point
+	//currentFrameResource->Fence = ++currentFence;
+
+	//// add an instruction to the command queue to set a new fence point.
+	//// because we are on the GPU timeline, the new fence point won't be 
+	//// set until the GPU finishes processing all the commands prior to this Signal()
+	//commndQueue->Signal(Fence.Get(), currentFence);
 }
 
 void TitleScene::SpriteDraw() {
@@ -497,6 +636,7 @@ void TitleScene::BuildShadersAndInputLayout()
 
 void TitleScene::BuildPSOs()
 {
+	KDirectXCommon* directXCommon = KDirectXCommon::GetInstance();
 	ID3D12Device* device = KDirectXCommon::GetInstance()->GetDevice();
 
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC opaquePSODescription;
@@ -530,6 +670,7 @@ void TitleScene::BuildPSOs()
 
 	D3D12_DEPTH_STENCIL_DESC depth = {};
 	depth.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
+	//depth.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
 	depth.DepthFunc = D3D12_COMPARISON_FUNC_LESS;
 	depth.DepthEnable = true;
 
@@ -541,8 +682,9 @@ void TitleScene::BuildPSOs()
 	opaquePSODescription.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT;
 	opaquePSODescription.NumRenderTargets = 1;
 	opaquePSODescription.RTVFormats[0] = BackBufferFormat;
-	opaquePSODescription.SampleDesc.Count = xMsaaState ? 4 : 1;
-	opaquePSODescription.SampleDesc.Quality = xMsaaState ? (xMsaaQuality - 1) : 0;
+	opaquePSODescription.SampleDesc.Count = directXCommon->GetDepthBuffer()->GetxMsaaState() ? 4 : 1;
+	opaquePSODescription.SampleDesc.Quality = 
+		directXCommon->GetDepthBuffer()->GetxMsaaState() ? (directXCommon->GetDepthBuffer()->GetxMsaaQuality() - 1) : 0;
 	opaquePSODescription.DSVFormat = DepthStencilFormat;
 	ThrowIfFailed(device->CreateGraphicsPipelineState(&opaquePSODescription, IID_PPV_ARGS(&PSOs["opaque"])));
 

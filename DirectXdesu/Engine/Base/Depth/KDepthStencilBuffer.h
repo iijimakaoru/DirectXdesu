@@ -24,6 +24,9 @@ private:
 	//ハンドル
 	D3D12_CPU_DESCRIPTOR_HANDLE handle{};
 
+	bool      xMsaaState = false;    // 4X MSAA enabled
+	UINT      xMsaaQuality = 0;      // quality level of 4X MSAA
+
 public:
 
 	/// <summary>
@@ -41,6 +44,8 @@ public:
 	/// <param name="descriptorHeap">デプスステンシル用のデスクプリタヒープ</param>
 	KDepthStencilBuffer(ID3D12Device* d3dDevice, KDsvDescriptorHeap* descriptorHeap);
 
+	D3D12_CPU_DESCRIPTOR_HANDLE DepthStencilView();
+
 	/// <summary>
 	/// リソースを取得
 	/// </summary>
@@ -50,6 +55,9 @@ public:
 	/// ポインタ番号を取得
 	/// </summary>
 	const D3D12_CPU_DESCRIPTOR_HANDLE& GetHandle();
+
+	bool GetxMsaaState();
+	UINT GetxMsaaQuality();
 
 	~KDepthStencilBuffer() = default;
 

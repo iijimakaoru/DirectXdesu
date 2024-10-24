@@ -104,9 +104,6 @@ private:
 
 	Emitter* emitter;
 
-	bool      xMsaaState = false;    // 4X MSAA enabled
-	UINT      xMsaaQuality = 0;      // quality level of 4X MSAA
-
 	DXGI_FORMAT BackBufferFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
 	DXGI_FORMAT DepthStencilFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
 

@@ -76,7 +76,8 @@ void KDirectXCommon::PreDraw()
 
 	//3画面クリア
 	cmdList->ClearRenderTargetView(backBuffers[bbIndex]->GetHandle(), clearColor, 0, nullptr);
-	cmdList->ClearDepthStencilView(depthBuff->GetHandle(), D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+	cmdList->ClearDepthStencilView(depthBuff->DepthStencilView(),
+		D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 	//ビューポート設定
 	viewport.Width = (FLOAT)KWinApp::GetInstance()->GetWindowSizeW();
 	viewport.Height = (FLOAT)KWinApp::GetInstance()->GetWindowSizeH();
@@ -180,6 +181,16 @@ ID3D12GraphicsCommandList* KDirectXCommon::GetCommandList()
 ID3D12CommandQueue* KDirectXCommon::GetCommandQueue()
 {
 	return cmdQueue.Get();
+}
+
+ID3D12Fence* KDirectXCommon::GetFence()
+{
+	return fence.Get();
+}
+
+IDXGISwapChain4* KDirectXCommon::GetSwapChain()
+{
+	return swapChain.Get();
 }
 
 KDescriptorHeap* KDirectXCommon::GetSRVDescriptorHeap()
@@ -312,11 +323,17 @@ HRESULT KDirectXCommon::CreateSwapChain()
 	swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;//フリップ後は破棄
 	swapChainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 
+	currentBackBuffer = 0;
+
 	//生成
 	if (cmdQueue != 0)
 	{
 		Microsoft::WRL::ComPtr<IDXGISwapChain1> tmpSwapChain;
-		result = dxgiFactory->CreateSwapChainForHwnd(cmdQueue.Get(), KWinApp::GetInstance()->GetHWND(), &swapChainDesc, nullptr, nullptr, tmpSwapChain.ReleaseAndGetAddressOf());
+		result = dxgiFactory->CreateSwapChainForHwnd(
+			cmdQueue.Get(),
+			KWinApp::GetInstance()->GetHWND(), 
+			&swapChainDesc,
+			nullptr, nullptr, tmpSwapChain.ReleaseAndGetAddressOf());
 		tmpSwapChain.As(&swapChain);
 
 		if (FAILED(result))
@@ -383,9 +400,12 @@ HRESULT KDirectXCommon::CreateDepthBuffer()
 
 	//深度バッファ生成
 	depthBuff = std::make_unique<KDepthStencilBuffer>(device_.Get(), dsvHeap.get());
+	/*depthBuff->Create(static_cast<UINT>(KWinApp::GetInstance()->GetWindowSizeW()),
+		static_cast<UINT>(KWinApp::GetInstance()->GetWindowSizeH()),
+		DXGI_FORMAT_D32_FLOAT);*/
 	depthBuff->Create(static_cast<UINT>(KWinApp::GetInstance()->GetWindowSizeW()),
 		static_cast<UINT>(KWinApp::GetInstance()->GetWindowSizeH()),
-		DXGI_FORMAT_D32_FLOAT);
+		DXGI_FORMAT_R24G8_TYPELESS);
 
 	return result;
 }
@@ -494,6 +514,34 @@ void KDirectXCommon::FlashCommndQueue()
 Microsoft::WRL::ComPtr<ID3D12CommandAllocator> KDirectXCommon::GetCommandAllocator()
 {
 	return cmdAllocater;
+}
+
+D3D12_VIEWPORT KDirectXCommon::GetViewport()
+{
+	return viewport;
+}
+
+D3D12_RECT KDirectXCommon::GetRect()
+{
+	return scissorRect;
+}
+
+ID3D12Resource* KDirectXCommon::CurrentBackBuffer()
+{
+	return SwapChainBuffer[currentBackBuffer].Get();
+}
+
+D3D12_CPU_DESCRIPTOR_HANDLE KDirectXCommon::CurrentBackBufferView()
+{
+	return CD3DX12_CPU_DESCRIPTOR_HANDLE(
+		rtvHeap->GetHeap()->GetCPUDescriptorHandleForHeapStart(),
+		currentBackBuffer,
+		RTVDescriptorSize);
+}
+
+KDepthStencilBuffer* KDirectXCommon::GetDepthBuffer()
+{
+	return depthBuff.get();
 }
 
 void KDirectXCommon::InitFixFPS()

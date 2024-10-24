@@ -28,13 +28,16 @@ void TitleScene::LoadResources() {
 
 void TitleScene::Init() {
 	KDirectXCommon* directXCommon = KDirectXCommon::GetInstance();
+
+	ID3D12GraphicsCommandList* commndList = directXCommon->GetCommandList();
+	ID3D12CommandQueue* commndQueue = directXCommon->GetCommandQueue();
 	//ID3D12Device* device = KDirectXCommon::GetInstance()->GetDev();
 
 	timer_ = Timer(KWinApp::GetHWND(), KWinApp::GetWindow().lpszMenuName);
 
 	BaseScene::Init();
 
-	KDirectXCommon::GetInstance()->CloseCommnd();
+	directXCommon->CloseCommnd();
 
 	// reset the command list to prep for initialization commands
 	ThrowIfFailed(directXCommon->GetCommandList()->Reset(
@@ -77,16 +80,21 @@ void TitleScene::Init() {
 
 	BuildUAV();
 
-	KDirectXCommon::GetInstance()->CloseCommnd();
+	directXCommon->CloseCommnd();
 
-	KDirectXCommon::GetInstance()->BeginCommnd();
+	directXCommon->BeginCommnd();
 
 	BuildRootSignature();
 	BuildShadersAndInputLayout();
 	BuildFrameResources();
 	BuildPSOs();
 
-	KDirectXCommon::GetInstance()->CloseCommnd();
+	// execute the initialization commands
+	ThrowIfFailed(commndList->Close());
+	ID3D12CommandList* cmdsLists[] = { commndList };
+	commndQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
+
+	directXCommon->FlashCommndQueue();
 
 	ThrowIfFailed(directXCommon->GetCommandAllocator()->Reset());
 
@@ -101,11 +109,41 @@ void TitleScene::Init() {
 
 	UpdateMainPassCB(timer_);
 
+	ID3D12DescriptorHeap* descriptorHeaps[] = { UAVHeap.Get() };
+	commndList->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);
+
+	auto objectCB = currentFrameResource->ObjectCB->Resource();
+	commndList->SetComputeRootConstantBufferView(0, objectCB->GetGPUVirtualAddress());
+
+	auto timeCB = currentFrameResource->TimeCB->Resource();
+	commndList->SetComputeRootConstantBufferView(1, timeCB->GetGPUVirtualAddress());
+
+	auto particleCB = currentFrameResource->ParticleCB->Resource();
+	commndList->SetComputeRootConstantBufferView(2, particleCB->GetGPUVirtualAddress());
+
+	commndList->SetComputeRootDescriptorTable(3, ParticlePoolGPUUAV);
+	commndList->SetComputeRootDescriptorTable(4, ACDeadListGPUUAV);
+	commndList->SetComputeRootDescriptorTable(5, DrawListGPUUAV);
+	commndList->SetComputeRootDescriptorTable(6, DrawArgsGPUUAV);
+
+	commndList->Dispatch(emitter->GetMaxParticles(), 1, 1);
+
+	ThrowIfFailed(commndList->Close());
+
+	// Add the command list to the queue for execution.
+	ID3D12CommandList* cmdsLists1[] = { commndList };
+	commndQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists1);
+
+	directXCommon->FlashCommndQueue();
+
+	directXCommon->BeginCommnd();
+
 	camera->StartRound();
 }
 
 void TitleScene::Update() {
 	timer_.UpdateTimer();
+	timer_.UpdateTitleBarStats();
 
 	light_->SetLightRGB({lightRGB.x, lightRGB.y, lightRGB.z});
 	light_->SetLightDir({lightDir.x, lightDir.y, lightDir.z, 0.0f});

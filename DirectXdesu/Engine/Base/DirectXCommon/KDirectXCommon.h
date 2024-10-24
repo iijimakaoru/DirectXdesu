@@ -72,10 +72,12 @@ public:
 
 	// デバイス取得
 	ID3D12Device* GetDevice() const;
-	Microsoft::WRL::ComPtr<ID3D12Device> GetComDevice();
+	ComPtr<ID3D12Device> GetComDevice();
 
 	// コマンドリスト取得
 	ID3D12GraphicsCommandList* GetCommandList();
+
+	ID3D12CommandQueue* GetCommandQueue();
 
 	float fps = 0;
 
@@ -100,6 +102,7 @@ public:
 
 	void BeginCommnd();
 	void CloseCommnd();
+	void FlashCommndQueue();
 
 	ComPtr<ID3D12CommandAllocator> GetCommandAllocator();
 

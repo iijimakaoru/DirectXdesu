@@ -177,6 +177,11 @@ ID3D12GraphicsCommandList* KDirectXCommon::GetCommandList()
 	return cmdList.Get();
 }
 
+ID3D12CommandQueue* KDirectXCommon::GetCommandQueue()
+{
+	return cmdQueue.Get();
+}
+
 KDescriptorHeap* KDirectXCommon::GetSRVDescriptorHeap()
 {
 	return srvHeap.get();
@@ -456,6 +461,22 @@ void KDirectXCommon::CloseCommnd()
 	ID3D12CommandList* commandListts[] = { cmdList.Get() };
 	cmdQueue->ExecuteCommandLists(1, commandListts);
 
+	//コマンド実行完了を待つ
+	cmdQueue->Signal(fence.Get(), ++fenceVal);
+	if (fence->GetCompletedValue() != fenceVal)
+	{
+		HANDLE event = CreateEvent(nullptr, false, false, nullptr);
+		fence->SetEventOnCompletion(fenceVal, event);
+		if (event != 0)
+		{
+			WaitForSingleObject(event, INFINITE);
+			CloseHandle(event);
+		}
+	}
+}
+
+void KDirectXCommon::FlashCommndQueue()
+{
 	//コマンド実行完了を待つ
 	cmdQueue->Signal(fence.Get(), ++fenceVal);
 	if (fence->GetCompletedValue() != fenceVal)

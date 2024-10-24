@@ -27,9 +27,18 @@ void TitleScene::LoadResources() {
 }
 
 void TitleScene::Init() {
+	KDirectXCommon* directXCommon = KDirectXCommon::GetInstance();
 	//ID3D12Device* device = KDirectXCommon::GetInstance()->GetDev();
 
+	timer_ = Timer(KWinApp::GetHWND(), KWinApp::GetWindow().lpszMenuName);
+
 	BaseScene::Init();
+
+	KDirectXCommon::GetInstance()->CloseCommnd();
+
+	// reset the command list to prep for initialization commands
+	ThrowIfFailed(directXCommon->GetCommandList()->Reset(
+		directXCommon->GetCommandAllocator().Get(), nullptr));
 
 	// インスタンス
 	input = KInput::GetInstance();
@@ -77,16 +86,27 @@ void TitleScene::Init() {
 	BuildFrameResources();
 	BuildPSOs();
 
-	/*hrowIfFailed(CommandListAllocator->Reset());
+	KDirectXCommon::GetInstance()->CloseCommnd();
 
-	ThrowIfFailed(CommandList->Reset(CommandListAllocator.Get(), PSOs["particleDeadList"].Get()));
+	ThrowIfFailed(directXCommon->GetCommandAllocator()->Reset());
 
-	CommandList->SetComputeRootSignature(particleRootSignature.Get());*/
+	ThrowIfFailed(
+		directXCommon->GetCommandList()->Reset(directXCommon->GetCommandAllocator().Get(),
+			PSOs["particleDeadList"].Get()));
+
+	directXCommon->GetCommandList()->SetComputeRootSignature(particleRootSignature.Get());
+
+	currentFrameResourceIndex = (currentFrameResourceIndex + 1) % gNumberFrameResources;
+	currentFrameResource = FrameResources[currentFrameResourceIndex].get();
+
+	UpdateMainPassCB(timer_);
 
 	camera->StartRound();
 }
 
 void TitleScene::Update() {
+	timer_.UpdateTimer();
+
 	light_->SetLightRGB({lightRGB.x, lightRGB.y, lightRGB.z});
 	light_->SetLightDir({lightDir.x, lightDir.y, lightDir.z, 0.0f});
 
@@ -537,6 +557,38 @@ void TitleScene::BuildFrameResources()
 	{
 		FrameResources.push_back(std::make_unique<FrameResource>(device, 1, 1, 1));
 	}
+}
+
+void TitleScene::UpdateMainPassCB(const Timer& timer)
+{
+	DirectX::XMMATRIX world = DirectX::XMMatrixIdentity();
+	DirectX::XMMATRIX view = MyMathConvert::ChangeMatrix4toXMMATRIX(camera->GetViewPro()->GetMatView());
+	DirectX::XMMATRIX projection = MyMathConvert::ChangeMatrix4toXMMATRIX(camera->GetViewPro()->GetMatPro());
+
+	ObjectConstants objConstants;
+	XMStoreFloat4x4(&objConstants.World, XMMatrixTranspose(world));
+	XMStoreFloat4x4(&objConstants.View, XMMatrixTranspose(view));
+	XMStoreFloat4x4(&objConstants.Projection, XMMatrixTranspose(projection));
+	objConstants.AspectRatio = (float)KWinApp::GetWindowSizeW() / KWinApp::GetWindowSizeH();
+
+	auto currentObjectCB = currentFrameResource->ObjectCB.get();
+	currentObjectCB->CopyData(0, objConstants);
+
+	MainTimeCB.DeltaTime = timer.GetDeltaTime();
+	MainTimeCB.TotalTime = timer.GetTotalTime();
+
+	auto currentTimeCB = currentFrameResource->TimeCB.get();
+	currentTimeCB->CopyData(0, MainTimeCB);
+
+	MainParticleCB.EmitCount = emitter->GetEmitCount();
+	MainParticleCB.MaxParticles = emitter->GetMaxParticles();
+	MainParticleCB.GridSize = emitter->GetGridSize();
+	MainParticleCB.LifeTime = emitter->GetLifeTime();
+	MainParticleCB.velocity = emitter->GetVelocity();
+	MainParticleCB.acceleration = emitter->GetAcceleration();
+
+	auto currentParticleCB = currentFrameResource->ParticleCB.get();
+	currentParticleCB->CopyData(0, MainParticleCB);
 }
 
 std::array<const CD3DX12_STATIC_SAMPLER_DESC, 6> TitleScene::GetStaticSamplers()

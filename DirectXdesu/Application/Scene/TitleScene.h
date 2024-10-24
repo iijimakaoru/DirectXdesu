@@ -20,6 +20,7 @@
 #include "d3dUtil.h"
 
 #include "FrameResource.h"
+#include "Timer.h"
 /**
  * @file TitleScene.h
  * @brief タイトルシーン
@@ -52,6 +53,7 @@ public:
 	void BuildShadersAndInputLayout();
 	void BuildPSOs();
 	void BuildFrameResources();
+	void UpdateMainPassCB(const Timer& timer);
 
 	std::array<const CD3DX12_STATIC_SAMPLER_DESC, 6> GetStaticSamplers();
 
@@ -97,6 +99,8 @@ private:
 
 	KMyMath::Vector3 lightRGB = {1, 1, 1};
 	KMyMath::Vector3 lightDir = {0, -1, 0};
+
+	Timer timer_;
 
 	Emitter* emitter;
 
@@ -144,7 +148,8 @@ private:
 	std::unordered_map<std::string, Microsoft::WRL::ComPtr<ID3DBlob>> Shaders;
 	std::unordered_map<std::string, Microsoft::WRL::ComPtr<ID3D12PipelineState>> PSOs;
 
-	//TimeConstants MainTimeCB;
-	//ParticleConstants MainParticleCB;
+	ObjectConstants MainObjectCB;
+	TimeConstants MainTimeCB;
+	ParticleConstants MainParticleCB;
 };
 

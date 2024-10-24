@@ -470,9 +470,9 @@ void KDirectXCommon::CloseCommnd()
 	}
 }
 
-ID3D12CommandAllocator* KDirectXCommon::GetCommandAllocator()
+Microsoft::WRL::ComPtr<ID3D12CommandAllocator> KDirectXCommon::GetCommandAllocator()
 {
-	return nullptr;
+	return cmdAllocater;
 }
 
 void KDirectXCommon::InitFixFPS()

@@ -572,7 +572,7 @@ namespace MyMathConvert
 		return result;
 	}
 
-	DirectX::XMMATRIX ChangeMatrix4toXMVECTOR(KMyMath::Matrix4 matrix)
+	DirectX::XMMATRIX ChangeMatrix4toXMMATRIX(KMyMath::Matrix4 matrix)
 	{
 		DirectX::XMMATRIX result;
 

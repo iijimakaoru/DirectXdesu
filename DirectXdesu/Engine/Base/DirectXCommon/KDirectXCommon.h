@@ -101,7 +101,7 @@ public:
 	void BeginCommnd();
 	void CloseCommnd();
 
-	ID3D12CommandAllocator* GetCommandAllocator();
+	ComPtr<ID3D12CommandAllocator> GetCommandAllocator();
 
 private:
 	// DXGI初期化

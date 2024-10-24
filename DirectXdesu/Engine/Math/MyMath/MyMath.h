@@ -253,7 +253,7 @@ namespace MyMathConvert
 	/// </summary>
 	/// <param name="matrix"></param>
 	/// <returns></returns>
-	DirectX::XMMATRIX ChangeMatrix4toXMVECTOR(KMyMath::Matrix4 matrix);
+	DirectX::XMMATRIX ChangeMatrix4toXMMATRIX(KMyMath::Matrix4 matrix);
 
 	/// <summary>
 	/// XMFloat3からVector3へ変換

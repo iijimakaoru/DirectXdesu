@@ -184,17 +184,8 @@ void TitleScene::ObjDraw() {
 
 	KDirectXCommon* directXCommon = KDirectXCommon::GetInstance();
 	ID3D12GraphicsCommandList* commndList = directXCommon->GetCommandList();
-	ID3D12CommandQueue* commndQueue = directXCommon->GetCommandQueue();
 
 	auto currentCommandListAllocator = currentFrameResource->commandListAllocator;
-
-	ThrowIfFailed(commndList->Close());
-
-	// reuse the memory associated with command recording
-	// we can only reset when the associated command lists have finished execution on the GPU
-	ThrowIfFailed(currentCommandListAllocator->Reset());
-
-	ThrowIfFailed(commndList->Reset(currentCommandListAllocator.Get(), PSOs["opaque"].Get()));
 
 	commndList->SetPipelineState(PSOs["particleEmit"].Get());
 	commndList->SetComputeRootSignature(particleRootSignature.Get());
@@ -249,6 +240,14 @@ void TitleScene::ObjDraw() {
 	commndList->SetComputeRootSignature(particleRootSignature.Get());
 	commndList->Dispatch(1, 1, 1);
 
+	resourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(RWDrawList.Get(),
+		D3D12_RESOURCE_STATE_UNORDERED_ACCESS, D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE);
+	commndList->ResourceBarrier(1, &resourceBarrier);
+
+	resourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(RWParticlePool.Get(),
+		D3D12_RESOURCE_STATE_UNORDERED_ACCESS, D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE);
+	commndList->ResourceBarrier(1, &resourceBarrier);
+
 	commndList->SetPipelineState(PSOs["opaque"].Get());
 
 	commndList->SetGraphicsRootSignature(rootSignature.Get());
@@ -278,28 +277,13 @@ void TitleScene::ObjDraw() {
 		D3D12_RESOURCE_STATE_INDIRECT_ARGUMENT, D3D12_RESOURCE_STATE_UNORDERED_ACCESS);
 	commndList->ResourceBarrier(1, &resourceBarrier);
 
-	// indicate a state transition on the resource usage
-	/*commndList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(),
-		D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));*/
+	resourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(RWDrawList.Get(),
+		D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE, D3D12_RESOURCE_STATE_UNORDERED_ACCESS);
+	commndList->ResourceBarrier(1, &resourceBarrier);
 
-	// done recording commands
-	ThrowIfFailed(commndList->Close());
-
-	// add the command list to the queue for execution
-	ID3D12CommandList* cmdsLists[] = { commndList };
-	commndQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
-
-	//// wwap the back and front buffers
-	//ThrowIfFailed(directXCommon->GetSwapChain()->Present(0, 0));
-	//currentBackBuffer = (currentBackBuffer + 1) % SwapChainBufferCount;
-
-	//// advance the fence value to mark commands up to this fence point
-	//currentFrameResource->Fence = ++currentFence;
-
-	//// add an instruction to the command queue to set a new fence point.
-	//// because we are on the GPU timeline, the new fence point won't be 
-	//// set until the GPU finishes processing all the commands prior to this Signal()
-	//commndQueue->Signal(Fence.Get(), currentFence);
+	resourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(RWParticlePool.Get(),
+		D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE, D3D12_RESOURCE_STATE_UNORDERED_ACCESS);
+	commndList->ResourceBarrier(1, &resourceBarrier);
 }
 
 void TitleScene::SpriteDraw() {
@@ -375,7 +359,7 @@ void TitleScene::BuildUAV()
 			CD3DX12_CPU_DESCRIPTOR_HANDLE(UAVHeap->GetCPUDescriptorHandleForHeapStart(), 4, directXCommon->GetCBVSRVUAVDescriptorSize());
 		ParticlePoolGPUSRV = 
 			CD3DX12_GPU_DESCRIPTOR_HANDLE(UAVHeap->GetGPUDescriptorHandleForHeapStart(), 4, directXCommon->GetCBVSRVUAVDescriptorSize());
-		device->CreateShaderResourceView(RWParticlePool.Get(), &particlePoolSRVDescription, ParticlePoolCPUUAV);
+		device->CreateShaderResourceView(RWParticlePool.Get(), &particlePoolSRVDescription, ParticlePoolCPUSRV);
 	}
 
 	// Dead List
@@ -636,7 +620,7 @@ void TitleScene::BuildShadersAndInputLayout()
 
 void TitleScene::BuildPSOs()
 {
-	KDirectXCommon* directXCommon = KDirectXCommon::GetInstance();
+	//KDirectXCommon* directXCommon = KDirectXCommon::GetInstance();
 	ID3D12Device* device = KDirectXCommon::GetInstance()->GetDevice();
 
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC opaquePSODescription;
@@ -659,33 +643,37 @@ void TitleScene::BuildPSOs()
 	};
 
 	D3D12_RENDER_TARGET_BLEND_DESC transparencyBlendDesc = {};
+	transparencyBlendDesc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
 	transparencyBlendDesc.BlendEnable = true;
+	transparencyBlendDesc.BlendOpAlpha = D3D12_BLEND_OP_ADD;
+	transparencyBlendDesc.SrcBlendAlpha = D3D12_BLEND_ONE;
+	transparencyBlendDesc.DestBlendAlpha = D3D12_BLEND_ZERO;
 	transparencyBlendDesc.BlendOp = D3D12_BLEND_OP_ADD;
 	transparencyBlendDesc.SrcBlend = D3D12_BLEND_ONE;
 	transparencyBlendDesc.DestBlend = D3D12_BLEND_ONE;
-	transparencyBlendDesc.BlendOpAlpha = D3D12_BLEND_OP_ADD;
-	transparencyBlendDesc.SrcBlendAlpha = D3D12_BLEND_ONE;
-	transparencyBlendDesc.DestBlendAlpha = D3D12_BLEND_ONE;
-	transparencyBlendDesc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
 
 	D3D12_DEPTH_STENCIL_DESC depth = {};
-	depth.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
-	//depth.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
+	//depth.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
+	depth.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
 	depth.DepthFunc = D3D12_COMPARISON_FUNC_LESS;
-	depth.DepthEnable = true;
+	depth.DepthEnable = false;
+
+	opaquePSODescription.DepthStencilState = depth;
+
+	opaquePSODescription.DSVFormat = DXGI_FORMAT_D32_FLOAT;
 
 	opaquePSODescription.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
 	opaquePSODescription.RasterizerState.FillMode = D3D12_FILL_MODE_SOLID;
 	opaquePSODescription.BlendState.RenderTarget[0] = transparencyBlendDesc;
-	opaquePSODescription.DepthStencilState = depth;
-	opaquePSODescription.SampleMask = UINT_MAX;
+
+	opaquePSODescription.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
 	opaquePSODescription.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT;
 	opaquePSODescription.NumRenderTargets = 1;
 	opaquePSODescription.RTVFormats[0] = BackBufferFormat;
-	opaquePSODescription.SampleDesc.Count = directXCommon->GetDepthBuffer()->GetxMsaaState() ? 4 : 1;
-	opaquePSODescription.SampleDesc.Quality = 
-		directXCommon->GetDepthBuffer()->GetxMsaaState() ? (directXCommon->GetDepthBuffer()->GetxMsaaQuality() - 1) : 0;
-	opaquePSODescription.DSVFormat = DepthStencilFormat;
+
+	opaquePSODescription.SampleDesc.Count = 1;
+
+
 	ThrowIfFailed(device->CreateGraphicsPipelineState(&opaquePSODescription, IID_PPV_ARGS(&PSOs["opaque"])));
 
 	D3D12_COMPUTE_PIPELINE_STATE_DESC particleEmitPSO = {};

@@ -104,7 +104,7 @@ private:
 
 	Emitter* emitter;
 
-	DXGI_FORMAT BackBufferFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
+	DXGI_FORMAT BackBufferFormat = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
 	DXGI_FORMAT DepthStencilFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
 
 	std::vector<std::unique_ptr<FrameResource>> FrameResources;

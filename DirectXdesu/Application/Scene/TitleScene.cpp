@@ -229,6 +229,7 @@ void TitleScene::ObjDraw() {
 		D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_UNORDERED_ACCESS);
 	commndList->ResourceBarrier(1, &resourceBarrier);
 
+	// パーティクル更新シェーダー
 	commndList->SetPipelineState(PSOs["particleUpdate"].Get());
 	commndList->SetComputeRootSignature(particleRootSignature.Get());
 	commndList->Dispatch(emitter->GetMaxParticles(), 1, 1);
@@ -236,6 +237,7 @@ void TitleScene::ObjDraw() {
 	resourceBarrier = CD3DX12_RESOURCE_BARRIER::UAV(RWDrawList.Get());
 	commndList->ResourceBarrier(1, &resourceBarrier);
 
+	// パーティクル描画シェーダー
 	commndList->SetPipelineState(PSOs["particleDraw"].Get());
 	commndList->SetComputeRootSignature(particleRootSignature.Get());
 	commndList->Dispatch(1, 1, 1);
@@ -626,16 +628,19 @@ void TitleScene::BuildPSOs()
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC opaquePSODescription;
 	ZeroMemory(&opaquePSODescription, sizeof(D3D12_GRAPHICS_PIPELINE_STATE_DESC));
 	opaquePSODescription.pRootSignature = rootSignature.Get();
+	// GPUParticleVS
 	opaquePSODescription.VS =
 	{
 		reinterpret_cast<BYTE*>(Shaders["VS"]->GetBufferPointer()),
 		Shaders["VS"]->GetBufferSize()
 	};
+	// GPUParticlePS
 	opaquePSODescription.PS =
 	{
 		reinterpret_cast<BYTE*>(Shaders["PS"]->GetBufferPointer()),
 		Shaders["PS"]->GetBufferSize()
 	};
+	// GPUParticleGS
 	opaquePSODescription.GS =
 	{
 		reinterpret_cast<BYTE*>(Shaders["GS"]->GetBufferPointer()),
@@ -653,8 +658,8 @@ void TitleScene::BuildPSOs()
 	transparencyBlendDesc.DestBlend = D3D12_BLEND_ONE;
 
 	D3D12_DEPTH_STENCIL_DESC depth = {};
-	//depth.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
-	depth.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
+	depth.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
+	//depth.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
 	depth.DepthFunc = D3D12_COMPARISON_FUNC_LESS;
 	depth.DepthEnable = false;
 
@@ -676,6 +681,7 @@ void TitleScene::BuildPSOs()
 
 	ThrowIfFailed(device->CreateGraphicsPipelineState(&opaquePSODescription, IID_PPV_ARGS(&PSOs["opaque"])));
 
+	// EmitCS
 	D3D12_COMPUTE_PIPELINE_STATE_DESC particleEmitPSO = {};
 	particleEmitPSO.pRootSignature = particleRootSignature.Get();
 	particleEmitPSO.CS =
@@ -686,6 +692,7 @@ void TitleScene::BuildPSOs()
 	particleEmitPSO.Flags = D3D12_PIPELINE_STATE_FLAG_NONE;
 	ThrowIfFailed(device->CreateComputePipelineState(&particleEmitPSO, IID_PPV_ARGS(&PSOs["particleEmit"])));
 
+	// UpdateCS
 	D3D12_COMPUTE_PIPELINE_STATE_DESC particleUpdatePSO = {};
 	particleUpdatePSO.pRootSignature = particleRootSignature.Get();
 	particleUpdatePSO.CS =
@@ -696,6 +703,7 @@ void TitleScene::BuildPSOs()
 	particleUpdatePSO.Flags = D3D12_PIPELINE_STATE_FLAG_NONE;
 	ThrowIfFailed(device->CreateComputePipelineState(&particleUpdatePSO, IID_PPV_ARGS(&PSOs["particleUpdate"])));
 
+	// CopyDrawCountCS
 	D3D12_COMPUTE_PIPELINE_STATE_DESC particleDrawPSO = {};
 	particleDrawPSO.pRootSignature = particleRootSignature.Get();
 	particleDrawPSO.CS =
@@ -706,6 +714,7 @@ void TitleScene::BuildPSOs()
 	particleDrawPSO.Flags = D3D12_PIPELINE_STATE_FLAG_NONE;
 	ThrowIfFailed(device->CreateComputePipelineState(&particleDrawPSO, IID_PPV_ARGS(&PSOs["particleDraw"])));
 
+	// DeadListInitCS
 	D3D12_COMPUTE_PIPELINE_STATE_DESC particleDeadListPSO = {};
 	particleDeadListPSO.pRootSignature = particleRootSignature.Get();
 	particleDeadListPSO.CS =

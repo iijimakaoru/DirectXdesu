@@ -92,9 +92,6 @@ public:
 	ComPtr<ID3D12CommandAllocator> GetCommandAllocator();
 	D3D12_VIEWPORT GetViewport();
 	D3D12_RECT GetRect();
-	ID3D12Resource* CurrentBackBuffer();
-	D3D12_CPU_DESCRIPTOR_HANDLE CurrentBackBufferView();
-	KDepthStencilBuffer* GetDepthBuffer();
 
 private:
 	// DXGI初期化
@@ -134,10 +131,6 @@ private:
 	ComPtr<ID3D12CommandAllocator> cmdAllocater;
 	ComPtr<ID3D12GraphicsCommandList> cmdList;
 	ComPtr<ID3D12CommandQueue> cmdQueue;
-	static const int SwapChainBufferCount = 2;
-	int currentBackBuffer = 0;
-	Microsoft::WRL::ComPtr<ID3D12Resource> SwapChainBuffer[SwapChainBufferCount];
-	Microsoft::WRL::ComPtr<ID3D12Resource> DepthStencilBuffer;
 	// RTV用のデスクリプタヒープ
 	std::unique_ptr<KRtvDescriptorHeap> rtvHeap;
 	// DSV用のデスクリプタヒープ

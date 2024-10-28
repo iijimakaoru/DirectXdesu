@@ -323,8 +323,6 @@ HRESULT KDirectXCommon::CreateSwapChain()
 	swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;//フリップ後は破棄
 	swapChainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 
-	currentBackBuffer = 0;
-
 	//生成
 	if (cmdQueue != 0)
 	{
@@ -524,24 +522,6 @@ D3D12_VIEWPORT KDirectXCommon::GetViewport()
 D3D12_RECT KDirectXCommon::GetRect()
 {
 	return scissorRect;
-}
-
-ID3D12Resource* KDirectXCommon::CurrentBackBuffer()
-{
-	return SwapChainBuffer[currentBackBuffer].Get();
-}
-
-D3D12_CPU_DESCRIPTOR_HANDLE KDirectXCommon::CurrentBackBufferView()
-{
-	return CD3DX12_CPU_DESCRIPTOR_HANDLE(
-		rtvHeap->GetHeap()->GetCPUDescriptorHandleForHeapStart(),
-		currentBackBuffer,
-		RTVDescriptorSize);
-}
-
-KDepthStencilBuffer* KDirectXCommon::GetDepthBuffer()
-{
-	return depthBuff.get();
 }
 
 void KDirectXCommon::InitFixFPS()

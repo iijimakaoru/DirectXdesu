@@ -1,26 +1,19 @@
 #pragma once
 #include "Camera.h"
 #include "KGPlin.h"
-
 #include "BaseScene.h"
-
 #include "KInput.h"
-
 #include "PostEffect.h"
-
 #include "Sprite.h"
 #include "TitleCamera.h"
-
 #include "AudioManager.h"
-
 #include "KObject3d.h"
-
 #include "Emitter.h"
-
 #include "d3dUtil.h"
-
 #include "FrameResource.h"
 #include "Timer.h"
+#include "GPUParticle.h"
+
 /**
  * @file TitleScene.h
  * @brief タイトルシーン
@@ -47,15 +40,6 @@ public:
 
 	// タイトルコール
 	void TitleCall();
-
-	void BuildUAV();
-	void BuildRootSignature();
-	void BuildShadersAndInputLayout();
-	void BuildPSOs();
-	void BuildFrameResources();
-	void UpdateMainPassCB(const Timer& timer);
-
-	std::array<const CD3DX12_STATIC_SAMPLER_DESC, 6> GetStaticSamplers();
 
 	// We pack the UAV counter into the same buffer as the commands rather than create
 	// a separate 64K resource/heap for it. The counter must be aligned on 4K boundaries,
@@ -102,51 +86,7 @@ private:
 
 	Timer timer_;
 
-	Emitter* emitter;
-
-	DXGI_FORMAT BackBufferFormat = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
-	DXGI_FORMAT DepthStencilFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
-
-	std::vector<std::unique_ptr<FrameResource>> FrameResources;
-	FrameResource* currentFrameResource = nullptr;
-	int currentFrameResourceIndex = 0;
-
-	Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature = nullptr;
-	Microsoft::WRL::ComPtr<ID3D12RootSignature> particleRootSignature = nullptr;
-	Microsoft::WRL::ComPtr<ID3D12CommandSignature> particleCommandSignature = nullptr;
-
-	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> UAVHeap = nullptr;
-
-	Microsoft::WRL::ComPtr<ID3D12Resource> RWParticlePool = nullptr;
-	Microsoft::WRL::ComPtr<ID3D12Resource> ACDeadList = nullptr;
-	Microsoft::WRL::ComPtr<ID3D12Resource> RWDrawList = nullptr;
-	Microsoft::WRL::ComPtr<ID3D12Resource> RWDrawArgs = nullptr;
-
-	Microsoft::WRL::ComPtr<ID3D12Resource> DrawListUploadBuffer = nullptr;
-
-	CD3DX12_CPU_DESCRIPTOR_HANDLE ParticlePoolCPUSRV;
-	CD3DX12_GPU_DESCRIPTOR_HANDLE ParticlePoolGPUSRV;
-
-	CD3DX12_CPU_DESCRIPTOR_HANDLE ParticlePoolCPUUAV;
-	CD3DX12_GPU_DESCRIPTOR_HANDLE ParticlePoolGPUUAV;
-
-	CD3DX12_CPU_DESCRIPTOR_HANDLE ACDeadListCPUUAV;
-	CD3DX12_GPU_DESCRIPTOR_HANDLE ACDeadListGPUUAV;
-
-	CD3DX12_CPU_DESCRIPTOR_HANDLE DrawListCPUSRV;
-	CD3DX12_GPU_DESCRIPTOR_HANDLE DrawListGPUSRV;
-
-	CD3DX12_CPU_DESCRIPTOR_HANDLE DrawListCPUUAV;
-	CD3DX12_GPU_DESCRIPTOR_HANDLE DrawListGPUUAV;
-
-	CD3DX12_CPU_DESCRIPTOR_HANDLE DrawArgsCPUUAV;
-	CD3DX12_GPU_DESCRIPTOR_HANDLE DrawArgsGPUUAV;
-
-	std::unordered_map<std::string, Microsoft::WRL::ComPtr<ID3DBlob>> Shaders;
-	std::unordered_map<std::string, Microsoft::WRL::ComPtr<ID3D12PipelineState>> PSOs;
-
-	ObjectConstants MainObjectCB;
-	TimeConstants MainTimeCB;
-	ParticleConstants MainParticleCB;
+	GPUParticle* gpuParticle_;
+	GPUParticle* gpuParticle2_;
 };
 

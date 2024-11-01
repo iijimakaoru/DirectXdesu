@@ -4,6 +4,8 @@
 
 using Microsoft::WRL::ComPtr;
 
+const std::wstring d3dUtil::ShaderHeadFileName = L"Resources/Shader/";
+
 DxException::DxException(HRESULT hr, const std::wstring& functionName, const std::wstring& filename, int lineNumber) :
 	ErrorCode(hr),
 	FunctionName(functionName),
@@ -115,9 +117,11 @@ ComPtr<ID3DBlob> d3dUtil::CompileShader(
 
 	HRESULT hr = S_OK;
 
+	std::wstring shaderName = ShaderHeadFileName + filename;
+
 	ComPtr<ID3DBlob> byteCode = nullptr;
 	ComPtr<ID3DBlob> errors;
-	hr = D3DCompileFromFile(filename.c_str(), defines, D3D_COMPILE_STANDARD_FILE_INCLUDE,
+	hr = D3DCompileFromFile(shaderName.c_str(), defines, D3D_COMPILE_STANDARD_FILE_INCLUDE,
 		entrypoint.c_str(), target.c_str(), compileFlags, 0, &byteCode, &errors);
 
 	if (errors != nullptr)

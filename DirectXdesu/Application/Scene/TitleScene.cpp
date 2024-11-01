@@ -68,14 +68,14 @@ void TitleScene::Init() {
 	audioManager = AudioManager::GetInstance();
 
 	emitter = new Emitter(
-		10000,
+		50000,
 		100,
 		10000.0f,
-		120.0f,
+		20.0f,
+		DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f),
 		DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f),
-		DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f),
-		DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f),
-		DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f)
+		DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 0.0f),
+		DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 0.0f)
 	);
 
 	BuildUAV();
@@ -604,19 +604,19 @@ void TitleScene::BuildRootSignature()
 
 void TitleScene::BuildShadersAndInputLayout()
 {
-	Shaders["VS"] = d3dUtil::CompileShader(L"Resources/Shader/GPUParticle/GPUParticleVS.hlsl",
+	Shaders["VS"] = d3dUtil::CompileShader(L"GPUParticle/GPUParticleVS.hlsl",
 		nullptr,"main","vs_5_0");
-	Shaders["GS"] = d3dUtil::CompileShader(L"Resources/Shader/GPUParticle/GPUParticleGS.hlsl",
+	Shaders["GS"] = d3dUtil::CompileShader(L"GPUParticle/GPUParticleGS.hlsl",
 		nullptr, "main", "gs_5_0");
-	Shaders["PS"] = d3dUtil::CompileShader(L"Resources/Shader/GPUParticle/GPUParticlePS.hlsl",
+	Shaders["PS"] = d3dUtil::CompileShader(L"GPUParticle/GPUParticlePS.hlsl",
 		nullptr, "main", "ps_5_0");
-	Shaders["EmitCS"] = d3dUtil::CompileShader(L"Resources/Shader/GPUParticle/EmitCS.hlsl",
+	Shaders["EmitCS"] = d3dUtil::CompileShader(L"GPUParticle/EmitCS.hlsl",
 		nullptr, "main", "cs_5_0");
-	Shaders["UpdateCS"] = d3dUtil::CompileShader(L"Resources/Shader/GPUParticle/UpdateCS.hlsl",
+	Shaders["UpdateCS"] = d3dUtil::CompileShader(L"GPUParticle/UpdateCS.hlsl",
 		nullptr, "main", "cs_5_0");
-	Shaders["CopyDrawCountCS"] = d3dUtil::CompileShader(L"Resources/Shader/GPUParticle/CopyDrawCountCS.hlsl",
+	Shaders["CopyDrawCountCS"] = d3dUtil::CompileShader(L"GPUParticle/CopyDrawCountCS.hlsl",
 		nullptr, "main", "cs_5_0");
-	Shaders["DeadListInitCS"] = d3dUtil::CompileShader(L"Resources/Shader/GPUParticle/DeadListInitCS.hlsl",
+	Shaders["DeadListInitCS"] = d3dUtil::CompileShader(L"GPUParticle/DeadListInitCS.hlsl",
 		nullptr, "main", "cs_5_0");
 }
 
@@ -677,7 +677,6 @@ void TitleScene::BuildPSOs()
 	opaquePSODescription.RTVFormats[0] = BackBufferFormat;
 
 	opaquePSODescription.SampleDesc.Count = 1;
-
 
 	ThrowIfFailed(device->CreateGraphicsPipelineState(&opaquePSODescription, IID_PPV_ARGS(&PSOs["opaque"])));
 

@@ -55,11 +55,8 @@ void TitleScene::Init() {
 
 	audioManager = AudioManager::GetInstance();
 
-	gpuParticle_ = new GPUParticle(
-		timer_,
-		camera->GetViewPro()->GetMatView(),
-		camera->GetViewPro()->GetMatPro(),
-		10000,
+	gpuParticle_ = new GPUParticle(timer_, camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro(),
+		30000,
 		100,
 		10000.0f,
 		10.0f,
@@ -68,14 +65,11 @@ void TitleScene::Init() {
 		DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 0.0f),
 		DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 0.0f));
 
-	gpuParticle2_ = new GPUParticle(
-		timer_,
-		camera->GetViewPro()->GetMatView(),
-		camera->GetViewPro()->GetMatPro(),
+	gpuParticle2_ = new GPUParticle(timer_, camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro(),
 		10000,
 		100,
 		10000.0f,
-		20.0f,
+		40.0f,
 		DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f),
 		DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f),
 		DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 0.0f),

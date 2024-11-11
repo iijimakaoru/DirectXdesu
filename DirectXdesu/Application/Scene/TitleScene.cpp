@@ -91,6 +91,21 @@ void TitleScene::Update() {
 
 	skyDome->Update(camera->GetViewPro(), camera->GetWorldPos());
 
+	if (input->IsTrigger(DIK_1)) {
+		gpuParticle2_ = new GPUParticle(
+			timer_, 
+			camera->GetViewPro()->GetMatView(), 
+			camera->GetViewPro()->GetMatPro(),
+			10000,
+			100,
+			10000.0f,
+			40.0f,
+			DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f),
+			DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f),
+			DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 0.0f),
+			DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f));
+	}
+
 	gpuParticle_->Update(timer_, 
 		camera->GetViewPro()->GetMatView(),
 		camera->GetViewPro()->GetMatPro());

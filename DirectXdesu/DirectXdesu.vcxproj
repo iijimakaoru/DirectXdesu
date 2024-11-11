@@ -204,6 +204,7 @@
     <ClCompile Include="Engine\Base\DirectXCommon\FrameResource.cpp" />
     <ClCompile Include="Engine\Base\DirectXCommon\Timer.cpp" />
     <ClCompile Include="Engine\Particle\GPUParticle.cpp" />
+    <ClCompile Include="Engine\Particle\ParticleEditor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\BossEnemy\ActState.h" />
@@ -308,6 +309,7 @@
     <ClInclude Include="Engine\Base\DirectXCommon\UploadBuffer.h" />
     <ClInclude Include="Engine\Base\DirectXCommon\Timer.h" />
     <ClInclude Include="Engine\Particle\GPUParticle.h" />
+    <ClInclude Include="Engine\Particle\ParticleEditor.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DirectXdesu.rc" />

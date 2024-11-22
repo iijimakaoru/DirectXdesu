@@ -4,37 +4,21 @@
 GPUParticle::GPUParticle(const Timer& timer,
 	const KMyMath::Matrix4& matView,
 	const KMyMath::Matrix4& matProjection,
-	int maxParticles,
-	int gridSize,
-	float emissionRate,
-	float lifeTime,
-	DirectX::XMFLOAT3 velocity,
-	DirectX::XMFLOAT3 acceleration,
-	DirectX::XMFLOAT4 startColor,
-	DirectX::XMFLOAT4 endColor)
+	Emitter* emitter)
 {
-	emitter_ = new Emitter(
-		maxParticles,
-		gridSize,
-		emissionRate,
-		lifeTime,
-		velocity,
-		acceleration,
-		startColor,
-		endColor);
-
-	Init(timer, matView, matProjection);
+	Init(timer, matView, matProjection,emitter);
 }
 
 void GPUParticle::Init(const Timer& timer,
 	const KMyMath::Matrix4& matView,
-	const KMyMath::Matrix4& matProjection)
+	const KMyMath::Matrix4& matProjection,
+	Emitter* emitter)
 {
 	KDirectXCommon* directXCommon = KDirectXCommon::GetInstance();
 	ID3D12GraphicsCommandList* commndList = directXCommon->GetCommandList();
 	ID3D12CommandQueue* commndQueue = directXCommon->GetCommandQueue();
 
-	BuildUAV();
+	BuildUAV(emitter);
 	BuildRootSignature();
 	BuildShadersAndInputLayout();
 	BuildFrameResources();
@@ -58,7 +42,7 @@ void GPUParticle::Init(const Timer& timer,
 	currentFrameResourceIndex = (currentFrameResourceIndex + 1) % gNumberFrameResources;
 	currentFrameResource = FrameResources[currentFrameResourceIndex].get();
 
-	UpdateMainPassCB(timer, matView, matProjection);
+	UpdateMainPassCB(timer, matView, matProjection,emitter);
 
 	ID3D12DescriptorHeap* descriptorHeaps[] = { UAVHeap.Get() };
 	commndList->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);
@@ -77,7 +61,7 @@ void GPUParticle::Init(const Timer& timer,
 	commndList->SetComputeRootDescriptorTable(5, DrawListGPUUAV);
 	commndList->SetComputeRootDescriptorTable(6, DrawArgsGPUUAV);
 
-	commndList->Dispatch(emitter_->GetMaxParticles(), 1, 1);
+	commndList->Dispatch(emitter->GetMaxParticles(), 1, 1);
 
 	ThrowIfFailed(commndList->Close());
 
@@ -90,7 +74,10 @@ void GPUParticle::Init(const Timer& timer,
 	directXCommon->BeginCommnd();
 }
 
-void GPUParticle::Update(const Timer& timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection)
+void GPUParticle::Update(const Timer& timer,
+	const KMyMath::Matrix4& matView, 
+	const KMyMath::Matrix4& matProjection,
+	Emitter* emitter)
 {
 	KDirectXCommon* directXCommon = KDirectXCommon::GetInstance();
 	ID3D12Fence* fence = directXCommon->GetFence();
@@ -109,14 +96,15 @@ void GPUParticle::Update(const Timer& timer, const KMyMath::Matrix4& matView, co
 		CloseHandle(eventHandle);
 	}
 
-	emitter_->Update(timer.GetTotalTime());
+	emitter->Update(timer.GetTotalTime());
 
-	UpdateMainPassCB(timer, matView, matProjection);
+	UpdateMainPassCB(timer, matView, matProjection,emitter);
 }
 
 void GPUParticle::Draw(const Timer& timer,
 	const KMyMath::Matrix4& matView,
-	const KMyMath::Matrix4& matProjection)
+	const KMyMath::Matrix4& matProjection,
+	Emitter* emitter)
 {
 	KDirectXCommon* directXCommon = KDirectXCommon::GetInstance();
 	ID3D12GraphicsCommandList* commndList = directXCommon->GetCommandList();
@@ -143,16 +131,16 @@ void GPUParticle::Draw(const Timer& timer,
 	commndList->SetComputeRootDescriptorTable(5, DrawListGPUUAV);
 	commndList->SetComputeRootDescriptorTable(6, DrawArgsGPUUAV);
 
-	while (emitter_->GetEmitTimeCounter() >= emitter_->GetTimeBetweenEmit())
+	while (emitter->GetEmitTimeCounter() >= emitter->GetTimeBetweenEmit())
 	{
-		emitter_->SetEmitCount((int)(emitter_->GetEmitTimeCounter() / emitter_->GetTimeBetweenEmit()));
+		emitter->SetEmitCount((int)(emitter->GetEmitTimeCounter() / emitter->GetTimeBetweenEmit()));
 
-		emitter_->SetEmitCount(min(emitter_->GetEmitCount(), 65535));
-		emitter_->SetEmitTimeCounter(fmod(emitter_->GetEmitTimeCounter(), emitter_->GetTimeBetweenEmit()));
+		emitter->SetEmitCount(min(emitter->GetEmitCount(), 65535));
+		emitter->SetEmitTimeCounter(fmod(emitter->GetEmitTimeCounter(), emitter->GetTimeBetweenEmit()));
 
-		UpdateMainPassCB(timer, matView, matProjection);
+		UpdateMainPassCB(timer, matView, matProjection,emitter);
 
-		commndList->Dispatch(emitter_->GetEmitCount(), 1, 1);
+		commndList->Dispatch(emitter->GetEmitCount(), 1, 1);
 	}
 
 	CD3DX12_RESOURCE_BARRIER resourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(RWDrawList.Get(),
@@ -168,7 +156,7 @@ void GPUParticle::Draw(const Timer& timer,
 	// パーティクル更新シェーダー
 	commndList->SetPipelineState(PSOs["particleUpdate"].Get());
 	commndList->SetComputeRootSignature(particleRootSignature.Get());
-	commndList->Dispatch(emitter_->GetMaxParticles(), 1, 1);
+	commndList->Dispatch(emitter->GetMaxParticles(), 1, 1);
 
 	resourceBarrier = CD3DX12_RESOURCE_BARRIER::UAV(RWDrawList.Get());
 	commndList->ResourceBarrier(1, &resourceBarrier);
@@ -224,7 +212,7 @@ void GPUParticle::Draw(const Timer& timer,
 	commndList->ResourceBarrier(1, &resourceBarrier);
 }
 
-void GPUParticle::BuildUAV()
+void GPUParticle::BuildUAV(Emitter* emitter)
 {
 	KDirectXCommon* directXCommon = KDirectXCommon::GetInstance();
 	ID3D12Device* device = directXCommon->GetDevice();
@@ -237,7 +225,7 @@ void GPUParticle::BuildUAV()
 		uavHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 		ThrowIfFailed(device->CreateDescriptorHeap(&uavHeapDesc, IID_PPV_ARGS(&UAVHeap)));
 
-		UINT64 particlePoolByteSize = sizeof(Particle) * emitter_->GetMaxParticles();
+		UINT64 particlePoolByteSize = sizeof(Particle) * emitter->GetMaxParticles();
 		CD3DX12_HEAP_PROPERTIES heap = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
 		CD3DX12_RESOURCE_DESC resouceDesc =
 			CD3DX12_RESOURCE_DESC::Buffer(particlePoolByteSize,
@@ -256,7 +244,7 @@ void GPUParticle::BuildUAV()
 		D3D12_UNORDERED_ACCESS_VIEW_DESC particlePoolUAVDescription = {};
 		particlePoolUAVDescription.Format = DXGI_FORMAT_UNKNOWN;
 		particlePoolUAVDescription.Buffer.FirstElement = 0;
-		particlePoolUAVDescription.Buffer.NumElements = emitter_->GetMaxParticles();
+		particlePoolUAVDescription.Buffer.NumElements = emitter->GetMaxParticles();
 		particlePoolUAVDescription.Buffer.StructureByteStride = sizeof(Particle);
 		particlePoolUAVDescription.Buffer.CounterOffsetInBytes = 0;
 		particlePoolUAVDescription.ViewDimension = D3D12_UAV_DIMENSION_BUFFER;
@@ -266,7 +254,7 @@ void GPUParticle::BuildUAV()
 		particlePoolSRVDescription.Format = DXGI_FORMAT_UNKNOWN;
 		particlePoolSRVDescription.ViewDimension = D3D12_SRV_DIMENSION_BUFFER;
 		particlePoolSRVDescription.Buffer.FirstElement = 0;
-		particlePoolSRVDescription.Buffer.NumElements = emitter_->GetMaxParticles();
+		particlePoolSRVDescription.Buffer.NumElements = emitter->GetMaxParticles();
 		particlePoolSRVDescription.Buffer.StructureByteStride = sizeof(Particle);
 
 		ParticlePoolCPUUAV =
@@ -284,7 +272,7 @@ void GPUParticle::BuildUAV()
 
 	// Dead List
 	{
-		UINT64 deadListByteSize = sizeof(unsigned int) * emitter_->GetMaxParticles();
+		UINT64 deadListByteSize = sizeof(unsigned int) * emitter->GetMaxParticles();
 		UINT64 countBufferOffset = AlignForUavCounter((UINT)deadListByteSize);
 
 		CD3DX12_HEAP_PROPERTIES heap = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
@@ -303,7 +291,7 @@ void GPUParticle::BuildUAV()
 		D3D12_UNORDERED_ACCESS_VIEW_DESC deadListUAVDescription = {};
 		deadListUAVDescription.Format = DXGI_FORMAT_UNKNOWN;
 		deadListUAVDescription.Buffer.FirstElement = 0;
-		deadListUAVDescription.Buffer.NumElements = emitter_->GetMaxParticles();
+		deadListUAVDescription.Buffer.NumElements = emitter->GetMaxParticles();
 		deadListUAVDescription.Buffer.StructureByteStride = sizeof(unsigned	int);
 		deadListUAVDescription.Buffer.CounterOffsetInBytes = countBufferOffset;
 		deadListUAVDescription.ViewDimension = D3D12_UAV_DIMENSION_BUFFER;
@@ -317,7 +305,7 @@ void GPUParticle::BuildUAV()
 
 	// Draw List
 	{
-		UINT64 drawListByteSize = sizeof(ParticleSort) * emitter_->GetMaxParticles();
+		UINT64 drawListByteSize = sizeof(ParticleSort) * emitter->GetMaxParticles();
 		UINT64 countBufferOffset = AlignForUavCounter((UINT)drawListByteSize);
 
 		CD3DX12_HEAP_PROPERTIES heap = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
@@ -336,7 +324,7 @@ void GPUParticle::BuildUAV()
 		D3D12_UNORDERED_ACCESS_VIEW_DESC drawListUAVDescription = {};
 		drawListUAVDescription.Format = DXGI_FORMAT_UNKNOWN;
 		drawListUAVDescription.Buffer.FirstElement = 0;
-		drawListUAVDescription.Buffer.NumElements = emitter_->GetMaxParticles();
+		drawListUAVDescription.Buffer.NumElements = emitter->GetMaxParticles();
 		drawListUAVDescription.Buffer.StructureByteStride = sizeof(ParticleSort);
 		drawListUAVDescription.Buffer.CounterOffsetInBytes = countBufferOffset;
 		drawListUAVDescription.Buffer.Flags = D3D12_BUFFER_UAV_FLAG_NONE;
@@ -353,7 +341,7 @@ void GPUParticle::BuildUAV()
 		drawListSRVDescription.Format = DXGI_FORMAT_UNKNOWN;
 		drawListSRVDescription.ViewDimension = D3D12_SRV_DIMENSION_BUFFER;
 		drawListSRVDescription.Buffer.FirstElement = 0;
-		drawListSRVDescription.Buffer.NumElements = emitter_->GetMaxParticles();
+		drawListSRVDescription.Buffer.NumElements = emitter->GetMaxParticles();
 		drawListSRVDescription.Buffer.StructureByteStride = sizeof(ParticleSort);
 
 		DrawListCPUSRV =
@@ -654,7 +642,9 @@ void GPUParticle::BuildFrameResources()
 }
 
 void GPUParticle::UpdateMainPassCB(const Timer& timer,
-	const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection)
+	const KMyMath::Matrix4& matView,
+	const KMyMath::Matrix4& matProjection,
+	Emitter* emitter)
 {
 	DirectX::XMMATRIX world = DirectX::XMMatrixIdentity();
 	DirectX::XMMATRIX view = MyMathConvert::ChangeMatrix4toXMMATRIX(matView);
@@ -675,12 +665,12 @@ void GPUParticle::UpdateMainPassCB(const Timer& timer,
 	auto currentTimeCB = currentFrameResource->TimeCB.get();
 	currentTimeCB->CopyData(0, MainTimeCB);
 
-	MainParticleCB.EmitCount = emitter_->GetEmitCount();
-	MainParticleCB.MaxParticles = emitter_->GetMaxParticles();
-	MainParticleCB.GridSize = emitter_->GetGridSize();
-	MainParticleCB.LifeTime = emitter_->GetLifeTime();
-	MainParticleCB.velocity = emitter_->GetVelocity();
-	MainParticleCB.acceleration = emitter_->GetAcceleration();
+	MainParticleCB.EmitCount = emitter->GetEmitCount();
+	MainParticleCB.MaxParticles = emitter->GetMaxParticles();
+	MainParticleCB.GridSize = emitter->GetGridSize();
+	MainParticleCB.LifeTime = emitter->GetLifeTime();
+	MainParticleCB.velocity = emitter->GetVelocity();
+	MainParticleCB.acceleration = emitter->GetAcceleration();
 
 	auto currentParticleCB = currentFrameResource->ParticleCB.get();
 	currentParticleCB->CopyData(0, MainParticleCB);

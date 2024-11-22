@@ -88,8 +88,8 @@ private:
 
 	Timer timer_;
 
+	Emitter* emitter_;
 	GPUParticle* gpuParticle_;
-	GPUParticle* gpuParticle2_;
 
 	ParticleEditor* particleEditor_;
 };

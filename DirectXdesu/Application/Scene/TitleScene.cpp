@@ -55,9 +55,7 @@ void TitleScene::Init() {
 
 	audioManager = AudioManager::GetInstance();
 
-	gpuParticle_ = new GPUParticle(timer_, 
-		camera->GetViewPro()->GetMatView(), 
-		camera->GetViewPro()->GetMatPro(),
+	emitter_ = new Emitter(
 		30000,
 		100,
 		10000.0f,
@@ -65,19 +63,13 @@ void TitleScene::Init() {
 		DirectX::XMFLOAT3(1.0f, 1.0f, 0.0f),
 		DirectX::XMFLOAT3(0.0f, 5.0f, 0.0f),
 		DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 0.0f),
-		DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 0.0f));
+		DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 0.0f)
+	);
 
-	gpuParticle2_ = new GPUParticle(timer_, 
+	gpuParticle_ = new GPUParticle(timer_, 
 		camera->GetViewPro()->GetMatView(), 
 		camera->GetViewPro()->GetMatPro(),
-		10000,
-		100,
-		10000.0f,
-		40.0f,
-		DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f),
-		DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f),
-		DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 0.0f),
-		DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f));
+		emitter_);
 
 	particleEditor_ = new ParticleEditor();
 
@@ -100,27 +92,13 @@ void TitleScene::Update() {
 	particleEditor_->Update();
 
 	if (input->IsTrigger(DIK_1)) {
-		gpuParticle2_ = new GPUParticle(
-			timer_, 
-			camera->GetViewPro()->GetMatView(), 
-			camera->GetViewPro()->GetMatPro(),
-			10000,
-			100,
-			10000.0f,
-			40.0f,
-			DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f),
-			DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f),
-			DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 0.0f),
-			DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f));
+		
 	}
 
 	gpuParticle_->Update(timer_, 
 		camera->GetViewPro()->GetMatView(),
-		camera->GetViewPro()->GetMatPro());
-
-	gpuParticle2_->Update(timer_,
-		camera->GetViewPro()->GetMatView(),
-		camera->GetViewPro()->GetMatPro());
+		camera->GetViewPro()->GetMatPro(),
+		emitter_);
 
 	camera->Update();
 }
@@ -132,11 +110,8 @@ void TitleScene::ObjDraw() {
 
 	gpuParticle_->Draw(timer_, 
 		camera->GetViewPro()->GetMatView(),
-		camera->GetViewPro()->GetMatPro());
-
-	gpuParticle2_->Draw(timer_,
-		camera->GetViewPro()->GetMatView(),
-		camera->GetViewPro()->GetMatPro());
+		camera->GetViewPro()->GetMatPro(),
+		emitter_);
 }
 
 void TitleScene::SpriteDraw() {
@@ -144,8 +119,8 @@ void TitleScene::SpriteDraw() {
 }
 
 void TitleScene::Final() {
+	delete emitter_;
 	delete gpuParticle_;
-	delete gpuParticle2_;
 	delete particleEditor_;
 }
 

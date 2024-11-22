@@ -8,40 +8,36 @@
 class GPUParticle
 {
 public:
-
-
 	GPUParticle(const Timer& timer,
 		const KMyMath::Matrix4& matView,
 		const KMyMath::Matrix4& matProjection,
-		int maxParticles,
-		int gridSize,
-		float emissionRate,
-		float lifeTime,
-		DirectX::XMFLOAT3 velocity,
-		DirectX::XMFLOAT3 acceleration,
-		DirectX::XMFLOAT4 startColor,
-		DirectX::XMFLOAT4 endColor);
+		Emitter* emitter);
 
 	void Init(const Timer& timer,
 		const KMyMath::Matrix4& matView,
-		const KMyMath::Matrix4& matProjection);
+		const KMyMath::Matrix4& matProjection,
+		Emitter* emitter);
 
 	void Update(const Timer& timer,
 		const KMyMath::Matrix4& matView,
-		const KMyMath::Matrix4& matProjection);
+		const KMyMath::Matrix4& matProjection,
+		Emitter* emitter);
 
 	void Draw(const Timer& timer,
 		const KMyMath::Matrix4& matView,
-		const KMyMath::Matrix4& matProjection);
+		const KMyMath::Matrix4& matProjection,
+		Emitter* emitter);
 
 private:
-	void BuildUAV();
+	void BuildUAV(Emitter* emitter);
 	void BuildRootSignature();
 	void BuildShadersAndInputLayout();
 	void BuildPSOs();
 	void BuildFrameResources();
 	void UpdateMainPassCB(const Timer& timer,
-		const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection);
+		const KMyMath::Matrix4& matView,
+		const KMyMath::Matrix4& matProjection,
+		Emitter* emitter);
 
 	std::array<const CD3DX12_STATIC_SAMPLER_DESC, 6> GetStaticSamplers();
 
@@ -56,8 +52,6 @@ private:
 	}
 
 private:
-	Emitter* emitter_;
-
 	DXGI_FORMAT BackBufferFormat = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
 
 	std::vector<std::unique_ptr<FrameResource>> FrameResources;

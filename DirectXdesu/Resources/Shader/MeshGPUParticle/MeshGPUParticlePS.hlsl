@@ -1,30 +1,4 @@
-#include "GPUParticleHeader.hlsli"
-
-cbuffer objectData : register(b0)
-{
-    matrix world;
-    matrix view;
-    matrix projection;
-    float aspectRatio;
-}
-
-cbuffer timeData : register(b1)
-{
-    float deltaTime;
-    float totalTime;
-}
-
-cbuffer particleData : register(b2)
-{
-    int emitCount;
-    int maxParticles;
-    int gridSize;
-    float3 velocity;
-    float3 acceleration;
-    float4 startColor;
-    float4 endColor;
-    float lifeTime;
-}
+#include "MeshGPUParticle.hlsli"
 
 struct GS_OUTPUT
 {

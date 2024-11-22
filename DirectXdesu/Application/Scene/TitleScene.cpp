@@ -55,7 +55,9 @@ void TitleScene::Init() {
 
 	audioManager = AudioManager::GetInstance();
 
-	gpuParticle_ = new GPUParticle(timer_, camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro(),
+	gpuParticle_ = new GPUParticle(timer_, 
+		camera->GetViewPro()->GetMatView(), 
+		camera->GetViewPro()->GetMatPro(),
 		30000,
 		100,
 		10000.0f,
@@ -65,7 +67,9 @@ void TitleScene::Init() {
 		DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 0.0f),
 		DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 0.0f));
 
-	gpuParticle2_ = new GPUParticle(timer_, camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro(),
+	gpuParticle2_ = new GPUParticle(timer_, 
+		camera->GetViewPro()->GetMatView(), 
+		camera->GetViewPro()->GetMatPro(),
 		10000,
 		100,
 		10000.0f,
@@ -74,6 +78,8 @@ void TitleScene::Init() {
 		DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f),
 		DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 0.0f),
 		DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f));
+
+	particleEditor_ = new ParticleEditor();
 
 	camera->StartRound();
 }
@@ -90,6 +96,8 @@ void TitleScene::Update() {
 	object3d->Update(camera->GetViewPro(), camera->GetWorldPos());
 
 	skyDome->Update(camera->GetViewPro(), camera->GetWorldPos());
+
+	particleEditor_->Update();
 
 	if (input->IsTrigger(DIK_1)) {
 		gpuParticle2_ = new GPUParticle(
@@ -138,6 +146,7 @@ void TitleScene::SpriteDraw() {
 void TitleScene::Final() {
 	delete gpuParticle_;
 	delete gpuParticle2_;
+	delete particleEditor_;
 }
 
 void TitleScene::StartScene() {

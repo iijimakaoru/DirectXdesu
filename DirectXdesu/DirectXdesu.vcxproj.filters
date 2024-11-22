@@ -915,6 +915,8 @@
     <None Include="Resources\Shader\GPUParticle\SimplexNoise.hlsli">
       <Filter>シェーダー</Filter>
     </None>
+    <None Include="Resources\Shader\MeshGPUParticle\MeshGPUParticle.hlsli" />
+    <None Include="Resources\Shader\MeshGPUParticle\MeshSimplexNoise.hlsli" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shader\BasicPS.hlsl">
@@ -987,5 +989,12 @@
     <FxCompile Include="Resources\Shader\GPUParticle\CopyDrawCountCS.hlsl" />
     <FxCompile Include="Resources\Shader\GPUParticle\DeadListInitCS.hlsl" />
     <FxCompile Include="Resources\Shader\GPUParticle\EmitCS.hlsl" />
+    <FxCompile Include="Resources\Shader\MeshGPUParticle\MeshCopyDrawCountCS.hlsl" />
+    <FxCompile Include="Resources\Shader\MeshGPUParticle\MeshDeadListInitCS.hlsl" />
+    <FxCompile Include="Resources\Shader\MeshGPUParticle\MeshEmitCS.hlsl" />
+    <FxCompile Include="Resources\Shader\MeshGPUParticle\MeshGPUParticleGS.hlsl" />
+    <FxCompile Include="Resources\Shader\MeshGPUParticle\MeshGPUParticlePS.hlsl" />
+    <FxCompile Include="Resources\Shader\MeshGPUParticle\MeshGPUParticleVS.hlsl" />
+    <FxCompile Include="Resources\Shader\MeshGPUParticle\MeshUpdateCS.hlsl" />
   </ItemGroup>
 </Project>

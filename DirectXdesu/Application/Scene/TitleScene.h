@@ -14,6 +14,8 @@
 #include "Timer.h"
 #include "GPUParticle.h"
 
+#include "ParticleEditor.h"
+
 /**
  * @file TitleScene.h
  * @brief タイトルシーン
@@ -88,5 +90,7 @@ private:
 
 	GPUParticle* gpuParticle_;
 	GPUParticle* gpuParticle2_;
+
+	ParticleEditor* particleEditor_;
 };
 

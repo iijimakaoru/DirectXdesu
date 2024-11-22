@@ -36,11 +36,9 @@ RWStructuredBuffer<uint> DrawArgs : register(u3);
 [numthreads(32, 1, 1)]
 void main(uint id : SV_DispatchThreadID)
 {
-    // ¶¬ãŒÀ
     if (id.x >= (uint) emitCount)
         return;
 
-    // 
     uint emitIndex = CDeadList.Consume();
 
     float3 gridPosition;

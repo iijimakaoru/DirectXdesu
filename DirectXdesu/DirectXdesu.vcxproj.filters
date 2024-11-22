@@ -564,6 +564,9 @@
     <ClCompile Include="Engine\Particle\ParticleEditor.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Particle\MeshGPUParticle.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Input\KInput.h">
@@ -875,6 +878,9 @@
     <ClInclude Include="Engine\Particle\ParticleEditor.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Particle\MeshGPUParticle.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DirectXdesu.rc">
@@ -882,31 +888,31 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Shader\Basic.hlsli">
+    <None Include="Resources\Shader\Basic\Basic.hlsli">
       <Filter>シェーダー</Filter>
     </None>
-    <None Include="Resources\Shader\Obj.hlsli">
+    <None Include="Resources\Shader\Obj\Obj.hlsli">
       <Filter>シェーダー</Filter>
     </None>
-    <None Include="Resources\Shader\Sprite.hlsli">
+    <None Include="Resources\Shader\Sprite\Sprite.hlsli">
       <Filter>シェーダー</Filter>
     </None>
-    <None Include="Resources\Shader\Particle.hlsli">
+    <None Include="Resources\Shader\Particle\Particle.hlsli">
       <Filter>シェーダー</Filter>
     </None>
-    <None Include="Resources\Shader\FBX.hlsli">
+    <None Include="Resources\Shader\Fbx\FBX.hlsli">
       <Filter>シェーダー</Filter>
     </None>
-    <None Include="Resources\Shader\PostEffect.hlsli">
+    <None Include="Resources\Shader\PostEffect\PostEffect.hlsli">
       <Filter>シェーダー</Filter>
     </None>
-    <None Include="Resources\Shader\lightOBJ.hlsli">
+    <None Include="Resources\Shader\LightObj\lightOBJ.hlsli">
       <Filter>シェーダー</Filter>
     </None>
-    <None Include="Resources\Shader\Vignette.hlsli">
+    <None Include="Resources\Shader\Vignette\Vignette.hlsli">
       <Filter>シェーダー</Filter>
     </None>
-    <None Include="Resources\Shader\MultiTextureHeader.hlsli">
+    <None Include="Resources\Shader\MultiTexture\MultiTextureHeader.hlsli">
       <Filter>シェーダー</Filter>
     </None>
     <None Include="Resources\Shader\GPUParticle\GPUParticleHeader.hlsli">
@@ -919,61 +925,61 @@
     <None Include="Resources\Shader\MeshGPUParticle\MeshSimplexNoise.hlsli" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Resources\Shader\BasicPS.hlsl">
+    <FxCompile Include="Resources\Shader\Basic\BasicPS.hlsl">
       <Filter>シェーダー</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\Shader\BasicVS.hlsl">
+    <FxCompile Include="Resources\Shader\Basic\BasicVS.hlsl">
       <Filter>シェーダー</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\Shader\ObjPS.hlsl">
+    <FxCompile Include="Resources\Shader\Obj\ObjPS.hlsl">
       <Filter>シェーダー</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\Shader\ObjVS.hlsl">
+    <FxCompile Include="Resources\Shader\Obj\ObjVS.hlsl">
       <Filter>シェーダー</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\Shader\SpritePS.hlsl">
+    <FxCompile Include="Resources\Shader\Sprite\SpritePS.hlsl">
       <Filter>シェーダー</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\Shader\SpriteVS.hlsl">
+    <FxCompile Include="Resources\Shader\Sprite\SpriteVS.hlsl">
       <Filter>シェーダー</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\Shader\ParticleGS.hlsl">
+    <FxCompile Include="Resources\Shader\Particle\ParticleGS.hlsl">
       <Filter>シェーダー</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\Shader\ParticlePS.hlsl">
+    <FxCompile Include="Resources\Shader\Particle\ParticlePS.hlsl">
       <Filter>シェーダー</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\Shader\ParticleVS.hlsl">
+    <FxCompile Include="Resources\Shader\Particle\ParticleVS.hlsl">
       <Filter>シェーダー</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\Shader\FBXPS.hlsl">
+    <FxCompile Include="Resources\Shader\Fbx\FBXPS.hlsl">
       <Filter>シェーダー</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\Shader\FBXVS.hlsl">
+    <FxCompile Include="Resources\Shader\Fbx\FBXVS.hlsl">
       <Filter>シェーダー</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\Shader\PostEffectPS.hlsl">
+    <FxCompile Include="Resources\Shader\PostEffect\PostEffectPS.hlsl">
       <Filter>シェーダー</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\Shader\PostEffectVS.hlsl">
+    <FxCompile Include="Resources\Shader\PostEffect\PostEffectVS.hlsl">
       <Filter>シェーダー</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\Shader\lightOBJPS.hlsl">
+    <FxCompile Include="Resources\Shader\LightObj\lightOBJPS.hlsl">
       <Filter>シェーダー</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\Shader\lightOBJVS.hlsl">
+    <FxCompile Include="Resources\Shader\LightObj\lightOBJVS.hlsl">
       <Filter>シェーダー</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\Shader\VignettePS.hlsl">
+    <FxCompile Include="Resources\Shader\Vignette\VignettePS.hlsl">
       <Filter>シェーダー</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\Shader\VignetteVS.hlsl">
+    <FxCompile Include="Resources\Shader\Vignette\VignetteVS.hlsl">
       <Filter>シェーダー</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\Shader\MultiTexturePS.hlsl">
+    <FxCompile Include="Resources\Shader\MultiTexture\MultiTexturePS.hlsl">
       <Filter>シェーダー</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\Shader\MultiTextureVS.hlsl">
+    <FxCompile Include="Resources\Shader\MultiTexture\MultiTextureVS.hlsl">
       <Filter>シェーダー</Filter>
     </FxCompile>
     <FxCompile Include="Resources\Shader\GPUParticle\GPUParticleVS.hlsl">

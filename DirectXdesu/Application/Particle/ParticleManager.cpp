@@ -78,8 +78,10 @@ Particles* Particles::Create(TextureData& textureData_) {
 
 void Particles::InitializeGraphicsPipeline() {
 	shader.Init(
-	    L"Resources/Shader/ParticleVS.hlsl", L"Resources/Shader/ParticlePS.hlsl", "main",
-	    L"Resources/Shader/ParticleGS.hlsl");
+	    L"Resources/Shader/Particle/ParticleVS.hlsl", 
+		L"Resources/Shader/Particle/ParticlePS.hlsl", 
+		"main",
+	    L"Resources/Shader/Particle/ParticleGS.hlsl");
 
 	pipeline.reset(KGPlin::Create(shader, "Particle"));
 }

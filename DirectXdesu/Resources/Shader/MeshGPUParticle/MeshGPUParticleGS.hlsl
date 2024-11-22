@@ -1,19 +1,5 @@
 #include "MeshGPUParticle.hlsli"
 
-struct VS_OUTPUT
-{
-    float3 Position : POSITION;
-    float Size : SIZE;
-    float4 Color : COLOR;
-};
-
-struct GS_OUTPUT
-{
-    float4 Position : SV_POSITION;
-    float4 Color : COLOR;
-    float2 UV : TEXCOORD;
-};
-
 [maxvertexcount(4)]
 void main(point VS_OUTPUT input[1], inout TriangleStream<GS_OUTPUT> outStream)
 {

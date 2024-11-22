@@ -64,3 +64,17 @@ cbuffer particleData : register(b2)
     int gridSize;
     uint meshSize;
 }
+
+struct VS_OUTPUT
+{
+    float3 Position : POSITION;
+    float Size : SIZE;
+    float4 Color : COLOR;
+};
+
+struct GS_OUTPUT
+{
+    float4 Position : SV_POSITION;
+    float4 Color : COLOR;
+    float2 UV : TEXCOORD;
+};

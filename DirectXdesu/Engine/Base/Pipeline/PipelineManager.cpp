@@ -8,30 +8,39 @@ PipelineManager* PipelineManager::GetInstance() {
 
 void PipelineManager::Init() {
 	// Obj
-	shaders_["Obj"].Init(L"Resources/Shader/lightOBJVS.hlsl", L"Resources/Shader/lightOBJPS.hlsl");
+	shaders_["Obj"].Init(
+		L"Resources/Shader/LightObj/lightOBJVS.hlsl",
+		L"Resources/Shader/LightObj/lightOBJPS.hlsl");
 	pipelines_["Obj"].reset(KGPlin::Create(shaders_["Obj"], "Obj"));
 
 	// Sprite
-	shaders_["Sprite"].Init(L"Resources/Shader/SpriteVS.hlsl", L"Resources/Shader/SpritePS.hlsl");
+	shaders_["Sprite"].Init(
+		L"Resources/Shader/Sprite/SpriteVS.hlsl",
+		L"Resources/Shader/Sprite/SpritePS.hlsl");
 	pipelines_["Sprite"].reset(KGPlin::Create(shaders_["Sprite"], "Sprite"));
 
 	// fbx
-	shaders_["Fbx"].Init(L"Resources/Shader/FbxVS.hlsl", L"Resources/Shader/FbxPS.hlsl");
+	shaders_["Fbx"].Init(
+		L"Resources/Shader/Fbx/FbxVS.hlsl",
+		L"Resources/Shader/Fbx/FbxPS.hlsl");
 	pipelines_["Fbx"].reset(KGPlin::Create(shaders_["Fbx"], "Fbx"));
 
 	// post
 	shaders_["PostEffect"].Init(
-	    L"Resources/Shader/PostEffectVS.hlsl", L"Resources/Shader/PostEffectPS.hlsl");
+		L"Resources/Shader/PostEffect/PostEffectVS.hlsl", 
+		L"Resources/Shader/PostEffect/PostEffectPS.hlsl");
 	pipelines_["PostEffect"].reset(KGPlin::Create(shaders_["PostEffect"], "PostEffect"));
 
 	// Vignette
 	shaders_["Vignette"].Init(
-	    L"Resources/Shader/VignetteVS.hlsl", L"Resources/Shader/VignettePS.hlsl");
+	    L"Resources/Shader/Vignette/VignetteVS.hlsl",
+		L"Resources/Shader/Vignette/VignettePS.hlsl");
 	pipelines_["Vignette"].reset(KGPlin::Create(shaders_["Vignette"], "Vignette"));
 
 	// MultiTexture
 	shaders_["MultiTexture"].Init(
-	    L"Resources/Shader/MultiTextureVS.hlsl", L"Resources/Shader/MultiTexturePS.hlsl");
+	    L"Resources/Shader/MultiTexture/MultiTextureVS.hlsl",
+		L"Resources/Shader/MultiTexture/MultiTexturePS.hlsl");
 	pipelines_["MultiTexture"].reset(KGPlin::Create(shaders_["MultiTexture"], "MultiTexture"));
 }
 

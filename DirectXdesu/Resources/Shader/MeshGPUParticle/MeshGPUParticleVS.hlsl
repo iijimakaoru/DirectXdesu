@@ -1,12 +1,5 @@
 #include "MeshGPUParticle.hlsli"
 
-struct VS_OUTPUT
-{
-    float3 Position : POSITION;
-    float Size : SIZE;
-    float4 Color : COLOR;
-};
-
 StructuredBuffer<Particle> ParticlePool : register(t0);
 StructuredBuffer<ParticleDraw> DrawList : register(t1);
 

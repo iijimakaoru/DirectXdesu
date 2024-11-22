@@ -1,12 +1,5 @@
 #include "MeshGPUParticle.hlsli"
 
-struct GS_OUTPUT
-{
-    float4 Position : SV_POSITION;
-    float4 Color : COLOR;
-    float2 UV : TEXCOORD;
-};
-
 float4 main(GS_OUTPUT input) : SV_TARGET
 {
     input.UV = input.UV * 2 - 1;

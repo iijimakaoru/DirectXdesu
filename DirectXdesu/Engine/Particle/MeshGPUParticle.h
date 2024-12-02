@@ -4,6 +4,7 @@
 #include "Timer.h"
 #include "Emitter.h"
 #include "FrameResource.h"
+#include "KVertex.h"
 
 class MeshGPUParticle
 {
@@ -11,12 +12,14 @@ public:
 	MeshGPUParticle(const Timer& timer,
 		const KMyMath::Matrix4& matView,
 		const KMyMath::Matrix4& matProjection,
-		Emitter* emitter);
+		Emitter* emitter,
+		const std::string modelname = "test");
 
 	void Init(const Timer& timer,
 		const KMyMath::Matrix4& matView,
 		const KMyMath::Matrix4& matProjection,
-		Emitter* emitter);
+		Emitter* emitter,
+		const std::string modelname);
 
 	void Update(const Timer& timer,
 		const KMyMath::Matrix4& matView,
@@ -27,6 +30,8 @@ public:
 		const KMyMath::Matrix4& matView,
 		const KMyMath::Matrix4& matProjection,
 		Emitter* emitter);
+
+	bool LoadMesh(const std::string modelname);
 
 private:
 	void BuildUAV(Emitter* emitter);
@@ -51,7 +56,6 @@ private:
 		return (bufferSize + (alignment - 1)) & ~(alignment - 1);
 	}
 
-private:
 private:
 	DXGI_FORMAT BackBufferFormat = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
 
@@ -96,5 +100,8 @@ private:
 	ObjectConstants MainObjectCB;
 	TimeConstants MainTimeCB;
 	ParticleConstants MainParticleCB;
+
+	std::vector<Vertex> vertices_;
+	std::unique_ptr<KVertex> vertexs;
 };
 

@@ -1,17 +1,25 @@
 #include "MeshGPUParticle.h"
 #include "KDirectXCommon.h"
 
-MeshGPUParticle::MeshGPUParticle(const Timer& timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection, Emitter* emitter)
+MeshGPUParticle::MeshGPUParticle(const Timer& timer,
+	const KMyMath::Matrix4& matView,
+	const KMyMath::Matrix4& matProjection,
+	Emitter* emitter, const std::string modelname)
 {
-	Init(timer, matView, matProjection, emitter);
+	Init(timer, matView, matProjection, emitter,modelname);
 }
 
-void MeshGPUParticle::Init(const Timer& timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection, Emitter* emitter)
+void MeshGPUParticle::Init(const Timer& timer,
+	const KMyMath::Matrix4& matView,
+	const KMyMath::Matrix4& matProjection,
+	Emitter* emitter,
+	const std::string modelname)
 {
 	KDirectXCommon* directXCommon = KDirectXCommon::GetInstance();
 	ID3D12GraphicsCommandList* commndList = directXCommon->GetCommandList();
 	ID3D12CommandQueue* commndQueue = directXCommon->GetCommandQueue();
 
+	LoadMesh(modelname);
 	BuildUAV(emitter);
 	BuildRootSignature();
 	BuildShadersAndInputLayout();
@@ -198,6 +206,72 @@ void MeshGPUParticle::Draw(const Timer& timer, const KMyMath::Matrix4& matView, 
 	resourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(RWParticlePool.Get(),
 		D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE, D3D12_RESOURCE_STATE_UNORDERED_ACCESS);
 	commndList->ResourceBarrier(1, &resourceBarrier);
+}
+
+bool MeshGPUParticle::LoadMesh(const std::string modelname)
+{
+	std::ifstream file;
+
+	const std::string filename = modelname + ".obj";
+	const std::string directoryPath = "Resources/obj/" + modelname + "/";
+	file.open(directoryPath + filename);
+
+	assert(!file.fail());
+
+	std::vector<KMyMath::Vector3> positions;
+	std::vector<KMyMath::Vector3> normals;
+
+	std::string line;
+	while (getline(file, line)) {
+
+		std::istringstream line_stream(line);
+
+		std::string key;
+		std::getline(line_stream, key, ' ');
+
+		if (key == "v") {
+			KMyMath::Vector3 pos{};
+			line_stream >> pos.x;
+			line_stream >> pos.y;
+			line_stream >> pos.z;
+
+			positions.emplace_back(pos);
+		}
+
+		if (key == "vn") {
+			KMyMath::Vector3 normal{};
+			line_stream >> normal.x;
+			line_stream >> normal.y;
+			line_stream >> normal.z;
+
+			normals.emplace_back(normal);
+		}
+
+		if (key == "f") {
+			std::string index_string;
+			while (std::getline(line_stream, index_string, ' ')) {
+				std::istringstream index_stream(index_string);
+
+				unsigned short indexPosition, indexNormal, indexTexcoord;
+
+				index_stream >> indexPosition;
+				index_stream.seekg(1, std::ios_base::cur);
+				index_stream >> indexTexcoord;
+				index_stream.seekg(1, std::ios_base::cur);
+				index_stream >> indexNormal;
+
+				Vertex vertex{};
+				vertex.position = positions[indexPosition - 1];
+				vertex.normal = normals[indexNormal - 1];
+				vertices_.emplace_back(vertex);
+			}
+		}
+	}
+	file.close();
+
+	vertexs.reset(new KVertex(KDirectXCommon::GetInstance()->GetDevice(), vertices_));
+
+	return true;
 }
 
 void MeshGPUParticle::BuildUAV(Emitter* emitter)
@@ -446,8 +520,11 @@ void MeshGPUParticle::BuildRootSignature()
 		CD3DX12_DESCRIPTOR_RANGE uavTable3;
 		uavTable3.Init(D3D12_DESCRIPTOR_RANGE_TYPE_UAV, 1, 3);
 
+		CD3DX12_DESCRIPTOR_RANGE savTable;
+		savTable.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 4);
+
 		// Root parameter can be a table, root descriptor or root constants.
-		CD3DX12_ROOT_PARAMETER slotRootParameter[7];
+		CD3DX12_ROOT_PARAMETER slotRootParameter[8];
 
 		// Perfomance TIP: Order from most frequent to least frequent.
 		slotRootParameter[0].InitAsConstantBufferView(0);
@@ -457,9 +534,10 @@ void MeshGPUParticle::BuildRootSignature()
 		slotRootParameter[4].InitAsDescriptorTable(1, &uavTable1);
 		slotRootParameter[5].InitAsDescriptorTable(1, &uavTable2);
 		slotRootParameter[6].InitAsDescriptorTable(1, &uavTable3);
+		slotRootParameter[7].InitAsDescriptorTable(1, &savTable);
 
 		// A root signature is an array of root parameters.
-		CD3DX12_ROOT_SIGNATURE_DESC rootSigDesc(7, slotRootParameter,
+		CD3DX12_ROOT_SIGNATURE_DESC rootSigDesc(8, slotRootParameter,
 			0, nullptr,
 			D3D12_ROOT_SIGNATURE_FLAG_NONE);
 
@@ -499,19 +577,26 @@ void MeshGPUParticle::BuildRootSignature()
 
 void MeshGPUParticle::BuildShadersAndInputLayout()
 {
-	Shaders["VS"] = d3dUtil::CompileShader(L"MeshGPUParticle/MeshGPUParticleVS.hlsl",
+	Shaders["VS"] = 
+		d3dUtil::CompileShader(L"MeshGPUParticle/MeshGPUParticleVS.hlsl",
 		nullptr, "main", "vs_5_0");
-	Shaders["GS"] = d3dUtil::CompileShader(L"MeshGPUParticle/MeshGPUParticleGS.hlsl",
+	Shaders["GS"] = 
+		d3dUtil::CompileShader(L"MeshGPUParticle/MeshGPUParticleGS.hlsl",
 		nullptr, "main", "gs_5_0");
-	Shaders["PS"] = d3dUtil::CompileShader(L"MeshGPUParticle/MeshGPUParticlePS.hlsl",
+	Shaders["PS"] = 
+		d3dUtil::CompileShader(L"MeshGPUParticle/MeshGPUParticlePS.hlsl",
 		nullptr, "main", "ps_5_0");
-	Shaders["EmitCS"] = d3dUtil::CompileShader(L"MeshGPUParticle/MeshEmitCS.hlsl",
+	Shaders["EmitCS"] = 
+		d3dUtil::CompileShader(L"MeshGPUParticle/MeshEmitCS.hlsl",
 		nullptr, "main", "cs_5_0");
-	Shaders["UpdateCS"] = d3dUtil::CompileShader(L"MeshGPUParticle/MeshUpdateCS.hlsl",
+	Shaders["UpdateCS"] = 
+		d3dUtil::CompileShader(L"MeshGPUParticle/MeshUpdateCS.hlsl",
 		nullptr, "main", "cs_5_0");
-	Shaders["CopyDrawCountCS"] = d3dUtil::CompileShader(L"MeshGPUParticle/MeshCopyDrawCountCS.hlsl",
+	Shaders["CopyDrawCountCS"] = 
+		d3dUtil::CompileShader(L"MeshGPUParticle/MeshCopyDrawCountCS.hlsl",
 		nullptr, "main", "cs_5_0");
-	Shaders["DeadListInitCS"] = d3dUtil::CompileShader(L"MeshGPUParticle/MeshDeadListInitCS.hlsl",
+	Shaders["DeadListInitCS"] = 
+		d3dUtil::CompileShader(L"MeshGPUParticle/MeshDeadListInitCS.hlsl",
 		nullptr, "main", "cs_5_0");
 }
 
@@ -519,6 +604,44 @@ void MeshGPUParticle::BuildPSOs()
 {
 	//KDirectXCommon* directXCommon = KDirectXCommon::GetInstance();
 	ID3D12Device* device = KDirectXCommon::GetInstance()->GetDevice();
+
+	// Mesh
+	{
+		// 頂点データを準備
+		std::vector<Vertex> vertexData;
+		for (size_t i = 0; i < vertices_.size(); ++i) {
+			vertexData.push_back({ vertices_[i] });
+		}
+
+		// バッファリソースを作成
+		D3D12_HEAP_PROPERTIES heapProps = {};
+		heapProps.Type = D3D12_HEAP_TYPE_UPLOAD;
+
+		D3D12_RESOURCE_DESC bufferDesc = {};
+		bufferDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
+		bufferDesc.Width = sizeof(Vertex) * vertexData.size();
+		bufferDesc.Height = 1;
+		bufferDesc.DepthOrArraySize = 1;
+		bufferDesc.MipLevels = 1;
+		bufferDesc.SampleDesc.Count = 1;
+		bufferDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+
+		ID3D12Resource* vertexBuffer;
+		device->CreateCommittedResource(
+			&heapProps,
+			D3D12_HEAP_FLAG_NONE,
+			&bufferDesc,
+			D3D12_RESOURCE_STATE_GENERIC_READ,
+			nullptr,
+			IID_PPV_ARGS(&vertexBuffer)
+		);
+
+		// バッファにデータを書き込む
+		void* mappedData = nullptr;
+		vertexBuffer->Map(0, nullptr, &mappedData);
+		memcpy(mappedData, vertexData.data(), sizeof(Vertex) * vertexData.size());
+		vertexBuffer->Unmap(0, nullptr);
+	}
 
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC opaquePSODescription;
 	ZeroMemory(&opaquePSODescription, sizeof(D3D12_GRAPHICS_PIPELINE_STATE_DESC));

@@ -71,6 +71,11 @@ void TitleScene::Init() {
 		camera->GetViewPro()->GetMatPro(),
 		emitter_);
 
+	meshGpuParticle_ = new MeshGPUParticle(timer_,
+		camera->GetViewPro()->GetMatView(),
+		camera->GetViewPro()->GetMatPro(),
+		emitter_);
+
 	particleEditor_ = new ParticleEditor();
 
 	camera->StartRound();
@@ -100,6 +105,11 @@ void TitleScene::Update() {
 		camera->GetViewPro()->GetMatPro(),
 		emitter_);
 
+	meshGpuParticle_->Update(timer_,
+		camera->GetViewPro()->GetMatView(),
+		camera->GetViewPro()->GetMatPro(),
+		emitter_);
+
 	camera->Update();
 }
 
@@ -112,6 +122,11 @@ void TitleScene::ObjDraw() {
 		camera->GetViewPro()->GetMatView(),
 		camera->GetViewPro()->GetMatPro(),
 		emitter_);
+
+	meshGpuParticle_->Draw(timer_,
+		camera->GetViewPro()->GetMatView(),
+		camera->GetViewPro()->GetMatPro(),
+		emitter_);
 }
 
 void TitleScene::SpriteDraw() {
@@ -121,6 +136,7 @@ void TitleScene::SpriteDraw() {
 void TitleScene::Final() {
 	delete emitter_;
 	delete gpuParticle_;
+	delete meshGpuParticle_;
 	delete particleEditor_;
 }
 

@@ -12,7 +12,9 @@
 #include "d3dUtil.h"
 #include "FrameResource.h"
 #include "Timer.h"
+
 #include "GPUParticle.h"
+#include "MeshGPUParticle.h"
 
 #include "ParticleEditor.h"
 
@@ -90,6 +92,7 @@ private:
 
 	Emitter* emitter_;
 	GPUParticle* gpuParticle_;
+	MeshGPUParticle* meshGpuParticle_;
 
 	ParticleEditor* particleEditor_;
 };

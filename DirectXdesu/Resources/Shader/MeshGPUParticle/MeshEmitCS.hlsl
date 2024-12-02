@@ -7,6 +7,8 @@ RWStructuredBuffer<ParticleDraw> DrawList : register(u2);
 RWStructuredBuffer<uint> DrawArgs : register(u3);
 RWStructuredBuffer<Mesh> meshes : register(u4);
 
+StructuredBuffer<Mesh> meshs : register(t0);
+
 [numthreads(32, 1, 1)]
 void main(uint id : SV_DispatchThreadID)
 {
@@ -30,7 +32,7 @@ void main(uint id : SV_DispatchThreadID)
     Particle emitParticle = ParticlePool.Load(emitIndex);
 
 	//color and position depend on the grid position and size
-    emitParticle.Position = meshes[id.x].pos;
+    emitParticle.Position = meshs[id.x].pos;
     emitParticle.Velocity = float3(0, 0.0f, 0.0f);
     emitParticle.Color = float4(gridPosition / gridSize, 1);
     emitParticle.Age = 0.0f;

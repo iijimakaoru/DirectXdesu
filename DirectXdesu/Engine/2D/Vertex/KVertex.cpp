@@ -6,7 +6,14 @@ KVertex::KVertex(ID3D12Device* dev, std::vector<VertexPosNormalUV>& vertices, st
 	KVertexInit(dev, vertices, indices);
 }
 
-void KVertex::KVertexInit(ID3D12Device* dev, std::vector<VertexPosNormalUV>& vertices, std::vector<unsigned short>& indices) 
+KVertex::KVertex(ID3D12Device* dev, std::vector<Vertex>& vertices)
+{
+	KVertexInit(dev, vertices);
+}
+
+void KVertex::KVertexInit(ID3D12Device* dev,
+	std::vector<VertexPosNormalUV>& vertices,
+	std::vector<unsigned short>& indices) 
 {
 #pragma region 頂点
 	// 頂点データ全体のサイズ = 頂点データ一つ分のサイズ * 頂点データの要素数
@@ -100,6 +107,45 @@ void KVertex::KVertexInit(ID3D12Device* dev, std::vector<VertexPosNormalUV>& ver
 #pragma endregion
 }
 
+void KVertex::KVertexInit(ID3D12Device* dev, std::vector<Vertex>& vertices)
+{
+#pragma region 頂点
+	// 頂点データ全体のサイズ = 頂点データ一つ分のサイズ * 頂点データの要素数
+	UINT sizeVB = static_cast<UINT>(sizeof(Vertex) * vertices.size());
+	length = (uint32_t)vertices.size();
+	singleSize = sizeof(Vertex);
+
+	CD3DX12_HEAP_PROPERTIES heap1 = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
+
+	CD3DX12_RESOURCE_DESC vB = CD3DX12_RESOURCE_DESC::Buffer(sizeVB);
+	result = static_cast<HREFTYPE>(dev->CreateCommittedResource(
+		&heap1,
+		D3D12_HEAP_FLAG_NONE,
+		&vB,
+		D3D12_RESOURCE_STATE_GENERIC_READ,
+		nullptr,
+		IID_PPV_ARGS(&vertBuff)
+	));
+	assert(SUCCEEDED(result));
+
+	// GPU上のバッファに対応した仮想メモリを取得
+	Vertex* vertMap = nullptr;
+	result = static_cast<HREFTYPE>(vertBuff->Map(0, nullptr, (void**)&vertMap));
+	assert(SUCCEEDED(result));
+	// 全頂点に対して
+	std::copy(vertices.begin(), vertices.end(), vertMap);
+	// 繋がりを解除
+	vertBuff->Unmap(0, nullptr);
+
+	// GPU仮想アドレス
+	vbView.BufferLocation = vertBuff->GetGPUVirtualAddress();
+	// 頂点バッファのサイズ
+	vbView.SizeInBytes = sizeVB;
+	// 頂点一つ分のデータサイズ
+	vbView.StrideInBytes = sizeof(vertices[0]);
+#pragma endregion
+}
+
 const ID3D12Resource* KVertex::GetVertBuff() const
 {
 	return vertBuff.Get();
@@ -118,4 +164,26 @@ const D3D12_VERTEX_BUFFER_VIEW& KVertex::GetVertBuffView() const
 const D3D12_INDEX_BUFFER_VIEW& KVertex::GetIndexBuffView() const
 {
 	return ibView;
+}
+
+CD3DX12_GPU_DESCRIPTOR_HANDLE KVertex::CreateDescripterSRV(ID3D12DescriptorHeap* descHeap)
+{
+	KDirectXCommon* directXCommon = KDirectXCommon::GetInstance();
+
+	CD3DX12_CPU_DESCRIPTOR_HANDLE descripterCPUUAV =
+		CD3DX12_CPU_DESCRIPTOR_HANDLE(descHeap->GetCPUDescriptorHandleForHeapStart(),
+			0, directXCommon->GetCBVSRVUAVDescriptorSize());
+
+	D3D12_SHADER_RESOURCE_VIEW_DESC lSrvResDesc = {};
+	lSrvResDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+	lSrvResDesc.Format = DXGI_FORMAT::DXGI_FORMAT_UNKNOWN;
+	lSrvResDesc.ViewDimension = D3D12_SRV_DIMENSION::D3D12_SRV_DIMENSION_BUFFER;
+	lSrvResDesc.Buffer.FirstElement = 0;
+	lSrvResDesc.Buffer.NumElements = static_cast<uint32_t> (length);
+	lSrvResDesc.Buffer.StructureByteStride = static_cast<uint32_t> (singleSize);
+	descripterSRV =
+		CD3DX12_GPU_DESCRIPTOR_HANDLE(descHeap->GetGPUDescriptorHandleForHeapStart(), 6, directXCommon->GetCBVSRVUAVDescriptorSize());
+	directXCommon->GetDevice()->CreateShaderResourceView(vertBuff.Get(), &lSrvResDesc, descripterCPUUAV);
+
+	return descripterSRV;
 }

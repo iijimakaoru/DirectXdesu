@@ -553,82 +553,93 @@ void GPUParticle::BuildPSOs()
 		Shaders["GS"]->GetBufferSize()
 	};
 
-	D3D12_RENDER_TARGET_BLEND_DESC transparencyBlendDesc = {};
-	transparencyBlendDesc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
-	transparencyBlendDesc.BlendEnable = true;
-	transparencyBlendDesc.BlendOpAlpha = D3D12_BLEND_OP_ADD;
-	transparencyBlendDesc.SrcBlendAlpha = D3D12_BLEND_ONE;
-	transparencyBlendDesc.DestBlendAlpha = D3D12_BLEND_ZERO;
-	transparencyBlendDesc.BlendOp = D3D12_BLEND_OP_ADD;
-	transparencyBlendDesc.SrcBlend = D3D12_BLEND_ONE;
-	transparencyBlendDesc.DestBlend = D3D12_BLEND_ONE;
+	// opaque
+	{
+		D3D12_RENDER_TARGET_BLEND_DESC transparencyBlendDesc = {};
+		transparencyBlendDesc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
+		transparencyBlendDesc.BlendEnable = true;
+		transparencyBlendDesc.BlendOpAlpha = D3D12_BLEND_OP_ADD;
+		transparencyBlendDesc.SrcBlendAlpha = D3D12_BLEND_ONE;
+		transparencyBlendDesc.DestBlendAlpha = D3D12_BLEND_ZERO;
+		transparencyBlendDesc.BlendOp = D3D12_BLEND_OP_ADD;
+		transparencyBlendDesc.SrcBlend = D3D12_BLEND_ONE;
+		transparencyBlendDesc.DestBlend = D3D12_BLEND_ONE;
 
-	D3D12_DEPTH_STENCIL_DESC depth = {};
-	depth.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
-	//depth.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
-	depth.DepthFunc = D3D12_COMPARISON_FUNC_LESS;
-	depth.DepthEnable = false;
+		D3D12_DEPTH_STENCIL_DESC depth = {};
+		depth.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
+		//depth.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
+		depth.DepthFunc = D3D12_COMPARISON_FUNC_LESS;
+		depth.DepthEnable = false;
 
-	opaquePSODescription.DepthStencilState = depth;
+		opaquePSODescription.DepthStencilState = depth;
 
-	opaquePSODescription.DSVFormat = DXGI_FORMAT_D32_FLOAT;
+		opaquePSODescription.DSVFormat = DXGI_FORMAT_D32_FLOAT;
 
-	opaquePSODescription.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
-	opaquePSODescription.RasterizerState.FillMode = D3D12_FILL_MODE_SOLID;
-	opaquePSODescription.BlendState.RenderTarget[0] = transparencyBlendDesc;
+		opaquePSODescription.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
+		opaquePSODescription.RasterizerState.FillMode = D3D12_FILL_MODE_SOLID;
+		opaquePSODescription.BlendState.RenderTarget[0] = transparencyBlendDesc;
 
-	opaquePSODescription.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
-	opaquePSODescription.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT;
-	opaquePSODescription.NumRenderTargets = 1;
-	opaquePSODescription.RTVFormats[0] = BackBufferFormat;
+		opaquePSODescription.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
+		opaquePSODescription.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT;
+		opaquePSODescription.NumRenderTargets = 1;
+		opaquePSODescription.RTVFormats[0] = BackBufferFormat;
 
-	opaquePSODescription.SampleDesc.Count = 1;
+		opaquePSODescription.SampleDesc.Count = 1;
 
-	ThrowIfFailed(device->CreateGraphicsPipelineState(&opaquePSODescription, IID_PPV_ARGS(&PSOs["opaque"])));
+		ThrowIfFailed(device->CreateGraphicsPipelineState(&opaquePSODescription, IID_PPV_ARGS(&PSOs["opaque"])));
+	}
 
 	// EmitCS
-	D3D12_COMPUTE_PIPELINE_STATE_DESC particleEmitPSO = {};
-	particleEmitPSO.pRootSignature = particleRootSignature.Get();
-	particleEmitPSO.CS =
 	{
-		reinterpret_cast<BYTE*>(Shaders["EmitCS"]->GetBufferPointer()),
-		Shaders["EmitCS"]->GetBufferSize()
-	};
-	particleEmitPSO.Flags = D3D12_PIPELINE_STATE_FLAG_NONE;
-	ThrowIfFailed(device->CreateComputePipelineState(&particleEmitPSO, IID_PPV_ARGS(&PSOs["particleEmit"])));
+		D3D12_COMPUTE_PIPELINE_STATE_DESC particleEmitPSO = {};
+		particleEmitPSO.pRootSignature = particleRootSignature.Get();
+		particleEmitPSO.CS =
+		{
+			reinterpret_cast<BYTE*>(Shaders["EmitCS"]->GetBufferPointer()),
+			Shaders["EmitCS"]->GetBufferSize()
+		};
+		particleEmitPSO.Flags = D3D12_PIPELINE_STATE_FLAG_NONE;
+		ThrowIfFailed(device->CreateComputePipelineState(&particleEmitPSO, IID_PPV_ARGS(&PSOs["particleEmit"])));
+	}
 
 	// UpdateCS
-	D3D12_COMPUTE_PIPELINE_STATE_DESC particleUpdatePSO = {};
-	particleUpdatePSO.pRootSignature = particleRootSignature.Get();
-	particleUpdatePSO.CS =
 	{
-		reinterpret_cast<BYTE*>(Shaders["UpdateCS"]->GetBufferPointer()),
-		Shaders["UpdateCS"]->GetBufferSize()
-	};
-	particleUpdatePSO.Flags = D3D12_PIPELINE_STATE_FLAG_NONE;
-	ThrowIfFailed(device->CreateComputePipelineState(&particleUpdatePSO, IID_PPV_ARGS(&PSOs["particleUpdate"])));
+		D3D12_COMPUTE_PIPELINE_STATE_DESC particleUpdatePSO = {};
+		particleUpdatePSO.pRootSignature = particleRootSignature.Get();
+		particleUpdatePSO.CS =
+		{
+			reinterpret_cast<BYTE*>(Shaders["UpdateCS"]->GetBufferPointer()),
+			Shaders["UpdateCS"]->GetBufferSize()
+		};
+		particleUpdatePSO.Flags = D3D12_PIPELINE_STATE_FLAG_NONE;
+		ThrowIfFailed(device->CreateComputePipelineState(&particleUpdatePSO, IID_PPV_ARGS(&PSOs["particleUpdate"])));
+	}
 
 	// CopyDrawCountCS
-	D3D12_COMPUTE_PIPELINE_STATE_DESC particleDrawPSO = {};
-	particleDrawPSO.pRootSignature = particleRootSignature.Get();
-	particleDrawPSO.CS =
 	{
-		reinterpret_cast<BYTE*>(Shaders["CopyDrawCountCS"]->GetBufferPointer()),
-		Shaders["CopyDrawCountCS"]->GetBufferSize()
-	};
-	particleDrawPSO.Flags = D3D12_PIPELINE_STATE_FLAG_NONE;
-	ThrowIfFailed(device->CreateComputePipelineState(&particleDrawPSO, IID_PPV_ARGS(&PSOs["particleDraw"])));
+		D3D12_COMPUTE_PIPELINE_STATE_DESC particleDrawPSO = {};
+		particleDrawPSO.pRootSignature = particleRootSignature.Get();
+		particleDrawPSO.CS =
+		{
+			reinterpret_cast<BYTE*>(Shaders["CopyDrawCountCS"]->GetBufferPointer()),
+			Shaders["CopyDrawCountCS"]->GetBufferSize()
+		};
+		particleDrawPSO.Flags = D3D12_PIPELINE_STATE_FLAG_NONE;
+		ThrowIfFailed(device->CreateComputePipelineState(&particleDrawPSO, IID_PPV_ARGS(&PSOs["particleDraw"])));
+	}
 
 	// DeadListInitCS
-	D3D12_COMPUTE_PIPELINE_STATE_DESC particleDeadListPSO = {};
-	particleDeadListPSO.pRootSignature = particleRootSignature.Get();
-	particleDeadListPSO.CS =
 	{
-		reinterpret_cast<BYTE*>(Shaders["DeadListInitCS"]->GetBufferPointer()),
-		Shaders["DeadListInitCS"]->GetBufferSize()
-	};
-	particleDeadListPSO.Flags = D3D12_PIPELINE_STATE_FLAG_NONE;
-	ThrowIfFailed(device->CreateComputePipelineState(&particleDeadListPSO, IID_PPV_ARGS(&PSOs["particleDeadList"])));
+		D3D12_COMPUTE_PIPELINE_STATE_DESC particleDeadListPSO = {};
+		particleDeadListPSO.pRootSignature = particleRootSignature.Get();
+		particleDeadListPSO.CS =
+		{
+			reinterpret_cast<BYTE*>(Shaders["DeadListInitCS"]->GetBufferPointer()),
+			Shaders["DeadListInitCS"]->GetBufferSize()
+		};
+		particleDeadListPSO.Flags = D3D12_PIPELINE_STATE_FLAG_NONE;
+		ThrowIfFailed(device->CreateComputePipelineState(&particleDeadListPSO, IID_PPV_ARGS(&PSOs["particleDeadList"])));
+	}
 }
 
 void GPUParticle::BuildFrameResources()

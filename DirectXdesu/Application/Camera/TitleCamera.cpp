@@ -57,7 +57,7 @@ void TitleCamera::RoundCamera() {
 	nowAngle = rotAngle;
 
 	const float radian = DirectX::XMConvertToRadians(rotAngle);
-	const float distance = -20;
+	const float distance = -200;
 	cameraTransform.SetPos(
 	    {distance * sinf(radian), cameraTransform.GetPos().y, distance * cosf(radian)});
 

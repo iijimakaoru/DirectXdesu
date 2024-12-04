@@ -146,28 +146,35 @@ private:
 	
 	// SRV用のデスクリプタヒープ
 	std::unique_ptr<KDescriptorHeap> srvHeap;
+
 	// 深度バッファ
 	std::unique_ptr<KDepthStencilBuffer> depthBuff{};
 	
 	// バックバッファ
 	std::vector<std::unique_ptr<KRenderTargetBuffer>> backBuffers;
+
 	// フェンスの生成
 	UINT64 fenceVal = 0;
+
 	// スワップチェーンの設定
 	DXGI_SWAP_CHAIN_DESC1 swapChainDesc{};
+
 	// クリアカラー
 	FLOAT clearColor[4] = { 0.1f,0.25f,0.5f,0.0f };
 	UINT bbIndex;
 	char PADING2[4]{};
 	static KDirectXCommon* directXCommon_;
+
 	// デスクリプタヒープの設定
 	D3D12_DESCRIPTOR_HEAP_DESC rtvHeapDesc{};
 	ComPtr<ID3D12DescriptorHeap> tmpDsvHeap{};
 	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle;
 	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle;
+
 	// 1.リソースバリアで書き込み可能に変更
 	D3D12_RESOURCE_BARRIER barrierDesc{};
 	std::chrono::steady_clock::time_point reference_;
+
 	// コマンドキューの設定
 	D3D12_COMMAND_QUEUE_DESC cmdQueueDesc{};
 };

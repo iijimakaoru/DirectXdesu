@@ -6,6 +6,8 @@
 #include "FrameResource.h"
 #include "KVertex.h"
 
+#include "RootSignature.h"
+
 class MeshGPUParticle
 {
 public:
@@ -63,8 +65,6 @@ private:
 	FrameResource* currentFrameResource = nullptr;
 	int currentFrameResourceIndex = 0;
 
-	Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature = nullptr;
-	Microsoft::WRL::ComPtr<ID3D12RootSignature> particleRootSignature = nullptr;
 	Microsoft::WRL::ComPtr<ID3D12CommandSignature> particleCommandSignature = nullptr;
 
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> UAVHeap = nullptr;
@@ -94,6 +94,8 @@ private:
 	CD3DX12_CPU_DESCRIPTOR_HANDLE DrawArgsCPUUAV;
 	CD3DX12_GPU_DESCRIPTOR_HANDLE DrawArgsGPUUAV;
 
+	CD3DX12_GPU_DESCRIPTOR_HANDLE MeshSRV;
+
 	std::unordered_map<std::string, Microsoft::WRL::ComPtr<ID3DBlob>> Shaders;
 	std::unordered_map<std::string, Microsoft::WRL::ComPtr<ID3D12PipelineState>> PSOs;
 
@@ -103,5 +105,8 @@ private:
 
 	std::vector<Vertex> vertices_;
 	std::unique_ptr<KVertex> vertexs;
+
+	std::unique_ptr<RootSignature> rootSignature_;
+	std::unique_ptr<RootSignature> particleRootSignature_;
 };
 

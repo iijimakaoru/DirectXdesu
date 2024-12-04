@@ -206,6 +206,9 @@
     <ClCompile Include="Engine\Particle\GPUParticle.cpp" />
     <ClCompile Include="Engine\Particle\ParticleEditor.cpp" />
     <ClCompile Include="Engine\Particle\MeshGPUParticle.cpp" />
+    <ClCompile Include="Engine\Particle\ParticlePool.cpp" />
+    <ClCompile Include="Engine\Particle\RootSignature.cpp" />
+    <ClCompile Include="Engine\Particle\ComputePipelineState.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\BossEnemy\ActState.h" />
@@ -312,6 +315,9 @@
     <ClInclude Include="Engine\Particle\GPUParticle.h" />
     <ClInclude Include="Engine\Particle\ParticleEditor.h" />
     <ClInclude Include="Engine\Particle\MeshGPUParticle.h" />
+    <ClInclude Include="Engine\Particle\ParticlePool.h" />
+    <ClInclude Include="Engine\Particle\RootSignature.h" />
+    <ClInclude Include="Engine\Particle\ComputePipelineState.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DirectXdesu.rc" />

@@ -172,7 +172,7 @@ CD3DX12_GPU_DESCRIPTOR_HANDLE KVertex::CreateDescripterSRV(ID3D12DescriptorHeap*
 
 	CD3DX12_CPU_DESCRIPTOR_HANDLE descripterCPUUAV =
 		CD3DX12_CPU_DESCRIPTOR_HANDLE(descHeap->GetCPUDescriptorHandleForHeapStart(),
-			0, directXCommon->GetCBVSRVUAVDescriptorSize());
+			7, directXCommon->GetCBVSRVUAVDescriptorSize());
 
 	D3D12_SHADER_RESOURCE_VIEW_DESC lSrvResDesc = {};
 	lSrvResDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
@@ -182,7 +182,7 @@ CD3DX12_GPU_DESCRIPTOR_HANDLE KVertex::CreateDescripterSRV(ID3D12DescriptorHeap*
 	lSrvResDesc.Buffer.NumElements = static_cast<uint32_t> (length);
 	lSrvResDesc.Buffer.StructureByteStride = static_cast<uint32_t> (singleSize);
 	descripterSRV =
-		CD3DX12_GPU_DESCRIPTOR_HANDLE(descHeap->GetGPUDescriptorHandleForHeapStart(), 6, directXCommon->GetCBVSRVUAVDescriptorSize());
+		CD3DX12_GPU_DESCRIPTOR_HANDLE(descHeap->GetGPUDescriptorHandleForHeapStart(), 7, directXCommon->GetCBVSRVUAVDescriptorSize());
 	directXCommon->GetDevice()->CreateShaderResourceView(vertBuff.Get(), &lSrvResDesc, descripterCPUUAV);
 
 	return descripterSRV;

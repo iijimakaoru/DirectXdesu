@@ -19,6 +19,9 @@ void MeshGPUParticle::Init(const Timer& timer,
 	ID3D12GraphicsCommandList* commndList = directXCommon->GetCommandList();
 	ID3D12CommandQueue* commndQueue = directXCommon->GetCommandQueue();
 
+	rootSignature_ = std::make_unique<RootSignature>();
+	particleRootSignature_ = std::make_unique<RootSignature>();
+
 	LoadMesh(modelname);
 	BuildUAV(emitter);
 	BuildRootSignature();
@@ -39,7 +42,7 @@ void MeshGPUParticle::Init(const Timer& timer,
 		directXCommon->GetCommandList()->Reset(directXCommon->GetCommandAllocator().Get(),
 			PSOs["particleDeadList"].Get()));
 
-	directXCommon->GetCommandList()->SetComputeRootSignature(particleRootSignature.Get());
+	directXCommon->GetCommandList()->SetComputeRootSignature(particleRootSignature_->GetRootSignature());
 
 	currentFrameResourceIndex = (currentFrameResourceIndex + 1) % gNumberFrameResources;
 	currentFrameResource = FrameResources[currentFrameResourceIndex].get();
@@ -108,7 +111,7 @@ void MeshGPUParticle::Draw(const Timer& timer, const KMyMath::Matrix4& matView, 
 	auto currentCommandListAllocator = currentFrameResource->commandListAllocator;
 
 	commndList->SetPipelineState(PSOs["particleEmit"].Get());
-	commndList->SetComputeRootSignature(particleRootSignature.Get());
+	commndList->SetComputeRootSignature(particleRootSignature_->GetRootSignature());
 
 	ID3D12DescriptorHeap* descriptorHeaps[] = { UAVHeap.Get() };
 	commndList->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);
@@ -126,6 +129,8 @@ void MeshGPUParticle::Draw(const Timer& timer, const KMyMath::Matrix4& matView, 
 	commndList->SetComputeRootDescriptorTable(4, ACDeadListGPUUAV);
 	commndList->SetComputeRootDescriptorTable(5, DrawListGPUUAV);
 	commndList->SetComputeRootDescriptorTable(6, DrawArgsGPUUAV);
+
+	commndList->SetComputeRootDescriptorTable(7, MeshSRV);
 
 	while (emitter->GetEmitTimeCounter() >= emitter->GetTimeBetweenEmit())
 	{
@@ -151,7 +156,7 @@ void MeshGPUParticle::Draw(const Timer& timer, const KMyMath::Matrix4& matView, 
 
 	// パーティクル更新シェーダー
 	commndList->SetPipelineState(PSOs["particleUpdate"].Get());
-	commndList->SetComputeRootSignature(particleRootSignature.Get());
+	commndList->SetComputeRootSignature(particleRootSignature_->GetRootSignature());
 	commndList->Dispatch(emitter->GetMaxParticles(), 1, 1);
 
 	resourceBarrier = CD3DX12_RESOURCE_BARRIER::UAV(RWDrawList.Get());
@@ -159,7 +164,7 @@ void MeshGPUParticle::Draw(const Timer& timer, const KMyMath::Matrix4& matView, 
 
 	// パーティクル描画シェーダー
 	commndList->SetPipelineState(PSOs["particleDraw"].Get());
-	commndList->SetComputeRootSignature(particleRootSignature.Get());
+	commndList->SetComputeRootSignature(particleRootSignature_->GetRootSignature());
 	commndList->Dispatch(1, 1, 1);
 
 	resourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(RWDrawList.Get(),
@@ -172,7 +177,7 @@ void MeshGPUParticle::Draw(const Timer& timer, const KMyMath::Matrix4& matView, 
 
 	commndList->SetPipelineState(PSOs["opaque"].Get());
 
-	commndList->SetGraphicsRootSignature(rootSignature.Get());
+	commndList->SetGraphicsRootSignature(rootSignature_->GetRootSignature());
 
 	commndList->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
 
@@ -269,8 +274,6 @@ bool MeshGPUParticle::LoadMesh(const std::string modelname)
 	}
 	file.close();
 
-	vertexs.reset(new KVertex(KDirectXCommon::GetInstance()->GetDevice(), vertices_));
-
 	return true;
 }
 
@@ -282,13 +285,16 @@ void MeshGPUParticle::BuildUAV(Emitter* emitter)
 	// Particle Pool
 	{
 		D3D12_DESCRIPTOR_HEAP_DESC uavHeapDesc = {};
-		uavHeapDesc.NumDescriptors = 6;
+		uavHeapDesc.NumDescriptors = 2048;
 		uavHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
 		uavHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-		ThrowIfFailed(device->CreateDescriptorHeap(&uavHeapDesc, IID_PPV_ARGS(&UAVHeap)));
+		ThrowIfFailed(device->CreateDescriptorHeap(&uavHeapDesc,
+			IID_PPV_ARGS(&UAVHeap)));
 
-		UINT64 particlePoolByteSize = sizeof(Particle) * emitter->GetMaxParticles();
-		CD3DX12_HEAP_PROPERTIES heap = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
+		UINT64 particlePoolByteSize = 
+			sizeof(Particle) * emitter->GetMaxParticles();
+		CD3DX12_HEAP_PROPERTIES heap = 
+			CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
 		CD3DX12_RESOURCE_DESC resouceDesc =
 			CD3DX12_RESOURCE_DESC::Buffer(particlePoolByteSize,
 				D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS);
@@ -300,7 +306,8 @@ void MeshGPUParticle::BuildUAV(Emitter* emitter)
 			nullptr,
 			IID_PPV_ARGS(&RWParticlePool)));
 		directXCommon->Transition(RWParticlePool.Get(),
-			D3D12_RESOURCE_STATE_COMMON, D3D12_RESOURCE_STATE_UNORDERED_ACCESS);
+			D3D12_RESOURCE_STATE_COMMON,
+			D3D12_RESOURCE_STATE_UNORDERED_ACCESS);
 		RWParticlePool->SetName(L"ParticlePool");
 
 		D3D12_UNORDERED_ACCESS_VIEW_DESC particlePoolUAVDescription = {};
@@ -337,9 +344,11 @@ void MeshGPUParticle::BuildUAV(Emitter* emitter)
 		UINT64 deadListByteSize = sizeof(unsigned int) * emitter->GetMaxParticles();
 		UINT64 countBufferOffset = AlignForUavCounter((UINT)deadListByteSize);
 
-		CD3DX12_HEAP_PROPERTIES heap = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
+		CD3DX12_HEAP_PROPERTIES heap = 
+			CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
 		CD3DX12_RESOURCE_DESC resouceDesc =
-			CD3DX12_RESOURCE_DESC::Buffer(countBufferOffset + sizeof(UINT), D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS);
+			CD3DX12_RESOURCE_DESC::Buffer(countBufferOffset + sizeof(UINT),
+				D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS);
 		ThrowIfFailed(device->CreateCommittedResource(
 			&heap,
 			D3D12_HEAP_FLAG_NONE,
@@ -367,12 +376,15 @@ void MeshGPUParticle::BuildUAV(Emitter* emitter)
 
 	// Draw List
 	{
-		UINT64 drawListByteSize = sizeof(ParticleSort) * emitter->GetMaxParticles();
+		UINT64 drawListByteSize = 
+			sizeof(ParticleSort) * emitter->GetMaxParticles();
 		UINT64 countBufferOffset = AlignForUavCounter((UINT)drawListByteSize);
 
-		CD3DX12_HEAP_PROPERTIES heap = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
+		CD3DX12_HEAP_PROPERTIES heap = 
+			CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
 		CD3DX12_RESOURCE_DESC resouceDesc =
-			CD3DX12_RESOURCE_DESC::Buffer(countBufferOffset + sizeof(UINT), D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS);
+			CD3DX12_RESOURCE_DESC::Buffer(countBufferOffset + sizeof(UINT),
+				D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS);
 		ThrowIfFailed(device->CreateCommittedResource(
 			&heap,
 			D3D12_HEAP_FLAG_NONE,
@@ -429,7 +441,8 @@ void MeshGPUParticle::BuildUAV(Emitter* emitter)
 		UINT64 drawArgsByteSize = (sizeof(unsigned int) * 9);
 		UINT64 countBufferOffset = AlignForUavCounter((UINT)drawArgsByteSize);
 
-		CD3DX12_HEAP_PROPERTIES heap = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
+		CD3DX12_HEAP_PROPERTIES heap = 
+			CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
 		CD3DX12_RESOURCE_DESC resouceDesc =
 			CD3DX12_RESOURCE_DESC::Buffer(countBufferOffset + sizeof(UINT),
 				D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS);
@@ -458,6 +471,9 @@ void MeshGPUParticle::BuildUAV(Emitter* emitter)
 			CD3DX12_GPU_DESCRIPTOR_HANDLE(UAVHeap->GetGPUDescriptorHandleForHeapStart(), 3, directXCommon->GetCBVSRVUAVDescriptorSize());
 		device->CreateUnorderedAccessView(RWDrawArgs.Get(), RWDrawArgs.Get(), &drawArgsUAVDescription, DrawArgsCPUUAV);
 	}
+
+	vertexs.reset(new KVertex(directXCommon->GetDevice(), vertices_));
+	MeshSRV = vertexs->CreateDescripterSRV(UAVHeap.Get());
 }
 
 void MeshGPUParticle::BuildRootSignature()
@@ -466,98 +482,39 @@ void MeshGPUParticle::BuildRootSignature()
 
 	// default root signature
 	{
-		CD3DX12_DESCRIPTOR_RANGE srvTable0;
-		srvTable0.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0);
+		rootSignature_->Add(RootType::CBV, 0);// b0
+		rootSignature_->Add(RootType::CBV, 1);// b1
+		rootSignature_->Add(RootType::CBV, 2);// b2
+		rootSignature_->Add(RangeType::SRV, 0);
+		rootSignature_->Add(RangeType::SRV, 1);
 
-		CD3DX12_DESCRIPTOR_RANGE srvTable1;
-		srvTable1.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 1);
+		rootSignature_->AddStaticSampler(0, 0, D3D12_FILTER_MIN_MAG_MIP_POINT);
+		rootSignature_->AddStaticSampler(1, 0, D3D12_FILTER_MIN_MAG_MIP_POINT,
+			AddressMode::Clamp, AddressMode::Clamp, AddressMode::Clamp);
+		rootSignature_->AddStaticSampler(2);
+		rootSignature_->AddStaticSampler(3, 0, D3D12_FILTER_MIN_MAG_MIP_LINEAR,
+			AddressMode::Clamp, AddressMode::Clamp, AddressMode::Clamp);
+		rootSignature_->AddStaticSampler(4, 0, D3D12_FILTER_ANISOTROPIC);
+		rootSignature_->AddStaticSampler(5, 0, D3D12_FILTER_ANISOTROPIC,
+			AddressMode::Clamp, AddressMode::Clamp, AddressMode::Clamp);
 
-		CD3DX12_ROOT_PARAMETER slotRootParameter[5];
-
-		slotRootParameter[0].InitAsConstantBufferView(0);
-		slotRootParameter[1].InitAsConstantBufferView(1);
-		slotRootParameter[2].InitAsConstantBufferView(2);
-		slotRootParameter[3].InitAsDescriptorTable(1, &srvTable0);
-		slotRootParameter[4].InitAsDescriptorTable(1, &srvTable1);
-
-		auto staticSamplers = GetStaticSamplers();
-
-		CD3DX12_ROOT_SIGNATURE_DESC rootSigDesc(5, slotRootParameter,
-			(UINT)staticSamplers.size(),
-			staticSamplers.data(),
-			D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
-
-		Microsoft::WRL::ComPtr<ID3D10Blob> serializedRootSig = nullptr;
-		Microsoft::WRL::ComPtr<ID3D10Blob> errorBlob = nullptr;
-		HRESULT hr = D3D12SerializeRootSignature(&rootSigDesc, D3D_ROOT_SIGNATURE_VERSION_1,
-			serializedRootSig.GetAddressOf(), errorBlob.GetAddressOf());
-
-		if (errorBlob != nullptr)
-		{
-			::OutputDebugStringA((char*)errorBlob->GetBufferPointer());
-		}
-		ThrowIfFailed(hr);
-
-		ThrowIfFailed(device->CreateRootSignature(
-			0,
-			serializedRootSig->GetBufferPointer(),
-			serializedRootSig->GetBufferSize(),
-			IID_PPV_ARGS(rootSignature.GetAddressOf())
-		));
+		rootSignature_->Create(device);
 	}
 
 	// particle root signature
 	{
-		CD3DX12_DESCRIPTOR_RANGE uavTable0;
-		uavTable0.Init(D3D12_DESCRIPTOR_RANGE_TYPE_UAV, 1, 0);
+		particleRootSignature_->Add(RootType::CBV, 0);
+		particleRootSignature_->Add(RootType::CBV, 1);
+		particleRootSignature_->Add(RootType::CBV, 2);
+		particleRootSignature_->Add(RangeType::UAV, 0);
+		particleRootSignature_->Add(RangeType::UAV, 1);
+		particleRootSignature_->Add(RangeType::UAV, 2);
+		particleRootSignature_->Add(RangeType::UAV, 3);
+		particleRootSignature_->Add(RangeType::SRV, 0);
 
-		CD3DX12_DESCRIPTOR_RANGE uavTable1;
-		uavTable1.Init(D3D12_DESCRIPTOR_RANGE_TYPE_UAV, 1, 1);
+		particleRootSignature_->AddStaticSampler(0);
 
-		CD3DX12_DESCRIPTOR_RANGE uavTable2;
-		uavTable2.Init(D3D12_DESCRIPTOR_RANGE_TYPE_UAV, 1, 2);
-
-		CD3DX12_DESCRIPTOR_RANGE uavTable3;
-		uavTable3.Init(D3D12_DESCRIPTOR_RANGE_TYPE_UAV, 1, 3);
-
-		CD3DX12_DESCRIPTOR_RANGE savTable;
-		savTable.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 4);
-
-		// Root parameter can be a table, root descriptor or root constants.
-		CD3DX12_ROOT_PARAMETER slotRootParameter[8];
-
-		// Perfomance TIP: Order from most frequent to least frequent.
-		slotRootParameter[0].InitAsConstantBufferView(0);
-		slotRootParameter[1].InitAsConstantBufferView(1);
-		slotRootParameter[2].InitAsConstantBufferView(2);
-		slotRootParameter[3].InitAsDescriptorTable(1, &uavTable0);
-		slotRootParameter[4].InitAsDescriptorTable(1, &uavTable1);
-		slotRootParameter[5].InitAsDescriptorTable(1, &uavTable2);
-		slotRootParameter[6].InitAsDescriptorTable(1, &uavTable3);
-		slotRootParameter[7].InitAsDescriptorTable(1, &savTable);
-
-		// A root signature is an array of root parameters.
-		CD3DX12_ROOT_SIGNATURE_DESC rootSigDesc(8, slotRootParameter,
-			0, nullptr,
-			D3D12_ROOT_SIGNATURE_FLAG_NONE);
-
-		// create a root signature with a single slot which points to a descriptor range consisting of a single constant buffer
-		Microsoft::WRL::ComPtr<ID3DBlob> serializedRootSig = nullptr;
-		Microsoft::WRL::ComPtr<ID3DBlob> errorBlob = nullptr;
-		HRESULT hr = D3D12SerializeRootSignature(&rootSigDesc, D3D_ROOT_SIGNATURE_VERSION_1,
-			serializedRootSig.GetAddressOf(), errorBlob.GetAddressOf());
-
-		if (errorBlob != nullptr)
-		{
-			::OutputDebugStringA((char*)errorBlob->GetBufferPointer());
-		}
-		ThrowIfFailed(hr);
-
-		ThrowIfFailed(device->CreateRootSignature(
-			0,
-			serializedRootSig->GetBufferPointer(),
-			serializedRootSig->GetBufferSize(),
-			IID_PPV_ARGS(particleRootSignature.GetAddressOf())));
+		particleRootSignature_->Create(device);
 	}
 
 	// particle commnd signature
@@ -645,7 +602,7 @@ void MeshGPUParticle::BuildPSOs()
 
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC opaquePSODescription;
 	ZeroMemory(&opaquePSODescription, sizeof(D3D12_GRAPHICS_PIPELINE_STATE_DESC));
-	opaquePSODescription.pRootSignature = rootSignature.Get();
+	opaquePSODescription.pRootSignature = rootSignature_->GetRootSignature();
 	// GPUParticleVS
 	opaquePSODescription.VS =
 	{
@@ -698,9 +655,10 @@ void MeshGPUParticle::BuildPSOs()
 
 	ThrowIfFailed(device->CreateGraphicsPipelineState(&opaquePSODescription, IID_PPV_ARGS(&PSOs["opaque"])));
 
+	ID3D12RootSignature* pSignature = particleRootSignature_->GetRootSignature();
 	// EmitCS
 	D3D12_COMPUTE_PIPELINE_STATE_DESC particleEmitPSO = {};
-	particleEmitPSO.pRootSignature = particleRootSignature.Get();
+	particleEmitPSO.pRootSignature = pSignature;
 	particleEmitPSO.CS =
 	{
 		reinterpret_cast<BYTE*>(Shaders["EmitCS"]->GetBufferPointer()),
@@ -711,7 +669,7 @@ void MeshGPUParticle::BuildPSOs()
 
 	// UpdateCS
 	D3D12_COMPUTE_PIPELINE_STATE_DESC particleUpdatePSO = {};
-	particleUpdatePSO.pRootSignature = particleRootSignature.Get();
+	particleUpdatePSO.pRootSignature = pSignature;
 	particleUpdatePSO.CS =
 	{
 		reinterpret_cast<BYTE*>(Shaders["UpdateCS"]->GetBufferPointer()),
@@ -722,7 +680,7 @@ void MeshGPUParticle::BuildPSOs()
 
 	// CopyDrawCountCS
 	D3D12_COMPUTE_PIPELINE_STATE_DESC particleDrawPSO = {};
-	particleDrawPSO.pRootSignature = particleRootSignature.Get();
+	particleDrawPSO.pRootSignature = pSignature;
 	particleDrawPSO.CS =
 	{
 		reinterpret_cast<BYTE*>(Shaders["CopyDrawCountCS"]->GetBufferPointer()),
@@ -733,7 +691,7 @@ void MeshGPUParticle::BuildPSOs()
 
 	// DeadListInitCS
 	D3D12_COMPUTE_PIPELINE_STATE_DESC particleDeadListPSO = {};
-	particleDeadListPSO.pRootSignature = particleRootSignature.Get();
+	particleDeadListPSO.pRootSignature = pSignature;
 	particleDeadListPSO.CS =
 	{
 		reinterpret_cast<BYTE*>(Shaders["DeadListInitCS"]->GetBufferPointer()),
@@ -780,6 +738,7 @@ void MeshGPUParticle::UpdateMainPassCB(const Timer& timer, const KMyMath::Matrix
 	MainParticleCB.LifeTime = emitter->GetLifeTime();
 	MainParticleCB.velocity = emitter->GetVelocity();
 	MainParticleCB.acceleration = emitter->GetAcceleration();
+	MainParticleCB.vertexNum = (uint32_t)vertices_.size();
 
 	auto currentParticleCB = currentFrameResource->ParticleCB.get();
 	currentParticleCB->CopyData(0, MainParticleCB);

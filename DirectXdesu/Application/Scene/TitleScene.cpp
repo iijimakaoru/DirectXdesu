@@ -51,25 +51,20 @@ void TitleScene::Init() {
 
 	skyDome.reset(
 	    KObject3d::Create(skyDomeModel, PipelineManager::GetInstance()->GetPipeline("Obj")));
-	skyDome->GetTransform().SetScale({200.0f, 200.0f, 200.0f});
+	skyDome->GetTransform().SetScale({400.0f, 400.0f, 400.0f});
 
 	audioManager = AudioManager::GetInstance();
 
 	emitter_ = new Emitter(
-		30000,
+		4,
 		100,
 		10000.0f,
-		10.0f,
+		300.0f,
 		DirectX::XMFLOAT3(1.0f, 1.0f, 0.0f),
 		DirectX::XMFLOAT3(0.0f, 5.0f, 0.0f),
 		DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 0.0f),
 		DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 0.0f)
 	);
-
-	gpuParticle_ = new GPUParticle(timer_, 
-		camera->GetViewPro()->GetMatView(), 
-		camera->GetViewPro()->GetMatPro(),
-		emitter_);
 
 	meshGpuParticle_ = new MeshGPUParticle(timer_,
 		camera->GetViewPro()->GetMatView(),
@@ -100,11 +95,6 @@ void TitleScene::Update() {
 		
 	}
 
-	gpuParticle_->Update(timer_, 
-		camera->GetViewPro()->GetMatView(),
-		camera->GetViewPro()->GetMatPro(),
-		emitter_);
-
 	meshGpuParticle_->Update(timer_,
 		camera->GetViewPro()->GetMatView(),
 		camera->GetViewPro()->GetMatPro(),
@@ -117,11 +107,6 @@ void TitleScene::ObjDraw() {
 	object3d->Draw();
 
 	skyDome->Draw();
-
-	gpuParticle_->Draw(timer_, 
-		camera->GetViewPro()->GetMatView(),
-		camera->GetViewPro()->GetMatPro(),
-		emitter_);
 
 	meshGpuParticle_->Draw(timer_,
 		camera->GetViewPro()->GetMatView(),

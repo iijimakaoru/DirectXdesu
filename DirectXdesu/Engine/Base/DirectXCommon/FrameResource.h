@@ -29,6 +29,7 @@ struct ParticleConstants
 	int EmitCount = 0;
 	int MaxParticles = 0;
 	int GridSize = 0;
+	uint32_t vertexNum = 0;
 };
 
 struct FrameResource

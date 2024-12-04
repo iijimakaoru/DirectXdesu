@@ -21,6 +21,7 @@ void MeshGPUParticle::Init(const Timer& timer,
 
 	rootSignature_ = std::make_unique<RootSignature>();
 	particleRootSignature_ = std::make_unique<RootSignature>();
+	emitPSO = std::make_unique<ComputePipelineState>();
 
 	LoadMesh(modelname);
 	BuildUAV(emitter);
@@ -110,7 +111,7 @@ void MeshGPUParticle::Draw(const Timer& timer, const KMyMath::Matrix4& matView, 
 
 	auto currentCommandListAllocator = currentFrameResource->commandListAllocator;
 
-	commndList->SetPipelineState(PSOs["particleEmit"].Get());
+	commndList->SetPipelineState(emitPSO->GetPipelineState());
 	commndList->SetComputeRootSignature(particleRootSignature_->GetRootSignature());
 
 	ID3D12DescriptorHeap* descriptorHeaps[] = { UAVHeap.Get() };
@@ -657,15 +658,10 @@ void MeshGPUParticle::BuildPSOs()
 
 	ID3D12RootSignature* pSignature = particleRootSignature_->GetRootSignature();
 	// EmitCS
-	D3D12_COMPUTE_PIPELINE_STATE_DESC particleEmitPSO = {};
-	particleEmitPSO.pRootSignature = pSignature;
-	particleEmitPSO.CS =
-	{
-		reinterpret_cast<BYTE*>(Shaders["EmitCS"]->GetBufferPointer()),
-		Shaders["EmitCS"]->GetBufferSize()
-	};
-	particleEmitPSO.Flags = D3D12_PIPELINE_STATE_FLAG_NONE;
-	ThrowIfFailed(device->CreateComputePipelineState(&particleEmitPSO, IID_PPV_ARGS(&PSOs["particleEmit"])));
+	emitPSO->CreateShader(L"MeshGPUParticle/MeshEmitCS.hlsl", "main");
+	emitPSO->SetRootSignature(particleRootSignature_.get());
+	emitPSO->SetFlag(D3D12_PIPELINE_STATE_FLAG_NONE);
+	emitPSO->Create(device);
 
 	// UpdateCS
 	D3D12_COMPUTE_PIPELINE_STATE_DESC particleUpdatePSO = {};

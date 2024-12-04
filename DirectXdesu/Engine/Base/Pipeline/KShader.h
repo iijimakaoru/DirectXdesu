@@ -47,6 +47,8 @@ public:
 	void Init(LPCWSTR VSFileName, LPCWSTR PSFileName, LPCSTR pEntryPoint = "main", 
 		LPCWSTR GSFileName = nullptr, LPCWSTR DSFileName = nullptr, LPCWSTR HSFileName = nullptr);
 
+	void Create(LPCWSTR fileName, LPCSTR entryPoint, LPCSTR target);
+
 	// エラー
 	void Error();
 
@@ -59,12 +61,16 @@ private:
 	ComPtr<ID3D10Blob> psBlob = nullptr; // ピクセルシェーダーオブジェクト
 	ComPtr<ID3D10Blob> errorBlob = nullptr; // エラーオブジェクト
 
+	ComPtr<ID3D10Blob> blob = nullptr;
+
 	// シェーダーバイトコード
 	D3D12_SHADER_BYTECODE vsBytecode{}; // 頂点シェーダーバイトコード
 	D3D12_SHADER_BYTECODE hsBytecode{}; // ハルシェーダーバイトコード
 	D3D12_SHADER_BYTECODE dsBytecode{}; // ドメインシェーダーバイトコード
 	D3D12_SHADER_BYTECODE gsBytecode{}; // ジオメトリシェーダーバイトコード
 	D3D12_SHADER_BYTECODE psBytecode{}; // ピクセルシェーダーバイトコード
+
+	D3D12_SHADER_BYTECODE byteCode{};
 
 	HRESULT result;
 
@@ -81,5 +87,7 @@ public:
 	D3D12_SHADER_BYTECODE* GetDSBytecode();
 	D3D12_SHADER_BYTECODE* GetGSBytecode();
 	D3D12_SHADER_BYTECODE* GetPSBytecode();
+
+	const D3D12_SHADER_BYTECODE& GetBytecode()const;
 };
 

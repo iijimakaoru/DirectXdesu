@@ -40,6 +40,11 @@ D3D12_SHADER_BYTECODE* KShader::GetGSBytecode() { return &gsBytecode; }
 
 D3D12_SHADER_BYTECODE* KShader::GetPSBytecode() { return &psBytecode; }
 
+const D3D12_SHADER_BYTECODE& KShader::GetBytecode() const
+{
+	return byteCode;
+}
+
 KShader::KShader() {}
 
 void KShader::Init(
@@ -135,4 +140,21 @@ void KShader::Init(
 	psBytecode.pShaderBytecode = psBlob->GetBufferPointer();
 	psBytecode.BytecodeLength = psBlob->GetBufferSize();
 #pragma endregion
+}
+
+void KShader::Create(LPCWSTR fileName, LPCSTR entryPoint, LPCSTR target)
+{
+	result = D3DCompileFromFile(
+		fileName, // シェーダファイル名
+		nullptr,
+		D3D_COMPILE_STANDARD_FILE_INCLUDE, // インクルード可能にする
+		entryPoint, target, // エントリーポイント名、シェーダーモデル指定
+		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, // デバッグ用設定
+		0, &blob, &errorBlob);
+
+	// エラーなら
+	Error();
+
+	byteCode.pShaderBytecode = blob->GetBufferPointer();
+	byteCode.BytecodeLength = blob->GetBufferSize();
 }

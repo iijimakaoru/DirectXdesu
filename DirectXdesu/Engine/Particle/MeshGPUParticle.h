@@ -7,6 +7,7 @@
 #include "KVertex.h"
 
 #include "RootSignature.h"
+#include "ComputePipelineState.h"
 
 class MeshGPUParticle
 {
@@ -108,5 +109,7 @@ private:
 
 	std::unique_ptr<RootSignature> rootSignature_;
 	std::unique_ptr<RootSignature> particleRootSignature_;
+
+	std::unique_ptr<ComputePipelineState> emitPSO;
 };
 

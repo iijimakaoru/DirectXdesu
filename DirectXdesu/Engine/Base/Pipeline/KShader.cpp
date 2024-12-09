@@ -157,4 +157,11 @@ void KShader::Create(LPCWSTR fileName, LPCSTR entryPoint, LPCSTR target)
 
 	byteCode.pShaderBytecode = blob->GetBufferPointer();
 	byteCode.BytecodeLength = blob->GetBufferSize();
+
+	isCreate = true;
+}
+
+bool KShader::GetIsCreate()
+{
+	return isCreate;
 }

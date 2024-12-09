@@ -6,7 +6,7 @@
 void TitleCamera::Init() {
 	Camera::Init();
 
-	cameraTransform.SetPos({0.0f, 0.0f, -20.0f});
+	cameraTransform.SetPos({0.0f, -50.0f, -20.0f});
 	cameraTransform.SetRot({0.0f, 0.0f, 0.0f});
 
 	cameraTransform.TransUpdate();
@@ -14,7 +14,7 @@ void TitleCamera::Init() {
 	KMyMath::Matrix4 nowMatWorld = cameraTransform.GetMatWorld();
 	viewProjection->SetMatView(MyMathUtility::MakeInverse(nowMatWorld));
 
-	isRound = false;
+	isRound = true;
 
 	isSortie = false;
 
@@ -43,7 +43,7 @@ void TitleCamera::Update() {
 }
 
 void TitleCamera::RoundCamera() {
-	cameraTransform.SetPos({cameraTransform.GetPos().x, 4.0f, cameraTransform.GetPos().z});
+	cameraTransform.SetPos({cameraTransform.GetPos().x, -0.0f, cameraTransform.GetPos().z});
 
 	// 角度を変更
 	const float rotSpeed = 0.5f;
@@ -57,7 +57,7 @@ void TitleCamera::RoundCamera() {
 	nowAngle = rotAngle;
 
 	const float radian = DirectX::XMConvertToRadians(rotAngle);
-	const float distance = -20;
+	const float distance = -10;
 	cameraTransform.SetPos(
 	    {distance * sinf(radian), cameraTransform.GetPos().y, distance * cosf(radian)});
 

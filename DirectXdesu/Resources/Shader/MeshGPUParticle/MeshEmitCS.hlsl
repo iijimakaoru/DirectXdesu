@@ -37,7 +37,7 @@ void main(uint id : SV_DispatchThreadID)
     //emitParticle.Color = float4(gridPosition / gridSize, 1);
     emitParticle.Color = float4(1, 1, 1, 1);
     emitParticle.Age = 0.0f;
-    emitParticle.Size = 0.05f;
+    emitParticle.Size = 0.1f;
     emitParticle.Alive = 1.0f;
 
 	//Put it back

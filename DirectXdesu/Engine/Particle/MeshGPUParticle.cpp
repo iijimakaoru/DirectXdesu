@@ -1,5 +1,6 @@
 #include "MeshGPUParticle.h"
 #include "KDirectXCommon.h"
+#include "CreateBlend.h"
 
 MeshGPUParticle::MeshGPUParticle(const Timer& timer,
 	const KMyMath::Matrix4& matView,
@@ -21,7 +22,13 @@ void MeshGPUParticle::Init(const Timer& timer,
 
 	rootSignature_ = std::make_unique<RootSignature>();
 	particleRootSignature_ = std::make_unique<RootSignature>();
-	emitPSO = std::make_unique<ComputePipelineState>();
+
+	graphicPSO_ = std::make_unique<GraphicPipelineState>();
+
+	emitPSO_ = std::make_unique<ComputePipelineState>();
+	updatePSO_ = std::make_unique<ComputePipelineState>();
+	copyDrawPSO_ = std::make_unique<ComputePipelineState>();
+	deadListPSO_ = std::make_unique<ComputePipelineState>();
 
 	LoadMesh(modelname);
 	BuildUAV(emitter);
@@ -41,7 +48,7 @@ void MeshGPUParticle::Init(const Timer& timer,
 
 	ThrowIfFailed(
 		directXCommon->GetCommandList()->Reset(directXCommon->GetCommandAllocator().Get(),
-			PSOs["particleDeadList"].Get()));
+			deadListPSO_->GetPipelineState()));
 
 	directXCommon->GetCommandList()->SetComputeRootSignature(particleRootSignature_->GetRootSignature());
 
@@ -111,7 +118,7 @@ void MeshGPUParticle::Draw(const Timer& timer, const KMyMath::Matrix4& matView, 
 
 	auto currentCommandListAllocator = currentFrameResource->commandListAllocator;
 
-	commndList->SetPipelineState(emitPSO->GetPipelineState());
+	commndList->SetPipelineState(emitPSO_->GetPipelineState());
 	commndList->SetComputeRootSignature(particleRootSignature_->GetRootSignature());
 
 	ID3D12DescriptorHeap* descriptorHeaps[] = { UAVHeap.Get() };
@@ -133,16 +140,20 @@ void MeshGPUParticle::Draw(const Timer& timer, const KMyMath::Matrix4& matView, 
 
 	commndList->SetComputeRootDescriptorTable(7, MeshSRV);
 
-	while (emitter->GetEmitTimeCounter() >= emitter->GetTimeBetweenEmit())
+	if (!init) 
 	{
-		emitter->SetEmitCount((int)(emitter->GetEmitTimeCounter() / emitter->GetTimeBetweenEmit()));
+		init = true;
+		while (emitter->GetEmitTimeCounter() >= emitter->GetTimeBetweenEmit())
+		{
+			emitter->SetEmitCount((int)(emitter->GetEmitTimeCounter() / emitter->GetTimeBetweenEmit()));
 
-		emitter->SetEmitCount(min(emitter->GetEmitCount(), 65535));
-		emitter->SetEmitTimeCounter(fmod(emitter->GetEmitTimeCounter(), emitter->GetTimeBetweenEmit()));
+			emitter->SetEmitCount(emitter->GetEmitCount());
+			emitter->SetEmitTimeCounter(fmod(emitter->GetEmitTimeCounter(), emitter->GetTimeBetweenEmit()));
 
-		UpdateMainPassCB(timer, matView, matProjection, emitter);
+			UpdateMainPassCB(timer, matView, matProjection, emitter);
 
-		commndList->Dispatch(emitter->GetEmitCount(), 1, 1);
+			commndList->Dispatch(emitter->GetEmitCount(), 1, 1);
+		}
 	}
 
 	CD3DX12_RESOURCE_BARRIER resourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(RWDrawList.Get(),
@@ -156,7 +167,7 @@ void MeshGPUParticle::Draw(const Timer& timer, const KMyMath::Matrix4& matView, 
 	commndList->ResourceBarrier(1, &resourceBarrier);
 
 	// パーティクル更新シェーダー
-	commndList->SetPipelineState(PSOs["particleUpdate"].Get());
+	commndList->SetPipelineState(updatePSO_->GetPipelineState());
 	commndList->SetComputeRootSignature(particleRootSignature_->GetRootSignature());
 	commndList->Dispatch(emitter->GetMaxParticles(), 1, 1);
 
@@ -164,7 +175,7 @@ void MeshGPUParticle::Draw(const Timer& timer, const KMyMath::Matrix4& matView, 
 	commndList->ResourceBarrier(1, &resourceBarrier);
 
 	// パーティクル描画シェーダー
-	commndList->SetPipelineState(PSOs["particleDraw"].Get());
+	commndList->SetPipelineState(copyDrawPSO_->GetPipelineState());
 	commndList->SetComputeRootSignature(particleRootSignature_->GetRootSignature());
 	commndList->Dispatch(1, 1, 1);
 
@@ -176,7 +187,7 @@ void MeshGPUParticle::Draw(const Timer& timer, const KMyMath::Matrix4& matView, 
 		D3D12_RESOURCE_STATE_UNORDERED_ACCESS, D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE);
 	commndList->ResourceBarrier(1, &resourceBarrier);
 
-	commndList->SetPipelineState(PSOs["opaque"].Get());
+	commndList->SetPipelineState(graphicPSO_->GetPipelineState());
 
 	commndList->SetGraphicsRootSignature(rootSignature_->GetRootSignature());
 
@@ -224,53 +235,29 @@ bool MeshGPUParticle::LoadMesh(const std::string modelname)
 
 	assert(!file.fail());
 
-	std::vector<KMyMath::Vector3> positions;
-	std::vector<KMyMath::Vector3> normals;
-
 	std::string line;
-	while (getline(file, line)) {
-
+	while (getline(file, line)) 
+	{
 		std::istringstream line_stream(line);
 
 		std::string key;
 		std::getline(line_stream, key, ' ');
 
-		if (key == "v") {
+		if (key == "v") 
+		{
 			KMyMath::Vector3 pos{};
 			line_stream >> pos.x;
 			line_stream >> pos.y;
 			line_stream >> pos.z;
 
-			positions.emplace_back(pos);
+			Vertex vertex{};
+			vertex.position = pos;
+			vertices_.emplace_back(vertex);
 		}
 
-		if (key == "vn") {
-			KMyMath::Vector3 normal{};
-			line_stream >> normal.x;
-			line_stream >> normal.y;
-			line_stream >> normal.z;
-
-			normals.emplace_back(normal);
-		}
-
-		if (key == "f") {
-			std::string index_string;
-			while (std::getline(line_stream, index_string, ' ')) {
-				std::istringstream index_stream(index_string);
-
-				unsigned short indexPosition, indexNormal, indexTexcoord;
-
-				index_stream >> indexPosition;
-				index_stream.seekg(1, std::ios_base::cur);
-				index_stream >> indexTexcoord;
-				index_stream.seekg(1, std::ios_base::cur);
-				index_stream >> indexNormal;
-
-				Vertex vertex{};
-				vertex.position = positions[indexPosition - 1];
-				vertex.normal = normals[indexNormal - 1];
-				vertices_.emplace_back(vertex);
-			}
+		if (key == "vn" || key == "vt" || key == "f") 
+		{
+			break;
 		}
 	}
 	file.close();
@@ -535,27 +522,7 @@ void MeshGPUParticle::BuildRootSignature()
 
 void MeshGPUParticle::BuildShadersAndInputLayout()
 {
-	Shaders["VS"] = 
-		d3dUtil::CompileShader(L"MeshGPUParticle/MeshGPUParticleVS.hlsl",
-		nullptr, "main", "vs_5_0");
-	Shaders["GS"] = 
-		d3dUtil::CompileShader(L"MeshGPUParticle/MeshGPUParticleGS.hlsl",
-		nullptr, "main", "gs_5_0");
-	Shaders["PS"] = 
-		d3dUtil::CompileShader(L"MeshGPUParticle/MeshGPUParticlePS.hlsl",
-		nullptr, "main", "ps_5_0");
-	Shaders["EmitCS"] = 
-		d3dUtil::CompileShader(L"MeshGPUParticle/MeshEmitCS.hlsl",
-		nullptr, "main", "cs_5_0");
-	Shaders["UpdateCS"] = 
-		d3dUtil::CompileShader(L"MeshGPUParticle/MeshUpdateCS.hlsl",
-		nullptr, "main", "cs_5_0");
-	Shaders["CopyDrawCountCS"] = 
-		d3dUtil::CompileShader(L"MeshGPUParticle/MeshCopyDrawCountCS.hlsl",
-		nullptr, "main", "cs_5_0");
-	Shaders["DeadListInitCS"] = 
-		d3dUtil::CompileShader(L"MeshGPUParticle/MeshDeadListInitCS.hlsl",
-		nullptr, "main", "cs_5_0");
+	
 }
 
 void MeshGPUParticle::BuildPSOs()
@@ -601,100 +568,49 @@ void MeshGPUParticle::BuildPSOs()
 		vertexBuffer->Unmap(0, nullptr);
 	}
 
-	D3D12_GRAPHICS_PIPELINE_STATE_DESC opaquePSODescription;
-	ZeroMemory(&opaquePSODescription, sizeof(D3D12_GRAPHICS_PIPELINE_STATE_DESC));
-	opaquePSODescription.pRootSignature = rootSignature_->GetRootSignature();
-	// GPUParticleVS
-	opaquePSODescription.VS =
-	{
-		reinterpret_cast<BYTE*>(Shaders["VS"]->GetBufferPointer()),
-		Shaders["VS"]->GetBufferSize()
-	};
-	// GPUParticlePS
-	opaquePSODescription.PS =
-	{
-		reinterpret_cast<BYTE*>(Shaders["PS"]->GetBufferPointer()),
-		Shaders["PS"]->GetBufferSize()
-	};
-	// GPUParticleGS
-	opaquePSODescription.GS =
-	{
-		reinterpret_cast<BYTE*>(Shaders["GS"]->GetBufferPointer()),
-		Shaders["GS"]->GetBufferSize()
-	};
+	graphicPSO_->SetRootSignature(rootSignature_->GetRootSignature());
+	graphicPSO_->CreateVertexShader(L"MeshGPUParticle/MeshGPUParticleVS.hlsl", "main");
+	graphicPSO_->CreatePixelShader(L"MeshGPUParticle/MeshGPUParticlePS.hlsl", "main");
+	graphicPSO_->CreateGeometryShader(L"MeshGPUParticle/MeshGPUParticleGS.hlsl", "main");
 
-	D3D12_RENDER_TARGET_BLEND_DESC transparencyBlendDesc = {};
-	transparencyBlendDesc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
-	transparencyBlendDesc.BlendEnable = true;
-	transparencyBlendDesc.BlendOpAlpha = D3D12_BLEND_OP_ADD;
-	transparencyBlendDesc.SrcBlendAlpha = D3D12_BLEND_ONE;
-	transparencyBlendDesc.DestBlendAlpha = D3D12_BLEND_ZERO;
-	transparencyBlendDesc.BlendOp = D3D12_BLEND_OP_ADD;
-	transparencyBlendDesc.SrcBlend = D3D12_BLEND_ONE;
-	transparencyBlendDesc.DestBlend = D3D12_BLEND_ONE;
+	D3D12_BLEND_DESC lBlendDesc = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
 
-	D3D12_DEPTH_STENCIL_DESC depth = {};
-	depth.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
-	//depth.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
-	depth.DepthFunc = D3D12_COMPARISON_FUNC_LESS;
-	depth.DepthEnable = false;
+	lBlendDesc = CreateBlend(BlendMode::ADD);
 
-	opaquePSODescription.DepthStencilState = depth;
+	RenderTargetFormat renderTargetFormat{};
+	renderTargetFormat.NumRenderTargets = 1;
+	renderTargetFormat.RTVFormats[0] = BackBufferFormat;
 
-	opaquePSODescription.DSVFormat = DXGI_FORMAT_D32_FLOAT;
-
-	opaquePSODescription.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
-	opaquePSODescription.RasterizerState.FillMode = D3D12_FILL_MODE_SOLID;
-	opaquePSODescription.BlendState.RenderTarget[0] = transparencyBlendDesc;
-
-	opaquePSODescription.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
-	opaquePSODescription.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT;
-	opaquePSODescription.NumRenderTargets = 1;
-	opaquePSODescription.RTVFormats[0] = BackBufferFormat;
-
-	opaquePSODescription.SampleDesc.Count = 1;
-
-	ThrowIfFailed(device->CreateGraphicsPipelineState(&opaquePSODescription, IID_PPV_ARGS(&PSOs["opaque"])));
-
-	ID3D12RootSignature* pSignature = particleRootSignature_->GetRootSignature();
+	graphicPSO_->SetPrimitiveType(D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT);
+	graphicPSO_->SetRenderTargetFormat(renderTargetFormat);
+	graphicPSO_->SetDepthFlag(false);
+	graphicPSO_->SetDepthWriteMask(D3D12_DEPTH_WRITE_MASK_ZERO);
+	graphicPSO_->SetFillMode(D3D12_FILL_MODE_SOLID);
+	graphicPSO_->SetBlend(lBlendDesc);
+	graphicPSO_->Create(device);
 	// EmitCS
-	emitPSO->CreateShader(L"MeshGPUParticle/MeshEmitCS.hlsl", "main");
-	emitPSO->SetRootSignature(particleRootSignature_.get());
-	emitPSO->SetFlag(D3D12_PIPELINE_STATE_FLAG_NONE);
-	emitPSO->Create(device);
+	emitPSO_->CreateShader(L"MeshGPUParticle/MeshEmitCS.hlsl", "main");
+	emitPSO_->SetRootSignature(particleRootSignature_.get());
+	emitPSO_->SetFlag(D3D12_PIPELINE_STATE_FLAG_NONE);
+	emitPSO_->Create(device);
 
 	// UpdateCS
-	D3D12_COMPUTE_PIPELINE_STATE_DESC particleUpdatePSO = {};
-	particleUpdatePSO.pRootSignature = pSignature;
-	particleUpdatePSO.CS =
-	{
-		reinterpret_cast<BYTE*>(Shaders["UpdateCS"]->GetBufferPointer()),
-		Shaders["UpdateCS"]->GetBufferSize()
-	};
-	particleUpdatePSO.Flags = D3D12_PIPELINE_STATE_FLAG_NONE;
-	ThrowIfFailed(device->CreateComputePipelineState(&particleUpdatePSO, IID_PPV_ARGS(&PSOs["particleUpdate"])));
+	updatePSO_->CreateShader(L"MeshGPUParticle/MeshUpdateCS.hlsl", "main");
+	updatePSO_->SetRootSignature(particleRootSignature_.get());
+	updatePSO_->SetFlag(D3D12_PIPELINE_STATE_FLAG_NONE);
+	updatePSO_->Create(device);
 
 	// CopyDrawCountCS
-	D3D12_COMPUTE_PIPELINE_STATE_DESC particleDrawPSO = {};
-	particleDrawPSO.pRootSignature = pSignature;
-	particleDrawPSO.CS =
-	{
-		reinterpret_cast<BYTE*>(Shaders["CopyDrawCountCS"]->GetBufferPointer()),
-		Shaders["CopyDrawCountCS"]->GetBufferSize()
-	};
-	particleDrawPSO.Flags = D3D12_PIPELINE_STATE_FLAG_NONE;
-	ThrowIfFailed(device->CreateComputePipelineState(&particleDrawPSO, IID_PPV_ARGS(&PSOs["particleDraw"])));
+	copyDrawPSO_->CreateShader(L"MeshGPUParticle/MeshCopyDrawCountCS.hlsl", "main");
+	copyDrawPSO_->SetRootSignature(particleRootSignature_.get());
+	copyDrawPSO_->SetFlag(D3D12_PIPELINE_STATE_FLAG_NONE);
+	copyDrawPSO_->Create(device);
 
 	// DeadListInitCS
-	D3D12_COMPUTE_PIPELINE_STATE_DESC particleDeadListPSO = {};
-	particleDeadListPSO.pRootSignature = pSignature;
-	particleDeadListPSO.CS =
-	{
-		reinterpret_cast<BYTE*>(Shaders["DeadListInitCS"]->GetBufferPointer()),
-		Shaders["DeadListInitCS"]->GetBufferSize()
-	};
-	particleDeadListPSO.Flags = D3D12_PIPELINE_STATE_FLAG_NONE;
-	ThrowIfFailed(device->CreateComputePipelineState(&particleDeadListPSO, IID_PPV_ARGS(&PSOs["particleDeadList"])));
+	deadListPSO_->CreateShader(L"MeshGPUParticle/MeshDeadListInitCS.hlsl", "main");
+	deadListPSO_->SetRootSignature(particleRootSignature_.get());
+	deadListPSO_->SetFlag(D3D12_PIPELINE_STATE_FLAG_NONE);
+	deadListPSO_->Create(device);
 }
 
 void MeshGPUParticle::BuildFrameResources()

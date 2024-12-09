@@ -49,6 +49,8 @@ public:
 
 	void Create(LPCWSTR fileName, LPCSTR entryPoint, LPCSTR target);
 
+	bool GetIsCreate();
+
 	// エラー
 	void Error();
 
@@ -73,6 +75,8 @@ private:
 	D3D12_SHADER_BYTECODE byteCode{};
 
 	HRESULT result;
+
+	bool isCreate = false;
 
 public:
 	// ゲッター

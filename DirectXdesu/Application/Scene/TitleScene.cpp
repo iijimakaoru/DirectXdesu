@@ -56,9 +56,9 @@ void TitleScene::Init() {
 	audioManager = AudioManager::GetInstance();
 
 	emitter_ = new Emitter(
-		5000000,
+		1000000,
 		1,
-		5000000.0f,
+		1000000.0f,
 		300.0f,
 		DirectX::XMFLOAT3(1.0f, 1.0f, 0.0f),
 		DirectX::XMFLOAT3(0.0f, 5.0f, 0.0f),
@@ -69,7 +69,7 @@ void TitleScene::Init() {
 	meshGpuParticle_ = new MeshGPUParticle(timer_,
 		camera->GetViewPro()->GetMatView(),
 		camera->GetViewPro()->GetMatPro(),
-		emitter_,"suzanne50");
+		emitter_,"test2");
 
 	particleEditor_ = new ParticleEditor();
 

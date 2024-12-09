@@ -8,6 +8,7 @@
 
 #include "RootSignature.h"
 #include "ComputePipelineState.h"
+#include "GraphicPipelineState.h"
 
 class MeshGPUParticle
 {
@@ -97,9 +98,6 @@ private:
 
 	CD3DX12_GPU_DESCRIPTOR_HANDLE MeshSRV;
 
-	std::unordered_map<std::string, Microsoft::WRL::ComPtr<ID3DBlob>> Shaders;
-	std::unordered_map<std::string, Microsoft::WRL::ComPtr<ID3D12PipelineState>> PSOs;
-
 	ObjectConstants MainObjectCB;
 	TimeConstants MainTimeCB;
 	ParticleConstants MainParticleCB;
@@ -110,6 +108,13 @@ private:
 	std::unique_ptr<RootSignature> rootSignature_;
 	std::unique_ptr<RootSignature> particleRootSignature_;
 
-	std::unique_ptr<ComputePipelineState> emitPSO;
+	std::unique_ptr<GraphicPipelineState> graphicPSO_;
+
+	std::unique_ptr<ComputePipelineState> emitPSO_;
+	std::unique_ptr<ComputePipelineState> updatePSO_;
+	std::unique_ptr<ComputePipelineState> copyDrawPSO_;
+	std::unique_ptr<ComputePipelineState> deadListPSO_;
+
+	bool init = false;
 };
 

@@ -130,6 +130,7 @@
     <ClCompile Include="Application\BossEnemy\Blaster\BlasterUnitTackle.cpp" />
     <ClCompile Include="Application\Movie\BossStart.cpp" />
     <ClCompile Include="Application\Particle\Emitter.cpp" />
+    <ClCompile Include="Engine\Particle\CreateBlend.cpp" />
     <ClCompile Include="Engine\Base\DirectXCommon\d3dUtil.cpp" />
     <ClCompile Include="Engine\Collision\CollisionManager.cpp" />
     <ClCompile Include="Engine\Collision\Collider.cpp" />
@@ -209,6 +210,7 @@
     <ClCompile Include="Engine\Particle\ParticlePool.cpp" />
     <ClCompile Include="Engine\Particle\RootSignature.cpp" />
     <ClCompile Include="Engine\Particle\ComputePipelineState.cpp" />
+    <ClCompile Include="Engine\Particle\GraphicPipelineState.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\BossEnemy\ActState.h" />
@@ -238,6 +240,7 @@
     <ClInclude Include="Application\BossEnemy\Blaster\BlasterUnitTackle.h" />
     <ClInclude Include="Application\Movie\BossStart.h" />
     <ClInclude Include="Application\Particle\Emitter.h" />
+    <ClInclude Include="Engine\Particle\CreateBlend.h" />
     <ClInclude Include="Engine\Base\DirectXCommon\d3dUtil.h" />
     <ClInclude Include="Engine\Collision\CollisionManager.h" />
     <ClInclude Include="Engine\Collision\Collider.h" />
@@ -318,6 +321,7 @@
     <ClInclude Include="Engine\Particle\ParticlePool.h" />
     <ClInclude Include="Engine\Particle\RootSignature.h" />
     <ClInclude Include="Engine\Particle\ComputePipelineState.h" />
+    <ClInclude Include="Engine\Particle\GraphicPipelineState.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DirectXdesu.rc" />

@@ -10,6 +10,11 @@
 #include "ComputePipelineState.h"
 #include "GraphicPipelineState.h"
 
+#include "ParticlePool.h"
+#include "DeadList.h"
+#include "DrawList.h"
+#include "DrawArgs.h"
+
 class MeshGPUParticle
 {
 public:
@@ -48,8 +53,6 @@ private:
 		const KMyMath::Matrix4& matProjection,
 		Emitter* emitter);
 
-	std::array<const CD3DX12_STATIC_SAMPLER_DESC, 6> GetStaticSamplers();
-
 	// We pack the UAV counter into the same buffer as the commands rather than create
 	// a separate 64K resource/heap for it. The counter must be aligned on 4K boundaries,
 	// so we pad the command buffer (if necessary) such that the counter will be placed
@@ -71,27 +74,7 @@ private:
 
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> UAVHeap = nullptr;
 
-	Microsoft::WRL::ComPtr<ID3D12Resource> RWParticlePool = nullptr;
-	Microsoft::WRL::ComPtr<ID3D12Resource> ACDeadList = nullptr;
-	Microsoft::WRL::ComPtr<ID3D12Resource> RWDrawList = nullptr;
 	Microsoft::WRL::ComPtr<ID3D12Resource> RWDrawArgs = nullptr;
-
-	Microsoft::WRL::ComPtr<ID3D12Resource> DrawListUploadBuffer = nullptr;
-
-	CD3DX12_CPU_DESCRIPTOR_HANDLE ParticlePoolCPUSRV;
-	CD3DX12_GPU_DESCRIPTOR_HANDLE ParticlePoolGPUSRV;
-
-	CD3DX12_CPU_DESCRIPTOR_HANDLE ParticlePoolCPUUAV;
-	CD3DX12_GPU_DESCRIPTOR_HANDLE ParticlePoolGPUUAV;
-
-	CD3DX12_CPU_DESCRIPTOR_HANDLE ACDeadListCPUUAV;
-	CD3DX12_GPU_DESCRIPTOR_HANDLE ACDeadListGPUUAV;
-
-	CD3DX12_CPU_DESCRIPTOR_HANDLE DrawListCPUSRV;
-	CD3DX12_GPU_DESCRIPTOR_HANDLE DrawListGPUSRV;
-
-	CD3DX12_CPU_DESCRIPTOR_HANDLE DrawListCPUUAV;
-	CD3DX12_GPU_DESCRIPTOR_HANDLE DrawListGPUUAV;
 
 	CD3DX12_CPU_DESCRIPTOR_HANDLE DrawArgsCPUUAV;
 	CD3DX12_GPU_DESCRIPTOR_HANDLE DrawArgsGPUUAV;
@@ -114,6 +97,11 @@ private:
 	std::unique_ptr<ComputePipelineState> updatePSO_;
 	std::unique_ptr<ComputePipelineState> copyDrawPSO_;
 	std::unique_ptr<ComputePipelineState> deadListPSO_;
+
+	std::unique_ptr<ParticlePool> particlePool_;
+	std::unique_ptr<DeadList> deadList_;
+	std::unique_ptr<DrawList> drawList_;
+	std::unique_ptr<DrawArgs> drawArgs_;
 
 	bool init = false;
 };

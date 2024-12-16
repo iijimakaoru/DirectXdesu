@@ -29,6 +29,10 @@ void MeshGPUParticle::Init(const Timer& timer,
 	updatePSO_ = std::make_unique<ComputePipelineState>();
 	copyDrawPSO_ = std::make_unique<ComputePipelineState>();
 	deadListPSO_ = std::make_unique<ComputePipelineState>();
+	particlePool_ = std::make_unique<ParticlePool>();
+	deadList_ = std::make_unique<DeadList>();
+	drawList_ = std::make_unique<DrawList>();
+	drawArgs_ = std::make_unique<DrawArgs>();
 
 	LoadMesh(modelname);
 	BuildUAV(emitter);
@@ -69,9 +73,9 @@ void MeshGPUParticle::Init(const Timer& timer,
 	auto particleCB = currentFrameResource->ParticleCB->Resource();
 	commndList->SetComputeRootConstantBufferView(2, particleCB->GetGPUVirtualAddress());
 
-	commndList->SetComputeRootDescriptorTable(3, ParticlePoolGPUUAV);
-	commndList->SetComputeRootDescriptorTable(4, ACDeadListGPUUAV);
-	commndList->SetComputeRootDescriptorTable(5, DrawListGPUUAV);
+	commndList->SetComputeRootDescriptorTable(3, particlePool_->GetGPUUAV());
+	commndList->SetComputeRootDescriptorTable(4, deadList_->GetGPUUAV());
+	commndList->SetComputeRootDescriptorTable(5, drawList_->GetGPUUAV());
 	commndList->SetComputeRootDescriptorTable(6, DrawArgsGPUUAV);
 
 	commndList->Dispatch(emitter->GetMaxParticles(), 1, 1);
@@ -133,9 +137,9 @@ void MeshGPUParticle::Draw(const Timer& timer, const KMyMath::Matrix4& matView, 
 	auto particleCB = currentFrameResource->ParticleCB->Resource();
 	commndList->SetComputeRootConstantBufferView(2, particleCB->GetGPUVirtualAddress());
 
-	commndList->SetComputeRootDescriptorTable(3, ParticlePoolGPUUAV);
-	commndList->SetComputeRootDescriptorTable(4, ACDeadListGPUUAV);
-	commndList->SetComputeRootDescriptorTable(5, DrawListGPUUAV);
+	commndList->SetComputeRootDescriptorTable(3, particlePool_->GetGPUUAV());
+	commndList->SetComputeRootDescriptorTable(4, deadList_->GetGPUUAV());
+	commndList->SetComputeRootDescriptorTable(5, drawList_->GetGPUUAV());
 	commndList->SetComputeRootDescriptorTable(6, DrawArgsGPUUAV);
 
 	commndList->SetComputeRootDescriptorTable(7, MeshSRV);
@@ -156,13 +160,13 @@ void MeshGPUParticle::Draw(const Timer& timer, const KMyMath::Matrix4& matView, 
 		}
 	}
 
-	CD3DX12_RESOURCE_BARRIER resourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(RWDrawList.Get(),
+	CD3DX12_RESOURCE_BARRIER resourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(drawList_->GetDrawList(),
 		D3D12_RESOURCE_STATE_UNORDERED_ACCESS, D3D12_RESOURCE_STATE_COPY_DEST);
 	commndList->ResourceBarrier(1, &resourceBarrier);
 
-	commndList->CopyResource(RWDrawList.Get(), DrawListUploadBuffer.Get());
+	commndList->CopyResource(drawList_->GetDrawList(), drawList_->GetDrawListUploadBuffer());
 
-	resourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(RWDrawList.Get(),
+	resourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(drawList_->GetDrawList(),
 		D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_UNORDERED_ACCESS);
 	commndList->ResourceBarrier(1, &resourceBarrier);
 
@@ -171,7 +175,7 @@ void MeshGPUParticle::Draw(const Timer& timer, const KMyMath::Matrix4& matView, 
 	commndList->SetComputeRootSignature(particleRootSignature_->GetRootSignature());
 	commndList->Dispatch(emitter->GetMaxParticles(), 1, 1);
 
-	resourceBarrier = CD3DX12_RESOURCE_BARRIER::UAV(RWDrawList.Get());
+	resourceBarrier = CD3DX12_RESOURCE_BARRIER::UAV(drawList_->GetDrawList());
 	commndList->ResourceBarrier(1, &resourceBarrier);
 
 	// パーティクル描画シェーダー
@@ -179,11 +183,11 @@ void MeshGPUParticle::Draw(const Timer& timer, const KMyMath::Matrix4& matView, 
 	commndList->SetComputeRootSignature(particleRootSignature_->GetRootSignature());
 	commndList->Dispatch(1, 1, 1);
 
-	resourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(RWDrawList.Get(),
+	resourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(drawList_->GetDrawList(),
 		D3D12_RESOURCE_STATE_UNORDERED_ACCESS, D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE);
 	commndList->ResourceBarrier(1, &resourceBarrier);
 
-	resourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(RWParticlePool.Get(),
+	resourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(particlePool_->GetParticlePool(),
 		D3D12_RESOURCE_STATE_UNORDERED_ACCESS, D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE);
 	commndList->ResourceBarrier(1, &resourceBarrier);
 
@@ -197,8 +201,8 @@ void MeshGPUParticle::Draw(const Timer& timer, const KMyMath::Matrix4& matView, 
 	commndList->SetGraphicsRootConstantBufferView(1, timeCB->GetGPUVirtualAddress());
 	commndList->SetGraphicsRootConstantBufferView(2, particleCB->GetGPUVirtualAddress());
 
-	commndList->SetGraphicsRootDescriptorTable(3, ParticlePoolGPUSRV);
-	commndList->SetGraphicsRootDescriptorTable(4, DrawListGPUSRV);
+	commndList->SetGraphicsRootDescriptorTable(3, particlePool_->GetGPUSRV());
+	commndList->SetGraphicsRootDescriptorTable(4, drawList_->GetGPUSRV());
 
 	resourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(RWDrawArgs.Get(),
 		D3D12_RESOURCE_STATE_UNORDERED_ACCESS, D3D12_RESOURCE_STATE_INDIRECT_ARGUMENT);
@@ -216,11 +220,11 @@ void MeshGPUParticle::Draw(const Timer& timer, const KMyMath::Matrix4& matView, 
 		D3D12_RESOURCE_STATE_INDIRECT_ARGUMENT, D3D12_RESOURCE_STATE_UNORDERED_ACCESS);
 	commndList->ResourceBarrier(1, &resourceBarrier);
 
-	resourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(RWDrawList.Get(),
+	resourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(drawList_->GetDrawList(),
 		D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE, D3D12_RESOURCE_STATE_UNORDERED_ACCESS);
 	commndList->ResourceBarrier(1, &resourceBarrier);
 
-	resourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(RWParticlePool.Get(),
+	resourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(particlePool_->GetParticlePool(),
 		D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE, D3D12_RESOURCE_STATE_UNORDERED_ACCESS);
 	commndList->ResourceBarrier(1, &resourceBarrier);
 }
@@ -270,162 +274,32 @@ void MeshGPUParticle::BuildUAV(Emitter* emitter)
 	KDirectXCommon* directXCommon = KDirectXCommon::GetInstance();
 	ID3D12Device* device = directXCommon->GetDevice();
 
+	D3D12_DESCRIPTOR_HEAP_DESC uavHeapDesc = {};
+	uavHeapDesc.NumDescriptors = 2048;
+	uavHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+	uavHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+	ThrowIfFailed(device->CreateDescriptorHeap(&uavHeapDesc,
+		IID_PPV_ARGS(&UAVHeap)));
+
 	// Particle Pool
 	{
-		D3D12_DESCRIPTOR_HEAP_DESC uavHeapDesc = {};
-		uavHeapDesc.NumDescriptors = 2048;
-		uavHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
-		uavHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-		ThrowIfFailed(device->CreateDescriptorHeap(&uavHeapDesc,
-			IID_PPV_ARGS(&UAVHeap)));
-
-		UINT64 particlePoolByteSize = 
-			sizeof(Particle) * emitter->GetMaxParticles();
-		CD3DX12_HEAP_PROPERTIES heap = 
-			CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
-		CD3DX12_RESOURCE_DESC resouceDesc =
-			CD3DX12_RESOURCE_DESC::Buffer(particlePoolByteSize,
-				D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS);
-		ThrowIfFailed(device->CreateCommittedResource(
-			&heap,
-			D3D12_HEAP_FLAG_NONE,
-			&resouceDesc,
-			D3D12_RESOURCE_STATE_COMMON,
-			nullptr,
-			IID_PPV_ARGS(&RWParticlePool)));
-		directXCommon->Transition(RWParticlePool.Get(),
-			D3D12_RESOURCE_STATE_COMMON,
-			D3D12_RESOURCE_STATE_UNORDERED_ACCESS);
-		RWParticlePool->SetName(L"ParticlePool");
-
-		D3D12_UNORDERED_ACCESS_VIEW_DESC particlePoolUAVDescription = {};
-		particlePoolUAVDescription.Format = DXGI_FORMAT_UNKNOWN;
-		particlePoolUAVDescription.Buffer.FirstElement = 0;
-		particlePoolUAVDescription.Buffer.NumElements = emitter->GetMaxParticles();
-		particlePoolUAVDescription.Buffer.StructureByteStride = sizeof(Particle);
-		particlePoolUAVDescription.Buffer.CounterOffsetInBytes = 0;
-		particlePoolUAVDescription.ViewDimension = D3D12_UAV_DIMENSION_BUFFER;
-
-		D3D12_SHADER_RESOURCE_VIEW_DESC particlePoolSRVDescription = {};
-		particlePoolSRVDescription.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-		particlePoolSRVDescription.Format = DXGI_FORMAT_UNKNOWN;
-		particlePoolSRVDescription.ViewDimension = D3D12_SRV_DIMENSION_BUFFER;
-		particlePoolSRVDescription.Buffer.FirstElement = 0;
-		particlePoolSRVDescription.Buffer.NumElements = emitter->GetMaxParticles();
-		particlePoolSRVDescription.Buffer.StructureByteStride = sizeof(Particle);
-
-		ParticlePoolCPUUAV =
-			CD3DX12_CPU_DESCRIPTOR_HANDLE(UAVHeap->GetCPUDescriptorHandleForHeapStart(), 0, directXCommon->GetCBVSRVUAVDescriptorSize());
-		ParticlePoolGPUUAV =
-			CD3DX12_GPU_DESCRIPTOR_HANDLE(UAVHeap->GetGPUDescriptorHandleForHeapStart(), 0, directXCommon->GetCBVSRVUAVDescriptorSize());
-		device->CreateUnorderedAccessView(RWParticlePool.Get(), nullptr, &particlePoolUAVDescription, ParticlePoolCPUUAV);
-
-		ParticlePoolCPUSRV =
-			CD3DX12_CPU_DESCRIPTOR_HANDLE(UAVHeap->GetCPUDescriptorHandleForHeapStart(), 4, directXCommon->GetCBVSRVUAVDescriptorSize());
-		ParticlePoolGPUSRV =
-			CD3DX12_GPU_DESCRIPTOR_HANDLE(UAVHeap->GetGPUDescriptorHandleForHeapStart(), 4, directXCommon->GetCBVSRVUAVDescriptorSize());
-		device->CreateShaderResourceView(RWParticlePool.Get(), &particlePoolSRVDescription, ParticlePoolCPUSRV);
+		particlePool_->Create(UAVHeap.Get(), emitter);
 	}
 
 	// Dead List
 	{
-		UINT64 deadListByteSize = sizeof(unsigned int) * emitter->GetMaxParticles();
-		UINT64 countBufferOffset = AlignForUavCounter((UINT)deadListByteSize);
-
-		CD3DX12_HEAP_PROPERTIES heap = 
-			CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
-		CD3DX12_RESOURCE_DESC resouceDesc =
-			CD3DX12_RESOURCE_DESC::Buffer(countBufferOffset + sizeof(UINT),
-				D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS);
-		ThrowIfFailed(device->CreateCommittedResource(
-			&heap,
-			D3D12_HEAP_FLAG_NONE,
-			&resouceDesc,
-			D3D12_RESOURCE_STATE_COMMON,
-			nullptr,
-			IID_PPV_ARGS(&ACDeadList)
-		));
-		ACDeadList->SetName(L"ACDeadList");
-
-		D3D12_UNORDERED_ACCESS_VIEW_DESC deadListUAVDescription = {};
-		deadListUAVDescription.Format = DXGI_FORMAT_UNKNOWN;
-		deadListUAVDescription.Buffer.FirstElement = 0;
-		deadListUAVDescription.Buffer.NumElements = emitter->GetMaxParticles();
-		deadListUAVDescription.Buffer.StructureByteStride = sizeof(unsigned	int);
-		deadListUAVDescription.Buffer.CounterOffsetInBytes = countBufferOffset;
-		deadListUAVDescription.ViewDimension = D3D12_UAV_DIMENSION_BUFFER;
-
-		ACDeadListCPUUAV =
-			CD3DX12_CPU_DESCRIPTOR_HANDLE(UAVHeap->GetCPUDescriptorHandleForHeapStart(), 1, directXCommon->GetCBVSRVUAVDescriptorSize());
-		ACDeadListGPUUAV =
-			CD3DX12_GPU_DESCRIPTOR_HANDLE(UAVHeap->GetGPUDescriptorHandleForHeapStart(), 1, directXCommon->GetCBVSRVUAVDescriptorSize());
-		device->CreateUnorderedAccessView(ACDeadList.Get(), ACDeadList.Get(), &deadListUAVDescription, ACDeadListCPUUAV);
+		deadList_->Create(UAVHeap.Get(), emitter);
 	}
 
 	// Draw List
 	{
-		UINT64 drawListByteSize = 
-			sizeof(ParticleSort) * emitter->GetMaxParticles();
-		UINT64 countBufferOffset = AlignForUavCounter((UINT)drawListByteSize);
-
-		CD3DX12_HEAP_PROPERTIES heap = 
-			CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
-		CD3DX12_RESOURCE_DESC resouceDesc =
-			CD3DX12_RESOURCE_DESC::Buffer(countBufferOffset + sizeof(UINT),
-				D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS);
-		ThrowIfFailed(device->CreateCommittedResource(
-			&heap,
-			D3D12_HEAP_FLAG_NONE,
-			&resouceDesc,
-			D3D12_RESOURCE_STATE_COMMON,
-			nullptr,
-			IID_PPV_ARGS(&RWDrawList)
-		));
-		RWDrawList->SetName(L"DrawList");
-
-		D3D12_UNORDERED_ACCESS_VIEW_DESC drawListUAVDescription = {};
-		drawListUAVDescription.Format = DXGI_FORMAT_UNKNOWN;
-		drawListUAVDescription.Buffer.FirstElement = 0;
-		drawListUAVDescription.Buffer.NumElements = emitter->GetMaxParticles();
-		drawListUAVDescription.Buffer.StructureByteStride = sizeof(ParticleSort);
-		drawListUAVDescription.Buffer.CounterOffsetInBytes = countBufferOffset;
-		drawListUAVDescription.Buffer.Flags = D3D12_BUFFER_UAV_FLAG_NONE;
-		drawListUAVDescription.ViewDimension = D3D12_UAV_DIMENSION_BUFFER;
-
-		DrawListCPUUAV =
-			CD3DX12_CPU_DESCRIPTOR_HANDLE(UAVHeap->GetCPUDescriptorHandleForHeapStart(), 2, directXCommon->GetCBVSRVUAVDescriptorSize());
-		DrawListGPUUAV =
-			CD3DX12_GPU_DESCRIPTOR_HANDLE(UAVHeap->GetGPUDescriptorHandleForHeapStart(), 2, directXCommon->GetCBVSRVUAVDescriptorSize());
-		device->CreateUnorderedAccessView(RWDrawList.Get(), RWDrawList.Get(), &drawListUAVDescription, DrawListCPUUAV);
-
-		D3D12_SHADER_RESOURCE_VIEW_DESC drawListSRVDescription = {};
-		drawListSRVDescription.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-		drawListSRVDescription.Format = DXGI_FORMAT_UNKNOWN;
-		drawListSRVDescription.ViewDimension = D3D12_SRV_DIMENSION_BUFFER;
-		drawListSRVDescription.Buffer.FirstElement = 0;
-		drawListSRVDescription.Buffer.NumElements = emitter->GetMaxParticles();
-		drawListSRVDescription.Buffer.StructureByteStride = sizeof(ParticleSort);
-
-		DrawListCPUSRV =
-			CD3DX12_CPU_DESCRIPTOR_HANDLE(UAVHeap->GetCPUDescriptorHandleForHeapStart(), 5, directXCommon->GetCBVSRVUAVDescriptorSize());
-		DrawListGPUSRV =
-			CD3DX12_GPU_DESCRIPTOR_HANDLE(UAVHeap->GetGPUDescriptorHandleForHeapStart(), 5, directXCommon->GetCBVSRVUAVDescriptorSize());
-		device->CreateShaderResourceView(RWDrawList.Get(), &drawListSRVDescription, DrawListCPUSRV);
-
-		heap = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
-		resouceDesc = CD3DX12_RESOURCE_DESC::Buffer(countBufferOffset + sizeof(UINT));
-		ThrowIfFailed(device->CreateCommittedResource(
-			&heap,
-			D3D12_HEAP_FLAG_NONE,
-			&resouceDesc,
-			D3D12_RESOURCE_STATE_GENERIC_READ,
-			nullptr,
-			IID_PPV_ARGS(&DrawListUploadBuffer)
-		));
+		drawList_->Create(UAVHeap.Get(), emitter);
 	}
 
 	// Draw Args
 	{
+		drawArgs_->Create(UAVHeap.Get());
+
 		UINT64 drawArgsByteSize = (sizeof(unsigned int) * 9);
 		UINT64 countBufferOffset = AlignForUavCounter((UINT)drawArgsByteSize);
 
@@ -654,61 +528,4 @@ void MeshGPUParticle::UpdateMainPassCB(const Timer& timer, const KMyMath::Matrix
 
 	auto currentParticleCB = currentFrameResource->ParticleCB.get();
 	currentParticleCB->CopyData(0, MainParticleCB);
-}
-
-std::array<const CD3DX12_STATIC_SAMPLER_DESC, 6> MeshGPUParticle::GetStaticSamplers()
-{
-	// Applications usually only need a handful of samplers.  So just define them all up front
-	// and keep them available as part of the root signature.  
-
-	const CD3DX12_STATIC_SAMPLER_DESC pointWrap(
-		0, // shaderRegister
-		D3D12_FILTER_MIN_MAG_MIP_POINT, // filter
-		D3D12_TEXTURE_ADDRESS_MODE_WRAP,  // addressU
-		D3D12_TEXTURE_ADDRESS_MODE_WRAP,  // addressV
-		D3D12_TEXTURE_ADDRESS_MODE_WRAP); // addressW
-
-	const CD3DX12_STATIC_SAMPLER_DESC pointClamp(
-		1, // shaderRegister
-		D3D12_FILTER_MIN_MAG_MIP_POINT, // filter
-		D3D12_TEXTURE_ADDRESS_MODE_CLAMP,  // addressU
-		D3D12_TEXTURE_ADDRESS_MODE_CLAMP,  // addressV
-		D3D12_TEXTURE_ADDRESS_MODE_CLAMP); // addressW
-
-	const CD3DX12_STATIC_SAMPLER_DESC linearWrap(
-		2, // shaderRegister
-		D3D12_FILTER_MIN_MAG_MIP_LINEAR, // filter
-		D3D12_TEXTURE_ADDRESS_MODE_WRAP,  // addressU
-		D3D12_TEXTURE_ADDRESS_MODE_WRAP,  // addressV
-		D3D12_TEXTURE_ADDRESS_MODE_WRAP); // addressW
-
-	const CD3DX12_STATIC_SAMPLER_DESC linearClamp(
-		3, // shaderRegister
-		D3D12_FILTER_MIN_MAG_MIP_LINEAR, // filter
-		D3D12_TEXTURE_ADDRESS_MODE_CLAMP,  // addressU
-		D3D12_TEXTURE_ADDRESS_MODE_CLAMP,  // addressV
-		D3D12_TEXTURE_ADDRESS_MODE_CLAMP); // addressW
-
-	const CD3DX12_STATIC_SAMPLER_DESC anisotropicWrap(
-		4, // shaderRegister
-		D3D12_FILTER_ANISOTROPIC, // filter
-		D3D12_TEXTURE_ADDRESS_MODE_WRAP,  // addressU
-		D3D12_TEXTURE_ADDRESS_MODE_WRAP,  // addressV
-		D3D12_TEXTURE_ADDRESS_MODE_WRAP,  // addressW
-		0.0f,                             // mipLODBias
-		8);                               // maxAnisotropy
-
-	const CD3DX12_STATIC_SAMPLER_DESC anisotropicClamp(
-		5, // shaderRegister
-		D3D12_FILTER_ANISOTROPIC, // filter
-		D3D12_TEXTURE_ADDRESS_MODE_CLAMP,  // addressU
-		D3D12_TEXTURE_ADDRESS_MODE_CLAMP,  // addressV
-		D3D12_TEXTURE_ADDRESS_MODE_CLAMP,  // addressW
-		0.0f,                              // mipLODBias
-		8);                                // maxAnisotropy
-
-	return {
-		pointWrap, pointClamp,
-		linearWrap, linearClamp,
-		anisotropicWrap, anisotropicClamp };
 }

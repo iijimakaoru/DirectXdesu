@@ -16,7 +16,7 @@ private:
 	CD3DX12_GPU_DESCRIPTOR_HANDLE ParticlePoolGPUUAV;
 
 public:
-	void Create(ID3D12DescriptorHeap* uavHeap,Emitter* emitter);
+	void Create(ID3D12DescriptorHeap* uavHeap, uint32_t particleMax);
 	ID3D12Resource* GetParticlePool();
 	CD3DX12_CPU_DESCRIPTOR_HANDLE& GetCPUSRV();
 	CD3DX12_GPU_DESCRIPTOR_HANDLE& GetGPUSRV();

@@ -434,3 +434,59 @@ KModel::ObjMaterialInfo::ObjMaterialInfo() {
 	specular = {0.0f, 0.0f, 0.0f};
 	alpha = 1.0f;
 }
+
+MeshModel::MeshModel(const std::string modelname)
+{
+	ID3D12Device* device = KDirectXCommon::GetInstance()->GetDevice();
+
+	std::ifstream file;
+
+	const std::string filename = modelname + ".obj";
+	const std::string directoryPath = "Resources/obj/" + modelname + "/";
+	file.open(directoryPath + filename);
+
+	assert(!file.fail());
+
+	std::string line;
+	while (getline(file, line))
+	{
+		std::istringstream line_stream(line);
+
+		std::string key;
+		std::getline(line_stream, key, ' ');
+
+		if (key == "v")
+		{
+			KMyMath::Vector3 pos{};
+			line_stream >> pos.x;
+			line_stream >> pos.y;
+			line_stream >> pos.z;
+
+			Vertex vertex{};
+			vertex.position = pos;
+			vertices.emplace_back(vertex);
+		}
+
+		if (key == "vn" || key == "vt" || key == "f")
+		{
+			break;
+		}
+	}
+	file.close();
+
+	vertexs.reset(new KVertex(device, vertices));
+}
+
+MeshModel::~MeshModel()
+{
+}
+
+std::vector<Vertex> MeshModel::GetVertices()
+{
+	return vertices;
+}
+
+KVertex* MeshModel::GetVertex()
+{
+	return vertexs.get();
+}

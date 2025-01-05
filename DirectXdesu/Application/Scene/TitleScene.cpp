@@ -56,9 +56,9 @@ void TitleScene::Init() {
 	audioManager = AudioManager::GetInstance();
 
 	emitter_ = new Emitter(
-		1000000,
+		100,
 		1,
-		1000000.0f,
+		100.0f,
 		300.0f,
 		DirectX::XMFLOAT3(1.0f, 1.0f, 0.0f),
 		DirectX::XMFLOAT3(0.0f, 5.0f, 0.0f),

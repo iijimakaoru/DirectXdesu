@@ -1,13 +1,13 @@
 #include "DrawList.h"
 #include "KDirectXCommon.h"
 
-void DrawList::Create(ID3D12DescriptorHeap* uavHeap, Emitter* emitter)
+void DrawList::Create(ID3D12DescriptorHeap* uavHeap, uint32_t particleMax)
 {
 	KDirectXCommon* directXCommon = KDirectXCommon::GetInstance();
 	ID3D12Device* device = directXCommon->GetDevice();
 
 	UINT64 drawListByteSize =
-		sizeof(ParticleSort) * emitter->GetMaxParticles();
+		sizeof(ParticleSort) * particleMax;
 	UINT64 countBufferOffset = AlignForUavCounter((UINT)drawListByteSize);
 
 	CD3DX12_HEAP_PROPERTIES heap =
@@ -28,7 +28,7 @@ void DrawList::Create(ID3D12DescriptorHeap* uavHeap, Emitter* emitter)
 	D3D12_UNORDERED_ACCESS_VIEW_DESC drawListUAVDescription = {};
 	drawListUAVDescription.Format = DXGI_FORMAT_UNKNOWN;
 	drawListUAVDescription.Buffer.FirstElement = 0;
-	drawListUAVDescription.Buffer.NumElements = emitter->GetMaxParticles();
+	drawListUAVDescription.Buffer.NumElements = particleMax;
 	drawListUAVDescription.Buffer.StructureByteStride = sizeof(ParticleSort);
 	drawListUAVDescription.Buffer.CounterOffsetInBytes = countBufferOffset;
 	drawListUAVDescription.Buffer.Flags = D3D12_BUFFER_UAV_FLAG_NONE;
@@ -45,7 +45,7 @@ void DrawList::Create(ID3D12DescriptorHeap* uavHeap, Emitter* emitter)
 	drawListSRVDescription.Format = DXGI_FORMAT_UNKNOWN;
 	drawListSRVDescription.ViewDimension = D3D12_SRV_DIMENSION_BUFFER;
 	drawListSRVDescription.Buffer.FirstElement = 0;
-	drawListSRVDescription.Buffer.NumElements = emitter->GetMaxParticles();
+	drawListSRVDescription.Buffer.NumElements = particleMax;
 	drawListSRVDescription.Buffer.StructureByteStride = sizeof(ParticleSort);
 
 	DrawListCPUSRV =

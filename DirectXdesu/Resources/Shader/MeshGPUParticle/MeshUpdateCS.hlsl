@@ -25,7 +25,6 @@ void main(uint id : SV_DispatchThreadID)
 	
     float3 curlPosition = particle.Position * 0.1f;
     float3 curlVelocity = curlNoise3D(curlPosition, 1.0f);
-    //particle.Velocity = curlVelocity * 2;
     particle.Velocity = 0;
 
 	// put the particle back

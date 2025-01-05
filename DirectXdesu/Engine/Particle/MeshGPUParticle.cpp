@@ -22,9 +22,7 @@ void MeshGPUParticle::Init(const Timer& timer,
 
 	rootSignature_ = std::make_unique<RootSignature>();
 	particleRootSignature_ = std::make_unique<RootSignature>();
-
 	graphicPSO_ = std::make_unique<GraphicPipelineState>();
-
 	emitPSO_ = std::make_unique<ComputePipelineState>();
 	updatePSO_ = std::make_unique<ComputePipelineState>();
 	copyDrawPSO_ = std::make_unique<ComputePipelineState>();
@@ -33,11 +31,11 @@ void MeshGPUParticle::Init(const Timer& timer,
 	deadList_ = std::make_unique<DeadList>();
 	drawList_ = std::make_unique<DrawList>();
 	drawArgs_ = std::make_unique<DrawArgs>();
+	commandSignature_ = std::make_unique<CommandSignature>();
+	meshModel_ = std::make_unique<MeshModel>(modelname);
 
-	LoadMesh(modelname);
-	BuildUAV(emitter);
+	BuildUAV();
 	BuildRootSignature();
-	BuildShadersAndInputLayout();
 	BuildFrameResources();
 	BuildPSOs();
 
@@ -76,9 +74,9 @@ void MeshGPUParticle::Init(const Timer& timer,
 	commndList->SetComputeRootDescriptorTable(3, particlePool_->GetGPUUAV());
 	commndList->SetComputeRootDescriptorTable(4, deadList_->GetGPUUAV());
 	commndList->SetComputeRootDescriptorTable(5, drawList_->GetGPUUAV());
-	commndList->SetComputeRootDescriptorTable(6, DrawArgsGPUUAV);
+	commndList->SetComputeRootDescriptorTable(6, drawArgs_->GetGPUUAV());
 
-	commndList->Dispatch(emitter->GetMaxParticles(), 1, 1);
+	commndList->Dispatch((uint32_t)meshModel_->GetVertices().size(), 1, 1);
 
 	ThrowIfFailed(commndList->Close());
 
@@ -140,32 +138,21 @@ void MeshGPUParticle::Draw(const Timer& timer, const KMyMath::Matrix4& matView, 
 	commndList->SetComputeRootDescriptorTable(3, particlePool_->GetGPUUAV());
 	commndList->SetComputeRootDescriptorTable(4, deadList_->GetGPUUAV());
 	commndList->SetComputeRootDescriptorTable(5, drawList_->GetGPUUAV());
-	commndList->SetComputeRootDescriptorTable(6, DrawArgsGPUUAV);
+	commndList->SetComputeRootDescriptorTable(6, drawArgs_->GetGPUUAV());
 
 	commndList->SetComputeRootDescriptorTable(7, MeshSRV);
 
 	if (!init) 
 	{
 		init = true;
-		while (emitter->GetEmitTimeCounter() >= emitter->GetTimeBetweenEmit())
-		{
-			emitter->SetEmitCount((int)(emitter->GetEmitTimeCounter() / emitter->GetTimeBetweenEmit()));
-
-			emitter->SetEmitCount(emitter->GetEmitCount());
-			emitter->SetEmitTimeCounter(fmod(emitter->GetEmitTimeCounter(), emitter->GetTimeBetweenEmit()));
-
-			UpdateMainPassCB(timer, matView, matProjection, emitter);
-
-			commndList->Dispatch(emitter->GetEmitCount(), 1, 1);
-		}
+		UpdateMainPassCB(timer, matView, matProjection, emitter);
+		commndList->Dispatch((uint32_t)meshModel_->GetVertices().size(), 1, 1);
 	}
 
 	CD3DX12_RESOURCE_BARRIER resourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(drawList_->GetDrawList(),
 		D3D12_RESOURCE_STATE_UNORDERED_ACCESS, D3D12_RESOURCE_STATE_COPY_DEST);
 	commndList->ResourceBarrier(1, &resourceBarrier);
-
 	commndList->CopyResource(drawList_->GetDrawList(), drawList_->GetDrawListUploadBuffer());
-
 	resourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(drawList_->GetDrawList(),
 		D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_UNORDERED_ACCESS);
 	commndList->ResourceBarrier(1, &resourceBarrier);
@@ -173,7 +160,7 @@ void MeshGPUParticle::Draw(const Timer& timer, const KMyMath::Matrix4& matView, 
 	// パーティクル更新シェーダー
 	commndList->SetPipelineState(updatePSO_->GetPipelineState());
 	commndList->SetComputeRootSignature(particleRootSignature_->GetRootSignature());
-	commndList->Dispatch(emitter->GetMaxParticles(), 1, 1);
+	commndList->Dispatch((uint32_t)meshModel_->GetVertices().size(), 1, 1);
 
 	resourceBarrier = CD3DX12_RESOURCE_BARRIER::UAV(drawList_->GetDrawList());
 	commndList->ResourceBarrier(1, &resourceBarrier);
@@ -204,19 +191,14 @@ void MeshGPUParticle::Draw(const Timer& timer, const KMyMath::Matrix4& matView, 
 	commndList->SetGraphicsRootDescriptorTable(3, particlePool_->GetGPUSRV());
 	commndList->SetGraphicsRootDescriptorTable(4, drawList_->GetGPUSRV());
 
-	resourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(RWDrawArgs.Get(),
+	resourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(drawArgs_->GetDrawArgs(),
 		D3D12_RESOURCE_STATE_UNORDERED_ACCESS, D3D12_RESOURCE_STATE_INDIRECT_ARGUMENT);
 	commndList->ResourceBarrier(1, &resourceBarrier);
 
-	commndList->ExecuteIndirect(
-		particleCommandSignature.Get(),
-		1,
-		RWDrawArgs.Get(),
-		0,
-		nullptr,
-		0);
+	commndList->ExecuteIndirect(commandSignature_->GetCommandSignature(), 1, RWDrawArgs.Get(), 0, nullptr, 0);
+	//commndList->ExecuteIndirect(commandSignature_->GetCommandSignature(), 1, drawArgs_->GetDrawArgs(), 0, nullptr, 0);
 
-	resourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(RWDrawArgs.Get(),
+	resourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(drawArgs_->GetDrawArgs(),
 		D3D12_RESOURCE_STATE_INDIRECT_ARGUMENT, D3D12_RESOURCE_STATE_UNORDERED_ACCESS);
 	commndList->ResourceBarrier(1, &resourceBarrier);
 
@@ -229,47 +211,7 @@ void MeshGPUParticle::Draw(const Timer& timer, const KMyMath::Matrix4& matView, 
 	commndList->ResourceBarrier(1, &resourceBarrier);
 }
 
-bool MeshGPUParticle::LoadMesh(const std::string modelname)
-{
-	std::ifstream file;
-
-	const std::string filename = modelname + ".obj";
-	const std::string directoryPath = "Resources/obj/" + modelname + "/";
-	file.open(directoryPath + filename);
-
-	assert(!file.fail());
-
-	std::string line;
-	while (getline(file, line)) 
-	{
-		std::istringstream line_stream(line);
-
-		std::string key;
-		std::getline(line_stream, key, ' ');
-
-		if (key == "v") 
-		{
-			KMyMath::Vector3 pos{};
-			line_stream >> pos.x;
-			line_stream >> pos.y;
-			line_stream >> pos.z;
-
-			Vertex vertex{};
-			vertex.position = pos;
-			vertices_.emplace_back(vertex);
-		}
-
-		if (key == "vn" || key == "vt" || key == "f") 
-		{
-			break;
-		}
-	}
-	file.close();
-
-	return true;
-}
-
-void MeshGPUParticle::BuildUAV(Emitter* emitter)
+void MeshGPUParticle::BuildUAV()
 {
 	KDirectXCommon* directXCommon = KDirectXCommon::GetInstance();
 	ID3D12Device* device = directXCommon->GetDevice();
@@ -283,17 +225,17 @@ void MeshGPUParticle::BuildUAV(Emitter* emitter)
 
 	// Particle Pool
 	{
-		particlePool_->Create(UAVHeap.Get(), emitter);
+		particlePool_->Create(UAVHeap.Get(), (uint32_t)meshModel_->GetVertices().size());
 	}
 
 	// Dead List
 	{
-		deadList_->Create(UAVHeap.Get(), emitter);
+		deadList_->Create(UAVHeap.Get(), (uint32_t)meshModel_->GetVertices().size());
 	}
 
 	// Draw List
 	{
-		drawList_->Create(UAVHeap.Get(), emitter);
+		drawList_->Create(UAVHeap.Get(), (uint32_t)meshModel_->GetVertices().size());
 	}
 
 	// Draw Args
@@ -334,8 +276,10 @@ void MeshGPUParticle::BuildUAV(Emitter* emitter)
 		device->CreateUnorderedAccessView(RWDrawArgs.Get(), RWDrawArgs.Get(), &drawArgsUAVDescription, DrawArgsCPUUAV);
 	}
 
-	vertexs.reset(new KVertex(directXCommon->GetDevice(), vertices_));
-	MeshSRV = vertexs->CreateDescripterSRV(UAVHeap.Get());
+	// Mesh
+	{
+		MeshSRV = meshModel_->GetVertex()->CreateDescripterSRV(UAVHeap.Get());
+	}
 }
 
 void MeshGPUParticle::BuildRootSignature()
@@ -380,117 +324,77 @@ void MeshGPUParticle::BuildRootSignature()
 	}
 
 	// particle commnd signature
-	D3D12_INDIRECT_ARGUMENT_DESC Args[1];
-	Args[0].Type = D3D12_INDIRECT_ARGUMENT_TYPE_DRAW;
-
-	D3D12_COMMAND_SIGNATURE_DESC particleCommandSingatureDescription = {};
-	particleCommandSingatureDescription.ByteStride = 36;
-	particleCommandSingatureDescription.NumArgumentDescs = 1;
-	particleCommandSingatureDescription.pArgumentDescs = Args;
-
-	ThrowIfFailed(device->CreateCommandSignature(
-		&particleCommandSingatureDescription,
-		NULL,
-		IID_PPV_ARGS(particleCommandSignature.GetAddressOf())));
-}
-
-void MeshGPUParticle::BuildShadersAndInputLayout()
-{
-	
+	commandSignature_->Create();
 }
 
 void MeshGPUParticle::BuildPSOs()
 {
-	//KDirectXCommon* directXCommon = KDirectXCommon::GetInstance();
 	ID3D12Device* device = KDirectXCommon::GetInstance()->GetDevice();
 
-	// Mesh
+	// Graphic
 	{
-		// 頂点データを準備
-		std::vector<Vertex> vertexData;
-		for (size_t i = 0; i < vertices_.size(); ++i) {
-			vertexData.push_back({ vertices_[i] });
-		}
-
-		// バッファリソースを作成
-		D3D12_HEAP_PROPERTIES heapProps = {};
-		heapProps.Type = D3D12_HEAP_TYPE_UPLOAD;
-
-		D3D12_RESOURCE_DESC bufferDesc = {};
-		bufferDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-		bufferDesc.Width = sizeof(Vertex) * vertexData.size();
-		bufferDesc.Height = 1;
-		bufferDesc.DepthOrArraySize = 1;
-		bufferDesc.MipLevels = 1;
-		bufferDesc.SampleDesc.Count = 1;
-		bufferDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
-
-		ID3D12Resource* vertexBuffer;
-		device->CreateCommittedResource(
-			&heapProps,
-			D3D12_HEAP_FLAG_NONE,
-			&bufferDesc,
-			D3D12_RESOURCE_STATE_GENERIC_READ,
-			nullptr,
-			IID_PPV_ARGS(&vertexBuffer)
-		);
-
-		// バッファにデータを書き込む
-		void* mappedData = nullptr;
-		vertexBuffer->Map(0, nullptr, &mappedData);
-		memcpy(mappedData, vertexData.data(), sizeof(Vertex) * vertexData.size());
-		vertexBuffer->Unmap(0, nullptr);
+		graphicPSO_->SetRootSignature(rootSignature_->GetRootSignature());
+		graphicPSO_->CreateVertexShader(L"MeshGPUParticle/MeshGPUParticleVS.hlsl", "main");
+		graphicPSO_->CreatePixelShader(L"MeshGPUParticle/MeshGPUParticlePS.hlsl", "main");
+		graphicPSO_->CreateGeometryShader(L"MeshGPUParticle/MeshGPUParticleGS.hlsl", "main");
 	}
 
-	graphicPSO_->SetRootSignature(rootSignature_->GetRootSignature());
-	graphicPSO_->CreateVertexShader(L"MeshGPUParticle/MeshGPUParticleVS.hlsl", "main");
-	graphicPSO_->CreatePixelShader(L"MeshGPUParticle/MeshGPUParticlePS.hlsl", "main");
-	graphicPSO_->CreateGeometryShader(L"MeshGPUParticle/MeshGPUParticleGS.hlsl", "main");
-
+	// Blend
 	D3D12_BLEND_DESC lBlendDesc = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
-
 	lBlendDesc = CreateBlend(BlendMode::ADD);
 
+	// RenderTargetFormat
 	RenderTargetFormat renderTargetFormat{};
 	renderTargetFormat.NumRenderTargets = 1;
 	renderTargetFormat.RTVFormats[0] = BackBufferFormat;
 
-	graphicPSO_->SetPrimitiveType(D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT);
-	graphicPSO_->SetRenderTargetFormat(renderTargetFormat);
-	graphicPSO_->SetDepthFlag(false);
-	graphicPSO_->SetDepthWriteMask(D3D12_DEPTH_WRITE_MASK_ZERO);
-	graphicPSO_->SetFillMode(D3D12_FILL_MODE_SOLID);
-	graphicPSO_->SetBlend(lBlendDesc);
-	graphicPSO_->Create(device);
+	// Graphic
+	{
+		graphicPSO_->SetPrimitiveType(D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT);
+		graphicPSO_->SetRenderTargetFormat(renderTargetFormat);
+		graphicPSO_->SetDepthFlag(false);
+		graphicPSO_->SetDepthWriteMask(D3D12_DEPTH_WRITE_MASK_ZERO);
+		graphicPSO_->SetFillMode(D3D12_FILL_MODE_SOLID);
+		graphicPSO_->SetBlend(lBlendDesc);
+		graphicPSO_->Create(device);
+	}
+
 	// EmitCS
-	emitPSO_->CreateShader(L"MeshGPUParticle/MeshEmitCS.hlsl", "main");
-	emitPSO_->SetRootSignature(particleRootSignature_.get());
-	emitPSO_->SetFlag(D3D12_PIPELINE_STATE_FLAG_NONE);
-	emitPSO_->Create(device);
+	{
+		emitPSO_->CreateShader(L"MeshGPUParticle/MeshEmitCS.hlsl", "main");
+		emitPSO_->SetRootSignature(particleRootSignature_.get());
+		emitPSO_->SetFlag(D3D12_PIPELINE_STATE_FLAG_NONE);
+		emitPSO_->Create(device);
+	}
 
 	// UpdateCS
-	updatePSO_->CreateShader(L"MeshGPUParticle/MeshUpdateCS.hlsl", "main");
-	updatePSO_->SetRootSignature(particleRootSignature_.get());
-	updatePSO_->SetFlag(D3D12_PIPELINE_STATE_FLAG_NONE);
-	updatePSO_->Create(device);
+	{
+		updatePSO_->CreateShader(L"MeshGPUParticle/MeshUpdateCS.hlsl", "main");
+		updatePSO_->SetRootSignature(particleRootSignature_.get());
+		updatePSO_->SetFlag(D3D12_PIPELINE_STATE_FLAG_NONE);
+		updatePSO_->Create(device);
+	}
 
 	// CopyDrawCountCS
-	copyDrawPSO_->CreateShader(L"MeshGPUParticle/MeshCopyDrawCountCS.hlsl", "main");
-	copyDrawPSO_->SetRootSignature(particleRootSignature_.get());
-	copyDrawPSO_->SetFlag(D3D12_PIPELINE_STATE_FLAG_NONE);
-	copyDrawPSO_->Create(device);
+	{
+		copyDrawPSO_->CreateShader(L"MeshGPUParticle/MeshCopyDrawCountCS.hlsl", "main");
+		copyDrawPSO_->SetRootSignature(particleRootSignature_.get());
+		copyDrawPSO_->SetFlag(D3D12_PIPELINE_STATE_FLAG_NONE);
+		copyDrawPSO_->Create(device);
+	}
 
 	// DeadListInitCS
-	deadListPSO_->CreateShader(L"MeshGPUParticle/MeshDeadListInitCS.hlsl", "main");
-	deadListPSO_->SetRootSignature(particleRootSignature_.get());
-	deadListPSO_->SetFlag(D3D12_PIPELINE_STATE_FLAG_NONE);
-	deadListPSO_->Create(device);
+	{
+		deadListPSO_->CreateShader(L"MeshGPUParticle/MeshDeadListInitCS.hlsl", "main");
+		deadListPSO_->SetRootSignature(particleRootSignature_.get());
+		deadListPSO_->SetFlag(D3D12_PIPELINE_STATE_FLAG_NONE);
+		deadListPSO_->Create(device);
+	}
 }
 
 void MeshGPUParticle::BuildFrameResources()
 {
 	ID3D12Device* device = KDirectXCommon::GetInstance()->GetDevice();
-
 	for (int i = 0; i < gNumberFrameResources; ++i)
 	{
 		FrameResources.push_back(std::make_unique<FrameResource>(device, 1, 1, 1));
@@ -519,12 +423,12 @@ void MeshGPUParticle::UpdateMainPassCB(const Timer& timer, const KMyMath::Matrix
 	currentTimeCB->CopyData(0, MainTimeCB);
 
 	MainParticleCB.EmitCount = emitter->GetEmitCount();
-	MainParticleCB.MaxParticles = emitter->GetMaxParticles();
+	MainParticleCB.MaxParticles = (uint32_t)meshModel_->GetVertices().size();
 	MainParticleCB.GridSize = emitter->GetGridSize();
 	MainParticleCB.LifeTime = emitter->GetLifeTime();
 	MainParticleCB.velocity = emitter->GetVelocity();
 	MainParticleCB.acceleration = emitter->GetAcceleration();
-	MainParticleCB.vertexNum = (uint32_t)vertices_.size();
+	MainParticleCB.vertexNum = (uint32_t)meshModel_->GetVertices().size();
 
 	auto currentParticleCB = currentFrameResource->ParticleCB.get();
 	currentParticleCB->CopyData(0, MainParticleCB);

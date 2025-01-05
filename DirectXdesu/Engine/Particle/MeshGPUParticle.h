@@ -15,6 +15,10 @@
 #include "DrawList.h"
 #include "DrawArgs.h"
 
+#include "CommandSignature.h"
+
+#include "KModel.h"
+
 class MeshGPUParticle
 {
 public:
@@ -40,12 +44,9 @@ public:
 		const KMyMath::Matrix4& matProjection,
 		Emitter* emitter);
 
-	bool LoadMesh(const std::string modelname);
-
 private:
-	void BuildUAV(Emitter* emitter);
+	void BuildUAV();
 	void BuildRootSignature();
-	void BuildShadersAndInputLayout();
 	void BuildPSOs();
 	void BuildFrameResources();
 	void UpdateMainPassCB(const Timer& timer,
@@ -70,8 +71,6 @@ private:
 	FrameResource* currentFrameResource = nullptr;
 	int currentFrameResourceIndex = 0;
 
-	Microsoft::WRL::ComPtr<ID3D12CommandSignature> particleCommandSignature = nullptr;
-
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> UAVHeap = nullptr;
 
 	Microsoft::WRL::ComPtr<ID3D12Resource> RWDrawArgs = nullptr;
@@ -84,9 +83,6 @@ private:
 	ObjectConstants MainObjectCB;
 	TimeConstants MainTimeCB;
 	ParticleConstants MainParticleCB;
-
-	std::vector<Vertex> vertices_;
-	std::unique_ptr<KVertex> vertexs;
 
 	std::unique_ptr<RootSignature> rootSignature_;
 	std::unique_ptr<RootSignature> particleRootSignature_;
@@ -102,6 +98,10 @@ private:
 	std::unique_ptr<DeadList> deadList_;
 	std::unique_ptr<DrawList> drawList_;
 	std::unique_ptr<DrawArgs> drawArgs_;
+
+	std::unique_ptr<CommandSignature> commandSignature_;
+
+	std::unique_ptr<MeshModel> meshModel_;
 
 	bool init = false;
 };

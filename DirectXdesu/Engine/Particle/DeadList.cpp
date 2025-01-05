@@ -1,12 +1,12 @@
 #include "DeadList.h"
 #include "KDirectXCommon.h"
 
-void DeadList::Create(ID3D12DescriptorHeap* uavHeap, Emitter* emitter)
+void DeadList::Create(ID3D12DescriptorHeap* uavHeap, uint32_t particleMax)
 {
 	KDirectXCommon* directXCommon = KDirectXCommon::GetInstance();
 	ID3D12Device* device = directXCommon->GetDevice();
 
-	UINT64 deadListByteSize = sizeof(unsigned int) * emitter->GetMaxParticles();
+	UINT64 deadListByteSize = sizeof(unsigned int) * particleMax;
 	UINT64 countBufferOffset = AlignForUavCounter((UINT)deadListByteSize);
 
 	CD3DX12_HEAP_PROPERTIES heap =
@@ -27,7 +27,7 @@ void DeadList::Create(ID3D12DescriptorHeap* uavHeap, Emitter* emitter)
 	D3D12_UNORDERED_ACCESS_VIEW_DESC deadListUAVDescription = {};
 	deadListUAVDescription.Format = DXGI_FORMAT_UNKNOWN;
 	deadListUAVDescription.Buffer.FirstElement = 0;
-	deadListUAVDescription.Buffer.NumElements = emitter->GetMaxParticles();
+	deadListUAVDescription.Buffer.NumElements = particleMax;
 	deadListUAVDescription.Buffer.StructureByteStride = sizeof(unsigned	int);
 	deadListUAVDescription.Buffer.CounterOffsetInBytes = countBufferOffset;
 	deadListUAVDescription.ViewDimension = D3D12_UAV_DIMENSION_BUFFER;

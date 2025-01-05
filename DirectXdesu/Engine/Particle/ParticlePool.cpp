@@ -1,13 +1,13 @@
 #include "ParticlePool.h"
 #include "KDirectXCommon.h"
 
-void ParticlePool::Create(ID3D12DescriptorHeap* uavHeap,Emitter* emitter)
+void ParticlePool::Create(ID3D12DescriptorHeap* uavHeap, uint32_t particleMax)
 {
 	KDirectXCommon* directXCommon = KDirectXCommon::GetInstance();
 	ID3D12Device* device = directXCommon->GetDevice();
 
 	UINT64 particlePoolByteSize =
-		sizeof(Particle) * emitter->GetMaxParticles();
+		sizeof(Particle) * particleMax;
 	CD3DX12_HEAP_PROPERTIES heap =
 		CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
 	CD3DX12_RESOURCE_DESC resouceDesc =
@@ -28,7 +28,7 @@ void ParticlePool::Create(ID3D12DescriptorHeap* uavHeap,Emitter* emitter)
 	D3D12_UNORDERED_ACCESS_VIEW_DESC particlePoolUAVDescription = {};
 	particlePoolUAVDescription.Format = DXGI_FORMAT_UNKNOWN;
 	particlePoolUAVDescription.Buffer.FirstElement = 0;
-	particlePoolUAVDescription.Buffer.NumElements = emitter->GetMaxParticles();
+	particlePoolUAVDescription.Buffer.NumElements = particleMax;
 	particlePoolUAVDescription.Buffer.StructureByteStride = sizeof(Particle);
 	particlePoolUAVDescription.Buffer.CounterOffsetInBytes = 0;
 	particlePoolUAVDescription.ViewDimension = D3D12_UAV_DIMENSION_BUFFER;
@@ -38,7 +38,7 @@ void ParticlePool::Create(ID3D12DescriptorHeap* uavHeap,Emitter* emitter)
 	particlePoolSRVDescription.Format = DXGI_FORMAT_UNKNOWN;
 	particlePoolSRVDescription.ViewDimension = D3D12_SRV_DIMENSION_BUFFER;
 	particlePoolSRVDescription.Buffer.FirstElement = 0;
-	particlePoolSRVDescription.Buffer.NumElements = emitter->GetMaxParticles();
+	particlePoolSRVDescription.Buffer.NumElements = particleMax;
 	particlePoolSRVDescription.Buffer.StructureByteStride = sizeof(Particle);
 
 	ParticlePoolCPUUAV =

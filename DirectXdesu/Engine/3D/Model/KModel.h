@@ -98,3 +98,16 @@ public:
 	MtlObj(const std::string modelname);
 	~MtlObj();
 };
+
+class MeshModel {
+private:
+	std::vector<Vertex> vertices;
+	std::unique_ptr<KVertex> vertexs;
+
+public:
+	MeshModel(const std::string modelname);
+	~MeshModel();
+
+	std::vector<Vertex> GetVertices();
+	KVertex* GetVertex();
+};

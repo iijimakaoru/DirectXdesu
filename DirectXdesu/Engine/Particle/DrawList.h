@@ -18,7 +18,7 @@ private:
 	CD3DX12_GPU_DESCRIPTOR_HANDLE DrawListGPUUAV;
 
 public:
-	void Create(ID3D12DescriptorHeap* uavHeap, Emitter* emitter);
+	void Create(ID3D12DescriptorHeap* uavHeap, uint32_t particleMax);
 	ID3D12Resource* GetDrawList();
 	ID3D12Resource* GetDrawListUploadBuffer();
 	CD3DX12_CPU_DESCRIPTOR_HANDLE& GetCPUSRV();

@@ -9,7 +9,6 @@ class DrawList
 {
 private:
 	Microsoft::WRL::ComPtr<ID3D12Resource> RWDrawList = nullptr;
-	Microsoft::WRL::ComPtr<ID3D12Resource> DrawListUploadBuffer = nullptr;
 
 	CD3DX12_CPU_DESCRIPTOR_HANDLE DrawListCPUSRV;
 	CD3DX12_GPU_DESCRIPTOR_HANDLE DrawListGPUSRV;
@@ -17,14 +16,16 @@ private:
 	CD3DX12_CPU_DESCRIPTOR_HANDLE DrawListCPUUAV;
 	CD3DX12_GPU_DESCRIPTOR_HANDLE DrawListGPUUAV;
 
+	D3D12_RESOURCE_STATES resourseState;
+
 public:
 	void Create(ID3D12DescriptorHeap* uavHeap, uint32_t particleMax);
 	ID3D12Resource* GetDrawList();
-	ID3D12Resource* GetDrawListUploadBuffer();
 	CD3DX12_CPU_DESCRIPTOR_HANDLE& GetCPUSRV();
 	CD3DX12_GPU_DESCRIPTOR_HANDLE& GetGPUSRV();
 	CD3DX12_CPU_DESCRIPTOR_HANDLE& GetCPUUAV();
 	CD3DX12_GPU_DESCRIPTOR_HANDLE& GetGPUUAV();
+	void Translation(ID3D12GraphicsCommandList* cmdList, D3D12_RESOURCE_STATES afterState);
 
 	// We pack the UAV counter into the same buffer as the commands rather than create
 	// a separate 64K resource/heap for it. The counter must be aligned on 4K boundaries,

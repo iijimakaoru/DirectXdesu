@@ -15,6 +15,8 @@ private:
 	CD3DX12_CPU_DESCRIPTOR_HANDLE ParticlePoolCPUUAV;
 	CD3DX12_GPU_DESCRIPTOR_HANDLE ParticlePoolGPUUAV;
 
+	D3D12_RESOURCE_STATES resourseState;
+
 public:
 	void Create(ID3D12DescriptorHeap* uavHeap, uint32_t particleMax);
 	ID3D12Resource* GetParticlePool();
@@ -22,5 +24,6 @@ public:
 	CD3DX12_GPU_DESCRIPTOR_HANDLE& GetGPUSRV();
 	CD3DX12_CPU_DESCRIPTOR_HANDLE& GetCPUUAV();
 	CD3DX12_GPU_DESCRIPTOR_HANDLE& GetGPUUAV();
+	void Translation(ID3D12GraphicsCommandList* cmdList, D3D12_RESOURCE_STATES afterState);
 };
 

@@ -23,6 +23,7 @@ void DrawList::Create(ID3D12DescriptorHeap* uavHeap, uint32_t particleMax)
 		nullptr,
 		IID_PPV_ARGS(&RWDrawList)
 	);
+	resourseState = D3D12_RESOURCE_STATE_COMMON;
 	RWDrawList->SetName(L"DrawList");
 
 	D3D12_UNORDERED_ACCESS_VIEW_DESC drawListUAVDescription = {};
@@ -53,27 +54,11 @@ void DrawList::Create(ID3D12DescriptorHeap* uavHeap, uint32_t particleMax)
 	DrawListGPUSRV =
 		CD3DX12_GPU_DESCRIPTOR_HANDLE(uavHeap->GetGPUDescriptorHandleForHeapStart(), 5, directXCommon->GetCBVSRVUAVDescriptorSize());
 	device->CreateShaderResourceView(RWDrawList.Get(), &drawListSRVDescription, DrawListCPUSRV);
-
-	heap = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
-	resouceDesc = CD3DX12_RESOURCE_DESC::Buffer(countBufferOffset + sizeof(UINT));
-	device->CreateCommittedResource(
-		&heap,
-		D3D12_HEAP_FLAG_NONE,
-		&resouceDesc,
-		D3D12_RESOURCE_STATE_GENERIC_READ,
-		nullptr,
-		IID_PPV_ARGS(&DrawListUploadBuffer)
-	);
 }
 
 ID3D12Resource* DrawList::GetDrawList()
 {
 	return RWDrawList.Get();
-}
-
-ID3D12Resource* DrawList::GetDrawListUploadBuffer()
-{
-	return DrawListUploadBuffer.Get();
 }
 
 CD3DX12_CPU_DESCRIPTOR_HANDLE& DrawList::GetCPUSRV()
@@ -94,4 +79,12 @@ CD3DX12_CPU_DESCRIPTOR_HANDLE& DrawList::GetCPUUAV()
 CD3DX12_GPU_DESCRIPTOR_HANDLE& DrawList::GetGPUUAV()
 {
 	return DrawListGPUUAV;
+}
+
+void DrawList::Translation(ID3D12GraphicsCommandList* cmdList, D3D12_RESOURCE_STATES afterState)
+{
+	CD3DX12_RESOURCE_BARRIER resourceBarrier = 
+		CD3DX12_RESOURCE_BARRIER::Transition(RWDrawList.Get(), resourseState, afterState);
+	cmdList->ResourceBarrier(1, &resourceBarrier);
+	resourseState = afterState;
 }

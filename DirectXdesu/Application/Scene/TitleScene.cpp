@@ -108,10 +108,7 @@ void TitleScene::ObjDraw() {
 
 	skyDome->Draw();
 
-	meshGpuParticle_->Draw(timer_,
-		camera->GetViewPro()->GetMatView(),
-		camera->GetViewPro()->GetMatPro(),
-		emitter_);
+	meshGpuParticle_->Draw(timer_, camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro(), emitter_);
 }
 
 void TitleScene::SpriteDraw() {

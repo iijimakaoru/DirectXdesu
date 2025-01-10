@@ -3,6 +3,7 @@
 
 #include "Timer.h"
 #include "Emitter.h"
+#include "MeshEmitter.h"
 #include "FrameResource.h"
 #include "KVertex.h"
 
@@ -53,16 +54,9 @@ private:
 		const KMyMath::Matrix4& matView,
 		const KMyMath::Matrix4& matProjection,
 		Emitter* emitter);
-
-	// We pack the UAV counter into the same buffer as the commands rather than create
-	// a separate 64K resource/heap for it. The counter must be aligned on 4K boundaries,
-	// so we pad the command buffer (if necessary) such that the counter will be placed
-	// at a valid location in the buffer.
-	static inline UINT AlignForUavCounter(UINT bufferSize)
-	{
-		const UINT alignment = D3D12_UAV_COUNTER_PLACEMENT_ALIGNMENT;
-		return (bufferSize + (alignment - 1)) & ~(alignment - 1);
-	}
+	void ParticleUpdate();
+	void ParticleDraw();
+	void DrawCommon();
 
 private:
 	DXGI_FORMAT BackBufferFormat = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
@@ -72,13 +66,6 @@ private:
 	int currentFrameResourceIndex = 0;
 
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> UAVHeap = nullptr;
-
-	Microsoft::WRL::ComPtr<ID3D12Resource> RWDrawArgs = nullptr;
-
-	CD3DX12_CPU_DESCRIPTOR_HANDLE DrawArgsCPUUAV;
-	CD3DX12_GPU_DESCRIPTOR_HANDLE DrawArgsGPUUAV;
-
-	CD3DX12_GPU_DESCRIPTOR_HANDLE MeshSRV;
 
 	ObjectConstants MainObjectCB;
 	TimeConstants MainTimeCB;
@@ -102,6 +89,7 @@ private:
 	std::unique_ptr<CommandSignature> commandSignature_;
 
 	std::unique_ptr<MeshModel> meshModel_;
+	CD3DX12_GPU_DESCRIPTOR_HANDLE MeshSRV;
 
 	bool init = false;
 };

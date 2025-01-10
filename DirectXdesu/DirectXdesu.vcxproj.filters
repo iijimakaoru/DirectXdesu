@@ -543,7 +543,7 @@
     <ClCompile Include="Engine\3D\Model\ModelManager.cpp">
       <Filter>ソース ファイル\Engine\3d</Filter>
     </ClCompile>
-    <ClCompile Include="Application\Particle\Emitter.cpp">
+    <ClCompile Include="Engine\Particle\Emitter.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Base\DirectXCommon\d3dUtil.cpp">
@@ -881,7 +881,7 @@
     <ClInclude Include="Engine\2D\PostEffect\VignettePostEffect.h">
       <Filter>ヘッダー ファイル\Engine\2d\Sprites\PostEffect</Filter>
     </ClInclude>
-    <ClInclude Include="Application\Particle\Emitter.h">
+    <ClInclude Include="Engine\Particle\Emitter.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Base\DirectXCommon\d3dUtil.h">

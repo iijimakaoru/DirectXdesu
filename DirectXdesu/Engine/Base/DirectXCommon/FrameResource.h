@@ -41,16 +41,16 @@ public:
 	FrameResource& operator=(const FrameResource& rhs) = delete;
 	~FrameResource();
 
-	// we cannot reset the allocator until the GPU is done processing the commands so each frame needs their own allocator
+	// GPU がコマンドの処理を完了するまでアロケータをリセットできないため、各フレームには独自のアロケータが必要です
 	Microsoft::WRL::ComPtr<ID3D12CommandAllocator> commandListAllocator;
 
-	// we cannot update a cbuffer until the GPU is done processing the commands that reference it
-	//so each frame needs their own cbuffers
+	// GPU がそれを参照するコマンドの処理を完了するまで、cbuffer を更新することはできません
+	// したがって、各フレームには独自の cbuffer が必要です
 	std::unique_ptr<UploadBuffer<ObjectConstants>> ObjectCB = nullptr;
 	std::unique_ptr<UploadBuffer<TimeConstants>> TimeCB = nullptr;
 	std::unique_ptr<UploadBuffer<ParticleConstants>> ParticleCB = nullptr;
 
-	// fence value to mark commands up to this fence point 
-	// this lets us check if these frame resources are still in use by the GPU.
+	// このフェンスポイントまでのコマンドをマークするフェンス値
+	// これにより、これらのフレーム リソースが GPU によってまだ使用されているかどうかを確認できます
 	UINT64 Fence = 0;
 };

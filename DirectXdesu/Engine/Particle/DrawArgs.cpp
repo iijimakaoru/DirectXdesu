@@ -9,19 +9,15 @@ void DrawArgs::Create(ID3D12DescriptorHeap* uavHeap)
 	UINT64 drawArgsByteSize = (sizeof(unsigned int) * 9);
 	UINT64 countBufferOffset = AlignForUavCounter((UINT)drawArgsByteSize);
 
-	CD3DX12_HEAP_PROPERTIES heap =
-		CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
-	CD3DX12_RESOURCE_DESC resouceDesc =
-		CD3DX12_RESOURCE_DESC::Buffer(countBufferOffset + sizeof(UINT),
+	CD3DX12_HEAP_PROPERTIES heap = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
+	CD3DX12_RESOURCE_DESC resouceDesc = CD3DX12_RESOURCE_DESC::Buffer(countBufferOffset + sizeof(UINT),
 			D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS);
-	device->CreateCommittedResource(
-		&heap,
+	device->CreateCommittedResource(&heap,
 		D3D12_HEAP_FLAG_NONE,
 		&resouceDesc,
 		D3D12_RESOURCE_STATE_COMMON,
-		nullptr,
-		IID_PPV_ARGS(&RWDrawArgs)
-	);
+		nullptr, IID_PPV_ARGS(&RWDrawArgs));
+	resourseState = D3D12_RESOURCE_STATE_COMMON;
 	RWDrawArgs.Get()->SetName(L"DrawArgs");
 
 	D3D12_UNORDERED_ACCESS_VIEW_DESC drawArgsUAVDescription = {};
@@ -33,10 +29,8 @@ void DrawArgs::Create(ID3D12DescriptorHeap* uavHeap)
 	drawArgsUAVDescription.Buffer.Flags = D3D12_BUFFER_UAV_FLAG_NONE;
 	drawArgsUAVDescription.ViewDimension = D3D12_UAV_DIMENSION_BUFFER;
 
-	DrawArgsCPUUAV =
-		CD3DX12_CPU_DESCRIPTOR_HANDLE(uavHeap->GetCPUDescriptorHandleForHeapStart(), 3, directXCommon->GetCBVSRVUAVDescriptorSize());
-	DrawArgsGPUUAV =
-		CD3DX12_GPU_DESCRIPTOR_HANDLE(uavHeap->GetGPUDescriptorHandleForHeapStart(), 3, directXCommon->GetCBVSRVUAVDescriptorSize());
+	DrawArgsCPUUAV = CD3DX12_CPU_DESCRIPTOR_HANDLE(uavHeap->GetCPUDescriptorHandleForHeapStart(), 3, directXCommon->GetCBVSRVUAVDescriptorSize());
+	DrawArgsGPUUAV = CD3DX12_GPU_DESCRIPTOR_HANDLE(uavHeap->GetGPUDescriptorHandleForHeapStart(), 3, directXCommon->GetCBVSRVUAVDescriptorSize());
 	device->CreateUnorderedAccessView(RWDrawArgs.Get(), RWDrawArgs.Get(), &drawArgsUAVDescription, DrawArgsCPUUAV);
 }
 
@@ -53,4 +47,12 @@ CD3DX12_CPU_DESCRIPTOR_HANDLE DrawArgs::GetCPUUAV()
 CD3DX12_GPU_DESCRIPTOR_HANDLE DrawArgs::GetGPUUAV()
 {
 	return DrawArgsGPUUAV;
+}
+
+void DrawArgs::Translation(ID3D12GraphicsCommandList* cmdList, D3D12_RESOURCE_STATES afterState)
+{
+	CD3DX12_RESOURCE_BARRIER resourceBarrier = 
+		CD3DX12_RESOURCE_BARRIER::Transition(RWDrawArgs.Get(), resourseState, afterState);
+	cmdList->ResourceBarrier(1, &resourceBarrier);
+	resourseState = afterState;
 }

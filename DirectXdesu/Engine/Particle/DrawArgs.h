@@ -12,11 +12,14 @@ private:
 	CD3DX12_CPU_DESCRIPTOR_HANDLE DrawArgsCPUUAV;
 	CD3DX12_GPU_DESCRIPTOR_HANDLE DrawArgsGPUUAV;
 
+	D3D12_RESOURCE_STATES resourseState;
+
 public:
 	void Create(ID3D12DescriptorHeap* uavHeap);
 	ID3D12Resource* GetDrawArgs();
 	CD3DX12_CPU_DESCRIPTOR_HANDLE GetCPUUAV();
 	CD3DX12_GPU_DESCRIPTOR_HANDLE GetGPUUAV();
+	void Translation(ID3D12GraphicsCommandList* cmdList, D3D12_RESOURCE_STATES afterState);
 
 	// We pack the UAV counter into the same buffer as the commands rather than create
 	// a separate 64K resource/heap for it. The counter must be aligned on 4K boundaries,

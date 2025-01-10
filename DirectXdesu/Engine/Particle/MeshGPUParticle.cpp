@@ -2,10 +2,7 @@
 #include "KDirectXCommon.h"
 #include "CreateBlend.h"
 
-MeshGPUParticle::MeshGPUParticle(const Timer& timer,
-	const KMyMath::Matrix4& matView,
-	const KMyMath::Matrix4& matProjection,
-	Emitter* emitter, const std::string modelname)
+MeshGPUParticle::MeshGPUParticle(const Timer& timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection, Emitter* emitter, const std::string modelname)
 {
 	Init(timer, matView, matProjection, emitter,modelname);
 }
@@ -39,7 +36,7 @@ void MeshGPUParticle::Init(const Timer& timer,
 	BuildFrameResources();
 	BuildPSOs();
 
-	// execute the initialization commands
+	// 初期化コマンドを実行する
 	ThrowIfFailed(commndList->Close());
 	ID3D12CommandList* cmdsLists[] = { commndList };
 	commndQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
@@ -48,9 +45,8 @@ void MeshGPUParticle::Init(const Timer& timer,
 
 	ThrowIfFailed(directXCommon->GetCommandAllocator()->Reset());
 
-	ThrowIfFailed(
-		directXCommon->GetCommandList()->Reset(directXCommon->GetCommandAllocator().Get(),
-			deadListPSO_->GetPipelineState()));
+	ThrowIfFailed(directXCommon->GetCommandList()->Reset(
+		directXCommon->GetCommandAllocator().Get(), deadListPSO_->GetPipelineState()));
 
 	directXCommon->GetCommandList()->SetComputeRootSignature(particleRootSignature_->GetRootSignature());
 
@@ -75,12 +71,13 @@ void MeshGPUParticle::Init(const Timer& timer,
 	commndList->SetComputeRootDescriptorTable(4, deadList_->GetGPUUAV());
 	commndList->SetComputeRootDescriptorTable(5, drawList_->GetGPUUAV());
 	commndList->SetComputeRootDescriptorTable(6, drawArgs_->GetGPUUAV());
+	commndList->SetComputeRootDescriptorTable(7, MeshSRV);
 
 	commndList->Dispatch((uint32_t)meshModel_->GetVertices().size(), 1, 1);
 
 	ThrowIfFailed(commndList->Close());
 
-	// Add the command list to the queue for execution.
+	// コマンドリストを実行キューに追加します
 	ID3D12CommandList* cmdsLists1[] = { commndList };
 	commndQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists1);
 
@@ -91,15 +88,14 @@ void MeshGPUParticle::Init(const Timer& timer,
 
 void MeshGPUParticle::Update(const Timer& timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection, Emitter* emitter)
 {
-	KDirectXCommon* directXCommon = KDirectXCommon::GetInstance();
-	ID3D12Fence* fence = directXCommon->GetFence();
+	ID3D12Fence* fence = KDirectXCommon::GetInstance()->GetFence();
 
-	// Cycle through the circular frame resource array.
+	// 円形のフレーム リソース配列を循環します
 	currentFrameResourceIndex = (currentFrameResourceIndex + 1) % gNumberFrameResources;
 	currentFrameResource = FrameResources[currentFrameResourceIndex].get();
 
-	// Has the GPU finished processing the commands of the current frame resource?
-	// If not, wait until the GPU has completed commands up to this fence point.
+	// GPU は現在のフレーム リソースのコマンドの処理を終了しましたか?
+	// そうでない場合は、GPU がこのフェンス ポイントまでのコマンドを完了するまで待ちます
 	if (currentFrameResource->Fence != 0 && fence->GetCompletedValue() < currentFrameResource->Fence)
 	{
 		HANDLE eventHandle = CreateEventEx(nullptr, (LPCWSTR)false, false, EVENT_ALL_ACCESS);
@@ -120,95 +116,59 @@ void MeshGPUParticle::Draw(const Timer& timer, const KMyMath::Matrix4& matView, 
 
 	auto currentCommandListAllocator = currentFrameResource->commandListAllocator;
 
-	commndList->SetPipelineState(emitPSO_->GetPipelineState());
-	commndList->SetComputeRootSignature(particleRootSignature_->GetRootSignature());
-
-	ID3D12DescriptorHeap* descriptorHeaps[] = { UAVHeap.Get() };
-	commndList->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);
-
-	auto objectCB = currentFrameResource->ObjectCB->Resource();
-	commndList->SetComputeRootConstantBufferView(0, objectCB->GetGPUVirtualAddress());
-
-	auto timeCB = currentFrameResource->TimeCB->Resource();
-	commndList->SetComputeRootConstantBufferView(1, timeCB->GetGPUVirtualAddress());
-
-	auto particleCB = currentFrameResource->ParticleCB->Resource();
-	commndList->SetComputeRootConstantBufferView(2, particleCB->GetGPUVirtualAddress());
-
-	commndList->SetComputeRootDescriptorTable(3, particlePool_->GetGPUUAV());
-	commndList->SetComputeRootDescriptorTable(4, deadList_->GetGPUUAV());
-	commndList->SetComputeRootDescriptorTable(5, drawList_->GetGPUUAV());
-	commndList->SetComputeRootDescriptorTable(6, drawArgs_->GetGPUUAV());
-
-	commndList->SetComputeRootDescriptorTable(7, MeshSRV);
-
 	if (!init) 
 	{
 		init = true;
+		commndList->SetPipelineState(emitPSO_->GetPipelineState());
+		commndList->SetComputeRootSignature(particleRootSignature_->GetRootSignature());
+
+		ID3D12DescriptorHeap* descriptorHeaps[] = { UAVHeap.Get() };
+		commndList->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);
+
+		auto objectCB = currentFrameResource->ObjectCB->Resource();
+		commndList->SetComputeRootConstantBufferView(0, objectCB->GetGPUVirtualAddress());
+
+		auto timeCB = currentFrameResource->TimeCB->Resource();
+		commndList->SetComputeRootConstantBufferView(1, timeCB->GetGPUVirtualAddress());
+
+		auto particleCB = currentFrameResource->ParticleCB->Resource();
+		commndList->SetComputeRootConstantBufferView(2, particleCB->GetGPUVirtualAddress());
+
+		commndList->SetComputeRootDescriptorTable(3, particlePool_->GetGPUUAV());
+		commndList->SetComputeRootDescriptorTable(4, deadList_->GetGPUUAV());
+		commndList->SetComputeRootDescriptorTable(5, drawList_->GetGPUUAV());
+		commndList->SetComputeRootDescriptorTable(6, drawArgs_->GetGPUUAV());
+		commndList->SetComputeRootDescriptorTable(7, MeshSRV);
+
 		UpdateMainPassCB(timer, matView, matProjection, emitter);
 		commndList->Dispatch((uint32_t)meshModel_->GetVertices().size(), 1, 1);
 	}
 
-	CD3DX12_RESOURCE_BARRIER resourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(drawList_->GetDrawList(),
-		D3D12_RESOURCE_STATE_UNORDERED_ACCESS, D3D12_RESOURCE_STATE_COPY_DEST);
-	commndList->ResourceBarrier(1, &resourceBarrier);
-	commndList->CopyResource(drawList_->GetDrawList(), drawList_->GetDrawListUploadBuffer());
-	resourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(drawList_->GetDrawList(),
-		D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_UNORDERED_ACCESS);
-	commndList->ResourceBarrier(1, &resourceBarrier);
+	drawList_->Translation(commndList, D3D12_RESOURCE_STATE_COPY_DEST);
+	
+	drawList_->Translation(commndList, D3D12_RESOURCE_STATE_UNORDERED_ACCESS);
 
 	// パーティクル更新シェーダー
-	commndList->SetPipelineState(updatePSO_->GetPipelineState());
-	commndList->SetComputeRootSignature(particleRootSignature_->GetRootSignature());
-	commndList->Dispatch((uint32_t)meshModel_->GetVertices().size(), 1, 1);
+	ParticleUpdate();
 
-	resourceBarrier = CD3DX12_RESOURCE_BARRIER::UAV(drawList_->GetDrawList());
+	CD3DX12_RESOURCE_BARRIER resourceBarrier = CD3DX12_RESOURCE_BARRIER::UAV(drawList_->GetDrawList());
 	commndList->ResourceBarrier(1, &resourceBarrier);
 
 	// パーティクル描画シェーダー
-	commndList->SetPipelineState(copyDrawPSO_->GetPipelineState());
-	commndList->SetComputeRootSignature(particleRootSignature_->GetRootSignature());
-	commndList->Dispatch(1, 1, 1);
+	ParticleDraw();
 
-	resourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(drawList_->GetDrawList(),
-		D3D12_RESOURCE_STATE_UNORDERED_ACCESS, D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE);
-	commndList->ResourceBarrier(1, &resourceBarrier);
+	drawList_->Translation(commndList, D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE);
 
-	resourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(particlePool_->GetParticlePool(),
-		D3D12_RESOURCE_STATE_UNORDERED_ACCESS, D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE);
-	commndList->ResourceBarrier(1, &resourceBarrier);
+	particlePool_->Translation(commndList, D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE);
 
-	commndList->SetPipelineState(graphicPSO_->GetPipelineState());
+	// 描画
+	DrawCommon();
 
-	commndList->SetGraphicsRootSignature(rootSignature_->GetRootSignature());
+	drawArgs_->Translation(commndList, D3D12_RESOURCE_STATE_UNORDERED_ACCESS);
 
-	commndList->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
+	drawList_->Translation(commndList, D3D12_RESOURCE_STATE_UNORDERED_ACCESS);
 
-	commndList->SetGraphicsRootConstantBufferView(0, objectCB->GetGPUVirtualAddress());
-	commndList->SetGraphicsRootConstantBufferView(1, timeCB->GetGPUVirtualAddress());
-	commndList->SetGraphicsRootConstantBufferView(2, particleCB->GetGPUVirtualAddress());
-
-	commndList->SetGraphicsRootDescriptorTable(3, particlePool_->GetGPUSRV());
-	commndList->SetGraphicsRootDescriptorTable(4, drawList_->GetGPUSRV());
-
-	resourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(drawArgs_->GetDrawArgs(),
-		D3D12_RESOURCE_STATE_UNORDERED_ACCESS, D3D12_RESOURCE_STATE_INDIRECT_ARGUMENT);
-	commndList->ResourceBarrier(1, &resourceBarrier);
-
-	commndList->ExecuteIndirect(commandSignature_->GetCommandSignature(), 1, RWDrawArgs.Get(), 0, nullptr, 0);
-	//commndList->ExecuteIndirect(commandSignature_->GetCommandSignature(), 1, drawArgs_->GetDrawArgs(), 0, nullptr, 0);
-
-	resourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(drawArgs_->GetDrawArgs(),
-		D3D12_RESOURCE_STATE_INDIRECT_ARGUMENT, D3D12_RESOURCE_STATE_UNORDERED_ACCESS);
-	commndList->ResourceBarrier(1, &resourceBarrier);
-
-	resourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(drawList_->GetDrawList(),
-		D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE, D3D12_RESOURCE_STATE_UNORDERED_ACCESS);
-	commndList->ResourceBarrier(1, &resourceBarrier);
-
-	resourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(particlePool_->GetParticlePool(),
-		D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE, D3D12_RESOURCE_STATE_UNORDERED_ACCESS);
-	commndList->ResourceBarrier(1, &resourceBarrier);
+	particlePool_->Translation(commndList, D3D12_RESOURCE_STATE_UNORDERED_ACCESS);
 }
 
 void MeshGPUParticle::BuildUAV()
@@ -220,8 +180,7 @@ void MeshGPUParticle::BuildUAV()
 	uavHeapDesc.NumDescriptors = 2048;
 	uavHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
 	uavHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-	ThrowIfFailed(device->CreateDescriptorHeap(&uavHeapDesc,
-		IID_PPV_ARGS(&UAVHeap)));
+	ThrowIfFailed(device->CreateDescriptorHeap(&uavHeapDesc, IID_PPV_ARGS(&UAVHeap)));
 
 	// Particle Pool
 	{
@@ -241,39 +200,6 @@ void MeshGPUParticle::BuildUAV()
 	// Draw Args
 	{
 		drawArgs_->Create(UAVHeap.Get());
-
-		UINT64 drawArgsByteSize = (sizeof(unsigned int) * 9);
-		UINT64 countBufferOffset = AlignForUavCounter((UINT)drawArgsByteSize);
-
-		CD3DX12_HEAP_PROPERTIES heap = 
-			CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
-		CD3DX12_RESOURCE_DESC resouceDesc =
-			CD3DX12_RESOURCE_DESC::Buffer(countBufferOffset + sizeof(UINT),
-				D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS);
-		ThrowIfFailed(device->CreateCommittedResource(
-			&heap,
-			D3D12_HEAP_FLAG_NONE,
-			&resouceDesc,
-			D3D12_RESOURCE_STATE_COMMON,
-			nullptr,
-			IID_PPV_ARGS(&RWDrawArgs)
-		));
-		RWDrawArgs.Get()->SetName(L"DrawArgs");
-
-		D3D12_UNORDERED_ACCESS_VIEW_DESC drawArgsUAVDescription = {};
-		drawArgsUAVDescription.Format = DXGI_FORMAT_UNKNOWN;
-		drawArgsUAVDescription.Buffer.FirstElement = 0;
-		drawArgsUAVDescription.Buffer.NumElements = 9;
-		drawArgsUAVDescription.Buffer.StructureByteStride = sizeof(unsigned int);
-		drawArgsUAVDescription.Buffer.CounterOffsetInBytes = countBufferOffset;
-		drawArgsUAVDescription.Buffer.Flags = D3D12_BUFFER_UAV_FLAG_NONE;
-		drawArgsUAVDescription.ViewDimension = D3D12_UAV_DIMENSION_BUFFER;
-
-		DrawArgsCPUUAV =
-			CD3DX12_CPU_DESCRIPTOR_HANDLE(UAVHeap->GetCPUDescriptorHandleForHeapStart(), 3, directXCommon->GetCBVSRVUAVDescriptorSize());
-		DrawArgsGPUUAV =
-			CD3DX12_GPU_DESCRIPTOR_HANDLE(UAVHeap->GetGPUDescriptorHandleForHeapStart(), 3, directXCommon->GetCBVSRVUAVDescriptorSize());
-		device->CreateUnorderedAccessView(RWDrawArgs.Get(), RWDrawArgs.Get(), &drawArgsUAVDescription, DrawArgsCPUUAV);
 	}
 
 	// Mesh
@@ -286,7 +212,7 @@ void MeshGPUParticle::BuildRootSignature()
 {
 	ID3D12Device* device = KDirectXCommon::GetInstance()->GetDevice();
 
-	// default root signature
+	// デフォルトのルート署名
 	{
 		rootSignature_->Add(RootType::CBV, 0);// b0
 		rootSignature_->Add(RootType::CBV, 1);// b1
@@ -295,19 +221,16 @@ void MeshGPUParticle::BuildRootSignature()
 		rootSignature_->Add(RangeType::SRV, 1);
 
 		rootSignature_->AddStaticSampler(0, 0, D3D12_FILTER_MIN_MAG_MIP_POINT);
-		rootSignature_->AddStaticSampler(1, 0, D3D12_FILTER_MIN_MAG_MIP_POINT,
-			AddressMode::Clamp, AddressMode::Clamp, AddressMode::Clamp);
+		rootSignature_->AddStaticSampler(1, 0, D3D12_FILTER_MIN_MAG_MIP_POINT, AddressMode::Clamp, AddressMode::Clamp, AddressMode::Clamp);
 		rootSignature_->AddStaticSampler(2);
-		rootSignature_->AddStaticSampler(3, 0, D3D12_FILTER_MIN_MAG_MIP_LINEAR,
-			AddressMode::Clamp, AddressMode::Clamp, AddressMode::Clamp);
+		rootSignature_->AddStaticSampler(3, 0, D3D12_FILTER_MIN_MAG_MIP_LINEAR, AddressMode::Clamp, AddressMode::Clamp, AddressMode::Clamp);
 		rootSignature_->AddStaticSampler(4, 0, D3D12_FILTER_ANISOTROPIC);
-		rootSignature_->AddStaticSampler(5, 0, D3D12_FILTER_ANISOTROPIC,
-			AddressMode::Clamp, AddressMode::Clamp, AddressMode::Clamp);
+		rootSignature_->AddStaticSampler(5, 0, D3D12_FILTER_ANISOTROPIC, AddressMode::Clamp, AddressMode::Clamp, AddressMode::Clamp);
 
 		rootSignature_->Create(device);
 	}
 
-	// particle root signature
+	// 粒子ルート署名
 	{
 		particleRootSignature_->Add(RootType::CBV, 0);
 		particleRootSignature_->Add(RootType::CBV, 1);
@@ -323,7 +246,7 @@ void MeshGPUParticle::BuildRootSignature()
 		particleRootSignature_->Create(device);
 	}
 
-	// particle commnd signature
+	// パーティクルコマンドシグネチャ
 	commandSignature_->Create();
 }
 
@@ -432,4 +355,87 @@ void MeshGPUParticle::UpdateMainPassCB(const Timer& timer, const KMyMath::Matrix
 
 	auto currentParticleCB = currentFrameResource->ParticleCB.get();
 	currentParticleCB->CopyData(0, MainParticleCB);
+}
+
+void MeshGPUParticle::ParticleUpdate()
+{
+	ID3D12GraphicsCommandList* commndList = KDirectXCommon::GetInstance()->GetCommandList();
+
+	commndList->SetPipelineState(updatePSO_->GetPipelineState());
+	commndList->SetComputeRootSignature(particleRootSignature_->GetRootSignature());
+
+	ID3D12DescriptorHeap* descriptorHeaps[] = { UAVHeap.Get() };
+	commndList->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);
+
+	auto objectCB = currentFrameResource->ObjectCB->Resource();
+	commndList->SetComputeRootConstantBufferView(0, objectCB->GetGPUVirtualAddress());
+
+	auto timeCB = currentFrameResource->TimeCB->Resource();
+	commndList->SetComputeRootConstantBufferView(1, timeCB->GetGPUVirtualAddress());
+
+	auto particleCB = currentFrameResource->ParticleCB->Resource();
+	commndList->SetComputeRootConstantBufferView(2, particleCB->GetGPUVirtualAddress());
+
+	commndList->SetComputeRootDescriptorTable(3, particlePool_->GetGPUUAV());
+	commndList->SetComputeRootDescriptorTable(4, deadList_->GetGPUUAV());
+	commndList->SetComputeRootDescriptorTable(5, drawList_->GetGPUUAV());
+	commndList->SetComputeRootDescriptorTable(6, drawArgs_->GetGPUUAV());
+	commndList->SetComputeRootDescriptorTable(7, MeshSRV);
+
+	commndList->Dispatch((uint32_t)meshModel_->GetVertices().size(), 1, 1);
+}
+
+void MeshGPUParticle::ParticleDraw()
+{
+	ID3D12GraphicsCommandList* commndList = KDirectXCommon::GetInstance()->GetCommandList();
+
+	commndList->SetPipelineState(copyDrawPSO_->GetPipelineState());
+	commndList->SetComputeRootSignature(particleRootSignature_->GetRootSignature());
+
+	ID3D12DescriptorHeap* descriptorHeaps[] = { UAVHeap.Get() };
+	commndList->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);
+
+	auto objectCB = currentFrameResource->ObjectCB->Resource();
+	commndList->SetComputeRootConstantBufferView(0, objectCB->GetGPUVirtualAddress());
+
+	auto timeCB = currentFrameResource->TimeCB->Resource();
+	commndList->SetComputeRootConstantBufferView(1, timeCB->GetGPUVirtualAddress());
+
+	auto particleCB = currentFrameResource->ParticleCB->Resource();
+	commndList->SetComputeRootConstantBufferView(2, particleCB->GetGPUVirtualAddress());
+
+	commndList->SetComputeRootDescriptorTable(3, particlePool_->GetGPUUAV());
+	commndList->SetComputeRootDescriptorTable(4, deadList_->GetGPUUAV());
+	commndList->SetComputeRootDescriptorTable(5, drawList_->GetGPUUAV());
+	commndList->SetComputeRootDescriptorTable(6, drawArgs_->GetGPUUAV());
+	commndList->SetComputeRootDescriptorTable(7, MeshSRV);
+
+	commndList->Dispatch(1, 1, 1);
+}
+
+void MeshGPUParticle::DrawCommon()
+{
+	ID3D12GraphicsCommandList* commndList = KDirectXCommon::GetInstance()->GetCommandList();
+
+	commndList->SetPipelineState(graphicPSO_->GetPipelineState());
+	commndList->SetGraphicsRootSignature(rootSignature_->GetRootSignature());
+
+	ID3D12DescriptorHeap* descriptorHeaps[] = { UAVHeap.Get() };
+	commndList->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);
+
+	auto objectCB = currentFrameResource->ObjectCB->Resource();
+	auto timeCB = currentFrameResource->TimeCB->Resource();
+	auto particleCB = currentFrameResource->ParticleCB->Resource();
+
+	commndList->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
+
+	commndList->SetGraphicsRootConstantBufferView(0, objectCB->GetGPUVirtualAddress());
+	commndList->SetGraphicsRootConstantBufferView(1, timeCB->GetGPUVirtualAddress());
+	commndList->SetGraphicsRootConstantBufferView(2, particleCB->GetGPUVirtualAddress());
+	commndList->SetGraphicsRootDescriptorTable(3, particlePool_->GetGPUSRV());
+	commndList->SetGraphicsRootDescriptorTable(4, drawList_->GetGPUSRV());
+
+	drawArgs_->Translation(commndList, D3D12_RESOURCE_STATE_INDIRECT_ARGUMENT);
+
+	commndList->ExecuteIndirect(commandSignature_->GetCommandSignature(), 1, drawArgs_->GetDrawArgs(), 0, nullptr, 0);
 }

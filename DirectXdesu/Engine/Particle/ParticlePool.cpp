@@ -20,9 +20,8 @@ void ParticlePool::Create(ID3D12DescriptorHeap* uavHeap, uint32_t particleMax)
 		D3D12_RESOURCE_STATE_COMMON,
 		nullptr,
 		IID_PPV_ARGS(&RWParticlePool));
-	directXCommon->Transition(RWParticlePool.Get(),
-		D3D12_RESOURCE_STATE_COMMON,
-		D3D12_RESOURCE_STATE_UNORDERED_ACCESS);
+	resourseState = D3D12_RESOURCE_STATE_COMMON;
+	Translation(directXCommon->GetCommandList(), D3D12_RESOURCE_STATE_UNORDERED_ACCESS);
 	RWParticlePool->SetName(L"ParticlePool");
 
 	D3D12_UNORDERED_ACCESS_VIEW_DESC particlePoolUAVDescription = {};
@@ -77,4 +76,12 @@ CD3DX12_CPU_DESCRIPTOR_HANDLE& ParticlePool::GetCPUUAV()
 CD3DX12_GPU_DESCRIPTOR_HANDLE& ParticlePool::GetGPUUAV()
 {
 	return ParticlePoolGPUUAV;
+}
+
+void ParticlePool::Translation(ID3D12GraphicsCommandList* cmdList, D3D12_RESOURCE_STATES afterState)
+{
+	CD3DX12_RESOURCE_BARRIER resourceBarrier =
+		CD3DX12_RESOURCE_BARRIER::Transition(RWParticlePool.Get(), resourseState, afterState);
+	cmdList->ResourceBarrier(1, &resourceBarrier);
+	resourseState = afterState;
 }

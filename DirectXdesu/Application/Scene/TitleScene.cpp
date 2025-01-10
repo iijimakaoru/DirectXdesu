@@ -66,10 +66,20 @@ void TitleScene::Init() {
 		DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 0.0f)
 	);
 
+	meshEmitter_ = new MeshEmitter(
+		100.0f,
+		300.0f,
+		DirectX::XMFLOAT3(0, 0, 0),
+		DirectX::XMFLOAT3(1.0f, 1.0f, 0.0f),
+		DirectX::XMFLOAT3(0.0f, 5.0f, 0.0f),
+		DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 0.0f),
+		DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 0.0f)
+	);
+
 	meshGpuParticle_ = new MeshGPUParticle(timer_,
 		camera->GetViewPro()->GetMatView(),
 		camera->GetViewPro()->GetMatPro(),
-		emitter_,"test2");
+		meshEmitter_,"test2");
 
 	particleEditor_ = new ParticleEditor();
 
@@ -98,7 +108,7 @@ void TitleScene::Update() {
 	meshGpuParticle_->Update(timer_,
 		camera->GetViewPro()->GetMatView(),
 		camera->GetViewPro()->GetMatPro(),
-		emitter_);
+		meshEmitter_);
 
 	camera->Update();
 }
@@ -108,7 +118,10 @@ void TitleScene::ObjDraw() {
 
 	skyDome->Draw();
 
-	meshGpuParticle_->Draw(timer_, camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro(), emitter_);
+	meshGpuParticle_->Draw(timer_,
+		camera->GetViewPro()->GetMatView(),
+		camera->GetViewPro()->GetMatPro(),
+		meshEmitter_);
 }
 
 void TitleScene::SpriteDraw() {
@@ -117,6 +130,7 @@ void TitleScene::SpriteDraw() {
 
 void TitleScene::Final() {
 	delete emitter_;
+	delete meshEmitter_;
 	delete gpuParticle_;
 	delete meshGpuParticle_;
 	delete particleEditor_;

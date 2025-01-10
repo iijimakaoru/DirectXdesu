@@ -20,13 +20,13 @@ void main(uint id : SV_DispatchThreadID)
 
     uint emitIndex = CDeadList.Consume();
 
-    float3 gridPosition;
-    uint gridIndex = emitIndex;
-    gridPosition.x = gridIndex % (gridSize + 1);
-    gridIndex /= (gridSize + 1);
-    gridPosition.y = gridIndex % (gridSize + 1);
-    gridIndex /= (gridSize + 1);
-    gridPosition.z = gridIndex;
+    //float3 gridPosition;
+    //uint gridIndex = emitIndex;
+    //gridPosition.x = gridIndex % (gridSize + 1);
+    //gridIndex /= (gridSize + 1);
+    //gridPosition.y = gridIndex % (gridSize + 1);
+    //gridIndex /= (gridSize + 1);
+    //gridPosition.z = gridIndex;
 
 	// update it in ParticlePool
     Particle emitParticle = ParticlePool.Load(emitIndex);

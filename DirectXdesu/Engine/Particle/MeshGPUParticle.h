@@ -20,30 +20,32 @@
 
 #include "KModel.h"
 
+#include "MeshEmitter.h"
+
 class MeshGPUParticle
 {
 public:
 	MeshGPUParticle(const Timer& timer,
 		const KMyMath::Matrix4& matView,
 		const KMyMath::Matrix4& matProjection,
-		Emitter* emitter,
+		MeshEmitter* emitter,
 		const std::string modelname = "test");
 
 	void Init(const Timer& timer,
 		const KMyMath::Matrix4& matView,
 		const KMyMath::Matrix4& matProjection,
-		Emitter* emitter,
+		MeshEmitter* emitter,
 		const std::string modelname);
 
 	void Update(const Timer& timer,
 		const KMyMath::Matrix4& matView,
 		const KMyMath::Matrix4& matProjection,
-		Emitter* emitter);
+		MeshEmitter* emitter);
 
 	void Draw(const Timer& timer,
 		const KMyMath::Matrix4& matView,
 		const KMyMath::Matrix4& matProjection,
-		Emitter* emitter);
+		MeshEmitter* emitter);
 
 private:
 	void BuildUAV();
@@ -53,7 +55,7 @@ private:
 	void UpdateMainPassCB(const Timer& timer,
 		const KMyMath::Matrix4& matView,
 		const KMyMath::Matrix4& matProjection,
-		Emitter* emitter);
+		MeshEmitter* emitter);
 	void ParticleUpdate();
 	void ParticleDraw();
 	void DrawCommon();

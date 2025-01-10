@@ -82,7 +82,7 @@ DirectX::XMFLOAT4 Emitter::GetEndColor()
 
 void Emitter::SetEmitCount(int value)
 {
-	emitCount += value;
+	emitCount = value;
 }
 
 void Emitter::SetEmitTimeCounter(float value)

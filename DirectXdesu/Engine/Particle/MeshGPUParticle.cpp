@@ -2,7 +2,11 @@
 #include "KDirectXCommon.h"
 #include "CreateBlend.h"
 
-MeshGPUParticle::MeshGPUParticle(const Timer& timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection, Emitter* emitter, const std::string modelname)
+MeshGPUParticle::MeshGPUParticle(const Timer& timer, 
+	const KMyMath::Matrix4& matView,
+	const KMyMath::Matrix4& matProjection,
+	MeshEmitter* emitter,
+	const std::string modelname)
 {
 	Init(timer, matView, matProjection, emitter,modelname);
 }
@@ -10,7 +14,7 @@ MeshGPUParticle::MeshGPUParticle(const Timer& timer, const KMyMath::Matrix4& mat
 void MeshGPUParticle::Init(const Timer& timer,
 	const KMyMath::Matrix4& matView,
 	const KMyMath::Matrix4& matProjection,
-	Emitter* emitter,
+	MeshEmitter* emitter,
 	const std::string modelname)
 {
 	KDirectXCommon* directXCommon = KDirectXCommon::GetInstance();
@@ -86,7 +90,10 @@ void MeshGPUParticle::Init(const Timer& timer,
 	directXCommon->BeginCommnd();
 }
 
-void MeshGPUParticle::Update(const Timer& timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection, Emitter* emitter)
+void MeshGPUParticle::Update(const Timer& timer,
+	const KMyMath::Matrix4& matView,
+	const KMyMath::Matrix4& matProjection,
+	MeshEmitter* emitter)
 {
 	ID3D12Fence* fence = KDirectXCommon::GetInstance()->GetFence();
 
@@ -104,12 +111,13 @@ void MeshGPUParticle::Update(const Timer& timer, const KMyMath::Matrix4& matView
 		CloseHandle(eventHandle);
 	}
 
-	emitter->Update(timer.GetTotalTime());
-
 	UpdateMainPassCB(timer, matView, matProjection, emitter);
 }
 
-void MeshGPUParticle::Draw(const Timer& timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection, Emitter* emitter)
+void MeshGPUParticle::Draw(const Timer& timer,
+	const KMyMath::Matrix4& matView,
+	const KMyMath::Matrix4& matProjection,
+	MeshEmitter* emitter)
 {
 	KDirectXCommon* directXCommon = KDirectXCommon::GetInstance();
 	ID3D12GraphicsCommandList* commndList = directXCommon->GetCommandList();
@@ -324,9 +332,14 @@ void MeshGPUParticle::BuildFrameResources()
 	}
 }
 
-void MeshGPUParticle::UpdateMainPassCB(const Timer& timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection, Emitter* emitter)
+void MeshGPUParticle::UpdateMainPassCB(const Timer& timer,
+	const KMyMath::Matrix4& matView,
+	const KMyMath::Matrix4& matProjection,
+	MeshEmitter* emitter)
 {
 	DirectX::XMMATRIX world = DirectX::XMMatrixIdentity();
+	DirectX::XMMATRIX matScale, matRotation, matTransform, matWorld;
+
 	DirectX::XMMATRIX view = MyMathConvert::ChangeMatrix4toXMMATRIX(matView);
 	DirectX::XMMATRIX projection = MyMathConvert::ChangeMatrix4toXMMATRIX(matProjection);
 

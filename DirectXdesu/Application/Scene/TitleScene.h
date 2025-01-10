@@ -8,7 +8,7 @@
 #include "TitleCamera.h"
 #include "AudioManager.h"
 #include "KObject3d.h"
-#include "Emitter.h"
+
 #include "d3dUtil.h"
 #include "FrameResource.h"
 #include "Timer.h"
@@ -17,6 +17,9 @@
 #include "MeshGPUParticle.h"
 
 #include "ParticleEditor.h"
+
+#include "Emitter.h"
+#include "MeshEmitter.h"
 
 /**
  * @file TitleScene.h
@@ -91,6 +94,8 @@ private:
 	Timer timer_;
 
 	Emitter* emitter_;
+	MeshEmitter* meshEmitter_;
+
 	GPUParticle* gpuParticle_;
 	MeshGPUParticle* meshGpuParticle_;
 

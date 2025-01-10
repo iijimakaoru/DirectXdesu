@@ -107,6 +107,7 @@
     <ClCompile Include="Application\MobEnemy\AppearEnemy.cpp" />
     <ClCompile Include="Application\Bullet\Bullet.cpp" />
     <ClCompile Include="Application\Camera\RailCamera.cpp" />
+    <ClCompile Include="Application\MusicDesc.cpp" />
     <ClCompile Include="Application\Stage\Ground.cpp" />
     <ClCompile Include="Application\MobEnemy\MobEnemy.cpp" />
     <ClCompile Include="Application\Player\Player.cpp" />
@@ -206,7 +207,7 @@
     <ClCompile Include="Engine\2D\PostEffect\PostEffectManager.cpp" />
     <ClCompile Include="Engine\2D\PostEffect\MultiPostEffect.cpp" />
     <ClCompile Include="Engine\Math\MyMath\MathHelper.cpp" />
-    <ClCompile Include="Engine\Base\DirectXCommon\FrameResource.cpp" />
+    <ClCompile Include="Engine\Particle\FrameResource.cpp" />
     <ClCompile Include="Engine\Base\DirectXCommon\Timer.cpp" />
     <ClCompile Include="Engine\Particle\GPUParticle.cpp" />
     <ClCompile Include="Engine\Particle\ParticleEditor.cpp" />
@@ -222,6 +223,7 @@
     <ClInclude Include="Application\MobEnemy\AppearEnemy.h" />
     <ClInclude Include="Application\Bullet\Bullet.h" />
     <ClInclude Include="Application\Camera\RailCamera.h" />
+    <ClInclude Include="Application\MusicDesc.h" />
     <ClInclude Include="Application\Stage\Ground.h" />
     <ClInclude Include="Application\MobEnemy\MobEnemy.h" />
     <ClInclude Include="Application\Player\Player.h" />
@@ -321,7 +323,7 @@
     <ClInclude Include="Engine\2D\PostEffect\PostEffectManager.h" />
     <ClInclude Include="Engine\2D\PostEffect\MultiPostEffect.h" />
     <ClInclude Include="Engine\Math\MyMath\MathHelper.h" />
-    <ClInclude Include="Engine\Base\DirectXCommon\FrameResource.h" />
+    <ClInclude Include="Engine\Particle\FrameResource.h" />
     <ClInclude Include="Engine\Base\DirectXCommon\UploadBuffer.h" />
     <ClInclude Include="Engine\Base\DirectXCommon\Timer.h" />
     <ClInclude Include="Engine\Particle\GPUParticle.h" />

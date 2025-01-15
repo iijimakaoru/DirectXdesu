@@ -18,7 +18,7 @@ void Reticle3D::Update(KMyMath::Matrix4& m_, KMyMath::Vector3 pPos_)
 	offset = KMyMath::Vec3Mat4Mul(offset, m_);
 
 	// ベクトルの長さを整える
-	offset = MyMathUtility::MakeNormalize(offset) * kDistancePlayerTo3DReticle;
+	offset = MyMathUtility::MakeVector3Normalize(offset) * kDistancePlayerTo3DReticle;
 
 	// 3Dレティクルの座標設定
 	object->GetTransform().SetPos(pPos_ + offset);

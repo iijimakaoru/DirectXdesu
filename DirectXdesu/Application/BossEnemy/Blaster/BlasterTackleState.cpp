@@ -62,7 +62,7 @@ void BlasterTackleState::Tackle() {
 	// タックルの速度
 	const float tackleSpeed = 10.0f;
 
-	blaster->AddSetPos(MyMathUtility::MakeNormalize(tackleVec) * tackleSpeed);
+	blaster->AddSetPos(MyMathUtility::MakeVector3Normalize(tackleVec) * tackleSpeed);
 }
 
 void BlasterTackleState::CubeCloseAct() {

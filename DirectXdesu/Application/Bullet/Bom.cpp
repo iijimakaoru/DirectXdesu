@@ -54,7 +54,7 @@ void Bom::Set(
     const float bulletSpeed_) {
 	object3d->GetTransform().SetPos(pos_);
 	this->vec = vec_;
-	vec = MyMathUtility::MakeNormalize(vec) * bulletSpeed_;
+	vec = MyMathUtility::MakeVector3Normalize(vec) * bulletSpeed_;
 	object3d->GetTransform().SetRot(rot_);
 
 	lifeTimer = 40;

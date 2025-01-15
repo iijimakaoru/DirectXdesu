@@ -34,6 +34,12 @@
 #include "Movie.h"
 #include "CollisionManager.h"
 
+
+#include "TitleCamera.h"
+#include "GameCamera.h"
+
+#include "MusicDesc.h"
+
 /**
  * @file GameScene.h
  * @brief ゲームシーン
@@ -59,108 +65,48 @@ public:
 	void Final() override;
 
 private:
-	// 衝突判定
-	void CheckAllCollisions();
+	enum OBJ
+	{
+		stage,
+		line,
+		skydome,
+		max,
+	};
 
-	// ボスバトル開始
-	void BossBattleStart();
+	enum
+	{
+		PERFECT,
+		GREAT,
+		MISS,
+	};
 
-	// 自機死亡
-	void PlayerDead();
+private:
+	//マウス角度算出
+	void RotAndLenCalculationMouse();
 
-	void GameOverMovie();
+	//スティック角度、長さ算出
+	void RotAndLenCalculationStick(KMyMath::Vector2 vec);
 
-	// ゲームオーバーシーンへ
-	void GoGameOverScene();
+	//当たり判定
+	void Collision();
 
-	// ボス撃破
-	void BossBreakMovie();
-
-	// ゲームプレイ中
-	void GamePlay();
-
-	// 全シーン共通
-	void AllScene();
-
-	void PoseAction();
+	//csv読み込み
+	void LoadCSV(const std::string& name);
 
 private:
 	// インプット
 	KInput* input = nullptr;
 
 	// カメラ
-	std::unique_ptr<RailCamera> camera_ = nullptr;
+	std::unique_ptr<GameCamera> camera = nullptr;
 
-	// プレイヤー
-	std::unique_ptr<Player> player_ = nullptr;
+	// オブジェクト
+	std::array<std::unique_ptr<KObject3d>, OBJ::max> obj;
+	std::vector<std::unique_ptr<KObject3d>>objNote;
 
-	// 敵の弾モデル
-	std::unique_ptr<KModel> enemysBulletModel_ = nullptr;
-
-	// 簡易地面
-	std::unique_ptr<Ground> ground_ = nullptr;
-
-	// MS01_Blaster
-	std::unique_ptr<Blaster> blaster_ = nullptr;
-
-	// 登場警告
-	std::unique_ptr<Warning> bossWarning_ = nullptr;
-	bool isBossBattle_ = false;
-
-	// バレットマネージャー
-	BulletManager* bulletManager_ = nullptr;
-
-	// スカイボックス
-	std::unique_ptr<SkyBox> skyBox_ = nullptr;
-
-	// パーティクル
-	ParticleManager* particleManager = nullptr;
-	ObjParticleManager* objParticleManager = nullptr;
-
-	// クリアムービーへの移行タイマー
-	float goClearMovieTime = 60.0f;
-	float goClearMovieTimer = 0;
-
-	// ゲームオーバー
-	bool isGoOverScene = false;
-	float goOverSceneTime = 60.0f;
-	float goOverSceneTimer = 0;
-
-	// ビルマネージャー
-	std::unique_ptr<BillManager> billManager;
-
-	// 死亡カメラ呼び出しフラグ
-	bool isCallDeadCamera = false;
-
-	// 警告演出フラグ
-	bool isWarnning = false;
-
-	// エネミーマネージャー
-	std::unique_ptr<EnemyManager> enemyManager = nullptr;
-
-	// ボスバトル開始座標
-	float bossBattleStartPos = 1000;
-
-#pragma region ポーズ
-	bool isPose = false;
-
-	bool isOperation = true;
-	bool isBackTitle = false;
-
-	std::unique_ptr<Sprite> poseBack_;
-
-	std::unique_ptr<Sprite> selectBar_;
-	KMyMath::Vector2 selectBarPos_;
-
-	std::unique_ptr<Sprite> poseTexS_;
-	KMyMath::Vector2 poseTexPos_;
-
-	std::unique_ptr<Sprite> backTitleS_;
-	KMyMath::Vector2 backTitlePos_;
-
-	std::unique_ptr<Sprite> operationS_;
-	KMyMath::Vector2 operationPos_;
-#pragma endregion
+	// モデル
+	std::array<KModel*, OBJ::max> objModel;
+	KModel* noteModel;
 
 	// オーディオ
 	AudioManager* audioManager_;
@@ -170,15 +116,28 @@ private:
 	KMyMath::Vector3 lightRGB_ = {1, 1, 1};
 	KMyMath::Vector3 lightDir_ = {0, -1, 0};
 
-	// プレイシーン
-	Scene scene_ = Scene::Movies;
-
-	// ムービー
-	std::unique_ptr<BaseMovie> movie_ = nullptr;
-
-	// ゲームマネージャー
-	GameManager* gameManager_ = nullptr;
-
 	// 当たり判定マネージャー
 	CollisionManager* collisionManager_ = nullptr;
+
+private:
+	//ノーツ
+	std::unique_ptr<MusicDesc>music;
+	std::vector<Note>notes;
+
+	KMyMath::Vector2 start, end;
+	float angle;
+	float length;
+	float lenRimit;
+	float speed = 3.0f;
+	float posZ = 0.1f;
+	float playTime;
+	float notePosZ;
+	float sec = 0.1f;
+	float minusShift = 10;
+	float perfect = 2;
+	float fovAngle;
+	int32_t blankSpace = 0;
+	const int32_t constblankSpace = 240;
+	int score[3];
+	int combo;
 };

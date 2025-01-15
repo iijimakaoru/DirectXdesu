@@ -338,7 +338,6 @@ void MeshGPUParticle::UpdateMainPassCB(const Timer& timer,
 	MeshEmitter* emitter)
 {
 	DirectX::XMMATRIX world = DirectX::XMMatrixIdentity();
-	DirectX::XMMATRIX matScale, matRotation, matTransform, matWorld;
 
 	DirectX::XMMATRIX view = MyMathConvert::ChangeMatrix4toXMMATRIX(matView);
 	DirectX::XMMATRIX projection = MyMathConvert::ChangeMatrix4toXMMATRIX(matProjection);

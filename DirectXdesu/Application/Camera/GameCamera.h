@@ -14,10 +14,13 @@ class GameCamera : public Camera
 public:
 	GameCamera() 
 	{
-		Init();
+		
 	};
 
+	// 初期化
+	void Init();
+
 	// 更新
-	void Update()override;
+	void Update();
 };
 

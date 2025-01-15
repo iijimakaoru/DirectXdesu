@@ -11,7 +11,7 @@ void Bullet::Set(
     const float bulletSpeed_, const float bulletPower_) {
 	object3d->GetTransform().SetPos(pos_);
 	this->vec = vec_;
-	vec = MyMathUtility::MakeNormalize(vec) * bulletSpeed_;
+	vec = MyMathUtility::MakeVector3Normalize(vec) * bulletSpeed_;
 	object3d->GetTransform().SetRot(rot_);
 
 	lifeTimer = 120;

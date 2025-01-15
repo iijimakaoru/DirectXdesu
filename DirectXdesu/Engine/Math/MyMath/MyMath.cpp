@@ -2,6 +2,7 @@
 #include <cmath>
 #include <cassert>
 #include <random>
+#define PI (3.14f)
 
 namespace MyMathUtility
 {
@@ -27,13 +28,26 @@ namespace MyMathUtility
 	    return vec3;
     }
 
-	KMyMath::Vector3 MakeNormalize(KMyMath::Vector3 v)
+	KMyMath::Vector3 MakeVector3Normalize(KMyMath::Vector3 v)
 	{
 		float len = Vector3Length(v);
 		if (len != 0)
 		{
 			return v /= len;
 		}
+		return v;
+	}
+
+	KMyMath::Vector2 MakeVector2Normalize(KMyMath::Vector2 v)
+	{
+		float length = std::sqrt(v.x * v.x + v.y * v.y);
+		if (length != 0) {
+			v.x /= length;
+			v.y /= length;
+
+			return v;
+		}
+
 		return v;
 	}
 
@@ -605,5 +619,17 @@ namespace MyMathConvert
 		result.z = vector3.z;
 
 		return result;
+	}
+
+	float RadianTransform(float degree)
+	{
+		float radian = degree * (PI / 180.0f);
+		return radian;
+	}
+
+	float DegreeTransform(float radian)
+	{
+		float degree = radian * (180.0f / PI);
+		return degree;
 	}
 }

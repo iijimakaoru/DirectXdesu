@@ -2,7 +2,6 @@
 
 MeshEmitter::MeshEmitter(float emissionRate, 
 	float lifeTime,
-	DirectX::XMFLOAT3 position,
 	DirectX::XMFLOAT3 velocity,
 	DirectX::XMFLOAT3 acceleration,
 	DirectX::XMFLOAT4 startColor,

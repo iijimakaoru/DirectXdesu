@@ -52,7 +52,14 @@ namespace MyMathUtility
 	/// </summary>
 	/// <param name="v"></param>
 	/// <returns></returns>
-	KMyMath::Vector3 MakeNormalize(KMyMath::Vector3 v);
+	KMyMath::Vector3 MakeVector3Normalize(KMyMath::Vector3 v);
+
+	/// <summary>
+	/// Vector2正規化
+	/// </summary>
+	/// <param name="v"></param>
+	/// <returns></returns>
+	KMyMath::Vector2 MakeVector2Normalize(KMyMath::Vector2 v);
 
 	// 単位行列
 	KMyMath::Matrix4 MakeIdentity();
@@ -268,4 +275,16 @@ namespace MyMathConvert
 	/// <param name="vector3"></param>
 	/// <returns></returns>
 	DirectX::XMFLOAT3 ChangeVector3toXMfloat3(KMyMath::Vector3 vector3);
+
+	/// <summary>
+	/// ラジアン変換
+	/// </summary>
+	/// <param name="degree">度数</param>
+	float RadianTransform(float degree);
+
+	/// <summary>
+	/// 度数変換
+	/// </summary>
+	/// <param name="degree">ラジアン</param>
+	float DegreeTransform(float radian);
 }

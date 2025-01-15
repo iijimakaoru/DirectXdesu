@@ -325,7 +325,7 @@ void Player::Attack() {
 		    MyMathUtility::TransforNormal(bulletVec, object3d->GetTransform().GetMatWorld());
 
 		// 正規化
-		bulletVec = MyMathUtility::MakeNormalize(bulletVec);
+		bulletVec = MyMathUtility::MakeVector3Normalize(bulletVec);
 
 		// 弾発射
 		BulletManager::GetInstance()->PlayerBulletShot(
@@ -358,7 +358,7 @@ void Player::Attack() {
 		    MyMathUtility::TransforNormal(bulletVec, object3d->GetTransform().GetMatWorld());
 
 		// 正規化
-		bulletVec = MyMathUtility::MakeNormalize(bulletVec);
+		bulletVec = MyMathUtility::MakeVector3Normalize(bulletVec);
 
 		// 弾発射
 		BulletManager::GetInstance()->BomShot(

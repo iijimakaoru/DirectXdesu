@@ -5,7 +5,7 @@
 MeshGPUParticle::MeshGPUParticle(const Timer& timer, 
 	const KMyMath::Matrix4& matView,
 	const KMyMath::Matrix4& matProjection,
-	MeshEmitter* emitter,
+	Emitter* emitter,
 	const std::string modelname)
 {
 	Init(timer, matView, matProjection, emitter,modelname);
@@ -14,7 +14,7 @@ MeshGPUParticle::MeshGPUParticle(const Timer& timer,
 void MeshGPUParticle::Init(const Timer& timer,
 	const KMyMath::Matrix4& matView,
 	const KMyMath::Matrix4& matProjection,
-	MeshEmitter* emitter,
+	Emitter* emitter,
 	const std::string modelname)
 {
 	KDirectXCommon* directXCommon = KDirectXCommon::GetInstance();
@@ -93,7 +93,7 @@ void MeshGPUParticle::Init(const Timer& timer,
 void MeshGPUParticle::Update(const Timer& timer,
 	const KMyMath::Matrix4& matView,
 	const KMyMath::Matrix4& matProjection,
-	MeshEmitter* emitter)
+	Emitter* emitter)
 {
 	ID3D12Fence* fence = KDirectXCommon::GetInstance()->GetFence();
 
@@ -117,7 +117,7 @@ void MeshGPUParticle::Update(const Timer& timer,
 void MeshGPUParticle::Draw(const Timer& timer,
 	const KMyMath::Matrix4& matView,
 	const KMyMath::Matrix4& matProjection,
-	MeshEmitter* emitter)
+	Emitter* emitter)
 {
 	KDirectXCommon* directXCommon = KDirectXCommon::GetInstance();
 	ID3D12GraphicsCommandList* commndList = directXCommon->GetCommandList();
@@ -335,7 +335,7 @@ void MeshGPUParticle::BuildFrameResources()
 void MeshGPUParticle::UpdateMainPassCB(const Timer& timer,
 	const KMyMath::Matrix4& matView,
 	const KMyMath::Matrix4& matProjection,
-	MeshEmitter* emitter)
+	Emitter* emitter)
 {
 	DirectX::XMMATRIX world = DirectX::XMMatrixIdentity();
 

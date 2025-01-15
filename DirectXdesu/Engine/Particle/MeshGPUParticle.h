@@ -28,24 +28,24 @@ public:
 	MeshGPUParticle(const Timer& timer,
 		const KMyMath::Matrix4& matView,
 		const KMyMath::Matrix4& matProjection,
-		MeshEmitter* emitter,
+		Emitter* emitter,
 		const std::string modelname = "test");
 
 	void Init(const Timer& timer,
 		const KMyMath::Matrix4& matView,
 		const KMyMath::Matrix4& matProjection,
-		MeshEmitter* emitter,
+		Emitter* emitter,
 		const std::string modelname);
 
 	void Update(const Timer& timer,
 		const KMyMath::Matrix4& matView,
 		const KMyMath::Matrix4& matProjection,
-		MeshEmitter* emitter);
+		Emitter* emitter);
 
 	void Draw(const Timer& timer,
 		const KMyMath::Matrix4& matView,
 		const KMyMath::Matrix4& matProjection,
-		MeshEmitter* emitter);
+		Emitter* emitter);
 
 private:
 	void BuildUAV();
@@ -55,7 +55,7 @@ private:
 	void UpdateMainPassCB(const Timer& timer,
 		const KMyMath::Matrix4& matView,
 		const KMyMath::Matrix4& matProjection,
-		MeshEmitter* emitter);
+		Emitter* emitter);
 	void ParticleUpdate();
 	void ParticleDraw();
 	void DrawCommon();

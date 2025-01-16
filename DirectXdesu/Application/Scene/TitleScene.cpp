@@ -61,7 +61,7 @@ void TitleScene::Init() {
 	);
 
 	meshEmitter_ = new MeshEmitter(
-		100.0f,
+		50.0f,
 		300.0f,
 		DirectX::XMFLOAT3(1.0f, 1.0f, 0.0f),
 		DirectX::XMFLOAT3(0.0f, 5.0f, 0.0f),

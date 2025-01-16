@@ -8,7 +8,6 @@
 #include "KModel.h"
 #include "KObject3d.h"
 #include "KShader.h"
-#include "ParticleManager.h"
 #include "PostEffect.h"
 #include "Sprite.h"
 #include "Warning.h"

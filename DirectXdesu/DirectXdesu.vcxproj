@@ -157,7 +157,6 @@
     <ClCompile Include="Engine\Math\Vector4\Vector4.cpp" />
     <ClCompile Include="Engine\Base\View\ViewProjection.cpp" />
     <ClCompile Include="Engine\2D\Texture\TextureManager.cpp" />
-    <ClCompile Include="Application\Particle\ParticleManager.cpp" />
     <ClCompile Include="Application\Camera\TitleCamera.cpp" />
     <ClCompile Include="Application\GameManager.cpp" />
     <ClCompile Include="Engine\Base\Pipeline\PipelineManager.cpp" />
@@ -235,7 +234,6 @@
     <ClInclude Include="Engine\Math\Vector4\Vector4.h" />
     <ClInclude Include="Engine\Base\View\ViewProjection.h" />
     <ClInclude Include="Engine\2D\Texture\TextureManager.h" />
-    <ClInclude Include="Application\Particle\ParticleManager.h" />
     <ClInclude Include="Application\Camera\TitleCamera.h" />
     <ClInclude Include="Application\GameManager.h" />
     <ClInclude Include="Engine\Base\Pipeline\PipelineManager.h" />

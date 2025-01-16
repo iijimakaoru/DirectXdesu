@@ -1,6 +1,5 @@
 #include "Framework.h"
 #include "BaseScene.h"
-#include "ParticleManager.h"
 #include "Sprite.h"
 #include "PipelineManager.h"
 #include "ModelManager.h"
@@ -45,8 +44,6 @@ void Framework::Init() {
 	// リソース読み込み
 	ModelManager::GetInstance()->Init();
 
-	Particles::StaticInitialize();
-
 	// Imgui初期化
 	imguiMane.Init();
 
@@ -61,10 +58,6 @@ void Framework::Final() {
 
 	// テクスチャマネージャーの解放
 	textureManager->Delete();
-
-	// パーティクルマネージャー解放
-	ParticleManager::GetInstance()->Delete();
-	ObjParticleManager::GetInstance()->Delete();
 
 	audioManager->Finalize();
 

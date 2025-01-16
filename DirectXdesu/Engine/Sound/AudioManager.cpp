@@ -203,26 +203,7 @@ void AudioManager::SoundStopWave(const std::string& fileName) {
 }
 
 void AudioManager::AllLoad() {
-	// BGM
-	SoundLoadWave("BattleBGM.wav");
-	SoundLoadWave("titleBGM.wav");
-	SoundLoadWave("clearBGM.wav");
-	SoundLoadWave("bossBGM.wav");
-
-	// SE
-	SoundLoadWave("shotSE.wav");
-	SoundLoadWave("alertSE.wav");
-	SoundLoadWave("flashSE.wav");
-	SoundLoadWave("selectSE.wav");
-	SoundLoadWave("flySE.wav");
-	SoundLoadWave("bakuhatuSE.wav");
-	SoundLoadWave("chargeSE.wav");
-	SoundLoadWave("mokuhyo.wav");
-	SoundLoadWave("warningSE.wav");
-	SoundLoadWave("bossAwakenSE.wav");
-	SoundLoadWave("bomShot.wav");
-	SoundLoadWave("damageSE.wav");
-	SoundLoadWave("syouBakuhatuSE.wav");
+	
 }
 
  AudioManager* AudioManager::GetInstance() {

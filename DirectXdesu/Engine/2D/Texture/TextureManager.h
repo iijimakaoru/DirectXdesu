@@ -73,8 +73,6 @@ public:
 
 	TextureData& GetTextures(std::string mapName);
 
-	TextureData& GetNumTex(size_t i);
-
 private:
 	/// <summary>
 	/// テクスチャバッファの生成

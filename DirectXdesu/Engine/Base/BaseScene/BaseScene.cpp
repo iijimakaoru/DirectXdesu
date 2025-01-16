@@ -2,5 +2,5 @@
 
 void BaseScene::Init()
 {
-	sceneChange = SceneChange::GetInstance();
+	
 }

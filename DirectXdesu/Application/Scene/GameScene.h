@@ -1,26 +1,15 @@
 #pragma once
 #include "BaseScene.h"
-#include "BillManager.h"
-#include "Blaster.h"
-#include "BossEnemy.h"
-#include "Bullet.h"
-#include "BulletManager.h"
 #include "Camera.h"
-#include "EnemyManager.h"
 #include "FbxObject3D.h"
-#include "Ground.h"
 #include "KDirectXCommon.h"
 #include "KGPlin.h"
 #include "KInput.h"
 #include "KModel.h"
 #include "KObject3d.h"
 #include "KShader.h"
-#include "MobEnemy.h"
 #include "ParticleManager.h"
-#include "Player.h"
 #include "PostEffect.h"
-#include "RailCamera.h"
-#include "SkyBox.h"
 #include "Sprite.h"
 #include "Warning.h"
 #include <array>
@@ -31,7 +20,6 @@
 #include "Light.h"
 
 #include "GameManager.h"
-#include "Movie.h"
 #include "CollisionManager.h"
 
 

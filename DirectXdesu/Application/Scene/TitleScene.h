@@ -64,14 +64,6 @@ private:
 	// カメラ
 	std::unique_ptr<TitleCamera> camera = nullptr;
 
-#pragma region プレイヤー機体
-	// オブジェクト
-	std::unique_ptr<KObject3d> object3d = nullptr;
-
-	// モデル
-	KModel* model = nullptr;
-#pragma endregion
-
 #pragma region 天球
 	// オブジェクト
 	std::unique_ptr<KObject3d> skyDome = nullptr;

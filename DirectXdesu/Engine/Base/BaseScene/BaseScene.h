@@ -2,7 +2,6 @@
 #include "Camera.h"
 #include<memory>
 #include "TextureManager.h"
-#include "SceneChange.h"
 
 /**
  * @file BaseScene.h
@@ -46,7 +45,5 @@ public: // メンバ関数
 protected:
 	// シーンマネージャーを借りてくる
 	SceneManager* sceneManager = nullptr;
-
-	SceneChange* sceneChange = nullptr;
 };
 

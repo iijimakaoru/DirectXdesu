@@ -53,9 +53,6 @@ void Framework::Init() {
 	// ポストエフェクトテスト
 	postEffectManager = std::make_unique<PostEffectManager>();
 	postEffectManager->Init();
-
-	sceneChange = SceneChange::GetInstance();
-	sceneChange->Init();
 }
 
 void Framework::Final() {
@@ -73,8 +70,6 @@ void Framework::Final() {
 
 	// シーンファクトリー解放
 	delete sceneFactory;
-
-	sceneChange->Delete();
 
 	dx->Destroy();
 

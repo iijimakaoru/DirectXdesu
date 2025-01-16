@@ -19,11 +19,8 @@ const int gNumberFrameResources = 3;
 TitleScene::~TitleScene() { Final(); }
 
 void TitleScene::LoadResources() {
-	// 機体モデル
-	model = ModelManager::GetInstance()->GetModels("Player");
-
 	// 天球モデル
-	skyDomeModel = ModelManager::GetInstance()->GetModels("T_SkyDorm");
+	skyDomeModel = ModelManager::GetInstance()->GetModels("S_SkyDorm");
 }
 
 void TitleScene::Init() {
@@ -45,13 +42,10 @@ void TitleScene::Init() {
 
 	sceneManager = SceneManager::GetInstance();
 
-	// オブジェクト生成
-	object3d.reset(KObject3d::Create(model, PipelineManager::GetInstance()->GetPipeline("Obj")));
-	object3d->GetTransform().SetScale({0.0f, 0.0f, 0.0f});
-
 	skyDome.reset(
 	    KObject3d::Create(skyDomeModel, PipelineManager::GetInstance()->GetPipeline("Obj")));
 	skyDome->GetTransform().SetScale({400.0f, 400.0f, 400.0f});
+	skyDome->SetColor({ 0,0,0,0 });
 
 	audioManager = AudioManager::GetInstance();
 
@@ -94,8 +88,6 @@ void TitleScene::Update() {
 
 	light_->Update();
 
-	object3d->Update(camera->GetViewPro(), camera->GetWorldPos());
-
 	skyDome->Update(camera->GetViewPro(), camera->GetWorldPos());
 
 	particleEditor_->Update();
@@ -113,8 +105,6 @@ void TitleScene::Update() {
 }
 
 void TitleScene::ObjDraw() {
-	object3d->Draw();
-
 	skyDome->Draw();
 
 	meshGpuParticle_->Draw(timer_,

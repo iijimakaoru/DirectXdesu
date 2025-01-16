@@ -13,22 +13,11 @@
 #include "FbxLoader.h"
 
 #include "SceneManager.h"
-
-#include "AppearEnemy.h"
-#include "CanonEnemy.h"
-#include "FlyEnemy.h"
-
 #include "Ease.h"
-
-#include "ScoreManager.h"
 
 #include "PipelineManager.h"
 
 #include "ModelManager.h"
-
-#include "BossStart.h"
-#include "StageClear.h"
-#include "StageStart.h"
 
 GameScene::~GameScene() { Final(); };
 

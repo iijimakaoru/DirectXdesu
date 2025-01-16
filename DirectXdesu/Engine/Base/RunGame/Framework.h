@@ -8,7 +8,6 @@
 #include "ASceneFactory.h"
 #include "VignettePostEffect.h"
 #include "TextureManager.h"
-#include "SceneChange.h"
 
 #include "AudioManager.h"
 
@@ -65,8 +64,6 @@ protected:
 
 	// ポストエフェクト
 	std::unique_ptr<PostEffectManager> postEffectManager = nullptr;
-
-	SceneChange* sceneChange = nullptr;
 
 	AudioManager* audioManager = nullptr;
 };

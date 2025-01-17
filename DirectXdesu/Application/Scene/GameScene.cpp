@@ -51,12 +51,14 @@ void GameScene::Init() {
 	sceneManager = SceneManager::GetInstance();
 
 	// モデル
+	/*ステージ*/
 	obj[OBJ::stage].reset(KObject3d::Create(objModel[OBJ::stage],
 		PipelineManager::GetInstance()->GetPipeline("Obj")));
 	obj[OBJ::stage]->GetTransform().SetPos({ 0.0f,0.0f,200.0f });
 	obj[OBJ::stage]->GetTransform().SetScale({ 100.0f,1.0f,300.0f });
 	obj[OBJ::stage]->SetColor({ 0.0f,0.0f,0.0f,1.0f });
 
+	/*ライン*/
 	float scaleZ = perfect;
 	obj[OBJ::line].reset(KObject3d::Create(objModel[OBJ::stage],
 		PipelineManager::GetInstance()->GetPipeline("Obj")));
@@ -64,10 +66,12 @@ void GameScene::Init() {
 	obj[OBJ::line]->GetTransform().SetPos({ 0.0f,4.0f,0.0f });
 	obj[OBJ::line]->SetColor({ 0.8f,0.8f,0.8f,1.0f });
 
+	/*天球*/
 	obj[OBJ::skydome].reset(KObject3d::Create(objModel[OBJ::skydome], 
 		PipelineManager::GetInstance()->GetPipeline("Obj")));
 	obj[OBJ::skydome]->GetTransform().SetScale({ 800.0f, 800.0f, 800.0f });
 	obj[OBJ::skydome]->SetColor({ 0.1f,0.0f,1.0f,1.0f });
+
 
 	collisionManager_ = new CollisionManager();
 

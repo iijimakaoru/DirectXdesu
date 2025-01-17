@@ -178,6 +178,7 @@
     <ClCompile Include="Engine\Particle\ComputePipelineState.cpp" />
     <ClCompile Include="Engine\Particle\GraphicPipelineState.cpp" />
     <ClCompile Include="Engine\Particle\MeshEmitter.cpp" />
+    <ClCompile Include="NoteObj.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\MusicDesc.h" />
@@ -256,6 +257,7 @@
     <ClInclude Include="Engine\Particle\ComputePipelineState.h" />
     <ClInclude Include="Engine\Particle\GraphicPipelineState.h" />
     <ClInclude Include="Engine\Particle\MeshEmitter.h" />
+    <ClInclude Include="NoteObj.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DirectXdesu.rc" />

@@ -22,13 +22,15 @@
 GameScene::~GameScene() { Final(); };
 
 void GameScene::LoadResources() {
+	ModelManager* modelManager = ModelManager::GetInstance();
+
 	// モデル
 	objModel[OBJ::stage] = 
-		ModelManager::GetInstance()->GetModels("S_Cube");
+		modelManager->GetModels("S_Cube");
 	objModel[OBJ::skydome] = 
-		ModelManager::GetInstance()->GetModels("S_SkyDorm");
+		modelManager->GetModels("S_SkyDorm");
 	noteModel = 
-		ModelManager::GetInstance()->GetModels("S_Arrow");
+		modelManager->GetModels("S_Arrow");
 }
 
 void GameScene::Init() {
@@ -164,6 +166,15 @@ void GameScene::Init() {
 }
 
 void GameScene::Update() {
+	float LStick = input->GetPadLStick().x;
+
+	ImGui::Begin("lo");
+	ImGui::DragInt("perfect", &score[PERFECT]);
+	ImGui::DragInt("great", &score[GREAT]);
+	ImGui::DragInt("miss", &score[MISS]);
+	ImGui::DragInt("combo", &combo);
+	ImGui::DragFloat("LStick", &LStick);
+	ImGui::End();
 
 	light_->SetLightRGB({lightRGB_.x, lightRGB_.y, lightRGB_.z});
 	light_->SetLightDir({lightDir_.x, lightDir_.y, lightDir_.z, 0.0f});
@@ -307,7 +318,7 @@ void GameScene::Collision()
 				}
 				else if (notes[i].lane == 1)
 				{
-					RotAndLenCalculationStick(input->GetPadLStick());
+					RotAndLenCalculationStick(input->GetPadRStick());
 				}
 			}
 

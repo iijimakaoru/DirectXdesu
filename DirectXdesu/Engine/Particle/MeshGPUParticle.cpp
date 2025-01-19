@@ -337,7 +337,17 @@ void MeshGPUParticle::UpdateMainPassCB(const Timer& timer,
 	const KMyMath::Matrix4& matProjection,
 	Emitter* emitter)
 {
+	DirectX::XMMATRIX matScale = DirectX::XMMatrixIdentity();
+	matScale = DirectX::XMMatrixScaling(1, 1, 1);
+
+	DirectX::XMMATRIX matRotation = DirectX::XMMatrixIdentity();
+	matRotation = DirectX::XMMatrixRotationZ(0.5f);
+
+	DirectX::XMMATRIX matTrans = DirectX::XMMatrixIdentity();
+	matTrans = DirectX::XMMatrixTranslation(3.0f, 0.0f, 0.0f);
+
 	DirectX::XMMATRIX world = DirectX::XMMatrixIdentity();
+	world *= matScale * matRotation * matTrans;
 
 	DirectX::XMMATRIX view = MyMathConvert::ChangeMatrix4toXMMATRIX(matView);
 	DirectX::XMMATRIX projection = MyMathConvert::ChangeMatrix4toXMMATRIX(matProjection);

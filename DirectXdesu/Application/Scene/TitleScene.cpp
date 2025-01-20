@@ -81,7 +81,7 @@ void TitleScene::Init() {
 void TitleScene::Update() {
 	ImGui::Begin("MeshParticle");
 	ImGui::SliderFloat3("Position", &position.x, -6, 6, "%.1f");
-	ImGui::SliderFloat3("Rotation", &rotation.x, -5, 5, "%.1f");
+	ImGui::SliderFloat3("Rotation", &rotation.x, -180, 180, "%.1f");
 	ImGui::SliderFloat3("Scaling", &scaling.x, -5, 5, "%.1f");
 	ImGui::End();
 

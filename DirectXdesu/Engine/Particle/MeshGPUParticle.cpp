@@ -345,9 +345,9 @@ void MeshGPUParticle::UpdateMainPassCB(const Timer& timer,
 			emitter->GetScaling().z);
 
 	DirectX::XMMATRIX matRotation = DirectX::XMMatrixIdentity();
-	matRotation *= DirectX::XMMatrixRotationZ(emitter->GetRotation().z);
-	matRotation *= DirectX::XMMatrixRotationX(emitter->GetRotation().x);
-	matRotation *= DirectX::XMMatrixRotationY(emitter->GetRotation().y);
+	matRotation *= DirectX::XMMatrixRotationZ(DirectX::XMConvertToRadians(emitter->GetRotation().z));
+	matRotation *= DirectX::XMMatrixRotationX(DirectX::XMConvertToRadians(emitter->GetRotation().x));
+	matRotation *= DirectX::XMMatrixRotationY(DirectX::XMConvertToRadians(emitter->GetRotation().y));
 
 	DirectX::XMMATRIX matTrans = DirectX::XMMatrixIdentity();
 	matTrans = 

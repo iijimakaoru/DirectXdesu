@@ -1,11 +1,13 @@
 #include "NoteObj.h"
 
-void NoteObj::Init(const std::vector<Note> notes_)
+void NoteObj::Init(const std::vector<Note> notes_,MusicDesc* music_)
 {
 	modelM = ModelManager::GetInstance();
 	pipelineM = PipelineManager::GetInstance();
 
 	obj.resize(notes_.size());
+	notes = notes_;
+	music = music_;
 	for (size_t i = 0; i < notes_.size(); i++)
 	{
 		std::unique_ptr<KObject3d> obj_;
@@ -48,22 +50,29 @@ void NoteObj::Init(const std::vector<Note> notes_)
 
 }
 
-void NoteObj::Update()
+void NoteObj::Update(Camera* camera_)
 {
 	for (size_t i = 0; i < obj.size(); i++)
 	{
-		if (!notes_[i].isHit)
+		if (!notes[i].isHit)
 		{
 			KMyMath::Vector3 move;
 			move = obj[i]->GetTransform().GetPos();
 			move.z -= speed;
 
 			obj[i]->GetTransform().SetPos(move);
-			obj[i]->Update(camera->GetViewPro(), camera->GetWorldPos());
+			obj[i]->Update(camera_->GetViewPro(), camera_->GetWorldPos());
 		}
 	}
 }
 
 void NoteObj::Draw()
 {
+	for (size_t i = 0; i < obj.size(); i++)
+	{
+		if (!notes[i].isHit)
+		{
+			obj[i]->Draw();
+		}
+	}
 }

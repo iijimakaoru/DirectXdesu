@@ -27,8 +27,6 @@ void GameScene::LoadResources() {
 		ModelManager::GetInstance()->GetModels("S_Cube");
 	objModel[OBJ::skydome] = 
 		ModelManager::GetInstance()->GetModels("S_SkyDorm");
-	noteModel = 
-		ModelManager::GetInstance()->GetModels("S_Arrow");
 }
 
 void GameScene::Init() {
@@ -119,45 +117,8 @@ void GameScene::Init() {
 	notes.push_back({ { 12,2,4 },0 ,DIRECTION::left });
 	notes.push_back({ { 12,2,4 },1 ,DIRECTION::right });
 
-	for (size_t i = 0; i < notes.size(); i++)
-	{
-		std::unique_ptr<KObject3d> obj_;
-		obj_.reset(KObject3d::Create(noteModel, 
-			PipelineManager::GetInstance()->GetPipeline("Obj")));
-		obj_->GetTransform().SetScale({ 15.0f,15.0f,5.0f });
-
-		//色設定
-		if (notes[i].lane == 0)
-		{
-			obj_->SetColor({ 0.5f,0.0f,0.0f,1.0f });
-		}
-		else
-		{
-			obj_->SetColor({ 0.0f,0.3f,1.0f,1.0f });
-		}
-
-		//方向設定
-		if (notes[i].direction == DIRECTION::left)//左
-		{
-			obj_->GetTransform().SetRot({ 0.0f,180.0f,0.0f });
-		}
-		else if (notes[i].direction == DIRECTION::up)//上
-		{
-			obj_->GetTransform().SetRot({ 0.0f,0.0f,-90.0f });
-		}
-		else if (notes[i].direction == DIRECTION::dawn)//下
-		{
-			obj_->GetTransform().SetRot({ 0.0f,180.0f,90.0f });
-		}
-		else											  //右
-		{
-			obj_->GetTransform().SetRot({ 0.0f,0.0f,0.0f });
-		}
-		notePosZ = (sec * speed) * music->ConvertBeatToMiliSeconds(notes[i].beat);
-		obj_->GetTransform().SetPos({ -50.0f + (100.0f * notes[i].lane),25.0f,notePosZ });
-
-		objNote.push_back(std::move(obj_));
-	}
+	noteObj = std::make_unique<NoteObj>();
+	noteObj->Init(notes, music.get());
 
 	start = { 500,500 };
 	lenRimit = 100.0f;//csvに落とし込む,値を仮設定
@@ -181,18 +142,7 @@ void GameScene::Update() {
 		obj[i]->Update(camera->GetViewPro(), camera->GetWorldPos());
 	}
 
-	for (size_t i = 0; i < objNote.size(); i++)
-	{
-		if (!notes[i].isHit)
-		{
-			KMyMath::Vector3 move;
-			move = objNote[i]->GetTransform().GetPos();
-			move.z -= speed;
-
-			objNote[i]->GetTransform().SetPos(move);
-			objNote[i]->Update(camera->GetViewPro(), camera->GetWorldPos());
-		}
-	}
+	noteObj->Update(camera.get());
 
 	for (size_t i = 0; i < OBJ::max; i++) 
 	{
@@ -209,13 +159,7 @@ void GameScene::ObjDraw()
 		obj[i]->Draw();
 	}
 
-	for (size_t i = 0; i < objNote.size(); i++)
-	{
-		if (!notes[i].isHit)
-		{
-			objNote[i]->Draw();
-		}
-	}
+	noteObj->Draw();
 }
 
 void GameScene::SpriteDraw() {

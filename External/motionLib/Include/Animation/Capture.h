@@ -39,8 +39,15 @@ namespace MCBM
 		float iou_threshold_ = 0.45f;
 		int conversion_code_ = cv::COLOR_BGR2RGB;
 		bool initialized_ = true;
+		int index_;
+		std::string windowName;
 	public:
-		void Initialize();
+		float cameradist_ = 1.0f;//メートル単位
+		Vector3 cameraPosition_;
+		float focalLength_;
+		Vector3 screenCenterPos_;
+
+		void Initialize(const int32_t index = 0);
 		void Update();
 		void SetInitialPose();
 		void Finalize();

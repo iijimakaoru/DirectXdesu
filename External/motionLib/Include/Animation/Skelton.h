@@ -3,7 +3,7 @@
 #include <unordered_map>
 
 #include <Animation/Bone.h>
-#include <Animation/Capture.h>
+#include <Animation/CaptureManager.h>
 
 
 namespace MCBM
@@ -16,7 +16,6 @@ namespace MCBM
 		Bone* rootBone_;
 
 		Capture* capture;
-
 	public:
 		void SetCapturePtr(Capture* cap);
 

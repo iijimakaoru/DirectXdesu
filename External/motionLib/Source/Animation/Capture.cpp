@@ -1,8 +1,9 @@
 #include <Animation/Capture.h>
 #include <Math/MathUtil.h>
-void MCBM::Capture::Initialize()
+void MCBM::Capture::Initialize(const int32_t index)
 {
-	cv::VideoCapture cap(0);
+	index_ = index;
+	cv::VideoCapture cap(index_);
 	capture_ = std::move(cap);
 	capture_.set(cv::CAP_PROP_FRAME_WIDTH, 1280);
 	capture_.set(cv::CAP_PROP_FRAME_HEIGHT, 720);
@@ -99,11 +100,13 @@ void MCBM::Capture::Initialize()
 		}
 	}
 
+	windowName = "run" + std::to_string(index_);
+
 }
 
 void MCBM::Capture::Update()
 {
-	cv::imshow("run", img_);
+	cv::imshow(windowName.c_str(), img_);
 
 	land_ = m_YOLOPoseEstimation_->GetLandmakes();
 
@@ -131,7 +134,7 @@ void MCBM::Capture::SetInitialPose()
 void MCBM::Capture::Finalize()
 {
 	m_YOLOPoseEstimation_->End();
-	cv::destroyWindow("run");
+	cv::destroyWindow(windowName.c_str());
 }
 
 MCBM::CaptureData& MCBM::Capture::GetCaptureData(YOLO_POSE_INDEX key)

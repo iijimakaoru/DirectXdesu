@@ -755,14 +755,23 @@
     </None>
     <None Include="Resources\Shader\MeshGPUParticle\MeshGPUParticle.hlsli" />
     <None Include="Resources\Shader\MeshGPUParticle\MeshSimplexNoise.hlsli" />
+    <None Include="Resources\Shader\Basic\BasicPS.hlsl">
+      <Filter>シェーダー</Filter>
+    </None>
+    <None Include="Resources\Shader\Basic\BasicVS.hlsl">
+      <Filter>シェーダー</Filter>
+    </None>
+    <None Include="Resources\Shader\Fbx\FBXPS.hlsl">
+      <Filter>シェーダー</Filter>
+    </None>
+    <None Include="Resources\Shader\Fbx\FBXVS.hlsl">
+      <Filter>シェーダー</Filter>
+    </None>
+    <None Include="Resources\Shader\GPUParticle\GPUParticleGS.hlsl">
+      <Filter>シェーダー</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Resources\Shader\Basic\BasicPS.hlsl">
-      <Filter>シェーダー</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\Shader\Basic\BasicVS.hlsl">
-      <Filter>シェーダー</Filter>
-    </FxCompile>
     <FxCompile Include="Resources\Shader\Obj\ObjPS.hlsl">
       <Filter>シェーダー</Filter>
     </FxCompile>
@@ -782,12 +791,6 @@
       <Filter>シェーダー</Filter>
     </FxCompile>
     <FxCompile Include="Resources\Shader\Particle\ParticleVS.hlsl">
-      <Filter>シェーダー</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\Shader\Fbx\FBXPS.hlsl">
-      <Filter>シェーダー</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\Shader\Fbx\FBXVS.hlsl">
       <Filter>シェーダー</Filter>
     </FxCompile>
     <FxCompile Include="Resources\Shader\PostEffect\PostEffectPS.hlsl">
@@ -818,9 +821,6 @@
       <Filter>シェーダー</Filter>
     </FxCompile>
     <FxCompile Include="Resources\Shader\GPUParticle\GPUParticlePS.hlsl">
-      <Filter>シェーダー</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\Shader\GPUParticle\GPUParticleGS.hlsl">
       <Filter>シェーダー</Filter>
     </FxCompile>
     <FxCompile Include="Resources\Shader\GPUParticle\UpdateCS.hlsl" />

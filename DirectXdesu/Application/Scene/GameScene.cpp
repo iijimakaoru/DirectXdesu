@@ -19,6 +19,8 @@
 
 #include "ModelManager.h"
 
+#include<PModelLoader.h>
+
 GameScene::~GameScene() { Final(); };
 
 void GameScene::LoadResources() {
@@ -70,6 +72,9 @@ void GameScene::Init() {
 	obj[OBJ::skydome]->SetColor({ 0.1f,0.0f,1.0f,1.0f });
 
 	collisionManager_ = new CollisionManager();
+
+	PHONONLOADER::P_MODEL_DATA* pData =new PHONONLOADER::P_MODEL_DATA();
+	PHONONLOADER::PModelLoader::Load(pData,"obj/cube");
 
 	//ノーツ
 	playTime = 0;

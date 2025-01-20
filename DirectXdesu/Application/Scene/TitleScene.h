@@ -16,8 +16,6 @@
 #include "GPUParticle.h"
 #include "MeshGPUParticle.h"
 
-#include "ParticleEditor.h"
-
 #include "Emitter.h"
 #include "MeshEmitter.h"
 
@@ -47,16 +45,6 @@ public:
 
 	// タイトルコール
 	void TitleCall();
-
-	// We pack the UAV counter into the same buffer as the commands rather than create
-	// a separate 64K resource/heap for it. The counter must be aligned on 4K boundaries,
-	// so we pad the command buffer (if necessary) such that the counter will be placed
-	// at a valid location in the buffer.
-	static inline UINT AlignForUavCounter(UINT bufferSize)
-	{
-		const UINT alignment = D3D12_UAV_COUNTER_PLACEMENT_ALIGNMENT;
-		return (bufferSize + (alignment - 1)) & ~(alignment - 1);
-	}
 private:
 	// インプット
 	KInput* input = nullptr;
@@ -91,6 +79,9 @@ private:
 	GPUParticle* gpuParticle_;
 	MeshGPUParticle* meshGpuParticle_;
 
-	ParticleEditor* particleEditor_;
+	// Imgui用
+	DirectX::XMFLOAT3 position = { 0,0,0 };
+	DirectX::XMFLOAT3 rotation = { 0,0,0 };
+	DirectX::XMFLOAT3 scaling = { 1,1,1 };
 };
 

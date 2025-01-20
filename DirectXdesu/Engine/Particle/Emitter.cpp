@@ -4,6 +4,9 @@ Emitter::Emitter(int maxParticles,
 	int gridSize, 
 	float emissionRate, 
 	float lifeTime, 
+	DirectX::XMFLOAT3 position,
+	DirectX::XMFLOAT3 scaling,
+	DirectX::XMFLOAT3 rotation,
 	DirectX::XMFLOAT3 velocity, 
 	DirectX::XMFLOAT3 acceleration, 
 	DirectX::XMFLOAT4 startColor, 
@@ -12,6 +15,9 @@ Emitter::Emitter(int maxParticles,
 	gridSize(gridSize),
 	emissionRate(emissionRate),
 	lifeTime(lifeTime),
+	position(position),
+	rotation(rotation),
+	scaling(scaling),
 	velocity(velocity),
 	acceleration(acceleration),
 	startColor(startColor),
@@ -93,4 +99,34 @@ void Emitter::SetEmitTimeCounter(float value)
 void Emitter::Update(float deltaTime)
 {
 	emitTimeCounter += deltaTime;
+}
+
+DirectX::XMFLOAT3 Emitter::GetPosition()
+{
+	return position;
+}
+
+void Emitter::SetPosition(DirectX::XMFLOAT3& pos)
+{
+	position = pos;
+}
+
+DirectX::XMFLOAT3 Emitter::GetRotation()
+{
+	return rotation;
+}
+
+void Emitter::SetRotation(DirectX::XMFLOAT3& rot)
+{
+	rotation = rot;
+}
+
+DirectX::XMFLOAT3 Emitter::GetScaling()
+{
+	return scaling;
+}
+
+void Emitter::SetScaling(DirectX::XMFLOAT3& scale)
+{
+	scaling = scale;
 }

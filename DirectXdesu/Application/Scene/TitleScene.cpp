@@ -54,6 +54,9 @@ void TitleScene::Init() {
 		1,
 		100.0f,
 		300.0f,
+		DirectX::XMFLOAT3(0.0f,0.0f,0.0f),
+		DirectX::XMFLOAT3(3.0f, 3.0f, 3.0f),
+		DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f),
 		DirectX::XMFLOAT3(1.0f, 1.0f, 0.0f),
 		DirectX::XMFLOAT3(0.0f, 5.0f, 0.0f),
 		DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 0.0f),
@@ -72,14 +75,20 @@ void TitleScene::Init() {
 	meshGpuParticle_ = new MeshGPUParticle(timer_,
 		camera->GetViewPro()->GetMatView(),
 		camera->GetViewPro()->GetMatPro(),
-		emitter_,"test2");
-
-	particleEditor_ = new ParticleEditor();
-
-	camera->StartRound();
+		emitter_,"suzanne1");
 }
 
 void TitleScene::Update() {
+	ImGui::Begin("MeshParticle");
+	ImGui::SliderFloat3("Position", &position.x, -6, 6, "%.1f");
+	ImGui::SliderFloat3("Rotation", &rotation.x, -5, 5, "%.1f");
+	ImGui::SliderFloat3("Scaling", &scaling.x, -5, 5, "%.1f");
+	ImGui::End();
+
+	emitter_->SetPosition(position);
+	emitter_->SetRotation(rotation);
+	emitter_->SetScaling(scaling);
+
 	timer_.UpdateTimer();
 	timer_.UpdateTitleBarStats();
 
@@ -90,7 +99,7 @@ void TitleScene::Update() {
 
 	skyDome->Update(camera->GetViewPro(), camera->GetWorldPos());
 
-	particleEditor_->Update();
+	//particleEditor_->Update();
 
 	if (input->IsTrigger(DIK_1)) {
 		
@@ -122,7 +131,6 @@ void TitleScene::Final() {
 	delete meshEmitter_;
 	delete gpuParticle_;
 	delete meshGpuParticle_;
-	delete particleEditor_;
 }
 
 void TitleScene::StartScene() {

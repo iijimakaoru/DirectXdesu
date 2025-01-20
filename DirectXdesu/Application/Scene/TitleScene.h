@@ -92,5 +92,10 @@ private:
 	MeshGPUParticle* meshGpuParticle_;
 
 	ParticleEditor* particleEditor_;
+
+	// Imgui用
+	DirectX::XMFLOAT3 position = { 0,0,0 };
+	DirectX::XMFLOAT3 rotation = { 0,0,0 };
+	DirectX::XMFLOAT3 scaling = { 1,1,1 };
 };
 

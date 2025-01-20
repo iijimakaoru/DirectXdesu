@@ -26,6 +26,9 @@ public:
 		int gridSize,
 		float emissionRate,
 		float lifeTime,
+		DirectX::XMFLOAT3 position,
+		DirectX::XMFLOAT3 scaling,
+		DirectX::XMFLOAT3 rotation,
 		DirectX::XMFLOAT3 velocity,
 		DirectX::XMFLOAT3 acceleration,
 		DirectX::XMFLOAT4 startColor,
@@ -49,6 +52,13 @@ public:
 
 	void Update(float deltaTime);
 
+	DirectX::XMFLOAT3 GetPosition();
+	void SetPosition(DirectX::XMFLOAT3& pos);
+	DirectX::XMFLOAT3 GetRotation();
+	void SetRotation(DirectX::XMFLOAT3& rot);
+	DirectX::XMFLOAT3 GetScaling();
+	void SetScaling(DirectX::XMFLOAT3& scale);
+
 private:
 	//emitter settings
 	int maxParticles;
@@ -62,5 +72,8 @@ private:
 	DirectX::XMFLOAT3 acceleration;
 	DirectX::XMFLOAT4 startColor;
 	DirectX::XMFLOAT4 endColor;
+	DirectX::XMFLOAT3 position;
+	DirectX::XMFLOAT3 rotation;
+	DirectX::XMFLOAT3 scaling;
 };
 

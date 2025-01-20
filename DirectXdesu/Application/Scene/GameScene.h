@@ -27,6 +27,8 @@
 
 #include "MusicDesc.h"
 
+#include <Animation/Skelton.h>
+
 /**
  * @file GameScene.h
  * @brief ゲームシーン

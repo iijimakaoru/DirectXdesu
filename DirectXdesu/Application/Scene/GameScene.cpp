@@ -161,10 +161,12 @@ void GameScene::Init() {
 
 	start = { 500,500 };
 	lenRimit = 100.0f;//csvに落とし込む,値を仮設定
+
 }
 
 void GameScene::Update() {
 
+	
 	light_->SetLightRGB({lightRGB_.x, lightRGB_.y, lightRGB_.z});
 	light_->SetLightDir({lightDir_.x, lightDir_.y, lightDir_.z, 0.0f});
 
@@ -220,7 +222,10 @@ void GameScene::SpriteDraw() {
 	
 }
 
-void GameScene::Final() { delete collisionManager_; }
+void GameScene::Final() 
+{
+	delete collisionManager_; 
+}
 
 void GameScene::RotAndLenCalculationMouse()
 {

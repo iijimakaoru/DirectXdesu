@@ -343,3 +343,6 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+.External\fbx_sdk\lib
+/External/fbx_sdk/lib

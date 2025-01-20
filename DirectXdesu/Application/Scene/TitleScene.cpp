@@ -76,8 +76,6 @@ void TitleScene::Init() {
 		camera->GetViewPro()->GetMatView(),
 		camera->GetViewPro()->GetMatPro(),
 		emitter_,"suzanne1");
-
-	particleEditor_ = new ParticleEditor();
 }
 
 void TitleScene::Update() {
@@ -133,7 +131,6 @@ void TitleScene::Final() {
 	delete meshEmitter_;
 	delete gpuParticle_;
 	delete meshGpuParticle_;
-	delete particleEditor_;
 }
 
 void TitleScene::StartScene() {

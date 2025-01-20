@@ -21,7 +21,8 @@
 
 GameScene::~GameScene() { Final(); };
 
-void GameScene::LoadResources() {
+void GameScene::LoadResources() 
+{
 	ModelManager* modelManager = ModelManager::GetInstance();
 
 	// モデル
@@ -33,7 +34,8 @@ void GameScene::LoadResources() {
 		modelManager->GetModels("S_Arrow");
 }
 
-void GameScene::Init() {
+void GameScene::Init() 
+{
 	BaseScene::Init();
 
 	LoadCSV("collision");
@@ -165,15 +167,18 @@ void GameScene::Init() {
 	lenRimit = 100.0f;//csvに落とし込む,値を仮設定
 }
 
-void GameScene::Update() {
-	float LStick = input->GetPadLStick().x;
+void GameScene::Update() 
+{
+	KMyMath::Vector2 LStick = input->GetPadLStick();
+	KMyMath::Vector2 RStick = input->GetPadRStick();
 
 	ImGui::Begin("lo");
 	ImGui::DragInt("perfect", &score[PERFECT]);
 	ImGui::DragInt("great", &score[GREAT]);
 	ImGui::DragInt("miss", &score[MISS]);
 	ImGui::DragInt("combo", &combo);
-	ImGui::DragFloat("LStick", &LStick);
+	ImGui::DragFloat2("LStick", &LStick.x);
+	ImGui::DragFloat2("RStick", &RStick.x);
 	ImGui::End();
 
 	light_->SetLightRGB({lightRGB_.x, lightRGB_.y, lightRGB_.z});
@@ -227,7 +232,8 @@ void GameScene::ObjDraw()
 	}
 }
 
-void GameScene::SpriteDraw() {
+void GameScene::SpriteDraw() 
+{
 	
 }
 
@@ -238,13 +244,17 @@ void GameScene::RotAndLenCalculationMouse()
 	end = input->GetMousePos();
 
 	KMyMath::Vector2 mouseVec = { 0.0f,0.0f };
+
 	//ウィンドウの中心点とマウスの現在点のベクトルをとる
 	mouseVec.x = end.x - start.x;
 	mouseVec.y = end.y - start.y;
+
 	//長さ算出
 	length = MyMathUtility::Vector2Length(mouseVec);
+
 	//正規化
 	mouseVec = MyMathUtility::MakeVector2Normalize(mouseVec);
+
 	//角度を算出
 	angle = atan2(mouseVec.y, mouseVec.x);
 	angle = MyMathConvert::DegreeTransform(angle);
@@ -260,10 +270,13 @@ void GameScene::RotAndLenCalculationStick(KMyMath::Vector2 vec)
 	//ウィンドウの中心点とマウスの現在点のベクトルをとる
 	stickVec.x = end.x - s.x;
 	stickVec.y = end.y - s.y;
+
 	//長さ算出
 	length = MyMathUtility::Vector2Length(stickVec);
+
 	//正規化
 	stickVec = MyMathUtility::MakeVector2Normalize(stickVec);
+
 	//角度を算出
 	angle = atan2(stickVec.y, stickVec.x);
 	angle = MyMathConvert::DegreeTransform(angle);
@@ -314,11 +327,11 @@ void GameScene::Collision()
 
 				if (notes[i].lane == 0)
 				{
-					RotAndLenCalculationStick(input->GetPadLStick());
+					RotAndLenCalculationStick(-input->GetPadLStick());
 				}
 				else if (notes[i].lane == 1)
 				{
-					RotAndLenCalculationStick(input->GetPadRStick());
+					RotAndLenCalculationStick(-input->GetPadRStick());
 				}
 			}
 

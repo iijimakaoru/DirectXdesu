@@ -211,7 +211,7 @@ TextureManager* TextureManager::GetInstance() {
 }
 
 void TextureManager::LoadTextures() {
-	
+	textures["Texture"] = TextureManager::Load("Resources/texture/white1x1.png");
 }
 
 TextureData& TextureManager::GetTextures(std::string mapName) { return textures[mapName]; }

@@ -76,6 +76,9 @@ void TitleScene::Init() {
 		camera->GetViewPro()->GetMatView(),
 		camera->GetViewPro()->GetMatPro(),
 		emitter_,"suzanne1");
+
+	sprite.reset(Sprite::Create(PipelineManager::GetInstance()->GetPipeline("Sprite")));
+	texData = TextureManager::GetInstance()->GetTextures("Texture");
 }
 
 void TitleScene::Update() {
@@ -123,7 +126,9 @@ void TitleScene::ObjDraw() {
 }
 
 void TitleScene::SpriteDraw() {
-	
+	sprite->Draw(
+		texData, {0,0}, {32,32}, 0,
+		{1,0,0,1}, false, false, {0,0});
 }
 
 void TitleScene::Final() {

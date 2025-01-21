@@ -78,6 +78,8 @@ TextureData TextureManager::LoadTexture(const std::string& fileName) {
 	// 縦幅記憶
 	data.height = metadata.height;
 
+	textures[fileName] = data;
+
 	texCount++;
 
 	return data;
@@ -134,6 +136,8 @@ TextureData TextureManager::LoadDivTexture(
 	data.height = metadata.height;
 
 	texCount++;
+
+	textures[fileName_] = data;
 
 	return data;
 }
@@ -214,4 +218,7 @@ void TextureManager::LoadTextures() {
 	
 }
 
-TextureData& TextureManager::GetTextures(std::string mapName) { return textures[mapName]; }
+TextureData& TextureManager::GetTextures(std::string mapName)
+{
+	return textures[mapName];
+}

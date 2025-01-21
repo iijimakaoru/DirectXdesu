@@ -134,4 +134,9 @@ private:
 
 	std::unique_ptr<YOLOPoseEstimation> m_YOLOPoseEstimation;
 	cv::VideoCapture cap;
+	std::unique_ptr<Sprite> sprite;
+	TextureData texData;
+	float f;
+	float fDiv;
+
 };

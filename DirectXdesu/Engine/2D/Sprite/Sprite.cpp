@@ -326,6 +326,70 @@ void Sprite::DivDraw(
 	cmdList->DrawIndexedInstanced(6, 1, 0, 0, 0);
 }
 
+void Sprite::AnimationDraw(const TextureData& texData,uint16_t radiusX, uint16_t radiusY, float& frame, float frameDiv,KMyMath::Vector2 pos, KMyMath::Vector2 setSize_, float rot,KMyMath::Vector4 color )
+{
+	// 非表示処理
+	if (isInvisible)
+	{
+		return;
+	}
+
+	size_t lAnimeFrame = static_cast<size_t>(frame / frameDiv);
+
+	size_t lWidth = static_cast<size_t>(radiusX) * 2;
+	size_t lHeight = static_cast<size_t>(radiusY) * 2;
+
+	float lTexTop = 0.0f / static_cast<float>(texData.height);
+	float lTexRight = texData.width / static_cast<float>(texData.width);
+
+	float lWidthU = static_cast<float>(lWidth) / (lTexRight * static_cast<float>(texData.width));
+
+	//画像の半分のサイズ
+
+	if (texData.width / lWidth < lAnimeFrame + 1)
+	{
+		frame = 0;
+	}
+
+	// アンカーポイント
+	float left = ((0.0f - 0.5f) * (lWidth * setSize_.x)) * flipX;
+	float right = ((1.0f - 0.5f) * (lWidth * setSize_.x)) * flipX;
+	float top = ((0.0f - 0.5f) * (lHeight * setSize_.y)) * flipY;
+	float bottom = ((1.0f - 0.5f) * (lHeight * setSize_.y)) * flipY;
+
+	// 頂点データ
+	Vertex vertices[] = {
+		{{left, top, 0.0f},		{lWidthU * float(lAnimeFrame),lTexTop}			}, // 左上
+		{{left, bottom, 0.0f},	{lWidthU * float(lAnimeFrame),lTexRight}		}, // 左下
+		{{right, top, 0.0f},	{lWidthU * float((lAnimeFrame + 1)),lTexTop}	}, // 右上
+		{{right, bottom, 0.0f},	{lWidthU * float((lAnimeFrame + 1)),lTexRight}	}, // 右下
+	};
+
+	// インデックスデータ
+	uint16_t indices[] = {
+		1, 0, 3, // 三角形1つ目
+		2, 3, 0, // 三角形2つ目
+	};
+
+	// 全頂点に対して
+	memcpy(vertMap, vertices, sizeof(Vertex) * 4);
+
+	// 全インデックスに対して
+	memcpy(indexMap, indices, sizeof(uint16_t) * 6);
+
+	Update(pos, setSize_, rot, color);
+
+	// パイプラインセット
+	pipeline->Setting();
+	pipeline->Update(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST); // 三角形リスト
+
+	// 描画の条件
+	DrawCommand(texData);
+
+	// 描画コマンド
+	cmdList->DrawIndexedInstanced(6, 1, 0, 0, 0);
+}
+
 void Sprite::Update(
     KMyMath::Vector2 pos, KMyMath::Vector2 scale, float rot, KMyMath::Vector4 color_) {
 	// ワールド変換

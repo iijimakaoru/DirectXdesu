@@ -46,6 +46,11 @@ public:
 	    KMyMath::Vector2 pos, KMyMath::Vector2 setSize_, float rot, KMyMath::Vector4 color_,
 	    KMyMath::Vector2 anchorPoint_);
 
+	void AnimationDraw(const TextureData& texData, 
+		uint16_t radiusX, uint16_t radiusY, float& frame, float frameDiv,
+		KMyMath::Vector2 pos = { 0.0f, 0.0f },KMyMath::Vector2 setSize_ = { 1.0f, 1.0f }, float rot = 0.0f,
+		KMyMath::Vector4 color = { 1.0f, 1.0f, 1.0f, 1.0f });
+
 	// ポジションゲッター
 	const KMyMath::Vector2 GetPos() const;
 

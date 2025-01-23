@@ -102,6 +102,7 @@ Triangle::Triangle() {
 			line_stream >> normal.x;
 			line_stream >> normal.y;
 			line_stream >> normal.z;
+			normal.x *= -1.0f;
 
 			normals.emplace_back(normal);
 		}

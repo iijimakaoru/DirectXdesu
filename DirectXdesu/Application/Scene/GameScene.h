@@ -110,7 +110,6 @@ private:
 private:
 	//ノーツ
 	std::unique_ptr<MusicDesc>music;
-	std::vector<Note>notes;
 	std::unique_ptr<NoteObj>noteObj;
 	KMyMath::Vector2 start, end;
 	float angle;

@@ -73,52 +73,9 @@ void GameScene::Init() {
 	playTime = 0;
 	Meter meter = { 3,4 };
 	music = std::make_unique<MusicDesc>(85.0f, meter);
-	notes.push_back({ { 1,1,4 },1 ,DIRECTION::right });
-	notes.push_back({ { 1,2,4 },0 ,DIRECTION::left });
-	notes.push_back({ { 2,0,4 },1 ,DIRECTION::right });
-	notes.push_back({ { 2,1,4 },0 ,DIRECTION::up });
-	notes.push_back({ { 2,2,4 },0 ,DIRECTION::right });
-	notes.push_back({ { 2,2,4 },1 ,DIRECTION::left });
-	notes.push_back({ { 3,0,4 },1 ,DIRECTION::dawn });
-	notes.push_back({ { 3,1,4 },0 ,DIRECTION::right });
-	notes.push_back({ { 3,2,4 },1 ,DIRECTION::left });
-	notes.push_back({ { 4,0,4 },1 ,DIRECTION::up });
-	notes.push_back({ { 4,0,4 },0 ,DIRECTION::up });
-	notes.push_back({ { 4,1,4 },0 ,DIRECTION::right });
-	notes.push_back({ { 4,2,4 },0 ,DIRECTION::right });
-	notes.push_back({ { 5,0,4 },1 ,DIRECTION::right });
-	notes.push_back({ { 5,1,4 },0 ,DIRECTION::dawn });
-	notes.push_back({ { 5,1,4 },1 ,DIRECTION::dawn });
-	notes.push_back({ { 5,2,4 },0 ,DIRECTION::left });
-	notes.push_back({ { 6,0,4 },1 ,DIRECTION::dawn });
-	notes.push_back({ { 6,1,4 },0 ,DIRECTION::right });
-	notes.push_back({ { 6,2,4 },1 ,DIRECTION::up });
-	notes.push_back({ { 7,0,4 },0 ,DIRECTION::dawn });
-	notes.push_back({ { 7,0,4 },1 ,DIRECTION::dawn });
-	notes.push_back({ { 7,1,4 },1 ,DIRECTION::up });
-	notes.push_back({ { 7,2,4 },0 ,DIRECTION::left });
-	notes.push_back({ { 8,0,4 },1 ,DIRECTION::right });
-	notes.push_back({ { 8,1,4 },0 ,DIRECTION::right });
-	notes.push_back({ { 8,1,4 },1 ,DIRECTION::left });
-	notes.push_back({ { 8,2,4 },1 ,DIRECTION::dawn });
-	notes.push_back({ { 9,0,4 },0 ,DIRECTION::right });
-	notes.push_back({ { 9,1,4 },1 ,DIRECTION::right });
-	notes.push_back({ { 9,2,4 },0 ,DIRECTION::left });
-	notes.push_back({ { 10,0,4 },1 ,DIRECTION::up });
-	notes.push_back({ { 10,0,4 },0 ,DIRECTION::dawn });
-	notes.push_back({ { 10,1,4 },0 ,DIRECTION::right });
-	notes.push_back({ { 10,2,4 },1 ,DIRECTION::left });
-	notes.push_back({ { 11,0,4 },0 ,DIRECTION::right });
-	notes.push_back({ { 11,1,4 },0 ,DIRECTION::right });
-	notes.push_back({ { 11,1,4 },1 ,DIRECTION::left });
-	notes.push_back({ { 11,2,4 },0 ,DIRECTION::left });
-	notes.push_back({ { 12,0,4 },1 ,DIRECTION::right });
-	notes.push_back({ { 12,1,4 },0 ,DIRECTION::right });
-	notes.push_back({ { 12,2,4 },0 ,DIRECTION::left });
-	notes.push_back({ { 12,2,4 },1 ,DIRECTION::right });
 
 	noteObj = std::make_unique<NoteObj>();
-	noteObj->Init(notes, music.get());
+	noteObj->Init(music.get());
 
 	start = { 500,500 };
 	lenRimit = 100.0f;//csvに落とし込む,値を仮設定
@@ -215,15 +172,15 @@ void GameScene::Collision()
 	bool isSuccess = false;
 	float max, min;
 
-	for (size_t i = 0; i < notes.size(); i++)
+	for (size_t i = 0; i < noteObj->Notes().size(); i++)
 	{
 		//フラグが立っているなら次のノードへ
-		if (notes[i].isHit)
+		if (noteObj->Notes()[i]->isHit)
 		{
 			continue;
 		}
 		//ノードと現在のタイムを比較
-		float notetime = sec * music->ConvertBeatToMiliSeconds(notes[i].beat);
+		float notetime = sec * music->ConvertBeatToMiliSeconds(noteObj->Notes()[i]->beat);
 		float diff = notetime - playTime;
 		//60
 		if (diff <= 20 || !input->GetPadConnect())
@@ -236,7 +193,7 @@ void GameScene::Collision()
 			//1個前のノードのフラグが立っていないかつ同じ位置じゃない場合にしなければならない
 			if (i != 0)
 			{
-				if (!notes[i - 1].isHit)
+				if (!noteObj->Notes()[i - 1]->isHit)
 				{
 					continue;
 				}
@@ -250,18 +207,18 @@ void GameScene::Collision()
 			{
 				lenRimit = 0.7f;//仮
 
-				if (notes[i].lane == 0)
+				if (noteObj->Notes()[i]->lane == 0)
 				{
 					RotAndLenCalculationStick(input->GetPadLStick());
 				}
-				else if (notes[i].lane == 1)
+				else if (noteObj->Notes()[i]->lane == 1)
 				{
 					RotAndLenCalculationStick(input->GetPadLStick());
 				}
 			}
 
 
-			if (notes[i].direction == DIRECTION::right)
+			if (noteObj->Notes()[i]->direction == DIRECTION::right)
 			{
 				center = 0;
 				min = center - scope;
@@ -279,7 +236,7 @@ void GameScene::Collision()
 				}
 
 			}
-			else if (notes[i].direction == DIRECTION::up)
+			else if (noteObj->Notes()[i]->direction == DIRECTION::up)
 			{
 				center = -90;
 				min = center - scope;
@@ -296,7 +253,7 @@ void GameScene::Collision()
 				}
 
 			}
-			else if (notes[i].direction == DIRECTION::dawn)
+			else if (noteObj->Notes()[i]->direction == DIRECTION::dawn)
 			{
 				center = 90;
 				min = center - scope;
@@ -313,7 +270,7 @@ void GameScene::Collision()
 				}
 
 			}
-			else if (notes[i].direction == DIRECTION::left)
+			else if (noteObj->Notes()[i]->direction == DIRECTION::left)
 			{
 				center = 180;
 				min = -(center - scope);
@@ -333,7 +290,7 @@ void GameScene::Collision()
 			if (isSuccess)
 			{
 				combo++;
-				notes[i].isHit = true;
+				noteObj->Notes()[i]->isHit = true;
 			}
 			break;//for文から抜ける
 		}
@@ -341,7 +298,7 @@ void GameScene::Collision()
 		{
 			combo = 0;
 			score[MISS]++;
-			notes[i].isHit = true;
+			noteObj->Notes()[i]->isHit = true;
 		}
 	}
 }

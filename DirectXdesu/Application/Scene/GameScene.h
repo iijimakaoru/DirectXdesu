@@ -127,4 +127,6 @@ private:
 	const int32_t constblankSpace = 240;
 	int score[3];
 	int combo;
+
+	float testAngle;
 };

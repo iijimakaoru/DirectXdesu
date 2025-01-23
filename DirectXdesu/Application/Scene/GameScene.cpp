@@ -54,6 +54,10 @@ void GameScene::Init()
 	// シーンマネージャーインスタンス
 	sceneManager = SceneManager::GetInstance();
 
+	audioManager_ = AudioManager::GetInstance();
+
+	//audioManager_->BGMPlay_wav("Resources/Sound/maou_bgm_cyber44.wav");
+
 	// モデル
 	obj[OBJ::stage].reset(KObject3d::Create(objModel[OBJ::stage],
 		PipelineManager::GetInstance()->GetPipeline("Obj")));
@@ -153,7 +157,7 @@ void GameScene::Init()
 		{
 			obj_->GetTransform().SetRot({ 0.0f,180.0f,90.0f });
 		}
-		else											  //右
+		else										//右
 		{
 			obj_->GetTransform().SetRot({ 0.0f,0.0f,0.0f });
 		}
@@ -179,6 +183,7 @@ void GameScene::Update()
 	ImGui::DragInt("combo", &combo);
 	ImGui::DragFloat2("LStick", &LStick.x);
 	ImGui::DragFloat2("RStick", &RStick.x);
+	ImGui::DragFloat("angle", &testAngle);
 	ImGui::End();
 
 	light_->SetLightRGB({lightRGB_.x, lightRGB_.y, lightRGB_.z});
@@ -280,6 +285,8 @@ void GameScene::RotAndLenCalculationStick(KMyMath::Vector2 vec)
 	//角度を算出
 	angle = atan2(stickVec.y, stickVec.x);
 	angle = MyMathConvert::DegreeTransform(angle);
+
+	testAngle = angle;
 }
 
 void GameScene::Collision()
@@ -327,11 +334,11 @@ void GameScene::Collision()
 
 				if (notes[i].lane == 0)
 				{
-					RotAndLenCalculationStick(-input->GetPadLStick());
+					RotAndLenCalculationStick(input->GetPadLStick());
 				}
 				else if (notes[i].lane == 1)
 				{
-					RotAndLenCalculationStick(-input->GetPadRStick());
+					RotAndLenCalculationStick(input->GetPadRStick());
 				}
 			}
 

@@ -8,12 +8,12 @@ namespace MyMathUtility
 {
 	float Vector2Length(const KMyMath::Vector2& v)
 	{
-		return static_cast<float>(std::sqrt(v.x * v.x + v.y * v.y));
+		return std::sqrt(v.x * v.x + v.y * v.y);
 	}
 
 	float Vector3Length(const KMyMath::Vector3& v)
 	{
-		return static_cast<float>(std::sqrt(v.x * v.x + v.y * v.y + v.z * v.z));
+		return std::sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
     }
 
     float Vector3Dot(const KMyMath::Vector3& v1, const KMyMath::Vector3& v2) {

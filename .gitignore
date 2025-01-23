@@ -343,3 +343,5 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/DirectXdesu/Resources/Checkpoints
+/External/fbx_sdk/lib

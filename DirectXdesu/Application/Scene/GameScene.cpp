@@ -56,7 +56,7 @@ void GameScene::Init()
 
 	audioManager_ = AudioManager::GetInstance();
 
-	//audioManager_->BGMPlay_wav("Resources/Sound/maou_bgm_cyber44.wav");
+	audioManager_->BGMPlay_wav("maou_bgm_cyber44.wav");
 
 	// モデル
 	obj[OBJ::stage].reset(KObject3d::Create(objModel[OBJ::stage],
@@ -173,17 +173,11 @@ void GameScene::Init()
 
 void GameScene::Update() 
 {
-	KMyMath::Vector2 LStick = input->GetPadLStick();
-	KMyMath::Vector2 RStick = input->GetPadRStick();
-
 	ImGui::Begin("lo");
 	ImGui::DragInt("perfect", &score[PERFECT]);
 	ImGui::DragInt("great", &score[GREAT]);
 	ImGui::DragInt("miss", &score[MISS]);
 	ImGui::DragInt("combo", &combo);
-	ImGui::DragFloat2("LStick", &LStick.x);
-	ImGui::DragFloat2("RStick", &RStick.x);
-	ImGui::DragFloat("angle", &testAngle);
 	ImGui::End();
 
 	light_->SetLightRGB({lightRGB_.x, lightRGB_.y, lightRGB_.z});
@@ -285,8 +279,6 @@ void GameScene::RotAndLenCalculationStick(KMyMath::Vector2 vec)
 	//角度を算出
 	angle = atan2(stickVec.y, stickVec.x);
 	angle = MyMathConvert::DegreeTransform(angle);
-
-	testAngle = angle;
 }
 
 void GameScene::Collision()

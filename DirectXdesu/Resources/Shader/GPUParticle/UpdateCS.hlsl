@@ -27,23 +27,23 @@ void main(uint id : SV_DispatchThreadID)
     float3 curlVelocity = curlNoise3D(curlPosition, 1.0f);
     particle.Velocity = curlVelocity * 2;
 
-	//// put the particle back
+	//// 粒子を元に戻す
     ParticlePool[id.x] = particle;
 
-	// newly dead?
+	// 新しく死んだ？
     if (particle.Alive == 0.0f)
     {
-		// Add to dead list
+		// デッドリストに追加
         ADeadList.Append(id.x);
     }
     else
     {
-		// increment the counter on the draw list, then put the new draw data at the returned (pre-increment) index
+		// 描画リストのカウンターをインクリメントし、返された (インクリメント前の) インデックスに新しい描画データを置きます。
         uint drawIndex = DrawList.IncrementCounter();
 
-		// set up draw data
+		// 描画データを設定する
         ParticleDraw drawData;
-        drawData.Index = id.x; // this particle's actual index
+        drawData.Index = id.x; // このパーティクルの実際のインデックス
 
         DrawList[drawIndex] = drawData;
     }

@@ -29,10 +29,9 @@ public:
 		DirectX::XMFLOAT3 position,
 		DirectX::XMFLOAT3 scaling,
 		DirectX::XMFLOAT3 rotation,
+		DirectX::XMFLOAT4 color,
 		DirectX::XMFLOAT3 velocity,
-		DirectX::XMFLOAT3 acceleration,
-		DirectX::XMFLOAT4 startColor,
-		DirectX::XMFLOAT4 endColor);
+		DirectX::XMFLOAT3 acceleration);
 	~Emitter();
 
 	int GetEmitCount();
@@ -44,8 +43,6 @@ public:
 	float GetTimeBetweenEmit();
 	DirectX::XMFLOAT3 GetVelocity();
 	DirectX::XMFLOAT3 GetAcceleration();
-	DirectX::XMFLOAT4 GetStartColor();
-	DirectX::XMFLOAT4 GetEndColor();
 
 	void SetEmitCount(int value);
 	void SetEmitTimeCounter(float value);
@@ -58,6 +55,8 @@ public:
 	void SetRotation(DirectX::XMFLOAT3& rot);
 	DirectX::XMFLOAT3 GetScaling();
 	void SetScaling(DirectX::XMFLOAT3& scale);
+	DirectX::XMFLOAT4 GetColor();
+	void SetColor(DirectX::XMFLOAT4& color);
 
 private:
 	//emitter settings
@@ -70,10 +69,9 @@ private:
 	float emitTimeCounter;
 	DirectX::XMFLOAT3 velocity;
 	DirectX::XMFLOAT3 acceleration;
-	DirectX::XMFLOAT4 startColor;
-	DirectX::XMFLOAT4 endColor;
 	DirectX::XMFLOAT3 position;
 	DirectX::XMFLOAT3 rotation;
 	DirectX::XMFLOAT3 scaling;
+	DirectX::XMFLOAT4 coloring;
 };
 

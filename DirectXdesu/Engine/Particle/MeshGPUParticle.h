@@ -20,8 +20,6 @@
 
 #include "KModel.h"
 
-#include "MeshEmitter.h"
-
 class MeshGPUParticle
 {
 public:

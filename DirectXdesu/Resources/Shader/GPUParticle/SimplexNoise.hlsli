@@ -105,19 +105,19 @@ float snoise(float2 v)
     m = m * m;
     m = m * m;
 
-	// Gradients: 41 points uniformly over a line, mapped onto a diamond.
-	// The ring size 17*17 = 289 is close to a multiple of 41 (41*7 = 287)
+	// グラデーション: ライン上に均一に 41 個のポイントがあり、ひし形にマッピングされます。
+	// リングのサイズ 17*17 = 289 は 41 の倍数 (41*7 = 287) に近いです。
 
     float3 x = 2.0 * frac(p * C.www) - 1.0;
     float3 h = abs(x) - 0.5;
     float3 ox = floor(x + 0.5);
     float3 a0 = x - ox;
 
-	// Normalise gradients implicitly by scaling m
-	// Approximation of: m *= inversesqrt( a0*a0 + h*h );
+	// m をスケーリングすることで勾配を暗黙的に正規化します。
+	// 次の近似: m *= inversesqrt( a0*a0 + h*h );
     m *= 1.79284291400159 - 0.85373472095314 * (a0 * a0 + h * h);
 
-	// Compute final noise value at P
+	// P での最終ノイズ値を計算する
     float3 g;
     g.x = a0.x * x0.x + h.x * x0.y;
     g.yz = a0.yz * x12.xz + h.yz * x12.yw;

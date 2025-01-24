@@ -20,13 +20,13 @@ void main(point VS_OUTPUT input[1], inout TriangleStream<GS_OUTPUT> outStream)
 
         float depthChange = output.Position.z / output.Position.w;
 
-		// Adjust based on depth (prevents particles from getting too large)
+		// 深さに基づいて調整します (パーティクルが大きくなりすぎるのを防ぎます)
         offsets[i].y *= aspectRatio;
         output.Position.xy += offsets[i] * depthChange * input[0].Size;
         output.Color = input[0].Color;
         output.UV = saturate(offsets[i]);
 
-		// Done
+		// 終わり
         outStream.Append(output);
     }
 }

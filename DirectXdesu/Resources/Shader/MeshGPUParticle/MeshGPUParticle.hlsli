@@ -53,8 +53,7 @@ cbuffer timeData : register(b1)
 
 cbuffer particleData : register(b2)
 {
-    float4 startColor;
-    float4 endColor;
+    float4 color;
     float3 velocity;
     float lifeTime;
     float3 acceleration;

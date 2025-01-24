@@ -7,10 +7,9 @@ Emitter::Emitter(int maxParticles,
 	DirectX::XMFLOAT3 position,
 	DirectX::XMFLOAT3 scaling,
 	DirectX::XMFLOAT3 rotation,
+	DirectX::XMFLOAT4 color,
 	DirectX::XMFLOAT3 velocity, 
-	DirectX::XMFLOAT3 acceleration, 
-	DirectX::XMFLOAT4 startColor, 
-	DirectX::XMFLOAT4 endColor) :
+	DirectX::XMFLOAT3 acceleration) :
 	maxParticles(maxParticles),
 	gridSize(gridSize),
 	emissionRate(emissionRate),
@@ -18,10 +17,9 @@ Emitter::Emitter(int maxParticles,
 	position(position),
 	rotation(rotation),
 	scaling(scaling),
+	coloring(color),
 	velocity(velocity),
-	acceleration(acceleration),
-	startColor(startColor),
-	endColor(endColor)
+	acceleration(acceleration)
 {
 	emitTimeCounter = 0.0f;
 	timeBetweenEmit = 1.0f / emissionRate;
@@ -76,16 +74,6 @@ DirectX::XMFLOAT3 Emitter::GetAcceleration()
 	return acceleration;
 }
 
-DirectX::XMFLOAT4 Emitter::GetStartColor()
-{
-	return startColor;
-}
-
-DirectX::XMFLOAT4 Emitter::GetEndColor()
-{
-	return endColor;
-}
-
 void Emitter::SetEmitCount(int value)
 {
 	emitCount = value;
@@ -129,4 +117,14 @@ DirectX::XMFLOAT3 Emitter::GetScaling()
 void Emitter::SetScaling(DirectX::XMFLOAT3& scale)
 {
 	scaling = scale;
+}
+
+DirectX::XMFLOAT4 Emitter::GetColor()
+{
+	return coloring;
+}
+
+void Emitter::SetColor(DirectX::XMFLOAT4& color)
+{
+	coloring = color;
 }

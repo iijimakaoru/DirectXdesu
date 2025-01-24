@@ -35,6 +35,6 @@ void main(uint id : SV_DispatchThreadID)
     emitParticle.Size = 0.5f;
     emitParticle.Alive = 1.0f;
 
-	//Put it back
+	// Œ³‚É–ß‚µ‚Ä‚­‚¾‚³‚¢
     ParticlePool[emitIndex] = emitParticle;
 }

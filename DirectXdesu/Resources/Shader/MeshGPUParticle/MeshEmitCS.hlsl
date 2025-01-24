@@ -13,24 +13,28 @@ StructuredBuffer<Mesh> meshs : register(t0);
 void main(uint id : SV_DispatchThreadID)
 {
     if (id.x >= (uint) emitCount)
+    {
         return;
+    }
     
     if (id.x >= (uint) meshSize)
+    {
         return;
+    }
 
     uint emitIndex = CDeadList.Consume();
 
-	// update it in ParticlePool
+	// ParticlePool で更新します
     Particle emitParticle = ParticlePool.Load(emitIndex);
 
-	//color and position depend on the grid position and size
+	// 色と位置はグリッドの位置とサイズによって異なります
     emitParticle.Position = meshs[id.x].pos;
-    emitParticle.Velocity = float3(0, 0.0f, 0.0f);
-    emitParticle.Color = color;
+    emitParticle.Velocity = velocity;
+    emitParticle.Color = startColor;
     emitParticle.Age = 0.0f;
-    emitParticle.Size = 0.1f;
+    emitParticle.Size = 0.05f;
     emitParticle.Alive = 1.0f;
 
-	//Put it back
+	// 元に戻してください
     ParticlePool[emitIndex] = emitParticle;
 }

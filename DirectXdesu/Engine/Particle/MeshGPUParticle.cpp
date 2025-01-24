@@ -384,7 +384,8 @@ void MeshGPUParticle::UpdateMainPassCB(const Timer& timer,
 	MainParticleCB.velocity = emitter->GetVelocity();
 	MainParticleCB.acceleration = emitter->GetAcceleration();
 	MainParticleCB.vertexNum = (uint32_t)meshModel_->GetVertices().size();
-	MainParticleCB.color = emitter->GetColor();
+	MainParticleCB.startColor = emitter->GetStartColor();
+	MainParticleCB.endColor = emitter->GetEndColor();
 
 	auto currentParticleCB = currentFrameResource->ParticleCB.get();
 	currentParticleCB->CopyData(0, MainParticleCB);

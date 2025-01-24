@@ -20,7 +20,8 @@ struct TimeConstants
 
 struct ParticleConstants
 {
-	DirectX::XMFLOAT4 color;
+	DirectX::XMFLOAT4 startColor;
+	DirectX::XMFLOAT4 endColor;
 	DirectX::XMFLOAT3 velocity;
 	float LifeTime = 0.0f;
 	DirectX::XMFLOAT3 acceleration;

@@ -78,8 +78,9 @@ void NoteObj::Draw()
 
 void NoteObj::LoadNote(const std::string& name)
 {
+	int bpm;
 	//ファイルを開く
-	const std::string filename = "Resources/csv/note/" + name + ".csv";
+	const std::string filename = "Resources/csv/note/" + name + ".sus";
 	std::ifstream file;
 	file.open(filename);
 	assert(file.is_open());
@@ -88,21 +89,45 @@ void NoteObj::LoadNote(const std::string& name)
 	//1行分の文字列を入れる変数
 	std::string line;
 
+	for (size_t i = 0; i < 10; i++)
+	{
+		std::getline(file, line);
+	}
 	while (std::getline(file, line))
 	{
 		std::unique_ptr<Note> note=std::make_unique<Note>();
 		std::istringstream line_stream(line);
 		//,区切りで行の先頭文字列を取得
 		std::string key;
-		getline(line_stream, key,',');
+		// 空行をスキップ
+		if (line.empty()) continue;
+		//文字列にBPMがあるか
+		if (line[0] == '#')
+		{
+			if (line.find('BPM'))
+			{
+				// スペースの位置を見つける
+				size_t spacePos = line.find(':');
+
+				if (spacePos != std::string::npos) {
+					// スペースの次の部分を切り出す
+					std::string value = line.substr(spacePos + 1);
+
+					bpm = std::stoi(value);
+				}
+			}
+		
+			continue;
+		}
+		/*getline(line_stream, key,',');
 		note->beat.measure=std::stoi(key);
 		getline(line_stream, key, ',');
-		note->beat.beat = std::stoi(key);
+		note->beat.beat = std::stof(key);
 		getline(line_stream, key, ',');
 		note->beat.LPB = std::stoi(key);
 		getline(line_stream, key, ',');
 		note->lane = std::stoi(key);
-		getline(line_stream, key, ',');
+		getline(line_stream, key, ',');*/
 		//方向設定
 		if (key == "left")//左
 		{

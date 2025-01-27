@@ -4,7 +4,7 @@
 struct Beat
 {
 	int measure = 0;//小節番号
-	int beat = 0;//拍数
+	float beat = 0;//拍数
 	float LPB = 4;//1拍の長さ
 };
 

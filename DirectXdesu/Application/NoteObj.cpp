@@ -95,7 +95,6 @@ void NoteObj::LoadNote(const std::string& name)
 	}
 	while (std::getline(file, line))
 	{
-		std::unique_ptr<Note> note=std::make_unique<Note>();
 		std::istringstream line_stream(line);
 		//,区切りで行の先頭文字列を取得
 		std::string key;
@@ -104,16 +103,70 @@ void NoteObj::LoadNote(const std::string& name)
 		//文字列にBPMがあるか
 		if (line[0] == '#')
 		{
-			if (line.find('BPM'))
+			//BPMの代入
+			if (line.find('BPM')!= std::string::npos)
 			{
 				// スペースの位置を見つける
 				size_t spacePos = line.find(':');
-
 				if (spacePos != std::string::npos) {
 					// スペースの次の部分を切り出す
 					std::string value = line.substr(spacePos + 1);
 
 					bpm = std::stoi(value);
+				}
+			}
+			//BPMの次の行をスキップ
+			else if (line.find('8') != std::string::npos)
+			{
+				continue;
+			}
+			//ノーツの算出
+			else
+			{
+				// スペースの次の部分を切り出す
+				std::string value = line.substr(2, 2);//小節番号
+				int32_t measure = std::stoi(value);
+				value = line.substr(5,1);//レーン
+				int32_t lane = std::stoi(value) - 2;//レーンの始まりを0にするため値を-2する(文字を使うようになったら改良必須)
+				//拍数
+				// スペースの位置を見つける
+				size_t spacePos = line.find(':');
+				if (spacePos != std::string::npos) {
+					// スペースの次の部分を切り出す
+					std::string value = line.substr(spacePos + 1);
+					int32_t num = value.size() / 2;
+					for (size_t i = 0; i < num; i++)
+					{
+						int32_t pos = 2 * i;
+						std::string a = value.substr(pos, 2);
+						if (a == "11") {
+							std::unique_ptr<Note> note = std::make_unique<Note>();
+							//値を代入
+							note->beat.measure = measure;
+							note->lane = lane;
+							note->direction = DIRECTION::right;
+							note->beat.beat = 0.5 * pos;
+							notes.push_back(std::move(note));
+						}
+					}
+					////方向設定
+					//if (key == "left")//左
+					//{
+					//	note->direction = DIRECTION::left;
+					//}
+					//else if (key == "up")//上
+					//{
+					//	note->direction = DIRECTION::up;
+					//}
+					//else if (key == "dawn")//下
+					//{
+					//	note->direction = DIRECTION::dawn;
+					//}
+					//else //右
+					//{
+					//	note->direction = DIRECTION::right;
+					//}
+					//notes.push_back(std::move(note));
 				}
 			}
 		
@@ -128,24 +181,7 @@ void NoteObj::LoadNote(const std::string& name)
 		getline(line_stream, key, ',');
 		note->lane = std::stoi(key);
 		getline(line_stream, key, ',');*/
-		//方向設定
-		if (key == "left")//左
-		{
-			note->direction = DIRECTION::left;
-		}
-		else if(key == "up")//上
-		{
-			note->direction = DIRECTION::up;
-		}
-		else if (key == "dawn")//下
-		{
-			note->direction = DIRECTION::dawn;
-		}
-		else //右
-		{
-			note->direction = DIRECTION::right;
-		}
-		notes.push_back(std::move(note));
+		
 	}
 	//ファイルを閉じる
 	file.close();

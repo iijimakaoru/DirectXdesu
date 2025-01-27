@@ -29,6 +29,8 @@
 
 #include <Animation/Skelton.h>
 
+#include<YOLOPoseEstimation.h>
+
 /**
  * @file GameScene.h
  * @brief ゲームシーン
@@ -129,4 +131,15 @@ private:
 	const int32_t constblankSpace = 240;
 	int score[3];
 	int combo;
+
+	std::unique_ptr<YOLOPoseEstimation> m_YOLOPoseEstimation;
+	cv::VideoCapture cap;
+	cv::VideoCapture cap1;
+	cv::VideoCapture cap2;
+	cv::VideoCapture cap3;
+	std::unique_ptr<Sprite> sprite;
+	TextureData texData;
+	float f;
+	float fDiv;
+
 };

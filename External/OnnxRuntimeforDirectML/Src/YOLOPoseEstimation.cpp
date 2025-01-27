@@ -69,9 +69,13 @@ public:
 	void Update();
 
 private:
+	void GetFrame(int32_t index);
 
-	void _Draw(cv::Mat& image);
+	void _Draw(cv::Mat& image,int32_t index);
 
+	bool _AllComplete();
+
+	void _CompleteReset();
 private:
 
 	const std::array<Vec2, 19> m_skeleton = { {{16, 14}, {14, 12}, {17, 15}, {15, 13}, {12, 13}, {6, 12}, {7, 13}, {6, 7},{6, 8}, {7, 9}, {8, 10}, {9, 11}, {2, 3}, {1, 2}, {1, 3}, {2, 4}, {3, 5}, {4, 6}, {5, 7} } };
@@ -83,7 +87,11 @@ private:
 
 	std::array<YOLO_POSE_LANDMAKE, 17> m_baseLandmakes;
 	std::array<YOLO_POSE_LANDMAKE, 17> m_landmakes;
-	cv::VideoCapture* m_pCam;
+	std::vector<cv::VideoCapture*> m_pCams;
+	std::vector<cv::Mat> frames;
+	std::vector<bool> m_getFrameComplete;
+	std::vector<std::thread> m_frameThread;
+	
 
 	float m_maskThreshold;
 	float m_confhhreshold;
@@ -93,9 +101,10 @@ private:
 	std::unique_ptr<AutoBackendOnnx> m_pModel;
 	std::string m_modelPath;
 	const std::string m_onnxLogid = "yolov8_inference2";
-
+	std::vector<std::string> winName = { "win1","win2","win3","win4"};
 	bool m_isDraw;
 	bool m_canDraw;
+	bool m_emission;
 	std::atomic<bool> isRunning;
 	std::thread th;
 	std::mutex value_mutex;
@@ -124,7 +133,7 @@ YOLOPoseEstimationImp::~YOLOPoseEstimationImp()
 
 void YOLOPoseEstimationImp::CameraInitialize(void* cam)
 {
-	m_pCam = (cv::VideoCapture*)cam;
+	m_pCams.push_back((cv::VideoCapture*)cam);
 }
 
 void YOLOPoseEstimationImp::ModelInitialize(const char* modelPath, float maskThreshold, float confThreshold, float iouThreshold, ONNXP_ROVIDERS provider)
@@ -141,11 +150,22 @@ void YOLOPoseEstimationImp::Start(bool isDraw)
 {
 	m_isDraw = isDraw;
 	isRunning = true;
-
+	m_frameThread.resize(m_pCams.size());
+	frames.resize(m_pCams.size());
+	m_getFrameComplete.resize(m_pCams.size());
+	for ( size_t i = 0; i < m_pCams.size(); i++ )
+	{
+		m_frameThread[ i ] = std::thread([ this,i ] ()
+			{
+				this->GetFrame(i);
+			});
+	}
 	th = std::thread([this]()
 		{
 			this->Update();
 		});
+
+
 }
 
 const YOLO_POSE_LANDMAKE* const YOLOPoseEstimationImp::GetLandmakes()
@@ -165,55 +185,82 @@ void YOLOPoseEstimationImp::Update()
 {
 	m_canDraw = false;
 
-	cv::Mat frame;
 
-	while (m_pCam->read(frame) && isRunning)
+	while ( isRunning )
 	{
-		std::vector<YoloResults> objs;
+		m_emission = false;
 
-		if (m_pModel)
+		if ( _AllComplete() )
 		{
-			objs = m_pModel->predict_once(frame, m_confhhreshold, m_iouThreshold, m_maskThreshold);
-		}
-
-		if (!objs.empty())
-		{
-			for (int i = 0; i < (int)YOLO_POSE_INDEX::YOLO_POSE_INDEX_MAX; i++)
+			for ( size_t i = 0; i < m_pCams.size(); i++ )
 			{
-				int idx = i * 3;
-				m_baseLandmakes[i].x = objs[0].keypoints[idx];
-				m_baseLandmakes[i].y = objs[0].keypoints[idx + 1];
-				m_baseLandmakes[i].vi = objs[0].keypoints[idx + 2];
+
+				std::vector<YoloResults> objs;
+
+				if ( m_pModel )
+				{
+					std::lock_guard<std::mutex> lock(value_mutex);
+					objs = m_pModel->predict_once(frames[ i ],m_confhhreshold,m_iouThreshold,m_maskThreshold);
+				}
+
+				if ( !objs.empty() )
+				{
+					for ( int i = 0; i < ( int ) YOLO_POSE_INDEX::YOLO_POSE_INDEX_MAX; i++ )
+					{
+						int idx = i * 3;
+						m_baseLandmakes[ i ].x = objs[ 0 ].keypoints[ idx ];
+						m_baseLandmakes[ i ].y = objs[ 0 ].keypoints[ idx + 1 ];
+						m_baseLandmakes[ i ].vi = objs[ 0 ].keypoints[ idx + 2 ];
+					}
+
+					Vec2F mid = Midpoint({ m_baseLandmakes[ size_t(YOLO_POSE_INDEX::HIP_L) ].x, m_baseLandmakes[ size_t(YOLO_POSE_INDEX::HIP_L) ].y },{ m_baseLandmakes[ size_t(YOLO_POSE_INDEX::HIP_R) ].x, m_baseLandmakes[ size_t(YOLO_POSE_INDEX::HIP_R) ].y });
+
+					std::lock_guard<std::mutex> lock(value_mutex);
+
+					for ( int i = 0; i < ( int ) YOLO_POSE_INDEX::YOLO_POSE_INDEX_MAX; i++ )
+					{
+						Vec2F newPoint = Translate({ m_baseLandmakes[ i ].x, m_baseLandmakes[ i ].y },mid);
+
+						m_landmakes[ i ].x = newPoint.x;
+						m_landmakes[ i ].y = newPoint.y;
+						m_landmakes[ i ].vi = m_baseLandmakes[ i ].vi;
+					}
+
+					m_canDraw = true;
+				}
+
+				if ( m_isDraw )
+				{
+					_Draw(frames[ i ],i);
+				}
+
+				std::this_thread::sleep_for(std::chrono::milliseconds(1));
 			}
-
-			Vec2F mid = Midpoint({ m_baseLandmakes[size_t(YOLO_POSE_INDEX::HIP_L)].x, m_baseLandmakes[size_t(YOLO_POSE_INDEX::HIP_L)].y }, { m_baseLandmakes[size_t(YOLO_POSE_INDEX::HIP_R)].x, m_baseLandmakes[size_t(YOLO_POSE_INDEX::HIP_R)].y });
-
-			std::lock_guard<std::mutex> lock(value_mutex);
-
-			for (int i = 0; i < (int)YOLO_POSE_INDEX::YOLO_POSE_INDEX_MAX; i++)
-			{
-				Vec2F newPoint = Translate({ m_baseLandmakes[i].x, m_baseLandmakes[i].y }, mid);
-
-				m_landmakes[i].x = newPoint.x;
-				m_landmakes[i].y = newPoint.y;
-				m_landmakes[i].vi = m_baseLandmakes[i].vi;
-			}
-
-			m_canDraw = true;
+			_CompleteReset();
+			m_emission = true; 
 		}
-
-		if (m_isDraw)
-		{
-			_Draw(frame);
-		}
-
-		std::this_thread::sleep_for(std::chrono::milliseconds(1));
 	}
-
 	cv::destroyWindow("win");
 }
 
-void YOLOPoseEstimationImp::_Draw(cv::Mat& image)
+void YOLOPoseEstimationImp::GetFrame(int32_t index)
+{
+	if ( index >= frames.size() && index >= m_pCams.size() )
+	{
+		return;
+	}
+	while ( isRunning )
+	{
+		m_getFrameComplete[ index ] = m_pCams[ index ]->read(frames[ index ]);
+		while ( !m_emission && m_getFrameComplete[ index ] )
+		{
+			std::this_thread::sleep_for(std::chrono::milliseconds(1));
+		}
+		
+	} 
+}
+
+void YOLOPoseEstimationImp::_Draw(cv::Mat& image,int32_t index)
 {
 	cv::cvtColor(image, image, cv::COLOR_RGB2BGR);
 	cv::Size show_shape = image.size();
@@ -264,6 +311,27 @@ void YOLOPoseEstimationImp::_Draw(cv::Mat& image)
 		}
 	}
 
-	cv::imshow("win", image);
+	cv::imshow(winName[index].c_str(),image);
 	cv::waitKey(1);
+}
+
+bool YOLOPoseEstimationImp::_AllComplete()
+{
+	std::lock_guard<std::mutex> lock(value_mutex);
+	for ( size_t i = 0; i < m_getFrameComplete.size(); i++ )
+	{
+		if ( !m_getFrameComplete[ i ] )
+		{
+			return false;
+		}
+	}
+	return true;
+}
+
+void YOLOPoseEstimationImp::_CompleteReset()
+{
+	for ( size_t i = 0; i < m_getFrameComplete.size(); i++ )
+	{
+		m_getFrameComplete[ i ] = false;
+	}
 }

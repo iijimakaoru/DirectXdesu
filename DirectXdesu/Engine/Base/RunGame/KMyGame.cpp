@@ -20,6 +20,7 @@ void KMyGame::Update() {
 
 void KMyGame::Draw() {
 	// レンダーテクスチャへの描画
+	KDirectXCommon::GetInstance()->BeginCommnd();
 	postEffectManager->PreDraw(sceneManager);
 
 	// 描画開始

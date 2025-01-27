@@ -16,6 +16,9 @@
  */
 
 struct TextureData {
+
+	std::string path;
+
 	// テクスチャバッファ
 	Microsoft::WRL::ComPtr<ID3D12Resource> texBuff;
 
@@ -93,6 +96,7 @@ private:
 
 private:
 	ID3D12Device* device = nullptr;
+	ID3D12GraphicsCommandList* commandList = nullptr;
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> srvHeap = nullptr;
 	D3D12_DESCRIPTOR_RANGE descriptorRange;
 	D3D12_HEAP_PROPERTIES textureHeapProp{};

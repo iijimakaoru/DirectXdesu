@@ -52,24 +52,15 @@ void TitleScene::Init() {
 	emitter_ = new Emitter(
 		100,
 		1,
-		100.0f,
+		1.0f,
 		2.5f,
 		DirectX::XMFLOAT3(0.0f,0.0f,0.0f),
 		DirectX::XMFLOAT3(3.0f, 3.0f, 3.0f),
 		DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f),
-		DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f),
-		DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f),
-		DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f),
+		DirectX::XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f),
+		DirectX::XMFLOAT4(1.0f, 0.0f, 1.0f, 1.0f),
+		DirectX::XMFLOAT3(0.0f,	0.0f, 0.0f),
 		DirectX::XMFLOAT3(0.0f, 5.0f, 0.0f)
-	);
-
-	meshEmitter_ = new MeshEmitter(
-		50.0f,
-		300.0f,
-		DirectX::XMFLOAT3(1.0f, 1.0f, 0.0f),
-		DirectX::XMFLOAT3(0.0f, 5.0f, 0.0f),
-		DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 0.0f),
-		DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 0.0f)
 	);
 
 	meshGpuParticle_ = new MeshGPUParticle(timer_,
@@ -133,7 +124,6 @@ void TitleScene::SpriteDraw() {
 
 void TitleScene::Final() {
 	delete emitter_;
-	delete meshEmitter_;
 	delete gpuParticle_;
 	delete meshGpuParticle_;
 }

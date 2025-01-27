@@ -74,7 +74,6 @@ private:
 	Timer timer_;
 
 	Emitter* emitter_;
-	MeshEmitter* meshEmitter_;
 
 	GPUParticle* gpuParticle_;
 	MeshGPUParticle* meshGpuParticle_;
@@ -84,6 +83,7 @@ private:
 	DirectX::XMFLOAT3 rotation = { 0,0,0 };
 	DirectX::XMFLOAT3 scaling = { 1,1,1 };
 
+	// テスト用
 	std::unique_ptr<Sprite> sprite;
 	TextureData texData;
 };

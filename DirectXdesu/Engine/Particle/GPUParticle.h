@@ -5,6 +5,17 @@
 #include "Emitter.h"
 #include "FrameResource.h"
 
+#include "RootSignature.h"
+#include "ComputePipelineState.h"
+#include "GraphicPipelineState.h"
+
+#include "ParticlePool.h"
+#include "DeadList.h"
+#include "DrawList.h"
+#include "DrawArgs.h"
+
+#include "CommandSignature.h"
+
 class GPUParticle
 {
 public:
@@ -58,42 +69,30 @@ private:
 	FrameResource* currentFrameResource = nullptr;
 	int currentFrameResourceIndex = 0;
 
-	Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature = nullptr;
-	Microsoft::WRL::ComPtr<ID3D12RootSignature> particleRootSignature = nullptr;
-	Microsoft::WRL::ComPtr<ID3D12CommandSignature> particleCommandSignature = nullptr;
-
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> UAVHeap = nullptr;
-
-	Microsoft::WRL::ComPtr<ID3D12Resource> RWParticlePool = nullptr;
-	Microsoft::WRL::ComPtr<ID3D12Resource> ACDeadList = nullptr;
-	Microsoft::WRL::ComPtr<ID3D12Resource> RWDrawList = nullptr;
-	Microsoft::WRL::ComPtr<ID3D12Resource> RWDrawArgs = nullptr;
-
-	Microsoft::WRL::ComPtr<ID3D12Resource> DrawListUploadBuffer = nullptr;
-
-	CD3DX12_CPU_DESCRIPTOR_HANDLE ParticlePoolCPUSRV;
-	CD3DX12_GPU_DESCRIPTOR_HANDLE ParticlePoolGPUSRV;
-
-	CD3DX12_CPU_DESCRIPTOR_HANDLE ParticlePoolCPUUAV;
-	CD3DX12_GPU_DESCRIPTOR_HANDLE ParticlePoolGPUUAV;
-
-	CD3DX12_CPU_DESCRIPTOR_HANDLE ACDeadListCPUUAV;
-	CD3DX12_GPU_DESCRIPTOR_HANDLE ACDeadListGPUUAV;
-
-	CD3DX12_CPU_DESCRIPTOR_HANDLE DrawListCPUSRV;
-	CD3DX12_GPU_DESCRIPTOR_HANDLE DrawListGPUSRV;
-
-	CD3DX12_CPU_DESCRIPTOR_HANDLE DrawListCPUUAV;
-	CD3DX12_GPU_DESCRIPTOR_HANDLE DrawListGPUUAV;
-
-	CD3DX12_CPU_DESCRIPTOR_HANDLE DrawArgsCPUUAV;
-	CD3DX12_GPU_DESCRIPTOR_HANDLE DrawArgsGPUUAV;
-
-	std::unordered_map<std::string, Microsoft::WRL::ComPtr<ID3DBlob>> Shaders;
-	std::unordered_map<std::string, Microsoft::WRL::ComPtr<ID3D12PipelineState>> PSOs;
 
 	ObjectConstants MainObjectCB;
 	TimeConstants MainTimeCB;
 	ParticleConstants MainParticleCB;
+
+	std::unique_ptr<RootSignature> rootSignature_;
+	std::unique_ptr<RootSignature> particleRootSignature_;
+
+	std::unique_ptr<GraphicPipelineState> graphicPSO_;
+
+	std::unique_ptr<ComputePipelineState> emitPSO_;
+	std::unique_ptr<ComputePipelineState> updatePSO_;
+	std::unique_ptr<ComputePipelineState> copyDrawPSO_;
+	std::unique_ptr<ComputePipelineState> deadListPSO_;
+
+	std::unique_ptr<ParticlePool> particlePool_;
+	std::unique_ptr<DeadList> deadList_;
+	std::unique_ptr<DrawList> drawList_;
+	std::unique_ptr<DrawArgs> drawArgs_;
+
+	std::unique_ptr<CommandSignature> commandSignature_;
+
+	std::unordered_map<std::string, Microsoft::WRL::ComPtr<ID3DBlob>> Shaders;
+	std::unordered_map<std::string, Microsoft::WRL::ComPtr<ID3D12PipelineState>> PSOs;
 };
 

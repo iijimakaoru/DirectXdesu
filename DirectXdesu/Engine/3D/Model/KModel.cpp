@@ -462,6 +462,7 @@ MeshModel::MeshModel(const std::string modelname)
 			line_stream >> pos.x;
 			line_stream >> pos.y;
 			line_stream >> pos.z;
+			pos.x *= -1.0f;
 
 			Vertex vertex{};
 			vertex.position = pos;

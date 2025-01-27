@@ -3,7 +3,6 @@
 
 #include "Timer.h"
 #include "Emitter.h"
-#include "MeshEmitter.h"
 #include "FrameResource.h"
 #include "KVertex.h"
 

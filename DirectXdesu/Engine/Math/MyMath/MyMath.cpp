@@ -621,6 +621,30 @@ namespace MyMathConvert
 		return result;
 	}
 
+	KMyMath::Vector4 ChangeVector4(DirectX::XMFLOAT4 float4)
+	{
+		KMyMath::Vector4 result;
+
+		result.x = float4.x;
+		result.y = float4.y;
+		result.z = float4.z;
+		result.w = float4.w;
+
+		return result;
+	}
+
+	DirectX::XMFLOAT4 ChangeXMFLOAT4(KMyMath::Vector4 vector4)
+	{
+		DirectX::XMFLOAT4 result;
+
+		result.x = vector4.x;
+		result.y = vector4.y;
+		result.z = vector4.z;
+		result.w = vector4.w;
+
+		return result;
+	}
+
 	float RadianTransform(float degree)
 	{
 		float radian = degree * (PI / 180.0f);

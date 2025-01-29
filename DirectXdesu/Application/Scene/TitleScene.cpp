@@ -49,12 +49,8 @@ void TitleScene::Init() {
 
 	audioManager = AudioManager::GetInstance();
 
-	emitter_ = new Emitter(
-		100,
-		1,
-		1.0f,
-		2.5f,
-		DirectX::XMFLOAT3(0.0f,0.0f,0.0f),
+	emitter_ = new Emitter(100, 1, 1.0f, 2.5f, 0.025f,
+		DirectX::XMFLOAT3(5.0f,0.0f,0.0f),
 		DirectX::XMFLOAT3(3.0f, 3.0f, 3.0f),
 		DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f),
 		DirectX::XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f),
@@ -63,10 +59,35 @@ void TitleScene::Init() {
 		DirectX::XMFLOAT3(0.0f, 5.0f, 0.0f)
 	);
 
+	meshModel_ = std::make_unique<MeshModel>("suzanne1");
 	meshGpuParticle_ = new MeshGPUParticle(timer_,
 		camera->GetViewPro()->GetMatView(),
 		camera->GetViewPro()->GetMatPro(),
-		emitter_,"suzanne1");
+		emitter_,
+		meshModel_.get());
+
+	arrowEmitter_ = std::make_unique<Emitter>(100, 1, 1.0f, 2.5f, 0.025f,
+		DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f),
+		DirectX::XMFLOAT3(3.0f, 3.0f, 3.0f),
+		DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f),
+		DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),
+		DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),
+		DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f),
+		DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
+	arrowModel_ = std::make_unique<MeshModel>("arrowEffect");
+	arrowEffect_ = std::make_unique<MeshGPUParticle>(timer_,
+		camera->GetViewPro()->GetMatView(),
+		camera->GetViewPro()->GetMatPro(),
+		emitter_,
+		arrowModel_.get());
+
+	KMyMath::Vector3 testPos = { 0,0,0 };
+	KMyMath::Vector3 testRot = { 0,0,0 };
+	KMyMath::Vector3 testScale = { 10,10,10 };
+	KMyMath::Vector4 testColor = { 1,1,1,1 };
+	float testLimit = 60.0f;
+	arrow_.reset(ArrowEffect::Create(testPos, testRot, testScale, testColor, arrowModel_.get(), testLimit,
+		timer_, camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro()));
 
 	sprite.reset(Sprite::Create(PipelineManager::GetInstance()->GetPipeline("Sprite")));
 	texData = TextureManager::GetInstance()->GetTextures("Texture");
@@ -76,12 +97,12 @@ void TitleScene::Update() {
 	ImGui::Begin("MeshParticle");
 	ImGui::SliderFloat3("Position", &position.x, -6, 6, "%.1f");
 	ImGui::SliderFloat3("Rotation", &rotation.x, -180, 180, "%.1f");
-	ImGui::SliderFloat3("Scaling", &scaling.x, -5, 5, "%.1f");
+	ImGui::SliderFloat3("Scaling", &scaling.x, -2, 2, "%.1f");
 	ImGui::End();
 
-	emitter_->SetPosition(position);
-	emitter_->SetRotation(rotation);
-	emitter_->SetScaling(scaling);
+	arrowEmitter_->SetPosition(position);
+	arrowEmitter_->SetRotation(rotation);
+	arrowEmitter_->SetScaling(scaling);
 
 	timer_.UpdateTimer();
 	timer_.UpdateTitleBarStats();
@@ -104,6 +125,15 @@ void TitleScene::Update() {
 		camera->GetViewPro()->GetMatPro(),
 		emitter_);
 
+	arrowEffect_->Update(timer_,
+		camera->GetViewPro()->GetMatView(),
+		camera->GetViewPro()->GetMatPro(),
+		arrowEmitter_.get());
+
+	arrow_->Update(timer_,
+		camera->GetViewPro()->GetMatView(),
+		camera->GetViewPro()->GetMatPro());
+
 	camera->Update();
 }
 
@@ -114,6 +144,15 @@ void TitleScene::ObjDraw() {
 		camera->GetViewPro()->GetMatView(),
 		camera->GetViewPro()->GetMatPro(),
 		emitter_);
+
+	/*arrowEffect_->Draw(timer_,
+		camera->GetViewPro()->GetMatView(),
+		camera->GetViewPro()->GetMatPro(),
+		arrowEmitter_.get());*/
+
+	arrow_->Draw(timer_,
+		camera->GetViewPro()->GetMatView(),
+		camera->GetViewPro()->GetMatPro());
 }
 
 void TitleScene::SpriteDraw() {

@@ -104,6 +104,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Application\MusicDesc.cpp" />
+    <ClCompile Include="Application\ArrowEffect.cpp" />
     <ClCompile Include="Engine\Particle\Emitter.cpp" />
     <ClCompile Include="Engine\Particle\CommandSignature.cpp" />
     <ClCompile Include="Engine\Particle\DrawArgs.cpp" />
@@ -181,6 +182,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\MusicDesc.h" />
+    <ClInclude Include="Application\ArrowEffect.h" />
     <ClInclude Include="Engine\Particle\Emitter.h" />
     <ClInclude Include="Engine\Particle\CommandSignature.h" />
     <ClInclude Include="Engine\Particle\DrawArgs.h" />

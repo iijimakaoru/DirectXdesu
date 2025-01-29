@@ -26,6 +26,7 @@ public:
 		int gridSize,
 		float emissionRate,
 		float lifeTime,
+		float size,
 		DirectX::XMFLOAT3 position,
 		DirectX::XMFLOAT3 scaling,
 		DirectX::XMFLOAT3 rotation,
@@ -61,6 +62,9 @@ public:
 	DirectX::XMFLOAT4 GetEndColor();
 	void SetEndColor(DirectX::XMFLOAT4& color);
 
+	float GetParticleSize();
+	void SetParticleSize(float& size_);
+
 private:
 	//emitter settings
 	int maxParticles;
@@ -70,6 +74,7 @@ private:
 	float emissionRate;
 	float timeBetweenEmit;
 	float emitTimeCounter;
+	float size;
 	DirectX::XMFLOAT3 velocity;
 	DirectX::XMFLOAT3 acceleration;
 	DirectX::XMFLOAT3 position;

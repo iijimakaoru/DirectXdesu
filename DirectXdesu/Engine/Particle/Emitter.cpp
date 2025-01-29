@@ -4,6 +4,7 @@ Emitter::Emitter(int maxParticles,
 	int gridSize, 
 	float emissionRate, 
 	float lifeTime, 
+	float size,
 	DirectX::XMFLOAT3 position,
 	DirectX::XMFLOAT3 scaling,
 	DirectX::XMFLOAT3 rotation,
@@ -15,6 +16,7 @@ Emitter::Emitter(int maxParticles,
 	gridSize(gridSize),
 	emissionRate(emissionRate),
 	lifeTime(lifeTime),
+	size(size),
 	position(position),
 	rotation(rotation),
 	scaling(scaling),
@@ -139,4 +141,14 @@ DirectX::XMFLOAT4 Emitter::GetEndColor()
 void Emitter::SetEndColor(DirectX::XMFLOAT4& color)
 {
 	endColor = color;
+}
+
+float Emitter::GetParticleSize()
+{
+	return size;
+}
+
+void Emitter::SetParticleSize(float& size_)
+{
+	size = size_;
 }

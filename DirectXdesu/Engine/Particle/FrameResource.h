@@ -24,6 +24,7 @@ struct ParticleConstants
 	DirectX::XMFLOAT4 endColor;
 	DirectX::XMFLOAT3 velocity;
 	float LifeTime = 0.0f;
+	float size;
 	DirectX::XMFLOAT3 acceleration;
 	float pad;
 	int EmitCount = 0;

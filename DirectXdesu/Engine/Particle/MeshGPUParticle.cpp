@@ -2,20 +2,13 @@
 #include "KDirectXCommon.h"
 #include "CreateBlend.h"
 
-MeshGPUParticle::MeshGPUParticle(const Timer& timer, 
-	const KMyMath::Matrix4& matView,
-	const KMyMath::Matrix4& matProjection,
-	Emitter* emitter,
-	const std::string modelname)
+MeshGPUParticle::MeshGPUParticle(const Timer& timer,  const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection, Emitter* emitter, MeshModel* model)
 {
-	Init(timer, matView, matProjection, emitter,modelname);
+	model_ = model;
+	Init(timer, matView, matProjection, emitter);
 }
 
-void MeshGPUParticle::Init(const Timer& timer,
-	const KMyMath::Matrix4& matView,
-	const KMyMath::Matrix4& matProjection,
-	Emitter* emitter,
-	const std::string modelname)
+void MeshGPUParticle::Init(const Timer& timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection, Emitter* emitter)
 {
 	KDirectXCommon* directXCommon = KDirectXCommon::GetInstance();
 	ID3D12GraphicsCommandList* commndList = directXCommon->GetCommandList();
@@ -33,7 +26,6 @@ void MeshGPUParticle::Init(const Timer& timer,
 	drawList_ = std::make_unique<DrawList>();
 	drawArgs_ = std::make_unique<DrawArgs>();
 	commandSignature_ = std::make_unique<CommandSignature>();
-	meshModel_ = std::make_unique<MeshModel>(modelname);
 
 	BuildUAV();
 	BuildRootSignature();
@@ -77,7 +69,7 @@ void MeshGPUParticle::Init(const Timer& timer,
 	commndList->SetComputeRootDescriptorTable(6, drawArgs_->GetGPUUAV());
 	commndList->SetComputeRootDescriptorTable(7, MeshSRV);
 
-	commndList->Dispatch((uint32_t)meshModel_->GetVertices().size(), 1, 1);
+	commndList->Dispatch((uint32_t)model_->GetVertices().size(), 1, 1);
 
 	ThrowIfFailed(commndList->Close());
 
@@ -90,10 +82,7 @@ void MeshGPUParticle::Init(const Timer& timer,
 	directXCommon->BeginCommnd();
 }
 
-void MeshGPUParticle::Update(const Timer& timer,
-	const KMyMath::Matrix4& matView,
-	const KMyMath::Matrix4& matProjection,
-	Emitter* emitter)
+void MeshGPUParticle::Update(const Timer& timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection, Emitter* emitter)
 {
 	ID3D12Fence* fence = KDirectXCommon::GetInstance()->GetFence();
 
@@ -114,10 +103,7 @@ void MeshGPUParticle::Update(const Timer& timer,
 	UpdateMainPassCB(timer, matView, matProjection, emitter);
 }
 
-void MeshGPUParticle::Draw(const Timer& timer,
-	const KMyMath::Matrix4& matView,
-	const KMyMath::Matrix4& matProjection,
-	Emitter* emitter)
+void MeshGPUParticle::Draw(const Timer& timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection, Emitter* emitter)
 {
 	KDirectXCommon* directXCommon = KDirectXCommon::GetInstance();
 	ID3D12GraphicsCommandList* commndList = directXCommon->GetCommandList();
@@ -149,7 +135,7 @@ void MeshGPUParticle::Draw(const Timer& timer,
 		commndList->SetComputeRootDescriptorTable(7, MeshSRV);
 
 		UpdateMainPassCB(timer, matView, matProjection, emitter);
-		commndList->Dispatch((uint32_t)meshModel_->GetVertices().size(), 1, 1);
+		commndList->Dispatch((uint32_t)model_->GetVertices().size(), 1, 1);
 	}
 
 	drawList_->Translation(commndList, D3D12_RESOURCE_STATE_COPY_DEST);
@@ -192,17 +178,17 @@ void MeshGPUParticle::BuildUAV()
 
 	// Particle Pool
 	{
-		particlePool_->Create(UAVHeap.Get(), (uint32_t)meshModel_->GetVertices().size());
+		particlePool_->Create(UAVHeap.Get(), (uint32_t)model_->GetVertices().size());
 	}
 
 	// Dead List
 	{
-		deadList_->Create(UAVHeap.Get(), (uint32_t)meshModel_->GetVertices().size());
+		deadList_->Create(UAVHeap.Get(), (uint32_t)model_->GetVertices().size());
 	}
 
 	// Draw List
 	{
-		drawList_->Create(UAVHeap.Get(), (uint32_t)meshModel_->GetVertices().size());
+		drawList_->Create(UAVHeap.Get(), (uint32_t)model_->GetVertices().size());
 	}
 
 	// Draw Args
@@ -212,7 +198,7 @@ void MeshGPUParticle::BuildUAV()
 
 	// Mesh
 	{
-		MeshSRV = meshModel_->GetVertex()->CreateDescripterSRV(UAVHeap.Get());
+		MeshSRV = model_->GetVertex()->CreateDescripterSRV(UAVHeap.Get());
 	}
 }
 
@@ -378,14 +364,15 @@ void MeshGPUParticle::UpdateMainPassCB(const Timer& timer,
 	currentTimeCB->CopyData(0, MainTimeCB);
 
 	MainParticleCB.EmitCount = emitter->GetEmitCount();
-	MainParticleCB.MaxParticles = (uint32_t)meshModel_->GetVertices().size();
+	MainParticleCB.MaxParticles = (uint32_t)model_->GetVertices().size();
 	MainParticleCB.GridSize = emitter->GetGridSize();
 	MainParticleCB.LifeTime = emitter->GetLifeTime();
 	MainParticleCB.velocity = emitter->GetVelocity();
 	MainParticleCB.acceleration = emitter->GetAcceleration();
-	MainParticleCB.vertexNum = (uint32_t)meshModel_->GetVertices().size();
+	MainParticleCB.vertexNum = (uint32_t)model_->GetVertices().size();
 	MainParticleCB.startColor = emitter->GetStartColor();
 	MainParticleCB.endColor = emitter->GetEndColor();
+	MainParticleCB.size = emitter->GetParticleSize();
 
 	auto currentParticleCB = currentFrameResource->ParticleCB.get();
 	currentParticleCB->CopyData(0, MainParticleCB);
@@ -416,7 +403,7 @@ void MeshGPUParticle::ParticleUpdate()
 	commndList->SetComputeRootDescriptorTable(6, drawArgs_->GetGPUUAV());
 	commndList->SetComputeRootDescriptorTable(7, MeshSRV);
 
-	commndList->Dispatch((uint32_t)meshModel_->GetVertices().size(), 1, 1);
+	commndList->Dispatch((uint32_t)model_->GetVertices().size(), 1, 1);
 }
 
 void MeshGPUParticle::ParticleDraw()

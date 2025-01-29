@@ -26,13 +26,12 @@ public:
 		const KMyMath::Matrix4& matView,
 		const KMyMath::Matrix4& matProjection,
 		Emitter* emitter,
-		const std::string modelname = "test");
+		MeshModel* model);
 
 	void Init(const Timer& timer,
 		const KMyMath::Matrix4& matView,
 		const KMyMath::Matrix4& matProjection,
-		Emitter* emitter,
-		const std::string modelname);
+		Emitter* emitter);
 
 	void Update(const Timer& timer,
 		const KMyMath::Matrix4& matView,
@@ -87,7 +86,7 @@ private:
 
 	std::unique_ptr<CommandSignature> commandSignature_;
 
-	std::unique_ptr<MeshModel> meshModel_;
+	MeshModel* model_ = nullptr;
 	CD3DX12_GPU_DESCRIPTOR_HANDLE MeshSRV;
 
 	bool init = false;

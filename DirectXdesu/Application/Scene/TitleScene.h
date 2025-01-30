@@ -77,12 +77,8 @@ private:
 
 	Emitter* emitter_;
 
-	GPUParticle* gpuParticle_;
+	std::unique_ptr<GPUParticle> gpuParticle_;
 
-	MeshGPUParticle* meshGpuParticle_;
-	std::unique_ptr<MeshModel> meshModel_;
-
-	std::unique_ptr<MeshModel> arrowModel_;
 	// Imgui用
 	DirectX::XMFLOAT3 position = { 0,0,0 };
 	DirectX::XMFLOAT3 rotation = { 0,0,0 };

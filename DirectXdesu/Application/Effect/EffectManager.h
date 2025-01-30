@@ -1,7 +1,7 @@
 #pragma once
 #include "ArrowEffect.h"
 
-const size_t maxArrowEffect = 5;
+const size_t maxArrowEffect = 15;
 
 class EffectManager
 {
@@ -23,8 +23,6 @@ private:
 private:
 	std::unique_ptr<MeshModel> arrowModel_;
 
-	//std::list<std::unique_ptr<ArrowEffect>> arrowEffect_;
 	std::array<std::unique_ptr<ArrowEffect>, maxArrowEffect> arrowEffect_;
-	//std::unique_ptr<ArrowEffect> arrowEffect_;
 };
 

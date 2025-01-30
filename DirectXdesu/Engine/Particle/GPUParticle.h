@@ -42,7 +42,6 @@ public:
 private:
 	void BuildUAV(Emitter* emitter);
 	void BuildRootSignature();
-	void BuildShadersAndInputLayout();
 	void BuildPSOs();
 	void BuildFrameResources();
 	void UpdateMainPassCB(const Timer& timer,
@@ -91,8 +90,5 @@ private:
 	std::unique_ptr<DrawArgs> drawArgs_;
 
 	std::unique_ptr<CommandSignature> commandSignature_;
-
-	std::unordered_map<std::string, Microsoft::WRL::ComPtr<ID3DBlob>> Shaders;
-	std::unordered_map<std::string, Microsoft::WRL::ComPtr<ID3D12PipelineState>> PSOs;
 };
 

@@ -34,7 +34,6 @@ void GPUParticle::Init(const Timer& timer,
 
 	BuildUAV(emitter);
 	BuildRootSignature();
-	BuildShadersAndInputLayout();
 	BuildFrameResources();
 	BuildPSOs();
 
@@ -49,7 +48,7 @@ void GPUParticle::Init(const Timer& timer,
 
 	ThrowIfFailed(
 		directXCommon->GetCommandList()->Reset(directXCommon->GetCommandAllocator().Get(),
-			PSOs["particleDeadList"].Get()));
+			deadListPSO_->GetPipelineState()));
 
 	directXCommon->GetCommandList()->SetComputeRootSignature(particleRootSignature_->GetRootSignature());
 
@@ -125,7 +124,7 @@ void GPUParticle::Draw(const Timer& timer,
 
 	auto currentCommandListAllocator = currentFrameResource->commandListAllocator;
 
-	commndList->SetPipelineState(PSOs["particleEmit"].Get());
+	commndList->SetPipelineState(emitPSO_->GetPipelineState());
 	commndList->SetComputeRootSignature(particleRootSignature_->GetRootSignature());
 
 	ID3D12DescriptorHeap* descriptorHeaps[] = { UAVHeap.Get() };
@@ -166,7 +165,7 @@ void GPUParticle::Draw(const Timer& timer,
 	commndList->ResourceBarrier(1, &resourceBarrier);
 
 	// パーティクル更新シェーダー
-	commndList->SetPipelineState(PSOs["particleUpdate"].Get());
+	commndList->SetPipelineState(updatePSO_->GetPipelineState());
 	commndList->SetComputeRootSignature(particleRootSignature_->GetRootSignature());
 	commndList->Dispatch(emitter->GetMaxParticles(), 1, 1);
 
@@ -174,7 +173,7 @@ void GPUParticle::Draw(const Timer& timer,
 	commndList->ResourceBarrier(1, &resourceBarrier);
 
 	// パーティクル描画シェーダー
-	commndList->SetPipelineState(PSOs["particleDraw"].Get());
+	commndList->SetPipelineState(copyDrawPSO_->GetPipelineState());
 	commndList->SetComputeRootSignature(particleRootSignature_->GetRootSignature());
 	commndList->Dispatch(1, 1, 1);
 
@@ -186,7 +185,7 @@ void GPUParticle::Draw(const Timer& timer,
 		D3D12_RESOURCE_STATE_UNORDERED_ACCESS, D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE);
 	commndList->ResourceBarrier(1, &resourceBarrier);
 
-	commndList->SetPipelineState(PSOs["opaque"].Get());
+	commndList->SetPipelineState(graphicPSO_->GetPipelineState());
 
 	commndList->SetGraphicsRootSignature(rootSignature_->GetRootSignature());
 
@@ -298,24 +297,6 @@ void GPUParticle::BuildRootSignature()
 	commandSignature_->Create();
 }
 
-void GPUParticle::BuildShadersAndInputLayout()
-{
-	Shaders["VS"] = d3dUtil::CompileShader(L"GPUParticle/GPUParticleVS.hlsl",
-		nullptr, "main", "vs_5_0");
-	Shaders["GS"] = d3dUtil::CompileShader(L"GPUParticle/GPUParticleGS.hlsl",
-		nullptr, "main", "gs_5_0");
-	Shaders["PS"] = d3dUtil::CompileShader(L"GPUParticle/GPUParticlePS.hlsl",
-		nullptr, "main", "ps_5_0");
-	Shaders["EmitCS"] = d3dUtil::CompileShader(L"GPUParticle/EmitCS.hlsl",
-		nullptr, "main", "cs_5_0");
-	Shaders["UpdateCS"] = d3dUtil::CompileShader(L"GPUParticle/UpdateCS.hlsl",
-		nullptr, "main", "cs_5_0");
-	Shaders["CopyDrawCountCS"] = d3dUtil::CompileShader(L"GPUParticle/CopyDrawCountCS.hlsl",
-		nullptr, "main", "cs_5_0");
-	Shaders["DeadListInitCS"] = d3dUtil::CompileShader(L"GPUParticle/DeadListInitCS.hlsl",
-		nullptr, "main", "cs_5_0");
-}
-
 void GPUParticle::BuildPSOs()
 {
 	//KDirectXCommon* directXCommon = KDirectXCommon::GetInstance();
@@ -324,9 +305,9 @@ void GPUParticle::BuildPSOs()
 	// Graphic
 	{
 		graphicPSO_->SetRootSignature(rootSignature_->GetRootSignature());
-		graphicPSO_->CreateVertexShader(L"MeshGPUParticle/MeshGPUParticleVS.hlsl", "main");
-		graphicPSO_->CreatePixelShader(L"MeshGPUParticle/MeshGPUParticlePS.hlsl", "main");
-		graphicPSO_->CreateGeometryShader(L"MeshGPUParticle/MeshGPUParticleGS.hlsl", "main");
+		graphicPSO_->CreateVertexShader(L"GPUParticle/GPUParticleVS.hlsl", "main");
+		graphicPSO_->CreatePixelShader(L"GPUParticle/GPUParticlePS.hlsl", "main");
+		graphicPSO_->CreateGeometryShader(L"GPUParticle/GPUParticleGS.hlsl", "main");
 	}
 
 	// Blend
@@ -351,7 +332,7 @@ void GPUParticle::BuildPSOs()
 
 	// EmitCS
 	{
-		emitPSO_->CreateShader(L"MeshGPUParticle/MeshEmitCS.hlsl", "main");
+		emitPSO_->CreateShader(L"GPUParticle/EmitCS.hlsl", "main");
 		emitPSO_->SetRootSignature(particleRootSignature_.get());
 		emitPSO_->SetFlag(D3D12_PIPELINE_STATE_FLAG_NONE);
 		emitPSO_->Create(device);
@@ -359,7 +340,7 @@ void GPUParticle::BuildPSOs()
 
 	// UpdateCS
 	{
-		updatePSO_->CreateShader(L"MeshGPUParticle/MeshUpdateCS.hlsl", "main");
+		updatePSO_->CreateShader(L"GPUParticle/UpdateCS.hlsl", "main");
 		updatePSO_->SetRootSignature(particleRootSignature_.get());
 		updatePSO_->SetFlag(D3D12_PIPELINE_STATE_FLAG_NONE);
 		updatePSO_->Create(device);
@@ -367,7 +348,7 @@ void GPUParticle::BuildPSOs()
 
 	// CopyDrawCountCS
 	{
-		copyDrawPSO_->CreateShader(L"MeshGPUParticle/MeshCopyDrawCountCS.hlsl", "main");
+		copyDrawPSO_->CreateShader(L"GPUParticle/CopyDrawCountCS.hlsl", "main");
 		copyDrawPSO_->SetRootSignature(particleRootSignature_.get());
 		copyDrawPSO_->SetFlag(D3D12_PIPELINE_STATE_FLAG_NONE);
 		copyDrawPSO_->Create(device);
@@ -375,7 +356,7 @@ void GPUParticle::BuildPSOs()
 
 	// DeadListInitCS
 	{
-		deadListPSO_->CreateShader(L"MeshGPUParticle/MeshDeadListInitCS.hlsl", "main");
+		deadListPSO_->CreateShader(L"GPUParticle/DeadListInitCS.hlsl", "main");
 		deadListPSO_->SetRootSignature(particleRootSignature_.get());
 		deadListPSO_->SetFlag(D3D12_PIPELINE_STATE_FLAG_NONE);
 		deadListPSO_->Create(device);

@@ -49,7 +49,8 @@ void TitleScene::Init() {
 
 	audioManager = AudioManager::GetInstance();
 
-	emitter_ = new Emitter(100, 1, 1.0f, 2.5f, 0.025f,
+	emitter_ = new Emitter(
+		10000, 1, 1000.0f, 2.5f, 0.025f,
 		DirectX::XMFLOAT3(5.0f,0.0f,0.0f),
 		DirectX::XMFLOAT3(3.0f, 3.0f, 3.0f),
 		DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f),
@@ -59,14 +60,7 @@ void TitleScene::Init() {
 		DirectX::XMFLOAT3(0.0f, 5.0f, 0.0f)
 	);
 
-	meshModel_ = std::make_unique<MeshModel>("suzanne1");
-	meshGpuParticle_ = new MeshGPUParticle(timer_,
-		camera->GetViewPro()->GetMatView(),
-		camera->GetViewPro()->GetMatPro(),
-		emitter_,
-		meshModel_.get());
-
-	arrowModel_ = std::make_unique<MeshModel>("arrowEffect");
+	gpuParticle_ = std::make_unique<GPUParticle>(timer_, camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro(), emitter_);
 
 	sprite.reset(Sprite::Create(PipelineManager::GetInstance()->GetPipeline("Sprite")));
 	texData = TextureManager::GetInstance()->GetTextures("Texture");
@@ -96,10 +90,7 @@ void TitleScene::Update() {
 		
 	}
 
-	meshGpuParticle_->Update(timer_,
-		camera->GetViewPro()->GetMatView(),
-		camera->GetViewPro()->GetMatPro(),
-		emitter_);
+	gpuParticle_->Update(timer_, camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro(), emitter_);
 
 	camera->Update();
 }
@@ -107,10 +98,7 @@ void TitleScene::Update() {
 void TitleScene::ObjDraw() {
 	skyDome->Draw();
 
-	meshGpuParticle_->Draw(timer_,
-		camera->GetViewPro()->GetMatView(),
-		camera->GetViewPro()->GetMatPro(),
-		emitter_);
+	gpuParticle_->Draw(timer_, camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro(), emitter_);
 }
 
 void TitleScene::SpriteDraw() {
@@ -121,8 +109,6 @@ void TitleScene::SpriteDraw() {
 
 void TitleScene::Final() {
 	delete emitter_;
-	delete gpuParticle_;
-	delete meshGpuParticle_;
 }
 
 void TitleScene::StartScene() {

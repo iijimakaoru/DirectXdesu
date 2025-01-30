@@ -66,28 +66,7 @@ void TitleScene::Init() {
 		emitter_,
 		meshModel_.get());
 
-	arrowEmitter_ = std::make_unique<Emitter>(100, 1, 1.0f, 2.5f, 0.025f,
-		DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f),
-		DirectX::XMFLOAT3(3.0f, 3.0f, 3.0f),
-		DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f),
-		DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),
-		DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),
-		DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f),
-		DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
 	arrowModel_ = std::make_unique<MeshModel>("arrowEffect");
-	arrowEffect_ = std::make_unique<MeshGPUParticle>(timer_,
-		camera->GetViewPro()->GetMatView(),
-		camera->GetViewPro()->GetMatPro(),
-		emitter_,
-		arrowModel_.get());
-
-	KMyMath::Vector3 testPos = { 0,0,0 };
-	KMyMath::Vector3 testRot = { 0,0,0 };
-	KMyMath::Vector3 testScale = { 10,10,10 };
-	KMyMath::Vector4 testColor = { 1,1,1,1 };
-	float testLimit = 60.0f;
-	arrow_.reset(ArrowEffect::Create(testPos, testRot, testScale, testColor, arrowModel_.get(), testLimit,
-		timer_, camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro()));
 
 	sprite.reset(Sprite::Create(PipelineManager::GetInstance()->GetPipeline("Sprite")));
 	texData = TextureManager::GetInstance()->GetTextures("Texture");
@@ -99,10 +78,6 @@ void TitleScene::Update() {
 	ImGui::SliderFloat3("Rotation", &rotation.x, -180, 180, "%.1f");
 	ImGui::SliderFloat3("Scaling", &scaling.x, -2, 2, "%.1f");
 	ImGui::End();
-
-	arrowEmitter_->SetPosition(position);
-	arrowEmitter_->SetRotation(rotation);
-	arrowEmitter_->SetScaling(scaling);
 
 	timer_.UpdateTimer();
 	timer_.UpdateTitleBarStats();
@@ -122,8 +97,7 @@ void TitleScene::Update() {
 		KMyMath::Vector3 testRot = MyMathConvert::ChangeXMFloat3toVector3(rotation);
 		KMyMath::Vector3 testScale = MyMathConvert::ChangeXMFloat3toVector3(scaling);
 		KMyMath::Vector4 testColor = { 1,1,1,1 };
-		float testLimit = 60.0f;
-		newArrowEffect.reset(ArrowEffect::Create(testPos, testRot, testScale, testColor, arrowModel_.get(), testLimit,
+		newArrowEffect.reset(ArrowEffect::Create(testPos, testRot, testScale, testColor, arrowModel_.get(),
 			timer_, camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro()));
 
 		arrowEffects.push_back(std::move(newArrowEffect));
@@ -134,15 +108,6 @@ void TitleScene::Update() {
 		camera->GetViewPro()->GetMatPro(),
 		emitter_);
 
-	arrowEffect_->Update(timer_,
-		camera->GetViewPro()->GetMatView(),
-		camera->GetViewPro()->GetMatPro(),
-		arrowEmitter_.get());
-
-	arrow_->Update(timer_,
-		camera->GetViewPro()->GetMatView(),
-		camera->GetViewPro()->GetMatPro());
-
 	for (std::unique_ptr<ArrowEffect>& arrowEffect : arrowEffects) 
 	{
 		arrowEffect->Update(timer_,
@@ -151,6 +116,10 @@ void TitleScene::Update() {
 	}
 
 	camera->Update();
+
+	// エフェクト
+	arrowEffects.remove_if(
+		[](std::unique_ptr<ArrowEffect>& arrowEffect) { return arrowEffect->GetIsDead(); });
 }
 
 void TitleScene::ObjDraw() {
@@ -160,15 +129,6 @@ void TitleScene::ObjDraw() {
 		camera->GetViewPro()->GetMatView(),
 		camera->GetViewPro()->GetMatPro(),
 		emitter_);
-
-	/*arrowEffect_->Draw(timer_,
-		camera->GetViewPro()->GetMatView(),
-		camera->GetViewPro()->GetMatPro(),
-		arrowEmitter_.get());*/
-
-	/*arrow_->Draw(timer_,
-		camera->GetViewPro()->GetMatView(),
-		camera->GetViewPro()->GetMatPro());*/
 
 	for (std::unique_ptr<ArrowEffect>& arrowEffect : arrowEffects) 
 	{

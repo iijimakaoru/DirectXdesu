@@ -27,6 +27,8 @@ void main(uint id : SV_DispatchThreadID)
 	
     particle.Velocity = velocity;
     
+    particle.Size = size;
+    
     particle.Color =
     float4(lerp(startColor.x, endColor.x, particle.Age / lifeTime),
            lerp(startColor.y, endColor.y, particle.Age / lifeTime),

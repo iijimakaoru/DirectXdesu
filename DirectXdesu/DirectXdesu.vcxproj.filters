@@ -483,7 +483,7 @@
     <ClCompile Include="Application\MusicDesc.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Application\ArrowEffect.cpp">
+    <ClCompile Include="Application\Effect\ArrowEffect\ArrowEffect.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -716,7 +716,7 @@
     <ClInclude Include="Application\MusicDesc.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Application\ArrowEffect.h">
+    <ClInclude Include="Application\Effect\ArrowEffect\ArrowEffect.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

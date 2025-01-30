@@ -82,12 +82,8 @@ private:
 	MeshGPUParticle* meshGpuParticle_;
 	std::unique_ptr<MeshModel> meshModel_;
 
-	std::unique_ptr<Emitter> arrowEmitter_;
 	std::unique_ptr<MeshModel> arrowModel_;
-	std::unique_ptr<MeshGPUParticle> arrowEffect_;
-
 	std::list<std::unique_ptr<ArrowEffect>> arrowEffects;
-	std::unique_ptr<ArrowEffect> arrow_;
 
 	// Imgui用
 	DirectX::XMFLOAT3 position = { 0,0,0 };

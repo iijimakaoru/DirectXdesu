@@ -27,6 +27,8 @@
 
 #include "MusicDesc.h"
 
+#include "EffectManager.h"
+
 /**
  * @file GameScene.h
  * @brief ゲームシーン
@@ -127,4 +129,8 @@ private:
 	const int32_t constblankSpace = 240;
 	int score[3];
 	int combo;
+
+	// エフェクト系
+	Timer timer_;
+	std::unique_ptr<EffectManager> effectManager;
 };

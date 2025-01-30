@@ -144,6 +144,11 @@ void KObject3d::Finalize() {  }
 
 Transform& KObject3d::GetTransform() { return transform; }
 
+KMyMath::Vector4& KObject3d::GetColor()
+{
+	return color;
+}
+
 void KObject3d::SetColor(const KMyMath::Vector4& color_) { color = color_; }
 
 void KObject3d::SetRGB(const KMyMath::Vector3& rgb) {

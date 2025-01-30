@@ -99,6 +99,8 @@ public:
 	// ゲッター
 	Transform& GetTransform();
 
+	KMyMath::Vector4& GetColor();
+
 	// セッター
 	void SetParent(const Transform* parent_);
 	void SetColor(const KMyMath::Vector4& color_);

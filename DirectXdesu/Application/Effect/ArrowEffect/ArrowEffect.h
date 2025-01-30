@@ -6,11 +6,7 @@
 class ArrowEffect
 {
 public:
-	static ArrowEffect* Create(KMyMath::Vector3& pos, KMyMath::Vector3& rotation, KMyMath::Vector3& scale,KMyMath::Vector4& color, 
-		MeshModel* model, const Timer& timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection);
-
-	void Init(KMyMath::Vector3& pos,KMyMath::Vector3& rotation,KMyMath::Vector3& scale, KMyMath::Vector4& color,
-		const Timer& timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection);
+	void Init(MeshModel* model, const Timer& timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection);
 
 	void Update(const Timer& timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection);
 
@@ -18,6 +14,8 @@ public:
 
 	bool GetIsDead();
 
+	void SetParticle(KMyMath::Vector3& pos, KMyMath::Vector3& rotation, KMyMath::Vector3& scale, KMyMath::Vector4& color,
+		const Timer& timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection);
 private:
 	void SetModel(MeshModel* model);
 	void SetLifeLimit(float& lifeLimit);

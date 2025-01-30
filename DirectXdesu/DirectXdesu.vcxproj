@@ -105,6 +105,7 @@
   <ItemGroup>
     <ClCompile Include="Application\MusicDesc.cpp" />
     <ClCompile Include="Application\Effect\ArrowEffect\ArrowEffect.cpp" />
+    <ClCompile Include="Application\Effect\EffectManager.cpp" />
     <ClCompile Include="Engine\Particle\Emitter.cpp" />
     <ClCompile Include="Engine\Particle\CommandSignature.cpp" />
     <ClCompile Include="Engine\Particle\DrawArgs.cpp" />
@@ -183,6 +184,7 @@
   <ItemGroup>
     <ClInclude Include="Application\MusicDesc.h" />
     <ClInclude Include="Application\Effect\ArrowEffect\ArrowEffect.h" />
+    <ClInclude Include="Application\Effect\EffectManager.h" />
     <ClInclude Include="Engine\Particle\Emitter.h" />
     <ClInclude Include="Engine\Particle\CommandSignature.h" />
     <ClInclude Include="Engine\Particle\DrawArgs.h" />

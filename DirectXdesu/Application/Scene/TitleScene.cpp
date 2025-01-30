@@ -91,7 +91,8 @@ void TitleScene::Update() {
 
 	//particleEditor_->Update();
 
-	if (input->IsTrigger(DIK_1)) {
+	if (input->IsTrigger(DIK_1)) 
+	{
 		std::unique_ptr<ArrowEffect> newArrowEffect;
 		KMyMath::Vector3 testPos = MyMathConvert::ChangeXMFloat3toVector3(position);
 		KMyMath::Vector3 testRot = MyMathConvert::ChangeXMFloat3toVector3(rotation);

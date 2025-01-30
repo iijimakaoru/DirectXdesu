@@ -54,8 +54,8 @@ void GameScene::Init()
 	// シーンマネージャーインスタンス
 	sceneManager = SceneManager::GetInstance();
 
+	// 音
 	audioManager_ = AudioManager::GetInstance();
-
 	audioManager_->BGMPlay_wav("maou_bgm_cyber44.wav");
 
 	// モデル
@@ -78,6 +78,10 @@ void GameScene::Init()
 	obj[OBJ::skydome]->SetColor({ 0.1f,0.0f,1.0f,1.0f });
 
 	collisionManager_ = new CollisionManager();
+
+	// エフェクトの初期化
+	effectManager = std::make_unique<EffectManager>();
+	effectManager->Init();
 
 	//ノーツ
 	playTime = 0;
@@ -212,6 +216,9 @@ void GameScene::Update()
 		obj[i]->Update(camera->GetViewPro(), camera->GetWorldPos());
 	}
 
+	// エフェクトの更新
+	effectManager->Update(timer_, camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro());
+
 	camera->Update();
 }
 
@@ -229,6 +236,9 @@ void GameScene::ObjDraw()
 			objNote[i]->Draw();
 		}
 	}
+
+	// エフェクト描画
+	effectManager->Draw(timer_, camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro());
 }
 
 void GameScene::SpriteDraw() 
@@ -408,6 +418,14 @@ void GameScene::Collision()
 			{
 				combo++;
 				notes[i].isHit = true;
+
+				// エフェクト発生
+				KMyMath::Vector3 nowPos = objNote[i]->GetTransform().GetPos();
+				KMyMath::Vector3 nowRot = objNote[i]->GetTransform().GetRot();
+				KMyMath::Vector3 nowScale = objNote[i]->GetTransform().GetScale();
+				KMyMath::Vector4 nowColor = objNote[i]->GetColor();
+				effectManager->SetArrowEffect(nowPos, nowRot, nowScale, nowColor,
+					timer_, camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro());
 			}
 			break;//for文から抜ける
 		}

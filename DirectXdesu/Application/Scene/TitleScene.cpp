@@ -117,7 +117,16 @@ void TitleScene::Update() {
 	//particleEditor_->Update();
 
 	if (input->IsTrigger(DIK_1)) {
-		
+		std::unique_ptr<ArrowEffect> newArrowEffect;
+		KMyMath::Vector3 testPos = MyMathConvert::ChangeXMFloat3toVector3(position);
+		KMyMath::Vector3 testRot = MyMathConvert::ChangeXMFloat3toVector3(rotation);
+		KMyMath::Vector3 testScale = MyMathConvert::ChangeXMFloat3toVector3(scaling);
+		KMyMath::Vector4 testColor = { 1,1,1,1 };
+		float testLimit = 60.0f;
+		newArrowEffect.reset(ArrowEffect::Create(testPos, testRot, testScale, testColor, arrowModel_.get(), testLimit,
+			timer_, camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro()));
+
+		arrowEffects.push_back(std::move(newArrowEffect));
 	}
 
 	meshGpuParticle_->Update(timer_,
@@ -133,6 +142,13 @@ void TitleScene::Update() {
 	arrow_->Update(timer_,
 		camera->GetViewPro()->GetMatView(),
 		camera->GetViewPro()->GetMatPro());
+
+	for (std::unique_ptr<ArrowEffect>& arrowEffect : arrowEffects) 
+	{
+		arrowEffect->Update(timer_,
+			camera->GetViewPro()->GetMatView(),
+			camera->GetViewPro()->GetMatPro());
+	}
 
 	camera->Update();
 }
@@ -150,9 +166,16 @@ void TitleScene::ObjDraw() {
 		camera->GetViewPro()->GetMatPro(),
 		arrowEmitter_.get());*/
 
-	arrow_->Draw(timer_,
+	/*arrow_->Draw(timer_,
 		camera->GetViewPro()->GetMatView(),
-		camera->GetViewPro()->GetMatPro());
+		camera->GetViewPro()->GetMatPro());*/
+
+	for (std::unique_ptr<ArrowEffect>& arrowEffect : arrowEffects) 
+	{
+		arrowEffect->Draw(timer_,
+			camera->GetViewPro()->GetMatView(),
+			camera->GetViewPro()->GetMatPro());
+	}
 }
 
 void TitleScene::SpriteDraw() {

@@ -86,7 +86,7 @@ private:
 	std::unique_ptr<MeshModel> arrowModel_;
 	std::unique_ptr<MeshGPUParticle> arrowEffect_;
 
-	std::vector<std::unique_ptr<ArrowEffect>> arrowEffects;
+	std::list<std::unique_ptr<ArrowEffect>> arrowEffects;
 	std::unique_ptr<ArrowEffect> arrow_;
 
 	// Imgui用

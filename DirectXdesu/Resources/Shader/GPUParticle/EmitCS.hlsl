@@ -32,7 +32,7 @@ void main(uint id : SV_DispatchThreadID)
     emitParticle.Velocity = float3(0, 0.0f, 0.0f);
     emitParticle.Color = float4(gridPosition / gridSize, 1);
     emitParticle.Age = 0.0f;
-    emitParticle.Size = 0.5f;
+    emitParticle.Size = 0.1f;
     emitParticle.Alive = 1.0f;
 
 	// Œ³‚É–ß‚µ‚Ä‚­‚¾‚³‚¢

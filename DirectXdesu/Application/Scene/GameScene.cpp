@@ -36,6 +36,8 @@ void GameScene::LoadResources()
 
 void GameScene::Init() 
 {
+	timer_ = Timer(KWinApp::GetHWND(), KWinApp::GetWindow().lpszMenuName);
+
 	BaseScene::Init();
 
 	LoadCSV("collision");
@@ -53,10 +55,6 @@ void GameScene::Init()
 
 	// シーンマネージャーインスタンス
 	sceneManager = SceneManager::GetInstance();
-
-	// 音
-	audioManager_ = AudioManager::GetInstance();
-	audioManager_->BGMPlay_wav("maou_bgm_cyber44.wav");
 
 	// モデル
 	obj[OBJ::stage].reset(KObject3d::Create(objModel[OBJ::stage],
@@ -81,7 +79,7 @@ void GameScene::Init()
 
 	// エフェクトの初期化
 	effectManager = std::make_unique<EffectManager>();
-	effectManager->Init();
+	effectManager->Init(timer_, camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro());
 
 	//ノーツ
 	playTime = 0;
@@ -173,6 +171,10 @@ void GameScene::Init()
 
 	start = { 500,500 };
 	lenRimit = 100.0f;//csvに落とし込む,値を仮設定
+
+	// 音
+	audioManager_ = AudioManager::GetInstance();
+	audioManager_->BGMPlay_wav("maou_bgm_cyber44.wav");
 }
 
 void GameScene::Update() 
@@ -183,6 +185,8 @@ void GameScene::Update()
 	ImGui::DragInt("miss", &score[MISS]);
 	ImGui::DragInt("combo", &combo);
 	ImGui::End();
+
+	timer_.UpdateTimer();
 
 	light_->SetLightRGB({lightRGB_.x, lightRGB_.y, lightRGB_.z});
 	light_->SetLightDir({lightDir_.x, lightDir_.y, lightDir_.z, 0.0f});

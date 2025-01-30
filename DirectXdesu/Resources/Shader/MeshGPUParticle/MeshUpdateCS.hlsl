@@ -35,7 +35,7 @@ void main(uint id : SV_DispatchThreadID)
            lerp(startColor.z, endColor.z, particle.Age / lifeTime),
            1);
     
-    particle.Age += deltaTime;
+    //particle.Age += deltaTime;
 
 	// —±Žq‚ðŒ³‚É–ß‚·
     ParticlePool[id.x] = particle;

@@ -22,7 +22,7 @@ void ArrowEffect::Update(const Timer& timer, const KMyMath::Matrix4& matView, co
 	if (!isDead)
 	{
 		DirectX::XMFLOAT3 easeScale = MyMathConvert::ChangeVector3toXMfloat3(MyEase::OutCubicVec3(startScale_, endScale_, lifeTimer_ / lifeLimit_));
-		float particleSize = MyEase::Lerp(0.5f, 0.0f, lifeTimer_ / lifeLimit_);
+		float particleSize = MyEase::Lerp(1.0f, 0.0f, lifeTimer_ / lifeLimit_);
 
 		emitter_->SetScaling(easeScale);
 		emitter_->SetParticleSize(particleSize);
@@ -63,13 +63,15 @@ void ArrowEffect::SetParticle(KMyMath::Vector3& pos, KMyMath::Vector3& rotation,
 	DirectX::XMFLOAT3 nowRot = MyMathConvert::ChangeVector3toXMfloat3(rotation);
 	DirectX::XMFLOAT3 nowScale = MyMathConvert::ChangeVector3toXMfloat3(scale);
 	DirectX::XMFLOAT4 nowColor = MyMathConvert::ChangeXMFLOAT4(color);
-	float nowParticleSize = 0.5f;
+	float nowParticleSize = 1.0f;
 
 	emitter_->SetPosition(nowPos);
 	emitter_->SetScaling(nowScale);
 	emitter_->SetRotation(nowRot);
 	emitter_->SetStartColor(nowColor);
 	emitter_->SetParticleSize(nowParticleSize);
+
+	lifeTimer_ = 0.0f;
 
 	isDead = false;
 }

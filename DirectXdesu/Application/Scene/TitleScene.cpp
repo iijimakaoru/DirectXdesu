@@ -93,15 +93,7 @@ void TitleScene::Update() {
 
 	if (input->IsTrigger(DIK_1)) 
 	{
-		std::unique_ptr<ArrowEffect> newArrowEffect;
-		KMyMath::Vector3 testPos = MyMathConvert::ChangeXMFloat3toVector3(position);
-		KMyMath::Vector3 testRot = MyMathConvert::ChangeXMFloat3toVector3(rotation);
-		KMyMath::Vector3 testScale = MyMathConvert::ChangeXMFloat3toVector3(scaling);
-		KMyMath::Vector4 testColor = { 1,1,1,1 };
-		newArrowEffect.reset(ArrowEffect::Create(testPos, testRot, testScale, testColor, arrowModel_.get(),
-			timer_, camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro()));
-
-		arrowEffects.push_back(std::move(newArrowEffect));
+		
 	}
 
 	meshGpuParticle_->Update(timer_,
@@ -109,18 +101,7 @@ void TitleScene::Update() {
 		camera->GetViewPro()->GetMatPro(),
 		emitter_);
 
-	for (std::unique_ptr<ArrowEffect>& arrowEffect : arrowEffects) 
-	{
-		arrowEffect->Update(timer_,
-			camera->GetViewPro()->GetMatView(),
-			camera->GetViewPro()->GetMatPro());
-	}
-
 	camera->Update();
-
-	// エフェクト
-	arrowEffects.remove_if(
-		[](std::unique_ptr<ArrowEffect>& arrowEffect) { return arrowEffect->GetIsDead(); });
 }
 
 void TitleScene::ObjDraw() {
@@ -130,13 +111,6 @@ void TitleScene::ObjDraw() {
 		camera->GetViewPro()->GetMatView(),
 		camera->GetViewPro()->GetMatPro(),
 		emitter_);
-
-	for (std::unique_ptr<ArrowEffect>& arrowEffect : arrowEffects) 
-	{
-		arrowEffect->Draw(timer_,
-			camera->GetViewPro()->GetMatView(),
-			camera->GetViewPro()->GetMatPro());
-	}
 }
 
 void TitleScene::SpriteDraw() {

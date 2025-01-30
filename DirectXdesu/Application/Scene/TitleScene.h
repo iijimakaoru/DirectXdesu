@@ -83,8 +83,6 @@ private:
 	std::unique_ptr<MeshModel> meshModel_;
 
 	std::unique_ptr<MeshModel> arrowModel_;
-	std::list<std::unique_ptr<ArrowEffect>> arrowEffects;
-
 	// Imgui用
 	DirectX::XMFLOAT3 position = { 0,0,0 };
 	DirectX::XMFLOAT3 rotation = { 0,0,0 };

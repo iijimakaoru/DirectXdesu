@@ -136,4 +136,5 @@ private:
 	std::unique_ptr<EffectManager> effectManager;
 
 	// オブジェクト系
+	std::unique_ptr<ObjectManager> objectManager;
 };

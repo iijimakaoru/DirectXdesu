@@ -4,11 +4,11 @@ void EffectManager::Init(const Timer& timer, const KMyMath::Matrix4& matView, co
 {
 	arrowModel_ = std::make_unique<MeshModel>("arrowEffect");
 
-	for (size_t i = 0; i < maxEffectNum; i++)
+	/*for (size_t i = 0; i < maxEffectNum; i++)
 	{
 		arrowEffect_[i] = std::make_unique<ArrowEffect>();
 		arrowEffect_[i]->Init(arrowModel_.get(), timer, matView, matProjection);
-	}
+	}*/
 
 	groundModel_ = std::make_unique<MeshModel>("GroundEffect");
 
@@ -49,20 +49,26 @@ void EffectManager::Draw(const Timer& timer, const KMyMath::Matrix4& matView, co
 
 void EffectManager::DeleteEffect()
 {
-	
+	arrowEffect_.remove_if([](std::unique_ptr<ArrowEffect>& arrowEffect) { return arrowEffect->GetIsDead(); });
 }
 
 void EffectManager::SetArrowEffect(KMyMath::Vector3& pos, KMyMath::Vector3& rotation, KMyMath::Vector3& scale, KMyMath::Vector4& color,
 	const Timer& timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection)
 {
-	for (size_t i = 0; i < maxEffectNum; i++)
+	std::unique_ptr<ArrowEffect> newArrowEffect;
+	newArrowEffect = std::make_unique<ArrowEffect>();
+	newArrowEffect->Init(arrowModel_.get(), timer, matView, matProjection);
+	newArrowEffect->SetParticle(pos, rotation, scale, color, timer, matView, matProjection);
+
+	arrowEffect_.push_back(std::move(newArrowEffect));
+	/*for (size_t i = 0; i < maxEffectNum; i++)
 	{
 		if (arrowEffect_[i]->GetIsDead())
 		{
 			arrowEffect_[i]->SetParticle(pos, rotation, scale, color, timer, matView, matProjection);
 			break;
 		}
-	}
+	}*/
 }
 
 void EffectManager::SetGroundEffect(KMyMath::Vector3& pos, KMyMath::Vector3& rotation, KMyMath::Vector3& scale, KMyMath::Vector4& color, const Timer& timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection)

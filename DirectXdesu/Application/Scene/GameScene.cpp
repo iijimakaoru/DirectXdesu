@@ -81,6 +81,17 @@ void GameScene::Init()
 	effectManager = std::make_unique<EffectManager>();
 	effectManager->Init(timer_, camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro());
 
+	// ゲーム内オブジェクトの初期化
+	objectManager = std::make_unique<ObjectManager>();
+	objectManager->Init(timer_, camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro());
+
+	KMyMath::Vector3 centerPos = { 0.0f,100.0f,800.0f };
+	KMyMath::Vector3 centerRot = { 0.0f,0.0f,0.0f };
+	KMyMath::Vector3 centerScale = { 50.0f,75.0f,50.0f };
+	KMyMath::Vector4 centerColor = { 1.0f,1.0f,1.0f,1.0f };
+	objectManager->SetCenterObject(centerPos, centerRot, centerScale, centerColor,
+		timer_, camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro());
+
 	//ノーツ
 	playTime = 0;
 	Meter meter = { 3,4 };
@@ -223,6 +234,9 @@ void GameScene::Update()
 	// エフェクトの更新
 	effectManager->Update(timer_, camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro());
 
+	// オブジェクトの更新
+	objectManager->Update(timer_, camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro());
+
 	camera->Update();
 }
 
@@ -243,6 +257,9 @@ void GameScene::ObjDraw()
 
 	// エフェクト描画
 	effectManager->Draw(timer_, camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro());
+
+	// オブジェクトの更新
+	//objectManager->Draw(timer_, camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro());
 }
 
 void GameScene::SpriteDraw() 

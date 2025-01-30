@@ -30,7 +30,7 @@ void CenterObject::SetObject(KMyMath::Vector3& pos, KMyMath::Vector3& rotation, 
 	DirectX::XMFLOAT3 nowRot = MyMathConvert::ChangeVector3toXMfloat3(rotation);
 	DirectX::XMFLOAT3 nowScale = MyMathConvert::ChangeVector3toXMfloat3(scale);
 	DirectX::XMFLOAT4 nowColor = MyMathConvert::ChangeXMFLOAT4(color);
-	float nowParticleSize = 1.0f;
+	float nowParticleSize = 3.0f;
 
 	emitter_->SetPosition(nowPos);
 	emitter_->SetScaling(nowScale);

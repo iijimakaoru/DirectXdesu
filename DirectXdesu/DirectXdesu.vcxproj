@@ -183,6 +183,7 @@
     <ClCompile Include="Engine\Particle\MeshEmitter.cpp" />
     <ClCompile Include="Application\Object\ObjectManager.cpp" />
     <ClCompile Include="Application\Effect\GroundEffect.cpp" />
+    <ClCompile Include="Application\Object\SideObject\SideObject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\MusicDesc.h" />
@@ -266,6 +267,7 @@
     <ClInclude Include="Engine\Particle\MeshEmitter.h" />
     <ClInclude Include="Application\Object\ObjectManager.h" />
     <ClInclude Include="Application\Effect\GroundEffect.h" />
+    <ClInclude Include="Application\Object\SideObject\SideObject.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DirectXdesu.rc" />

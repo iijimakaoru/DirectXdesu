@@ -6,7 +6,7 @@ AppendStructuredBuffer<uint> ADeadList : register(u1);
 RWStructuredBuffer<ParticleDraw> DrawList : register(u2);
 RWStructuredBuffer<uint> DrawArgs : register(u3);
 
-[numthreads(32, 1, 1)]
+[numthreads(1024, 1, 1)]
 void main(uint id : SV_DispatchThreadID)
 {
     if (id.x >= (uint) maxParticles)

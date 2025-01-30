@@ -9,7 +9,7 @@ RWStructuredBuffer<Mesh> meshes : register(u4);
 
 StructuredBuffer<Mesh> meshs : register(t0);
 
-[numthreads(32, 1, 1)]
+[numthreads(1024, 1, 1)]
 void main(uint id : SV_DispatchThreadID)
 {
     if (id.x >= (uint) emitCount)

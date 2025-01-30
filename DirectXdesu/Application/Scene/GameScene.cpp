@@ -424,12 +424,31 @@ void GameScene::Collision()
 				notes[i].isHit = true;
 
 				// エフェクト発生
-				KMyMath::Vector3 nowPos = objNote[i]->GetTransform().GetPos();
-				KMyMath::Vector3 nowRot = objNote[i]->GetTransform().GetRot();
-				KMyMath::Vector3 nowScale = objNote[i]->GetTransform().GetScale();
-				KMyMath::Vector4 nowColor = objNote[i]->GetColor();
-				effectManager->SetArrowEffect(nowPos, nowRot, nowScale, nowColor,
-					timer_, camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro());
+				// 矢印
+				{
+					KMyMath::Vector3 nowArrowPos = objNote[i]->GetTransform().GetPos();
+					KMyMath::Vector3 nowArrowRot = objNote[i]->GetTransform().GetRot();
+					KMyMath::Vector3 nowArrowScale = objNote[i]->GetTransform().GetScale();
+					KMyMath::Vector4 nowArrowColor = objNote[i]->GetColor();
+					effectManager->SetArrowEffect(nowArrowPos, nowArrowRot, nowArrowScale, nowArrowColor,
+						timer_, camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro());
+				}
+
+				// パーフェクトゾーン
+				{
+					KMyMath::Vector3 nowLinePos = { 
+						objNote[i]->GetTransform().GetPos().x,
+						obj[OBJ::line]->GetTransform().GetPos().y,
+						obj[OBJ::line]->GetTransform().GetPos().z };
+					KMyMath::Vector3 nowLineRot = {0.0f,0.0f,0.0f};
+					KMyMath::Vector3 nowLineScale = {
+						obj[OBJ::line]->GetTransform().GetScale().x / 2,
+						obj[OBJ::line]->GetTransform().GetScale().y,
+						obj[OBJ::line]->GetTransform().GetScale().z};
+					KMyMath::Vector4 nowLineColor = objNote[i]->GetColor();
+					effectManager->SetGroundEffect(nowLinePos, nowLineRot, nowLineScale, nowLineColor,
+						timer_, camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro());
+				}
 			}
 			break;//for文から抜ける
 		}

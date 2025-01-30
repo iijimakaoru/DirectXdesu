@@ -1,7 +1,8 @@
 #pragma once
 #include "ArrowEffect.h"
+#include "GroundEffect.h"
 
-const size_t maxArrowEffect = 15;
+const size_t maxEffectNum = 15;
 
 class EffectManager
 {
@@ -16,13 +17,17 @@ public:
 	// エフェクト設置
 	void SetArrowEffect(KMyMath::Vector3& pos, KMyMath::Vector3& rotation, KMyMath::Vector3& scale, KMyMath::Vector4& color,
 		const Timer& timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection);
+	void SetGroundEffect(KMyMath::Vector3& pos, KMyMath::Vector3& rotation, KMyMath::Vector3& scale, KMyMath::Vector4& color,
+		const Timer& timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection);
 
 private:
 	void DeleteEffect();
 
 private:
 	std::unique_ptr<MeshModel> arrowModel_;
+	std::array<std::unique_ptr<ArrowEffect>, maxEffectNum> arrowEffect_;
 
-	std::array<std::unique_ptr<ArrowEffect>, maxArrowEffect> arrowEffect_;
+	std::unique_ptr<MeshModel> groundModel_;
+	std::array<std::unique_ptr<GroundEffect>, maxEffectNum> groundEffect_;
 };
 

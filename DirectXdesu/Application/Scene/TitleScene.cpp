@@ -51,8 +51,8 @@ void TitleScene::Init() {
 
 	emitter_ = new Emitter(
 		10000, 1, 1000.0f, 10.0f, 0.025f,
-		DirectX::XMFLOAT3(5.0f,0.0f,0.0f),
-		DirectX::XMFLOAT3(3.0f, 3.0f, 3.0f),
+		DirectX::XMFLOAT3(0.0f,0.0f,0.0f),
+		DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f),
 		DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f),
 		DirectX::XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f),
 		DirectX::XMFLOAT4(1.0f, 0.0f, 1.0f, 1.0f),
@@ -60,7 +60,9 @@ void TitleScene::Init() {
 		DirectX::XMFLOAT3(0.0f, 5.0f, 0.0f)
 	);
 
-	gpuParticle_ = std::make_unique<GPUParticle>(timer_, camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro(), emitter_);
+	testM = std::make_unique<MeshModel>("GroundEffect");
+	testP = std::make_unique<MeshGPUParticle>(timer_, camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro(), emitter_, testM.get());
+	
 
 	sprite.reset(Sprite::Create(PipelineManager::GetInstance()->GetPipeline("Sprite")));
 	texData = TextureManager::GetInstance()->GetTextures("Texture");
@@ -90,7 +92,7 @@ void TitleScene::Update() {
 		
 	}
 
-	gpuParticle_->Update(timer_, camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro(), emitter_);
+	testP->Update(timer_, camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro(), emitter_);
 
 	camera->Update();
 }
@@ -98,7 +100,7 @@ void TitleScene::Update() {
 void TitleScene::ObjDraw() {
 	skyDome->Draw();
 
-	gpuParticle_->Draw(timer_, camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro(), emitter_);
+	testP->Draw(timer_, camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro(), emitter_);
 }
 
 void TitleScene::SpriteDraw() {

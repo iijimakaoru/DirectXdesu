@@ -182,6 +182,7 @@
     <ClCompile Include="Engine\Particle\GraphicPipelineState.cpp" />
     <ClCompile Include="Engine\Particle\MeshEmitter.cpp" />
     <ClCompile Include="Application\Object\ObjectManager.cpp" />
+    <ClCompile Include="Application\Effect\GroundEffect.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\MusicDesc.h" />
@@ -264,6 +265,7 @@
     <ClInclude Include="Engine\Particle\GraphicPipelineState.h" />
     <ClInclude Include="Engine\Particle\MeshEmitter.h" />
     <ClInclude Include="Application\Object\ObjectManager.h" />
+    <ClInclude Include="Application\Effect\GroundEffect.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DirectXdesu.rc" />

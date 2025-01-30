@@ -77,7 +77,8 @@ private:
 
 	Emitter* emitter_;
 
-	std::unique_ptr<GPUParticle> gpuParticle_;
+	std::unique_ptr<MeshModel> testM;
+	std::unique_ptr<MeshGPUParticle> testP;
 
 	// Imgui用
 	DirectX::XMFLOAT3 position = { 0,0,0 };

@@ -21,9 +21,11 @@ void ArrowEffect::Update(const Timer& timer, const KMyMath::Matrix4& matView, co
 {
 	if (!isDead)
 	{
+		DirectX::XMFLOAT3 easePos = MyMathConvert::ChangeVector3toXMfloat3(MyEase::OutCubicVec3(startPos_, endPos_, lifeTimer_ / lifeLimit_));
 		DirectX::XMFLOAT3 easeScale = MyMathConvert::ChangeVector3toXMfloat3(MyEase::OutCubicVec3(startScale_, endScale_, lifeTimer_ / lifeLimit_));
-		float particleSize = MyEase::Lerp(1.0f, 0.0f, lifeTimer_ / lifeLimit_);
+		float particleSize = MyEase::Lerp(2.0f, 0.0f, lifeTimer_ / lifeLimit_);
 
+		emitter_->SetPosition(easePos);
 		emitter_->SetScaling(easeScale);
 		emitter_->SetParticleSize(particleSize);
 
@@ -57,13 +59,37 @@ void ArrowEffect::SetParticle(KMyMath::Vector3& pos, KMyMath::Vector3& rotation,
 	const Timer& timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection)
 {
 	startScale_ = scale;
-	endScale_ = scale * 3;
+	endScale_ = { scale.x * 5, scale.y * 2.5f, scale.z * 5 };
 
 	DirectX::XMFLOAT3 nowPos = MyMathConvert::ChangeVector3toXMfloat3(pos);
 	DirectX::XMFLOAT3 nowRot = MyMathConvert::ChangeVector3toXMfloat3(rotation);
 	DirectX::XMFLOAT3 nowScale = MyMathConvert::ChangeVector3toXMfloat3(scale);
 	DirectX::XMFLOAT4 nowColor = MyMathConvert::ChangeXMFLOAT4(color);
-	float nowParticleSize = 1.0f;
+	float nowParticleSize = 2.0f;
+
+	// 仮
+	float particlePower = 30.0f;
+
+	// 右
+	if (nowRot.y == 0.0f && nowRot.z == 0.0f) {
+		startPos_ = pos;
+		endPos_ = { pos.x + particlePower,pos.y,pos.z };
+	}
+	// 左
+	else if (nowRot.y == 180.0f && nowRot.z == 0.0f) {
+		startPos_ = pos;
+		endPos_ = { pos.x - particlePower,pos.y,pos.z };
+	}
+	// 上
+	else if (nowRot.y == 0.0f && nowRot.z == -90.0f) {
+		startPos_ = pos;
+		endPos_ = { pos.x ,pos.y - particlePower,pos.z };
+	}
+	// 下
+	else {
+		startPos_ = pos;
+		endPos_ = { pos.x,pos.y + particlePower,pos.z };
+	}
 
 	emitter_->SetPosition(nowPos);
 	emitter_->SetScaling(nowScale);

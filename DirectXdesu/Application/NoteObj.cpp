@@ -7,15 +7,15 @@ void NoteObj::Init(MusicDesc* music_)
 	pipelineM = PipelineManager::GetInstance();
 	LoadNote("maou_bgm_cyber44");
 	music = music_;
-	for (size_t i = 0; i < notes.size(); i++)
+	for (auto& [key, value] : obj)
 	{
 		std::unique_ptr<KObject3d> obj_;
-		obj_.reset(KObject3d::Create(modelM->GetModels("S_Arrow"),
+		obj_.reset(KObject3d::Create(modelM->GetModels("cube"),
 			pipelineM->GetPipeline("Obj")));
 		obj_->GetTransform().SetScale({ 15.0f,15.0f,5.0f });
 
 		//色設定
-		if (notes[i]->lane == 0)
+		if (notes[key]->lane == 0)
 		{
 			obj_->SetColor({ 0.5f,0.0f,0.0f,1.0f });
 		}
@@ -25,53 +25,57 @@ void NoteObj::Init(MusicDesc* music_)
 		}
 
 		//方向設定
-		if (notes[i]->direction == DIRECTION::left)//左
+		//if (notes[key]->direction == DIRECTION::left)//左
+		//{
+		//	obj_->GetTransform().SetRot({ 0.0f,180.0f,0.0f });
+		//}
+		//else if (notes[key]->direction == DIRECTION::up)//上
+		//{
+		//	obj_->GetTransform().SetRot({ 0.0f,0.0f,-90.0f });
+		//}
+		//else if (notes[key]->direction == DIRECTION::dawn)//下
+		//{
+		//	obj_->GetTransform().SetRot({ 0.0f,180.0f,90.0f });
+		//}
+		//else											  //右
+		//{
+		//	obj_->GetTransform().SetRot({ 0.0f,0.0f,0.0f });
+		//}
+		notePosZ = (sec * speed) * music->ConvertBeatToMiliSeconds(notes[key]->beat);
+		if (notes[key]->lane)
 		{
-			obj_->GetTransform().SetRot({ 0.0f,180.0f,0.0f });
-		}
-		else if (notes[i]->direction == DIRECTION::up)//上
-		{
-			obj_->GetTransform().SetRot({ 0.0f,0.0f,-90.0f });
-		}
-		else if (notes[i]->direction == DIRECTION::dawn)//下
-		{
-			obj_->GetTransform().SetRot({ 0.0f,180.0f,90.0f });
-		}
-		else											  //右
-		{
-			obj_->GetTransform().SetRot({ 0.0f,0.0f,0.0f });
-		}
-		notePosZ = (sec * speed) * music->ConvertBeatToMiliSeconds(notes[i]->beat);
-		obj_->GetTransform().SetPos({ -50.0f + (100.0f * notes[i]->lane),25.0f,notePosZ });
 
-		obj.push_back(std::move(obj_));
+		}
+		obj_->GetTransform().SetPos({ -50.0f + (100.0f * notes[key]->lane),25.0f,notePosZ });
+
+		obj.emplace(std::move(obj_));
 	}
 
 }
 
 void NoteObj::Update(Camera* camera_)
 {
-	for (size_t i = 0; i < obj.size(); i++)
+	for (auto& [key, value] : obj)
 	{
-		if (!notes[i]->isHit)
+		if (!notes[key]->isHit)
 		{
 			KMyMath::Vector3 move;
-			move = obj[i]->GetTransform().GetPos();
+			move = obj[key]->GetTransform().GetPos();
 			move.z -= speed;
 
-			obj[i]->GetTransform().SetPos(move);
-			obj[i]->Update(camera_->GetViewPro(), camera_->GetWorldPos());
+			obj[key]->GetTransform().SetPos(move);
+			obj[key]->Update(camera_->GetViewPro(), camera_->GetWorldPos());
 		}
 	}
 }
 
 void NoteObj::Draw()
 {
-	for (size_t i = 0; i < obj.size(); i++)
+	for (auto& [key, value] : obj)
 	{
-		if (!notes[i]->isHit)
+		if (!notes[key]->isHit)
 		{
-			obj[i]->Draw();
+			obj[key]->Draw();
 		}
 	}
 }
@@ -146,7 +150,7 @@ void NoteObj::LoadNote(const std::string& name)
 							note->lane = lane;
 							note->direction = DIRECTION::right;
 							note->beat.beat = 0.5 * pos;
-							notes.push_back(std::move(note));
+							notes.emplace(note->beat,std::move(note));
 						}
 					}
 					////方向設定
@@ -169,19 +173,7 @@ void NoteObj::LoadNote(const std::string& name)
 					//notes.push_back(std::move(note));
 				}
 			}
-		
-			continue;
 		}
-		/*getline(line_stream, key,',');
-		note->beat.measure=std::stoi(key);
-		getline(line_stream, key, ',');
-		note->beat.beat = std::stof(key);
-		getline(line_stream, key, ',');
-		note->beat.LPB = std::stoi(key);
-		getline(line_stream, key, ',');
-		note->lane = std::stoi(key);
-		getline(line_stream, key, ',');*/
-		
 	}
 	//ファイルを閉じる
 	file.close();

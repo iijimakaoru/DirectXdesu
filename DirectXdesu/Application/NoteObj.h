@@ -1,7 +1,7 @@
 #pragma once
 #include<vector>
 #include<string>
-#include"MusicDesc.h"
+#include<MusicDesc.h>
 #include"KObject3d.h"
 #include"ModelManager.h"
 #include"PipelineManager.h"
@@ -10,19 +10,19 @@
 class NoteObj
 {
 public:
-	void Init(MusicDesc*music_);
-	void Update(Camera*camera_);
+	void Init(MusicDesc* music_);
+	void Update(Camera* camera_);
 	void Draw();
-	std::vector<std::unique_ptr<KObject3d>>& Obj(){
+	std::map<Beat, std::unique_ptr<KObject3d>>& Obj() {
 		return obj;
 	}
-	std::vector<std::unique_ptr<Note>>& Notes() {
+	std::map<Beat, std::unique_ptr<Note>>& Notes() {
 		return notes;
 	}
-	void LoadNote(const std::string&  name);
+	void LoadNote(const std::string& name);
 private:
-	std::vector<std::unique_ptr<KObject3d>>obj;
-	std::vector<std::unique_ptr<Note>>notes;
+	std::map<Beat, std::unique_ptr<KObject3d>>obj;
+	std::map<Beat, std::unique_ptr<Note>>notes;
 	ModelManager* modelM;
 	PipelineManager* pipelineM;
 	float speed = 3.0f;

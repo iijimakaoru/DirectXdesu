@@ -21,6 +21,10 @@ enum DIRECTION
 	dawn   //下
 };
 
+enum Hand {
+	R, //右
+	L  //左
+};
 
 struct Note
 {

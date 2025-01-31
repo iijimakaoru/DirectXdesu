@@ -83,7 +83,7 @@ Triangle::Triangle() {
 			line_stream >> pos.x;
 			line_stream >> pos.y;
 			line_stream >> pos.z;
-
+			
 			positions.emplace_back(pos);
 		}
 
@@ -376,7 +376,7 @@ MtlObj::MtlObj(const std::string modelname) {
 			line_stream >> pos.x;
 			line_stream >> pos.y;
 			line_stream >> pos.z;
-
+			pos.x *= -1.0f;
 			positions.emplace_back(pos);
 		}
 

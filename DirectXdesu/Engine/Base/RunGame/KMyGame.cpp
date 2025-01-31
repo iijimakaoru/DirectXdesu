@@ -8,7 +8,8 @@ void KMyGame::Init() {
 	sceneFactory = new SceneFactory();
 	// シーンマネージャーにセット
 	SceneManager::GetInstance()->SetSceneFactory(sceneFactory);
-
+	//モデル読み込み
+	
 	// 最初のシーン
 	SceneManager::GetInstance()->ChangeScene("GAME");
 }

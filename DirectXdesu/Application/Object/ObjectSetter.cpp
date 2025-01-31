@@ -2,7 +2,7 @@
 
 void ObjectSetter::Init(const Timer& timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection)
 {
-	centerModel_ = std::make_unique<MeshModel>("suzanne1");
+	centerModel_ = std::make_unique<MeshModel>("centerObject");
 
 	centerObject_ = std::make_unique<CenterObject>();
 	centerObject_->Init(centerModel_.get(), timer, matView, matProjection);

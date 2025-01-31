@@ -85,6 +85,15 @@ void GameScene::Init()
 	objectSetter = std::make_unique<ObjectSetter>();
 	objectSetter->Init(timer_, camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro());
 
+	{
+		KMyMath::Vector3 centerObjectPos = { 0.0f,100.0f,800.0f };
+		KMyMath::Vector3 centerObjectRot = { 0.0f,0.0f,0.0f };
+		KMyMath::Vector3 centerObjectScale = { 1.0f,1.0f,1.0f };
+		KMyMath::Vector4 centerObjectColor = { 1.0f,1.0f,1.0f,1.0f };
+		objectSetter->SetCenterObject(centerObjectPos, centerObjectRot, centerObjectScale, centerObjectColor,
+			timer_, camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro());
+	}
+
 	//ノーツ
 	playTime = 0;
 	Meter meter = { 3,4 };

@@ -69,7 +69,7 @@ void MeshGPUParticle::Init(const Timer& timer, const KMyMath::Matrix4& matView, 
 	commndList->SetComputeRootDescriptorTable(6, drawArgs_->GetGPUUAV());
 	commndList->SetComputeRootDescriptorTable(7, MeshSRV);
 
-	commndList->Dispatch((uint32_t)model_->GetVertices().size(), 1, 1);
+	commndList->Dispatch(static_cast<uint32_t>(model_->GetVertices().size() / 1024 + 1), 1, 1);
 
 	ThrowIfFailed(commndList->Close());
 
@@ -135,7 +135,7 @@ void MeshGPUParticle::Draw(const Timer& timer, const KMyMath::Matrix4& matView, 
 		commndList->SetComputeRootDescriptorTable(7, MeshSRV);
 
 		UpdateMainPassCB(timer, matView, matProjection, emitter);
-		commndList->Dispatch((uint32_t)model_->GetVertices().size(), 1, 1);
+		commndList->Dispatch(static_cast<uint32_t>(model_->GetVertices().size() / 1024 + 1), 1, 1);
 	}
 
 	drawList_->Translation(commndList, D3D12_RESOURCE_STATE_COPY_DEST);
@@ -403,7 +403,7 @@ void MeshGPUParticle::ParticleUpdate()
 	commndList->SetComputeRootDescriptorTable(6, drawArgs_->GetGPUUAV());
 	commndList->SetComputeRootDescriptorTable(7, MeshSRV);
 
-	commndList->Dispatch((uint32_t)model_->GetVertices().size(), 1, 1);
+	commndList->Dispatch(static_cast<uint32_t>(model_->GetVertices().size() / 1024 + 1), 1, 1);
 }
 
 void MeshGPUParticle::ParticleDraw()

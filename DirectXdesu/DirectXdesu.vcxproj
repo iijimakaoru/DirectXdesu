@@ -105,7 +105,7 @@
   <ItemGroup>
     <ClCompile Include="Application\MusicDesc.cpp" />
     <ClCompile Include="Application\Effect\ArrowEffect\ArrowEffect.cpp" />
-    <ClCompile Include="Application\Effect\EffectManager.cpp" />
+    <ClCompile Include="Application\Effect\EffectSetter.cpp" />
     <ClCompile Include="Application\Object\CenterObject\CenterObject.cpp" />
     <ClCompile Include="Engine\Particle\Emitter.cpp" />
     <ClCompile Include="Engine\Particle\CommandSignature.cpp" />
@@ -181,13 +181,13 @@
     <ClCompile Include="Engine\Particle\ComputePipelineState.cpp" />
     <ClCompile Include="Engine\Particle\GraphicPipelineState.cpp" />
     <ClCompile Include="Engine\Particle\MeshEmitter.cpp" />
-    <ClCompile Include="Application\Object\ObjectManager.cpp" />
+    <ClCompile Include="Application\Object\ObjectSetter.cpp" />
     <ClCompile Include="Application\Effect\GroundEffect.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\MusicDesc.h" />
     <ClInclude Include="Application\Effect\ArrowEffect\ArrowEffect.h" />
-    <ClInclude Include="Application\Effect\EffectManager.h" />
+    <ClInclude Include="Application\Effect\EffectSetter.h" />
     <ClInclude Include="Application\Object\CenterObject\CenterObject.h" />
     <ClInclude Include="Engine\Particle\Emitter.h" />
     <ClInclude Include="Engine\Particle\CommandSignature.h" />
@@ -264,7 +264,7 @@
     <ClInclude Include="Engine\Particle\ComputePipelineState.h" />
     <ClInclude Include="Engine\Particle\GraphicPipelineState.h" />
     <ClInclude Include="Engine\Particle\MeshEmitter.h" />
-    <ClInclude Include="Application\Object\ObjectManager.h" />
+    <ClInclude Include="Application\Object\ObjectSetter.h" />
     <ClInclude Include="Application\Effect\GroundEffect.h" />
   </ItemGroup>
   <ItemGroup>

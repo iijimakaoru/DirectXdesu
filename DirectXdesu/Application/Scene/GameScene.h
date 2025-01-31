@@ -27,8 +27,8 @@
 
 #include "MusicDesc.h"
 
-#include "EffectManager.h"
-#include "ObjectManager.h"
+#include "EffectSetter.h"
+#include "ObjectSetter.h"
 
 /**
  * @file GameScene.h
@@ -133,7 +133,8 @@ private:
 
 	// エフェクト系
 	Timer timer_;
-	std::unique_ptr<EffectManager> effectManager;
+	std::unique_ptr<EffectSetter> effectSetter;
 
 	// オブジェクト系
+	std::unique_ptr<ObjectSetter> objectSetter;
 };

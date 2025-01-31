@@ -4,7 +4,7 @@
 
 const size_t maxEffectNum = 15;
 
-class EffectManager
+class EffectSetter
 {
 public:
 	// 初期化

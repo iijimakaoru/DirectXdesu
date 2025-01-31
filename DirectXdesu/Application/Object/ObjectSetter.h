@@ -1,7 +1,7 @@
 #pragma once
 #include "CenterObject.h"
 
-class ObjectManager
+class ObjectSetter
 {
 public:
 	// 初期化

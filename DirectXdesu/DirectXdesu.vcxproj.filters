@@ -486,13 +486,13 @@
     <ClCompile Include="Application\Effect\ArrowEffect\ArrowEffect.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Application\Effect\EffectManager.cpp">
+    <ClCompile Include="Application\Effect\EffectSetter.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Application\Object\CenterObject\CenterObject.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Application\Object\ObjectManager.cpp">
+    <ClCompile Include="Application\Object\ObjectSetter.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Application\Effect\GroundEffect.cpp">
@@ -731,13 +731,13 @@
     <ClInclude Include="Application\Effect\ArrowEffect\ArrowEffect.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Application\Effect\EffectManager.h">
+    <ClInclude Include="Application\Effect\EffectSetter.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Application\Object\CenterObject\CenterObject.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Application\Object\ObjectManager.h">
+    <ClInclude Include="Application\Object\ObjectSetter.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Application\Effect\GroundEffect.h">

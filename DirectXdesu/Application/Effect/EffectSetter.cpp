@@ -1,6 +1,6 @@
-#include "EffectManager.h"
+#include "EffectSetter.h"
 
-void EffectManager::Init(const Timer& timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection)
+void EffectSetter::Init(const Timer& timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection)
 {
 	arrowModel_ = std::make_unique<MeshModel>("arrowEffect");
 
@@ -19,7 +19,7 @@ void EffectManager::Init(const Timer& timer, const KMyMath::Matrix4& matView, co
 	}
 }
 
-void EffectManager::Update(const Timer& timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection)
+void EffectSetter::Update(const Timer& timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection)
 {
 	DeleteEffect();
 
@@ -34,7 +34,7 @@ void EffectManager::Update(const Timer& timer, const KMyMath::Matrix4& matView, 
 	}
 }
 
-void EffectManager::Draw(const Timer& timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection)
+void EffectSetter::Draw(const Timer& timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection)
 {
 	for (std::unique_ptr<ArrowEffect>& arrowEffect : arrowEffect_)
 	{
@@ -47,12 +47,12 @@ void EffectManager::Draw(const Timer& timer, const KMyMath::Matrix4& matView, co
 	}
 }
 
-void EffectManager::DeleteEffect()
+void EffectSetter::DeleteEffect()
 {
 	
 }
 
-void EffectManager::SetArrowEffect(KMyMath::Vector3& pos, KMyMath::Vector3& rotation, KMyMath::Vector3& scale, KMyMath::Vector4& color,
+void EffectSetter::SetArrowEffect(KMyMath::Vector3& pos, KMyMath::Vector3& rotation, KMyMath::Vector3& scale, KMyMath::Vector4& color,
 	const Timer& timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection)
 {
 	for (size_t i = 0; i < maxEffectNum; i++)
@@ -65,7 +65,7 @@ void EffectManager::SetArrowEffect(KMyMath::Vector3& pos, KMyMath::Vector3& rota
 	}
 }
 
-void EffectManager::SetGroundEffect(KMyMath::Vector3& pos, KMyMath::Vector3& rotation, KMyMath::Vector3& scale, KMyMath::Vector4& color, const Timer& timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection)
+void EffectSetter::SetGroundEffect(KMyMath::Vector3& pos, KMyMath::Vector3& rotation, KMyMath::Vector3& scale, KMyMath::Vector4& color, const Timer& timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection)
 {
 	for (size_t i = 0; i < maxEffectNum; i++)
 	{

@@ -1,11 +1,11 @@
 #include <Animation/Capture.h>
 #include <Math/MathUtil.h>
-void MCBM::Capture::Initialize()
+void MCBM::Capture::Initialize(int32_t index)
 {
-	cv::VideoCapture cap(0);
-	capture_ = std::move(cap);
-	capture_.set(cv::CAP_PROP_FRAME_WIDTH, 1280);
-	capture_.set(cv::CAP_PROP_FRAME_HEIGHT, 720);
+
+	capture_ = cv::VideoCapture(index);
+	capture_.set(cv::CAP_PROP_FRAME_WIDTH, YOLOPoseEstimation::CAMERA_WITH);
+	capture_.set(cv::CAP_PROP_FRAME_HEIGHT, YOLOPoseEstimation::CAMERA_HIGHT);
 	capture_.set(cv::CAP_PROP_FPS, 30);
 	capture_.set(cv::CAP_PROP_FOURCC, cv::VideoWriter::fourcc('H', '2', '6', '4'));
 
@@ -25,13 +25,8 @@ void MCBM::Capture::Initialize()
 		return;
 	}
 
-	m_YOLOPoseEstimation_.reset(CreateYOLOPoseEstimation());
-
 	m_YOLOPoseEstimation_->CameraInitialize(&capture_);
 
-	m_YOLOPoseEstimation_->ModelInitialize(modelPath_.c_str());
-
-	m_YOLOPoseEstimation_->Start(true);
 	for (int32_t i = 0; i < (int32_t)YOLO_POSE_INDEX::YOLO_POSE_INDEX_MAX; i++)
 	{
 		CaptureData datatemp;
@@ -103,9 +98,9 @@ void MCBM::Capture::Initialize()
 
 void MCBM::Capture::Update()
 {
-	cv::imshow("run", img_);
 
 	land_ = m_YOLOPoseEstimation_->GetLandmakes();
+	finalPoints_ = m_YOLOPoseEstimation_->GetFinalPositions();
 
 	//skelton構成
 	for (int32_t i = 0; i < (int32_t)YOLO_POSE_INDEX::YOLO_POSE_INDEX_MAX; i++)
@@ -131,10 +126,23 @@ void MCBM::Capture::SetInitialPose()
 void MCBM::Capture::Finalize()
 {
 	m_YOLOPoseEstimation_->End();
-	cv::destroyWindow("run");
 }
 
 MCBM::CaptureData& MCBM::Capture::GetCaptureData(YOLO_POSE_INDEX key)
 {
 	return capturedata_[key];
+}
+
+MCBM::Vector3& MCBM::Capture::GetFinalPositionData(YOLO_POSE_INDEX key)
+{
+	Vector3 ret;
+	ret.x = finalPoints_->find(key)->second.x;
+	ret.y = finalPoints_->find(key)->second.y;
+	ret.z = finalPoints_->find(key)->second.z;
+	return ret;
+}
+
+void MCBM::Capture::SetYOLOEstimation(YOLOPoseEstimation* yoloPoseEst)
+{
+	m_YOLOPoseEstimation_ = yoloPoseEst;
 }

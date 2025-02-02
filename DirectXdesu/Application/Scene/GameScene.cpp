@@ -175,14 +175,7 @@ void GameScene::Init() {
 	PHONONLOADER::P_MODEL_DATA* pData = new PHONONLOADER::P_MODEL_DATA();
 	PHONONLOADER::PModelLoader::Load(pData, "obj/cube");
 
-	cap= cv::VideoCapture(0, cv::CAP_DSHOW);
-	cap.set(cv::CAP_PROP_FRAME_WIDTH, 600);
-	cap.set(cv::CAP_PROP_FRAME_HEIGHT, 720);
-
-	if (!cap.isOpened())
-	{
-		assert(0);
-	}
+	
 
 	cv::Mat img;
 
@@ -193,13 +186,9 @@ void GameScene::Init() {
 	float iou_threshold = 0.45f;
 	int conversion_code = cv::COLOR_BGR2RGB;
 
-	m_YOLOPoseEstimation.reset(CreateYOLOPoseEstimation());
+	cap = std::make_unique<MCBM::CaptureManager>();
 
-	m_YOLOPoseEstimation->CameraInitialize(&cap);
-
-	m_YOLOPoseEstimation->ModelInitialize(modelPath.c_str(), mask_threshold, conf_threshold, iou_threshold,ONNXP_ROVIDERS::DIRECTML);
-
-	m_YOLOPoseEstimation->Start(true);
+	cap->Initialize();
 
 	sprite.reset(Sprite::Create(PipelineManager::GetInstance()->GetPipeline("Sprite")));
 
@@ -207,7 +196,7 @@ void GameScene::Init() {
 }
 
 void GameScene::Update() {
-
+	cap->Update();
 	
 	light_->SetLightRGB({lightRGB_.x, lightRGB_.y, lightRGB_.z});
 	light_->SetLightDir({lightDir_.x, lightDir_.y, lightDir_.z, 0.0f});

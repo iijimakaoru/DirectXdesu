@@ -1,6 +1,7 @@
 #pragma once
 #pragma warning(push)
 #pragma warning(disable: 4820)
+#define DIRECTINPUT_VERSION 0x0800
 #include <dinput.h>
 #pragma warning(pop)
 #include <wrl.h>

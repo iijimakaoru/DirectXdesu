@@ -35,7 +35,7 @@ KModel* ModelManager::_Load(const std::string& modelname, const char* pName)
 
 	size_t pathHash = std::hash<std::string>()("Resources/obj/" + modelname);
 
-	auto& resultPair = models_.insert(std::pair(pathHash, std::make_unique<MtlObj>(modelname)));
+	const auto& resultPair = models_.insert(std::pair(pathHash, std::make_unique<MtlObj>(modelname)));
 	auto& resultModel = resultPair.first->second;
 	result = resultModel.get();
 

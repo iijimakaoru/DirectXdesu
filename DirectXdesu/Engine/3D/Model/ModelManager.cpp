@@ -6,10 +6,65 @@ ModelManager* ModelManager::GetInstance() {
 	return &instance;
 }
 
-void ModelManager::Init() {
-	models_["S_SkyDorm"] = std::make_unique<MtlObj>("skydome");
-	models_["S_Cube"] = std::make_unique<MtlObj>("cube");
-	models_["S_Arrow"] = std::make_unique<MtlObj>("arrow");
+KModel* ModelManager::Load(const std::string& modelname, const char* pName)
+{
+	return GetInstance()->_Load(modelname, pName);
 }
 
-KModel* ModelManager::GetModels(std::string mapName) { return models_[mapName].get(); }
+KModel* ModelManager::GetModels(const std::string& mapName)
+{
+	KModel* result = _Find(mapName, mapName.c_str());
+
+	if (result != nullptr)
+	{
+		return result;
+	}
+
+	return nullptr;
+
+}
+
+KModel* ModelManager::_Load(const std::string& modelname, const char* pName)
+{
+	KModel* result = _Find(modelname, pName);
+
+	if (result != nullptr)
+	{
+		return result;
+	}
+
+	size_t pathHash = std::hash<std::string>()("Resources/obj/" + modelname);
+
+	const auto& resultPair = models_.insert(std::pair(pathHash, std::make_unique<MtlObj>(modelname)));
+	auto& resultModel = resultPair.first->second;
+	result = resultModel.get();
+
+	if (pName != nullptr)
+	{
+		size_t pNameHash = std::hash<std::string_view>()(pName);
+
+		modelNames_.insert(std::pair(pNameHash, pathHash));
+	}
+
+	return result;
+}
+
+KModel* ModelManager::_Find(const std::string& modelname, const char* pName)
+{
+	size_t pNameHash = std::hash<std::string_view>()(pName);
+
+	if (modelNames_.find(pNameHash) != modelNames_.end())
+	{
+		size_t pathHash = modelNames_[pNameHash];
+		return models_[pathHash].get();
+	}
+
+	size_t pathHash = std::hash<std::string>()("Resources/obj/" + modelname);
+
+	if (models_.find(pathHash) != models_.end())
+	{
+		return models_[pathHash].get();
+	}
+
+	return nullptr;
+}

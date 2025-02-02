@@ -71,14 +71,16 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(ProjectDir)Include\Math;$(ProjectDir)Include\Animation;$(ProjectDir)Include;$(SolutionDir)External\opencv\build\include;$(SolutionDir)External\OnnxRuntimeforDirectML\Include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)\External\motion\Thaad\lib\debug;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)Include\Math;$(ProjectDir)Include\Animation;$(ProjectDir)Include;$(SolutionDir)External\opencv\build\include;$(SolutionDir)External\OnnxRuntimeforDirectML\Include</IncludePath>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)Generated\Outputs\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)Generated\Obj\$(ProjectName)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <LibraryPath>$(ProjectDir)\External\motion\Thaad\lib\release;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(ProjectDir)Include\Math;$(ProjectDir)Include\Animation;$(ProjectDir)Include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)Include\Math;$(ProjectDir)Include\Animation;$(ProjectDir)Include;$(SolutionDir)External\opencv\build\include;$(SolutionDir)External\OnnxRuntimeforDirectML\Include</IncludePath>
+    <OutDir>$(SolutionDir)Generated\Outputs\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)Generated\Obj\$(ProjectName)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -116,7 +118,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)External\motion\Thaad\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>
+      </AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
@@ -137,8 +140,9 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_LIB;CV_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)External\motion\Thaad\include</AdditionalIncludeDirectories>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <AdditionalIncludeDirectories>
+      </AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -148,7 +152,8 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>opencv_objdetect4.lib;opencv_video4.lib;opencv_stitching4.lib;opencv_calib3d4.lib;opencv_highgui4.lib;opencv_videoio4.lib;opencv_features2d4.lib;opencv_dnn4.lib;opencv_photo4.lib;opencv_imgcodecs4.lib;opencv_imgproc4.lib;opencv_ml4.lib;opencv_flann4.lib;opencv_core4.lib;onnxruntime.lib;jpeg.lib;tiff.lib;libpng16.lib;libwebp.lib;zlib.lib;lzma.lib;libsharpyuv.lib;OnnxRuntimeDirectMLTest.lib;Advapi32.lib;Comdlg32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>

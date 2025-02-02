@@ -818,21 +818,19 @@
     <None Include="Resources\Shader\Vignette\VignetteVS.hlsl">
       <Filter>シェーダー</Filter>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="Resources\Shader\Particle\ParticleVS.hlsl">
+    <None Include="Resources\Shader\GPUParticle\CopyDrawCountCS.hlsl" />
+    <None Include="Resources\Shader\GPUParticle\UpdateCS.hlsl" />
+    <None Include="Resources\Shader\MeshGPUParticle\MeshUpdateCS.hlsl" />
+    <None Include="Resources\Shader\MeshGPUParticle\MeshGPUParticleVS.hlsl" />
+    <None Include="Resources\Shader\MeshGPUParticle\MeshGPUParticlePS.hlsl" />
+    <None Include="Resources\Shader\MeshGPUParticle\MeshGPUParticleGS.hlsl" />
+    <None Include="Resources\Shader\MeshGPUParticle\MeshEmitCS.hlsl" />
+    <None Include="Resources\Shader\MeshGPUParticle\MeshDeadListInitCS.hlsl" />
+    <None Include="Resources\Shader\MeshGPUParticle\MeshCopyDrawCountCS.hlsl" />
+    <None Include="Resources\Shader\GPUParticle\EmitCS.hlsl" />
+    <None Include="Resources\Shader\GPUParticle\DeadListInitCS.hlsl" />
+    <None Include="Resources\Shader\Particle\ParticleVS.hlsl">
       <Filter>シェーダー</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\Shader\GPUParticle\UpdateCS.hlsl" />
-    <FxCompile Include="Resources\Shader\GPUParticle\CopyDrawCountCS.hlsl" />
-    <FxCompile Include="Resources\Shader\GPUParticle\DeadListInitCS.hlsl" />
-    <FxCompile Include="Resources\Shader\GPUParticle\EmitCS.hlsl" />
-    <FxCompile Include="Resources\Shader\MeshGPUParticle\MeshCopyDrawCountCS.hlsl" />
-    <FxCompile Include="Resources\Shader\MeshGPUParticle\MeshDeadListInitCS.hlsl" />
-    <FxCompile Include="Resources\Shader\MeshGPUParticle\MeshEmitCS.hlsl" />
-    <FxCompile Include="Resources\Shader\MeshGPUParticle\MeshGPUParticleGS.hlsl" />
-    <FxCompile Include="Resources\Shader\MeshGPUParticle\MeshGPUParticlePS.hlsl" />
-    <FxCompile Include="Resources\Shader\MeshGPUParticle\MeshGPUParticleVS.hlsl" />
-    <FxCompile Include="Resources\Shader\MeshGPUParticle\MeshUpdateCS.hlsl" />
+    </None>
   </ItemGroup>
 </Project>

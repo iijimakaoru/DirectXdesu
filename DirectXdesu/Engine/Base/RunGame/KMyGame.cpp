@@ -1,5 +1,6 @@
 #include "KMyGame.h"
 #include "SceneFactory.h"
+#include<ModelManager.h>
 
 void KMyGame::Init() {
 	Framework::Init();
@@ -8,6 +9,10 @@ void KMyGame::Init() {
 	sceneFactory = new SceneFactory();
 	// シーンマネージャーにセット
 	SceneManager::GetInstance()->SetSceneFactory(sceneFactory);
+
+	ModelManager::Load("skydome", "S_SkyDorm");
+	ModelManager::Load("cube","S_Cube");
+	ModelManager::Load("arrow","S_Arrow");
 
 	// 最初のシーン
 	SceneManager::GetInstance()->ChangeScene("GAME");

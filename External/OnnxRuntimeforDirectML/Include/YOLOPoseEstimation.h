@@ -35,8 +35,8 @@ enum class YOLO_POSE_INDEX
 enum Locate
 {
 	FRONT,
-	//RIGHT,
-	//LEFT,
+	RIGHT,
+	LEFT,
 	MAX_LOCATE
 };
 

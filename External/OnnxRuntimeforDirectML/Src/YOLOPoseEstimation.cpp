@@ -282,8 +282,11 @@ void YOLOPoseEstimationImp::Update()
 
 		std::this_thread::sleep_for(std::chrono::milliseconds(1));
 	}
-
-	cv::destroyWindow("win");
+	for ( size_t i = 0; i < m_pCams.size(); i++ )
+	{
+		//cv::destroyWindow("win");
+		cv::destroyWindow(std::format("win{}",i));
+	}
 }
 
 const std::unordered_map<YOLO_POSE_INDEX,Vector3>* const YOLOPoseEstimationImp::GetFinalPositions()
@@ -353,24 +356,24 @@ void YOLOPoseEstimationImp::CalclateFinalCaptureData()
 	for ( int32_t i = 0; i < ( int32_t ) YOLO_POSE_INDEX::YOLO_POSE_INDEX_MAX; i++ )
 	{
 		CaptureData frontCamera = capturedata_[ Locate::FRONT ][ ( YOLO_POSE_INDEX ) i ];
-		//CaptureData leftCamera = capturedata_[ Locate::LEFT ][ ( YOLO_POSE_INDEX ) i ];
-		//CaptureData rightCamera = capturedata_[ Locate::RIGHT ][ ( YOLO_POSE_INDEX ) i ];
+		CaptureData leftCamera = capturedata_[ Locate::LEFT ][ ( YOLO_POSE_INDEX ) i ];
+		CaptureData rightCamera = capturedata_[ Locate::RIGHT ][ ( YOLO_POSE_INDEX ) i ];
 
 		Vector3 tmpF(frontCamera.captureBonePos.x - screenCenterPos_.x
 			,frontCamera.captureBonePos.y - screenCenterPos_.y,
 			-focalLength_[ Locate::FRONT ]);
 
-		//Vector3 tmpL(focalLength_[ Locate::LEFT ],
-		//	leftCamera.captureBonePos.y - screenCenterPos_.y,
-		//	-( leftCamera.captureBonePos.x - screenCenterPos_.x ));
+		Vector3 tmpL(focalLength_[ Locate::LEFT ],
+			leftCamera.captureBonePos.y - screenCenterPos_.y,
+			-( leftCamera.captureBonePos.x - screenCenterPos_.x ));
 
-		//Vector3 tmpR(-focalLength_[ Locate::RIGHT ],
-		//	rightCamera.captureBonePos.y - screenCenterPos_.y,
-		//	+( rightCamera.captureBonePos.x - screenCenterPos_.x ));
+		Vector3 tmpR(-focalLength_[ Locate::RIGHT ],
+			rightCamera.captureBonePos.y - screenCenterPos_.y,
+			+( rightCamera.captureBonePos.x - screenCenterPos_.x ));
 
 		Vector3 dF = tmpF.GetV3Norm();
-		//Vector3 dL = tmpL.GetV3Norm();
-		//Vector3 dR = tmpR.GetV3Norm();
+		Vector3 dL = tmpL.GetV3Norm();
+		Vector3 dR = tmpR.GetV3Norm();
 
 		Matrix3x3 Q;
 		for ( int i = 0; i < 9; i++ )
@@ -394,9 +397,9 @@ void YOLOPoseEstimationImp::CalclateFinalCaptureData()
 		// 前カメラ
 		accumulate_line(cameraPosition_[ Locate::FRONT ],dF,frontCamera.captureBonePos.z);
 		// 左カメラ
-		//accumulate_line(cameraPosition_[ Locate::LEFT ],dL,leftCamera.captureBonePos.z);
+		accumulate_line(cameraPosition_[ Locate::LEFT ],dL,leftCamera.captureBonePos.z);
 		// 右カメラ
-		//accumulate_line(cameraPosition_[ Locate::RIGHT ],dR,rightCamera.captureBonePos.z);
+		accumulate_line(cameraPosition_[ Locate::RIGHT ],dR,rightCamera.captureBonePos.z);
 
 		// (6) 連立方程式 Q X = C を解く (Xが最小二乗解)
 		Matrix3x3 Qinv;
@@ -477,28 +480,28 @@ void YOLOPoseEstimationImp::CalclateFinalCaptureDataFromCalibrateData()
 		//   ここではダミーで(0,0,1)
 		tvecs[ 0 ] = ( cv::Mat_<double>(3,1) << 0,0,cameradist[ FRONT ] );
 	}
-	//// left (原点から -X=1.0m、 カメラは +X を向く)
-	//{
-	//	// 例: (X,Y,Z)->(Z,Y,-X) のような90度回転(簡易例)
-	//	cv::Mat Rl = ( cv::Mat_<double>(3,3) <<
-	//		0,0,-cameradist[ LEFT ],
-	//		0,cameradist[ LEFT ],0,
-	//		cameradist[ LEFT ],0,0
-	//	);
-	//	Rvecs[ 2 ] = Rl;
-	//	tvecs[ 2 ] = ( cv::Mat_<double>(3,1) << -cameradist[ LEFT ],0,0 );
-	//}
-	//// right (原点から +X=1.0m、 カメラは -X を向く)
-	//{
-	//	// 例: (X,Y,Z)->(-Z,Y,X)
-	//	cv::Mat Rr = ( cv::Mat_<double>(3,3) <<
-	//		0,0,cameradist[ RIGHT ],
-	//		0,cameradist[ RIGHT ],0,
-	//	   -cameradist[ RIGHT ],0,0
-	//	);
-	//	Rvecs[ 3 ] = Rr;
-	//	tvecs[ 3 ] = ( cv::Mat_<double>(3,1) << +cameradist[ RIGHT ],0,0 );
-	//}
+	// left (原点から -X=1.0m、 カメラは +X を向く)
+	{
+		// 例: (X,Y,Z)->(Z,Y,-X) のような90度回転(簡易例)
+		cv::Mat Rl = ( cv::Mat_<double>(3,3) <<
+			0,0,-cameradist[ LEFT ],
+			0,cameradist[ LEFT ],0,
+			cameradist[ LEFT ],0,0
+		);
+		Rvecs[ 2 ] = Rl;
+		tvecs[ 2 ] = ( cv::Mat_<double>(3,1) << -cameradist[ LEFT ],0,0 );
+	}
+	// right (原点から +X=1.0m、 カメラは -X を向く)
+	{
+		// 例: (X,Y,Z)->(-Z,Y,X)
+		cv::Mat Rr = ( cv::Mat_<double>(3,3) <<
+			0,0,cameradist[ RIGHT ],
+			0,cameradist[ RIGHT ],0,
+		   -cameradist[ RIGHT ],0,0
+		);
+		Rvecs[ 3 ] = Rr;
+		tvecs[ 3 ] = ( cv::Mat_<double>(3,1) << +cameradist[ RIGHT ],0,0 );
+	}
 	Vector3 finalData;
 	for ( int32_t i = 0; i < ( int32_t ) YOLO_POSE_INDEX::YOLO_POSE_INDEX_MAX; i++ )
 	{
@@ -510,11 +513,11 @@ void YOLOPoseEstimationImp::CalclateFinalCaptureDataFromCalibrateData()
 			{capturedata_[ Locate::FRONT ][ ( YOLO_POSE_INDEX ) i ].captureBonePos.x,
 			capturedata_[ Locate::FRONT ][ ( YOLO_POSE_INDEX ) i ].captureBonePos.y}, // front
 
-			//{capturedata_[ Locate::LEFT ][ ( YOLO_POSE_INDEX ) i ].captureBonePos.x,
-			//capturedata_[ Locate::LEFT ][ ( YOLO_POSE_INDEX ) i ].captureBonePos.y}, // left
+			{capturedata_[ Locate::LEFT ][ ( YOLO_POSE_INDEX ) i ].captureBonePos.x,
+			capturedata_[ Locate::LEFT ][ ( YOLO_POSE_INDEX ) i ].captureBonePos.y}, // left
 
-			//{capturedata_[ Locate::RIGHT ][ ( YOLO_POSE_INDEX ) i ].captureBonePos.x,
-			//capturedata_[ Locate::RIGHT ][ ( YOLO_POSE_INDEX ) i ].captureBonePos.y}, // right
+			{capturedata_[ Locate::RIGHT ][ ( YOLO_POSE_INDEX ) i ].captureBonePos.x,
+			capturedata_[ Locate::RIGHT ][ ( YOLO_POSE_INDEX ) i ].captureBonePos.y}, // right
 		};
 		std::vector<double> confidences{ capturedata_[ Locate::FRONT ][ ( YOLO_POSE_INDEX ) i ].captureBonePos.z
 /*			, capturedata_[ Locate::LEFT ][ ( YOLO_POSE_INDEX ) i ].captureBonePos.z

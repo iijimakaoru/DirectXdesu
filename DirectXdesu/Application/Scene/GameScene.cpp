@@ -74,7 +74,6 @@ void GameScene::Init() {
 	obj[OBJ::skydome].reset(KObject3d::Create(objModel[OBJ::skydome], 
 		PipelineManager::GetInstance()->GetPipeline("Obj")));
 	obj[OBJ::skydome]->GetTransform().SetScale({ 800.0f, 800.0f, 800.0f });
-	obj[OBJ::skydome]->SetColor({ 0.1f,0.0f,1.0f,1.0f });
 
 	collisionManager_ = new CollisionManager();
 

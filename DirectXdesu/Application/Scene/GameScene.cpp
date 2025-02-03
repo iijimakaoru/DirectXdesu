@@ -200,6 +200,7 @@ void GameScene::Update()
 	ImGui::End();
 
 	timer_.UpdateTimer();
+	timer_.UpdateTitleBarStats();
 
 	light_->SetLightRGB({lightRGB_.x, lightRGB_.y, lightRGB_.z});
 	light_->SetLightDir({lightDir_.x, lightDir_.y, lightDir_.z, 0.0f});
@@ -261,7 +262,7 @@ void GameScene::ObjDraw()
 	effectSetter->Draw(timer_, camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro());
 
 	// オブジェクトの描画
-	objectSetter->Draw(timer_, camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro());
+	//objectSetter->Draw(timer_, camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro());
 }
 
 void GameScene::SpriteDraw() 

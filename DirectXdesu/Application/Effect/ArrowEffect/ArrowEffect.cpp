@@ -48,6 +48,7 @@ void ArrowEffect::Draw(const Timer& timer, const KMyMath::Matrix4& matView, cons
 	{
 		effect_->Draw(timer, matView, matProjection, emitter_.get());
 	}
+	//effect_->Draw(timer, matView, matProjection, emitter_.get());
 }
 
 bool ArrowEffect::GetIsDead()

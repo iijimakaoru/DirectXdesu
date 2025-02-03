@@ -20,18 +20,21 @@ void NoteObj::Init(MusicDesc* music_)
 	for (auto it = notes.begin();it!=notes.end();++it)
 	{
 		std::unique_ptr<KObject3d> obj_;
-		obj_.reset(KObject3d::Create(modelM->GetModels("S_Cube"),
-			pipelineM->GetPipeline("Obj")));
+		std::unique_ptr<KObject3d> underObj_;
+		obj_.reset(KObject3d::Create(modelM->GetModels("S_Cube"),pipelineM->GetPipeline("Obj")));
 		obj_->GetTransform().SetScale({ 15.0f,15.0f,5.0f });
-
+		underObj_.reset(KObject3d::Create(modelM->GetModels("S_Cube"), pipelineM->GetPipeline("Obj")));
+		underObj_->GetTransform().SetScale({ 15.0f,2.0f,2.0f });
 		//色設定
 		if (it->second.lane == 0)
 		{
 			obj_->SetColor({ 0.5f,0.0f,0.0f,1.0f });
+			underObj_->SetColor({ 0.5f,0.0f,0.0f,1.0f });
 		}
 		else
 		{
 			obj_->SetColor({ 0.0f,0.3f,1.0f,1.0f });
+			underObj_->SetColor({ 0.0f,0.3f,1.0f,1.0f });
 		}
 
 		//方向設定
@@ -54,8 +57,10 @@ void NoteObj::Init(MusicDesc* music_)
 		notePosZ = (sec * speed) * music->ConvertBeatToMiliSeconds(it->second.beat);
 		
 		obj_->GetTransform().SetPos({ -50.0f + (100.0f * it->second.lane),25.0f,notePosZ });
+		underObj_->GetTransform().SetPos({ -50.0f + (100.0f * it->second.lane),5.0f,notePosZ });
 
 		obj.emplace(it->first,std::move(obj_));
+		underObj.push_back(std::move(underObj_));
 	}
 
 }
@@ -74,6 +79,16 @@ void NoteObj::Update(Camera* camera_)
 			obj[key]->Update(camera_->GetViewPro(), camera_->GetWorldPos());
 		}
 	}
+	//一応後で同じにする今は表示のみ
+	for (size_t i = 0; i < underObj.size(); i++)
+	{
+		KMyMath::Vector3 move;
+		move = underObj[i]->GetTransform().GetPos();
+		move.z -= speed;
+
+		underObj[i]->GetTransform().SetPos(move);
+		underObj[i]->Update(camera_->GetViewPro(), camera_->GetWorldPos());
+	}
 }
 
 void NoteObj::Draw()
@@ -84,6 +99,11 @@ void NoteObj::Draw()
 		{
 			obj[key]->Draw();
 		}
+	}
+	for (size_t i = 0; i < underObj.size(); i++)
+	{
+		
+		underObj[i]->Draw();
 	}
 }
 

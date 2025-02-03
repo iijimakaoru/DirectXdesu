@@ -43,6 +43,8 @@ public:
 private:
 	std::map<Key, std::unique_ptr<KObject3d>>obj;
 	std::map<Key, Note>notes;
+
+	std::vector<std::unique_ptr<KObject3d>>underObj;
 	ModelManager* modelM;
 	PipelineManager* pipelineM;
 	float speed = 3.0f;

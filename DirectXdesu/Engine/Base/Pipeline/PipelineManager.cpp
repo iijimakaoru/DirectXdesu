@@ -44,4 +44,4 @@ void PipelineManager::Init() {
 	pipelines_["MultiTexture"].reset(KGPlin::Create(shaders_["MultiTexture"], "MultiTexture"));
 }
 
-KGPlin* PipelineManager::GetPipeline(std::string pipelineName) { return pipelines_[pipelineName].get(); }
+KGPlin* PipelineManager::GetPipeline(const std::string& pipelineName) { return pipelines_[pipelineName].get(); }

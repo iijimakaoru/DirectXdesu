@@ -41,9 +41,6 @@ void Framework::Init() {
 	textureManager->Init();
 	textureManager->LoadTextures();
 
-	// リソース読み込み
-	ModelManager::GetInstance()->Init();
-
 	// Imgui初期化
 	imguiMane.Init();
 

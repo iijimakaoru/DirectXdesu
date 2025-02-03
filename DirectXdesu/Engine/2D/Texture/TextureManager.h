@@ -16,6 +16,9 @@
  */
 
 struct TextureData {
+
+	std::string path;
+
 	// テクスチャバッファ
 	Microsoft::WRL::ComPtr<ID3D12Resource> texBuff;
 
@@ -51,7 +54,7 @@ public:
 	TextureData LoadTexture(const std::string& fileName);
 
 	TextureData LoadDivTexture(
-	    const std::string& fileName_, KMyMath::Vector2 leftTop_, KMyMath::Vector2 divSize_);
+	    const std::string& fileName_, KMyMath::Vector2& leftTop_, KMyMath::Vector2& divSize_);
 
 	/// <summary>
 	/// 読み込み
@@ -71,7 +74,7 @@ public:
 
 	void LoadTextures();
 
-	TextureData& GetTextures(std::string mapName);
+	TextureData& GetTextures(const std::string& mapName);
 
 private:
 	/// <summary>
@@ -93,6 +96,7 @@ private:
 
 private:
 	ID3D12Device* device = nullptr;
+	ID3D12GraphicsCommandList* commandList = nullptr;
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> srvHeap = nullptr;
 	D3D12_DESCRIPTOR_RANGE descriptorRange;
 	D3D12_HEAP_PROPERTIES textureHeapProp{};

@@ -19,6 +19,8 @@
 
 #include "ModelManager.h"
 
+#include<PModelLoader.h>
+
 GameScene::~GameScene() { Final(); };
 
 void GameScene::LoadResources() {
@@ -27,9 +29,16 @@ void GameScene::LoadResources() {
 		ModelManager::GetInstance()->GetModels("S_Cube");
 	objModel[OBJ::skydome] = 
 		ModelManager::GetInstance()->GetModels("S_SkyDorm");
+	noteModel = 
+		ModelManager::GetInstance()->GetModels("S_Arrow");
+
+	TextureManager::Load("Resources/texture/boss1.png");
+
+
 }
 
 void GameScene::Init() {
+
 	BaseScene::Init();
 
 	LoadCSV("collision");
@@ -80,6 +89,41 @@ void GameScene::Init() {
 	start = { 500,500 };
 	lenRimit = 100.0f;//csvに落とし込む,値を仮設定
 
+	//------------------------------------------------------------------------------------------------------------------------------------------------------------//
+
+
+	PHONONLOADER::P_MODEL_DATA* pData = new PHONONLOADER::P_MODEL_DATA();
+	PHONONLOADER::PModelLoader::Load(pData, "obj/cube");
+
+	cap= cv::VideoCapture(0, cv::CAP_DSHOW);
+	cap.set(cv::CAP_PROP_FRAME_WIDTH, 600);
+	cap.set(cv::CAP_PROP_FRAME_HEIGHT, 720);
+
+	if (!cap.isOpened())
+	{
+		assert(0);
+	}
+
+	cv::Mat img;
+
+	const std::string& modelPath = "Resources/Checkpoints/yolo11x-pose.onnx";
+
+	float mask_threshold = 0.5f;
+	float conf_threshold = 0.30f;
+	float iou_threshold = 0.45f;
+	int conversion_code = cv::COLOR_BGR2RGB;
+
+	m_YOLOPoseEstimation.reset(CreateYOLOPoseEstimation());
+
+	m_YOLOPoseEstimation->CameraInitialize(&cap);
+
+	m_YOLOPoseEstimation->ModelInitialize(modelPath.c_str(), mask_threshold, conf_threshold, iou_threshold,ONNXP_ROVIDERS::DIRECTML);
+
+	m_YOLOPoseEstimation->Start(true);
+
+	sprite.reset(Sprite::Create(PipelineManager::GetInstance()->GetPipeline("Sprite")));
+
+	texData = TextureManager::GetInstance()->GetTextures("Resources/texture/boss1.png");
 }
 
 void GameScene::Update() {
@@ -120,7 +164,11 @@ void GameScene::ObjDraw()
 }
 
 void GameScene::SpriteDraw() {
-	
+
+	//------------------------------------------------------------------------------------------------------------------------------------------------------------//
+	f++;
+	fDiv = 7;
+	sprite->AnimationDraw(texData, 64, 64, f, fDiv, {200,200});
 }
 
 void GameScene::Final() 
@@ -145,7 +193,7 @@ void GameScene::RotAndLenCalculationMouse()
 	angle = MyMathConvert::DegreeTransform(angle);
 }
 
-void GameScene::RotAndLenCalculationStick(KMyMath::Vector2 vec)
+void GameScene::RotAndLenCalculationStick(KMyMath::Vector2& vec)
 {
 	end = vec;
 

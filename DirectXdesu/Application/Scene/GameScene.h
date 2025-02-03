@@ -30,6 +30,8 @@
 
 #include <Animation/Skelton.h>
 
+#include<YOLOPoseEstimation.h>
+
 /**
  * @file GameScene.h
  * @brief ゲームシーン
@@ -75,7 +77,7 @@ private:
 	void RotAndLenCalculationMouse();
 
 	//スティック角度、長さ算出
-	void RotAndLenCalculationStick(KMyMath::Vector2 vec);
+	void RotAndLenCalculationStick(KMyMath::Vector2& vec);
 
 	//当たり判定
 	void Collision();
@@ -127,4 +129,12 @@ private:
 	const int32_t constblankSpace = 240;
 	int score[3];
 	int combo;
+
+	std::unique_ptr<YOLOPoseEstimation> m_YOLOPoseEstimation;
+	cv::VideoCapture cap;
+	std::unique_ptr<Sprite> sprite;
+	TextureData texData;
+	float f;
+	float fDiv;
+
 };

@@ -315,7 +315,7 @@ void KModel::Draw(UINT rootParamIndex) {
 	    (UINT)indices.size(), 1, 0, 0, 0);
 }
 
-void KModel::Draw(UINT rootParamIndex, TextureData texData_) {
+void KModel::Draw(UINT rootParamIndex, const TextureData& texData_) {
 	// 頂点バッファビューの設定
 	KDirectXCommon::GetInstance()->GetCommandList()->IASetVertexBuffers(
 	    0, 1, &vertexs->GetVertBuffView());
@@ -341,7 +341,7 @@ void KModel::Draw(UINT rootParamIndex, TextureData texData_) {
 	    static_cast<UINT>(indices.size()), 1, 0, 0, 0);
 }
 
-MtlObj::MtlObj(const std::string modelname) {
+MtlObj::MtlObj(const std::string& modelname, bool smoothing) {
 	std::ifstream file;
 
 	const std::string filename = modelname + ".obj";
@@ -417,16 +417,52 @@ MtlObj::MtlObj(const std::string modelname) {
 				vertex.uv = texcoords[indexTexcoord - 1];
 				vertices.emplace_back(vertex);
 
+				if (smoothing)
+				{
+					smoothData[static_cast<size_t>(indexPosition)].emplace_back(static_cast<uint16_t>(vertices.size() - 1));
+				}
+
 				indices.emplace_back((unsigned short)indices.size());
 			}
 		}
 	}
 	file.close();
 
+
+	if (smoothing)
+	{
+		CalculateSmoothedVertexNormals();
+	}
+
 	CreateModel();
 }
 
 MtlObj::~MtlObj() {}
+
+void MtlObj::CalculateSmoothedVertexNormals()
+{
+	auto itr = smoothData.begin();
+	for (; itr != smoothData.end(); itr++)
+	{
+		//各面用の共通点コレクション
+		std::vector<uint16_t>& v = itr->second;
+		//全頂点の法線を平均する
+		KMyMath::Vector3 normal = {};
+		for (uint16_t index : v)
+		{
+			normal += KMyMath::Vector3{ vertices[index].normal.x, vertices[index].normal.y, vertices[index].normal.z };
+		}
+
+		normal = normal / static_cast<float>(v.size());
+		normal = normal.Normalize();
+		//共通法線を使用する全ての頂点データに書き込む
+		for (uint16_t index : v)
+		{
+			vertices[index].normal = { normal.x,normal.y,normal.z };
+		}
+
+	}
+}
 
 KModel::ObjMaterialInfo::ObjMaterialInfo() {
 	ambient = {0.3f, 0.3f, 0.3f};
@@ -435,7 +471,7 @@ KModel::ObjMaterialInfo::ObjMaterialInfo() {
 	alpha = 1.0f;
 }
 
-MeshModel::MeshModel(const std::string modelname)
+MeshModel::MeshModel(const std::string& modelname)
 {
 	ID3D12Device* device = KDirectXCommon::GetInstance()->GetDevice();
 

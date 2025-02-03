@@ -290,7 +290,7 @@ void GameScene::RotAndLenCalculationMouse()
 	angle = MyMathConvert::DegreeTransform(angle);
 }
 
-void GameScene::RotAndLenCalculationStick(KMyMath::Vector2 vec)
+void GameScene::RotAndLenCalculationStick(KMyMath::Vector2& vec)
 {
 	end = vec;
 

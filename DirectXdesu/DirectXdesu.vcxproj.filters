@@ -178,47 +178,17 @@
     <Filter Include="ソース ファイル\Application\Player">
       <UniqueIdentifier>{d84a6c93-4c49-4005-9329-ec6af1c2a410}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\Application\MobEnemy">
-      <UniqueIdentifier>{b3d23755-0e52-4620-a638-f8aeb6748d3f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Application\Bullet">
-      <UniqueIdentifier>{f41a7e8e-2f3f-4350-bf57-761160c6c536}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Application\Effect">
-      <UniqueIdentifier>{b0035c34-4f54-4ac7-8c75-e1619589af9c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Application\BossEnemy">
-      <UniqueIdentifier>{647d05d9-7f80-49c0-b4c1-497df898e5de}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Application\Player">
-      <UniqueIdentifier>{4a2ae5af-08ab-441d-a73a-e5a1bd58c853}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Application\Stage">
-      <UniqueIdentifier>{c22783ff-4562-4198-a931-380c1fa72e07}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Application\Reticle">
-      <UniqueIdentifier>{0cf5abcd-c778-4a60-9b45-c1c61400448d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\Application\BossEnemy\Blaster">
       <UniqueIdentifier>{bbaabdb8-f663-4d3e-b5d9-5b6d449f370f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\Application\BossEnemy\Blaster">
-      <UniqueIdentifier>{e6eb8886-7dc0-43ad-a38d-34a8ee8ca92f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\Application\Score">
       <UniqueIdentifier>{492e2a89-39a8-4a85-9898-65068a9ecca1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Application\Score">
-      <UniqueIdentifier>{de255936-d107-47de-b190-a0cb8b50cfab}</UniqueIdentifier>
     </Filter>
     <Filter Include="ソース ファイル\Application\Particle">
       <UniqueIdentifier>{da2f9fc0-c3e2-47a3-91a1-8ab82d4317a1}</UniqueIdentifier>
     </Filter>
     <Filter Include="ヘッダー ファイル\Engine\Base\Pipeline">
       <UniqueIdentifier>{e86145cc-fd0a-49cd-bd01-8c2a2bd8ef16}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Application\Particle">
-      <UniqueIdentifier>{029f01f4-2cb5-47e1-b28a-84110fc785b2}</UniqueIdentifier>
     </Filter>
     <Filter Include="ソース ファイル\Engine\Camera">
       <UniqueIdentifier>{e975677e-0632-4ebf-ae3d-6c46fb2608c3}</UniqueIdentifier>
@@ -246,9 +216,6 @@
     </Filter>
     <Filter Include="ソース ファイル\Application\Movie">
       <UniqueIdentifier>{403cdc20-d460-49cd-b3b9-7a90caaa9e30}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Application\Movie">
-      <UniqueIdentifier>{59cf5ec5-1af3-4983-a746-502c4fb2bc58}</UniqueIdentifier>
     </Filter>
     <Filter Include="ソース ファイル\Engine\2d\Sprites\PostEffect">
       <UniqueIdentifier>{0b50b264-86ed-44d8-8d5b-386d7e85889d}</UniqueIdentifier>

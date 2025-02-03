@@ -6,9 +6,9 @@ ModelManager* ModelManager::GetInstance() {
 	return &instance;
 }
 
-KModel* ModelManager::Load(const std::string& modelname, const char* pName)
+KModel* ModelManager::Load(const std::string& modelname, const char* pName, bool smoothing)
 {
-	return GetInstance()->_Load(modelname, pName);
+	return GetInstance()->_Load(modelname, pName, smoothing);
 }
 
 KModel* ModelManager::GetModels(const std::string& mapName)
@@ -24,7 +24,7 @@ KModel* ModelManager::GetModels(const std::string& mapName)
 
 }
 
-KModel* ModelManager::_Load(const std::string& modelname, const char* pName)
+KModel* ModelManager::_Load(const std::string& modelname, const char* pName, bool smoothing)
 {
 	KModel* result = _Find(modelname, pName);
 
@@ -35,7 +35,7 @@ KModel* ModelManager::_Load(const std::string& modelname, const char* pName)
 
 	size_t pathHash = std::hash<std::string>()("Resources/obj/" + modelname);
 
-	const auto& resultPair = models_.insert(std::pair(pathHash, std::make_unique<MtlObj>(modelname)));
+	const auto& resultPair = models_.insert(std::pair(pathHash, std::make_unique<MtlObj>(modelname, smoothing)));
 	auto& resultModel = resultPair.first->second;
 	result = resultModel.get();
 

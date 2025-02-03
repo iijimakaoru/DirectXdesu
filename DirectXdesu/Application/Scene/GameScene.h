@@ -76,7 +76,7 @@ private:
 	void RotAndLenCalculationMouse();
 
 	//スティック角度、長さ算出
-	void RotAndLenCalculationStick(KMyMath::Vector2 vec);
+	void RotAndLenCalculationStick(KMyMath::Vector2& vec);
 
 	//当たり判定
 	void Collision();

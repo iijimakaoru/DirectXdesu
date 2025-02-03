@@ -1,6 +1,6 @@
 #pragma once
 #include "ArrowEffect.h"
-#include "GroundEffect.h"
+#include "GroundEffect/GroundEffect.h"
 
 const size_t maxEffectNum = 15;
 

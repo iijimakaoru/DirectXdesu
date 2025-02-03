@@ -133,9 +133,9 @@ MCBM::CaptureData& MCBM::Capture::GetCaptureData(YOLO_POSE_INDEX key)
 	return capturedata_[key];
 }
 
-MCBM::Vector3& MCBM::Capture::GetFinalPositionData(YOLO_POSE_INDEX key)
+MCBM::MVector3& MCBM::Capture::GetFinalPositionData(YOLO_POSE_INDEX key)
 {
-	Vector3 ret;
+	MVector3 ret;
 	ret.x = finalPoints_->find(key)->second.x;
 	ret.y = finalPoints_->find(key)->second.y;
 	ret.z = finalPoints_->find(key)->second.z;

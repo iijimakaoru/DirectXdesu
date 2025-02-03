@@ -1,7 +1,7 @@
 #pragma once
 #include <stdint.h>
-#include <Math/Vector3.h>
-#include <Math/Quaternion.h>
+#include <Math/MVector3.h>
+#include <Math/MQuaternion.h>
 #include <Animation/Bone.h>
 
 namespace MCBM
@@ -14,7 +14,7 @@ namespace MCBM
 		int32_t linkBoneCount_ = 4;
 		float threshold_ = 1.0e-5f;
 		int32_t iteration_ = 4;
-		Vector3 targetPos_;
+		MVector3 targetPos_;
 		Bone* effector_;
 
 	public:
@@ -22,7 +22,7 @@ namespace MCBM
 		void CCDIK();
 		void SetIKConfig(int32_t linkBone, int32_t iteration,bool isLimit,
 			bool isCoordinateTransformation,float threshold = 1.0e-5f);
-		void SetTarget(Vector3 targetPos);
+		void SetTarget(MVector3 targetPos);
 
 	};
 }

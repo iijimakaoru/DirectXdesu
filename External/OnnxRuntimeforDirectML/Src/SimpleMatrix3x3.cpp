@@ -12,7 +12,7 @@ Matrix3x3 Matrix3x3::Mat3Identity()
 }
 
 // A = I - d d^T (dは3次元ベクトル)
-Matrix3x3 Matrix3x3::ProjectionMatrix(const Vector3& d) {
+Matrix3x3 Matrix3x3::ProjectionMatrix(const YVector3& d) {
 	// dは単位ベクトルを想定
 	// I - d*d^T
 	Matrix3x3 P;
@@ -52,8 +52,8 @@ Matrix3x3 Matrix3x3::Mat3Scale(const Matrix3x3& A, double s) {
 }
 
 // v2 = A * v1 (3×3行列×3ベクトル)
-Vector3 Matrix3x3::Mat3Mulvec(const Matrix3x3& A, const Vector3& v) {
-	return Vector3(
+YVector3 Matrix3x3::Mat3Mulvec(const Matrix3x3& A, const YVector3& v) {
+	return YVector3(
 		A.mat[0] * v.x + A.mat[1] * v.y + A.mat[2] * v.z,
 		A.mat[3] * v.x + A.mat[4] * v.y + A.mat[5] * v.z,
 		A.mat[6] * v.x + A.mat[7] * v.y + A.mat[8] * v.z

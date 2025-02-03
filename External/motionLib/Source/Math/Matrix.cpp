@@ -35,7 +35,7 @@ MCBM::Matrix MCBM::Matrix::MatrixTranslate(float x, float y, float z)
 	return temp;
 }
 
-Matrix MCBM::Matrix::MatrixTranslate(Vector3 pos)
+Matrix MCBM::Matrix::MatrixTranslate(MVector3 pos)
 {
 	Matrix temp;
 	temp.MatrixIdentity();
@@ -63,7 +63,7 @@ MCBM::Matrix MCBM::Matrix::MatrixScaling(float x, float y, float z)
 
 }
 
-Matrix MCBM::Matrix::MatrixScaling(Vector3 scale)
+Matrix MCBM::Matrix::MatrixScaling(MVector3 scale)
 {
 	Matrix temp;
 	temp.MatrixIdentity();
@@ -154,7 +154,7 @@ MCBM::Matrix MCBM::Matrix::MatrixRotaZ(float angle)
 }
 
 
-Matrix MCBM::Matrix::GetQuaternionRotaMat(const Quaternion& rotaQ)
+Matrix MCBM::Matrix::GetQuaternionRotaMat(const MQuaternion& rotaQ)
 {
 	Matrix mat;
 	mat.MatrixIdentity();
@@ -291,11 +291,11 @@ Matrix MCBM::Matrix::MatrixInverse(Matrix mat)
 //	return ans;
 //}
 
-Vector3 MCBM::Matrix::Transform(const Vector3& v, const Matrix& m)
+MVector3 MCBM::Matrix::Transform(const MVector3& v, const Matrix& m)
 {
 	float w = v.x * m._14_ + v.y * m._24_ + v.z * m._34_ + m._44_;
 
-	Vector3 result
+	MVector3 result
 	{
 		(v.x * m._11_ + v.y * m._21_ + v.z * m._31_ + m._41_) / w,
 		(v.x * m._12_ + v.y * m._22_ + v.z * m._32_ + m._42_) / w,
@@ -304,18 +304,18 @@ Vector3 MCBM::Matrix::Transform(const Vector3& v, const Matrix& m)
 	return result;
 }
 
-Vector3 MCBM::Matrix::GetTranslate(const Matrix& m)
+MVector3 MCBM::Matrix::GetTranslate(const Matrix& m)
 {
-	Vector3 pos;
+	MVector3 pos;
 	pos.x = m._41_;
 	pos.y = m._42_;
 	pos.z = m._43_;
 	return pos;
 }
 
-Vector3 MCBM::Matrix::GetRotationToEuler()
+MVector3 MCBM::Matrix::GetRotationToEuler()
 {
-	Vector3 rot;
+	MVector3 rot;
 	if (_13_ == 1.0f)
 	{
 		rot.x = static_cast<float>(atan2(_23_, _33_));

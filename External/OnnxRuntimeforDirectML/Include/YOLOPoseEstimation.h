@@ -68,7 +68,7 @@ public:
 
 	virtual const YOLO_POSE_LANDMAKE* const GetLandmakes() = 0;
 
-	virtual const std::unordered_map <YOLO_POSE_INDEX,MCBO::Vector3>* const GetFinalPositions() = 0;
+	virtual const std::unordered_map <YOLO_POSE_INDEX,MCBO::YVector3>* const GetFinalPositions() = 0;
 };
 
 

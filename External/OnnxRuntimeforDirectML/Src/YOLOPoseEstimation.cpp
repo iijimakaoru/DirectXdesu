@@ -39,8 +39,8 @@ struct Vec2F
 struct CaptureData
 {
 	std::string captureBoneName;
-	MCBO::Vector3 captureBonePos;
-	MCBO::Vector3 initializedCaptureBonePos;
+	MCBO::YVector3 captureBonePos;
+	MCBO::YVector3 initializedCaptureBonePos;
 	std::vector<CaptureData*> captureChildren;
 	CaptureData* parent;
 
@@ -83,7 +83,7 @@ public:
 
 	void Update();
 
-	const std::unordered_map <YOLO_POSE_INDEX,Vector3>* const GetFinalPositions() override;
+	const std::unordered_map <YOLO_POSE_INDEX,YVector3>* const GetFinalPositions() override;
 
 private:
 
@@ -91,7 +91,7 @@ private:
 
 	void CalclateFinalCaptureData();
 
-	void computeRay(const cv::Mat& R,const cv::Mat& t,const cv::Point2f& undistNorm,Vector3& camCenterW,Vector3& dirW);
+	void computeRay(const cv::Mat& R,const cv::Mat& t,const cv::Point2f& undistNorm,YVector3& camCenterW,YVector3& dirW);
 
 	void CalclateFinalCaptureDataFromCalibrateData();
 
@@ -128,12 +128,12 @@ private:
 
 
 	std::array<std::unordered_map<YOLO_POSE_INDEX,CaptureData>,4> capturedata_;
-	std::unordered_map <YOLO_POSE_INDEX,Vector3> finalCaptureData_;
+	std::unordered_map <YOLO_POSE_INDEX,YVector3> finalCaptureData_;
 
 	std::vector<float> cameradist;//メートル単位
-	std::vector<Vector3> cameraPosition_;
+	std::vector<YVector3> cameraPosition_;
 	std::vector<float> focalLength_ = { 581.818f,581.818f,581.818f,581.818f };
-	Vector3 screenCenterPos_ = { CAMERA_WITH / 2,CAMERA_HIGHT / 2,0 };
+	YVector3 screenCenterPos_ = { CAMERA_WITH / 2,CAMERA_HIGHT / 2,0 };
 
 	std::vector<cv::Mat> distCoeffs;
 	std::vector<cv::Mat> K;
@@ -289,7 +289,7 @@ void YOLOPoseEstimationImp::Update()
 	}
 }
 
-const std::unordered_map<YOLO_POSE_INDEX,Vector3>* const YOLOPoseEstimationImp::GetFinalPositions()
+const std::unordered_map<YOLO_POSE_INDEX,YVector3>* const YOLOPoseEstimationImp::GetFinalPositions()
 {
 	return &finalCaptureData_;
 }
@@ -352,37 +352,37 @@ void YOLOPoseEstimationImp::_Draw(cv::Mat& image,int index)
 
 void YOLOPoseEstimationImp::CalclateFinalCaptureData()
 {
-	Vector3 finalData;
+	YVector3 finalData;
 	for ( int32_t i = 0; i < ( int32_t ) YOLO_POSE_INDEX::YOLO_POSE_INDEX_MAX; i++ )
 	{
 		CaptureData frontCamera = capturedata_[ Locate::FRONT ][ ( YOLO_POSE_INDEX ) i ];
 		CaptureData leftCamera = capturedata_[ Locate::LEFT ][ ( YOLO_POSE_INDEX ) i ];
 		CaptureData rightCamera = capturedata_[ Locate::RIGHT ][ ( YOLO_POSE_INDEX ) i ];
 
-		Vector3 tmpF(frontCamera.captureBonePos.x - screenCenterPos_.x
+		YVector3 tmpF(frontCamera.captureBonePos.x - screenCenterPos_.x
 			,frontCamera.captureBonePos.y - screenCenterPos_.y,
 			-focalLength_[ Locate::FRONT ]);
 
-		Vector3 tmpL(focalLength_[ Locate::LEFT ],
+		YVector3 tmpL(focalLength_[ Locate::LEFT ],
 			leftCamera.captureBonePos.y - screenCenterPos_.y,
 			-( leftCamera.captureBonePos.x - screenCenterPos_.x ));
 
-		Vector3 tmpR(-focalLength_[ Locate::RIGHT ],
+		YVector3 tmpR(-focalLength_[ Locate::RIGHT ],
 			rightCamera.captureBonePos.y - screenCenterPos_.y,
 			+( rightCamera.captureBonePos.x - screenCenterPos_.x ));
 
-		Vector3 dF = tmpF.GetV3Norm();
-		Vector3 dL = tmpL.GetV3Norm();
-		Vector3 dR = tmpR.GetV3Norm();
+		YVector3 dF = tmpF.GetV3Norm();
+		YVector3 dL = tmpL.GetV3Norm();
+		YVector3 dR = tmpR.GetV3Norm();
 
 		Matrix3x3 Q;
 		for ( int i = 0; i < 9; i++ )
 		{
 			Q.mat[ i ] = 0.0;
 		}
-		Vector3 C(0.0,0.0,0.0);
+		YVector3 C(0.0,0.0,0.0);
 
-		auto accumulate_line = [ & ] (const Vector3& p,const Vector3& d,double w)
+		auto accumulate_line = [ & ] (const YVector3& p,const YVector3& d,double w)
 			{
 				// P = I - d d^T
 				Matrix3x3 P = P.ProjectionMatrix(d);
@@ -390,7 +390,7 @@ void YOLOPoseEstimationImp::CalclateFinalCaptureData()
 				Matrix3x3 wP = wP.Mat3Scale(P,w);
 				Q = Q.Mat3Add(Q,wP);
 				// c += w * P * p
-				Vector3 Pp = P.Mat3Mulvec(P,p);
+				YVector3 Pp = P.Mat3Mulvec(P,p);
 				C = C + ( w * Pp );
 			};
 
@@ -404,7 +404,7 @@ void YOLOPoseEstimationImp::CalclateFinalCaptureData()
 		// (6) 連立方程式 Q X = C を解く (Xが最小二乗解)
 		Matrix3x3 Qinv;
 		bool ok = Q.Invert3x3(Q,Qinv);
-		Vector3 X(0,0,0);
+		YVector3 X(0,0,0);
 		if ( ok )
 		{
 			X = Q.Mat3Mulvec(Qinv,C);
@@ -421,7 +421,7 @@ void YOLOPoseEstimationImp::CalclateFinalCaptureData()
 }
 
 
-void YOLOPoseEstimationImp::computeRay(const cv::Mat& R,const cv::Mat& t,const cv::Point2f& undistNorm,Vector3& camCenterW,Vector3& dirW)
+void YOLOPoseEstimationImp::computeRay(const cv::Mat& R,const cv::Mat& t,const cv::Point2f& undistNorm,YVector3& camCenterW,YVector3& dirW)
 {
 	// カメラ中心 (world系) = -R^T * t
 	cv::Mat Rt = R.t(); // Rの転置
@@ -433,7 +433,7 @@ void YOLOPoseEstimationImp::computeRay(const cv::Mat& R,const cv::Mat& t,const c
 	// → ワールド座標系へは R^T で回転
 	cv::Mat dirCam = ( cv::Mat_<double>(3,1) << undistNorm.x,undistNorm.y,1.0 );
 	cv::Mat dirWorld = Rt * dirCam; // (3x1)
-	Vector3 dw = {
+	YVector3 dw = {
 		 static_cast< float >( dirWorld.at<double>(0) ),
 		 static_cast< float >( dirWorld.at<double>(1) ),
 		 static_cast< float >( dirWorld.at<double>(2) )
@@ -502,7 +502,7 @@ void YOLOPoseEstimationImp::CalclateFinalCaptureDataFromCalibrateData()
 		Rvecs[ 3 ] = Rr;
 		tvecs[ 3 ] = ( cv::Mat_<double>(3,1) << +cameradist[ RIGHT ],0,0 );
 	}
-	Vector3 finalData;
+	YVector3 finalData;
 	for ( int32_t i = 0; i < ( int32_t ) YOLO_POSE_INDEX::YOLO_POSE_INDEX_MAX; i++ )
 	{
 	//===============================================================
@@ -548,7 +548,7 @@ void YOLOPoseEstimationImp::CalclateFinalCaptureDataFromCalibrateData()
 		// (2) 各カメラでレイをワールド座標系に表現
 		//     方向ベクトル(単位) dW[i], カメラ中心 cW[i]
 		//===============================================================
-		std::vector<Vector3> cW(4),dW(4); // cameraCenterWorld, directionWorld
+		std::vector<YVector3> cW(4),dW(4); // cameraCenterWorld, directionWorld
 		for ( int i = 0; i < Locate::MAX_LOCATE; i++ )
 		{
 			computeRay(Rvecs[ i ],tvecs[ i ],undistNormPoints[ i ],cW[ i ],dW[ i ]);
@@ -565,12 +565,12 @@ void YOLOPoseEstimationImp::CalclateFinalCaptureDataFromCalibrateData()
 		{
 			Q.mat[ k ] = 0.0;
 		}
-		Vector3 C{ 0,0,0 };
+		YVector3 C{ 0,0,0 };
 
 		for ( int i = 0; i < 4; i++ )
 		{
 			double w = confidences[ i ]; // カメラiの信頼度
-			Vector3 di = dW[ i ];
+			YVector3 di = dW[ i ];
 			// I - d_i d_i^T
 			Matrix3x3 Pi = Pi.ProjectionMatrix(di);
 			// w*Pi
@@ -578,16 +578,16 @@ void YOLOPoseEstimationImp::CalclateFinalCaptureDataFromCalibrateData()
 			// Q += wPi
 			Q = Q.Mat3Add(Q,wPi);
 			// c += wPi * cW[i]
-			Vector3 tmp = wPi.Mat3Mulvec(wPi,cW[ i ]);
+			YVector3 tmp = wPi.Mat3Mulvec(wPi,cW[ i ]);
 			C = C + tmp;
 		}
 
 		// Qを逆行列化して X= Q^-1 * c
 		Matrix3x3 Qinv;
-		Vector3 X{ 0,0,0 };
+		YVector3 X{ 0,0,0 };
 		if ( Q.Invert3x3(Q,Qinv) )
 		{
-			Vector3 sol = Qinv.Mat3Mulvec(Qinv,C);
+			YVector3 sol = Qinv.Mat3Mulvec(Qinv,C);
 			X = sol;
 		}
 		else

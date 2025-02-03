@@ -39,7 +39,7 @@
     <ClInclude Include="Include\Matrix3x3.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Vector3.h">
+    <ClInclude Include="Include\YVector3.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Include\SimpleMatrix3x3.h">

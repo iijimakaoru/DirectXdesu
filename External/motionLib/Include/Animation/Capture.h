@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 #include <unordered_map>
-#include <Math/Vector3.h>
+#include <Math/MVector3.h>
 #include <SimpleVector3.h>
 namespace MCBM
 {
@@ -14,8 +14,8 @@ namespace MCBM
 	struct CaptureData
 	{
 		std::string captureBoneName;
-		Vector3 captureBonePos;
-		Vector3 initializedCaptureBonePos;
+		MVector3 captureBonePos;
+		MVector3 initializedCaptureBonePos;
 		std::vector<CaptureData*> captureChildren;
 		CaptureData* parent;
 
@@ -30,7 +30,7 @@ namespace MCBM
 													"none","none" };
 
 		std::unordered_map<YOLO_POSE_INDEX, CaptureData> capturedata_;
-		const std::unordered_map<YOLO_POSE_INDEX, MCBO::Vector3>* finalPoints_;
+		const std::unordered_map<YOLO_POSE_INDEX, MCBO::YVector3>* finalPoints_;
 		cv::VideoCapture capture_;
 		cv::Mat img_;
 		const std::string& modelPath_ = "Checkpoints/yolo11x-pose.onnx";
@@ -42,14 +42,14 @@ namespace MCBM
 		int conversion_code_ = cv::COLOR_BGR2RGB;
 		bool initialized_ = true;
 	public:
-		Vector3 cameraPosition;
-		Vector3 cameraDistance = { 0.f,0.f,0.f };
+		MVector3 cameraPosition;
+		MVector3 cameraDistance = { 0.f,0.f,0.f };
 		void Initialize(int32_t index = 0);
 		void Update();
 		void SetInitialPose();
 		void Finalize();
 		CaptureData& GetCaptureData(YOLO_POSE_INDEX key);
-		Vector3& GetFinalPositionData(YOLO_POSE_INDEX key);
+		MVector3& GetFinalPositionData(YOLO_POSE_INDEX key);
 		void SetYOLOEstimation(YOLOPoseEstimation* yoloPoseEst);
 	};
 }

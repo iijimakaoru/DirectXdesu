@@ -163,7 +163,7 @@
     <ClInclude Include="Include\ops.h" />
     <ClInclude Include="Include\SimpleMatrix3x3.h" />
     <ClInclude Include="Include\SimpleVector3.h" />
-    <ClInclude Include="Include\Vector3.h" />
+    <ClInclude Include="Include\YVector3.h" />
     <ClInclude Include="Include\YOLOPoseEstimation.h" />
   </ItemGroup>
   <ItemGroup>

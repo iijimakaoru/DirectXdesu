@@ -37,7 +37,6 @@ MusicDesc::~MusicDesc()
 float MusicDesc::ConvertBeatToMiliSeconds(const Beat& beat)
 {
 	float beatTime = 0;
-	Beat now = { 0,0,1 };
 	for (const Beat& change:changeList )
 	{
 		if ( Comparison(beat,change) )

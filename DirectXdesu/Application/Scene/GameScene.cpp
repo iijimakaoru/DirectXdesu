@@ -171,16 +171,16 @@ void GameScene::Collision()
 	float center;
 	bool isSuccess = false;
 	float max, min;
-
-	for (size_t i = 0; i < noteObj->Notes().size(); i++)
+	auto ago = noteObj->Notes().begin();
+	for (auto it = noteObj->Notes().begin(); it != noteObj->Notes().end(); ++it)
 	{
 		//フラグが立っているなら次のノードへ
-		if (noteObj->Notes()[i]->isHit)
+		if (noteObj->Notes()[it->first].isHit)
 		{
 			continue;
 		}
 		//ノードと現在のタイムを比較
-		float notetime = sec * music->ConvertBeatToMiliSeconds(noteObj->Notes()[i]->beat);
+		float notetime = sec * music->ConvertBeatToMiliSeconds(noteObj->Notes()[it->first].beat);
 		float diff = notetime - playTime;
 		//60
 		if (diff <= 20 || !input->GetPadConnect())
@@ -191,9 +191,9 @@ void GameScene::Collision()
 		if (std::abs(diff) <= perfect)
 		{
 			//1個前のノードのフラグが立っていないかつ同じ位置じゃない場合にしなければならない
-			if (i != 0)
+			if (it != noteObj->Notes().begin())
 			{
-				if (!noteObj->Notes()[i - 1]->isHit)
+				if (!noteObj->Notes()[ago->first].isHit)
 				{
 					continue;
 				}
@@ -207,18 +207,18 @@ void GameScene::Collision()
 			{
 				lenRimit = 0.7f;//仮
 
-				if (noteObj->Notes()[i]->lane == 0)
+				if (noteObj->Notes()[it->first].lane == 0)
 				{
 					RotAndLenCalculationStick(input->GetPadLStick());
 				}
-				else if (noteObj->Notes()[i]->lane == 1)
+				else if (noteObj->Notes()[it->first].lane == 1)
 				{
 					RotAndLenCalculationStick(input->GetPadLStick());
 				}
 			}
 
 
-			if (noteObj->Notes()[i]->direction == DIRECTION::right)
+			if (noteObj->Notes()[it->first].direction == DIRECTION::right)
 			{
 				center = 0;
 				min = center - scope;
@@ -236,7 +236,7 @@ void GameScene::Collision()
 				}
 
 			}
-			else if (noteObj->Notes()[i]->direction == DIRECTION::up)
+			else if (noteObj->Notes()[it->first].direction == DIRECTION::up)
 			{
 				center = -90;
 				min = center - scope;
@@ -253,7 +253,7 @@ void GameScene::Collision()
 				}
 
 			}
-			else if (noteObj->Notes()[i]->direction == DIRECTION::dawn)
+			else if (noteObj->Notes()[it->first].direction == DIRECTION::dawn)
 			{
 				center = 90;
 				min = center - scope;
@@ -270,7 +270,7 @@ void GameScene::Collision()
 				}
 
 			}
-			else if (noteObj->Notes()[i]->direction == DIRECTION::left)
+			else if (noteObj->Notes()[it->first].direction == DIRECTION::left)
 			{
 				center = 180;
 				min = -(center - scope);
@@ -290,7 +290,7 @@ void GameScene::Collision()
 			if (isSuccess)
 			{
 				combo++;
-				noteObj->Notes()[i]->isHit = true;
+				noteObj->Notes()[it->first].isHit = true;
 			}
 			break;//for文から抜ける
 		}
@@ -298,8 +298,9 @@ void GameScene::Collision()
 		{
 			combo = 0;
 			score[MISS]++;
-			noteObj->Notes()[i]->isHit = true;
+			noteObj->Notes()[it->first].isHit = true;
 		}
+		ago = it;
 	}
 }
 

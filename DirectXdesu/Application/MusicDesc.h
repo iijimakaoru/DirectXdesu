@@ -26,12 +26,24 @@ enum Hand {
 	L  //左
 };
 
-struct Note
+class Note
 {
+public:
+	Note()=default;
 	Beat beat;//何拍目の音
 	int lane = 0;//レーン指定
 	DIRECTION direction=right;//方向
 	bool isHit = false;
+
+	// 移動コンストラクタ
+	Note(Note&& other) noexcept
+		: beat(std::move(other.beat)), lane(other.lane), direction(other.direction) {
+	}
+
+	// 必要に応じてコピーコンストラクタも実装
+	Note(const Note& other)
+		: beat(other.beat), lane(other.lane), direction(other.direction) {
+	}
 };
 
 class MusicDesc

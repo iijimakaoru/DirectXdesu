@@ -43,7 +43,7 @@ namespace MCBM
 		bool initialized_ = true;
 	public:
 		MVector3 cameraPosition;
-		MVector3 cameraDistance = { 0.f,0.f,0.f };
+		float cameraDistance = 0.f;
 		void Initialize(int32_t index = 0);
 		void Update();
 		void SetInitialPose();

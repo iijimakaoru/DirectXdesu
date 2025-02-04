@@ -89,13 +89,13 @@ private:
 
 	void _Draw(cv::Mat& image,int index);
 
-	void CalclateFinalCaptureData();
-
-	void computeRay(const cv::Mat& R,const cv::Mat& t,const cv::Point2f& undistNorm,YVector3& camCenterW,YVector3& dirW);
+	void createCameraExtrinsics(const YVector3& direction,float distance,cv::Mat& R,cv::Mat& t);
 
 	void CalclateFinalCaptureDataFromCalibrateData();
 
 	void AddCameraData(std::string filepath);
+
+	cv::Mat computeLookAtRotation(const YVector3& camPos,const YVector3& target,const YVector3& up);
 
 private:
 
@@ -127,7 +127,7 @@ private:
 	std::mutex value_mutex;
 
 
-	std::array<std::unordered_map<YOLO_POSE_INDEX,CaptureData>,4> capturedata_;
+	std::array<std::unordered_map<YOLO_POSE_INDEX,CaptureData>,MAX_LOCATE> capturedata_;
 	std::unordered_map <YOLO_POSE_INDEX,YVector3> finalCaptureData_;
 
 	std::vector<float> cameradist;//メートル単位
@@ -278,7 +278,6 @@ void YOLOPoseEstimationImp::Update()
 			}
 
 		}
-		CalclateFinalCaptureData();
 
 		std::this_thread::sleep_for(std::chrono::milliseconds(1));
 	}
@@ -343,262 +342,11 @@ void YOLOPoseEstimationImp::_Draw(cv::Mat& image,int index)
 			cv::Scalar color_limb = m_posePalette[ m_limbColorIndices[ i ] ];
 			cv::line(image,cv::Point(x1,y1),cv::Point(x2,y2),color_limb,2,cv::LINE_AA);
 		}
+		CalclateFinalCaptureDataFromCalibrateData();
 	}
 	
 	cv::imshow(std::format("win{}",index),image);
 	cv::waitKey(1);
-}
-
-
-void YOLOPoseEstimationImp::CalclateFinalCaptureData()
-{
-	YVector3 finalData;
-	for ( int32_t i = 0; i < ( int32_t ) YOLO_POSE_INDEX::YOLO_POSE_INDEX_MAX; i++ )
-	{
-		CaptureData frontCamera = capturedata_[ Locate::FRONT ][ ( YOLO_POSE_INDEX ) i ];
-		CaptureData leftCamera = capturedata_[ Locate::LEFT ][ ( YOLO_POSE_INDEX ) i ];
-		CaptureData rightCamera = capturedata_[ Locate::RIGHT ][ ( YOLO_POSE_INDEX ) i ];
-
-		YVector3 tmpF(frontCamera.captureBonePos.x - screenCenterPos_.x
-			,frontCamera.captureBonePos.y - screenCenterPos_.y,
-			-focalLength_[ Locate::FRONT ]);
-
-		YVector3 tmpL(focalLength_[ Locate::LEFT ],
-			leftCamera.captureBonePos.y - screenCenterPos_.y,
-			-( leftCamera.captureBonePos.x - screenCenterPos_.x ));
-
-		YVector3 tmpR(-focalLength_[ Locate::RIGHT ],
-			rightCamera.captureBonePos.y - screenCenterPos_.y,
-			+( rightCamera.captureBonePos.x - screenCenterPos_.x ));
-
-		YVector3 dF = tmpF.GetV3Norm();
-		YVector3 dL = tmpL.GetV3Norm();
-		YVector3 dR = tmpR.GetV3Norm();
-
-		Matrix3x3 Q;
-		for ( int i = 0; i < 9; i++ )
-		{
-			Q.mat[ i ] = 0.0;
-		}
-		YVector3 C(0.0,0.0,0.0);
-
-		auto accumulate_line = [ & ] (const YVector3& p,const YVector3& d,double w)
-			{
-				// P = I - d d^T
-				Matrix3x3 P = P.ProjectionMatrix(d);
-				// Q += w * P
-				Matrix3x3 wP = wP.Mat3Scale(P,w);
-				Q = Q.Mat3Add(Q,wP);
-				// c += w * P * p
-				YVector3 Pp = P.Mat3Mulvec(P,p);
-				C = C + ( w * Pp );
-			};
-
-		// 前カメラ
-		accumulate_line(cameraPosition_[ Locate::FRONT ],dF,frontCamera.captureBonePos.z);
-		// 左カメラ
-		accumulate_line(cameraPosition_[ Locate::LEFT ],dL,leftCamera.captureBonePos.z);
-		// 右カメラ
-		accumulate_line(cameraPosition_[ Locate::RIGHT ],dR,rightCamera.captureBonePos.z);
-
-		// (6) 連立方程式 Q X = C を解く (Xが最小二乗解)
-		Matrix3x3 Qinv;
-		bool ok = Q.Invert3x3(Q,Qinv);
-		YVector3 X(0,0,0);
-		if ( ok )
-		{
-			X = Q.Mat3Mulvec(Qinv,C);
-		}
-		else
-		{
-			// Qが特異 → 全部平行などの場合。
-			// ここでは簡単に(0,0,0)を返す
-			std::cerr << "警告: 行列が特異です。解けませんでした。\n";
-		}
-		finalData = X;
-		finalCaptureData_[ ( YOLO_POSE_INDEX ) i ] = finalData;
-	}
-}
-
-
-void YOLOPoseEstimationImp::computeRay(const cv::Mat& R,const cv::Mat& t,const cv::Point2f& undistNorm,YVector3& camCenterW,YVector3& dirW)
-{
-	// カメラ中心 (world系) = -R^T * t
-	cv::Mat Rt = R.t(); // Rの転置
-	cv::Mat center = -Rt * t; // (3x1)
-	camCenterW = { static_cast< float >( center.at<double>(0) ), static_cast< float >( center.at<double>(1) ),
-		 static_cast< float >( center.at<double>(2) ) };
-
-	// カメラ座標系でのベクトル: (x_nd, y_nd, 1)
-	// → ワールド座標系へは R^T で回転
-	cv::Mat dirCam = ( cv::Mat_<double>(3,1) << undistNorm.x,undistNorm.y,1.0 );
-	cv::Mat dirWorld = Rt * dirCam; // (3x1)
-	YVector3 dw = {
-		 static_cast< float >( dirWorld.at<double>(0) ),
-		 static_cast< float >( dirWorld.at<double>(1) ),
-		 static_cast< float >( dirWorld.at<double>(2) )
-	};
-	dw.GetV3Norm();
-	dirW = dw;
-}
-
-
-void YOLOPoseEstimationImp::CalclateFinalCaptureDataFromCalibrateData()
-{
-	//===============================================================
-	// 例) 4台のカメラ: それぞれ外部パラメータ (R_i, t_i) が既知とする
-	//    OpenCV流にいうと、X_c = R_i * X_w + t_i
-	//===============================================================
-	// ここでは「front, back, left, right」に相当する適当な例を作る
-	// 実際にはキャリブレーションやマーカー計測などで得たR,tを入れる
-	//
-	// front:  ワールド座標系の前方にZ負方向でカメラを見るイメージ
-	// back :  後方にZ正方向でカメラを見るイメージ
-	// left :  X負方向
-	// right:  X正方向
-	// (単にダミーで回転行列を用意)
-	//---------------------------------------------------------------
-	// （注意）ここでは「R_i, t_i は world->camera」の回転・並進行列
-	//          たとえば front は「Z軸正方向をカメラ-Zで見る」など
-	//          実際の値は環境に依存します。
-	//---------------------------------------------------------------
-	std::vector<cv::Mat> Rvecs(Locate::MAX_LOCATE),tvecs(Locate::MAX_LOCATE);
-
-	// front (原点から+Z方向=1.0m、カメラは -Z を向く)
-	// → つまりワールド座標でカメラの位置 (0,0,+1)
-	//    カメラ座標の Z軸がワールド座標系の -Z を向くには、回転行列は
-	//    「180度回転」around X軸(かつY軸反転しないように調整)など
-	{
-		cv::Mat Rf = cv::Mat::eye(3,3,CV_64F);
-		// 例: 回転行列で z->-z, すなわち y->-y, など
-		//     ここでは (X, Y, Z)->(X, -Y, -Z) の行列を作成する
-		Rf.at<double>(1,1) = -cameradist[ FRONT ];
-		Rf.at<double>(2,2) = -cameradist[ FRONT ];
-		Rvecs[ 0 ] = Rf;
-		// t = (0,0,1) in "camera = R*world + t" => 
-		// → world原点(0,0,0)がカメラ座標系でどう見えるか? 
-		//   ここではダミーで(0,0,1)
-		tvecs[ 0 ] = ( cv::Mat_<double>(3,1) << 0,0,cameradist[ FRONT ] );
-	}
-	// left (原点から -X=1.0m、 カメラは +X を向く)
-	{
-		// 例: (X,Y,Z)->(Z,Y,-X) のような90度回転(簡易例)
-		cv::Mat Rl = ( cv::Mat_<double>(3,3) <<
-			0,0,-cameradist[ LEFT ],
-			0,cameradist[ LEFT ],0,
-			cameradist[ LEFT ],0,0
-		);
-		Rvecs[ 2 ] = Rl;
-		tvecs[ 2 ] = ( cv::Mat_<double>(3,1) << -cameradist[ LEFT ],0,0 );
-	}
-	// right (原点から +X=1.0m、 カメラは -X を向く)
-	{
-		// 例: (X,Y,Z)->(-Z,Y,X)
-		cv::Mat Rr = ( cv::Mat_<double>(3,3) <<
-			0,0,cameradist[ RIGHT ],
-			0,cameradist[ RIGHT ],0,
-		   -cameradist[ RIGHT ],0,0
-		);
-		Rvecs[ 3 ] = Rr;
-		tvecs[ 3 ] = ( cv::Mat_<double>(3,1) << +cameradist[ RIGHT ],0,0 );
-	}
-	YVector3 finalData;
-	for ( int32_t i = 0; i < ( int32_t ) YOLO_POSE_INDEX::YOLO_POSE_INDEX_MAX; i++ )
-	{
-	//===============================================================
-	// 例) YOLO等から得られた4台分の (u,v) と 信頼度 c
-	//===============================================================
-	//   ここではテスト値を適当に設定
-		std::vector<cv::Point2f> imagePts{
-			{capturedata_[ Locate::FRONT ][ ( YOLO_POSE_INDEX ) i ].captureBonePos.x,
-			capturedata_[ Locate::FRONT ][ ( YOLO_POSE_INDEX ) i ].captureBonePos.y}, // front
-
-			{capturedata_[ Locate::LEFT ][ ( YOLO_POSE_INDEX ) i ].captureBonePos.x,
-			capturedata_[ Locate::LEFT ][ ( YOLO_POSE_INDEX ) i ].captureBonePos.y}, // left
-
-			{capturedata_[ Locate::RIGHT ][ ( YOLO_POSE_INDEX ) i ].captureBonePos.x,
-			capturedata_[ Locate::RIGHT ][ ( YOLO_POSE_INDEX ) i ].captureBonePos.y}, // right
-		};
-		std::vector<double> confidences{ capturedata_[ Locate::FRONT ][ ( YOLO_POSE_INDEX ) i ].captureBonePos.z
-/*			, capturedata_[ Locate::LEFT ][ ( YOLO_POSE_INDEX ) i ].captureBonePos.z
-			, capturedata_[ Locate::RIGHT ][ ( YOLO_POSE_INDEX ) i ].captureBonePos.z */};
-
-		//===============================================================
-		// (1) 歪み補正 & 正規化座標化
-		//     OpenCVの undistortPoints() を利用
-		//===============================================================
-		//   undistortPoints()の出力は 「(x_nd, y_nd)」(Z=1相当) なので
-		//   これを各カメラの外部パラメータに適用してレイを算出する
-		//---------------------------------------------------------------
-		//   注意: undistortPoints() は複数点をまとめて処理できる。
-		//---------------------------------------------------------------
-		std::vector<cv::Point2f> undistNormPoints;
-		{
-			// 入力をvectorに (今回は4点だけ)
-			std::vector<cv::Point2f> inputPts = imagePts;
-
-			// alpha=0の新しいカメラ行列(ここではKをそのまま使うでもOK)
-			std::vector< cv::Mat> newK = K;
-			// 歪み補正して正規化座標取得
-			cv::undistortPoints(inputPts,undistNormPoints,K,distCoeffs,cv::noArray(),newK);
-			// 出力 undistNormPoints[i] = (x_nd, y_nd)
-		}
-
-		//===============================================================
-		// (2) 各カメラでレイをワールド座標系に表現
-		//     方向ベクトル(単位) dW[i], カメラ中心 cW[i]
-		//===============================================================
-		std::vector<YVector3> cW(4),dW(4); // cameraCenterWorld, directionWorld
-		for ( int i = 0; i < Locate::MAX_LOCATE; i++ )
-		{
-			computeRay(Rvecs[ i ],tvecs[ i ],undistNormPoints[ i ],cW[ i ],dW[ i ]);
-		}
-
-		//===============================================================
-		// (3) 重み付き最小二乗 (Weighted LS) の計算
-		//     Q = Σ_i w_i (I - d_i d_i^T)
-		//     c = Σ_i w_i (I - d_i d_i^T) cW[i]
-		//     Q X = c  を解く
-		//===============================================================
-		Matrix3x3 Q;
-		for ( int k = 0; k < 9; k++ )
-		{
-			Q.mat[ k ] = 0.0;
-		}
-		YVector3 C{ 0,0,0 };
-
-		for ( int i = 0; i < 4; i++ )
-		{
-			double w = confidences[ i ]; // カメラiの信頼度
-			YVector3 di = dW[ i ];
-			// I - d_i d_i^T
-			Matrix3x3 Pi = Pi.ProjectionMatrix(di);
-			// w*Pi
-			Matrix3x3 wPi = Pi.Mat3Scale(Pi,w);
-			// Q += wPi
-			Q = Q.Mat3Add(Q,wPi);
-			// c += wPi * cW[i]
-			YVector3 tmp = wPi.Mat3Mulvec(wPi,cW[ i ]);
-			C = C + tmp;
-		}
-
-		// Qを逆行列化して X= Q^-1 * c
-		Matrix3x3 Qinv;
-		YVector3 X{ 0,0,0 };
-		if ( Q.Invert3x3(Q,Qinv) )
-		{
-			YVector3 sol = Qinv.Mat3Mulvec(Qinv,C);
-			X = sol;
-		}
-		else
-		{
-			std::cerr << "Warning: Q is singular!\n";
-		}
-
-		finalData = X;
-
-	}
-	return;
 }
 
 void YOLOPoseEstimationImp::AddCameraData(std::string filepath)
@@ -624,4 +372,109 @@ void YOLOPoseEstimationImp::AddCameraData(std::string filepath)
 
 	distCoeffs.push_back(tempCameraDistCoeffs);
 	K.push_back(tempCameraMat);
+}
+
+// LookAt関数的な回転行列の生成
+// カメラ位置 camPos から target を見る場合、up ベクトルを用いて回転行列を求める
+// ※ OpenCVの外部パラメーターでは、Rはワールド座標からカメラ座標への変換を表すので注意
+cv::Mat YOLOPoseEstimationImp::computeLookAtRotation(const YVector3& camPos,const YVector3& target,const YVector3& up) {
+	// 対象方向（正面ベクトル）
+	YVector3 forward = target - camPos;
+	forward = camPos.GetV3Norm();
+
+	// 右方向ベクトル： forward と up の外積
+	YVector3 right = forward.GetV3Cross(up);
+	right = right.GetV3Norm();
+
+	// 本来の上方向： right と forward の外積
+	YVector3 trueUp = right.GetV3Cross(forward);
+
+	// カメラ座標系では、一般的に x軸:右, y軸:真の上, z軸:カメラから被写体方向の反対（= -forward）とする
+	cv::Mat R = ( cv::Mat_<double>(3,3) <<
+			 right.x,right.y,right.z,
+			 trueUp.x,trueUp.y,trueUp.z,
+			 -forward.x,-forward.y,-forward.z );
+	return R;
+}
+
+// 外部パラメーター（カメラの位置・回転）の生成
+// direction: 原点からカメラ方向へのベクトル（任意の大きさ）
+// distance: 原点からの距離（メートル単位）
+// 出力: R（3×3回転行列）と t（3×1平行移動ベクトル、ワールド座標からカメラ座標への変換用）
+void YOLOPoseEstimationImp::createCameraExtrinsics(const YVector3& direction,float distance,cv::Mat& R,cv::Mat& t) {
+	// direction を正規化して、カメラ位置を計算
+	YVector3 normDir = direction.GetV3Norm();
+	YVector3 camPos = normDir * distance;  // カメラのワールド座標位置
+
+	// カメラは原点（対象）を注視するとする
+	YVector3 target(0,0,0);
+	// ワールド座標系での上方向。システムに合わせ (0, 1, 0) とする（必要に応じて変更）
+	YVector3 up(0,1,0);
+
+	// LookAt的回転行列を生成
+	R = computeLookAtRotation(camPos,target,up);
+	// 外部パラメーターの t は、ワールド座標からカメラ座標への変換で t = -R * camPos となる
+	cv::Mat camPosMat = ( cv::Mat_<double>(3,1) << camPos.x,camPos.y,camPos.z );
+	t = -R * camPosMat;
+}
+
+void YOLOPoseEstimationImp::CalclateFinalCaptureDataFromCalibrateData(){
+
+	cv::Mat R1,t1;
+	createCameraExtrinsics(cameraPosition_[Locate::FRONT],cameradist[Locate::FRONT],R1,t1);
+
+	cv::Mat R2,t2;
+	createCameraExtrinsics(cameraPosition_[ Locate::RIGHT ],cameradist[ Locate::RIGHT ],R2,t2);
+
+	// ③ 射影行列の生成： P = K * [R | t]
+	cv::Mat RT1,RT2,P1,P2;
+	hconcat(R1,t1,RT1);
+	hconcat(R2,t2,RT2);
+	P1 = K[ Locate::FRONT ] * RT1;
+	P2 = K[ Locate::RIGHT ] * RT2;
+
+	// ⑤ 有効な検出のみフィルタリング（信頼性が閾値以上）
+	std::vector<cv::Point2f> points1,points2;
+	std::vector<int> validIndices;
+	for ( size_t i = 0; i < (int32_t)YOLO_POSE_INDEX::YOLO_POSE_INDEX_MAX; i++ )
+	{
+		if ( capturedata_[ Locate::FRONT ][(YOLO_POSE_INDEX)i].captureBonePos.z >= CONFIDENCE_THRESHOLD &&
+			 capturedata_[ Locate::RIGHT ][ ( YOLO_POSE_INDEX ) i ].captureBonePos.z >= CONFIDENCE_THRESHOLD )
+		{
+			cv::Point2f point1 = { capturedata_[ Locate::FRONT ][ ( YOLO_POSE_INDEX ) i ].captureBonePos.x,
+									capturedata_[ Locate::FRONT ][ ( YOLO_POSE_INDEX ) i ].captureBonePos.y};
+
+			cv::Point2f point2 = { capturedata_[ Locate::FRONT ][ ( YOLO_POSE_INDEX ) i ].captureBonePos.x,
+									capturedata_[ Locate::RIGHT ][ ( YOLO_POSE_INDEX ) i ].captureBonePos.y };
+			points1.push_back(point1);
+			points2.push_back(point2);
+			validIndices.push_back(static_cast< int >( i ));
+		}
+	}
+	if ( points1.empty() || points2.empty() )
+	{
+		return;
+	}
+
+	// ⑥ 必要に応じた歪み補正
+	// ここでは、内部パラメーターを含む射影行列を使っているため、triangulatePointsには元のピクセル座標を使用します。
+	// ※ 高精度化のため、事前に undistortPoints を用いて正規化座標に変換する方法もあります。
+
+	// ⑦ 三角測量による3次元復元（OpenCVの triangulatePoints を使用）
+	cv::Mat pts4D;
+	triangulatePoints(P1,P2,points1,points2,pts4D);
+
+	// ⑧ 同次座標から通常の3次元座標へ変換して出力
+
+	for ( int i = 0; i < pts4D.cols; i++ )
+	{
+		cv::Mat col = pts4D.col(i);
+		// 同次座標（4次元）を第4成分で正規化
+		col /= col.at<float>(3,0);
+		cv::Point3f pt3D(col.at<float>(0,0),
+					 col.at<float>(1,0),
+					 col.at<float>(2,0));
+		
+		finalCaptureData_[ ( YOLO_POSE_INDEX ) validIndices[ i ] ] = { pt3D.x,pt3D.y,pt3D.z };
+	}
 }

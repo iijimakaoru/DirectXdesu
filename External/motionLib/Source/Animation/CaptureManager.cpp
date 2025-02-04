@@ -20,7 +20,7 @@ void CaptureManager::Initialize()
 
 	m_YOLOPoseEstimation_->Start(true);
 
-	capdatas[ Locate::FRONT ].cameraPosition = { 0.0f,0.0f,capdatas[ Locate::FRONT ].cameraDistance.z };
+	capdatas[ Locate::FRONT ].cameraPosition = { 0.0f,0.0f,1.0f };
 	//capdatas[ Locate::LEFT ].cameraPosition = { -capdatas[ Locate::LEFT ].cameraDistance.x,0.0f,0.0f };
 	//capdatas[ Locate::RIGHT ].cameraPosition = { capdatas[ Locate::RIGHT ].cameraDistance.x,0.0f,0.0f };
 }

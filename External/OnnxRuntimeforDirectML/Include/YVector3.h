@@ -16,7 +16,7 @@ namespace MCBO
 		YVector3 Vector3Substruct(const YVector3& start, const YVector3& end);
 		float V3Len() const;
 		void V3Norm();
-		YVector3 GetV3Norm();
+		YVector3 GetV3Norm() const;
 		float GetV3Dot(const YVector3& vector);
 		float GetInnerProduct(YVector3 vector);
 		YVector3 GetV3Cross(const YVector3& vector);

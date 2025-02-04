@@ -50,7 +50,7 @@ void MCBO::YVector3::V3Norm()
 
 }
 
-YVector3 MCBO::YVector3::GetV3Norm()
+YVector3 MCBO::YVector3::GetV3Norm() const
 {
 	YVector3 ans = *this;
 	ans.V3Norm();

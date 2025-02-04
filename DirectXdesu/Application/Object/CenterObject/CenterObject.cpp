@@ -16,6 +16,19 @@ void CenterObject::Init(MeshModel* model, const Timer& timer, const KMyMath::Mat
 
 void CenterObject::Update(const Timer& timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection)
 {
+	float rotPower = 1.0f;
+
+	if (rot_.y <= 180.0f) {
+		rot_.y += rotPower;
+	}
+	else {
+		rot_.y = 0;
+	}
+
+	DirectX::XMFLOAT3 rot = MyMathConvert::ChangeVector3toXMfloat3(rot_);
+
+	emitter_->SetRotation(rot);
+
 	object_->Update(timer, matView, matProjection, emitter_.get());
 }
 
@@ -24,13 +37,13 @@ void CenterObject::Draw(const Timer& timer, const KMyMath::Matrix4& matView, con
 	object_->Draw(timer, matView, matProjection, emitter_.get());
 }
 
-void CenterObject::SetObject(KMyMath::Vector3& pos, KMyMath::Vector3& rotation, KMyMath::Vector3& scale, KMyMath::Vector4& color, const Timer& timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection)
+void CenterObject::SetObject(KMyMath::Vector3& pos, KMyMath::Vector3& rotation, KMyMath::Vector3& scale, KMyMath::Vector4& color)
 {
 	DirectX::XMFLOAT3 nowPos = MyMathConvert::ChangeVector3toXMfloat3(pos);
 	DirectX::XMFLOAT3 nowRot = MyMathConvert::ChangeVector3toXMfloat3(rotation);
 	DirectX::XMFLOAT3 nowScale = MyMathConvert::ChangeVector3toXMfloat3(scale);
 	DirectX::XMFLOAT4 nowColor = MyMathConvert::ChangeXMFLOAT4(color);
-	float nowParticleSize = 1.0f;
+	float nowParticleSize = 0.5f;
 
 	emitter_->SetPosition(nowPos);
 	emitter_->SetScaling(nowScale);

@@ -91,6 +91,8 @@
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <FloatingPointModel>Precise</FloatingPointModel>
+      <Optimization>MinSpace</Optimization>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -183,6 +185,7 @@
     <ClCompile Include="Engine\Particle\MeshEmitter.cpp" />
     <ClCompile Include="Application\Object\ObjectSetter.cpp" />
     <ClCompile Include="Application\Effect\GroundEffect\GroundEffect.cpp" />
+    <ClCompile Include="Application\Object\SideObject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\MusicDesc.h" />
@@ -266,6 +269,7 @@
     <ClInclude Include="Engine\Particle\MeshEmitter.h" />
     <ClInclude Include="Application\Object\ObjectSetter.h" />
     <ClInclude Include="Application\Effect\GroundEffect\GroundEffect.h" />
+    <ClInclude Include="Application\Object\SideObject.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DirectXdesu.rc" />

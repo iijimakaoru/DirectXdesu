@@ -51,14 +51,23 @@ void FbxObject3D::Update(ViewProjection* viewProjection)
 	KMyMath::Matrix4 matScale, matRot, matTrans;
 
 	// 親オブジェクト要素
+	// 拡縮
 	matScale = MyMathUtility::MakeIdentity();
 	matScale = MyMathUtility::MakeScaling(scale);
+
+	// 回転
 	matRot = MyMathUtility::MakeIdentity();
-	matRot = MyMathUtility::MakeRotation({ DirectX::XMConvertToRadians(rotation.x),
-		DirectX::XMConvertToRadians(rotation.y),DirectX::XMConvertToRadians(rotation.z) });
+	matRot = MyMathUtility::MakeRotation({ 
+		DirectX::XMConvertToRadians(rotation.x),
+		DirectX::XMConvertToRadians(rotation.y),
+		DirectX::XMConvertToRadians(rotation.z) 
+		});
+
+	// 位置
 	matTrans = MyMathUtility::MakeIdentity();
 	matTrans = MyMathUtility::MakeTranslation(position);
 
+	// 
 	matWorld = MyMathUtility::MakeIdentity();
 	matWorld *= matScale;
 	matWorld *= matRot;

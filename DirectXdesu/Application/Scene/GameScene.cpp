@@ -90,8 +90,43 @@ void GameScene::Init()
 		KMyMath::Vector3 centerObjectRot = { 0.0f,0.0f,0.0f };
 		KMyMath::Vector3 centerObjectScale = { 1.0f,1.0f,1.0f };
 		KMyMath::Vector4 centerObjectColor = { 1.0f,1.0f,1.0f,1.0f };
-		objectSetter->SetCenterObject(centerObjectPos, centerObjectRot, centerObjectScale, centerObjectColor,
-			timer_, camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro());
+		objectSetter->SetCenterObject(centerObjectPos, centerObjectRot, centerObjectScale, centerObjectColor);
+	}
+
+	{
+		size_t i = 0;
+		KMyMath::Vector3 sideObjectPos = { 25.0f,100.0f,2000.0f };
+		KMyMath::Vector3 sideObjectRot = { 0.0f,0.0f,0.0f };
+		KMyMath::Vector3 sideObjectScale = { 5.0f,5.0f,5.0f };
+		KMyMath::Vector4 sideObjectColor = { 1.0f,1.0f,1.0f,1.0f };
+		objectSetter->SetSideObject(i, sideObjectPos, sideObjectRot, sideObjectScale, sideObjectColor);
+	}
+
+	{
+		size_t i = 1;
+		KMyMath::Vector3 sideObjectPos = { -25.0f,100.0f,1400.0f };
+		KMyMath::Vector3 sideObjectRot = { 0.0f,0.0f,0.0f };
+		KMyMath::Vector3 sideObjectScale = { 5.0f,5.0f,5.0f };
+		KMyMath::Vector4 sideObjectColor = { 1.0f,1.0f,1.0f,1.0f };
+		objectSetter->SetSideObject(i, sideObjectPos, sideObjectRot, sideObjectScale, sideObjectColor);
+	}
+
+	{
+		size_t i = 2;
+		KMyMath::Vector3 sideObjectPos = { 25.0f,100.0f,800.0f };
+		KMyMath::Vector3 sideObjectRot = { 0.0f,0.0f,0.0f };
+		KMyMath::Vector3 sideObjectScale = { 5.0f,5.0f,5.0f };
+		KMyMath::Vector4 sideObjectColor = { 1.0f,1.0f,1.0f,1.0f };
+		objectSetter->SetSideObject(i, sideObjectPos, sideObjectRot, sideObjectScale, sideObjectColor);
+	}
+
+	{
+		size_t i = 3;
+		KMyMath::Vector3 sideObjectPos = { -100.0f,50.0f,200.0f };
+		KMyMath::Vector3 sideObjectRot = { 0.0f,0.0f,0.0f };
+		KMyMath::Vector3 sideObjectScale = { 30.0f,30.0f,30.0f };
+		KMyMath::Vector4 sideObjectColor = { 1.0f,1.0f,1.0f,1.0f };
+		objectSetter->SetSideObject(i, sideObjectPos, sideObjectRot, sideObjectScale, sideObjectColor);
 	}
 
 	//ノーツ
@@ -262,7 +297,7 @@ void GameScene::ObjDraw()
 	effectSetter->Draw(timer_, camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro());
 
 	// オブジェクトの描画
-	//objectSetter->Draw(timer_, camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro());
+	objectSetter->Draw(timer_, camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro());
 }
 
 void GameScene::SpriteDraw() 

@@ -86,6 +86,18 @@ const M_MODEL_OUT& MCBM::Skelton::GetModelOutData()
 	return modelOut;
 }
 
+const std::vector<Matrix> MCBM::Skelton::GetMeshBoneData(int32_t meshIndex)
+{
+	std::vector<Matrix>ret;
+
+	for (int i = 0; i < modelOut.meshs_[meshIndex].bones.size(); i++)
+	{
+		ret.push_back(modelOut.meshs_[meshIndex].bones[i].matrix);
+	}
+
+	return ret;
+}
+
 void MCBM::Skelton::CaptureBoneUpdate(YOLO_POSE_INDEX rootBoneName, uint32_t boneCount)
 {
 

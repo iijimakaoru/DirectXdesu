@@ -109,5 +109,7 @@ namespace MCBM
 		/// </summary>
 		/// <returns></returns>
 		const M_MODEL_OUT& GetModelOutData();
+
+		const std::vector<Matrix> GetMeshBoneData(int32_t meshIndex);
 	};
 }

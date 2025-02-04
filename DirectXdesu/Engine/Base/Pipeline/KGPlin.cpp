@@ -217,7 +217,7 @@ void KGPlin::CreatePipelineAll(KShader& shader, const std::string& shaderName) {
 		pipelineDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
 
 		// ラスタライザの設定
-		pipelineDesc.RasterizerState.CullMode = D3D12_CULL_MODE_BACK;  // 背面をカリング
+		pipelineDesc.RasterizerState.CullMode = D3D12_CULL_MODE_NONE;  // 背面をカリング
 		pipelineDesc.RasterizerState.FillMode = D3D12_FILL_MODE_SOLID; // ポリゴン塗りつぶし
 		pipelineDesc.RasterizerState.DepthClipEnable = true;           // 深度クリッピング
 

@@ -83,7 +83,7 @@ Triangle::Triangle() {
 			line_stream >> pos.x;
 			line_stream >> pos.y;
 			line_stream >> pos.z;
-
+			
 			positions.emplace_back(pos);
 		}
 
@@ -102,6 +102,7 @@ Triangle::Triangle() {
 			line_stream >> normal.x;
 			line_stream >> normal.y;
 			line_stream >> normal.z;
+			normal.x *= -1.0f;
 
 			normals.emplace_back(normal);
 		}
@@ -375,7 +376,7 @@ MtlObj::MtlObj(const std::string& modelname, bool smoothing) {
 			line_stream >> pos.x;
 			line_stream >> pos.y;
 			line_stream >> pos.z;
-
+			pos.x *= -1.0f;
 			positions.emplace_back(pos);
 		}
 

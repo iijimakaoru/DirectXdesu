@@ -45,7 +45,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)External\DirectXTex;$(SolutionDir)External\imgui;$(SolutionDir)External\fbx_sdk\include;$(SolutionDir)External\Json;$(SolutionDir)External\motionLib\Include;$(SolutionDir)External\opencv\build\include;$(SolutionDir)External\OnnxRuntimeforDirectML\Include;$(SolutionDir)External\ModelLoader</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)External\DirectXTex;$(SolutionDir)External\imgui;$(SolutionDir)External\fbx_sdk\include;$(SolutionDir)External\Json;$(SolutionDir)External\opencv\build\include;$(SolutionDir)External\OnnxRuntimeforDirectML\Include;$(SolutionDir)External\ModelLoader;$(SolutionDir)External\motionLib\Include;$(SolutionDir)External\motionLib\Include\Animation;$(SolutionDir)External\motionLib\Include\Math</IncludePath>
     <LibraryPath>$(SolutionDir)External\fbx_sdk\lib\debug;$(SolutionDir)External\opencv\build\x64\vc15\lib;$(SolutionDir)External\DirectML.1.15.1\bin\x64-win;$(SolutionDir)External\OnnxRuntime..19.2\runtimes\win-x64\native;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)Generated\Outputs\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)Generated\Obj\$(ProjectName)\$(Configuration)\</IntDir>
@@ -105,6 +105,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Application\MusicDesc.cpp" />
+    <ClCompile Include="CaptureModel.cpp" />
     <ClCompile Include="Engine\Particle\Emitter.cpp" />
     <ClCompile Include="Engine\Particle\CommandSignature.cpp" />
     <ClCompile Include="Engine\Particle\DrawArgs.cpp" />
@@ -182,6 +183,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\MusicDesc.h" />
+    <ClInclude Include="CaptureModel.h" />
     <ClInclude Include="Engine\Particle\Emitter.h" />
     <ClInclude Include="Engine\Particle\CommandSignature.h" />
     <ClInclude Include="Engine\Particle\DrawArgs.h" />

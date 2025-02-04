@@ -26,6 +26,7 @@
 #include "GameCamera.h"
 
 #include "MusicDesc.h"
+#include "NoteObj.h"
 
 #include <Animation/Skelton.h>
 
@@ -93,11 +94,9 @@ private:
 
 	// オブジェクト
 	std::array<std::unique_ptr<KObject3d>, OBJ::max> obj;
-	std::vector<std::unique_ptr<KObject3d>>objNote;
 
 	// モデル
 	std::array<KModel*, OBJ::max> objModel;
-	KModel* noteModel;
 
 	// オーディオ
 	AudioManager* audioManager_;
@@ -113,8 +112,7 @@ private:
 private:
 	//ノーツ
 	std::unique_ptr<MusicDesc>music;
-	std::vector<Note>notes;
-
+	std::unique_ptr<NoteObj>noteObj;
 	KMyMath::Vector2 start, end;
 	float angle;
 	float length;

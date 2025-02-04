@@ -3,7 +3,7 @@
 #include <unordered_map>
 
 #include <Animation/Bone.h>
-#include <Animation/Capture.h>
+#include <Animation/CaptureManager.h>
 #include <Animation/AnimationManager.h>
 #include <Animation/AnimationMesh.h>
 #include <P_MODEL_DATA.h>
@@ -23,7 +23,7 @@ namespace MCBM
 
 		Bone* rootBone_;
 
-		Capture* capture;
+		std::unique_ptr<MCBM::CaptureManager> captureManager;
 
 		std::string name_;
 
@@ -31,7 +31,6 @@ namespace MCBM
 
 		bool canAnimation = false;
 	private:
-		void SetCapturePtr(Capture* cap);
 
 		void AddBone(std::unique_ptr<Bone> bone);
 
@@ -82,7 +81,11 @@ namespace MCBM
 
 	public:
 
+		void Initialize();
+
 		Bone* GetBone(std::string name);
+
+		const MVector3& GetCaptureThreeDimensionPos(YOLO_POSE_INDEX index);
 
 		Skelton& SetDataFromLoader(const PHONONLOADER::P_MODEL_DATA& modelData);
 
@@ -97,6 +100,8 @@ namespace MCBM
 		/// <param name="loop"></param>
 		/// <param name="animtionPositionRock"></param>
 		void UpDate(std::vector<YOLO_POSE_INDEX> rootBoneNames,float& timeInSeconds, const std::string& currentAnimation = "Tpose", bool loop = true, bool animtionPositionRock = true);
+
+		void CaptureUpDate(std::vector<YOLO_POSE_INDEX> rootBoneNames);
 		void Finalize();
 
 		/// <summary>

@@ -20,6 +20,12 @@ namespace MCBM
 		std::unique_ptr<YOLOPoseEstimation> m_YOLOPoseEstimation_;
 		const std::string& modelPath_ = "Resources/Checkpoints/yolo11x-pose.onnx";
 		const int32_t cameraFirstIndex = 0;
+
+		std::array<std::string, 17> linkBoneNames = { "none","none" ,"none" ,"none" ,"none" ,
+														"upper_arm.L","upper_arm.R",
+														"forearm.L","forearm.R","hand.L",
+													"hand.R" ,"none" ,"none" ,"none" ,"none" ,
+													"none","none" };
 	public:
 		void Initialize();
 		void Update();

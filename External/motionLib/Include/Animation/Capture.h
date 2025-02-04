@@ -25,7 +25,8 @@ namespace MCBM
 	{
 	private:
 		std::array<std::string, 17> linkBoneNames = { "none","none" ,"none" ,"none" ,"none" ,
-													"upper_arm.L","upper_arm.R","forearm.L","forearm.R","hand.L",
+														"upper_arm.L","upper_arm.R",
+														"forearm.L","forearm.R","hand.L",
 													"hand.R" ,"none" ,"none" ,"none" ,"none" ,
 													"none","none" };
 

@@ -31,7 +31,7 @@
 
 #include<YOLOPoseEstimation.h>
 
-#include<Animation/CaptureManager.h>
+#include<Animation/AnimationModelManager.h>
 
 /**
  * @file GameScene.h
@@ -136,7 +136,7 @@ private:
 	int score[3];
 	int combo;
 
-	std::unique_ptr<MCBM::CaptureManager> cap;
+	MCBM::Skelton* playerModel;
 
 	std::unique_ptr<Sprite> sprite;
 	TextureData texData;

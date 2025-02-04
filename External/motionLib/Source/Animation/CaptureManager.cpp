@@ -20,9 +20,80 @@ void CaptureManager::Initialize()
 
 	m_YOLOPoseEstimation_->Start(true);
 
+
+	for (int32_t i = 0; i < (int32_t)YOLO_POSE_INDEX::YOLO_POSE_INDEX_MAX; i++)
+	{
+		finalCaptureData_[(YOLO_POSE_INDEX)i].captureBoneName = 
+										capdatas[0].GetCaptureData((YOLO_POSE_INDEX) i).captureBoneName;
+
+	}
+
+	for (int32_t i = 0; i < (int32_t)YOLO_POSE_INDEX::YOLO_POSE_INDEX_MAX; i++)
+	{
+		CaptureData* temp = &finalCaptureData_[(YOLO_POSE_INDEX)i];
+		temp->captureBoneName = linkBoneNames[i];
+		switch ((YOLO_POSE_INDEX)i)
+		{
+		case YOLO_POSE_INDEX::NOSE:
+
+			break;
+		case YOLO_POSE_INDEX::EYE_L:
+
+			break;
+		case YOLO_POSE_INDEX::EYE_R:
+
+			break;
+		case YOLO_POSE_INDEX::EAR_L:
+
+			break;
+		case YOLO_POSE_INDEX::EARR:
+
+			break;
+		case YOLO_POSE_INDEX::SHOULDER_L:
+			temp->captureChildren.push_back(&finalCaptureData_[YOLO_POSE_INDEX::ELBOW_L]);
+			break;
+		case YOLO_POSE_INDEX::SHOULDER_R:
+			temp->captureChildren.push_back(&finalCaptureData_[YOLO_POSE_INDEX::ELBOW_R]);
+			break;
+		case YOLO_POSE_INDEX::ELBOW_L:
+			temp->captureChildren.push_back(&finalCaptureData_[YOLO_POSE_INDEX::WRIST_L]);
+			break;
+		case YOLO_POSE_INDEX::ELBOW_R:
+			temp->captureChildren.push_back(&finalCaptureData_[YOLO_POSE_INDEX::WRIST_R]);
+			break;
+		case YOLO_POSE_INDEX::WRIST_L:
+
+			break;
+		case YOLO_POSE_INDEX::WRIST_R:
+
+			break;
+		case YOLO_POSE_INDEX::HIP_L:
+
+			break;
+		case YOLO_POSE_INDEX::HIP_R:
+
+			break;
+		case YOLO_POSE_INDEX::KNEE_L:
+
+			break;
+		case YOLO_POSE_INDEX::KNEE_R:
+
+			break;
+		case YOLO_POSE_INDEX::ANKLE_L:
+
+			break;
+		case YOLO_POSE_INDEX::ANKLE_R:
+
+			break;
+		default:
+			break;
+		}
+	}
+
+
 	capdatas[ Locate::FRONT ].cameraPosition = { 0.0f,0.0f,1.0f };
 	//capdatas[ Locate::LEFT ].cameraPosition = { -capdatas[ Locate::LEFT ].cameraDistance.x,0.0f,0.0f };
-	//capdatas[ Locate::RIGHT ].cameraPosition = { capdatas[ Locate::RIGHT ].cameraDistance.x,0.0f,0.0f };
+	capdatas[ Locate::RIGHT ].cameraPosition = { 1.0f,0.0f,0.0f };
 }
 
 void CaptureManager::Update()

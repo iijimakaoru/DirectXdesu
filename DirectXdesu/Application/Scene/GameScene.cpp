@@ -185,10 +185,9 @@ void GameScene::Init() {
 	float conf_threshold = 0.30f;
 	float iou_threshold = 0.45f;
 	int conversion_code = cv::COLOR_BGR2RGB;
-
-	cap = std::make_unique<MCBM::CaptureManager>();
-
-	cap->Initialize();
+	
+	playerModel = MCBM::AnimationModelManager::GetInstance()->Load("fox","playerModel");
+	playerModel->Initialize();
 
 	sprite.reset(Sprite::Create(PipelineManager::GetInstance()->GetPipeline("Sprite")));
 
@@ -196,7 +195,7 @@ void GameScene::Init() {
 }
 
 void GameScene::Update() {
-	cap->Update();
+	playerModel->CaptureUpDate({ YOLO_POSE_INDEX::SHOULDER_L,YOLO_POSE_INDEX::SHOULDER_R });
 	
 	light_->SetLightRGB({lightRGB_.x, lightRGB_.y, lightRGB_.z});
 	light_->SetLightDir({lightDir_.x, lightDir_.y, lightDir_.z, 0.0f});

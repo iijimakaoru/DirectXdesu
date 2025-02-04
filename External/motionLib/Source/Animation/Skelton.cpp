@@ -1,6 +1,6 @@
 #include <Animation/Skelton.h>
 #include <Math/MVector3.h>
-
+#include <Animation/AnimationModelManager.h>
 
 using namespace MCBM;
 using namespace std;
@@ -9,11 +9,6 @@ using namespace std;
 float clamp(float f)
 {
 	return (f < 0.0f) ? 0.0f : ((f > 1.0f) ? 1.0f : f);
-}
-
-void MCBM::Skelton::SetCapturePtr(Capture* cap)
-{
-	capture = cap;
 }
 
 void MCBM::Skelton::AddBone(std::unique_ptr<Bone> bone)
@@ -25,6 +20,14 @@ void MCBM::Skelton::AddMesh(const M_MODEL_MESH& mesh)
 {
 	modelOut.meshs_.push_back(mesh);
 }
+
+void MCBM::Skelton::Initialize()
+{
+	captureManager = std::make_unique<MCBM::CaptureManager>();
+
+	captureManager->Initialize();
+}
+
 
 MCBM::Bone* MCBM::Skelton::GetBone(std::string name)
 {
@@ -38,6 +41,11 @@ MCBM::Bone* MCBM::Skelton::GetBone(std::string name)
 	return nullptr;
 }
 
+const MVector3& MCBM::Skelton::GetCaptureThreeDimensionPos(YOLO_POSE_INDEX index)
+{
+	return captureManager->GetCaptureData(index).captureBonePos;
+}
+
 MCBM::MQuaternion MCBM::Skelton::GetBoneRotation(std::string name)
 {
 	return GetBone(name)->GetRotation();
@@ -45,12 +53,12 @@ MCBM::MQuaternion MCBM::Skelton::GetBoneRotation(std::string name)
 
 void MCBM::Skelton::UpdateCaptureData()
 {
-	capture->Update();
+	captureManager->Update();
 }
 
 void MCBM::Skelton::CaptureBasePoseInitialize()
 {
-	capture->SetInitialPose();
+	captureManager->InitializePose();
 
 }
 
@@ -66,9 +74,11 @@ void MCBM::Skelton::CaptureBoneAccept()
 
 }
 
+
+
 void MCBM::Skelton::Finalize()
 {
-	capture->Finalize();
+	captureManager->Finalize();
 }
 
 const M_MODEL_OUT& MCBM::Skelton::GetModelOutData()
@@ -79,13 +89,20 @@ const M_MODEL_OUT& MCBM::Skelton::GetModelOutData()
 void MCBM::Skelton::CaptureBoneUpdate(YOLO_POSE_INDEX rootBoneName, uint32_t boneCount)
 {
 
-	CaptureData rootCap = capture->GetCaptureData(rootBoneName);
+	CaptureData rootCap = captureManager->GetCaptureData(rootBoneName);
 	MVector3 tempVec;
 	for (int i = 0; i < boneCount; i++)
 	{
 		Bone* rootBone = GetBone(rootCap.captureBoneName);
+
+		if (rootCap.captureChildren.empty())
+		{
+			break;
+		}
+
 		for (int k = 0; k < 1; k++)
 		{
+
 			CaptureData* child = rootCap.captureChildren[k];
 			MVector3 initializeBone = MVector3(rootCap.initializedCaptureBonePos, child->initializedCaptureBonePos);
 			MVector3 nowBone = MVector3(rootCap.captureBonePos, child->captureBonePos);
@@ -599,6 +616,7 @@ Skelton& MCBM::Skelton::SetDataFromLoader(const PHONONLOADER::P_MODEL_DATA& mode
 
 void MCBM::Skelton::UpDate(std::vector<YOLO_POSE_INDEX> rootBoneName,float& timeInSeconds, const std::string& currentAnimation, bool loop, bool animtionPositionRock)
 {
+	captureManager->Update();
 	Animation* anim = animations_.GetAnimation(currentAnimation);
 	for (int32_t i = 0; i < rootBoneName.size(); i++)
 	{
@@ -606,4 +624,14 @@ void MCBM::Skelton::UpDate(std::vector<YOLO_POSE_INDEX> rootBoneName,float& time
 	}
 	boneAnimTransform(timeInSeconds, anim, loop, animtionPositionRock);
 
+}
+void MCBM::Skelton::CaptureUpDate(std::vector<YOLO_POSE_INDEX> rootBoneNames)
+{
+	captureManager->Update();
+	for (int32_t i = 0; i < rootBoneNames.size(); i++)
+	{
+		CaptureBoneUpdate(rootBoneNames[i]);
+	}
+	float temp = 0;
+	boneAnimTransform(temp, nullptr, true, true);
 }

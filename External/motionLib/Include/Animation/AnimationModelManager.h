@@ -1,5 +1,5 @@
 #pragma once
-#include<Skelton.h>
+#include<Animation/Skelton.h>
 #include<unordered_map>
 #include<memory>
 
@@ -28,6 +28,6 @@ namespace MCBM
 
 	public:
 		MCBM::Skelton* GetModel(const std::string& name);
-		Skelton* Load(const std::string& modelname, const char* pName);
+		Skelton* Load(const std::string& modelname, const char* pName = nullptr);
 	};
 }

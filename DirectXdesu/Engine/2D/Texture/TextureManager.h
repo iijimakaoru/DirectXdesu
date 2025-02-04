@@ -54,7 +54,7 @@ public:
 	TextureData LoadTexture(const std::string& fileName);
 
 	TextureData LoadDivTexture(
-	    const std::string& fileName_, KMyMath::Vector2 leftTop_, KMyMath::Vector2 divSize_);
+	    const std::string& fileName_, KMyMath::Vector2& leftTop_, KMyMath::Vector2& divSize_);
 
 	/// <summary>
 	/// 読み込み
@@ -74,7 +74,7 @@ public:
 
 	void LoadTextures();
 
-	TextureData& GetTextures(std::string mapName);
+	TextureData& GetTextures(const std::string& mapName);
 
 private:
 	/// <summary>

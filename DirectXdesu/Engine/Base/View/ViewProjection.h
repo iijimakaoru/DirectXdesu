@@ -45,11 +45,11 @@ public:
 	const KMyMath::Vector3& GetUp() const;
 
 	// セッター
-	void SetMatView(const KMyMath::Matrix4 mat_);
+	void SetMatView(const KMyMath::Matrix4& mat_);
 	void SetEye(const KMyMath::Vector3& eye_);
 	void SetTarget(const KMyMath::Vector3& target_);
 	void SetUp(const KMyMath::Vector3& up_);
-	void SetFarZ(const float& farZ_);
-	void SetNearZ(const float& nearZ_);
+	void SetFarZ( float farZ_);
+	void SetNearZ( float nearZ_);
 };
 

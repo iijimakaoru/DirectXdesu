@@ -15,7 +15,7 @@ private:
 public:
 	void Init();
 
-	KGPlin* GetPipeline(std::string pipelineName);
+	KGPlin* GetPipeline(const std::string& pipelineName);
 
 private:
 	// パイプライン

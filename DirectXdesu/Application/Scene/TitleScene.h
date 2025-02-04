@@ -5,7 +5,7 @@
 #include "KInput.h"
 #include "PostEffect.h"
 #include "Sprite.h"
-#include "TitleCamera.h"
+#include "GameCamera.h"
 #include "AudioManager.h"
 #include "KObject3d.h"
 
@@ -30,7 +30,7 @@
 class TitleScene : public BaseScene
 {
 public:
-	TitleScene(){};
+	TitleScene() = default;
 	~TitleScene();
 	void LoadResources()override;
 	void Init() override;
@@ -39,30 +39,15 @@ public:
 	void SpriteDraw() override;
 	void Final()override;
 
-	// タイトル導入演出
-	void StartScene();
-
 	// 次のシーンへ
 	void GoNextScene();
 
-	// タイトルコール
-	void TitleCall();
-
-	// We pack the UAV counter into the same buffer as the commands rather than create
-	// a separate 64K resource/heap for it. The counter must be aligned on 4K boundaries,
-	// so we pad the command buffer (if necessary) such that the counter will be placed
-	// at a valid location in the buffer.
-	static inline UINT AlignForUavCounter(UINT bufferSize)
-	{
-		const UINT alignment = D3D12_UAV_COUNTER_PLACEMENT_ALIGNMENT;
-		return (bufferSize + (alignment - 1)) & ~(alignment - 1);
-	}
 private:
 	// インプット
 	KInput* input = nullptr;
 
 	// カメラ
-	std::unique_ptr<TitleCamera> camera = nullptr;
+	std::unique_ptr<GameCamera> camera = nullptr;
 
 #pragma region 天球
 	// オブジェクト
@@ -72,25 +57,8 @@ private:
 	KModel* skyDomeModel = nullptr;
 #pragma endregion
 
-	// 画面サイズ
-	const float width = static_cast<float>(KWinApp::GetInstance()->GetWindowSizeW());
-	const float height = static_cast<float>(KWinApp::GetInstance()->GetWindowSizeH());
-
 	AudioManager* audioManager = nullptr;
 
 	std::unique_ptr<Light> light_ = nullptr;
-
-	KMyMath::Vector3 lightRGB = {1, 1, 1};
-	KMyMath::Vector3 lightDir = {0, -1, 0};
-
-	Timer timer_;
-
-	Emitter* emitter_;
-	MeshEmitter* meshEmitter_;
-
-	GPUParticle* gpuParticle_;
-	MeshGPUParticle* meshGpuParticle_;
-
-	ParticleEditor* particleEditor_;
 };
 

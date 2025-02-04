@@ -18,6 +18,7 @@
 #include "PipelineManager.h"
 
 #include "ModelManager.h"
+#include"Vector2.h"
 
 #include<PModelLoader.h>
 
@@ -29,8 +30,8 @@ void GameScene::LoadResources() {
 		ModelManager::GetInstance()->GetModels("S_Cube");
 	objModel[OBJ::skydome] = 
 		ModelManager::GetInstance()->GetModels("S_SkyDorm");
-	noteModel = 
-		ModelManager::GetInstance()->GetModels("S_Arrow");
+	/*noteModel = 
+		ModelManager::GetInstance()->GetModels("S_Arrow");*/
 
 	TextureManager::Load("Resources/texture/boss1.png");
 
@@ -131,9 +132,6 @@ void GameScene::Update() {
 	
 	light_->SetLightRGB({lightRGB_.x, lightRGB_.y, lightRGB_.z});
 	light_->SetLightDir({lightDir_.x, lightDir_.y, lightDir_.z, 0.0f});
-
-	//角度算出
-	RotAndLenCalculationStick(input->GetPadLStick());
 
 	playTime++;
 	Collision();
@@ -259,11 +257,13 @@ void GameScene::Collision()
 
 				if (noteObj->Notes()[i]->lane == 0)
 				{
-					RotAndLenCalculationStick(input->GetPadLStick());
+					KMyMath::Vector2 rot = input->GetPadLStick();
+					RotAndLenCalculationStick(rot);
 				}
 				else if (noteObj->Notes()[i]->lane == 1)
 				{
-					RotAndLenCalculationStick(input->GetPadLStick());
+					KMyMath::Vector2 rot = input->GetPadRStick();
+					RotAndLenCalculationStick(rot);
 				}
 			}
 

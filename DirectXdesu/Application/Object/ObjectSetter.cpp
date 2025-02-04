@@ -25,7 +25,7 @@ void ObjectSetter::Init(const Timer& timer, const KMyMath::Matrix4& matView, con
 			float scaleNum = MyMathUtility::GetRandF(10.0f, 20.0f);
 			KMyMath::Vector3 scale = { scaleNum,scaleNum ,scaleNum };
 			KMyMath::Vector3 rot = { MyMathUtility::GetRandF(0.0f,180.0f),MyMathUtility::GetRandF(0.0f,180.0f) ,MyMathUtility::GetRandF(0.0f,180.0f) };
-			KMyMath::Vector4 color = { MyMathUtility::GetRandF(0.0f,1.0f),MyMathUtility::GetRandF(0.0f,1.0f) ,MyMathUtility::GetRandF(0.0f,1.0f) ,1.0f };
+			KMyMath::Vector4 color = { 1.0f,1.0f ,1.0f ,1.0f };
 			sideObjects_[i]->SetObject(pos, rot, scale, color);
 		}
 
@@ -40,7 +40,7 @@ void ObjectSetter::Init(const Timer& timer, const KMyMath::Matrix4& matView, con
 			float scaleNum = MyMathUtility::GetRandF(10.0f, 20.0f);
 			KMyMath::Vector3 scale = { scaleNum,scaleNum ,scaleNum };
 			KMyMath::Vector3 rot = { MyMathUtility::GetRandF(0.0f,180.0f),MyMathUtility::GetRandF(0.0f,180.0f) ,MyMathUtility::GetRandF(0.0f,180.0f) };
-			KMyMath::Vector4 color = { MyMathUtility::GetRandF(0.0f,1.0f),MyMathUtility::GetRandF(0.0f,1.0f) ,MyMathUtility::GetRandF(0.0f,1.0f) ,1.0f };
+			KMyMath::Vector4 color = { 1.0f,1.0f ,1.0f ,1.0f };
 			rightObjects_[i]->SetObject(pos, rot, scale, color);
 		}
 	}
@@ -58,7 +58,7 @@ void ObjectSetter::Update(const Timer& timer, const KMyMath::Matrix4& matView, c
 			float scaleNum = MyMathUtility::GetRandF(10.0f, 20.0f);
 			KMyMath::Vector3 scale = { scaleNum,scaleNum ,scaleNum };
 			KMyMath::Vector3 rot = { MyMathUtility::GetRandF(-180.0f,180.0f),MyMathUtility::GetRandF(-180.0f,180.0f) ,MyMathUtility::GetRandF(-180.0f,180.0f) };
-			KMyMath::Vector4 color = { MyMathUtility::GetRandF(0.0f,1.0f),MyMathUtility::GetRandF(0.0f,1.0f) ,MyMathUtility::GetRandF(0.0f,1.0f) ,1.0f };
+			KMyMath::Vector4 color = { 1.0f,1.0f ,1.0f ,1.0f };
 
 			sideObject->SetObject(pos, rot, scale, color);
 		}
@@ -74,7 +74,7 @@ void ObjectSetter::Update(const Timer& timer, const KMyMath::Matrix4& matView, c
 			float scaleNum = MyMathUtility::GetRandF(10.0f, 20.0f);
 			KMyMath::Vector3 scale = { scaleNum,scaleNum ,scaleNum };
 			KMyMath::Vector3 rot = { MyMathUtility::GetRandF(-180.0f,180.0f),MyMathUtility::GetRandF(-180.0f,180.0f) ,MyMathUtility::GetRandF(-180.0f,180.0f) };
-			KMyMath::Vector4 color = { MyMathUtility::GetRandF(0.0f,1.0f),MyMathUtility::GetRandF(0.0f,1.0f) ,MyMathUtility::GetRandF(0.0f,1.0f) ,1.0f };
+			KMyMath::Vector4 color = { 1.0f,1.0f ,1.0f ,1.0f };
 
 			sideObject->SetObject(pos, rot, scale, color);
 		}

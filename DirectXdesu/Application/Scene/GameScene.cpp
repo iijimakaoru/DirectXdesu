@@ -72,7 +72,7 @@ void GameScene::Init()
 
 	obj[OBJ::skydome].reset(KObject3d::Create(objModel[OBJ::skydome], 
 		PipelineManager::GetInstance()->GetPipeline("Obj")));
-	obj[OBJ::skydome]->GetTransform().SetScale({ 800.0f, 800.0f, 800.0f });
+	obj[OBJ::skydome]->GetTransform().SetScale({ 800.0f, 800.0f, 1000.0f });
 	obj[OBJ::skydome]->SetColor({ 0.1f,0.0f,1.0f,1.0f });
 
 	collisionManager_ = new CollisionManager();
@@ -91,42 +91,6 @@ void GameScene::Init()
 		KMyMath::Vector3 centerObjectScale = { 1.0f,1.0f,1.0f };
 		KMyMath::Vector4 centerObjectColor = { 1.0f,1.0f,1.0f,1.0f };
 		objectSetter->SetCenterObject(centerObjectPos, centerObjectRot, centerObjectScale, centerObjectColor);
-	}
-
-	{
-		size_t i = 0;
-		KMyMath::Vector3 sideObjectPos = { 25.0f,100.0f,2000.0f };
-		KMyMath::Vector3 sideObjectRot = { 0.0f,0.0f,0.0f };
-		KMyMath::Vector3 sideObjectScale = { 5.0f,5.0f,5.0f };
-		KMyMath::Vector4 sideObjectColor = { 1.0f,1.0f,1.0f,1.0f };
-		objectSetter->SetSideObject(i, sideObjectPos, sideObjectRot, sideObjectScale, sideObjectColor);
-	}
-
-	{
-		size_t i = 1;
-		KMyMath::Vector3 sideObjectPos = { -25.0f,100.0f,1400.0f };
-		KMyMath::Vector3 sideObjectRot = { 0.0f,0.0f,0.0f };
-		KMyMath::Vector3 sideObjectScale = { 5.0f,5.0f,5.0f };
-		KMyMath::Vector4 sideObjectColor = { 1.0f,1.0f,1.0f,1.0f };
-		objectSetter->SetSideObject(i, sideObjectPos, sideObjectRot, sideObjectScale, sideObjectColor);
-	}
-
-	{
-		size_t i = 2;
-		KMyMath::Vector3 sideObjectPos = { 25.0f,100.0f,800.0f };
-		KMyMath::Vector3 sideObjectRot = { 0.0f,0.0f,0.0f };
-		KMyMath::Vector3 sideObjectScale = { 5.0f,5.0f,5.0f };
-		KMyMath::Vector4 sideObjectColor = { 1.0f,1.0f,1.0f,1.0f };
-		objectSetter->SetSideObject(i, sideObjectPos, sideObjectRot, sideObjectScale, sideObjectColor);
-	}
-
-	{
-		size_t i = 3;
-		KMyMath::Vector3 sideObjectPos = { -100.0f,50.0f,200.0f };
-		KMyMath::Vector3 sideObjectRot = { 0.0f,0.0f,0.0f };
-		KMyMath::Vector3 sideObjectScale = { 30.0f,30.0f,30.0f };
-		KMyMath::Vector4 sideObjectColor = { 1.0f,1.0f,1.0f,1.0f };
-		objectSetter->SetSideObject(i, sideObjectPos, sideObjectRot, sideObjectScale, sideObjectColor);
 	}
 
 	//ノーツ

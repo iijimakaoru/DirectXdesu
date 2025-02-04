@@ -29,8 +29,6 @@ void GameScene::LoadResources() {
 		ModelManager::GetInstance()->GetModels("S_Cube");
 	objModel[OBJ::skydome] = 
 		ModelManager::GetInstance()->GetModels("S_SkyDorm");
-	noteModel = 
-		ModelManager::GetInstance()->GetModels("S_Arrow");
 
 	TextureManager::Load("Resources/texture/boss1.png");
 

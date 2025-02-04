@@ -104,7 +104,7 @@ void NoteObj::LoadNote(const std::string& name)
 		if (line[0] == '#')
 		{
 			//BPMの代入
-			if (line.find('BPM')!= std::string::npos)
+			if (line.find("BPM")!= std::string::npos)
 			{
 				// スペースの位置を見つける
 				size_t spacePos = line.find(':');
@@ -134,8 +134,8 @@ void NoteObj::LoadNote(const std::string& name)
 				if (spacePos != std::string::npos) {
 					// スペースの次の部分を切り出す
 					std::string value = line.substr(spacePos + 1);
-					int32_t num = value.size() / 2;
-					for (size_t i = 0; i < num; i++)
+					int32_t num =static_cast<int32_t>(value.size()) / 2;
+					for (int32_t i = 0; i < num; i++)
 					{
 						int32_t pos = 2 * i;
 						std::string a = value.substr(pos, 2);
@@ -145,7 +145,7 @@ void NoteObj::LoadNote(const std::string& name)
 							note->beat.measure = measure;
 							note->lane = lane;
 							note->direction = DIRECTION::right;
-							note->beat.beat = 0.5 * pos;
+							note->beat.beat = 0.5f * static_cast<int32_t>(pos);
 							notes.push_back(std::move(note));
 						}
 					}

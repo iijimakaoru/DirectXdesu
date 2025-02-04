@@ -10,7 +10,7 @@ void KMyGame::Init() {
 	// シーンマネージャーにセット
 	SceneManager::GetInstance()->SetSceneFactory(sceneFactory);
 
-	ModelManager::Load("skydome", "S_SkyDorm");
+	ModelManager::Load("skydome", "S_SkyDorm",true);
 	ModelManager::Load("cube","S_Cube");
 	ModelManager::Load("arrow","S_Arrow");
 

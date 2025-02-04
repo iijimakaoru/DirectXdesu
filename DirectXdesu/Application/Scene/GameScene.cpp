@@ -241,6 +241,8 @@ void GameScene::Update() {
 		obj[i]->Update(camera->GetViewPro(), camera->GetWorldPos());
 	}
 
+	obj[OBJ::skydome]->GetTransform().SetRot({ 0.0f, playTime * 0.05f, 0.0f });
+
 	camera->Update();
 }
 

@@ -210,11 +210,6 @@ void GameScene::Update()
 	playTime++;
 	Collision();
 
-	for (size_t i = 0; i < OBJ::max; i++)
-	{
-		obj[i]->Update(camera->GetViewPro(), camera->GetWorldPos());
-	}
-
 	for (size_t i = 0; i < objNote.size(); i++)
 	{
 		if (!notes[i].isHit)

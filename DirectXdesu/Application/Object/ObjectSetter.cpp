@@ -85,7 +85,7 @@ void ObjectSetter::Update(const Timer& timer, const KMyMath::Matrix4& matView, c
 
 void ObjectSetter::Draw(const Timer& timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection)
 {
-	//centerObject_->Draw(timer, matView, matProjection);
+	centerObject_->Draw(timer, matView, matProjection);
 
 	for (std::unique_ptr<SideObject>& sideObject : sideObjects_)
 	{

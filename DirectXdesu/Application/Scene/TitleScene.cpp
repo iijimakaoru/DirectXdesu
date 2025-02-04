@@ -43,7 +43,7 @@ void TitleScene::Init() {
 	sceneManager = SceneManager::GetInstance();
 
 	skyDome.reset(
-	    KObject3d::Create(skyDomeModel, PipelineManager::GetInstance()->GetPipeline("Obj")));
+	  KObject3d::Create(skyDomeModel, PipelineManager::GetInstance()->GetPipeline("Obj")));
 	skyDome->GetTransform().SetScale({400.0f, 400.0f, 400.0f});
 	skyDome->SetColor({ 0,0,0,0 });
 

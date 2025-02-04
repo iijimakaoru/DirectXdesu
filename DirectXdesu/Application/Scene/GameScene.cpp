@@ -136,11 +136,6 @@ void GameScene::Update() {
 	playTime++;
 	Collision();
 
-	for (size_t i = 0; i < OBJ::max; i++)
-	{
-		obj[i]->Update(camera->GetViewPro(), camera->GetWorldPos());
-	}
-
 	noteObj->Update(camera.get());
 
 	for (size_t i = 0; i < OBJ::max; i++) 

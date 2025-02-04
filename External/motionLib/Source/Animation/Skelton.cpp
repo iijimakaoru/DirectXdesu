@@ -21,9 +21,9 @@ void MCBM::Skelton::AddBone(std::unique_ptr<Bone> bone)
 	bones_.push_back(std::move(bone));
 }
 
-void MCBM::Skelton::AddMesh(std::unique_ptr<M_MODEL_MESH> mesh)
+void MCBM::Skelton::AddMesh(const M_MODEL_MESH& mesh)
 {
-	meshs_.push_back(std::move(mesh));
+	modelOut.meshs_.push_back(mesh);
 }
 
 MCBM::Bone* MCBM::Skelton::GetBone(std::string name)
@@ -69,6 +69,11 @@ void MCBM::Skelton::CaptureBoneAccept()
 void MCBM::Skelton::Finalize()
 {
 	capture->Finalize();
+}
+
+const M_MODEL_OUT& MCBM::Skelton::GetModelOutData()
+{
+	return modelOut;
 }
 
 void MCBM::Skelton::CaptureBoneUpdate(YOLO_POSE_INDEX rootBoneName, uint32_t boneCount)
@@ -323,20 +328,39 @@ void Skelton::AllNodeMatrixForModelToBone()
 	{
 		UpdateNodeMatrix(node.get());
 	}
+
+
+	std::list<M_BONE*> bonePtr{};
 	for (auto& node : bones_)
 	{
 		Matrix mat = node->GetAnimationMatrix();
 		const string& nodeName = node->GetName();
-		std::list<Bone*> bonePtr{};
-		for (auto& itr : bones_)
+		for (auto& itr2 : modelOut.meshs_)
 		{
-			Matrix boneOff = itr->GetOffSetMatrix();
-			Matrix trans = (boneOff) * (mat);
-			itr->SetFinalMatrix(trans);
+			for (auto& itr3 : itr2.bones)
+			{
+
+				if (itr3.name == nodeName)
+				{
+					bonePtr.push_back(&itr3);
+					break;
+				}
+			}
 		}
 
+		if (!bonePtr.empty())
+		{
+			for (auto& itr : bonePtr)
+			{
+				Matrix* boneOff = &itr->offsetMatrix;
+				Matrix trans = (*boneOff) * (mat);
+				itr->matrix = trans;
+			}
+
+		}
 
 	}
+
 
 }
 
@@ -368,6 +392,10 @@ void MCBM::Skelton::boneAnimTransform(float& timeInSeconds, Animation* animation
 	}
 	for (auto& itr : bones_)
 	{
+		if (canAnimation && animation != nullptr)
+		{
+			readAnimNodeHeirarchy(animationTime,itr.get(),animtionPositionRock,animation);
+		}
 		itr->SetAnimationParentMatrix(Matrix::ReturnMatrixIdentity());
 		itr->SetFinalMatrix(itr->GetOffSetMatrix());
 	}
@@ -388,6 +416,8 @@ Skelton& MCBM::Skelton::SetDataFromLoader(const PHONONLOADER::P_MODEL_DATA& mode
 	for (auto& bone : modelData.nodes)
 	{
 		unique_ptr<Bone> tempBone = make_unique<Bone>();
+		OUT_BONE outBone;
+
 		tempBone->SetName(bone.name);
 		tempBone->SetRotation({ bone.rotation.GetX(),bone.rotation.GetY(),
 								bone.rotation.GetZ(),bone.rotation.GetW() });
@@ -410,13 +440,19 @@ Skelton& MCBM::Skelton::SetDataFromLoader(const PHONONLOADER::P_MODEL_DATA& mode
 		for(auto& name:bone.childrenNodeNames)
 		{
 			tempBone->AddChildName(name);
+			outBone.childrenNames.push_back(name);
 		}
 		AddBone(std::move(tempBone));
+
+
+		outBone.name = bone.name;
+		outBone.parentName = bone.parentNodeName;
+		modelOut.bones_.push_back(outBone);
 	}
 
 	for (auto& mesh : modelData.meshes)
 	{
-		unique_ptr<M_MODEL_MESH> tempMesh = make_unique<M_MODEL_MESH>();
+		M_MODEL_MESH tempMesh;
 		for (auto& vertex : mesh.vertices)
 		{
 			M_POS_NORM_UV_TANGE_COL_SKIN tempVertex;
@@ -442,12 +478,12 @@ Skelton& MCBM::Skelton::SetDataFromLoader(const PHONONLOADER::P_MODEL_DATA& mode
 			{
 				tempVertex.boneWeight[i] = vertex.boneWeight[i];
 			}
-			tempMesh->vertices.push_back(tempVertex);
+			tempMesh.vertices.push_back(tempVertex);
 		}
 
 		for (auto indices : mesh.indices)
 		{
-			tempMesh->indices = mesh.indices;
+			tempMesh.indices = mesh.indices;
 		}
 
 		for (auto& bone : mesh.bones)
@@ -463,17 +499,17 @@ Skelton& MCBM::Skelton::SetDataFromLoader(const PHONONLOADER::P_MODEL_DATA& mode
 					boneMesh.offsetMatrix.matTowArray[i][j] = bone.offsetMatrix.Get(j, i);
 				}
 			}
-			tempMesh->bones.push_back(boneMesh);
+			tempMesh.bones.push_back(boneMesh);
 		}
 
 		for (auto& texture : mesh.textures)
 		{
-			tempMesh->textures.push_back(texture);
+			tempMesh.textures.push_back(texture);
 		}
 
 		for (auto& textureNormal : mesh.texturesNormal)
 		{
-			tempMesh->texturesNormal.push_back(textureNormal);
+			tempMesh.texturesNormal.push_back(textureNormal);
 		}
 
 		M_MODEL_MATERIAL tempMaterial;
@@ -495,9 +531,9 @@ Skelton& MCBM::Skelton::SetDataFromLoader(const PHONONLOADER::P_MODEL_DATA& mode
 
 		tempMaterial.textureFileName = mesh.material.textureFileName;
 		
-		tempMesh->material = tempMaterial;
+		tempMesh.material = tempMaterial;
 
-		meshs_.push_back(std::move(tempMesh));
+		modelOut.meshs_.push_back(tempMesh);
 	}
 
 
@@ -559,4 +595,15 @@ Skelton& MCBM::Skelton::SetDataFromLoader(const PHONONLOADER::P_MODEL_DATA& mode
 	}
 
 	return *this;
+}
+
+void MCBM::Skelton::UpDate(std::vector<YOLO_POSE_INDEX> rootBoneName,float& timeInSeconds, const std::string& currentAnimation, bool loop, bool animtionPositionRock)
+{
+	Animation* anim = animations_.GetAnimation(currentAnimation);
+	for (int32_t i = 0; i < rootBoneName.size(); i++)
+	{
+		CaptureBoneUpdate(rootBoneName[i]);
+	}
+	boneAnimTransform(timeInSeconds, anim, loop, animtionPositionRock);
+
 }

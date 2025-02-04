@@ -1,10 +1,10 @@
 #pragma once
 #include <string>
-#include <MVector4.h>
-#include <MVector3.h>
-#include <MVector2.h>
+#include <Math/MVector4.h>
+#include <Math/MVector3.h>
+#include <Math/MVector2.h>
 #include <vector>
-#include <AnimationMesh.h>
+#include <Animation/AnimationMesh.h>
 
 namespace MCBM
 {
@@ -20,7 +20,7 @@ namespace MCBM
 	{
 		std::string name;
 		std::vector<M_MODEL_MESH> meshs_;
-		std::vector<OUT_BONE> meshs_;
+		std::vector<OUT_BONE> bones_;
 		
 	};
 }

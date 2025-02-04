@@ -7,6 +7,7 @@
 #include <Animation/AnimationManager.h>
 #include <Animation/AnimationMesh.h>
 #include <P_MODEL_DATA.h>
+#include <Animation/ModelOut.h>
 
 
 namespace MCBM
@@ -16,7 +17,7 @@ namespace MCBM
 	private:
 		std::vector<std::unique_ptr<Bone>> bones_;
 
-		std::vector<std::unique_ptr<M_MODEL_MESH>> meshs_;
+		M_MODEL_OUT modelOut;
 		
 		AnimationManager animations_;
 
@@ -29,14 +30,13 @@ namespace MCBM
 		Matrix globalInverseTransform;
 
 		bool canAnimation = false;
-	public:
+	private:
 		void SetCapturePtr(Capture* cap);
 
 		void AddBone(std::unique_ptr<Bone> bone);
 
-		void AddMesh(std::unique_ptr<M_MODEL_MESH> mesh);
+		void AddMesh(const M_MODEL_MESH& mesh);
 
-		Bone* GetBone(std::string name);
 
 		MQuaternion GetBoneRotation(std::string name);
 
@@ -50,7 +50,6 @@ namespace MCBM
 
 		void CaptureBoneAccept();
 
-		void Finalize();
 		/// <summary>
 		/// モデルの回転の計算
 		/// </summary>
@@ -80,6 +79,30 @@ namespace MCBM
 
 		void boneAnimTransform(float& timeInSeconds, Animation* animation = nullptr, bool loop = true, bool animtionPositionRock = false);//Animation前の準備等
 		
+
+	public:
+
+		Bone* GetBone(std::string name);
+
 		Skelton& SetDataFromLoader(const PHONONLOADER::P_MODEL_DATA& modelData);
+
+		/// <summary>
+		/// キャプチャーによる腕の動きやアニメーションの適用
+		/// ただし、キャプチャーとアニメーションはどちらかしか有効にできない。
+		/// SetStartAnimation()で設定。falseならキャプチャー
+		/// </summary>
+		/// <param name="rootBoneName">キャプチャーの影響を受けるボーンの根元のボーン</param>
+		/// <param name="timeInSeconds"></param>
+		/// <param name="currentAnimation"></param>
+		/// <param name="loop"></param>
+		/// <param name="animtionPositionRock"></param>
+		void UpDate(std::vector<YOLO_POSE_INDEX> rootBoneNames,float& timeInSeconds, const std::string& currentAnimation = "Tpose", bool loop = true, bool animtionPositionRock = true);
+		void Finalize();
+
+		/// <summary>
+		///	描画に必要な計算済みデータ
+		/// </summary>
+		/// <returns></returns>
+		const M_MODEL_OUT& GetModelOutData();
 	};
 }

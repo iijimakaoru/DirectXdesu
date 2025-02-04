@@ -17,7 +17,9 @@ namespace MCBM
 		MVector3 translation_;
 		MQuaternion rotation_;
 		Bone* parent_;
+		std::string parentName_;
 		std::vector<Bone*> children_;
+		std::vector<std::string> childrenNames_;
 		
 		Matrix localTranform_;
 		Matrix modelInverseTransform_;
@@ -44,13 +46,17 @@ namespace MCBM
 		void SetParent(Bone* parent);
 
 		void AddChild(Bone* child);
+		void AddChildName(std::string childName);
 		void SetFinalMatrix(const Matrix& matrix);
 		void SetOffsetMatrix(const Matrix& matrix);
 		void SetAnimationParentMatrix(const Matrix& matrix);
+		void SetLocalTransform(const Matrix& matrix);
 		void RemoveChild(Bone* child);
 		//親のボーンを設定し、設定した親のボーンの子に自身を追加する。
 		//また既に親のボーンが設定されていた場合、その親のボーンの子ボーンから自身を削除する。
 		void SetParentAndChild(Bone* parent);
+
+		void SetParentName(std::string name);
 
 		//現在のデータを初期値として設定
 		void SetInitializeTransformData();
@@ -62,11 +68,13 @@ namespace MCBM
 		MVector3 GetModelTranslate();
 		Bone* GetParent();
 		std::vector<Bone*> GetChildren();
+		std::vector<std::string>* GetChildrenName();
 		MVector3 GetTopLimitEulerRadian();
 		MVector3 GetBottomLimitEulerRadian();
 		MVector3 GetInitializeModelTranslate();
 		MQuaternion GetInitializeRotation();
 		std::string GetName();
+		std::string GetParentName();
 		MVector3 GetScale();
 		MVector3 GetTranslation();
 		Matrix GetOffSetMatrix();

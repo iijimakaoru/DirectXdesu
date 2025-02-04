@@ -260,33 +260,33 @@ Matrix MCBM::Matrix::MatrixInverse(Matrix mat)
 //{
 //	Matrix ans;
 //
-//#pragma region ‚Ps–Ú
+//#pragma region ï¼‘è¡Œç›®
 //	ans._11 = (_11 * matrix._11) + (_12 * matrix._21) + (_13 * matrix._31) + (_14 * matrix._41);
 //	ans._12 = (_11 * matrix._12) + (_12 * matrix._22) + (_13 * matrix._32) + (_14 * matrix._42);
 //	ans._13 = (_11 * matrix._13) + (_12 * matrix._23) + (_13 * matrix._33) + (_14 * matrix._43);
 //	ans._14 = (_11 * matrix._14) + (_12 * matrix._24) + (_13 * matrix._34) + (_14 * matrix._44);
-//#pragma endregion 1s–Ú
+//#pragma endregion 1è¡Œç›®
 //
-//#pragma region 2s–Ú
+//#pragma region 2è¡Œç›®
 //	ans._21 = (_21 * matrix._11) + (_22 * matrix._21) + (_23 * matrix._31) + (_24 * matrix._41);
 //	ans._22 = (_21 * matrix._12) + (_22 * matrix._22) + (_23 * matrix._32) + (_24 * matrix._42);
 //	ans._23 = (_21 * matrix._13) + (_22 * matrix._23) + (_23 * matrix._33) + (_24 * matrix._43);
 //	ans._24 = (_21 * matrix._14) + (_22 * matrix._24) + (_23 * matrix._34) + (_24 * matrix._44);
-//#pragma endregion 2s–Ú
+//#pragma endregion 2è¡Œç›®
 //
-//#pragma region 3s–Ú
+//#pragma region 3è¡Œç›®
 //	ans._31 = (_31 * matrix._11) + (_32 * matrix._21) + (_33 * matrix._31) + (_34 * matrix._41);
 //	ans._32 = (_31 * matrix._12) + (_32 * matrix._22) + (_33 * matrix._32) + (_34 * matrix._42);
 //	ans._33 = (_31 * matrix._13) + (_32 * matrix._23) + (_33 * matrix._33) + (_34 * matrix._43);
 //	ans._34 = (_31 * matrix._14) + (_32 * matrix._24) + (_33 * matrix._34) + (_34 * matrix._44);
-//#pragma endregion 3s–Ú
+//#pragma endregion 3è¡Œç›®
 //
-//#pragma region 4s–Ú
+//#pragma region 4è¡Œç›®
 //	ans._41 = (_41 * matrix._11) + (_42 * matrix._21) + (_43 * matrix._31) + (_44 * matrix._41);
 //	ans._42 = (_41 * matrix._12) + (_42 * matrix._22) + (_43 * matrix._32) + (_44 * matrix._42);
 //	ans._43 = (_41 * matrix._13) + (_42 * matrix._23) + (_43 * matrix._33) + (_44 * matrix._43);
 //	ans._44 = (_41 * matrix._14) + (_42 * matrix._24) + (_43 * matrix._34) + (_44 * matrix._44);
-//#pragma endregion 4s–Ú
+//#pragma endregion 4è¡Œç›®
 //
 //	return ans;
 //}
@@ -542,7 +542,7 @@ float MCBM::Matrix::operator[](size_t n)
 		return _44_;
 		break;
 	default:
-		throw std::out_of_range(std::string("–³Œø‚È’l‚ª“ü—Í‚³‚ê‚Ü‚µ‚½B0`15‚Ü‚Å‚Ì”ÍˆÍ‚Ì®”‚ğ“ü—Í‚µ‚Ä‚­‚¾‚³‚¢B"));
+		throw std::out_of_range(std::string("ç„¡åŠ¹ãªå€¤ãŒå…¥åŠ›ã•ã‚Œã¾ã—ãŸã€‚0ï½15ã¾ã§ã®ç¯„å›²ã®æ•´æ•°ã‚’å…¥åŠ›ã—ã¦ãã ã•ã„ã€‚"));
 		break;
 	}
 
@@ -562,33 +562,33 @@ Matrix MCBM::operator*(const Matrix& matrix1, const Matrix& matrix2)
 {
 	Matrix ans;
 
-#pragma region ‚Ps–Ú
+#pragma region 
 	ans._11_ = (matrix1._11_ * matrix2._11_) + (matrix1._12_ * matrix2._21_) + (matrix1._13_ * matrix2._31_) + (matrix1._14_ * matrix2._41_);
 	ans._12_ = (matrix1._11_ * matrix2._12_) + (matrix1._12_ * matrix2._22_) + (matrix1._13_ * matrix2._32_) + (matrix1._14_ * matrix2._42_);
 	ans._13_ = (matrix1._11_ * matrix2._13_) + (matrix1._12_ * matrix2._23_) + (matrix1._13_ * matrix2._33_) + (matrix1._14_ * matrix2._43_);
 	ans._14_ = (matrix1._11_ * matrix2._14_) + (matrix1._12_ * matrix2._24_) + (matrix1._13_ * matrix2._34_) + (matrix1._14_ * matrix2._44_);
-#pragma endregion 1s–Ú
+#pragma endregion 
 
-#pragma region 2s–Ú
+#pragma region 
 	ans._21_ = (matrix1._21_ * matrix2._11_) + (matrix1._22_ * matrix2._21_) + (matrix1._23_ * matrix2._31_) + (matrix1._24_ * matrix2._41_);
 	ans._22_ = (matrix1._21_ * matrix2._12_) + (matrix1._22_ * matrix2._22_) + (matrix1._23_ * matrix2._32_) + (matrix1._24_ * matrix2._42_);
 	ans._23_ = (matrix1._21_ * matrix2._13_) + (matrix1._22_ * matrix2._23_) + (matrix1._23_ * matrix2._33_) + (matrix1._24_ * matrix2._43_);
 	ans._24_ = (matrix1._21_ * matrix2._14_) + (matrix1._22_ * matrix2._24_) + (matrix1._23_ * matrix2._34_) + (matrix1._24_ * matrix2._44_);
-#pragma endregion 2s–Ú
+#pragma endregion 
 
-#pragma region 3s–Ú
+#pragma region 
 	ans._31_ = (matrix1._31_ * matrix2._11_) + (matrix1._32_ * matrix2._21_) + (matrix1._33_ * matrix2._31_) + (matrix1._34_ * matrix2._41_);
 	ans._32_ = (matrix1._31_ * matrix2._12_) + (matrix1._32_ * matrix2._22_) + (matrix1._33_ * matrix2._32_) + (matrix1._34_ * matrix2._42_);
 	ans._33_ = (matrix1._31_ * matrix2._13_) + (matrix1._32_ * matrix2._23_) + (matrix1._33_ * matrix2._33_) + (matrix1._34_ * matrix2._43_);
 	ans._34_ = (matrix1._31_ * matrix2._14_) + (matrix1._32_ * matrix2._24_) + (matrix1._33_ * matrix2._34_) + (matrix1._34_ * matrix2._44_);
-#pragma endregion 3s–Ú
+#pragma endregion 
 
-#pragma region 4s–Ú
+#pragma region 
 	ans._41_ = (matrix1._41_ * matrix2._11_) + (matrix1._42_ * matrix2._21_) + (matrix1._43_ * matrix2._31_) + (matrix1._44_ * matrix2._41_);
 	ans._42_ = (matrix1._41_ * matrix2._12_) + (matrix1._42_ * matrix2._22_) + (matrix1._43_ * matrix2._32_) + (matrix1._44_ * matrix2._42_);
 	ans._43_ = (matrix1._41_ * matrix2._13_) + (matrix1._42_ * matrix2._23_) + (matrix1._43_ * matrix2._33_) + (matrix1._44_ * matrix2._43_);
 	ans._44_ = (matrix1._41_ * matrix2._14_) + (matrix1._42_ * matrix2._24_) + (matrix1._43_ * matrix2._34_) + (matrix1._44_ * matrix2._44_);
-#pragma endregion 4s–Ú
+#pragma endregion 
 
 	return ans;
 }

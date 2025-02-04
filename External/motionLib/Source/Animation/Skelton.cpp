@@ -21,6 +21,11 @@ void MCBM::Skelton::AddBone(std::unique_ptr<Bone> bone)
 	bones_.push_back(std::move(bone));
 }
 
+void MCBM::Skelton::AddMesh(std::unique_ptr<M_MODEL_MESH> mesh)
+{
+	meshs_.push_back(std::move(mesh));
+}
+
 MCBM::Bone* MCBM::Skelton::GetBone(std::string name)
 {
 	for (auto& bone : bones_)
@@ -375,3 +380,194 @@ void MCBM::Skelton::boneAnimTransform(float& timeInSeconds, Animation* animation
 
 	AllNodeMatrixForModelToBone();
 }
+
+Skelton& MCBM::Skelton::SetDataFromLoader(const PHONONLOADER::P_MODEL_DATA& modelData)
+{
+
+	name_ = modelData.name;
+	for (auto& bone : modelData.nodes)
+	{
+		unique_ptr<Bone> tempBone = make_unique<Bone>();
+		tempBone->SetName(bone.name);
+		tempBone->SetRotation({ bone.rotation.GetX(),bone.rotation.GetY(),
+								bone.rotation.GetZ(),bone.rotation.GetW() });
+		tempBone->SetScale({ bone.scale.GetX(),bone.scale.GetY(),bone.scale.GetZ() });
+		tempBone->SetTranslation({ bone.position.GetX(),bone.position.GetY(),bone.position.GetZ() });
+		Matrix local;
+		Matrix global;
+		for (int32_t i = 0; i < 4; i++)
+		{
+			for (int32_t j = 0; j < 4; j++)
+			{
+				local.matTowArray[i][j] = bone.transform.Get(j, i);
+				global.matTowArray[i][j] = bone.globalTransform.Get(j, i);
+			}
+		}
+		
+		tempBone->SetLocalTransform(local);
+		tempBone->SetAnimationParentMatrix(global);
+		tempBone->SetParentName(bone.parentNodeName);
+		for(auto& name:bone.childrenNodeNames)
+		{
+			tempBone->AddChildName(name);
+		}
+		AddBone(std::move(tempBone));
+	}
+
+	for (auto& mesh : modelData.meshes)
+	{
+		unique_ptr<M_MODEL_MESH> tempMesh = make_unique<M_MODEL_MESH>();
+		for (auto& vertex : mesh.vertices)
+		{
+			M_POS_NORM_UV_TANGE_COL_SKIN tempVertex;
+			tempVertex.position.SetValue(vertex.position.GetX(), vertex.position.GetY(),
+										vertex.position.GetZ(), vertex.position.GetW());
+			
+			tempVertex.normal = { vertex.normal.GetX(),vertex.normal.GetY(),vertex.normal.GetZ() };
+		
+			tempVertex.color.SetValue(vertex.color.GetX(), vertex.color.GetY(),
+										vertex.color.GetZ(), vertex.color.GetW());
+
+			tempVertex.uv.SetValue(vertex.uv.GetX(), vertex.uv.GetY());
+
+			tempVertex.tangent = { vertex.tangent.GetX(),vertex.tangent.GetY(),vertex.tangent.GetZ() };
+
+			
+			for (int32_t i = 0; i < vertex.boneIndex.size(); i++)
+			{
+				tempVertex.boneIndex[i] = vertex.boneIndex[i];
+			}
+
+			for (int32_t i = 0; i < vertex.boneWeight.size(); i++)
+			{
+				tempVertex.boneWeight[i] = vertex.boneWeight[i];
+			}
+			tempMesh->vertices.push_back(tempVertex);
+		}
+
+		for (auto indices : mesh.indices)
+		{
+			tempMesh->indices = mesh.indices;
+		}
+
+		for (auto& bone : mesh.bones)
+		{
+			M_BONE boneMesh;
+			boneMesh.name = bone.name;
+			boneMesh.index = bone.index;
+			for (int32_t i = 0; i < 4; i++)
+			{
+				for (int32_t j = 0; j < 4; j++)
+				{
+					boneMesh.matrix.matTowArray[i][j] = bone.matrix.Get(j, i);
+					boneMesh.offsetMatrix.matTowArray[i][j] = bone.offsetMatrix.Get(j, i);
+				}
+			}
+			tempMesh->bones.push_back(boneMesh);
+		}
+
+		for (auto& texture : mesh.textures)
+		{
+			tempMesh->textures.push_back(texture);
+		}
+
+		for (auto& textureNormal : mesh.texturesNormal)
+		{
+			tempMesh->texturesNormal.push_back(textureNormal);
+		}
+
+		M_MODEL_MATERIAL tempMaterial;
+		tempMaterial.alpha = mesh.material.alpha;
+
+		tempMaterial.ambient = { mesh.material.ambient.GetX(),mesh.material.ambient.GetY()
+								,mesh.material.ambient.GetZ() };
+
+		tempMaterial.diffuse = { mesh.material.diffuse.GetX(),mesh.material.diffuse.GetY()
+								,mesh.material.diffuse.GetZ() };
+	
+		tempMaterial.emission = { mesh.material.emission.GetX(),mesh.material.emission.GetY()
+								,mesh.material.emission.GetZ() };
+
+		tempMaterial.shininess = mesh.material.shininess;
+
+		tempMaterial.specular = { mesh.material.specular.GetX(),mesh.material.specular.GetY()
+								,mesh.material.specular.GetZ() };
+
+		tempMaterial.textureFileName = mesh.material.textureFileName;
+		
+		tempMesh->material = tempMaterial;
+
+		meshs_.push_back(std::move(tempMesh));
+	}
+
+
+	for (auto& animation : modelData.animations)
+	{
+		Animation tempAnim;
+		tempAnim.name = animation.name;
+		tempAnim.duration = animation.duration;
+		tempAnim.ticksPerSecond = animation.ticksPerSecond;
+		for (auto& channel : animation.channels)
+		{
+			NodeAnim nodeAnim;
+			nodeAnim.name = channel.name;
+			for (auto& trans : channel.positionKeys)
+			{
+				nodeAnim.position.push_back({ trans.value.GetX(),trans.value.GetY(),trans.value.GetZ() });
+				nodeAnim.positionTime.push_back(trans.time);
+			}
+
+			for (auto& rotation : channel.rotationKeys)
+			{
+				nodeAnim.rotation.push_back({ rotation.value.GetX(),rotation.value.GetY(),
+											rotation.value.GetZ(), rotation.value.GetW() });
+				nodeAnim.rotationTime.push_back(rotation.time);
+			}
+
+			for (auto& scale : channel.scalingKeys)
+			{
+				nodeAnim.scale.push_back({ scale.value.GetX(),scale.value.GetY(),
+											scale.value.GetZ() });
+				nodeAnim.scaleTime.push_back(scale.time);
+			}
+			tempAnim.channels.push_back(nodeAnim);
+		}
+	}
+
+	for (int32_t i = 0; i < 4; i++)
+	{
+		for (int32_t j = 0; j < 4; j++)
+		{
+			globalInverseTransform.matTowArray[i][j] = modelData.globalInverseTransform.Get(j,i);
+		}
+	}
+
+	canAnimation = modelData.canAnimation;
+
+	for (auto& bone : bones_)
+	{
+		for (auto& name : *bone->GetChildrenName())
+		{
+			Bone* child = GetBone(name);
+			bone->AddChild(child);
+		}
+		Bone* parent = GetBone(bone->GetParentName());
+		if (parent != nullptr)
+		{
+			bone->SetParent(parent);
+		}
+	}
+
+	return *this;
+}
+//struct P_NODE
+//{
+//	std::string name;
+//	PMatrix4 transform;
+//	PMatrix4 globalTransform;
+//	PVector3 position;
+//	PVector4 rotation;
+//	PVector3 scale;
+//	std::string parentNodeName;
+//	std::vector<std::string>childrenNodeNames;
+//};

@@ -99,6 +99,15 @@ void PAssimpLoader::_ParseNodeRecursive(P_MODEL_DATA* pData,const std::string& d
 		pAiNode->mTransformation.d1, pAiNode->mTransformation.d2, pAiNode->mTransformation.d3, pAiNode->mTransformation.d4,
 	};
 
+	aiVector3D p;
+	aiQuaternion r;
+	aiVector3D s;
+	pAiNode->mTransformation.Decompose(s,r,p);
+	pNode->position = { p.x,p.y,p.z };
+	pNode->rotation = { r.x,r.y,r.z,r.w };
+	pNode->scale = { s.x,s.y,s.z };
+
+
 	pNode->globalTransform = pNode->transform;
 
 	if ( pParent )

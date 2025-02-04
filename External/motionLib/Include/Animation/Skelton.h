@@ -5,6 +5,9 @@
 #include <Animation/Bone.h>
 #include <Animation/Capture.h>
 #include <Animation/AnimationManager.h>
+#include <Animation/AnimationMesh.h>
+#include <P_MODEL_DATA.h>
+
 
 namespace MCBM
 {
@@ -12,15 +15,26 @@ namespace MCBM
 	{
 	private:
 		std::vector<std::unique_ptr<Bone>> bones_;
+
+		std::vector<std::unique_ptr<M_MODEL_MESH>> meshs_;
 		
+		AnimationManager animations_;
+
 		Bone* rootBone_;
 
 		Capture* capture;
 
+		std::string name_;
+
+		Matrix globalInverseTransform;
+
+		bool canAnimation = false;
 	public:
 		void SetCapturePtr(Capture* cap);
 
 		void AddBone(std::unique_ptr<Bone> bone);
+
+		void AddMesh(std::unique_ptr<M_MODEL_MESH> mesh);
 
 		Bone* GetBone(std::string name);
 
@@ -65,5 +79,7 @@ namespace MCBM
 		void AllNodeMatrixForModelToBone();
 
 		void boneAnimTransform(float& timeInSeconds, Animation* animation = nullptr, bool loop = true, bool animtionPositionRock = false);//Animation前の準備等
+		
+		Skelton& SetDataFromLoader(const PHONONLOADER::P_MODEL_DATA& modelData);
 	};
 }

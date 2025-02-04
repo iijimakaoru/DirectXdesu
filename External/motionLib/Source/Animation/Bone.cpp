@@ -43,6 +43,11 @@ std::string MCBM::Bone::GetName()
 	return name_;
 }
 
+std::string MCBM::Bone::GetParentName()
+{
+	return parentName_;
+}
+
 MVector3 MCBM::Bone::GetScale()
 {
 	return scale_;
@@ -71,6 +76,13 @@ Matrix MCBM::Bone::GetLocalTransformMatrix()
 void MCBM::Bone::AddChild(Bone* child)
 {
 	children_.push_back(child);
+
+}
+
+
+void MCBM::Bone::AddChildName(std::string childName)
+{
+	childrenNames_.push_back(childName);
 }
 
 void MCBM::Bone::SetFinalMatrix(const Matrix& matrix)
@@ -86,6 +98,11 @@ void MCBM::Bone::SetOffsetMatrix(const Matrix& matrix)
 void MCBM::Bone::SetAnimationParentMatrix(const Matrix& matrix)
 {
 	animationParentMatrix_ = matrix;
+}
+
+void MCBM::Bone::SetLocalTransform(const Matrix& matrix)
+{
+	localTranform_ = matrix;
 }
 
 void MCBM::Bone::RemoveChild(Bone* child)
@@ -105,7 +122,13 @@ void MCBM::Bone::SetParentAndChild(Bone* parent)
 		parent_->RemoveChild(this);
 	}
 	parent_ = parent;
+	parentName_ = parent->GetName();
 	parent_->AddChild(this);
+}
+
+void MCBM::Bone::SetParentName(std::string name)
+{
+	parentName_ = name;
 }
 
 void MCBM::Bone::SetInitializeTransformData()
@@ -140,6 +163,11 @@ Bone* MCBM::Bone::GetParent()
 std::vector<Bone*> MCBM::Bone::GetChildren()
 {
 	return children_;
+}
+
+std::vector<std::string>* MCBM::Bone::GetChildrenName()
+{
+	return &childrenNames_;
 }
 
 MVector3 MCBM::Bone::GetTopLimitEulerRadian()

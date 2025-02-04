@@ -71,7 +71,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(ProjectDir)Include\Math;$(ProjectDir)Include\Animation;$(ProjectDir)Include;$(SolutionDir)External\opencv\build\include;$(SolutionDir)External\OnnxRuntimeforDirectML\Include;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)Include\Math;$(ProjectDir)Include\Animation;$(ProjectDir)Include;$(SolutionDir)External\opencv\build\include;$(SolutionDir)External\OnnxRuntimeforDirectML\Include;$(SolutionDir)External\ModelLoader;$(IncludePath)</IncludePath>
     <LibraryPath>$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)Generated\Outputs\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)Generated\Obj\$(ProjectName)\$(Configuration)\</IntDir>
@@ -120,6 +120,7 @@
       </AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -153,6 +154,8 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Include\Animation\AnimationModelManager.h" />
+    <ClInclude Include="Include\Animation\AnimationMesh.h" />
     <ClInclude Include="Include\Animation\AnimationManager.h" />
     <ClInclude Include="Include\Animation\Bone.h" />
     <ClInclude Include="Include\Animation\Capture.h" />
@@ -163,8 +166,12 @@
     <ClInclude Include="Include\Math\Matrix.h" />
     <ClInclude Include="Include\Math\MQuaternion.h" />
     <ClInclude Include="Include\Math\MVector3.h" />
+    <ClInclude Include="Include\Math\MVector2.h" />
+    <ClInclude Include="Include\Math\MVector4.h" />
+    <ClInclude Include="Include\Animation\ModelOut.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Animation\AnimationModelManager.cpp" />
     <ClCompile Include="Source\Animation\AnimationManager.cpp" />
     <ClCompile Include="Source\Animation\Bone.cpp" />
     <ClCompile Include="Source\Animation\Capture.cpp" />
@@ -173,10 +180,15 @@
     <ClCompile Include="Source\Animation\Skelton.cpp" />
     <ClCompile Include="Source\Math\MathUtil.cpp" />
     <ClCompile Include="Source\Math\Matrix.cpp" />
+    <ClCompile Include="Source\Math\MVector2.cpp" />
+    <ClCompile Include="Source\Math\MVector4.cpp" />
     <ClCompile Include="Source\Math\Quaternion.cpp" />
     <ClCompile Include="Source\Math\Vector3.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ModelLoader\ModelLoader.vcxproj">
+      <Project>{688f304d-0cd9-400d-9a93-80c4ddfa4054}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\OnnxRuntimeforDirectML\OnnxRuntimeDirectMLTest.vcxproj">
       <Project>{87851c67-72b5-4993-b0e9-b643dc3b2054}</Project>
     </ProjectReference>

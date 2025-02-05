@@ -17,6 +17,7 @@
 #include "augment.h"
 #include <dml_provider_factory.h>
 #include <onnxruntime_cxx_api.h>
+#include <json.hpp>
 
 #include "constants.h"
 #include "common.h"
@@ -97,6 +98,8 @@ private:
 
 	cv::Mat computeLookAtRotation(const YVector3& camPos,const YVector3& target,const YVector3& up);
 
+	void SetOutSideData();
+
 private:
 
 	const std::array<Vec2,19> m_skeleton = { {{16, 14}, {14, 12}, {17, 15}, {15, 13}, {12, 13}, {6, 12}, {7, 13}, {6, 7},{6, 8}, {7, 9}, {8, 10}, {9, 11}, {2, 3}, {1, 2}, {1, 3}, {2, 4}, {3, 5}, {4, 6}, {5, 7} } };
@@ -137,6 +140,8 @@ private:
 
 	std::vector<cv::Mat> distCoeffs;
 	std::vector<cv::Mat> K;
+
+
 
 };
 
@@ -379,12 +384,20 @@ void YOLOPoseEstimationImp::AddCameraData(std::string filepath)
 					 0, fy, cy,
 					 0,  0,  1);
 	*/
+	std::ifstream file;
+	file.open("Resources/camera_calibration.json");
+	if ( file.fail() )
+	{
+		assert(0 && "レベルデータ読み込み不良");
+	}
+	//nlohmann::json loadData = 
+	//
 
-	cv::Mat tempCameraMat;//ファイルから読み込み:カメラ行列
-	cv::Mat tempCameraDistCoeffs;//読み込み:歪み係数
+	//cv::Mat tempCameraMat;//ファイルから読み込み:カメラ行列
+	//cv::Mat tempCameraDistCoeffs;//読み込み:歪み係数
 
-	distCoeffs.push_back(tempCameraDistCoeffs);
-	K.push_back(tempCameraMat);
+	//distCoeffs.push_back(tempCameraDistCoeffs);
+	//K.push_back(tempCameraMat);
 }
 
 // LookAt関数的な回転行列の生成
@@ -408,6 +421,20 @@ cv::Mat YOLOPoseEstimationImp::computeLookAtRotation(const YVector3& camPos,cons
 			 trueUp.x,trueUp.y,trueUp.z,
 			 -forward.x,-forward.y,-forward.z );
 	return R;
+}
+
+void YOLOPoseEstimationImp::SetOutSideData()
+{
+	//外部パラメーターの計算
+
+	for ( int32_t i = 0; i < Locate::MAX_LOCATE; i++ )
+	{
+		YVector3 direction;//原点からの方向ベクトル
+		float cameraDist;//原点からの距離
+
+		cameraPosition_.push_back(direction);
+		cameradist.push_back(cameraDist);
+	}
 }
 
 // 外部パラメーター（カメラの位置・回転）の生成

@@ -17,6 +17,7 @@ TitleScene::~TitleScene() { Final(); }
 void TitleScene::LoadResources() {
 	// 天球モデル
 	skyDomeModel = ModelManager::GetInstance()->GetModels("S_SkyDorm");
+	logoModel = ModelManager::GetInstance()->GetModels("titleLogo");
 }
 
 void TitleScene::Init() {
@@ -40,6 +41,11 @@ void TitleScene::Init() {
 	skyDome->GetTransform().SetScale({ skydomeSize, skydomeSize, skydomeSize });
 	skyDome->GetTransform().SetPos({ 0.0f, 100.0f, 500.0f });
 
+	logo.reset(KObject3d::Create(logoModel, PipelineManager::GetInstance()->GetPipeline("Obj")));
+	logo->GetTransform().SetScale({ 100.0f, 100.0f, 100.0f });
+	logo->GetTransform().SetPos({ 0.0f, 50.0f, 100.0f });
+	logo->GetTransform().SetRot({ 0.0f, 180.0f, 0.0f});
+
 	audioManager = AudioManager::GetInstance();
 }
 
@@ -47,6 +53,7 @@ void TitleScene::Update() {
 	light_->Update();
 
 	skyDome->Update(camera->GetViewPro(), camera->GetWorldPos());
+	logo->Update(camera->GetViewPro(), camera->GetWorldPos());
 
 	camera->Update();
 	
@@ -55,6 +62,7 @@ void TitleScene::Update() {
 
 void TitleScene::ObjDraw() {
 	skyDome->Draw();
+	logo->Draw();
 }
 
 void TitleScene::SpriteDraw()

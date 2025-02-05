@@ -48,9 +48,11 @@ private:
 #pragma region 天球
 	// オブジェクト
 	std::unique_ptr<KObject3d> skyDome = nullptr;
+	std::unique_ptr<KObject3d> logo = nullptr;
 
 	// モデル
 	KModel* skyDomeModel = nullptr;
+	KModel* logoModel = nullptr;
 #pragma endregion
 
 	AudioManager* audioManager = nullptr;

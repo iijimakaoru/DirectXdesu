@@ -13,6 +13,7 @@ void KMyGame::Init() {
 	ModelManager::Load("skydome", "S_SkyDorm",true);
 	ModelManager::Load("cube","S_Cube");
 	ModelManager::Load("arrow","S_Arrow");
+	ModelManager::Load("logo","titleLogo");
 
 	// 最初のシーン
 	SceneManager::GetInstance()->ChangeScene("TITLE");

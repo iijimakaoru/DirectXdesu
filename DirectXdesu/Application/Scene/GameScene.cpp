@@ -193,7 +193,7 @@ void GameScene::Init() {
 
 	texData = TextureManager::GetInstance()->GetTextures("Resources/texture/boss1.png");
 
-	playerTrans.SetPos({ 0,87,-130 });
+	playerTrans.SetPos({ 0,87,-110 });
 }
 
 void GameScene::Update() {

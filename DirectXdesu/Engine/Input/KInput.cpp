@@ -164,17 +164,17 @@ bool KInput::GetPadConnect()
 	return isConnectPad;
 }
 
-bool KInput::GetPadButton(UINT button)
+bool KInput::GetPadButton(ControllerButton button)
 {
 	return xInputState.Gamepad.wButtons == button;
 }
 
-bool KInput::GetPadButtonUp(UINT button)
+bool KInput::GetPadButtonUp(ControllerButton button)
 {
 	return xInputState.Gamepad.wButtons != button && oldXInputState.Gamepad.wButtons == button;
 }
 
-bool KInput::GetPadButtonDown(UINT button)
+bool KInput::GetPadButtonDown(ControllerButton button)
 {
 	return xInputState.Gamepad.wButtons == button && oldXInputState.Gamepad.wButtons != button;
 }

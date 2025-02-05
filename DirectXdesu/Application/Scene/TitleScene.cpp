@@ -7,12 +7,8 @@
 
 #include <imgui.h>
 
-#include "Ease.h"
-
 #include "ModelManager.h"
 #include "PipelineManager.h"
-
-#include "PostEffectManager.h"
 
 const int gNumberFrameResources = 3;
 
@@ -41,7 +37,8 @@ void TitleScene::Init() {
 
 	skyDome.reset(
 	    KObject3d::Create(skyDomeModel, PipelineManager::GetInstance()->GetPipeline("Obj")));
-	skyDome->GetTransform().SetScale({400.0f, 400.0f, 400.0f});
+	skyDome->GetTransform().SetScale({ skydomeSize, skydomeSize, skydomeSize });
+	skyDome->GetTransform().SetPos({ 0.0f, 100.0f, 500.0f });
 
 	audioManager = AudioManager::GetInstance();
 }
@@ -69,7 +66,7 @@ void TitleScene::Final() {
 }
 
 void TitleScene::GoNextScene() {
-	if (input->GetPadButtonDown(XINPUT_GAMEPAD_A)) {
+	if (input->GetPadButtonDown(A)) {
 		sceneManager->ChangeScene("GAME");
 	}
 	else if (input->IsTrigger(DIK_SPACE)) {

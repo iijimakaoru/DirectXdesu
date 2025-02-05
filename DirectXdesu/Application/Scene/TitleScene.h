@@ -9,12 +9,8 @@
 #include "AudioManager.h"
 #include "KObject3d.h"
 
-#include "d3dUtil.h"
 #include "FrameResource.h"
 #include "Timer.h"
-
-#include "GPUParticle.h"
-#include "MeshGPUParticle.h"
 
 #include "ParticleEditor.h"
 
@@ -60,5 +56,10 @@ private:
 	AudioManager* audioManager = nullptr;
 
 	std::unique_ptr<Light> light_ = nullptr;
+
+	
+
+private:
+	const float skydomeSize = 800.0f; 
 };
 

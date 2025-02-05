@@ -9,7 +9,7 @@ void ViewProjection::Initialize()
 	target = { 0, 0, 0 };
 	up = { 0, 1, 0 };
 	nearZ = 0.1f;
-	farZ = 1000.0f;
+	farZ = 5000.0f;
 
 	aspect = static_cast<float>(KWinApp::GetWindowSizeW()) / static_cast<float>(KWinApp::GetWindowSizeH());
 

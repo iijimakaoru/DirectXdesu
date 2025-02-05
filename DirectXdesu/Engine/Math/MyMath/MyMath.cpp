@@ -483,6 +483,10 @@ namespace MyMathUtility
 
 		return result;
 	}
+	float SimpleHarmonicMotion(float time, float amplitude, float period)
+	{
+		return amplitude * sinf((2 * PI) * time / period);
+	}
 }
 
 namespace KMyMath

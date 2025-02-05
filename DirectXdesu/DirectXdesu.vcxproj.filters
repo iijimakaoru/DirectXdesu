@@ -426,7 +426,7 @@
     <ClCompile Include="Engine\3D\Model\ModelManager.cpp">
       <Filter>ソース ファイル\Engine\3d</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Particle\Emitter.cpp">
+    <ClCompile Include="Engine\Particle\Emitter\Emitter.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Base\DirectXCommon\d3dUtil.cpp">
@@ -441,13 +441,13 @@
     <ClCompile Include="Engine\Base\DirectXCommon\Timer.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Particle\GPUParticle.cpp">
+    <ClCompile Include="Engine\Particle\GPUParticle\GPUParticle.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Particle\ParticleEditor.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Particle\MeshGPUParticle.cpp">
+    <ClCompile Include="Engine\Particle\GPUParticle\MeshGPUParticle.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Particle\Buffer\ParticlePool.cpp">
@@ -477,7 +477,7 @@
     <ClCompile Include="Engine\Particle\CommandSignature\CommandSignature.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Particle\MeshEmitter.cpp">
+    <ClCompile Include="Engine\Particle\Emitter\MeshEmitter.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Application\MusicDesc.cpp">
@@ -671,7 +671,7 @@
     <ClInclude Include="Engine\2D\PostEffect\VignettePostEffect.h">
       <Filter>ヘッダー ファイル\Engine\2d\Sprites\PostEffect</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Particle\Emitter.h">
+    <ClInclude Include="Engine\Particle\Emitter\Emitter.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Base\DirectXCommon\d3dUtil.h">
@@ -689,13 +689,13 @@
     <ClInclude Include="Engine\Base\DirectXCommon\Timer.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Particle\GPUParticle.h">
+    <ClInclude Include="Engine\Particle\GPUParticle\GPUParticle.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Particle\ParticleEditor.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Particle\MeshGPUParticle.h">
+    <ClInclude Include="Engine\Particle\GPUParticle\MeshGPUParticle.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Particle\Buffer\ParticlePool.h">
@@ -725,7 +725,7 @@
     <ClInclude Include="Engine\Particle\CommandSignature\CommandSignature.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Particle\MeshEmitter.h">
+    <ClInclude Include="Engine\Particle\Emitter\MeshEmitter.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Application\MusicDesc.h">

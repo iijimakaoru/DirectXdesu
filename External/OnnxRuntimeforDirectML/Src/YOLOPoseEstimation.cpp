@@ -390,14 +390,33 @@ void YOLOPoseEstimationImp::AddCameraData(std::string filepath)
 	{
 		assert(0 && "レベルデータ読み込み不良");
 	}
-	//nlohmann::json loadData = 
+	nlohmann::json loadData;
+	file >> loadData;
+
 	//
+	for ( int32_t i = 0; i < m_pCams.size(); i++ )
+	{
+		cv::Mat tempK = ( cv::Mat_<float>(3,3) <<
+						( float ) loadData[ "camera_matrix" ][ 0 ][ 0 ],( float ) loadData[ "camera_matrix" ][ 0 ][ 1 ],
+						( float ) loadData[ "camera_matrix" ][ 0 ][ 2 ],
+						( float ) loadData[ "camera_matrix" ][ 1 ][ 0 ],( float ) loadData[ "camera_matrix" ][ 1 ][ 1 ],
+						( float ) loadData[ "camera_matrix" ][ 1 ][ 2 ],
+						( float ) loadData[ "camera_matrix" ][ 2 ][ 0 ],( float ) loadData[ "camera_matrix" ][ 2 ][ 1 ],
+						( float ) loadData[ "camera_matrix" ][ 0 ][ 2 ] );
+		cv::Mat distCoeffs = ( cv::Mat_<double>(1,5) <<
+								loadData[ "distortion_coefficients" ][ 0 ],loadData[ "distortion_coefficients" ][ 1 ],
+								loadData[ "distortion_coefficients" ][ 2 ],loadData[ "distortion_coefficients" ][ 3 ],
+								loadData[ "distortion_coefficients" ][ 4 ] // 例
+							 );
 
-	//cv::Mat tempCameraMat;//ファイルから読み込み:カメラ行列
-	//cv::Mat tempCameraDistCoeffs;//読み込み:歪み係数
+		//cv::Mat tempCameraMat;//ファイルから読み込み:カメラ行列
+		//cv::Mat tempCameraDistCoeffs;//読み込み:歪み係数
 
-	//distCoeffs.push_back(tempCameraDistCoeffs);
-	//K.push_back(tempCameraMat);
+		distCoeffs.push_back(distCoeffs);
+		K.push_back(tempK);
+	}
+
+	file.close();
 }
 
 // LookAt関数的な回転行列の生成

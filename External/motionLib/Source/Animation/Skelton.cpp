@@ -447,11 +447,26 @@ Skelton& MCBM::Skelton::SetDataFromLoader(const PHONONLOADER::P_MODEL_DATA& mode
 		unique_ptr<Bone> tempBone = make_unique<Bone>();
 		OUT_BONE outBone;
 
+		MQuaternion tempRot;
+		tempRot.x = bone.rotation.GetX();
+		tempRot.y = bone.rotation.GetY();
+		tempRot.z = bone.rotation.GetZ();
+		tempRot.w = bone.rotation.GetW();
+
+		MVector3 tempScale;
+		tempScale.x = bone.scale.GetX();
+		tempScale.y = bone.scale.GetY();
+		tempScale.z = bone.scale.GetZ();
+
+		MVector3 tempTrans;
+		tempTrans.x = bone.position.GetX();
+		tempTrans.y = bone.position.GetY();
+		tempTrans.z = bone.position.GetZ();
+
 		tempBone->SetName(bone.name);
-		tempBone->SetRotation({ bone.rotation.GetX(),bone.rotation.GetY(),
-								bone.rotation.GetZ(),bone.rotation.GetW() });
-		tempBone->SetScale({ bone.scale.GetX(),bone.scale.GetY(),bone.scale.GetZ() });
-		tempBone->SetTranslation({ bone.position.GetX(),bone.position.GetY(),bone.position.GetZ() });
+		tempBone->SetRotation(tempRot);
+		tempBone->SetScale(tempScale);
+		tempBone->SetTranslation(tempTrans);
 		Matrix local;
 		Matrix global;
 		for (int32_t i = 0; i < 4; i++)

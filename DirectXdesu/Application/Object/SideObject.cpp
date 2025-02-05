@@ -3,7 +3,7 @@
 void SideObject::Init(MeshModel* model, const Timer& timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection)
 {
 	meshModel_ = model;
-	emitter_ = std::make_unique<Emitter>(100, 1, 1.0f, 2.5f, 0.5f,
+	emitter_ = std::make_unique<Emitter>(100, 1, 1.0f, 4.5f, 0.5f,
 		DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f),
 		DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f),
 		DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f),

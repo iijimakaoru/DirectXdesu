@@ -29,13 +29,9 @@ void main(uint id : SV_DispatchThreadID)
     
     particle.Size = size;
     
-    particle.Color =
-    float4(lerp(startColor.x, endColor.x, particle.Age / lifeTime),
-           lerp(startColor.y, endColor.y, particle.Age / lifeTime),
-           lerp(startColor.z, endColor.z, particle.Age / lifeTime),
-           1);
+    particle.Color = startColor;
     
-    //particle.Age += deltaTime;
+    particle.Age += deltaTime;
 
 	// —±Žq‚ðŒ³‚É–ß‚·
     ParticlePool[id.x] = particle;

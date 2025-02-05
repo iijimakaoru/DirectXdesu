@@ -113,7 +113,12 @@ void CaptureModel::_SetModelData(const MCBM::M_MODEL_OUT& data)
 			{
 				VertexPosNormalUVSkin& vertex = mesh.vertexBuffer.vertices[j];
 
-				vertex.position = _ConvertVector4(var.position);
+				MCBM::MVector3 temp;
+				temp.x = var.position.GetX();
+				temp.y = var.position.GetY();
+				temp.z = var.position.GetZ();
+
+				vertex.position = _ConvertVector3(temp);
 				vertex.normal = _ConvertVector3(var.normal);
 				vertex.uv = _ConvertVector2(var.uv);
 				vertex.boneIndex = var.boneIndex;
@@ -168,8 +173,8 @@ void CaptureModel::_CreateVertexBuffer()
 
 		VertexPosNormalUVSkin* vertMap = nullptr;
 		result = buffer.buff->Map(0, nullptr, (void**)&vertMap);
-		//memcpy(buffer.vertices.begin(), buffer.vertices.end(), vertMap);
-		memcpy(vertMap, &buffer.vertices, sizeof(VertexPosNormalUVSkin));
+		copy(buffer.vertices.begin(), buffer.vertices.end(), vertMap);
+		memcpy(vertMap, buffer.vertices.data(), sizeof(VertexPosNormalUVSkin));
 		buffer.buff->Unmap(0, nullptr);
 
 		buffer.view.BufferLocation = buffer.buff->GetGPUVirtualAddress();

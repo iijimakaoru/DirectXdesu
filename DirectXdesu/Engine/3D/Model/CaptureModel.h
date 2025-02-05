@@ -30,7 +30,7 @@ public:
 
 	struct VertexPosNormalUVSkin
 	{
-		KMyMath::Vector4 position = { 0.0f,0.f,0.0f,1.0f };
+		KMyMath::Vector3 position = { 0.0f,0.f,0.0f };
 		KMyMath::Vector3 normal;
 		KMyMath::Vector2 uv;
 

@@ -488,14 +488,24 @@ Skelton& MCBM::Skelton::SetDataFromLoader(const PHONONLOADER::P_MODEL_DATA& mode
 			tempVertex.position.SetValue(vertex.position.GetX(), vertex.position.GetY(),
 										vertex.position.GetZ(), vertex.position.GetW());
 			
-			tempVertex.normal = { vertex.normal.GetX(),vertex.normal.GetY(),vertex.normal.GetZ() };
+			MVector3 tempNormal;
+			tempNormal.x = vertex.normal.GetX();
+			tempNormal.y = vertex.normal.GetY();
+			tempNormal.z = vertex.normal.GetZ();
+
+			tempVertex.normal = tempNormal;
 		
 			tempVertex.color.SetValue(vertex.color.GetX(), vertex.color.GetY(),
 										vertex.color.GetZ(), vertex.color.GetW());
 
 			tempVertex.uv.SetValue(vertex.uv.GetX(), vertex.uv.GetY());
 
-			tempVertex.tangent = { vertex.tangent.GetX(),vertex.tangent.GetY(),vertex.tangent.GetZ() };
+			MVector3 temptangent;
+			temptangent.x = vertex.tangent.GetX();
+			temptangent.y = vertex.tangent.GetY();
+			temptangent.z = vertex.tangent.GetZ();
+
+			tempVertex.tangent = temptangent;
 
 			
 			for (int32_t i = 0; i < vertex.boneIndex.size(); i++)

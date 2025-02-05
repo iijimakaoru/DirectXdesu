@@ -206,7 +206,7 @@ void GameScene::Update() {
 	playTime++;
 	Collision();
 
-	for (size_t i = 0; i < OBJ::max; i++)
+	/*for (size_t i = 0; i < OBJ::max; i++)
 	{
 		obj[i]->Update(camera->GetViewPro(), camera->GetWorldPos());
 	}
@@ -222,7 +222,7 @@ void GameScene::Update() {
 			objNote[i]->GetTransform().SetPos(move);
 			objNote[i]->Update(camera->GetViewPro(), camera->GetWorldPos());
 		}
-	}
+	}*/
 
 	for (size_t i = 0; i < OBJ::max; i++) 
 	{
@@ -230,26 +230,27 @@ void GameScene::Update() {
 	}
 
 	camera->Update();
-	playerTrans.SetPos({ 0,0,0 });
-	playerTrans.SetScale({ 1,1,1 });
+	playerTrans.SetPos({ 0,0,100 });
+	playerTrans.SetScale({ 0.5,0.5,0.5 });
 	playerTrans.SetRot({ 0,0,0 });
 	player->Update(camera->GetViewPro(),playerTrans);
 }
 
 void GameScene::ObjDraw() 
-{
-	for (size_t i = 0; i < OBJ::max; i++) 
-	{
-		obj[i]->Draw();
-	}
+{	
+	//for (size_t i = 0; i < OBJ::max; i++) 
+	//{
+	//	obj[i]->Draw();
+	//}
 
-	for (size_t i = 0; i < objNote.size(); i++)
-	{
-		if (!notes[i].isHit)
-		{
-			objNote[i]->Draw();
-		}
-	}
+	//for (size_t i = 0; i < objNote.size(); i++)
+	//{
+	//	if (!notes[i].isHit)
+	//	{
+	//		objNote[i]->Draw();
+	//	}
+	//}
+
 
 	player->Draw();
 }
@@ -259,7 +260,7 @@ void GameScene::SpriteDraw() {
 	//------------------------------------------------------------------------------------------------------------------------------------------------------------//
 	f++;
 	fDiv = 7;
-	sprite->AnimationDraw(texData, 64, 64, f, fDiv, {200,200});
+	//sprite->AnimationDraw(texData, 64, 64, f, fDiv, {200,200});
 }
 
 void GameScene::Final() 

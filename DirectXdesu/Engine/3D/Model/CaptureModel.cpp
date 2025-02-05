@@ -1,4 +1,6 @@
-﻿#include "CaptureModel.h"
+#include "CaptureModel.h"
+#include <Animation/AnimationModelManager.h>
+
 
 CaptureModel::CaptureModel()
 {
@@ -7,6 +9,17 @@ CaptureModel::CaptureModel()
 
 CaptureModel::~CaptureModel()
 {
+}
+
+void CaptureModel::Initilize(std::string modelName)
+{
+	skelton = MCBM::AnimationModelManager::GetInstance()->GetModel(modelName);
+	skelton->Initialize();
+	_SetModelData(skelton->GetModelOutData());
+	_CreateVertexBuffer();
+	_CreateIndexBuffer();
+	_CreateSkinBuffer();
+	_CreateTransformBuffer();
 }
 
 void CaptureModel::Update(ViewProjection* pViewProjection, Transform& transform)
@@ -20,6 +33,9 @@ void CaptureModel::Update(ViewProjection* pViewProjection, Transform& transform)
 	}
 
 	{
+
+		skelton->CaptureUpDate({ YOLO_POSE_INDEX::SHOULDER_L,YOLO_POSE_INDEX::SHOULDER_R });
+		UpdateMatrix();
 		//TODO:ボーン更新
 		_UpdateSkinBuffer();
 	}
@@ -55,6 +71,19 @@ void CaptureModel::Draw()
 		pCmdList->DrawIndexedInstanced((UINT)mesh.indexBuffer.indices.size(), 1, 0, 0, 0);
 	}
 
+}
+
+void CaptureModel::UpdateMatrix()
+{
+	for (size_t i = 0; i < m_meshes.size(); i++)
+	{
+		Mesh& mesh = m_meshes[i];
+		const MCBM::M_MODEL_MESH& modelMesh = skelton->GetModelOutData().meshs_[i];
+		for (size_t i = 0; i < modelMesh.bones.size(); i++)
+		{
+			mesh.skinBuffer.m_bones[i] = _ConvertMatrix4(modelMesh.bones[i].matrix);
+		}
+	}
 }
 
 void CaptureModel::_SetModelData(const MCBM::M_MODEL_OUT& data)
@@ -101,7 +130,7 @@ void CaptureModel::_SetModelData(const MCBM::M_MODEL_OUT& data)
 		}
 
 		{
-			for (size_t i = 0; i < mesh.skinBuffer.m_bones.size(); i++)
+			for (size_t i = 0; i < modelMesh.bones.size(); i++)
 			{
 				mesh.skinBuffer.m_bones[i] = _ConvertMatrix4(modelMesh.bones[i].matrix);
 			}
@@ -184,7 +213,7 @@ void CaptureModel::_CreateSkinBuffer()
 	{
 		SkinBuffer& buffer = m_meshes[i].skinBuffer;
 
-		CD3DX12_RESOURCE_DESC buffSkin = CD3DX12_RESOURCE_DESC::Buffer((sizeof(buffer.m_bones) + 0xff) & ~0xff);
+		CD3DX12_RESOURCE_DESC buffSkin = CD3DX12_RESOURCE_DESC::Buffer((MAX_BONE * sizeof(KMyMath::Matrix4) + 0xff) & ~0xff);
 
 		HRESULT result = pDevice->CreateCommittedResource(&heapProp, D3D12_HEAP_FLAG_NONE, &buffSkin, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&buffer.buff));
 		assert(SUCCEEDED(result));

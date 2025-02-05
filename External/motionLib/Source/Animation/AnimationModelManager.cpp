@@ -58,14 +58,16 @@ Skelton* AnimationModelManager::_Load(const std::string& modelname, const char* 
 
 Skelton* AnimationModelManager::_Find(const std::string& modelname, const char* pName)
 {
-	size_t pNameHash = std::hash<std::string_view>()(pName);
-
-	if (modelNames_.find(pNameHash) != modelNames_.end())
+	if (pName)
 	{
-		size_t pathHash = modelNames_[pNameHash];
-		return models_[pathHash].get();
-	}
+		size_t pNameHash = std::hash<std::string_view>()(pName);
 
+		if (modelNames_.find(pNameHash) != modelNames_.end())
+		{
+			size_t pathHash = modelNames_[pNameHash];
+			return models_[pathHash].get();
+		}
+	}
 	size_t pathHash = std::hash<std::string>()("Resources/obj/" + modelname);
 
 	if (models_.find(pathHash) != models_.end())

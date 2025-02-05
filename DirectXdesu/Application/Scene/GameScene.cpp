@@ -186,16 +186,16 @@ void GameScene::Init() {
 	float iou_threshold = 0.45f;
 	int conversion_code = cv::COLOR_BGR2RGB;
 	
-	playerModel = MCBM::AnimationModelManager::GetInstance()->Load("fox","playerModel");
-	playerModel->Initialize();
-
+	MCBM::AnimationModelManager::GetInstance()->Load("fox");
+	player = std::make_unique<CaptureModel>();
+	player->Initilize("fox");
 	sprite.reset(Sprite::Create(PipelineManager::GetInstance()->GetPipeline("Sprite")));
 
 	texData = TextureManager::GetInstance()->GetTextures("Resources/texture/boss1.png");
 }
 
 void GameScene::Update() {
-	playerModel->CaptureUpDate({ YOLO_POSE_INDEX::SHOULDER_L,YOLO_POSE_INDEX::SHOULDER_R });
+
 	
 	light_->SetLightRGB({lightRGB_.x, lightRGB_.y, lightRGB_.z});
 	light_->SetLightDir({lightDir_.x, lightDir_.y, lightDir_.z, 0.0f});
@@ -230,6 +230,10 @@ void GameScene::Update() {
 	}
 
 	camera->Update();
+	playerTrans.SetPos({ 0,0,0 });
+	playerTrans.SetScale({ 1,1,1 });
+	playerTrans.SetRot({ 0,0,0 });
+	player->Update(camera->GetViewPro(),playerTrans);
 }
 
 void GameScene::ObjDraw() 
@@ -246,6 +250,8 @@ void GameScene::ObjDraw()
 			objNote[i]->Draw();
 		}
 	}
+
+	player->Draw();
 }
 
 void GameScene::SpriteDraw() {

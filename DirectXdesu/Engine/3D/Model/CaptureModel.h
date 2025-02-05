@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include<Animation/ModelOut.h>
 #include "KDirectXCommon.h"
 #include "TextureManager.h"
@@ -6,6 +6,7 @@
 #include<ViewProjection.h>
 #include<PipelineManager.h>
 #include <KGPlin.h>
+#include <Animation/AnimationModelManager.h>
 
 class CaptureModel
 {
@@ -84,10 +85,13 @@ public:
 
 public:
 
+	void Initilize(std::string modelName);
+
 	void Update(ViewProjection* pViewProjection, Transform& transform);
 
 	void Draw();
 
+	void UpdateMatrix();
 private:
 
 	void _SetModelData(const MCBM::M_MODEL_OUT& data);
@@ -110,5 +114,6 @@ private:
 	KGPlin* pPipeline = nullptr;
 	std::vector<Mesh> m_meshes;
 	TransformBuffer m_transformBuffer;
+	MCBM::Skelton* skelton;
 };
 

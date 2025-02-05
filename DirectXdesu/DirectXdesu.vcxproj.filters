@@ -435,7 +435,7 @@
     <ClCompile Include="Engine\Math\MyMath\MathHelper.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Particle\FrameResource.cpp">
+    <ClCompile Include="Engine\Particle\FrameResource\FrameResource.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Base\DirectXCommon\Timer.cpp">
@@ -450,31 +450,31 @@
     <ClCompile Include="Engine\Particle\MeshGPUParticle.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Particle\ParticlePool.cpp">
+    <ClCompile Include="Engine\Particle\Buffer\ParticlePool.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Particle\RootSignature.cpp">
+    <ClCompile Include="Engine\Particle\RootSignature\RootSignature.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Particle\ComputePipelineState.cpp">
+    <ClCompile Include="Engine\Particle\ComputePipelineState\ComputePipelineState.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Particle\GraphicPipelineState.cpp">
+    <ClCompile Include="Engine\Particle\GraphicPipelineState\GraphicPipelineState.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Particle\CreateBlend.cpp">
+    <ClCompile Include="Engine\Particle\CreateBlend\CreateBlend.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Particle\DeadList.cpp">
+    <ClCompile Include="Engine\Particle\Buffer\DeadList.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Particle\DrawList.cpp">
+    <ClCompile Include="Engine\Particle\Buffer\DrawList.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Particle\DrawArgs.cpp">
+    <ClCompile Include="Engine\Particle\Buffer\DrawArgs.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Particle\CommandSignature.cpp">
+    <ClCompile Include="Engine\Particle\CommandSignature\CommandSignature.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Particle\MeshEmitter.cpp">
@@ -680,7 +680,7 @@
     <ClInclude Include="Engine\Math\MyMath\MathHelper.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Particle\FrameResource.h">
+    <ClInclude Include="Engine\Particle\FrameResource\FrameResource.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Base\DirectXCommon\UploadBuffer.h">
@@ -698,31 +698,31 @@
     <ClInclude Include="Engine\Particle\MeshGPUParticle.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Particle\ParticlePool.h">
+    <ClInclude Include="Engine\Particle\Buffer\ParticlePool.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Particle\RootSignature.h">
+    <ClInclude Include="Engine\Particle\RootSignature\RootSignature.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Particle\ComputePipelineState.h">
+    <ClInclude Include="Engine\Particle\ComputePipelineState\ComputePipelineState.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Particle\GraphicPipelineState.h">
+    <ClInclude Include="Engine\Particle\GraphicPipelineState\GraphicPipelineState.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Particle\CreateBlend.h">
+    <ClInclude Include="Engine\Particle\CreateBlend\CreateBlend.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Particle\DeadList.h">
+    <ClInclude Include="Engine\Particle\Buffer\DeadList.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Particle\DrawList.h">
+    <ClInclude Include="Engine\Particle\Buffer\DrawList.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Particle\DrawArgs.h">
+    <ClInclude Include="Engine\Particle\Buffer\DrawArgs.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Particle\CommandSignature.h">
+    <ClInclude Include="Engine\Particle\CommandSignature\CommandSignature.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Particle\MeshEmitter.h">

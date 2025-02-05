@@ -18,10 +18,10 @@ public:
 	CD3DX12_CPU_DESCRIPTOR_HANDLE GetCPUUAV();
 	CD3DX12_GPU_DESCRIPTOR_HANDLE GetGPUUAV();
 
-	// We pack the UAV counter into the same buffer as the commands rather than create
-	// a separate 64K resource/heap for it. The counter must be aligned on 4K boundaries,
-	// so we pad the command buffer (if necessary) such that the counter will be placed
-	// at a valid location in the buffer.
+	// UAV カウンターを作成するのではなく、コマンドと同じバッファーにパックします。
+	// それには別の 64K リソース/ヒープが必要です。カウンタは 4K 境界上に揃える必要があります。
+	// そのため、カウンターが配置されるようにコマンド バッファーを (必要に応じて) パディングします。
+	// バッファ内の有効な場所にあります。
 	static inline UINT AlignForUavCounter(UINT bufferSize)
 	{
 		const UINT alignment = D3D12_UAV_COUNTER_PLACEMENT_ALIGNMENT;

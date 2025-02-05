@@ -71,16 +71,16 @@ private:
 	};
 
 private:
-	//マウス角度算出
+	// マウス角度算出
 	void RotAndLenCalculationMouse();
 
-	//スティック角度、長さ算出
+	// スティック角度、長さ算出
 	void RotAndLenCalculationStick(KMyMath::Vector2 vec);
 
-	//当たり判定
+	// 当たり判定
 	void Collision();
 
-	//csv読み込み
+	// csv読み込み
 	void LoadCSV(const std::string& name);
 
 private:
@@ -110,7 +110,7 @@ private:
 	CollisionManager* collisionManager_ = nullptr;
 
 private:
-	//ノーツ
+	// ノーツ
 	std::unique_ptr<MusicDesc>music;
 	std::vector<Note>notes;
 

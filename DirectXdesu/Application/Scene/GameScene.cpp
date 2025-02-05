@@ -85,15 +85,7 @@ void GameScene::Init()
 	objectSetter = std::make_unique<ObjectSetter>();
 	objectSetter->Init(timer_, camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro());
 
-	{
-		KMyMath::Vector3 centerObjectPos = { 0.0f,100.0f,800.0f };
-		KMyMath::Vector3 centerObjectRot = { 0.0f,0.0f,0.0f };
-		KMyMath::Vector3 centerObjectScale = { 1.0f,1.0f,1.0f };
-		KMyMath::Vector4 centerObjectColor = { 1.0f,1.0f,1.0f,1.0f };
-		objectSetter->SetCenterObject(centerObjectPos, centerObjectRot, centerObjectScale, centerObjectColor);
-	}
-
-	//ノーツ
+	// ノーツ
 	playTime = 0;
 	Meter meter = { 3,4 };
 	music = std::make_unique<MusicDesc>(85.0f, meter);
@@ -182,7 +174,7 @@ void GameScene::Init()
 	}
 
 	start = { 500,500 };
-	lenRimit = 100.0f;//csvに落とし込む,値を仮設定
+	lenRimit = 100.0f; // csvに落とし込む,値を仮設定
 
 	// 音
 	audioManager_ = AudioManager::GetInstance();
@@ -204,7 +196,7 @@ void GameScene::Update()
 	light_->SetLightRGB({lightRGB_.x, lightRGB_.y, lightRGB_.z});
 	light_->SetLightDir({lightDir_.x, lightDir_.y, lightDir_.z, 0.0f});
 
-	//角度算出
+	// 角度算出
 	RotAndLenCalculationStick(input->GetPadLStick());
 
 	playTime++;
@@ -272,17 +264,17 @@ void GameScene::RotAndLenCalculationMouse()
 
 	KMyMath::Vector2 mouseVec = { 0.0f,0.0f };
 
-	//ウィンドウの中心点とマウスの現在点のベクトルをとる
+	// ウィンドウの中心点とマウスの現在点のベクトルをとる
 	mouseVec.x = end.x - start.x;
 	mouseVec.y = end.y - start.y;
 
-	//長さ算出
+	// 長さ算出
 	length = MyMathUtility::Vector2Length(mouseVec);
 
-	//正規化
+	// 正規化
 	mouseVec = MyMathUtility::MakeVector2Normalize(mouseVec);
 
-	//角度を算出
+	// 角度を算出
 	angle = atan2(mouseVec.y, mouseVec.x);
 	angle = MyMathConvert::DegreeTransform(angle);
 }
@@ -294,24 +286,24 @@ void GameScene::RotAndLenCalculationStick(KMyMath::Vector2 vec)
 	KMyMath::Vector2 stickVec = { 0.0f,0.0f };
 	KMyMath::Vector2 s = { 0.0f,0.0f };
 
-	//ウィンドウの中心点とマウスの現在点のベクトルをとる
+	// ウィンドウの中心点とマウスの現在点のベクトルをとる
 	stickVec.x = end.x - s.x;
 	stickVec.y = end.y - s.y;
 
-	//長さ算出
+	// 長さ算出
 	length = MyMathUtility::Vector2Length(stickVec);
 
-	//正規化
+	// 正規化
 	stickVec = MyMathUtility::MakeVector2Normalize(stickVec);
 
-	//角度を算出
+	// 角度を算出
 	angle = atan2(stickVec.y, stickVec.x);
 	angle = MyMathConvert::DegreeTransform(angle);
 }
 
 void GameScene::Collision()
 {
-	//範囲の指定（一応45と設定）
+	// 範囲の指定（一応45と設定）
 	float scope = 45.0f;
 	float center;
 	bool isSuccess = false;
@@ -319,23 +311,23 @@ void GameScene::Collision()
 
 	for (size_t i = 0; i < notes.size(); i++)
 	{
-		//フラグが立っているなら次のノードへ
+		// フラグが立っているなら次のノードへ
 		if (notes[i].isHit)
 		{
 			continue;
 		}
-		//ノードと現在のタイムを比較
+		// ノードと現在のタイムを比較
 		float notetime = sec * music->ConvertBeatToMiliSeconds(notes[i].beat);
 		float diff = notetime - playTime;
-		//60
+		// 60
 		if (diff <= 20 || !input->GetPadConnect())
 		{
 			start = input->GetMousePos();
 		}
-		//コントローラ、マウス
+		// コントローラ、マウス
 		if (std::abs(diff) <= perfect)
 		{
-			//1個前のノードのフラグが立っていないかつ同じ位置じゃない場合にしなければならない
+			// 1個前のノードのフラグが立っていないかつ同じ位置じゃない場合にしなければならない
 			if (i != 0)
 			{
 				if (!notes[i - 1].isHit)
@@ -370,7 +362,7 @@ void GameScene::Collision()
 				max = center + scope;
 				if (min <= angle && angle <= max)
 				{
-					//長さが一定以上超えていないなら
+					// 長さが一定以上超えていないなら
 					if (length < lenRimit)
 					{
 						continue;
@@ -388,7 +380,7 @@ void GameScene::Collision()
 				max = center + scope;
 				if (min <= angle && angle <= max)
 				{
-					//長さが一定以上超えていないなら
+					// 長さが一定以上超えていないなら
 					if (length < lenRimit)
 					{
 						continue;
@@ -405,7 +397,7 @@ void GameScene::Collision()
 				max = center + scope;
 				if (min <= angle && angle <= max)
 				{
-					//長さが一定以上超えていないなら
+					// 長さが一定以上超えていないなら
 					if (length < lenRimit)
 					{
 						continue;
@@ -422,7 +414,7 @@ void GameScene::Collision()
 				max = center - scope;
 				if (max <= angle || angle <= min)
 				{
-					//長さが一定以上超えていないなら
+					// 長さが一定以上超えていないなら
 					if (length < lenRimit)
 					{
 						continue;
@@ -464,9 +456,9 @@ void GameScene::Collision()
 						timer_, camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro());
 				}
 			}
-			break;//for文から抜ける
+			break;// for文から抜ける
 		}
-		else if (diff < -(perfect))//一旦ノードがラインから過ぎ去ったらミスにする
+		else if (diff < -(perfect))// 一旦ノードがラインから過ぎ去ったらミスにする
 		{
 			combo = 0;
 			score[MISS]++;
@@ -484,13 +476,13 @@ void GameScene::LoadCSV(const std::string& name)
 	assert(file.is_open());
 
 
-	//1行分の文字列を入れる変数
+	// 1行分の文字列を入れる変数
 	std::string line;
 
 	while (std::getline(file, line))
 	{
 		std::istringstream line_stream(line);
-		//,区切りで行の先頭文字列を取得
+		// ,区切りで行の先頭文字列を取得
 		std::string key;
 		getline(line_stream, key, ',');
 		if (key == "perfect")
@@ -506,6 +498,6 @@ void GameScene::LoadCSV(const std::string& name)
 		}
 
 	}
-	//ファイルを閉じる
+	// ファイルを閉じる
 	file.close();
 }

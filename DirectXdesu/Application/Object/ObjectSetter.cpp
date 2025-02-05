@@ -12,6 +12,14 @@ void ObjectSetter::Init(const Timer& timer, const KMyMath::Matrix4& matView, con
 	leftSide_ = -150.0f;
 	rightSide_ = 150.0f;
 
+	{
+		KMyMath::Vector3 centerObjectPos = { 0.0f,100.0f,800.0f };
+		KMyMath::Vector3 centerObjectRot = { 0.0f,0.0f,0.0f };
+		KMyMath::Vector3 centerObjectScale = { 1.0f,1.0f,1.0f };
+		KMyMath::Vector4 centerObjectColor = { 1.0f,1.0f,1.0f,1.0f };
+		centerObject_->SetObject(centerObjectPos, centerObjectRot, centerObjectScale, centerObjectColor);
+	}
+
 	for (size_t i = 0; i < maxObjectNum; i++)
 	{
 		// 左側

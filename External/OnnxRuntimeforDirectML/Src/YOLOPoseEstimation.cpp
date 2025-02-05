@@ -189,6 +189,19 @@ void YOLOPoseEstimationImp::Start(bool isDraw)
 	cameraPosition_.resize(m_pCams.size());
 	cameradist.resize(m_pCams.size());
 
+	for ( int i = 0; i < m_pCams.size(); i++ )
+	{
+		cv::Mat temp = ( cv::Mat_<double>(3,3) <<
+									800,0,450,
+								   0,800,450,
+								   0,0,1 );
+	// 歪み係数（例、キャリブレーション結果から）
+		cv::Mat distCoeffstemp = ( cv::Mat_<double>(1,5) << 0.1,-0.05,0.001,0.001,0 );
+
+		K.push_back(temp);
+		distCoeffs.push_back(distCoeffstemp);
+	}
+
 	for ( int32_t i = 0; i < Locate::MAX_LOCATE; i++ )
 	{
 		for ( int32_t j = 0; j < ( int32_t ) YOLO_POSE_INDEX::YOLO_POSE_INDEX_MAX; j++)

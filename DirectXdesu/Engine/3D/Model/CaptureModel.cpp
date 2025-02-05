@@ -97,26 +97,28 @@ void CaptureModel::_SetModelData(const MCBM::M_MODEL_OUT& data)
 
 		{
 			mesh.indexBuffer.indices.resize(modelMesh.indices.size());
-
-			for each(uint16_t var in modelMesh.indices)
+			int j = 0;
+			for(uint16_t var : modelMesh.indices)
 			{
-				mesh.indexBuffer.indices[i] = var;
+				mesh.indexBuffer.indices[j] = var;
+				j++;
 			}
 		}
 
 		{
 			mesh.vertexBuffer.vertices.resize(modelMesh.vertices.size());
 
-			for each(MCBM::M_POS_NORM_UV_TANGE_COL_SKIN var in modelMesh.vertices)
+			int j = 0;
+			for (MCBM::M_POS_NORM_UV_TANGE_COL_SKIN var : modelMesh.vertices)
 			{
-				VertexPosNormalUVSkin& vertex = mesh.vertexBuffer.vertices[i];
+				VertexPosNormalUVSkin& vertex = mesh.vertexBuffer.vertices[j];
 
 				vertex.position = _ConvertVector4(var.position);
 				vertex.normal = _ConvertVector3(var.normal);
 				vertex.uv = _ConvertVector2(var.uv);
 				vertex.boneIndex = var.boneIndex;
 				vertex.boneWeight = var.boneWeight;
-
+				j++;
 			}
 		}
 
@@ -166,7 +168,8 @@ void CaptureModel::_CreateVertexBuffer()
 
 		VertexPosNormalUVSkin* vertMap = nullptr;
 		result = buffer.buff->Map(0, nullptr, (void**)&vertMap);
-		std::copy(buffer.vertices.begin(), buffer.vertices.end(), vertMap);
+		//memcpy(buffer.vertices.begin(), buffer.vertices.end(), vertMap);
+		memcpy(vertMap, &buffer.vertices, sizeof(VertexPosNormalUVSkin));
 		buffer.buff->Unmap(0, nullptr);
 
 		buffer.view.BufferLocation = buffer.buff->GetGPUVirtualAddress();

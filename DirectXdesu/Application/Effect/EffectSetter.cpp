@@ -49,7 +49,9 @@ void EffectSetter::Draw(const Timer& timer, const KMyMath::Matrix4& matView, con
 
 void EffectSetter::DeleteEffect()
 {
-	
+	arrowEffect_.remove_if([](std::unique_ptr<ArrowEffect>& arrowEffect) { return arrowEffect->GetIsDead(); });
+
+	groundEffect_.remove_if([](std::unique_ptr<GroundEffect>& groundEffect) { return groundEffect->GetIsDead(); });
 }
 
 void EffectSetter::SetArrowEffect(KMyMath::Vector3& pos, KMyMath::Vector3& rotation, KMyMath::Vector3& scale, KMyMath::Vector4& color,
@@ -81,4 +83,10 @@ void EffectSetter::SetGroundEffect(KMyMath::Vector3& pos, KMyMath::Vector3& rota
 			break;
 		}
 	}*/
+
+	std::unique_ptr<GroundEffect> newGroundEffect = std::make_unique<GroundEffect>();
+	newGroundEffect->Init(groundModel_.get(), timer, matView, matProjection);
+	newGroundEffect->SetParticle(pos, rotation, scale, color, timer, matView, matProjection);
+
+	groundEffect_.push_back(std::move(newGroundEffect));
 }

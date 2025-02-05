@@ -192,6 +192,8 @@ void GameScene::Init() {
 	sprite.reset(Sprite::Create(PipelineManager::GetInstance()->GetPipeline("Sprite")));
 
 	texData = TextureManager::GetInstance()->GetTextures("Resources/texture/boss1.png");
+
+	playerTrans.SetPos({ 0,87,-130 });
 }
 
 void GameScene::Update() {
@@ -230,8 +232,23 @@ void GameScene::Update() {
 	}
 
 	camera->Update();
-	playerTrans.SetPos({ 0,0,100 });
-	playerTrans.SetScale({ 0.5,0.5,0.5 });
+
+	if (input->GetInstance()->IsPush(DIK_UP))
+	{
+		float z = playerTrans.GetPos().z;
+		z += 0.1f;
+		playerTrans.SetPos({ 0,87,z });
+	}
+
+	if (input->GetInstance()->IsPush(DIK_DOWN))
+	{
+		float z = playerTrans.GetPos().z;
+		z -= 0.1f;
+		playerTrans.SetPos({ 0,87,z });
+	}
+
+	
+	playerTrans.SetScale({ 1,1,1 });
 	playerTrans.SetRot({ 0,0,0 });
 	player->Update(camera->GetViewPro(),playerTrans);
 }

@@ -438,77 +438,62 @@ void GameScene::OutPutCollision()
 				}
 			}
 
-
-			if (noteObj->Notes()[it->first].direction == DIRECTION::right)
+			center = 0;
+			min = center - scope;
+			max = center + scope;
+			if (min <= angle && angle <= max)
 			{
-				center = 0;
-				min = center - scope;
-				max = center + scope;
-				if (min <= angle && angle <= max)
+				//長さが一定以上超えていないなら
+				if (length < lenRimit)
 				{
-					//長さが一定以上超えていないなら
-					if (length < lenRimit)
-					{
-						continue;
-					}
-
-					score[PERFECT]++;
-					isSuccess = true;
+					continue;
 				}
 
+				noteObj->Notes()[it->first].direction = DIRECTION::right;
+				isSuccess = true;
 			}
-			else if (noteObj->Notes()[it->first].direction == DIRECTION::up)
+			center = 90;
+			min = center - scope;
+			max = center + scope;
+			if (min <= angle && angle <= max)
 			{
-				center = -90;
-				min = center - scope;
-				max = center + scope;
-				if (min <= angle && angle <= max)
+				//長さが一定以上超えていないなら
+				if (length < lenRimit)
 				{
-					//長さが一定以上超えていないなら
-					if (length < lenRimit)
-					{
-						continue;
-					}
-					score[PERFECT]++;
-					isSuccess = true;
+					continue;
 				}
-
+				noteObj->Notes()[it->first].direction = DIRECTION::up;
+				isSuccess = true;
 			}
-			else if (noteObj->Notes()[it->first].direction == DIRECTION::dawn)
+
+			center = -90;
+			min = center - scope;
+			max = center + scope;
+			if (min <= angle && angle <= max)
 			{
-				center = 90;
-				min = center - scope;
-				max = center + scope;
-				if (min <= angle && angle <= max)
+				//長さが一定以上超えていないなら
+				if (length < lenRimit)
 				{
-					//長さが一定以上超えていないなら
-					if (length < lenRimit)
-					{
-						continue;
-					}
-					score[PERFECT]++;
-					isSuccess = true;
+					continue;
 				}
-
+				noteObj->Notes()[it->first].direction = DIRECTION::dawn;
+				isSuccess = true;
 			}
-			else if (noteObj->Notes()[it->first].direction == DIRECTION::left)
+			center = 180;
+			min = -(center - scope);
+			max = center - scope;
+			if (max <= angle || angle <= min)
 			{
-				center = 180;
-				min = -(center - scope);
-				max = center - scope;
-				if (max <= angle || angle <= min)
+				//長さが一定以上超えていないなら
+				if (length < lenRimit)
 				{
-					//長さが一定以上超えていないなら
-					if (length < lenRimit)
-					{
-						continue;
-					}
-					score[PERFECT]++;
-					isSuccess = true;
-
+					continue;
 				}
+				noteObj->Notes()[it->first].direction = DIRECTION::left;
+				isSuccess = true;
 
 			}
+			
 			if (isSuccess)
 			{
 				KMyMath::Vector3 pos;

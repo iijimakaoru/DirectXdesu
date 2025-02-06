@@ -373,8 +373,8 @@ void Skelton::AllNodeMatrixForModelToBone()
 			{
 				if (itr3.name == nodeName)
 				{
-					Matrix boneOff = node->GetOffSetMatrix();
-					Matrix trans =  (boneOff) * (mat) * globalInverseTransform;
+					Matrix boneOff = itr3.offsetMatrix;
+					Matrix trans =  (boneOff) * (mat);
 					itr3.matrix = trans;
 					break;
 				}

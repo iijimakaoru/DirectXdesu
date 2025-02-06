@@ -389,23 +389,23 @@ std::vector<std::string> PAssimpLoader::_LoadMatrixialTextures(aiMaterial* pAiMa
 void PAssimpLoader::_ConvertMatrix(PMatrix4& dest,const aiMatrix4x4& src)
 {
 	dest.Set(0,0,src.a1);
-	dest.Set(0,1,src.a2);
-	dest.Set(0,2,src.a3);
-	dest.Set(0,3,src.a4);
+	dest.Set(1,0,src.a2);
+	dest.Set(2,0,src.a3);
+	dest.Set(3,0,src.a4);
 
-	dest.Set(1,0,src.b1);
+	dest.Set(0,1,src.b1);
 	dest.Set(1,1,src.b2);
-	dest.Set(1,2,src.b3);
-	dest.Set(1,3,src.b4);
+	dest.Set(2,1,src.b3);
+	dest.Set(3,1,src.b4);
 
-	dest.Set(2,0,src.c1);
-	dest.Set(2,1,src.c2);
+	dest.Set(0,2,src.c1);
+	dest.Set(1,2,src.c2);
 	dest.Set(2,2,src.c3);
-	dest.Set(2,3,src.c4);
+	dest.Set(3,2,src.c4);
 
-	dest.Set(3,0,src.d1);
-	dest.Set(3,1,src.d2);
-	dest.Set(3,2,src.d3);
+	dest.Set(0,3,src.d1);
+	dest.Set(1,3,src.d2);
+	dest.Set(2,3,src.d3);
 	dest.Set(3,3,src.d4);
 
 }

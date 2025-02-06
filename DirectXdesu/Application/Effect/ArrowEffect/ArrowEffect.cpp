@@ -14,7 +14,7 @@ void ArrowEffect::Init(MeshModel* model, const Timer& timer, const KMyMath::Matr
 		DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f),
 		DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f),
 		DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
-	effect_ = std::make_unique<MeshGPUParticle>(timer, matView, matProjection, emitter_.get(), meshModel_);
+	effect_ = std::make_unique<ArrowEffectParticle>(timer, matView, matProjection, emitter_.get(), meshModel_);
 }
 
 void ArrowEffect::Update(const Timer& timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection)

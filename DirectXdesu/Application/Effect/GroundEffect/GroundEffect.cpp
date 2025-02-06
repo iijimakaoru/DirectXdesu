@@ -14,7 +14,7 @@ void GroundEffect::Init(MeshModel* model, const Timer& timer, const KMyMath::Mat
 		DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f),
 		DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f),
 		DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
-	effect_ = std::make_unique<MeshGPUParticle>(timer, matView, matProjection, emitter_.get(), meshModel_);
+	effect_ = std::make_unique<GroundEffectParticle>(timer, matView, matProjection, emitter_.get(), meshModel_);
 }
 
 void GroundEffect::Update(const Timer& timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection)

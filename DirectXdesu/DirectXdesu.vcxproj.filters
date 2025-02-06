@@ -501,6 +501,12 @@
     <ClCompile Include="Application\Object\SideObject.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Particle\GPUParticle\ArrowEffectParticle.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Particle\GPUParticle\GroundEffectParticle.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Input\KInput.h">
@@ -749,6 +755,12 @@
     <ClInclude Include="Application\Object\SideObject.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Particle\GPUParticle\ArrowEffectParticle.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Particle\GPUParticle\GroundEffectParticle.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DirectXdesu.rc">
@@ -791,6 +803,10 @@
     </None>
     <None Include="Resources\Shader\MeshGPUParticle\MeshGPUParticle.hlsli" />
     <None Include="Resources\Shader\MeshGPUParticle\MeshSimplexNoise.hlsli" />
+    <None Include="Resources\Shader\Effect\ArrowEffect\ArrowEffect.hlsli" />
+    <None Include="Resources\Shader\Effect\ArrowEffect\ArrowEffectSimplexNoise.hlsli" />
+    <None Include="Resources\Shader\Effect\GroundEffect\GroundEffect.hlsli" />
+    <None Include="Resources\Shader\Effect\GroundEffect\GroundEffectSimplexNoise.hlsli" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shader\Basic\BasicPS.hlsl">
@@ -870,5 +886,19 @@
     <FxCompile Include="Resources\Shader\MeshGPUParticle\MeshGPUParticlePS.hlsl" />
     <FxCompile Include="Resources\Shader\MeshGPUParticle\MeshGPUParticleVS.hlsl" />
     <FxCompile Include="Resources\Shader\MeshGPUParticle\MeshUpdateCS.hlsl" />
+    <FxCompile Include="Resources\Shader\Effect\ArrowEffect\ArrowEffectCopyDrawCountCS.hlsl" />
+    <FxCompile Include="Resources\Shader\Effect\ArrowEffect\ArrowEffectDeadListInitCS.hlsl" />
+    <FxCompile Include="Resources\Shader\Effect\ArrowEffect\ArrowEffectEmitCS.hlsl" />
+    <FxCompile Include="Resources\Shader\Effect\ArrowEffect\ArrowEffectGS.hlsl" />
+    <FxCompile Include="Resources\Shader\Effect\ArrowEffect\ArrowEffectPS.hlsl" />
+    <FxCompile Include="Resources\Shader\Effect\ArrowEffect\ArrowEffectVS.hlsl" />
+    <FxCompile Include="Resources\Shader\Effect\ArrowEffect\ArrowEffectUpdateCS.hlsl" />
+    <FxCompile Include="Resources\Shader\Effect\GroundEffect\GroundEffectCopyDrawCountCS.hlsl" />
+    <FxCompile Include="Resources\Shader\Effect\GroundEffect\GroundEffectDeadListInitCS.hlsl" />
+    <FxCompile Include="Resources\Shader\Effect\GroundEffect\GroundEffectEmitCS.hlsl" />
+    <FxCompile Include="Resources\Shader\Effect\GroundEffect\GroundEffectGS.hlsl" />
+    <FxCompile Include="Resources\Shader\Effect\GroundEffect\GroundEffectPS.hlsl" />
+    <FxCompile Include="Resources\Shader\Effect\GroundEffect\GroundEffectUpdateCS.hlsl" />
+    <FxCompile Include="Resources\Shader\Effect\GroundEffect\GroundEffectVS.hlsl" />
   </ItemGroup>
 </Project>

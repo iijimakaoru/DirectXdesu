@@ -2,6 +2,7 @@
 #include <memory>
 #include "Emitter.h"
 #include "MeshGPUParticle.h"
+#include "ArrowEffectParticle.h"
 
 class ArrowEffect
 {
@@ -23,7 +24,7 @@ private:
 private:
 	MeshModel* meshModel_ = nullptr;
 	std::unique_ptr<Emitter> emitter_;
-	std::unique_ptr<MeshGPUParticle> effect_;
+	std::unique_ptr<ArrowEffectParticle> effect_;
 
 	KMyMath::Vector3 startPos_;
 	KMyMath::Vector3 endPos_;

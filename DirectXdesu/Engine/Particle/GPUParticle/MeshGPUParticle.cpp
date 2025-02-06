@@ -30,39 +30,35 @@ void MeshGPUParticle::Init(const Timer& timer, const KMyMath::Matrix4& matView, 
 	drawArgs_ = std::make_unique<DrawArgs>();
 	commandSignature_ = std::make_unique<CommandSignature>();
 
+	// リソース構築
 	BuildUAV();
 	BuildRootSignature();
 	BuildFrameResources();
 	BuildPSOs();
 
-	// 初期化コマンドを実行する
-	ThrowIfFailed(commndList->Close());
-	ID3D12CommandList* cmdsLists[] = { commndList };
-	commndQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
+	// コマンドリストを1回だけリセットしてまとめて処理
+	ID3D12CommandAllocator* commandAllocator = directXCommon->GetCommandAllocator().Get();
+	commandAllocator->Reset();
+	commndList->Reset(commandAllocator, deadListPSO_->GetPipelineState());
 
-	directXCommon->FlashCommndQueue();
+	// Root Signature 設定
+	commndList->SetComputeRootSignature(particleRootSignature_->GetRootSignature());
 
-	ThrowIfFailed(directXCommon->GetCommandAllocator()->Reset());
-
-	ThrowIfFailed(directXCommon->GetCommandList()->Reset(
-		directXCommon->GetCommandAllocator().Get(), deadListPSO_->GetPipelineState()));
-
-	directXCommon->GetCommandList()->SetComputeRootSignature(particleRootSignature_->GetRootSignature());
-
+	// 現在のフレームリソースを取得
 	currentFrameResourceIndex = (currentFrameResourceIndex + 1) % gNumberFrameResources;
 	currentFrameResource = FrameResources[currentFrameResourceIndex].get();
 
 	UpdateMainPassCB(timer, matView, matProjection, emitter);
 
+	// Descriptor Heap 設定
 	ID3D12DescriptorHeap* descriptorHeaps[] = { UAVHeap.Get() };
 	commndList->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);
 
+	// RootParameter設定
 	auto objectCB = currentFrameResource->ObjectCB->Resource();
 	commndList->SetComputeRootConstantBufferView(0, objectCB->GetGPUVirtualAddress());
-
 	auto timeCB = currentFrameResource->TimeCB->Resource();
 	commndList->SetComputeRootConstantBufferView(1, timeCB->GetGPUVirtualAddress());
-
 	auto particleCB = currentFrameResource->ParticleCB->Resource();
 	commndList->SetComputeRootConstantBufferView(2, particleCB->GetGPUVirtualAddress());
 
@@ -72,17 +68,19 @@ void MeshGPUParticle::Init(const Timer& timer, const KMyMath::Matrix4& matView, 
 	commndList->SetComputeRootDescriptorTable(6, drawArgs_->GetGPUUAV());
 	commndList->SetComputeRootDescriptorTable(7, MeshSRV);
 
-	commndList->Dispatch(static_cast<uint32_t>(model_->GetVertices().size() / 1024 + 1), 1, 1);
+	// Compute Dispatch
+	uint32_t numThreadGroups = static_cast<uint32_t>(std::ceil(model_->GetVertices().size() / 1024.0 + 1));
+	commndList->Dispatch(numThreadGroups, 1, 1);
 
-	ThrowIfFailed(commndList->Close());
+	// 一回だけクローズ
+	commndList->Close();
 
-	// コマンドリストを実行キューに追加します
-	ID3D12CommandList* cmdsLists1[] = { commndList };
-	commndQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists1);
+	// コマンドリスト実行
+	ID3D12CommandList* cmdsLists[] = { commndList };
+	commndQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
 
+	// キューをフラッシュ
 	directXCommon->FlashCommndQueue();
-
-	directXCommon->BeginCommnd();
 }
 
 void MeshGPUParticle::Update(const Timer& timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection, Emitter* emitter)

@@ -5,7 +5,7 @@ void CommandSignature::Create()
 {
 	ID3D12Device* device = KDirectXCommon::GetInstance()->GetDevice();
 
-	// particle commnd signature
+	// パーティクルコマンドシグネチャ
 	D3D12_INDIRECT_ARGUMENT_DESC Args[1];
 	Args[0].Type = D3D12_INDIRECT_ARGUMENT_TYPE_DRAW;
 

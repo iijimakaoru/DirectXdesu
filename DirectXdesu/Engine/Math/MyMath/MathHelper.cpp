@@ -34,15 +34,15 @@ XMVECTOR MathHelper::RandUnitVec3()
 	XMVECTOR One = XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f);
 	XMVECTOR Zero = XMVectorZero();
 
-	// Keep trying until we get a point on/in the hemisphere.
+	// 半球上/半球内の点が得られるまで試し続けてください。
 	while (true)
 	{
-		// Generate random point in the cube [-1,1]^3.
+		// 立方体 [-1,1]^3 内にランダムな点を生成します。
 		XMVECTOR v = XMVectorSet(MathHelper::RandF(-1.0f, 1.0f), MathHelper::RandF(-1.0f, 1.0f), MathHelper::RandF(-1.0f, 1.0f), 0.0f);
 
-		// Ignore points outside the unit sphere in order to get an even distribution 
-		// over the unit sphere.  Otherwise points will clump more on the sphere near 
-		// the corners of the cube.
+		// 均一な分布を得るために、単位球の外側の点を無視します。
+		// 単位球上。  そうしないと、近くの球上にポイントがさらに集中してしまいます。
+		// 立方体の角。
 
 		if (XMVector3Greater(XMVector3LengthSq(v), One))
 			continue;
@@ -56,20 +56,19 @@ XMVECTOR MathHelper::RandHemisphereUnitVec3(XMVECTOR n)
 	XMVECTOR One = XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f);
 	XMVECTOR Zero = XMVectorZero();
 
-	// Keep trying until we get a point on/in the hemisphere.
+	// 半球上/半球内の点が得られるまで試し続けてください。
 	while (true)
 	{
-		// Generate random point in the cube [-1,1]^3.
+		// 立方体 [-1,1]^3 内にランダムな点を生成します。
 		XMVECTOR v = XMVectorSet(MathHelper::RandF(-1.0f, 1.0f), MathHelper::RandF(-1.0f, 1.0f), MathHelper::RandF(-1.0f, 1.0f), 0.0f);
 
-		// Ignore points outside the unit sphere in order to get an even distribution 
-		// over the unit sphere.  Otherwise points will clump more on the sphere near 
-		// the corners of the cube.
-
+		// 均一な分布を得るために、単位球の外側の点を無視します。
+		// 単位球上。  そうしないと、近くの球上にポイントがさらに集中してしまいます。
+		// 立方体の角。
 		if (XMVector3Greater(XMVector3LengthSq(v), One))
 			continue;
 
-		// Ignore points in the bottom hemisphere.
+		// 下半球の点は無視します。
 		if (XMVector3Less(XMVector3Dot(n, v), Zero))
 			continue;
 

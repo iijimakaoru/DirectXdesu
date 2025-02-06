@@ -37,7 +37,7 @@ void GPUParticle::Init(const Timer& timer,
 	BuildFrameResources();
 	BuildPSOs();
 
-	// execute the initialization commands
+	// 初期化コマンドを実行する
 	ThrowIfFailed(commndList->Close());
 	ID3D12CommandList* cmdsLists[] = { commndList };
 	commndQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
@@ -78,7 +78,7 @@ void GPUParticle::Init(const Timer& timer,
 
 	ThrowIfFailed(commndList->Close());
 
-	// Add the command list to the queue for execution.
+	// コマンドリストを実行キューに追加します。
 	ID3D12CommandList* cmdsLists1[] = { commndList };
 	commndQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists1);
 
@@ -95,12 +95,12 @@ void GPUParticle::Update(const Timer& timer,
 	KDirectXCommon* directXCommon = KDirectXCommon::GetInstance();
 	ID3D12Fence* fence = directXCommon->GetFence();
 
-	// Cycle through the circular frame resource array.
+	// 円形のフレーム リソース配列を循環します。
 	currentFrameResourceIndex = (currentFrameResourceIndex + 1) % gNumberFrameResources;
 	currentFrameResource = FrameResources[currentFrameResourceIndex].get();
 
-	// Has the GPU finished processing the commands of the current frame resource?
-	// If not, wait until the GPU has completed commands up to this fence point.
+	// GPU は現在のフレーム リソースのコマンドの処理を終了しましたか?
+	// そうでない場合は、GPU がこのフェンス ポイントまでのコマンドを完了するまで待ちます
 	if (currentFrameResource->Fence != 0 && fence->GetCompletedValue() < currentFrameResource->Fence)
 	{
 		HANDLE eventHandle = CreateEventEx(nullptr, (LPCWSTR)false, false, EVENT_ALL_ACCESS);
@@ -202,13 +202,7 @@ void GPUParticle::Draw(const Timer& timer,
 		D3D12_RESOURCE_STATE_UNORDERED_ACCESS, D3D12_RESOURCE_STATE_INDIRECT_ARGUMENT);
 	commndList->ResourceBarrier(1, &resourceBarrier);
 
-	commndList->ExecuteIndirect(
-		commandSignature_->GetCommandSignature(),
-		1,
-		drawArgs_->GetDrawArgs(),
-		0,
-		nullptr,
-		0);
+	commndList->ExecuteIndirect(commandSignature_->GetCommandSignature(), 1, drawArgs_->GetDrawArgs(), 0, nullptr, 0);
 
 	resourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(drawArgs_->GetDrawArgs(),
 		D3D12_RESOURCE_STATE_INDIRECT_ARGUMENT, D3D12_RESOURCE_STATE_UNORDERED_ACCESS);

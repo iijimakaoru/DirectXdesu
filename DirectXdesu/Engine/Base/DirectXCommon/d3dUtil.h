@@ -62,11 +62,11 @@ public:
 
 	static UINT CalcConstantBufferByteSize(UINT byteSize)
 	{
-		// Constant buffers must be a multiple of the minimum hardware
-		// allocation size (usually 256 bytes).  So round up to nearest
-		// multiple of 256.  We do this by adding 255 and then masking off
-		// the lower 2 bytes which store all bits < 256.
-		// Example: Suppose byteSize = 300.
+		// 定数バッファは最小ハードウェアの倍数でなければなりません
+		// 割り当てサイズ (通常は 256 バイト)。  したがって、最も近い値に切り上げます
+		// 256 の倍数です。これを行うには、255 を加算してからマスクオフします。
+		// 256 未満のすべてのビットを格納する下位 2 バイト。
+		// 例: byteSize = 300 と仮定します。
 		// (300 + 255) & ~255
 		// 555 & ~255
 		// 0x022B & ~0x00ff
@@ -109,28 +109,29 @@ public:
 	int LineNumber = -1;
 };
 
-// Defines a subrange of geometry in a MeshGeometry.  This is for when multiple
-// geometries are stored in one vertex and index buffer.  It provides the offsets
-// and data needed to draw a subset of geometry stores in the vertex and index 
-// buffers so that we can implement the technique described by Figure 6.3.
+// MeshGeometry 内のジオメトリのサブ範囲を定義します。  複数ある場合用です
+// ジオメトリは 1 つの頂点およびインデックス バッファーに保存されます。  オフセットを提供します
+// および頂点とインデックスに格納されるジオメトリのサブセットを描画するために必要なデータ
+// これにより、図 6.3 で説明した手法を実装できるようになります。
 struct SubmeshGeometry
 {
 	UINT IndexCount = 0;
 	UINT StartIndexLocation = 0;
 	INT BaseVertexLocation = 0;
 
-	// Bounding box of the geometry defined by this submesh. 
-	// This is used in later chapters of the book.
+	// このサブメッシュによって定義されるジオメトリの境界ボックス。
+	// これは、この本の後の章で使用されます。
 	DirectX::BoundingBox Bounds;
 };
 
 struct MeshGeometry
 {
-	// Give it a name so we can look it up by name.
+	// 名前で検索できるように名前を付けます。
 	std::string Name;
 
-	// System memory copies.  Use Blobs because the vertex/index format can be generic.
-	// It is up to the client to cast appropriately.  
+	// システムメモリのコピー。 
+	// 頂点/インデックス形式は汎用的なものになる可能性があるため、Blob を使用します。
+	// 適切にキャストするかどうかはクライアント次第です。 
 	Microsoft::WRL::ComPtr<ID3DBlob> VertexBufferCPU = nullptr;
 	Microsoft::WRL::ComPtr<ID3DBlob> VertexBufferColorCPU = nullptr;
 	Microsoft::WRL::ComPtr<ID3DBlob> IndexBufferCPU = nullptr;
@@ -143,7 +144,7 @@ struct MeshGeometry
 	Microsoft::WRL::ComPtr<ID3D12Resource> VertexBufferColorUploader = nullptr;
 	Microsoft::WRL::ComPtr<ID3D12Resource> IndexBufferUploader = nullptr;
 
-	// Data about the buffers.
+	// バッファに関するデータ。
 	UINT VertexByteStride = 0;
 	UINT VertexByteColorStride = 0;
 	UINT VertexBufferByteSize = 0;
@@ -151,9 +152,9 @@ struct MeshGeometry
 	DXGI_FORMAT IndexFormat = DXGI_FORMAT_R16_UINT;
 	UINT IndexBufferByteSize = 0;
 
-	// A MeshGeometry may store multiple geometries in one vertex/index buffer.
-	// Use this container to define the Submesh geometries so we can draw
-	// the Submeshes individually.
+	// MeshGeometry は、1 つの頂点/インデックス バッファーに複数のジオメトリを格納できます。
+	// このコンテナを使用してサブメッシュ ジオメトリを定義し、描画できるようにします。
+	// サブメッシュを個別に。
 	std::unordered_map<std::string, SubmeshGeometry> DrawArgs;
 
 	D3D12_VERTEX_BUFFER_VIEW VertexBufferView()const
@@ -186,7 +187,7 @@ struct MeshGeometry
 		return ibv;
 	}
 
-	// We can free this memory after we finish upload to the GPU.
+	// GPU へのアップロードが完了したら、このメモリを解放できます。
 	void DisposeUploaders()
 	{
 		VertexBufferUploader = nullptr;

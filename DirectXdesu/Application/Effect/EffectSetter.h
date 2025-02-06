@@ -3,7 +3,7 @@
 #include "ArrowEffect.h"
 #include "GroundEffect/GroundEffect.h"
 
-const size_t maxEffectNum = 15;
+const size_t maxEffectNum = 10;
 
 class EffectSetter
 {

@@ -14,7 +14,7 @@ void NoteObj::Init(MusicDesc* music_)
 {
 	modelM = ModelManager::GetInstance();
 	pipelineM = PipelineManager::GetInstance();
-	LoadNote("maou_bgm_cyber44");
+	LoadNote("cyber44");
 	music = music_;
 	
 	for (auto it = notes.begin();it!=notes.end();++it)
@@ -123,6 +123,16 @@ void NoteObj::LoadNote(const std::string& name)
 	for (size_t i = 0; i < 10; i++)
 	{
 		std::getline(file, line);
+		//タイトルの代入
+		if (line.find("TITLE") != std::string::npos)
+		{
+			// スペースの位置を見つける
+			size_t spacePos = line.find(' ');
+			if (spacePos != std::string::npos) {
+				// スペースの次の部分を切り出す
+				fileName = line.substr(spacePos + 1);
+			}
+		}
 	}
 	while (std::getline(file, line))
 	{
@@ -169,6 +179,9 @@ void NoteObj::LoadNote(const std::string& name)
 					float pos;
 					switch (num)
 					{
+					case 1:
+						pos = 0.0f;
+						break;
 					case 2:
 						pos = 2.0f;
 						break;
@@ -220,4 +233,15 @@ void NoteObj::LoadNote(const std::string& name)
 	}
 	//ファイルを閉じる
 	file.close();
+}
+
+void NoteObj::OutputNote(const std::string& name)
+{
+	std::string inputTxt;
+	std::ofstream outputfile(fileName);
+
+	inputTxt;
+
+	outputfile << inputTxt;
+	outputfile.close();
 }

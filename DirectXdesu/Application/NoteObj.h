@@ -30,6 +30,7 @@ public:
 		return notes;
 	}
 	void LoadNote(const std::string& name);
+	void OutputNote(const std::string& name);
 
 	//小節　サイズの限界まで
 	//拍数　99.5まで
@@ -47,6 +48,7 @@ private:
 	std::vector<std::unique_ptr<KObject3d>>underObj;
 	ModelManager* modelM;
 	PipelineManager* pipelineM;
+	std::string fileName;
 	float speed = 3.0f;
 	float posZ = 0.1f;
 	float playTime;

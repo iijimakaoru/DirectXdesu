@@ -22,8 +22,9 @@ enum DIRECTION
 };
 
 enum Hand {
-	R, //右
-	L  //左
+	L,  //左
+	R,  //右
+	max // 
 };
 
 class Note

@@ -5,13 +5,13 @@
 #include <algorithm>
 #include <future>
 
-MeshGPUParticle::MeshGPUParticle(const Timer& timer,  const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection, Emitter* emitter, MeshModel* model)
+MeshGPUParticle::MeshGPUParticle(const Timer* timer,  const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection, Emitter* emitter, MeshModel* model)
 {
 	model_ = model;
 	Init(timer, matView, matProjection, emitter);
 }
 
-void MeshGPUParticle::Init(const Timer& timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection, Emitter* emitter)
+void MeshGPUParticle::Init(const Timer* timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection, Emitter* emitter)
 {
 	KDirectXCommon* directXCommon = KDirectXCommon::GetInstance();
 	ID3D12GraphicsCommandList* commndList = directXCommon->GetCommandList();
@@ -85,7 +85,7 @@ void MeshGPUParticle::Init(const Timer& timer, const KMyMath::Matrix4& matView, 
 	directXCommon->BeginCommnd();
 }
 
-void MeshGPUParticle::Update(const Timer& timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection, Emitter* emitter)
+void MeshGPUParticle::Update(const Timer* timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection, Emitter* emitter)
 {
 	ID3D12Fence* fence = KDirectXCommon::GetInstance()->GetFence();
 
@@ -106,7 +106,7 @@ void MeshGPUParticle::Update(const Timer& timer, const KMyMath::Matrix4& matView
 	UpdateMainPassCB(timer, matView, matProjection, emitter);
 }
 
-void MeshGPUParticle::Draw(const Timer& timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection, Emitter* emitter)
+void MeshGPUParticle::Draw(const Timer* timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection, Emitter* emitter)
 {
 	KDirectXCommon* directXCommon = KDirectXCommon::GetInstance();
 	ID3D12GraphicsCommandList* commndList = directXCommon->GetCommandList();
@@ -340,7 +340,7 @@ void MeshGPUParticle::BuildFrameResources()
 	for (auto& f : frameFutures) FrameResources.push_back(f.get());
 }
 
-void MeshGPUParticle::UpdateMainPassCB(const Timer& timer,
+void MeshGPUParticle::UpdateMainPassCB(const Timer* timer,
 	const KMyMath::Matrix4& matView,
 	const KMyMath::Matrix4& matProjection,
 	Emitter* emitter)
@@ -379,8 +379,8 @@ void MeshGPUParticle::UpdateMainPassCB(const Timer& timer,
 	auto currentObjectCB = currentFrameResource->ObjectCB.get();
 	currentObjectCB->CopyData(0, objConstants);
 
-	MainTimeCB.DeltaTime = timer.GetDeltaTime();
-	MainTimeCB.TotalTime = timer.GetTotalTime();
+	MainTimeCB.DeltaTime = timer->GetDeltaTime();
+	MainTimeCB.TotalTime = timer->GetTotalTime();
 
 	auto currentTimeCB = currentFrameResource->TimeCB.get();
 	currentTimeCB->CopyData(0, MainTimeCB);

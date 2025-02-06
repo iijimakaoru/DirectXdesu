@@ -132,7 +132,7 @@ private:
 	int combo;
 
 	// エフェクト系
-	Timer timer_;
+	std::unique_ptr<Timer> timer_;
 	std::unique_ptr<EffectSetter> effectSetter;
 
 	// オブジェクト系

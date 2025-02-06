@@ -36,7 +36,7 @@ void GameScene::LoadResources()
 
 void GameScene::Init() 
 {
-	timer_ = Timer(KWinApp::GetHWND(), KWinApp::GetWindow().lpszMenuName);
+	timer_ = std::make_unique<Timer>();
 
 	BaseScene::Init();
 
@@ -79,11 +79,11 @@ void GameScene::Init()
 
 	// エフェクトの初期化
 	effectSetter = std::make_unique<EffectSetter>();
-	effectSetter->Init(timer_, camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro());
+	effectSetter->Init(timer_.get(), camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro());
 
 	// ゲーム内オブジェクトの初期化
 	objectSetter = std::make_unique<ObjectSetter>();
-	objectSetter->Init(timer_, camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro());
+	objectSetter->Init(timer_.get(), camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro());
 
 	// ノーツ
 	playTime = 0;
@@ -190,8 +190,7 @@ void GameScene::Update()
 	ImGui::DragInt("combo", &combo);
 	ImGui::End();
 
-	timer_.UpdateTimer();
-	timer_.UpdateTitleBarStats();
+	timer_->UpdateTimer();
 
 	light_->SetLightRGB({lightRGB_.x, lightRGB_.y, lightRGB_.z});
 	light_->SetLightDir({lightDir_.x, lightDir_.y, lightDir_.z, 0.0f});
@@ -221,10 +220,10 @@ void GameScene::Update()
 	}
 
 	// エフェクトの更新
-	effectSetter->Update(timer_, camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro());
+	effectSetter->Update(timer_.get(), camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro());
 
 	// オブジェクトの更新
-	objectSetter->Update(timer_, camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro());
+	objectSetter->Update(timer_.get(), camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro());
 
 	camera->Update();
 }
@@ -245,10 +244,10 @@ void GameScene::ObjDraw()
 	}
 
 	// エフェクト描画
-	effectSetter->Draw(timer_, camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro());
+	effectSetter->Draw(timer_.get(), camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro());
 
 	// オブジェクトの描画
-	objectSetter->Draw(timer_, camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro());
+	objectSetter->Draw(timer_.get(), camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro());
 }
 
 void GameScene::SpriteDraw() 
@@ -437,7 +436,7 @@ void GameScene::Collision()
 					KMyMath::Vector3 nowArrowScale = objNote[i]->GetTransform().GetScale();
 					KMyMath::Vector4 nowArrowColor = objNote[i]->GetColor();
 					effectSetter->SetArrowEffect(nowArrowPos, nowArrowRot, nowArrowScale, nowArrowColor,
-						timer_, camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro());
+						timer_.get(), camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro());
 				}
 
 				// パーフェクトゾーン
@@ -453,7 +452,7 @@ void GameScene::Collision()
 						obj[OBJ::line]->GetTransform().GetScale().z};
 					KMyMath::Vector4 nowLineColor = objNote[i]->GetColor();
 					effectSetter->SetGroundEffect(nowLinePos, nowLineRot, nowLineScale, nowLineColor,
-						timer_, camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro());
+						timer_.get(), camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro());
 				}
 			}
 			break;// for文から抜ける

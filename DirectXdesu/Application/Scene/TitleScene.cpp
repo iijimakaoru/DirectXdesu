@@ -22,7 +22,7 @@ void TitleScene::LoadResources() {
 }
 
 void TitleScene::Init() {
-	timer_ = Timer(KWinApp::GetHWND(), KWinApp::GetWindow().lpszMenuName);
+	timer_ = std::make_unique<Timer>();
 
 	BaseScene::Init();
 
@@ -59,7 +59,7 @@ void TitleScene::Init() {
 	);
 
 	testM = std::make_unique<MeshModel>("GroundEffect");
-	testP = std::make_unique<MeshGPUParticle>(timer_, camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro(), emitter_, testM.get());
+	testP = std::make_unique<MeshGPUParticle>(timer_.get(), camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro(), emitter_, testM.get());
 	
 
 	sprite.reset(Sprite::Create(PipelineManager::GetInstance()->GetPipeline("Sprite")));
@@ -73,8 +73,7 @@ void TitleScene::Update() {
 	ImGui::SliderFloat3("Scaling", &scaling.x, -2, 2, "%.1f");
 	ImGui::End();
 
-	timer_.UpdateTimer();
-	timer_.UpdateTitleBarStats();
+	timer_->UpdateTimer();
 
 	light_->SetLightRGB({lightRGB.x, lightRGB.y, lightRGB.z});
 	light_->SetLightDir({lightDir.x, lightDir.y, lightDir.z, 0.0f});
@@ -90,7 +89,7 @@ void TitleScene::Update() {
 		
 	}
 
-	testP->Update(timer_, camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro(), emitter_);
+	testP->Update(timer_.get(), camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro(), emitter_);
 
 	camera->Update();
 }
@@ -98,7 +97,7 @@ void TitleScene::Update() {
 void TitleScene::ObjDraw() {
 	skyDome->Draw();
 
-	testP->Draw(timer_, camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro(), emitter_);
+	testP->Draw(timer_.get(), camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro(), emitter_);
 }
 
 void TitleScene::SpriteDraw() {

@@ -1,6 +1,6 @@
 #include "CenterObject.h"
 
-void CenterObject::Init(MeshModel* model, const Timer& timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection)
+void CenterObject::Init(MeshModel* model, const Timer* timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection)
 {
 	meshModel_ = model;
 	emitter_ = std::make_unique<Emitter>(100, 1, 1.0f, 2.5f, 0.5f,
@@ -14,7 +14,7 @@ void CenterObject::Init(MeshModel* model, const Timer& timer, const KMyMath::Mat
 	object_ = std::make_unique<MeshGPUParticle>(timer, matView, matProjection, emitter_.get(), meshModel_);
 }
 
-void CenterObject::Update(const Timer& timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection)
+void CenterObject::Update(const Timer* timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection)
 {
 	float rotPower = 1.0f;
 
@@ -32,7 +32,7 @@ void CenterObject::Update(const Timer& timer, const KMyMath::Matrix4& matView, c
 	object_->Update(timer, matView, matProjection, emitter_.get());
 }
 
-void CenterObject::Draw(const Timer& timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection)
+void CenterObject::Draw(const Timer* timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection)
 {
 	object_->Draw(timer, matView, matProjection, emitter_.get());
 }

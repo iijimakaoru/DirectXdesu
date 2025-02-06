@@ -22,23 +22,23 @@
 class GroundEffectParticle
 {
 public:
-	GroundEffectParticle(const Timer& timer,
+	GroundEffectParticle(const Timer* timer,
 		const KMyMath::Matrix4& matView,
 		const KMyMath::Matrix4& matProjection,
 		Emitter* emitter,
 		MeshModel* model);
 
-	void Init(const Timer& timer,
+	void Init(const Timer* timer,
 		const KMyMath::Matrix4& matView,
 		const KMyMath::Matrix4& matProjection,
 		Emitter* emitter);
 
-	void Update(const Timer& timer,
+	void Update(const Timer* timer,
 		const KMyMath::Matrix4& matView,
 		const KMyMath::Matrix4& matProjection,
 		Emitter* emitter);
 
-	void Draw(const Timer& timer,
+	void Draw(const Timer* timer,
 		const KMyMath::Matrix4& matView,
 		const KMyMath::Matrix4& matProjection,
 		Emitter* emitter);
@@ -48,7 +48,7 @@ private:
 	void BuildRootSignature();
 	void BuildPSOs();
 	void BuildFrameResources();
-	void UpdateMainPassCB(const Timer& timer,
+	void UpdateMainPassCB(const Timer* timer,
 		const KMyMath::Matrix4& matView,
 		const KMyMath::Matrix4& matProjection,
 		Emitter* emitter);

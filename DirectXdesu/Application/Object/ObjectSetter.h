@@ -2,17 +2,17 @@
 #include "CenterObject.h"
 #include "SideObject.h"
 
-const size_t maxObjectNum = 2;
+const size_t maxObjectNum = 6;
 
 class ObjectSetter
 {
 public:
 	// 初期化
-	void Init(const Timer& timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection);
+	void Init(const Timer* timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection);
 	// 更新
-	void Update(const Timer& timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection);
+	void Update(const Timer* timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection);
 	// 描画
-	void Draw(const Timer& timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection);
+	void Draw(const Timer* timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection);
 
 	// オブジェクト配置
 	void SetCenterObject(KMyMath::Vector3& pos, KMyMath::Vector3& rotation, KMyMath::Vector3& scale, KMyMath::Vector4& color);

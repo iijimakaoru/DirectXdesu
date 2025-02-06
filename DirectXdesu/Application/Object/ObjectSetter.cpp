@@ -1,6 +1,6 @@
 #include "ObjectSetter.h"
 
-void ObjectSetter::Init(const Timer& timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection)
+void ObjectSetter::Init(const Timer* timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection)
 {
 	centerModel_ = std::make_unique<MeshModel>("centerObject");
 
@@ -54,7 +54,7 @@ void ObjectSetter::Init(const Timer& timer, const KMyMath::Matrix4& matView, con
 	}
 }
 
-void ObjectSetter::Update(const Timer& timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection)
+void ObjectSetter::Update(const Timer* timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection)
 {
 	centerObject_->Update(timer, matView, matProjection);
 
@@ -91,7 +91,7 @@ void ObjectSetter::Update(const Timer& timer, const KMyMath::Matrix4& matView, c
 	}
 }
 
-void ObjectSetter::Draw(const Timer& timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection)
+void ObjectSetter::Draw(const Timer* timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection)
 {
 	centerObject_->Draw(timer, matView, matProjection);
 

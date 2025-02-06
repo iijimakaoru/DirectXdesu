@@ -1,6 +1,6 @@
 #include "SideObject.h"
 
-void SideObject::Init(MeshModel* model, const Timer& timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection)
+void SideObject::Init(MeshModel* model, const Timer* timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection)
 {
 	meshModel_ = model;
 	emitter_ = std::make_unique<Emitter>(100, 1, 1.0f, 4.5f, 0.5f,
@@ -14,7 +14,7 @@ void SideObject::Init(MeshModel* model, const Timer& timer, const KMyMath::Matri
 	object_ = std::make_unique<MeshGPUParticle>(timer, matView, matProjection, emitter_.get(), meshModel_);
 }
 
-void SideObject::Update(const Timer& timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection)
+void SideObject::Update(const Timer* timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection)
 {
 	MoveUpdate();
 
@@ -23,7 +23,7 @@ void SideObject::Update(const Timer& timer, const KMyMath::Matrix4& matView, con
 	object_->Update(timer, matView, matProjection, emitter_.get());
 }
 
-void SideObject::Draw(const Timer& timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection)
+void SideObject::Draw(const Timer* timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection)
 {
 	object_->Draw(timer, matView, matProjection, emitter_.get());
 }

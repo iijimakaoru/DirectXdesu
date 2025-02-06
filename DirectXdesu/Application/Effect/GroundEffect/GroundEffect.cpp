@@ -1,7 +1,7 @@
 #include "GroundEffect.h"
 #include "Ease.h"
 
-void GroundEffect::Init(MeshModel* model, const Timer& timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection)
+void GroundEffect::Init(MeshModel* model, const Timer* timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection)
 {
 	lifeLimit_ = 10.0f;
 	meshModel_ = model;
@@ -17,7 +17,7 @@ void GroundEffect::Init(MeshModel* model, const Timer& timer, const KMyMath::Mat
 	effect_ = std::make_unique<GroundEffectParticle>(timer, matView, matProjection, emitter_.get(), meshModel_);
 }
 
-void GroundEffect::Update(const Timer& timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection)
+void GroundEffect::Update(const Timer* timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection)
 {
 	if (!isDead)
 	{
@@ -40,7 +40,7 @@ void GroundEffect::Update(const Timer& timer, const KMyMath::Matrix4& matView, c
 	}
 }
 
-void GroundEffect::Draw(const Timer& timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection)
+void GroundEffect::Draw(const Timer* timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection)
 {
 	if (!isDead)
 	{
@@ -53,7 +53,8 @@ bool GroundEffect::GetIsDead()
 	return isDead;
 }
 
-void GroundEffect::SetParticle(KMyMath::Vector3& pos, KMyMath::Vector3& rotation, KMyMath::Vector3& scale, KMyMath::Vector4& color, const Timer& timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection)
+void GroundEffect::SetParticle(KMyMath::Vector3& pos, KMyMath::Vector3& rotation, KMyMath::Vector3& scale, KMyMath::Vector4& color,
+	const Timer* timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection)
 {
 	DirectX::XMFLOAT3 nowPos = MyMathConvert::ChangeVector3toXMfloat3(pos);
 	DirectX::XMFLOAT3 nowRot = MyMathConvert::ChangeVector3toXMfloat3(rotation);

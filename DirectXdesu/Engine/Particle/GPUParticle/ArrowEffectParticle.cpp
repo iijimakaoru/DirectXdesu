@@ -5,13 +5,13 @@
 #include <algorithm>
 #include <future>
 
-ArrowEffectParticle::ArrowEffectParticle(const Timer& timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection, Emitter* emitter, MeshModel* model)
+ArrowEffectParticle::ArrowEffectParticle(const Timer* timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection, Emitter* emitter, MeshModel* model)
 {
 	model_ = model;
 	Init(timer, matView, matProjection, emitter);
 }
 
-void ArrowEffectParticle::Init(const Timer& timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection, Emitter* emitter)
+void ArrowEffectParticle::Init(const Timer* timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection, Emitter* emitter)
 {
 	KDirectXCommon* directXCommon = KDirectXCommon::GetInstance();
 	ID3D12GraphicsCommandList* commndList = directXCommon->GetCommandList();
@@ -85,7 +85,7 @@ void ArrowEffectParticle::Init(const Timer& timer, const KMyMath::Matrix4& matVi
 	directXCommon->BeginCommnd();
 }
 
-void ArrowEffectParticle::Update(const Timer& timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection, Emitter* emitter)
+void ArrowEffectParticle::Update(const Timer* timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection, Emitter* emitter)
 {
 	ID3D12Fence* fence = KDirectXCommon::GetInstance()->GetFence();
 
@@ -106,7 +106,7 @@ void ArrowEffectParticle::Update(const Timer& timer, const KMyMath::Matrix4& mat
 	UpdateMainPassCB(timer, matView, matProjection, emitter);
 }
 
-void ArrowEffectParticle::Draw(const Timer& timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection, Emitter* emitter)
+void ArrowEffectParticle::Draw(const Timer* timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection, Emitter* emitter)
 {
 	KDirectXCommon* directXCommon = KDirectXCommon::GetInstance();
 	ID3D12GraphicsCommandList* commndList = directXCommon->GetCommandList();
@@ -340,7 +340,7 @@ void ArrowEffectParticle::BuildFrameResources()
 	for (auto& f : frameFutures) FrameResources.push_back(f.get());
 }
 
-void ArrowEffectParticle::UpdateMainPassCB(const Timer& timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection, Emitter* emitter)
+void ArrowEffectParticle::UpdateMainPassCB(const Timer* timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection, Emitter* emitter)
 {
 	DirectX::XMMATRIX matScale = DirectX::XMMatrixIdentity();
 	matScale =
@@ -376,8 +376,8 @@ void ArrowEffectParticle::UpdateMainPassCB(const Timer& timer, const KMyMath::Ma
 	auto currentObjectCB = currentFrameResource->ObjectCB.get();
 	currentObjectCB->CopyData(0, objConstants);
 
-	MainTimeCB.DeltaTime = timer.GetDeltaTime();
-	MainTimeCB.TotalTime = timer.GetTotalTime();
+	MainTimeCB.DeltaTime = timer->GetDeltaTime();
+	MainTimeCB.TotalTime = timer->GetTotalTime();
 
 	auto currentTimeCB = currentFrameResource->TimeCB.get();
 	currentTimeCB->CopyData(0, MainTimeCB);

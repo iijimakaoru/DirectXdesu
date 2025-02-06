@@ -1,7 +1,7 @@
 #include "ArrowEffect.h"
 #include "Ease.h"
 
-void ArrowEffect::Init(MeshModel* model, const Timer& timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection)
+void ArrowEffect::Init(MeshModel* model, const Timer* timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection)
 {
 	lifeLimit_ = 20.0f;
 	meshModel_ = model;
@@ -17,7 +17,7 @@ void ArrowEffect::Init(MeshModel* model, const Timer& timer, const KMyMath::Matr
 	effect_ = std::make_unique<ArrowEffectParticle>(timer, matView, matProjection, emitter_.get(), meshModel_);
 }
 
-void ArrowEffect::Update(const Timer& timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection)
+void ArrowEffect::Update(const Timer* timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection)
 {
 	if (!isDead)
 	{
@@ -42,7 +42,7 @@ void ArrowEffect::Update(const Timer& timer, const KMyMath::Matrix4& matView, co
 	}
 }
 
-void ArrowEffect::Draw(const Timer& timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection)
+void ArrowEffect::Draw(const Timer* timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection)
 {
 	if (!isDead)
 	{
@@ -57,7 +57,7 @@ bool ArrowEffect::GetIsDead()
 }
 
 void ArrowEffect::SetParticle(KMyMath::Vector3& pos, KMyMath::Vector3& rotation, KMyMath::Vector3& scale, KMyMath::Vector4& color,
-	const Timer& timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection)
+	const Timer* timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection)
 {
 	startScale_ = scale;
 	endScale_ = { scale.x * 5, scale.y * 2.5f, scale.z * 5 };

@@ -21,7 +21,7 @@
 #include <cassert>
 #include "d3dx12.h"
 
-extern const int gNumberFrameResources;
+const int gNumberFrameResources = 3;
 
 inline void d3dSetDebugName(IDXGIObject* obj, const char* name)
 {

@@ -14,8 +14,6 @@
 
 #include "PostEffectManager.h"
 
-const int gNumberFrameResources = 3;
-
 TitleScene::~TitleScene() { Final(); }
 
 void TitleScene::LoadResources() {

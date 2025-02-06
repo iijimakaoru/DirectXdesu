@@ -2,6 +2,9 @@
 #include "KDirectXCommon.h"
 #include "CreateBlend.h"
 
+#include <algorithm>
+#include <future>
+
 MeshGPUParticle::MeshGPUParticle(const Timer& timer,  const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection, Emitter* emitter, MeshModel* model)
 {
 	model_ = model;
@@ -171,30 +174,32 @@ void MeshGPUParticle::BuildUAV()
 	ID3D12Device* device = directXCommon->GetDevice();
 
 	D3D12_DESCRIPTOR_HEAP_DESC uavHeapDesc = {};
-	uavHeapDesc.NumDescriptors = 2048;
+	uint32_t numDescriptors = std::min<uint32_t>(2048, (uint32_t)model_->GetVertices().size() * 2); // 必要な分だけ確保
+	uavHeapDesc.NumDescriptors = numDescriptors;
 	uavHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
 	uavHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 	ThrowIfFailed(device->CreateDescriptorHeap(&uavHeapDesc, IID_PPV_ARGS(&UAVHeap)));
 
+	std::vector<std::future<void>> futures;
+
+	// 並列
 	// Particle Pool
 	{
-		particlePool_->Create(UAVHeap.Get(), (uint32_t)model_->GetVertices().size());
+		futures.push_back(std::async(std::launch::async, [&] { particlePool_->Create(UAVHeap.Get(), (uint32_t)model_->GetVertices().size()); }));
 	}
-
 	// Dead List
 	{
-		deadList_->Create(UAVHeap.Get(), (uint32_t)model_->GetVertices().size());
+		futures.push_back(std::async(std::launch::async, [&] { deadList_->Create(UAVHeap.Get(), (uint32_t)model_->GetVertices().size()); }));
 	}
-
 	// Draw List
 	{
-		drawList_->Create(UAVHeap.Get(), (uint32_t)model_->GetVertices().size());
+		futures.push_back(std::async(std::launch::async, [&] {drawList_->Create(UAVHeap.Get(), (uint32_t)model_->GetVertices().size()); }));
 	}
-
 	// Draw Args
 	{
-		drawArgs_->Create(UAVHeap.Get());
+		futures.push_back(std::async(std::launch::async, [&] {drawArgs_->Create(UAVHeap.Get()); }));
 	}
+	for (auto& f : futures) f.get();  // 全ての処理を待つ
 
 	// Mesh
 	{
@@ -276,46 +281,63 @@ void MeshGPUParticle::BuildPSOs()
 		graphicPSO_->Create(device);
 	}
 
+	std::vector<std::future<void>> psoFutures;
+
 	// EmitCS
 	{
-		emitPSO_->CreateShader(L"MeshGPUParticle/MeshEmitCS.hlsl", "main");
-		emitPSO_->SetRootSignature(particleRootSignature_.get());
-		emitPSO_->SetFlag(D3D12_PIPELINE_STATE_FLAG_NONE);
-		emitPSO_->Create(device);
+		psoFutures.push_back(std::async(std::launch::async, [&] { 
+			emitPSO_->CreateShader(L"MeshGPUParticle/MeshEmitCS.hlsl", "main");
+			emitPSO_->SetRootSignature(particleRootSignature_.get());
+			emitPSO_->SetFlag(D3D12_PIPELINE_STATE_FLAG_NONE);
+			emitPSO_->Create(device);
+			}));
 	}
 
 	// UpdateCS
 	{
-		updatePSO_->CreateShader(L"MeshGPUParticle/MeshUpdateCS.hlsl", "main");
-		updatePSO_->SetRootSignature(particleRootSignature_.get());
-		updatePSO_->SetFlag(D3D12_PIPELINE_STATE_FLAG_NONE);
-		updatePSO_->Create(device);
+		psoFutures.push_back(std::async(std::launch::async, [&] {
+			updatePSO_->CreateShader(L"MeshGPUParticle/MeshUpdateCS.hlsl", "main");
+			updatePSO_->SetRootSignature(particleRootSignature_.get());
+			updatePSO_->SetFlag(D3D12_PIPELINE_STATE_FLAG_NONE);
+			updatePSO_->Create(device);
+			}));
 	}
 
 	// CopyDrawCountCS
 	{
-		copyDrawPSO_->CreateShader(L"MeshGPUParticle/MeshCopyDrawCountCS.hlsl", "main");
-		copyDrawPSO_->SetRootSignature(particleRootSignature_.get());
-		copyDrawPSO_->SetFlag(D3D12_PIPELINE_STATE_FLAG_NONE);
-		copyDrawPSO_->Create(device);
+		psoFutures.push_back(std::async(std::launch::async, [&] {
+			copyDrawPSO_->CreateShader(L"MeshGPUParticle/MeshCopyDrawCountCS.hlsl", "main");
+			copyDrawPSO_->SetRootSignature(particleRootSignature_.get());
+			copyDrawPSO_->SetFlag(D3D12_PIPELINE_STATE_FLAG_NONE);
+			copyDrawPSO_->Create(device);
+			}));
 	}
 
 	// DeadListInitCS
 	{
-		deadListPSO_->CreateShader(L"MeshGPUParticle/MeshDeadListInitCS.hlsl", "main");
-		deadListPSO_->SetRootSignature(particleRootSignature_.get());
-		deadListPSO_->SetFlag(D3D12_PIPELINE_STATE_FLAG_NONE);
-		deadListPSO_->Create(device);
+		psoFutures.push_back(std::async(std::launch::async, [&] {
+			deadListPSO_->CreateShader(L"MeshGPUParticle/MeshDeadListInitCS.hlsl", "main");
+			deadListPSO_->SetRootSignature(particleRootSignature_.get());
+			deadListPSO_->SetFlag(D3D12_PIPELINE_STATE_FLAG_NONE);
+			deadListPSO_->Create(device);
+			}));
 	}
+
+	for (auto& f : psoFutures) f.get();
 }
 
 void MeshGPUParticle::BuildFrameResources()
 {
 	ID3D12Device* device = KDirectXCommon::GetInstance()->GetDevice();
+	std::vector<std::future<std::unique_ptr<FrameResource>>> frameFutures;
 	for (int i = 0; i < gNumberFrameResources; ++i)
 	{
-		FrameResources.push_back(std::make_unique<FrameResource>(device, 1, 1, 1));
+		frameFutures.push_back(std::async(std::launch::async, [device]() 
+			{
+			return std::make_unique<FrameResource>(device, 1, 1, 1);
+			}));
 	}
+	for (auto& f : frameFutures) FrameResources.push_back(f.get());
 }
 
 void MeshGPUParticle::UpdateMainPassCB(const Timer& timer,

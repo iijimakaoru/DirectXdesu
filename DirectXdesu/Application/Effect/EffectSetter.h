@@ -26,11 +26,11 @@ private:
 
 private:
 	std::unique_ptr<MeshModel> arrowModel_;
-	//std::array<std::unique_ptr<ArrowEffect>, maxEffectNum> arrowEffect_;
-	std::list<std::unique_ptr<ArrowEffect>> arrowEffect_;
+	std::array<std::unique_ptr<ArrowEffect>, maxEffectNum> arrowEffect_;
+	//std::list<std::unique_ptr<ArrowEffect>> arrowEffect_;
 
 	std::unique_ptr<MeshModel> groundModel_;
-	//std::array<std::unique_ptr<GroundEffect>, maxEffectNum> groundEffect_;
-	std::list<std::unique_ptr<GroundEffect>> groundEffect_;
+	std::array<std::unique_ptr<GroundEffect>, maxEffectNum> groundEffect_;
+	//std::list<std::unique_ptr<GroundEffect>> groundEffect_;
 };
 

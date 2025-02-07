@@ -830,7 +830,6 @@
       <Filter>シェーダー</Filter>
     </FxCompile>
     <FxCompile Include="Resources\Shader\GPUParticle\UpdateCS.hlsl" />
-    <FxCompile Include="Resources\Shader\GPUParticle\CopyDrawCountCS.hlsl" />
     <FxCompile Include="Resources\Shader\GPUParticle\DeadListInitCS.hlsl" />
     <FxCompile Include="Resources\Shader\GPUParticle\EmitCS.hlsl" />
     <FxCompile Include="Resources\Shader\MeshGPUParticle\MeshCopyDrawCountCS.hlsl" />
@@ -840,5 +839,8 @@
     <FxCompile Include="Resources\Shader\MeshGPUParticle\MeshGPUParticlePS.hlsl" />
     <FxCompile Include="Resources\Shader\MeshGPUParticle\MeshGPUParticleVS.hlsl" />
     <FxCompile Include="Resources\Shader\MeshGPUParticle\MeshUpdateCS.hlsl" />
+    <FxCompile Include="Resources\Shader\GPUParticle\CopyDrawCountCS.hlsl">
+      <Filter>リソース ファイル</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

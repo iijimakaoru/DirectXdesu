@@ -194,11 +194,30 @@ void GameScene::Init() {
 	texData = TextureManager::GetInstance()->GetTextures("Resources/texture/boss1.png");
 
 	playerTrans.SetPos({ 0,87,-110 });
+	
+
 }
 
 void GameScene::Update() {
 
-	
+	if (input->IsPush(DIK_R))
+	{
+		initialePoseSet = true;
+		initializetime_ = std::chrono::system_clock::now();
+	}
+
+
+	if (initialePoseSet)
+	{
+		player->InitializePose();
+		initializeCount_ = std::chrono::system_clock::now();
+		std::chrono::seconds sec = std::chrono::duration_cast<std::chrono::seconds>(initializeCount_ - initializetime_);
+		if (sec > std::chrono::seconds{ 5 })
+		{
+			initialePoseSet = false;
+		}
+	}
+
 	light_->SetLightRGB({lightRGB_.x, lightRGB_.y, lightRGB_.z});
 	light_->SetLightDir({lightDir_.x, lightDir_.y, lightDir_.z, 0.0f});
 

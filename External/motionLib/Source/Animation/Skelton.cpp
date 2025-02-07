@@ -1,6 +1,7 @@
 #include <Animation/Skelton.h>
 #include <Math/MVector3.h>
 #include <Animation/AnimationModelManager.h>
+#include <DirectXMath.h>
 
 using namespace MCBM;
 using namespace std;
@@ -25,7 +26,7 @@ void MCBM::Skelton::Initialize()
 {
 	captureManager = std::make_unique<MCBM::CaptureManager>();
 
-	captureManager->Initialize();
+	captureManager->Initialize(CAMERA_NUM);
 }
 
 
@@ -629,6 +630,7 @@ Skelton& MCBM::Skelton::SetDataFromLoader(const PHONONLOADER::P_MODEL_DATA& mode
 
 	for (auto& bone : bones_)
 	{
+		bone->SetInitializeTransformData();
 		for (auto& name : *bone->GetChildrenName())
 		{
 			Bone* child = GetBone(name);
@@ -664,4 +666,9 @@ void MCBM::Skelton::CaptureUpDate(std::vector<YOLO_POSE_INDEX> rootBoneNames)
 	}
 	float temp = 0;
 	boneAnimTransform(temp, nullptr, true, true);
+}
+
+void MCBM::Skelton::InitializePoseData()
+{
+	captureManager->InitializePose();
 }

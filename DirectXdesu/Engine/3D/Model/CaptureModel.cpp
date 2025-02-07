@@ -86,6 +86,12 @@ void CaptureModel::UpdateMatrix()
 	}
 }
 
+void CaptureModel::InitializePose()
+{
+	skelton->InitializePoseData();
+}
+
+
 void CaptureModel::_SetModelData(const MCBM::M_MODEL_OUT& data)
 {
 	m_meshes.resize(data.meshs_.size());

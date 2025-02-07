@@ -479,6 +479,16 @@ void YOLOPoseEstimationImp::createCameraExtrinsics(const YVector3& direction,flo
 
 void YOLOPoseEstimationImp::CalclateFinalCaptureDataFromCalibrateData(){
 
+
+	if ( m_pCams.size() <= 1 )
+	{
+		for ( size_t i = 0; i < ( int32_t ) YOLO_POSE_INDEX::YOLO_POSE_INDEX_MAX; i++ )
+		{
+			finalCaptureData_[( YOLO_POSE_INDEX )i] = capturedata_[ Locate::FRONT ][ ( YOLO_POSE_INDEX ) i ].captureBonePos;
+			finalCaptureData_[ ( YOLO_POSE_INDEX ) i ].z = 0;
+		}
+		return;
+	}
 	cv::Mat R1,t1;
 	createCameraExtrinsics(cameraPosition_[Locate::FRONT],cameradist[Locate::FRONT],R1,t1);
 

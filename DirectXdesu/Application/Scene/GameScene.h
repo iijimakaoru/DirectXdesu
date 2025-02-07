@@ -136,6 +136,10 @@ private:
 	int score[3];
 	int combo;
 
+	bool initialePoseSet = false;
+	std::chrono::system_clock::time_point initializetime_;
+	std::chrono::system_clock::time_point initializeCount_;
+
 	std::unique_ptr<CaptureModel> player;
 	Transform playerTrans;
 

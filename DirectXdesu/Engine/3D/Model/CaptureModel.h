@@ -92,6 +92,9 @@ public:
 	void Draw();
 
 	void UpdateMatrix();
+
+	void InitializePose();
+
 private:
 
 	void _SetModelData(const MCBM::M_MODEL_OUT& data);

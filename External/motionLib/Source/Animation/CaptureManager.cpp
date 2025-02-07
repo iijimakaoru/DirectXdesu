@@ -3,8 +3,15 @@
 
 using namespace MCBM;
 
-void CaptureManager::Initialize()
+void CaptureManager::Initialize(int32_t cameraNum)
 {
+	cameraNum_ = cameraNum;
+
+	if (cameraNum > Locate::MAX_LOCATE)
+	{
+		cameraNum = Locate::MAX_LOCATE;
+	}
+
 	YOLOPoseEstimation* yolo = CreateYOLOPoseEstimation();
 
 	m_YOLOPoseEstimation_.reset(std::move(yolo));
@@ -12,7 +19,7 @@ void CaptureManager::Initialize()
 	m_YOLOPoseEstimation_->ModelInitialize(modelPath_.c_str());
 
 
-	for ( int32_t i = 0; i < Locate::MAX_LOCATE; i++ )
+	for ( int32_t i = 0; i < cameraNum_; i++ )
 	{
 		capdatas[ i ].SetYOLOEstimation(m_YOLOPoseEstimation_.get());
 		capdatas[ i ].Initialize(static_cast< int32_t >( i + cameraFirstIndex));
@@ -98,7 +105,7 @@ void CaptureManager::Initialize()
 
 void CaptureManager::Update()
 {
-	for ( size_t i = 0; i < Locate::MAX_LOCATE; i++ )
+	for ( size_t i = 0; i < cameraNum_; i++ )
 	{
 		capdatas[ i ].Update();
 	}
@@ -114,7 +121,7 @@ void CaptureManager::Update()
 
 void CaptureManager::InitializePose()
 {
-	for ( int32_t i = 0; i < Locate::MAX_LOCATE; i++ )
+	for ( int32_t i = 0; i < cameraNum_; i++ )
 	{
 		capdatas[ i ].Update();
 	}
@@ -133,7 +140,7 @@ void CaptureManager::InitializePose()
 void MCBM::CaptureManager::Finalize()
 {
 
-	for ( int32_t i = 0; i < Locate::MAX_LOCATE; i++ )
+	for ( int32_t i = 0; i < cameraNum_; i++ )
 	{
 		capdatas[ i ].Finalize();
 	}

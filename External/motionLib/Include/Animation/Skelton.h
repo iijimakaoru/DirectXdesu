@@ -30,6 +30,8 @@ namespace MCBM
 		Matrix globalInverseTransform;
 
 		bool canAnimation = false;
+
+		const int32_t CAMERA_NUM = 1;
 	private:
 
 		void AddBone(std::unique_ptr<Bone> bone);
@@ -102,6 +104,9 @@ namespace MCBM
 		void UpDate(std::vector<YOLO_POSE_INDEX> rootBoneNames,float& timeInSeconds, const std::string& currentAnimation = "Tpose", bool loop = true, bool animtionPositionRock = true);
 
 		void CaptureUpDate(std::vector<YOLO_POSE_INDEX> rootBoneNames);
+
+		void InitializePoseData();
+
 		void Finalize();
 
 		/// <summary>

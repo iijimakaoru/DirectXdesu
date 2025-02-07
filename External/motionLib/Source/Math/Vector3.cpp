@@ -291,14 +291,14 @@ MVector3 MCBM::operator-(const MVector3& vecA)
 
 
 MVector3 MVector3::adjustVectorLength(const MVector3& base, const MVector3& target) {
-	// ベースベクトルの長さを取得
-	double baseLength = base.V3Len();
+	// ベースベクトルの長さの2乗を計算
+	double baseLengthSquared = base.x * base.x + base.y * base.y;
 
-	// targetのxy平面での長さを計算
-	double xyLength = std::sqrt(target.x * target.x + target.y * target.y);
+	// targetのxy成分の長さの2乗を計算（zは0）
+	double targetXYLengthSquared = target.x * target.x + target.y * target.y;
 
-	// 必要なz成分を計算
-	double requiredZ = std::sqrt(std::abs(baseLength * baseLength - xyLength * xyLength));
+	// 必要なz成分を計算（sqrt計算を1回に削減）
+	double requiredZ = std::sqrt(baseLengthSquared - targetXYLengthSquared);
 
 	// 新しいベクトルを返す
 	return MVector3(target.x, target.y, requiredZ);

@@ -205,8 +205,7 @@ void GameScene::Update() {
 		initialePoseSet = true;
 		initializetime_ = std::chrono::system_clock::now();
 	}
-	
-	player->
+
 
 	if (initialePoseSet)
 	{

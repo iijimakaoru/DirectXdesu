@@ -93,12 +93,12 @@ void CaptureModel::InitializePose()
 
 MCBM::MVector3 CaptureModel::GetCapturePos(YOLO_POSE_INDEX key, Locate cameraLocate)
 {
-	skelton->GetCapturePos(key, cameraLocate);
+	return skelton->GetCapturePos(key, cameraLocate);
 }
 
 MCBM::MVector3 CaptureModel::GetCapturePosFromThreeD(YOLO_POSE_INDEX key)
 {
-	skelton->GetCaptureThreeDimensionPos(key);
+	return skelton->GetCaptureThreeDimensionPos(key);
 }
 
 

@@ -37,6 +37,8 @@ namespace MCBM
 
 		MVector3 Clamp(const MVector3& vec1, const MVector3& min, const MVector3& max, bool* isClamped = nullptr);
 
+		MVector3 adjustVectorLength(const MVector3& base, const MVector3& target);
+
 	};
 	MVector3 operator+(const MVector3& vecA, const MVector3& vecB);
 	bool operator!=(const MVector3& vecA, const MVector3& vecB);

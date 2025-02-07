@@ -107,7 +107,11 @@ const std::vector<Matrix> MCBM::Skelton::GetMeshBoneData(int32_t meshIndex)
 
 void MCBM::Skelton::CaptureBoneUpdate(YOLO_POSE_INDEX rootBoneName, uint32_t boneCount)
 {
-
+	if (CAMERA_NUM <= 1)
+	{
+		CaptureBoneUpdateTwoDimention(rootBoneName,boneCount);
+		return;
+	}
 	CaptureData rootCap = captureManager->GetCaptureData(rootBoneName);
 	MVector3 tempVec;
 	for (int i = 0; i < boneCount; i++)
@@ -158,6 +162,63 @@ void MCBM::Skelton::CaptureBoneUpdate(YOLO_POSE_INDEX rootBoneName, uint32_t bon
 
 
 	}
+}
+
+void MCBM::Skelton::CaptureBoneUpdateTwoDimention(YOLO_POSE_INDEX rootBoneName, uint32_t boneCount)
+{
+	CaptureData rootCap = captureManager->GetCaptureData(rootBoneName);
+	MVector3 tempVec;
+	for (int i = 0; i < boneCount; i++)
+	{
+		Bone* rootBone = GetBone(rootCap.captureBoneName);
+
+		if (rootCap.captureChildren.empty())
+		{
+			break;
+		}
+
+		for (int k = 0; k < 1; k++)
+		{
+
+			CaptureData* child = rootCap.captureChildren[k];
+			MVector3 initializeBone = MVector3(rootCap.initializedCaptureBonePos, child->initializedCaptureBonePos);
+			MVector3 nowBone = MVector3(rootCap.captureBonePos, child->captureBonePos);
+
+			MVector3 estimationZBone = nowBone.adjustVectorLength(initializeBone, nowBone);
+
+			initializeBone.V3Norm();
+
+			estimationZBone.V3Norm();
+
+			if (i != 0)
+			{
+				initializeBone = tempVec;
+			}
+
+			tempVec = estimationZBone;
+
+			MVector3 axis = estimationZBone.GetV3Cross(initializeBone);
+			float dotRadian = estimationZBone.GetV3Dot(initializeBone);
+			float rotation = acos(dotRadian);
+
+			if (!isfinite(rotation))
+			{
+				rotation = 0;
+			}
+			axis.V3Norm();
+
+			MQuaternion q(axis, rotation);
+			q.Normalize();
+			rootBone->SetRotation(rootBone->GetInitializeRotation());
+			MQuaternion temp = q.GetDirectProduct(rootBone->GetRotation(), q);
+			temp.Normalize();
+			rootBone->SetRotation(temp);
+		}
+		rootCap = *rootCap.captureChildren[0];
+
+
+	}
+
 }
 
 

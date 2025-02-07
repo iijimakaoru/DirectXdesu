@@ -57,6 +57,7 @@ namespace MCBM
 		/// <param name="rootBoneName">キャプチャさせたい根本のKey(例:YOLO_POSE_INDEX::SHOULDER_L)</param>
 		/// <param name="boneCount">どのくらい先端のボーンまでやるか。腕なら2で良い</param>
 		void CaptureBoneUpdate(YOLO_POSE_INDEX rootBoneName, uint32_t boneCount = 2);
+		void CaptureBoneUpdateTwoDimention(YOLO_POSE_INDEX rootBoneName, uint32_t boneCount = 2);
 
 		void readAnimNodeHeirarchy(float animationTime, Bone* pNode, bool& animationPositionRock, Animation* currentAnimationPtr = nullptr);//実際に階層構造読み込んでAnimationの計算をする関数
 

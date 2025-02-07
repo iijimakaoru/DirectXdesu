@@ -16,8 +16,10 @@ void GPUParticle::Init(const Timer& timer,
 	Emitter* emitter)
 {
 	KDirectXCommon* directXCommon = KDirectXCommon::GetInstance();
-	ID3D12GraphicsCommandList* commndList = directXCommon->GetCommandList();
-	ID3D12CommandQueue* commndQueue = directXCommon->GetCommandQueue();
+	ID3D12GraphicsCommandList* commandList = directXCommon->GetCommandListCompute();
+	ID3D12CommandQueue* commandQueue = directXCommon->GetCommandQueueCompute();
+	ID3D12CommandAllocator* commandAllocator = directXCommon->GetCommandAllocatorCompute();
+	ID3D12Fence* fence = KDirectXCommon::GetInstance()->GetFenceMain();
 
 	rootSignature_ = std::make_unique<RootSignature>();
 	particleRootSignature_ = std::make_unique<RootSignature>();
@@ -38,19 +40,17 @@ void GPUParticle::Init(const Timer& timer,
 	BuildPSOs();
 
 	// 初期化コマンドを実行する
-	ThrowIfFailed(commndList->Close());
-	ID3D12CommandList* cmdsLists[] = { commndList };
-	commndQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
+	ThrowIfFailed(commandList->Close());
+	ID3D12CommandList* cmdsLists[] = { commandList };
+	commandQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
 
-	directXCommon->FlashCommndQueue();
+	directXCommon->FlashCommandQueue();
 
-	ThrowIfFailed(directXCommon->GetCommandAllocator()->Reset());
+	ThrowIfFailed(commandAllocator->Reset());
 
-	ThrowIfFailed(
-		directXCommon->GetCommandList()->Reset(directXCommon->GetCommandAllocator().Get(),
-			deadListPSO_->GetPipelineState()));
+	ThrowIfFailed(commandList->Reset(commandAllocator, deadListPSO_->GetPipelineState()));
 
-	directXCommon->GetCommandList()->SetComputeRootSignature(particleRootSignature_->GetRootSignature());
+	commandList->SetComputeRootSignature(particleRootSignature_->GetRootSignature());
 
 	currentFrameResourceIndex = (currentFrameResourceIndex + 1) % gNumberFrameResources;
 	currentFrameResource = FrameResources[currentFrameResourceIndex].get();
@@ -58,33 +58,33 @@ void GPUParticle::Init(const Timer& timer,
 	UpdateMainPassCB(timer, matView, matProjection,emitter);
 
 	ID3D12DescriptorHeap* descriptorHeaps[] = { UAVHeap.Get() };
-	commndList->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);
+	commandList->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);
 
 	auto objectCB = currentFrameResource->ObjectCB->Resource();
-	commndList->SetComputeRootConstantBufferView(0, objectCB->GetGPUVirtualAddress());
+	commandList->SetComputeRootConstantBufferView(0, objectCB->GetGPUVirtualAddress());
 
 	auto timeCB = currentFrameResource->TimeCB->Resource();
-	commndList->SetComputeRootConstantBufferView(1, timeCB->GetGPUVirtualAddress());
+	commandList->SetComputeRootConstantBufferView(1, timeCB->GetGPUVirtualAddress());
 
 	auto particleCB = currentFrameResource->ParticleCB->Resource();
-	commndList->SetComputeRootConstantBufferView(2, particleCB->GetGPUVirtualAddress());
+	commandList->SetComputeRootConstantBufferView(2, particleCB->GetGPUVirtualAddress());
 
-	commndList->SetComputeRootDescriptorTable(3, particlePool_->GetGPUUAV());
-	commndList->SetComputeRootDescriptorTable(4, deadList_->GetGPUUAV());
-	commndList->SetComputeRootDescriptorTable(5, drawList_->GetGPUUAV());
-	commndList->SetComputeRootDescriptorTable(6, drawArgs_->GetGPUUAV());
+	commandList->SetComputeRootDescriptorTable(3, particlePool_->GetGPUUAV());
+	commandList->SetComputeRootDescriptorTable(4, deadList_->GetGPUUAV());
+	commandList->SetComputeRootDescriptorTable(5, drawList_->GetGPUUAV());
+	commandList->SetComputeRootDescriptorTable(6, drawArgs_->GetGPUUAV());
 
-	commndList->Dispatch(emitter->GetMaxParticles(), 1, 1);
+	commandList->Dispatch(emitter->GetMaxParticles(), 1, 1);
 
-	ThrowIfFailed(commndList->Close());
+	ThrowIfFailed(commandList->Close());
 
 	// コマンドリストを実行キューに追加します。
-	ID3D12CommandList* cmdsLists1[] = { commndList };
-	commndQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists1);
+	ID3D12CommandList* cmdsLists1[] = { commandList };
+	commandQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists1);
 
-	directXCommon->FlashCommndQueue();
+	directXCommon->FlashCommandQueue();
 
-	directXCommon->BeginCommnd();
+	directXCommon->BeginCommnd(commandList,commandAllocator);
 }
 
 void GPUParticle::Update(const Timer& timer,
@@ -93,7 +93,7 @@ void GPUParticle::Update(const Timer& timer,
 	Emitter* emitter)
 {
 	KDirectXCommon* directXCommon = KDirectXCommon::GetInstance();
-	ID3D12Fence* fence = directXCommon->GetFence();
+	ID3D12Fence* fence = directXCommon->GetFenceMain();
 
 	// 円形のフレーム リソース配列を循環します。
 	currentFrameResourceIndex = (currentFrameResourceIndex + 1) % gNumberFrameResources;
@@ -120,7 +120,7 @@ void GPUParticle::Draw(const Timer& timer,
 	Emitter* emitter)
 {
 	KDirectXCommon* directXCommon = KDirectXCommon::GetInstance();
-	ID3D12GraphicsCommandList* commndList = directXCommon->GetCommandList();
+	ID3D12GraphicsCommandList* commndList = directXCommon->GetCommandListCompute();
 
 	auto currentCommandListAllocator = currentFrameResource->commandListAllocator;
 
@@ -293,7 +293,6 @@ void GPUParticle::BuildRootSignature()
 
 void GPUParticle::BuildPSOs()
 {
-	//KDirectXCommon* directXCommon = KDirectXCommon::GetInstance();
 	ID3D12Device* device = KDirectXCommon::GetInstance()->GetDevice();
 
 	// Graphic

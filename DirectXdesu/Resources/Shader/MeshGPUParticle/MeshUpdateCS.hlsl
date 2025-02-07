@@ -37,7 +37,7 @@ void main(uint id : SV_DispatchThreadID)
     ParticlePool[id.x] = particle;
 
 	// 新しく死んだ？
-    if (particle.Alive == 0.0f)
+    if (particle.Alive <= 0.0f)
     {
 		// デッドリストに追加
         ADeadList.Append(id.x);

@@ -893,10 +893,10 @@ KGPlin* KGPlin::Create(KShader shader, std::string shaderName) {
 
 void KGPlin::Update(D3D12_PRIMITIVE_TOPOLOGY primitive) {
 	// パイプラインステートとルートシグネチャの設定コマンド
-	KDirectXCommon::GetInstance()->GetCommandList()->SetPipelineState(pipelineState.Get());
-	KDirectXCommon::GetInstance()->GetCommandList()->IASetPrimitiveTopology(primitive);
+	KDirectXCommon::GetInstance()->GetCommandListMain()->SetPipelineState(pipelineState.Get());
+	KDirectXCommon::GetInstance()->GetCommandListMain()->IASetPrimitiveTopology(primitive);
 }
 
 void KGPlin::Setting() {
-	KDirectXCommon::GetInstance()->GetCommandList()->SetGraphicsRootSignature(rootSignature.Get());
+	KDirectXCommon::GetInstance()->GetCommandListMain()->SetGraphicsRootSignature(rootSignature.Get());
 }

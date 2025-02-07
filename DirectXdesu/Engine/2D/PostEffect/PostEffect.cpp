@@ -13,7 +13,7 @@ void BasePostEffect::StaticInit() {
 
 	window = KWinApp::GetInstance();
 
-	cmdList = KDirectXCommon::GetInstance()->GetCommandList();
+	cmdList = KDirectXCommon::GetInstance()->GetCommandListMain();
 }
 
 void BasePostEffect::Init() {

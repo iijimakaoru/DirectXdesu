@@ -14,8 +14,10 @@ MeshGPUParticle::MeshGPUParticle(const Timer* timer,  const KMyMath::Matrix4& ma
 void MeshGPUParticle::Init(const Timer* timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection, Emitter* emitter)
 {
 	KDirectXCommon* directXCommon = KDirectXCommon::GetInstance();
-	ID3D12GraphicsCommandList* commndList = directXCommon->GetCommandList();
-	ID3D12CommandQueue* commndQueue = directXCommon->GetCommandQueue();
+	ID3D12GraphicsCommandList* commandList = directXCommon->GetCommandListCompute();
+	ID3D12CommandAllocator* commandAllocator = directXCommon->GetCommandAllocatorCompute();
+	ID3D12CommandQueue* commandQueue = directXCommon->GetCommandQueueCompute();
+	ID3D12Fence* fence = KDirectXCommon::GetInstance()->GetFenceMain();
 
 	rootSignature_ = std::make_unique<RootSignature>();
 	particleRootSignature_ = std::make_unique<RootSignature>();
@@ -36,18 +38,17 @@ void MeshGPUParticle::Init(const Timer* timer, const KMyMath::Matrix4& matView, 
 	BuildPSOs();
 
 	// 初期化コマンドを実行する
-	ThrowIfFailed(commndList->Close());
-	ID3D12CommandList* cmdsLists[] = { commndList };
-	commndQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
+	ThrowIfFailed(commandList->Close());
+	ID3D12CommandList* cmdsLists[] = { commandList };
+	commandQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
 
-	directXCommon->FlashCommndQueue();
+	directXCommon->FlashCommandQueue();
 
-	ThrowIfFailed(directXCommon->GetCommandAllocator()->Reset());
+	ThrowIfFailed(commandAllocator->Reset());
 
-	ThrowIfFailed(directXCommon->GetCommandList()->Reset(
-		directXCommon->GetCommandAllocator().Get(), deadListPSO_->GetPipelineState()));
+	ThrowIfFailed(commandList->Reset(commandAllocator, deadListPSO_->GetPipelineState()));
 
-	directXCommon->GetCommandList()->SetComputeRootSignature(particleRootSignature_->GetRootSignature());
+	commandList->SetComputeRootSignature(particleRootSignature_->GetRootSignature());
 
 	currentFrameResourceIndex = (currentFrameResourceIndex + 1) % gNumberFrameResources;
 	currentFrameResource = FrameResources[currentFrameResourceIndex].get();
@@ -55,39 +56,41 @@ void MeshGPUParticle::Init(const Timer* timer, const KMyMath::Matrix4& matView, 
 	UpdateMainPassCB(timer, matView, matProjection, emitter);
 
 	ID3D12DescriptorHeap* descriptorHeaps[] = { UAVHeap.Get() };
-	commndList->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);
+	commandList->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);
 
 	auto objectCB = currentFrameResource->ObjectCB->Resource();
-	commndList->SetComputeRootConstantBufferView(0, objectCB->GetGPUVirtualAddress());
+	commandList->SetComputeRootConstantBufferView(0, objectCB->GetGPUVirtualAddress());
 
 	auto timeCB = currentFrameResource->TimeCB->Resource();
-	commndList->SetComputeRootConstantBufferView(1, timeCB->GetGPUVirtualAddress());
+	commandList->SetComputeRootConstantBufferView(1, timeCB->GetGPUVirtualAddress());
 
 	auto particleCB = currentFrameResource->ParticleCB->Resource();
-	commndList->SetComputeRootConstantBufferView(2, particleCB->GetGPUVirtualAddress());
+	commandList->SetComputeRootConstantBufferView(2, particleCB->GetGPUVirtualAddress());
 
-	commndList->SetComputeRootDescriptorTable(3, particlePool_->GetGPUUAV());
-	commndList->SetComputeRootDescriptorTable(4, deadList_->GetGPUUAV());
-	commndList->SetComputeRootDescriptorTable(5, drawList_->GetGPUUAV());
-	commndList->SetComputeRootDescriptorTable(6, drawArgs_->GetGPUUAV());
-	commndList->SetComputeRootDescriptorTable(7, MeshSRV);
+	commandList->SetComputeRootDescriptorTable(3, particlePool_->GetGPUUAV());
+	commandList->SetComputeRootDescriptorTable(4, deadList_->GetGPUUAV());
+	commandList->SetComputeRootDescriptorTable(5, drawList_->GetGPUUAV());
+	commandList->SetComputeRootDescriptorTable(6, drawArgs_->GetGPUUAV());
+	commandList->SetComputeRootDescriptorTable(7, MeshSRV);
 
-	commndList->Dispatch(static_cast<uint32_t>(model_->GetVertices().size() / 1024 + 1), 1, 1);
+	commandList->Dispatch(static_cast<uint32_t>(model_->GetVertices().size() / 1024 + 1), 1, 1);
 
-	ThrowIfFailed(commndList->Close());
+	ThrowIfFailed(commandList->Close());
 
 	// コマンドリストを実行キューに追加します
-	ID3D12CommandList* cmdsLists1[] = { commndList };
-	commndQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists1);
+	ID3D12CommandList* cmdsLists1[] = { commandList };
+	commandQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists1);
 
-	directXCommon->FlashCommndQueue();
+	directXCommon->FlashCommandQueue();
 
-	directXCommon->BeginCommnd();
+	directXCommon->BeginCommnd(commandList, commandAllocator);
 }
 
 void MeshGPUParticle::Update(const Timer* timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection, Emitter* emitter)
 {
-	ID3D12Fence* fence = KDirectXCommon::GetInstance()->GetFence();
+	KDirectXCommon* directXCommon = KDirectXCommon::GetInstance();
+	ID3D12CommandQueue* commandQueue = directXCommon->GetCommandQueueCompute();
+	ID3D12Fence* fence = directXCommon->GetFenceMain();
 
 	// 円形のフレーム リソース配列を循環します
 	currentFrameResourceIndex = (currentFrameResourceIndex + 1) % gNumberFrameResources;
@@ -104,18 +107,23 @@ void MeshGPUParticle::Update(const Timer* timer, const KMyMath::Matrix4& matView
 	}
 
 	UpdateMainPassCB(timer, matView, matProjection, emitter);
+
+	directXCommon->FlashCommandQueue();
 }
 
 void MeshGPUParticle::Draw(const Timer* timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection, Emitter* emitter)
 {
-	KDirectXCommon* directXCommon = KDirectXCommon::GetInstance();
-	ID3D12GraphicsCommandList* commndList = directXCommon->GetCommandList();
+	ID3D12GraphicsCommandList* commndList = KDirectXCommon::GetInstance()->GetCommandListCompute();
 
 	auto currentCommandListAllocator = currentFrameResource->commandListAllocator;
 
 	if (!init) 
 	{
 		init = true;
+		
+	}
+
+	{
 		commndList->SetPipelineState(emitPSO_->GetPipelineState());
 		commndList->SetComputeRootSignature(particleRootSignature_->GetRootSignature());
 
@@ -138,7 +146,8 @@ void MeshGPUParticle::Draw(const Timer* timer, const KMyMath::Matrix4& matView, 
 		commndList->SetComputeRootDescriptorTable(7, MeshSRV);
 
 		UpdateMainPassCB(timer, matView, matProjection, emitter);
-		commndList->Dispatch(static_cast<uint32_t>(model_->GetVertices().size() / 1024 + 1), 1, 1);
+		uint32_t vertexSize = static_cast<uint32_t>(model_->GetVertices().size() / 1024 + 1);
+		commndList->Dispatch(vertexSize, 1, 1);
 	}
 
 	drawList_->Translation(commndList, D3D12_RESOURCE_STATE_COPY_DEST);
@@ -174,7 +183,7 @@ void MeshGPUParticle::BuildUAV()
 	ID3D12Device* device = directXCommon->GetDevice();
 
 	D3D12_DESCRIPTOR_HEAP_DESC uavHeapDesc = {};
-	uint32_t numDescriptors = std::min<uint32_t>(2048, (uint32_t)model_->GetVertices().size() * 2); // 必要な分だけ確保
+	uint32_t numDescriptors = std::min<uint32_t>(2048, (uint32_t)model_->GetVertices().size()); // 必要な分だけ確保
 	uavHeapDesc.NumDescriptors = numDescriptors;
 	uavHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
 	uavHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
@@ -402,7 +411,7 @@ void MeshGPUParticle::UpdateMainPassCB(const Timer* timer,
 
 void MeshGPUParticle::ParticleUpdate()
 {
-	ID3D12GraphicsCommandList* commndList = KDirectXCommon::GetInstance()->GetCommandList();
+	ID3D12GraphicsCommandList* commndList = KDirectXCommon::GetInstance()->GetCommandListCompute();
 
 	commndList->SetPipelineState(updatePSO_->GetPipelineState());
 	commndList->SetComputeRootSignature(particleRootSignature_->GetRootSignature());
@@ -430,7 +439,7 @@ void MeshGPUParticle::ParticleUpdate()
 
 void MeshGPUParticle::ParticleDraw()
 {
-	ID3D12GraphicsCommandList* commndList = KDirectXCommon::GetInstance()->GetCommandList();
+	ID3D12GraphicsCommandList* commndList = KDirectXCommon::GetInstance()->GetCommandListCompute();
 
 	commndList->SetPipelineState(copyDrawPSO_->GetPipelineState());
 	commndList->SetComputeRootSignature(particleRootSignature_->GetRootSignature());
@@ -453,32 +462,33 @@ void MeshGPUParticle::ParticleDraw()
 	commndList->SetComputeRootDescriptorTable(6, drawArgs_->GetGPUUAV());
 	commndList->SetComputeRootDescriptorTable(7, MeshSRV);
 
-	commndList->Dispatch(1, 1, 1);
+	commndList->Dispatch(static_cast<uint32_t>(model_->GetVertices().size() / 1024 + 1), 1, 1);
 }
 
 void MeshGPUParticle::DrawCommon()
 {
-	ID3D12GraphicsCommandList* commndList = KDirectXCommon::GetInstance()->GetCommandList();
+	ID3D12GraphicsCommandList* cmdListMain = KDirectXCommon::GetInstance()->GetCommandListMain();
+	ID3D12GraphicsCommandList* cmdListCompute = KDirectXCommon::GetInstance()->GetCommandListCompute();
 
-	commndList->SetPipelineState(graphicPSO_->GetPipelineState());
-	commndList->SetGraphicsRootSignature(rootSignature_->GetRootSignature());
+	cmdListMain->SetPipelineState(graphicPSO_->GetPipelineState());
+	cmdListMain->SetGraphicsRootSignature(rootSignature_->GetRootSignature());
 
 	ID3D12DescriptorHeap* descriptorHeaps[] = { UAVHeap.Get() };
-	commndList->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);
+	cmdListMain->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);
 
 	auto objectCB = currentFrameResource->ObjectCB->Resource();
 	auto timeCB = currentFrameResource->TimeCB->Resource();
 	auto particleCB = currentFrameResource->ParticleCB->Resource();
 
-	commndList->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
+	cmdListMain->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
 
-	commndList->SetGraphicsRootConstantBufferView(0, objectCB->GetGPUVirtualAddress());
-	commndList->SetGraphicsRootConstantBufferView(1, timeCB->GetGPUVirtualAddress());
-	commndList->SetGraphicsRootConstantBufferView(2, particleCB->GetGPUVirtualAddress());
-	commndList->SetGraphicsRootDescriptorTable(3, particlePool_->GetGPUSRV());
-	commndList->SetGraphicsRootDescriptorTable(4, drawList_->GetGPUSRV());
+	cmdListMain->SetGraphicsRootConstantBufferView(0, objectCB->GetGPUVirtualAddress());
+	cmdListMain->SetGraphicsRootConstantBufferView(1, timeCB->GetGPUVirtualAddress());
+	cmdListMain->SetGraphicsRootConstantBufferView(2, particleCB->GetGPUVirtualAddress());
+	cmdListMain->SetGraphicsRootDescriptorTable(3, particlePool_->GetGPUSRV());
+	cmdListMain->SetGraphicsRootDescriptorTable(4, drawList_->GetGPUSRV());
 
-	drawArgs_->Translation(commndList, D3D12_RESOURCE_STATE_INDIRECT_ARGUMENT);
+	drawArgs_->Translation(cmdListMain, D3D12_RESOURCE_STATE_INDIRECT_ARGUMENT);
 
-	commndList->ExecuteIndirect(commandSignature_->GetCommandSignature(), 1, drawArgs_->GetDrawArgs(), 0, nullptr, 0);
+	cmdListMain->ExecuteIndirect(commandSignature_->GetCommandSignature(), 1, drawArgs_->GetDrawArgs(), 0, nullptr, 0);
 }

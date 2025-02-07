@@ -50,7 +50,7 @@ public:
 	static KDirectXCommon* GetInstance();
 	// リソースの状態を変える
 	static void ResourceTransition(ID3D12Resource* resource, 
-		D3D12_RESOURCE_STATES beforeState, D3D12_RESOURCE_STATES afterState);
+		D3D12_RESOURCE_STATES beforeState, D3D12_RESOURCE_STATES afterState, ID3D12GraphicsCommandList* commandList);
 	// 初期化
 	void Init();
 	// 描画準備
@@ -63,35 +63,45 @@ public:
 	void Destroy();
 	// 背景の色変更
 	void SetBackScreenColor(float R, float G, float B, float A);
-	// デバイス取得
-	ID3D12Device* GetDevice() const;
-	ComPtr<ID3D12Device> GetComDevice();
-	// コマンドリスト取得
-	ID3D12GraphicsCommandList* GetCommandList();
-	ID3D12CommandQueue* GetCommandQueue();
-	ID3D12Fence* GetFence();
-	IDXGISwapChain4* GetSwapChain();
+
+	// キュー間の同期
+	void QueueSynchronization();
 
 	float fps = 0;
 	// SRV,CBV,URV用のデスクリプタヒープ取得
-	KDescriptorHeap* GetSRVDescriptorHeap();
+	KDescriptorHeap* GetSRVDescriptorHeap() const;
 	// RTV用のデスクリプタヒープ取得
-	KRtvDescriptorHeap* GetRTVDescriptorHeap();
+	KRtvDescriptorHeap* GetRTVDescriptorHeap() const;
 	// DSV用のデスクリプタヒープ取得
-	KDsvDescriptorHeap* GetDsvDescriptorHrap();
+	KDsvDescriptorHeap* GetDsvDescriptorHrap() const;
 	// リソースの状態を変える
-	void Transition(ID3D12Resource* resource, D3D12_RESOURCE_STATES beforeState, D3D12_RESOURCE_STATES afterState);
+	void Transition(ID3D12Resource* resource, D3D12_RESOURCE_STATES beforeState, D3D12_RESOURCE_STATES afterState, ID3D12GraphicsCommandList* commandList);
+	void BeginCommnd(ID3D12GraphicsCommandList* commandList, ID3D12CommandAllocator* commandAllocator);
+	void CloseCommnd(ID3D12GraphicsCommandList* commandList, ID3D12CommandQueue* commandQueue);
+	void FlashCommandQueue();
+
+	// デバイス取得
+	ID3D12Device* GetDevice() const;
+
+	// コマンド取得
+	ID3D12GraphicsCommandList* GetCommandListMain() const;
+	ID3D12GraphicsCommandList* GetCommandListCompute() const;
+	ID3D12CommandAllocator* GetCommandAllocatorMain() const;
+	ID3D12CommandAllocator* GetCommandAllocatorCompute() const;
+	ID3D12CommandQueue* GetCommandQueueMain() const;
+	ID3D12CommandQueue* GetCommandQueueCompute() const;
+
+	ID3D12Fence* GetFenceMain() const;
+	IDXGISwapChain4* GetSwapChain() const;
+
+	D3D12_VIEWPORT GetViewport();
+	D3D12_RECT GetRect();
+
 	// バックバッファの数を取得
 	size_t GetBackBufferCount() const;
 	UINT GetRTVDescriptorSize();
 	UINT GetDSVDescriptorSize();
 	UINT GetCBVSRVUAVDescriptorSize();
-	void BeginCommnd();
-	void CloseCommnd();
-	void FlashCommndQueue();
-	ComPtr<ID3D12CommandAllocator> GetCommandAllocator();
-	D3D12_VIEWPORT GetViewport();
-	D3D12_RECT GetRect();
 
 private:
 	// DXGI初期化
@@ -125,16 +135,43 @@ private:
 	ComPtr<IDXGIFactory6> dxgiFactory;
 	// スワップチェーン
 	ComPtr<IDXGISwapChain4> swapChain;
-	// フェンスの生成
-	ComPtr<ID3D12Fence> fence;
-	// コマンド
-	ComPtr<ID3D12CommandAllocator> cmdAllocater;
-	ComPtr<ID3D12GraphicsCommandList> cmdList;
-	ComPtr<ID3D12CommandQueue> cmdQueue;
-	// RTV用のデスクリプタヒープ
+	
+	/// <summary>
+	/// コマンド
+	/// </summary>
+	
+	/// アロケーター
+	// 描画用
+	ComPtr<ID3D12CommandAllocator> commandAllocaterMain;
+	// 計算用
+	ComPtr<ID3D12CommandAllocator> commandAllocaterCompute;
+
+	/// リスト
+	// 描画用
+	ComPtr<ID3D12GraphicsCommandList> commandListMain;
+	// 計算用
+	ComPtr<ID3D12GraphicsCommandList> commandListCompute;
+
+	/// キュー
+	// 描画用
+	ComPtr<ID3D12CommandQueue> commandQueueMain;
+	// 計算用
+	ComPtr<ID3D12CommandQueue> commandQueueCompute;
+
+	/// フェンスの生成
+	ComPtr<ID3D12Fence> fenceMain;
+
+	UINT64 fenceValMain = 1;
+	
+	/// <summary>
+	/// デスクリプタヒープ
+	/// </summary>
+	
+	// RTV用
 	std::unique_ptr<KRtvDescriptorHeap> rtvHeap;
-	// DSV用のデスクリプタヒープ
+	// DSV用
 	std::unique_ptr<KDsvDescriptorHeap> dsvHeap{};
+
 	//ビューポート
 	D3D12_VIEWPORT viewport{};
 	//シザー矩形
@@ -152,9 +189,6 @@ private:
 	
 	// バックバッファ
 	std::vector<std::unique_ptr<KRenderTargetBuffer>> backBuffers;
-
-	// フェンスの生成
-	UINT64 fenceVal = 0;
 
 	// スワップチェーンの設定
 	DXGI_SWAP_CHAIN_DESC1 swapChainDesc{};

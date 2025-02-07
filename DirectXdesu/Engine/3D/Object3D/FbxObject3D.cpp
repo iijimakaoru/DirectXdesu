@@ -119,7 +119,7 @@ void FbxObject3D::Update(ViewProjection* viewProjection)
 
 void FbxObject3D::Draw()
 {
-	ID3D12GraphicsCommandList* cmdList = KDirectXCommon::GetInstance()->GetCommandList();
+	ID3D12GraphicsCommandList* cmdList = KDirectXCommon::GetInstance()->GetCommandListMain();
 	if (model == nullptr)
 	{
 		return;

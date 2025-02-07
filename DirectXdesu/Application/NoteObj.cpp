@@ -112,6 +112,7 @@ void NoteObj::LoadNote(const std::string& name)
 	int bpm;
 	//ファイルを開く
 	const std::string filename = "Resources/csv/note/" + name + ".sus";
+	fileName = name;
 	std::ifstream file;
 	file.open(filename);
 	assert(file.is_open());
@@ -123,16 +124,6 @@ void NoteObj::LoadNote(const std::string& name)
 	for (size_t i = 0; i < 10; i++)
 	{
 		std::getline(file, line);
-		//タイトルの代入
-		if (line.find("TITLE") != std::string::npos)
-		{
-			// スペースの位置を見つける
-			size_t spacePos = line.find(' ');
-			if (spacePos != std::string::npos) {
-				// スペースの次の部分を切り出す
-				fileName = line.substr(spacePos + 1);
-			}
-		}
 	}
 	while (std::getline(file, line))
 	{
@@ -235,11 +226,29 @@ void NoteObj::LoadNote(const std::string& name)
 	file.close();
 }
 
-void NoteObj::OutputNote(const std::string& name)
+void NoteObj::OutputNote()
 {
 	std::string inputTxt;
-	std::ofstream outputfile(fileName);
+	std::string newLine="\n";
+	std::string name = fileName+"txt";
+	std::string sharp = "#";
 
+	std::ofstream outputfile(name);
+	int32_t step = 1000; // 1000刻みで分類
+	for (int32_t range_start = 0; range_start <= 300; range_start += step) {
+		int32_t range_end = range_start + step - 1; // 例: 0~99, 100~199
+
+		auto it_low = notes.lower_bound(range_start);
+		auto it_up = notes.upper_bound(range_end);
+
+		std::map<int32_t, Note> laneLeft;
+		std::map<int32_t, Note> laneRight;
+		for (auto it = it_low; it != it_up; ++it) {
+			if (it->second.lane == 0) {
+				//laneLeft.
+			}
+		}
+	}
 	inputTxt;
 
 	outputfile << inputTxt;

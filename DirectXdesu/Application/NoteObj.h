@@ -23,14 +23,14 @@ public:
 	void Init(MusicDesc* music_);
 	void Update(Camera* camera_);
 	void Draw();
-	std::map<Key, std::unique_ptr<KObject3d>>& Obj() {
+	std::map<int32_t, std::unique_ptr<KObject3d>>& Obj() {
 		return obj;
 	}
-	std::map<Key, Note>& Notes() {
+	std::map<int32_t, Note>& Notes() {
 		return notes;
 	}
 	void LoadNote(const std::string& name);
-	void OutputNote(const std::string& name);
+	void OutputNote();
 
 	//小節　サイズの限界まで
 	//拍数　99.5まで
@@ -42,8 +42,8 @@ public:
 		return num;
 	}
 private:
-	std::map<Key, std::unique_ptr<KObject3d>>obj;
-	std::map<Key, Note>notes;
+	std::map<int32_t, std::unique_ptr<KObject3d>>obj;
+	std::map<int32_t, Note>notes;
 
 	std::vector<std::unique_ptr<KObject3d>>underObj;
 	ModelManager* modelM;

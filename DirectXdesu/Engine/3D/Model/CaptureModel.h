@@ -95,6 +95,9 @@ public:
 
 	void InitializePose();
 
+	MCBM::MVector3 GetCapturePos(YOLO_POSE_INDEX key,Locate cameraLocate = Locate::FRONT);
+	MCBM::MVector3 GetCapturePosFromThreeD(YOLO_POSE_INDEX key);
+
 private:
 
 	void _SetModelData(const MCBM::M_MODEL_OUT& data);

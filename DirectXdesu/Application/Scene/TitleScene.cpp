@@ -9,6 +9,7 @@
 
 #include "ModelManager.h"
 #include "PipelineManager.h"
+#include "Ease.h"
 
 const int gNumberFrameResources = 3;
 
@@ -18,6 +19,9 @@ void TitleScene::LoadResources() {
 	// 天球モデル
 	skyDomeModel = ModelManager::GetInstance()->GetModels("S_SkyDorm");
 	logoModel = ModelManager::GetInstance()->GetModels("titleLogo");
+
+	texBG = TextureManager::Load("Resources/texture/titleBg.png");
+	texPressA = TextureManager::Load("Resources/texture/pressA.png");
 }
 
 void TitleScene::Init() {
@@ -43,8 +47,11 @@ void TitleScene::Init() {
 
 	logo.reset(KObject3d::Create(logoModel, PipelineManager::GetInstance()->GetPipeline("Obj")));
 	logo->GetTransform().SetScale({ 100.0f, 100.0f, 100.0f });
-	logo->GetTransform().SetPos({ 0.0f, 50.0f, 100.0f });
+	logo->GetTransform().SetPos({ 0.0f, 60.0f, 100.0f });
 	logo->GetTransform().SetRot({ 0.0f, 180.0f, 0.0f});
+
+	backGround.reset(Sprite::Create(PipelineManager::GetInstance()->GetPipeline("Sprite")));
+	pressA.reset(Sprite::Create(PipelineManager::GetInstance()->GetPipeline("Sprite")));
 
 	audioManager = AudioManager::GetInstance();
 }
@@ -55,6 +62,8 @@ void TitleScene::Update() {
 	skyDome->Update(camera->GetViewPro(), camera->GetWorldPos());
 	logo->Update(camera->GetViewPro(), camera->GetWorldPos());
 
+	logo->GetTransform().SetRot({ 0.0f, 180.0f + RotationLogoY(rotationSpeed), 0.0f});
+
 	camera->Update();
 	
 	GoNextScene();
@@ -62,11 +71,14 @@ void TitleScene::Update() {
 
 void TitleScene::ObjDraw() {
 	skyDome->Draw();
+	backGround->Draw(texBG, { 640.0f,360.0f });
 	logo->Draw();
+	pressA->Draw(texPressA, { 640.0f,600.0f },{0.8f,0.8f});
 }
 
 void TitleScene::SpriteDraw()
 {
+	
 }
 
 void TitleScene::Final() {
@@ -80,4 +92,31 @@ void TitleScene::GoNextScene() {
 	else if (input->IsTrigger(DIK_SPACE)) {
 		sceneManager->ChangeScene("GAME");
 	}
+}
+
+float TitleScene::RotationLogoY(const float& speed)
+{
+	if (flag == true)
+	{
+		result += speed;
+	}
+
+	if (result >= 360.0f) 
+	{
+		flag = false;
+		result = 0.0f;
+	}
+
+	if (flag == false)
+	{
+		timer++;
+		//3秒経過で再スタート
+		if (timer >= 180.0f)
+		{
+			flag = true;
+			timer = 0.0f;
+		}
+	}
+
+	return result;
 }

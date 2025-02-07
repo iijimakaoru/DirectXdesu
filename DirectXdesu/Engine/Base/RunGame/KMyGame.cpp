@@ -1,6 +1,7 @@
 #include "KMyGame.h"
 #include "SceneFactory.h"
 #include<ModelManager.h>
+#include "TextureManager.h"
 
 void KMyGame::Init() {
 	Framework::Init();
@@ -14,6 +15,9 @@ void KMyGame::Init() {
 	ModelManager::Load("cube","S_Cube");
 	ModelManager::Load("arrow","S_Arrow");
 	ModelManager::Load("logo","titleLogo");
+
+	TextureManager::Load("Resources/texture/titleBg.png");
+	TextureManager::Load("Resources/texture/pressA.png");
 
 	// 最初のシーン
 	SceneManager::GetInstance()->ChangeScene("TITLE");

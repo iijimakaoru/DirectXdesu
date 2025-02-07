@@ -17,6 +17,9 @@
 #include "Emitter.h"
 #include "MeshEmitter.h"
 
+#include "TextureManager.h"
+#include "Sprite.h"
+
 /**
  * @file TitleScene.h
  * @brief タイトルシーン
@@ -39,13 +42,17 @@ public:
 	void GoNextScene();
 
 private:
+
+	float RotationLogoY(const float& speed);
+
+private:
 	// インプット
 	KInput* input = nullptr;
 
 	// カメラ
 	std::unique_ptr<GameCamera> camera = nullptr;
 
-#pragma region 天球
+#pragma region リソース
 	// オブジェクト
 	std::unique_ptr<KObject3d> skyDome = nullptr;
 	std::unique_ptr<KObject3d> logo = nullptr;
@@ -53,15 +60,24 @@ private:
 	// モデル
 	KModel* skyDomeModel = nullptr;
 	KModel* logoModel = nullptr;
+
+	//テクスチャ
+	std::unique_ptr<Sprite> backGround;
+	std::unique_ptr<Sprite> pressA;
+	TextureData texBG;
+	TextureData texPressA;
 #pragma endregion
 
 	AudioManager* audioManager = nullptr;
 
 	std::unique_ptr<Light> light_ = nullptr;
 
-	
-
 private:
 	const float skydomeSize = 800.0f; 
+
+	float rotationSpeed = 0.5f;
+	float result = 0.0f;
+	float timer = 0.0f;
+	bool flag = true;
 };
 

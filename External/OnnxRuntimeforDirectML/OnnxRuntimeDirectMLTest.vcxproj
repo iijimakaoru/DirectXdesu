@@ -165,8 +165,10 @@
     <ClInclude Include="Include\SimpleVector3.h" />
     <ClInclude Include="Include\YVector3.h" />
     <ClInclude Include="Include\YOLOPoseEstimation.h" />
+    <ClInclude Include="Include\PoseEstimator.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\PoseEstimator.cpp" />
     <ClCompile Include="Src\augment.cpp" />
     <ClCompile Include="Src\autobackend.cpp" />
     <ClCompile Include="Src\common.cpp" />

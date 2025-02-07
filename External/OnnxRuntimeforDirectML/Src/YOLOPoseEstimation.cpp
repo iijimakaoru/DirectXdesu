@@ -505,6 +505,7 @@ void YOLOPoseEstimationImp::CalclateFinalCaptureDataFromCalibrateData(){
 
 			cv::Point2f point2 = { capturedata_[ Locate::FRONT ][ ( YOLO_POSE_INDEX ) i ].captureBonePos.x,
 									capturedata_[ Locate::RIGHT ][ ( YOLO_POSE_INDEX ) i ].captureBonePos.y };
+
 			points1.push_back(point1);
 			points2.push_back(point2);
 			validIndices.push_back(static_cast< int >( i ));
@@ -537,3 +538,4 @@ void YOLOPoseEstimationImp::CalclateFinalCaptureDataFromCalibrateData(){
 		finalCaptureData_[ ( YOLO_POSE_INDEX ) validIndices[ i ] ] = { pt3D.x,pt3D.y,pt3D.z };
 	}
 }
+

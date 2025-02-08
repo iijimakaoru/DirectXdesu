@@ -79,6 +79,7 @@ public:
 	void ModelInitialize(const char* modelPath,float mask_threshold,float conf_threshold,float iou_threshold,ONNXP_ROVIDERS provider) override;
 
 	void Start(bool isDraw) override;
+	void Initialize() override;
 
 	const YOLO_POSE_LANDMAKE* const GetLandmakes() override;
 
@@ -199,8 +200,6 @@ void YOLOPoseEstimationImp::Start(bool isDraw)
 	m_isDraw = isDraw;
 	isRunning = true;
 
-	calibrator = std::make_unique<CameraCalibrator>();
-
 	m_frame.resize(m_pCams.size());
 	m_baseLandmakes.resize(m_pCams.size());
 	m_landmakes.resize(m_pCams.size());
@@ -223,6 +222,11 @@ void YOLOPoseEstimationImp::Start(bool isDraw)
 		{
 			this->Update();
 		});
+}
+
+void YOLOPoseEstimationImp::Initialize()
+{
+	calibrator = std::make_unique<CameraCalibrator>();
 }
 
 const YOLO_POSE_LANDMAKE* const YOLOPoseEstimationImp::GetLandmakes()

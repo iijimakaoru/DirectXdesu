@@ -44,6 +44,8 @@ void CaptureManager::Initialize(int32_t cameraNum)
 		capdatas[ i ].Initialize(static_cast< int32_t >( i + cameraFirstIndex));
 	}
 
+	m_YOLOPoseEstimation_->Initialize();
+
 	for (int32_t i = 0; i < (int32_t)YOLO_POSE_INDEX::YOLO_POSE_INDEX_MAX; i++)
 	{
 		finalCaptureData_[(YOLO_POSE_INDEX)i].captureBoneName = 

@@ -64,6 +64,8 @@ public:
 
 	virtual void ModelInitialize(const char* modelPath, float mask_threshold = 0.5f, float conf_threshold = 0.30f, float iou_threshold = 0.45f, ONNXP_ROVIDERS provider = ONNXP_ROVIDERS::DIRECTML) = 0;
 
+	virtual void Initialize() = 0;
+
 	virtual void Start(bool isDraw= false) = 0;
 
 	virtual void End() = 0;

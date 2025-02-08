@@ -46,7 +46,7 @@ namespace MCBM
 		void InitializePose();
 		void Finalize();
 		CaptureData& GetCaptureData(YOLO_POSE_INDEX key);
-		CaptureData& GetLocateCaptureData(YOLO_POSE_INDEX key,Locate locate);
+		CaptureData& GetLocateCaptureData(YOLO_POSE_INDEX key, Locate locate);
 		YOLOPoseEstimation* GetYOLOPoseEstimation();
 
 	};

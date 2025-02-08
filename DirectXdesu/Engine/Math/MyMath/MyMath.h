@@ -52,14 +52,14 @@ namespace MyMathUtility
 	/// </summary>
 	/// <param name="v"></param>
 	/// <returns></returns>
-	KMyMath::Vector3 MakeVector3Normalize(KMyMath::Vector3 v);
+	KMyMath::Vector3 MakeVector3Normalize(KMyMath::Vector3& v);
 
 	/// <summary>
 	/// Vector2正規化
 	/// </summary>
 	/// <param name="v"></param>
 	/// <returns></returns>
-	KMyMath::Vector2 MakeVector2Normalize(KMyMath::Vector2 v);
+	KMyMath::Vector2 MakeVector2Normalize(KMyMath::Vector2& v);
 
 	// 単位行列
 	KMyMath::Matrix4 MakeIdentity();
@@ -92,7 +92,7 @@ namespace MyMathUtility
 	/// <param name="scaling"></param>
 	/// <param name="rotation"></param>
 	/// <returns></returns>
-	KMyMath::Matrix4 MakeWorld(KMyMath::Matrix4 translation, KMyMath::Matrix4 scaling, KMyMath::Matrix4 rotation);
+	KMyMath::Matrix4 MakeWorld(KMyMath::Matrix4& translation, KMyMath::Matrix4& scaling, KMyMath::Matrix4& rotation);
 
 	/// <summary>
 	/// サインとコサイン
@@ -175,7 +175,7 @@ namespace MyMathUtility
 	/// <returns></returns>
 	bool Approximately(float a, float b);
 
-	KMyMath::Vector3 HermiteGetPoint(KMyMath::Vector3 p0, KMyMath::Vector3 p1, KMyMath::Vector3 v0, KMyMath::Vector3 v1, float t);
+	KMyMath::Vector3 HermiteGetPoint(KMyMath::Vector3& p0, KMyMath::Vector3& p1, KMyMath::Vector3& v0, KMyMath::Vector3& v1, float t);
 
 	/// <summary>
 	/// ランダムな値を取得
@@ -239,42 +239,42 @@ namespace MyMathConvert
 	/// </summary>
 	/// <param name="vector4"></param>
 	/// <returns></returns>
-	DirectX::XMVECTOR ChangeVector4toXMVECTOR(KMyMath::Vector4 vector4);
+	DirectX::XMVECTOR ChangeVector4toXMVECTOR(KMyMath::Vector4& vector4);
 
 	/// <summary>
 	/// XMVECTORからVector4へ変換
 	/// </summary>
 	/// <param name=""></param>
 	/// <returns></returns>
-	KMyMath::Vector4 ChangeXMVECTORtoVector4(DirectX::XMVECTOR vector);
+	KMyMath::Vector4 ChangeXMVECTORtoVector4(DirectX::XMVECTOR& vector);
 
 	/// <summary>
 	/// XMMATRIXからMatrix4へ変換
 	/// </summary>
 	/// <param name="matrix"></param>
 	/// <returns></returns>
-	KMyMath::Matrix4 ChangeXMMATRIXtoMatrix4(DirectX::XMMATRIX matrix);
+	KMyMath::Matrix4 ChangeXMMATRIXtoMatrix4(DirectX::XMMATRIX& matrix);
 
 	/// <summary>
 	/// Matrix4からXMMATRIXへ変換
 	/// </summary>
 	/// <param name="matrix"></param>
 	/// <returns></returns>
-	DirectX::XMMATRIX ChangeMatrix4toXMMATRIX(KMyMath::Matrix4 matrix);
+	DirectX::XMMATRIX ChangeMatrix4toXMMATRIX(const KMyMath::Matrix4& matrix);
 
 	/// <summary>
 	/// XMFloat3からVector3へ変換
 	/// </summary>
 	/// <param name="float3"></param>
 	/// <returns></returns>
-	KMyMath::Vector3 ChangeXMFloat3toVector3(DirectX::XMFLOAT3 float3);
+	KMyMath::Vector3 ChangeXMFloat3toVector3(DirectX::XMFLOAT3& float3);
 
 	/// <summary>
 	/// Vector3からXMFloat3へ変換
 	/// </summary>
 	/// <param name="vector3"></param>
 	/// <returns></returns>
-	DirectX::XMFLOAT3 ChangeVector3toXMfloat3(KMyMath::Vector3 vector3);
+	DirectX::XMFLOAT3 ChangeVector3toXMfloat3(KMyMath::Vector3& vector3);
 
 	/// <summary>
 	/// ラジアン変換

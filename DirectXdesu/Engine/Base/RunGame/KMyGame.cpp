@@ -1,5 +1,6 @@
 #include "KMyGame.h"
 #include "SceneFactory.h"
+#include<ModelManager.h>
 
 void KMyGame::Init() {
 	Framework::Init();
@@ -8,8 +9,11 @@ void KMyGame::Init() {
 	sceneFactory = new SceneFactory();
 	// シーンマネージャーにセット
 	SceneManager::GetInstance()->SetSceneFactory(sceneFactory);
-	//モデル読み込み
-	
+
+	ModelManager::Load("skydome", "S_SkyDorm");
+	ModelManager::Load("cube","S_Cube");
+	ModelManager::Load("arrow","S_Arrow");
+
 	// 最初のシーン
 	SceneManager::GetInstance()->ChangeScene("GAME");
 }
@@ -21,6 +25,7 @@ void KMyGame::Update() {
 
 void KMyGame::Draw() {
 	// レンダーテクスチャへの描画
+	KDirectXCommon::GetInstance()->BeginCommnd();
 	postEffectManager->PreDraw(sceneManager);
 
 	// 描画開始

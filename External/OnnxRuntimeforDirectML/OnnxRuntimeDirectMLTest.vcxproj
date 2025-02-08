@@ -72,13 +72,16 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <LibraryPath>$(SolutionDir)Thaad\opencv\build\x64\vc15\bin;$(SolutionDir)Thaad\opencv\build\x64\vc15\lib;$(SolutionDir)External\DirectML.1.15.1\bin\x64-win;$(SolutionDir)External\OnnxRuntime..19.2\runtimes\win-x64\native;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)Thaad\opencv\build\x64\vc15\lib;$(SolutionDir)External\DirectML.1.15.1\bin\x64-win;$(SolutionDir)External\OnnxRuntime..19.2\runtimes\win-x64\native;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)Generated\Outputs\$(Configuration)\</OutDir>
     <IncludePath>$(SolutionDir)External\DirectML.1.15.1\include;$(SolutionDir)External\OnnxRuntime..19.2\build\native\include;$(SolutionDir)External\opencv\build\include;$(IncludePath)</IncludePath>
     <IntDir>$(SolutionDir)Generated\Obj\$(ProjectName)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <LibraryPath>$(SolutionDir)Thaad\opencv\build\x64\vc15\bin;$(SolutionDir)Thaad\opencv\build\x64\vc15\lib;$(SolutionDir)Thaad\OnnxRuntime.DirectML\DirectML.1.15.1\bin\x64-win;$(SolutionDir)Thaad\OnnxRuntime.DirectML\OnnxRuntime..19.2\runtimes\win-x64\native;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)Thaad\opencv\build\x64\vc15\lib;$(SolutionDir)Thaad\OnnxRuntime.DirectML\DirectML.1.15.1\bin\x64-win;$(SolutionDir)Thaad\OnnxRuntime.DirectML\OnnxRuntime..19.2\runtimes\win-x64\native</LibraryPath>
+    <IncludePath>$(SolutionDir)External\DirectML.1.15.1\include;$(SolutionDir)External\OnnxRuntime..19.2\build\native\include;$(SolutionDir)External\opencv\build\include;$(IncludePath)</IncludePath>
+    <OutDir>$(SolutionDir)Generated\Outputs\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)Generated\Obj\$(ProjectName)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -117,6 +120,7 @@
       <AdditionalIncludeDirectories>$(ProjectDir)Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -136,9 +140,10 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Include;$(SolutionDir)Thaad\OnnxRuntime.DirectML\DirectML.1.15.1\include;$(SolutionDir)Thaad\OnnxRuntime.DirectML\OnnxRuntime..19.2\build\native\include;$(SolutionDir)\Thaad\opencv\build\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

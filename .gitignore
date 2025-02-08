@@ -346,6 +346,4 @@ FodyWeavers.xsd
 
 .External\fbx_sdk\lib
 /External/fbx_sdk/lib
-Checkpoints
-motionLib
-OnnxRuntimeforDirectML
+/DirectXdesu/Resources/Checkpoints

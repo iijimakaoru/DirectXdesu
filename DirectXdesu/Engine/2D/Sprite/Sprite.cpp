@@ -31,8 +31,6 @@ Sprite* Sprite::Create(KGPlin* pipeline_) {
 
 void Sprite::SetPipeline(KGPlin* pipeline_) { pipeline = pipeline_; }
 
-const KMyMath::Vector2 Sprite::GetPos() const { return KMyMath::Vector2(); }
-
 void Sprite::CreateCBMaterial() {
 	// 定数バッファ生成用
 	D3D12_HEAP_PROPERTIES cbHeapProp{};       // ヒープの設定
@@ -177,7 +175,7 @@ void Sprite::CreateCBTransform() {
 	assert(SUCCEEDED(result));
 }
 
-void Sprite::DrawCommand(TextureData texData) {
+void Sprite::DrawCommand(const TextureData& texData) {
 	// デスクリプタヒープの配列をセットするコマンド
 	ID3D12DescriptorHeap* ppHeaps[] = {texData.srvHeap.Get()};
 	cmdList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
@@ -211,9 +209,8 @@ void Sprite::Init() {
 	isInvisible = false;
 }
 
-void Sprite::Draw(
-    const TextureData& texData, KMyMath::Vector2 pos, KMyMath::Vector2 setSize_, float rot,
-    KMyMath::Vector4 color_, bool isFlipX_, bool isFlipY_, KMyMath::Vector2 anchorPoint_) {
+void Sprite::Draw(const TextureData& texData, const KMyMath::Vector2& pos, const KMyMath::Vector2& setSize_, float rot, const KMyMath::Vector4& color_, bool isFlipX_, bool isFlipY_, const KMyMath::Vector2& anchorPoint_)
+{
 	// 非表示処理
 	if (isInvisible) {
 		return;
@@ -272,10 +269,8 @@ void Sprite::Draw(
 	cmdList->DrawIndexedInstanced(6, 1, 0, 0, 0);
 }
 
-void Sprite::DivDraw(
-    TextureData& texData, KMyMath::Vector2 leftTop_, KMyMath::Vector2 divSize_,
-    KMyMath::Vector2 pos, KMyMath::Vector2 setSize_, float rot, KMyMath::Vector4 color_,
-    KMyMath::Vector2 anchorPoint_) {
+void Sprite::DivDraw(const TextureData& texData, const KMyMath::Vector2& leftTop_, const KMyMath::Vector2& divSize_, const KMyMath::Vector2& pos, const KMyMath::Vector2& setSize_, float rot, const KMyMath::Vector4& color_, const KMyMath::Vector2& anchorPoint_)
+{
 	// 非表示処理
 	if (isInvisible) {
 		return;
@@ -326,8 +321,71 @@ void Sprite::DivDraw(
 	cmdList->DrawIndexedInstanced(6, 1, 0, 0, 0);
 }
 
-void Sprite::Update(
-    KMyMath::Vector2 pos, KMyMath::Vector2 scale, float rot, KMyMath::Vector4 color_) {
+void Sprite::AnimationDraw(const TextureData& texData,uint16_t radiusX, uint16_t radiusY, float& frame, float frameDiv, const KMyMath::Vector2& pos, const KMyMath::Vector2& setSize_, float rot, const KMyMath::Vector4& color )
+{
+	// 非表示処理
+	if (isInvisible)
+	{
+		return;
+
+	}
+	size_t lAnimeFrame = static_cast<size_t>(frame / frameDiv);
+
+	size_t lWidth = static_cast<size_t>(radiusX) * 2;
+	size_t lHeight = static_cast<size_t>(radiusY) * 2;
+
+	float lTexTop = 0.0f / static_cast<float>(texData.height);
+	float lTexRight = texData.width / static_cast<float>(texData.width);
+
+	float lWidthU = static_cast<float>(lWidth) / (lTexRight * static_cast<float>(texData.width));
+
+	//画像の半分のサイズ
+
+	if (texData.width / lWidth < lAnimeFrame + 1)
+	{
+		frame = 0;
+	}
+
+	// アンカーポイント
+	float left = ((0.0f - 0.5f) * (lWidth * setSize_.x)) * flipX;
+	float right = ((1.0f - 0.5f) * (lWidth * setSize_.x)) * flipX;
+	float top = ((0.0f - 0.5f) * (lHeight * setSize_.y)) * flipY;
+	float bottom = ((1.0f - 0.5f) * (lHeight * setSize_.y)) * flipY;
+
+	// 頂点データ
+	Vertex vertices[] = {
+		{{left, top, 0.0f},		{lWidthU * float(lAnimeFrame),lTexTop}			}, // 左上
+		{{left, bottom, 0.0f},	{lWidthU * float(lAnimeFrame),lTexRight}		}, // 左下
+		{{right, top, 0.0f},	{lWidthU * float((lAnimeFrame + 1)),lTexTop}	}, // 右上
+		{{right, bottom, 0.0f},	{lWidthU * float((lAnimeFrame + 1)),lTexRight}	}, // 右下
+	};
+
+	// インデックスデータ
+	uint16_t indices[] = {
+		1, 0, 3, // 三角形1つ目
+		2, 3, 0, // 三角形2つ目
+	};
+
+	// 全頂点に対して
+	memcpy(vertMap, vertices, sizeof(Vertex) * 4);
+
+	// 全インデックスに対して
+	memcpy(indexMap, indices, sizeof(uint16_t) * 6);
+
+	Update(pos, setSize_, rot, color);
+
+	// パイプラインセット
+	pipeline->Setting();
+	pipeline->Update(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST); // 三角形リスト
+
+	// 描画の条件
+	DrawCommand(texData);
+
+	// 描画コマンド
+	cmdList->DrawIndexedInstanced(6, 1, 0, 0, 0);
+}
+
+void Sprite::Update(const KMyMath::Vector2& pos, const KMyMath::Vector2& scale, float rot, const KMyMath::Vector4& color_) {
 	// ワールド変換
 	KMyMath::Matrix4 matWorld, matTrans, matRot;
 	// 移動行列

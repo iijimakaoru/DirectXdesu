@@ -8,6 +8,7 @@ void TextureManager::Init() {
 	HRESULT result;
 
 	device = KDirectXCommon::GetInstance()->GetDevice();
+	commandList = KDirectXCommon::GetInstance()->GetCommandList();
 
 	// デスクリプタレンジの設定
 	descriptorRange.NumDescriptors = 1; // 1度の描画に使うテクスチャの数
@@ -24,67 +25,86 @@ void TextureManager::Init() {
 	assert(SUCCEEDED(result));
 
 	// ヒープ設定
-	textureHeapProp.Type = D3D12_HEAP_TYPE_CUSTOM;
-	textureHeapProp.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_WRITE_BACK;
-	textureHeapProp.MemoryPoolPreference = D3D12_MEMORY_POOL_L0;
+	textureHeapProp = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
 }
 
 TextureData TextureManager::LoadTexture(const std::string& fileName) {
-	HRESULT result;
 
-	if (texCount > 1024) {
-		assert(0);
+	//一回読み込んだことがあるファイルはそのまま返す
+	auto textureItr = find_if(textures.begin(), textures.end(), [&](auto& texture)
+		{
+			return texture.second.path == fileName;
+		});
+
+	if (textureItr == textures.end())
+	{
+		HRESULT result;
+
+		if (texCount > 1024)
+		{
+			assert(0);
+		}
+
+		TextureData data{};
+
+		DirectX::TexMetadata metadata{};
+		DirectX::ScratchImage scratchImg{};
+		DirectX::ScratchImage mipChain{};
+
+		data.srvHeap = srvHeap;
+		data.descriptorRange = descriptorRange;
+
+		wchar_t wfilepath[256];
+
+		MultiByteToWideChar(CP_ACP, 0, fileName.c_str(), -1, wfilepath, _countof(wfilepath));
+
+		// テクスチャロード
+		result = LoadFromWICFile(wfilepath, DirectX::WIC_FLAGS_NONE, &metadata, scratchImg);
+		assert(SUCCEEDED(result));
+
+		// ミニマップ作成
+		result = GenerateMipMaps(
+			scratchImg.GetImages(), scratchImg.GetImageCount(), scratchImg.GetMetadata(),
+			DirectX::TEX_FILTER_DEFAULT, 0, mipChain);
+
+		if (SUCCEEDED(result))
+		{
+			scratchImg = std::move(mipChain);
+			metadata = scratchImg.GetMetadata();
+		}
+
+		// 読み込んだディフューズテクスチャをSRGBとして扱う
+		metadata.format = DirectX::MakeSRGB(metadata.format);
+
+		// テクスチャバッファの生成
+		data.texBuff = CreateTexBuff(metadata, scratchImg);
+
+		// シェーダリソースビューの生成
+		data.gpuHandle = CreateSRV(data.texBuff.Get(), metadata);
+
+		// 横幅記憶
+		data.width = metadata.width;
+
+		// 縦幅記憶
+		data.height = metadata.height;
+
+		data.path = fileName;
+
+		textures[fileName] = data;
+
+		texCount++;
+
+		return data;
 	}
+	else
+	{
+		return textures[fileName];
 
-	TextureData data{};
-
-	DirectX::TexMetadata metadata{};
-	DirectX::ScratchImage scratchImg{};
-	DirectX::ScratchImage mipChain{};
-
-	data.srvHeap = srvHeap;
-	data.descriptorRange = descriptorRange;
-
-	wchar_t wfilepath[256];
-
-	MultiByteToWideChar(CP_ACP, 0, fileName.c_str(), -1, wfilepath, _countof(wfilepath));
-
-	// テクスチャロード
-	result = LoadFromWICFile(wfilepath, DirectX::WIC_FLAGS_NONE, &metadata, scratchImg);
-	assert(SUCCEEDED(result));
-
-	// ミニマップ作成
-	result = GenerateMipMaps(
-	    scratchImg.GetImages(), scratchImg.GetImageCount(), scratchImg.GetMetadata(),
-	    DirectX::TEX_FILTER_DEFAULT, 0, mipChain);
-
-	if (SUCCEEDED(result)) {
-		scratchImg = std::move(mipChain);
-		metadata = scratchImg.GetMetadata();
 	}
-
-	// 読み込んだディフューズテクスチャをSRGBとして扱う
-	metadata.format = DirectX::MakeSRGB(metadata.format);
-
-	// テクスチャバッファの生成
-	data.texBuff = CreateTexBuff(metadata, scratchImg);
-
-	// シェーダリソースビューの生成
-	data.gpuHandle = CreateSRV(data.texBuff.Get(), metadata);
-
-	// 横幅記憶
-	data.width = metadata.width;
-
-	// 縦幅記憶
-	data.height = metadata.height;
-
-	texCount++;
-
-	return data;
 }
 
 TextureData TextureManager::LoadDivTexture(
-    const std::string& fileName_, KMyMath::Vector2 leftTop_, KMyMath::Vector2 divSize_) {
+    const std::string& fileName_, KMyMath::Vector2& leftTop_, KMyMath::Vector2& divSize_) {
 	HRESULT result;
 
 	if (texCount > 1024) {
@@ -135,6 +155,8 @@ TextureData TextureManager::LoadDivTexture(
 
 	texCount++;
 
+	textures[fileName_] = data;
+
 	return data;
 }
 
@@ -144,37 +166,52 @@ TextureData TextureManager::Load(const std::string& fileName) {
 
 Microsoft::WRL::ComPtr<ID3D12Resource> TextureManager::CreateTexBuff(
     DirectX::TexMetadata& metadata, DirectX::ScratchImage& scratchImg) {
-	HRESULT result;
 
-	Microsoft::WRL::ComPtr<ID3D12Resource> buff;
+	KDirectXCommon::GetInstance()->BeginCommnd();
 
-	// リソース設定
-	D3D12_RESOURCE_DESC textureResourceDesc{};
-	textureResourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
-	textureResourceDesc.Format = metadata.format;
-	textureResourceDesc.Width = metadata.width;
-	textureResourceDesc.Height = (UINT)metadata.height;
-	textureResourceDesc.DepthOrArraySize = (UINT16)metadata.arraySize;
-	textureResourceDesc.MipLevels = (UINT16)metadata.mipLevels;
-	textureResourceDesc.SampleDesc.Count = 1;
+	std::vector<D3D12_SUBRESOURCE_DATA> textureSubresources;
 
-	// テクスチャ用バッファの生成
-	result = device->CreateCommittedResource(
-	    &textureHeapProp, D3D12_HEAP_FLAG_NONE, &textureResourceDesc,
-	    D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(buff.ReleaseAndGetAddressOf()));
+	for (size_t i = 0; i < metadata.mipLevels; i++)
+	{
+		D3D12_SUBRESOURCE_DATA subresouce{};
 
-	// 全ミニマップについて
-	for (size_t i = 0; i < metadata.mipLevels; i++) {
-		// ミニマップレベルを指定してイメージを取得
-		const DirectX::Image* img = scratchImg.GetImage(i, 0, 0);
+		subresouce.pData = scratchImg.GetImages()[i].pixels;
+		subresouce.RowPitch = static_cast<LONG_PTR>(scratchImg.GetImages()[i].rowPitch);
+		subresouce.SlicePitch = static_cast<LONG_PTR>(scratchImg.GetImages()[i].slicePitch);
 
-		// テクスチャバッファにデータ転送
-		result = buff->WriteToSubresource(
-		    (UINT)i, nullptr, img->pixels, (UINT)img->rowPitch, (UINT)img->slicePitch);
-		assert(SUCCEEDED(result));
+		textureSubresources.push_back(subresouce);
 	}
 
-	return buff;
+	Microsoft::WRL::ComPtr<ID3D12Resource> result;
+	// リソース設定
+	D3D12_RESOURCE_DESC textureResourceDesc = CD3DX12_RESOURCE_DESC::Tex2D(metadata.format, metadata.width, static_cast<UINT>(metadata.height), static_cast<UINT16>(metadata.arraySize), static_cast<UINT16>(metadata.mipLevels));
+
+
+	//テクスチャバッファにデータ転送
+
+	device->CreateCommittedResource(&textureHeapProp,D3D12_HEAP_FLAG_NONE,&textureResourceDesc,D3D12_RESOURCE_STATE_COPY_DEST,nullptr,IID_PPV_ARGS(&result));
+
+	// ステージングバッファ準備
+	UINT64 totalBytes = GetRequiredIntermediateSize(result.Get(), 0, static_cast<UINT>(textureSubresources.size()));
+
+	Microsoft::WRL::ComPtr<ID3D12Resource> stagingBuffer;
+	auto heapProps = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
+	auto resDesc = CD3DX12_RESOURCE_DESC::Buffer(totalBytes);
+	HRESULT hResult = device->CreateCommittedResource(&heapProps,D3D12_HEAP_FLAG_NONE,&resDesc,D3D12_RESOURCE_STATE_GENERIC_READ,nullptr,IID_PPV_ARGS(&stagingBuffer));
+
+	if (FAILED(hResult))
+	{
+		assert(0);
+	}
+
+	UpdateSubresources(commandList, result.Get(), stagingBuffer.Get(), 0, 0, static_cast<uint32_t>(textureSubresources.size()), textureSubresources.data());
+
+	// コピー後にはテクスチャとしてのステートへ.
+	KDirectXCommon::ResourceTransition(result.Get(), D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
+
+	KDirectXCommon::GetInstance()->CloseCommnd();
+
+	return result;
 }
 
 D3D12_GPU_DESCRIPTOR_HANDLE
@@ -214,4 +251,7 @@ void TextureManager::LoadTextures() {
 	
 }
 
-TextureData& TextureManager::GetTextures(std::string mapName) { return textures[mapName]; }
+TextureData& TextureManager::GetTextures(const std::string& mapName)
+{
+	return textures[mapName];
+}

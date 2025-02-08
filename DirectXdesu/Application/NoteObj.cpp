@@ -280,7 +280,7 @@ void NoteObj::LoadNoteSUS(const std::string& name)
 		if (line[0] == '#')
 		{
 			//BPMの代入
-			if (line.find('BPM') != std::string::npos)
+			if (line.find("BPM")!= std::string::npos)
 			{
 				// スペースの位置を見つける
 				size_t spacePos = line.find(':');

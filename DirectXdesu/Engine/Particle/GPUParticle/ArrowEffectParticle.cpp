@@ -33,7 +33,6 @@ void ArrowEffectParticle::Init(const Timer* timer, const KMyMath::Matrix4& matVi
 	BuildRootSignature();
 	BuildFrameResources();
 	BuildPSOs();
-	BuildUAV();
 
 	// 初期化コマンドを実行する
 	directXCommon->CloseCommnd();
@@ -45,6 +44,8 @@ void ArrowEffectParticle::Init(const Timer* timer, const KMyMath::Matrix4& matVi
 	ThrowIfFailed(directXCommon->GetCommandAllocator()->Reset());
 
 	ThrowIfFailed(directXCommon->GetCommandList()->Reset(directXCommon->GetCommandAllocator().Get(), deadListPSO_->GetPipelineState()));
+
+	BuildUAV();
 
 	directXCommon->GetCommandList()->SetComputeRootSignature(particleRootSignature_->GetRootSignature());
 
@@ -277,63 +278,46 @@ void ArrowEffectParticle::BuildPSOs()
 		graphicPSO_->Create(device);
 	}
 
-	std::vector<std::future<void>> psoFutures;
-
 	// EmitCS
 	{
-		psoFutures.push_back(std::async(std::launch::async, [&] {
-			emitPSO_->CreateShader(L"Effect/ArrowEffect/ArrowEffectEmitCS.hlsl", "main");
-			emitPSO_->SetRootSignature(particleRootSignature_.get());
-			emitPSO_->SetFlag(D3D12_PIPELINE_STATE_FLAG_NONE);
-			emitPSO_->Create(device);
-			}));
+		emitPSO_->CreateShader(L"Effect/ArrowEffect/ArrowEffectEmitCS.hlsl", "main");
+		emitPSO_->SetRootSignature(particleRootSignature_.get());
+		emitPSO_->SetFlag(D3D12_PIPELINE_STATE_FLAG_NONE);
+		emitPSO_->Create(device);
 	}
 
 	// UpdateCS
 	{
-		psoFutures.push_back(std::async(std::launch::async, [&] {
-			updatePSO_->CreateShader(L"Effect/ArrowEffect/ArrowEffectUpdateCS.hlsl", "main");
-			updatePSO_->SetRootSignature(particleRootSignature_.get());
-			updatePSO_->SetFlag(D3D12_PIPELINE_STATE_FLAG_NONE);
-			updatePSO_->Create(device);
-			}));
+		updatePSO_->CreateShader(L"Effect/ArrowEffect/ArrowEffectUpdateCS.hlsl", "main");
+		updatePSO_->SetRootSignature(particleRootSignature_.get());
+		updatePSO_->SetFlag(D3D12_PIPELINE_STATE_FLAG_NONE);
+		updatePSO_->Create(device);
 	}
 
 	// CopyDrawCountCS
 	{
-		psoFutures.push_back(std::async(std::launch::async, [&] {
-			copyDrawPSO_->CreateShader(L"Effect/ArrowEffect/ArrowEffectCopyDrawCountCS.hlsl", "main");
-			copyDrawPSO_->SetRootSignature(particleRootSignature_.get());
-			copyDrawPSO_->SetFlag(D3D12_PIPELINE_STATE_FLAG_NONE);
-			copyDrawPSO_->Create(device);
-			}));
+		copyDrawPSO_->CreateShader(L"Effect/ArrowEffect/ArrowEffectCopyDrawCountCS.hlsl", "main");
+		copyDrawPSO_->SetRootSignature(particleRootSignature_.get());
+		copyDrawPSO_->SetFlag(D3D12_PIPELINE_STATE_FLAG_NONE);
+		copyDrawPSO_->Create(device);
 	}
 
 	// DeadListInitCS
 	{
-		psoFutures.push_back(std::async(std::launch::async, [&] {
-			deadListPSO_->CreateShader(L"Effect/ArrowEffect/ArrowEffectDeadListInitCS.hlsl", "main");
-			deadListPSO_->SetRootSignature(particleRootSignature_.get());
-			deadListPSO_->SetFlag(D3D12_PIPELINE_STATE_FLAG_NONE);
-			deadListPSO_->Create(device);
-			}));
+		deadListPSO_->CreateShader(L"Effect/ArrowEffect/ArrowEffectDeadListInitCS.hlsl", "main");
+		deadListPSO_->SetRootSignature(particleRootSignature_.get());
+		deadListPSO_->SetFlag(D3D12_PIPELINE_STATE_FLAG_NONE);
+		deadListPSO_->Create(device);
 	}
-
-	for (auto& f : psoFutures) f.get();
 }
 
 void ArrowEffectParticle::BuildFrameResources()
 {
 	ID3D12Device* device = KDirectXCommon::GetInstance()->GetDevice();
-	std::vector<std::future<std::unique_ptr<FrameResource>>> frameFutures;
 	for (int i = 0; i < gNumberFrameResources; ++i)
 	{
-		frameFutures.push_back(std::async(std::launch::async, [device]()
-			{
-				return std::make_unique<FrameResource>(device, 1, 1, 1);
-			}));
+		FrameResources.push_back(std::make_unique<FrameResource>(device, 1, 1, 1));
 	}
-	for (auto& f : frameFutures) FrameResources.push_back(f.get());
 }
 
 void ArrowEffectParticle::UpdateMainPassCB(const Timer* timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection, Emitter* emitter)

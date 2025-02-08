@@ -20,7 +20,7 @@ void KMyGame::Init() {
 	TextureManager::Load("Resources/texture/pressA.png");
 
 	// 最初のシーン
-	SceneManager::GetInstance()->ChangeScene("TITLE");
+	SceneManager::GetInstance()->ChangeScene("GAME");
 }
 
 void KMyGame::Update() {
@@ -30,7 +30,7 @@ void KMyGame::Update() {
 
 void KMyGame::Draw() {
 	// レンダーテクスチャへの描画
-	KDirectXCommon::GetInstance()->BeginCommnd();
+	//KDirectXCommon::GetInstance()->BeginCommnd();
 	postEffectManager->PreDraw(sceneManager);
 
 	// 描画開始

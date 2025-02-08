@@ -560,9 +560,34 @@ void YOLOPoseEstimationImp::CalclateFinalCaptureDataFromCalibrateData() {
 	// ここでは、内部パラメーターを含む射影行列を使っているため、triangulatePointsには元のピクセル座標を使用します。
 	// ※ 高精度化のため、事前に undistortPoints を用いて正規化座標に変換する方法もあります。
 
+	cv::Mat distCoeffs1 = ( cv::Mat_<double>(1,5) <<
+		instrinsiParams[ Locate::FRONT ].distortionCoefficients.GetX(),
+		instrinsiParams[ Locate::FRONT ].distortionCoefficients.GetY(),
+		instrinsiParams[ Locate::FRONT ].distortionCoefficients.GetZ(),
+		instrinsiParams[ Locate::FRONT ].distortionCoefficients.GetW(),
+		instrinsiParams[ Locate::FRONT ].distortionCoefficients.GetV() );
+
+
+	cv::Mat distCoeffs2 = ( cv::Mat_<double>(1,5) <<
+		instrinsiParams[ Locate::RIGHT ].distortionCoefficients.GetX(),
+		instrinsiParams[ Locate::RIGHT ].distortionCoefficients.GetY(),
+		instrinsiParams[ Locate::RIGHT ].distortionCoefficients.GetZ(),
+		instrinsiParams[ Locate::RIGHT ].distortionCoefficients.GetW(),
+		instrinsiParams[ Locate::RIGHT ].distortionCoefficients.GetV() );
+
+
+	std::vector<cv::Point2f> points1_undistorted,points2_undistorted;
+	cv::undistortPoints(points1,points1_undistorted,K1,distCoeffs1);
+	cv::undistortPoints(points2,points2_undistorted,K2,distCoeffs2);
+
+
+	std::vector<cv::Point2f> points1_normalized,points2_normalized;
+	cv::undistortPoints(points1,points1_normalized,K1,cv::Mat(),cv::Mat());
+	cv::undistortPoints(points2,points2_normalized,K2,cv::Mat(),cv::Mat());
+
 	// ⑦ 三角測量による3次元復元（OpenCVの triangulatePoints を使用）
 	cv::Mat pts4D;
-	triangulatePoints(P1,P2,points1,points2,pts4D);
+	triangulatePoints(P1,P2,points1_normalized,points2_normalized,pts4D);
 
 	// ⑧ 同次座標から通常の3次元座標へ変換して出力
 

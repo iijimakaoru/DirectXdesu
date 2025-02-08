@@ -209,9 +209,10 @@ void GameScene::Update() {
 		initializetime_ = std::chrono::system_clock::now();
 	}
 
-
+	ImGui::Begin("Test");
 	if (initialePoseSet)
 	{
+		ImGui::Text("PleseTposeKeep!!!");
 		player->InitializePose();
 		initializeCount_ = std::chrono::system_clock::now();
 		std::chrono::seconds sec = std::chrono::duration_cast<std::chrono::seconds>(initializeCount_ - initializetime_);
@@ -220,7 +221,7 @@ void GameScene::Update() {
 			initialePoseSet = false;
 		}
 	}
-
+	ImGui::End();
 	light_->SetLightRGB({lightRGB_.x, lightRGB_.y, lightRGB_.z});
 	light_->SetLightDir({lightDir_.x, lightDir_.y, lightDir_.z, 0.0f});
 

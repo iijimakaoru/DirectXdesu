@@ -86,6 +86,7 @@ public:
 
 	const std::unordered_map <YOLO_POSE_INDEX,YVector3>* const GetFinalPositions() override;
 
+	virtual const MCBO::YVector3& GetCaptureDataFromLocate(YOLO_POSE_INDEX index,Locate locate) override;
 private:
 
 	void _Draw(cv::Mat& image,int index);
@@ -309,6 +310,11 @@ void YOLOPoseEstimationImp::Update()
 const std::unordered_map<YOLO_POSE_INDEX,YVector3>* const YOLOPoseEstimationImp::GetFinalPositions()
 {
 	return &finalCaptureData_;
+}
+
+const MCBO::YVector3& YOLOPoseEstimationImp::GetCaptureDataFromLocate(YOLO_POSE_INDEX index,Locate locate)
+{
+	return capturedata_[ locate ][ index ].captureBonePos;
 }
 
 void YOLOPoseEstimationImp::_Draw(cv::Mat& image,int index)

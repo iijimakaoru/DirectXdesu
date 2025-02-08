@@ -185,13 +185,14 @@ void GameScene::Update() {
 		}
 		frame++;
 	}
-	MCBM::MVector3 p = player->GetCapturePosFromThreeD(YOLO_POSE_INDEX::WRIST_L);
+	MCBM::MVector3 p = player->GetCapturePos(YOLO_POSE_INDEX::WRIST_L);
 	float L[2] = { p.x,p.y };
-	MCBM::MVector3 b = player->GetCapturePos(YOLO_POSE_INDEX::WRIST_R, Locate::FRONT);
+	MCBM::MVector3 b = player->GetCapturePos(YOLO_POSE_INDEX::WRIST_R);
 	float R[2] = { b.x,b.y };
 
 	ImGui::Begin("lo");
-	ImGui::InputFloat2("R", R);
+	ImGui::Text("R");
+	ImGui::Text("%f,%f",b.x,b.y);
 	ImGui::InputFloat2("L", L);
 	
 	ImGui::End();

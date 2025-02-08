@@ -88,9 +88,9 @@ namespace MCBM
 
 		Bone* GetBone(std::string name);
 
-		const MVector3& GetCaptureThreeDimensionPos(YOLO_POSE_INDEX index);
+		const MVector3 GetCaptureThreeDimensionPos(YOLO_POSE_INDEX index);
 
-		const MVector3& GetCapturePos(YOLO_POSE_INDEX index,Locate cameraLocate = Locate::FRONT);
+		const MVector3 GetCapturePos(YOLO_POSE_INDEX index,Locate cameraLocate = Locate::FRONT);
 
 		Skelton& SetDataFromLoader(const PHONONLOADER::P_MODEL_DATA& modelData);
 

@@ -99,14 +99,15 @@ void MCBM::Capture::Initialize(int32_t index)
 void MCBM::Capture::Update()
 {
 
-	land_ = m_YOLOPoseEstimation_->GetLandmakes();
 	finalPoints_ = m_YOLOPoseEstimation_->GetFinalPositions();
 
 	//skelton構成
 	for (int32_t i = 0; i < (int32_t)YOLO_POSE_INDEX::YOLO_POSE_INDEX_MAX; i++)
 	{
-		capturedata_[(YOLO_POSE_INDEX)i].captureBonePos = { Util::TruncateToTens(land_[i].x),Util::TruncateToTens(land_[i].y),0 };
-	}
+		MCBO::YVector3 pos = m_YOLOPoseEstimation_->GetCaptureDataFromLocate((YOLO_POSE_INDEX)i, Locate::FRONT);
+		capturedata_[(YOLO_POSE_INDEX)i].captureBonePos.x = Util::TruncateToTens(pos.x);
+		capturedata_[(YOLO_POSE_INDEX)i].captureBonePos.y = Util::TruncateToTens(pos.y);
+	};
 
 }
 

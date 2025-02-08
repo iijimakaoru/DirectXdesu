@@ -42,12 +42,12 @@ MCBM::Bone* MCBM::Skelton::GetBone(std::string name)
 	return nullptr;
 }
 
-const MVector3& MCBM::Skelton::GetCaptureThreeDimensionPos(YOLO_POSE_INDEX index)
+const MVector3 MCBM::Skelton::GetCaptureThreeDimensionPos(YOLO_POSE_INDEX index)
 {
 	return captureManager->GetCaptureData(index).captureBonePos;
 }
 
-const MVector3& MCBM::Skelton::GetCapturePos(YOLO_POSE_INDEX index,Locate cameraLocate)
+const MVector3 MCBM::Skelton::GetCapturePos(YOLO_POSE_INDEX index,Locate cameraLocate)
 {
 	return captureManager->GetLocateCaptureData(index, cameraLocate).captureBonePos;
 }

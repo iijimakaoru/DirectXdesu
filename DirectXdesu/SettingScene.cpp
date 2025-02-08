@@ -82,6 +82,7 @@ void SettingScene::ImguiUpdate()
 			if (isfinite)
 			{
 				InterinsicCalibrating = false;
+				captureManager->GetYOLOPoseEstimation()->InterinsCalibrateSave("Resources\\CalibrateData");
 			}
 		}
 		else
@@ -118,6 +119,7 @@ void SettingScene::ImguiUpdate()
 			if (isfinite)
 			{
 				callBack.SetCapture(false);
+				captureManager->GetYOLOPoseEstimation()->ExtrinsCalibrateSave("Resources\\CalibrateData");
 			}
 		}
 		else

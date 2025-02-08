@@ -170,7 +170,7 @@ void SettingScene::ImguiUpdate()
 
 			if (ImGui::TreeNode("DistCoefee"))
 			{
-
+				ImGui::TreePop();
 			}
 			
 

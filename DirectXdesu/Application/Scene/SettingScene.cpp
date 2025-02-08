@@ -72,7 +72,7 @@ void SettingScene::Final() {
 void SettingScene::ImguiUpdate()
 {
 	ImGui::Begin("CalibrateInfo");
-	ImGui::SetWindowSize("CalibrateInfo", { 426 ,600 });
+	ImGui::SetWindowSize("CalibrateInfo", { 626 ,650 });
 	ImGui::SetWindowPos({10,10});
 	if (ImGui::TreeNode("Calibrate"))
 	{
@@ -128,6 +128,7 @@ void SettingScene::ImguiUpdate()
 		}
 		else
 		{
+			ImGui::Text("\n");
 			if (ImGui::Button("ExtrinsCalibrateCamera0Start",{ IMGUI_BUTTON_SIZE_WIDTH,IMGUI_BUTTON_SIZE_HEIGHT }))
 			{
 				ExtrinsiCalibrating = true;
@@ -151,7 +152,7 @@ void SettingScene::ImguiUpdate()
 			IntrinsicParameterCalibrator::Parameter intParam = captureManager->GetYOLOPoseEstimation()
 																->GetInterinsParameter(0);
 
-			ImGui::Text("\n\n\n");
+			ImGui::Text("\n");
 			ImGui::Text("CameraMatrix");
 			ImGui::Text("%d,%d,%d", intParam.cameraMatrix.Get(0, 0),
 				intParam.cameraMatrix.Get(1, 0), intParam.cameraMatrix.Get(2, 0));
@@ -160,7 +161,7 @@ void SettingScene::ImguiUpdate()
 			ImGui::Text("%d,%d,%d", intParam.cameraMatrix.Get(0, 2),
 				intParam.cameraMatrix.Get(1, 2), intParam.cameraMatrix.Get(2, 2));
 
-			ImGui::Text("\n\n\n");
+			ImGui::Text("\n");
 			ImGui::Text("DistCoefee");
 			ImGui::Text("%d,%d,%d,%d,%d", intParam.distortionCoefficients.GetX(),
 				intParam.distortionCoefficients.GetY(), intParam.distortionCoefficients.GetZ(),
@@ -170,7 +171,7 @@ void SettingScene::ImguiUpdate()
 			ExtrinsiParameterCalibrator::Parameter extParam = captureManager->GetYOLOPoseEstimation()
 				->GetExtrinsiParameter(0);
 
-			ImGui::Text("\n\n\n");
+			ImGui::Text("\n");
 			ImGui::Text("CameraRotateMatrix");
 			ImGui::Text("%d,%d,%d", extParam.rotationMatrix.Get(0, 0),
 				extParam.rotationMatrix.Get(1, 0), extParam.rotationMatrix.Get(2, 0));
@@ -179,14 +180,14 @@ void SettingScene::ImguiUpdate()
 			ImGui::Text("%d,%d,%d", extParam.rotationMatrix.Get(0, 2),
 				extParam.rotationMatrix.Get(1, 2), extParam.rotationMatrix.Get(2, 2));
 			
-			ImGui::Text("\n\n\n");
+			ImGui::Text("\n");
 			ImGui::Text("CameraTranslateVector");
 			ImGui::Text("%d,%d,%d", extParam.translationVector.GetX(), extParam.translationVector.GetY(),
 										extParam.translationVector.GetZ());
 
 			ImGui::TreePop();
 		}
-
+		ImGui::SameLine();
 		if (ImGui::TreeNode("CalibrateDataCamera:1"))
 		{
 			IntrinsicParameterCalibrator::Parameter intParam = captureManager->GetYOLOPoseEstimation()

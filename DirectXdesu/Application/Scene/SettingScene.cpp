@@ -71,7 +71,8 @@ void SettingScene::Final() {
 
 void SettingScene::ImguiUpdate()
 {
-	ImGui::Begin("CalibrateInfo");
+	ImGui::Begin("CalibrateInfo",nullptr,
+		ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
 	ImGui::SetWindowSize("CalibrateInfo", { 626 ,650 });
 	ImGui::SetWindowPos({10,10});
 	if (ImGui::TreeNode("Calibrate"))

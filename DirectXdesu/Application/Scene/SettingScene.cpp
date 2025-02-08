@@ -124,6 +124,7 @@ void SettingScene::ImguiUpdate()
 			bool isfinite = status == std::future_status::ready;
 			if (isfinite)
 			{
+				ExtrinsiCalibrating = false;
 				callBack.SetCapture(false);
 				captureManager->GetYOLOPoseEstimation()->ExtrinsCalibrateSave("Resources\\CalibrateData");
 			}
@@ -170,39 +171,40 @@ void SettingScene::ImguiUpdate()
 						->GetExtrinsiParameter(i);
 
 					ImGui::Text("CameraMatrix");
-					ImGui::Text("%d, %d, %d", intParam.cameraMatrix.Get(0, 0),
+					ImGui::Text("%f, %f, %f", intParam.cameraMatrix.Get(0, 0),
 						intParam.cameraMatrix.Get(1, 0),
 						intParam.cameraMatrix.Get(2, 0));
-					ImGui::Text("%d, %d, %d", intParam.cameraMatrix.Get(0, 1),
+					ImGui::Text("%f, %f, %f", intParam.cameraMatrix.Get(0, 1),
 						intParam.cameraMatrix.Get(1, 1),
 						intParam.cameraMatrix.Get(2, 1));
-					ImGui::Text("%d, %d, %d", intParam.cameraMatrix.Get(0, 2),
+					ImGui::Text("%f, %f, %f", intParam.cameraMatrix.Get(0, 2),
 						intParam.cameraMatrix.Get(1, 2),
 						intParam.cameraMatrix.Get(2, 2));
 
 					ImGui::Spacing();
 					ImGui::Text("DistCoefee");
-					ImGui::Text("%d, %d, %d, %d, %d", intParam.distortionCoefficients.GetX(),
+					ImGui::Text("%f, %f, %f", intParam.distortionCoefficients.GetX(),
 						intParam.distortionCoefficients.GetY(),
-						intParam.distortionCoefficients.GetZ(),
+						intParam.distortionCoefficients.GetZ());
+					ImGui::Text("%f, %f",
 						intParam.distortionCoefficients.GetW(),
 						intParam.distortionCoefficients.GetV());
 
 					ImGui::Spacing();
 					ImGui::Text("CameraRotateMatrix");
-					ImGui::Text("%d, %d, %d", extParam.rotationMatrix.Get(0, 0),
+					ImGui::Text("%f, %f, %f", extParam.rotationMatrix.Get(0, 0),
 						extParam.rotationMatrix.Get(1, 0),
 						extParam.rotationMatrix.Get(2, 0));
-					ImGui::Text("%d, %d, %d", extParam.rotationMatrix.Get(0, 1),
+					ImGui::Text("%f, %f, %f", extParam.rotationMatrix.Get(0, 1),
 						extParam.rotationMatrix.Get(1, 1),
 						extParam.rotationMatrix.Get(2, 1));
-					ImGui::Text("%d, %d, %d", extParam.rotationMatrix.Get(0, 2),
+					ImGui::Text("%f, %f, %f", extParam.rotationMatrix.Get(0, 2),
 						extParam.rotationMatrix.Get(1, 2),
 						extParam.rotationMatrix.Get(2, 2));
 
 					ImGui::Spacing();
 					ImGui::Text("CameraTranslateVector");
-					ImGui::Text("%d, %d, %d", extParam.translationVector.GetX(),
+					ImGui::Text("%f, %f, %f", extParam.translationVector.GetX(),
 						extParam.translationVector.GetY(),
 						extParam.translationVector.GetZ());
 

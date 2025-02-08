@@ -293,51 +293,51 @@ void KModel::CreateModel() {
 
 void KModel::Draw(UINT rootParamIndex) {
 	// 頂点バッファビューの設定
-	KDirectXCommon::GetInstance()->GetCommandListMain()->IASetVertexBuffers(
+	KDirectXCommon::GetInstance()->GetMainCommandList()->IASetVertexBuffers(
 	    0, 1, &vertexs->GetVertBuffView());
 
 	// インデックスバッファビューの設定
-	KDirectXCommon::GetInstance()->GetCommandListMain()->IASetIndexBuffer(&vertexs->GetIndexBuffView());
+	KDirectXCommon::GetInstance()->GetMainCommandList()->IASetIndexBuffer(&vertexs->GetIndexBuffView());
 
-	KDirectXCommon::GetInstance()->GetCommandListMain()->SetGraphicsRootConstantBufferView(
+	KDirectXCommon::GetInstance()->GetMainCommandList()->SetGraphicsRootConstantBufferView(
 	    rootParamIndex, constBuffB1->GetGPUVirtualAddress());
 
 	// デスクリプタヒープのセット
 	ID3D12DescriptorHeap* ppHeaps[] = {texData.srvHeap.Get()};
-	KDirectXCommon::GetInstance()->GetCommandListMain()->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
+	KDirectXCommon::GetInstance()->GetMainCommandList()->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 
 	// シェーダーリソースビューをセット
-	KDirectXCommon::GetInstance()->GetCommandListMain()->SetGraphicsRootDescriptorTable(
+	KDirectXCommon::GetInstance()->GetMainCommandList()->SetGraphicsRootDescriptorTable(
 	    2, texData.gpuHandle);
 
 	// 描画
-	KDirectXCommon::GetInstance()->GetCommandListMain()->DrawIndexedInstanced(
+	KDirectXCommon::GetInstance()->GetMainCommandList()->DrawIndexedInstanced(
 	    (UINT)indices.size(), 1, 0, 0, 0);
 }
 
 void KModel::Draw(UINT rootParamIndex, TextureData texData_) {
 	// 頂点バッファビューの設定
-	KDirectXCommon::GetInstance()->GetCommandListMain()->IASetVertexBuffers(
+	KDirectXCommon::GetInstance()->GetMainCommandList()->IASetVertexBuffers(
 	    0, 1, &vertexs->GetVertBuffView());
 
 	// インデックスバッファビューの設定
-	KDirectXCommon::GetInstance()->GetCommandListMain()->IASetIndexBuffer(&vertexs->GetIndexBuffView());
+	KDirectXCommon::GetInstance()->GetMainCommandList()->IASetIndexBuffer(&vertexs->GetIndexBuffView());
 
-	KDirectXCommon::GetInstance()->GetCommandListMain()->SetGraphicsRootConstantBufferView(
+	KDirectXCommon::GetInstance()->GetMainCommandList()->SetGraphicsRootConstantBufferView(
 	    rootParamIndex, constBuffB1->GetGPUVirtualAddress());
 
 	// デスクリプタヒープのセット
 	ID3D12DescriptorHeap* ppHeaps[] = {texData_.srvHeap.Get()};
-	KDirectXCommon::GetInstance()->GetCommandListMain()->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
+	KDirectXCommon::GetInstance()->GetMainCommandList()->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 
 	// 先頭ハンドルを取得
 	D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle = texData_.gpuHandle;
 
 	// シェーダーリソースビューをセット
-	KDirectXCommon::GetInstance()->GetCommandListMain()->SetGraphicsRootDescriptorTable(2, srvGpuHandle);
+	KDirectXCommon::GetInstance()->GetMainCommandList()->SetGraphicsRootDescriptorTable(2, srvGpuHandle);
 
 	// 描画
-	KDirectXCommon::GetInstance()->GetCommandListMain()->DrawIndexedInstanced(
+	KDirectXCommon::GetInstance()->GetMainCommandList()->DrawIndexedInstanced(
 	    static_cast<UINT>(indices.size()), 1, 0, 0, 0);
 }
 

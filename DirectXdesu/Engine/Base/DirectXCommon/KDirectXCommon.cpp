@@ -32,7 +32,6 @@ void KDirectXCommon::Init()
 #ifdef _DEBUG
 	EnbleInfoQueue();
 #endif
-
 	if (FAILED(InitCommand()))
 	{
 		assert(0);
@@ -70,13 +69,13 @@ void KDirectXCommon::PreDraw()
 	bbIndex = swapChain->GetCurrentBackBufferIndex();
 	//書き込み可能に変更
 
-	backBuffers[bbIndex]->Transition(D3D12_RESOURCE_STATE_RENDER_TARGET, commandListMain.Get());
+	backBuffers[bbIndex]->Transition(D3D12_RESOURCE_STATE_RENDER_TARGET, mainCommandList.Get());
 
-	commandListMain->OMSetRenderTargets(1, &backBuffers[bbIndex]->GetHandle(), false, &depthBuff->GetHandle());
+	mainCommandList->OMSetRenderTargets(1, &backBuffers[bbIndex]->GetHandle(), false, &depthBuff->GetHandle());
 
 	//3画面クリア
-	commandListMain->ClearRenderTargetView(backBuffers[bbIndex]->GetHandle(), clearColor, 0, nullptr);
-	commandListMain->ClearDepthStencilView(depthBuff->DepthStencilView(), D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+	mainCommandList->ClearRenderTargetView(backBuffers[bbIndex]->GetHandle(), clearColor, 0, nullptr);
+	mainCommandList->ClearDepthStencilView(depthBuff->DepthStencilView(), D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 	//ビューポート設定
 	viewport.Width = (FLOAT)KWinApp::GetInstance()->GetWindowSizeW();
 	viewport.Height = (FLOAT)KWinApp::GetInstance()->GetWindowSizeH();
@@ -86,7 +85,7 @@ void KDirectXCommon::PreDraw()
 	viewport.MaxDepth = 1.0f;
 
 	// ビューポート設定コマンドを、コマンドリストに積む
-	commandListMain->RSSetViewports(1, &viewport);
+	mainCommandList->RSSetViewports(1, &viewport);
 
 	// シザー矩形設定
 	scissorRect.left = 0; // 切り抜き座標左
@@ -95,13 +94,13 @@ void KDirectXCommon::PreDraw()
 	scissorRect.bottom = scissorRect.top + KWinApp::GetInstance()->GetWindowSizeH(); // 切り抜き座標下
 
 	// シザー矩形設定コマンドを、コマンドリストに積む
-	commandListMain->RSSetScissorRects(1, &scissorRect);
+	mainCommandList->RSSetScissorRects(1, &scissorRect);
 }
 
 void KDirectXCommon::PostDraw()
 {
 	//5元に戻す
-	backBuffers[bbIndex]->Transition(D3D12_RESOURCE_STATE_PRESENT, commandListMain.Get());
+	backBuffers[bbIndex]->Transition(D3D12_RESOURCE_STATE_PRESENT, mainCommandList.Get());
 
 	DeleteCommand();
 	// FPS固定
@@ -110,11 +109,9 @@ void KDirectXCommon::PostDraw()
 
 void KDirectXCommon::DeleteCommand()
 {
-	/// 命令のクローズ
 	// メイン
-	CloseCommnd(commandListMain.Get(), commandQueueMain.Get());
+	MainCommandListExecute();
 	// コンピュート
-	CloseCommnd(commandListCompute.Get(), commandQueueCompute.Get());
 
 	//フリップ
 	result = swapChain->Present(1, 0);
@@ -123,11 +120,8 @@ void KDirectXCommon::DeleteCommand()
 	// フラッシュ
 	FlashCommandQueue();
 
-	/// キューをクリア
-	// メイン
-	BeginCommnd(commandListMain.Get(), commandAllocaterMain.Get());
-	// コンピュート
-	BeginCommnd(commandListCompute.Get(), commandAllocaterCompute.Get());
+	// コマンドリセット
+	MainCommandListReset();
 }
 
 void KDirectXCommon::Destroy()
@@ -150,36 +144,6 @@ void KDirectXCommon::QueueSynchronization()
 ID3D12Device* KDirectXCommon::GetDevice() const
 {
 	return device_.Get();
-}
-
-ID3D12GraphicsCommandList* KDirectXCommon::GetCommandListMain() const
-{
-	return commandListMain.Get();
-}
-
-ID3D12GraphicsCommandList* KDirectXCommon::GetCommandListCompute() const
-{
-	return commandListCompute.Get();
-}
-
-ID3D12CommandQueue* KDirectXCommon::GetCommandQueueMain() const
-{
-	return commandQueueMain.Get();
-}
-
-ID3D12CommandQueue* KDirectXCommon::GetCommandQueueCompute() const
-{
-	return commandQueueCompute.Get();
-}
-
-ID3D12CommandAllocator* KDirectXCommon::GetCommandAllocatorMain() const
-{
-	return commandAllocaterMain.Get();
-}
-
-ID3D12CommandAllocator* KDirectXCommon::GetCommandAllocatorCompute() const
-{
-	return commandAllocaterCompute.Get();
 }
 
 ID3D12Fence* KDirectXCommon::GetFenceMain() const
@@ -207,10 +171,10 @@ KDsvDescriptorHeap* KDirectXCommon::GetDsvDescriptorHrap() const
 	return dsvHeap.get();
 }
 
-void KDirectXCommon::Transition(ID3D12Resource* resource, D3D12_RESOURCE_STATES beforeState, D3D12_RESOURCE_STATES afterState, ID3D12GraphicsCommandList* commandList)
+void KDirectXCommon::Transition(ID3D12Resource* resource, D3D12_RESOURCE_STATES beforeState, D3D12_RESOURCE_STATES afterState)
 {
 	auto barrier = CD3DX12_RESOURCE_BARRIER::Transition(resource, beforeState, afterState);
-	commandList->ResourceBarrier(1, &barrier);
+	mainCommandList->ResourceBarrier(1, &barrier);
 }
 
 size_t KDirectXCommon::GetBackBufferCount() const
@@ -323,10 +287,10 @@ HRESULT KDirectXCommon::CreateSwapChain()
 	swapChainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 
 	//生成
-	if (commandQueueMain != 0)
+	if (mainCommandQueue != 0)
 	{
 		Microsoft::WRL::ComPtr<IDXGISwapChain1> tmpSwapChain;
-		result = dxgiFactory->CreateSwapChainForHwnd(commandQueueMain.Get(), KWinApp::GetInstance()->GetHWND(), &swapChainDesc, 
+		result = dxgiFactory->CreateSwapChainForHwnd(mainCommandQueue.Get(), KWinApp::GetInstance()->GetHWND(), &swapChainDesc, 
 			nullptr, nullptr, tmpSwapChain.ReleaseAndGetAddressOf());
 		tmpSwapChain.As(&swapChain);
 
@@ -345,61 +309,44 @@ HRESULT KDirectXCommon::CreateSwapChain()
 
 HRESULT KDirectXCommon::InitCommand()
 {
-	/// コマンドアロケータを生成
+	D3D12_COMMAND_LIST_TYPE lListType = D3D12_COMMAND_LIST_TYPE_DIRECT;
 	// メイン
-	result = device_->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(commandAllocaterMain.ReleaseAndGetAddressOf()));
-	if (FAILED(result))
 	{
-		return result;
-	}
-	// コンピュート
-	result = device_->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_COMPUTE, IID_PPV_ARGS(commandAllocaterCompute.ReleaseAndGetAddressOf()));
-	if (FAILED(result))
-	{
-		return result;
+		// アロケーター
+		result = device_->CreateCommandAllocator(lListType, IID_PPV_ARGS(&mainCommandAllocater));
+		if (FAILED(result)) { return result; }
+
+		// キュー
+		D3D12_COMMAND_QUEUE_DESC commandQueueDesc{};
+		commandQueueDesc.Type = lListType;
+		result = device_->CreateCommandQueue(&commandQueueDesc, IID_PPV_ARGS(&mainCommandQueue));
+		if (FAILED(result)) { return result; }
+
+		// リスト
+		result = device_->CreateCommandList(0, lListType, mainCommandAllocater.Get(), nullptr, IID_PPV_ARGS(&mainCommandList));
+		if (FAILED(result)) { return result; }
+
+		//mainCommandList->Close();
 	}
 
-	/// コマンドリストを生成
-	// メイン
-	if (commandAllocaterMain != 0)
-	{
-		result = device_->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, commandAllocaterMain.Get(), nullptr, IID_PPV_ARGS(commandListMain.ReleaseAndGetAddressOf()));
-		if (FAILED(result))
-		{
-			return result;
-		}
-	}
-	else
-	{
-		assert(SUCCEEDED(0));
-	}
+	lListType = D3D12_COMMAND_LIST_TYPE_COMPUTE;
 	// コンピュート
-	if (commandAllocaterCompute != 0)
 	{
-		result = device_->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_COMPUTE, commandAllocaterCompute.Get(), nullptr, IID_PPV_ARGS(commandListCompute.ReleaseAndGetAddressOf()));
-	}
-	else
-	{
-		assert(SUCCEEDED(0));
-	}
+		// アロケーター
+		result = device_->CreateCommandAllocator(lListType, IID_PPV_ARGS(&computeCommandAllocater));
+		if (FAILED(result)) { return result; }
 
-	/// コマンドキューの設定＆生成
-	D3D12_COMMAND_QUEUE_DESC commandQueueDesc{};
-	// メイン
-	commandQueueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
-	commandQueueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
-	result = device_->CreateCommandQueue(&commandQueueDesc, IID_PPV_ARGS(commandQueueMain.ReleaseAndGetAddressOf()));
-	if (FAILED(result))
-	{
-		return result;
-	}
-	// コンピュート
-	commandQueueDesc.Type = D3D12_COMMAND_LIST_TYPE_COMPUTE;
-	commandQueueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
-	result = device_->CreateCommandQueue(&commandQueueDesc, IID_PPV_ARGS(commandQueueCompute.ReleaseAndGetAddressOf()));
-	if (FAILED(result))
-	{
-		return result;
+		// キュー
+		D3D12_COMMAND_QUEUE_DESC commandQueueDesc{};
+		commandQueueDesc.Type = lListType;
+		result = device_->CreateCommandQueue(&commandQueueDesc, IID_PPV_ARGS(&computeCommandQueue));
+		if (FAILED(result)) { return result; }
+
+		// リスト
+		result = device_->CreateCommandList(0, lListType, computeCommandAllocater.Get(), nullptr, IID_PPV_ARGS(&computeCommandList));
+		if (FAILED(result)) { return result; }
+
+		//computeCommandList->Close();
 	}
 
 	return result;
@@ -408,12 +355,6 @@ HRESULT KDirectXCommon::InitCommand()
 HRESULT KDirectXCommon::CreateFence()
 {
 	//フェンスの生成
-	result = device_->CreateFence(fenceValMain, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(fenceMain.ReleaseAndGetAddressOf()));
-	if (FAILED(result))
-	{
-		return result;
-	}
-
 	result = device_->CreateFence(fenceValMain, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(fenceMain.ReleaseAndGetAddressOf()));
 	if (FAILED(result))
 	{
@@ -486,39 +427,86 @@ void KDirectXCommon::EnbleInfoQueue()
 	}
 }
 
-void KDirectXCommon::BeginCommnd(ID3D12GraphicsCommandList* commandList, ID3D12CommandAllocator* commandAllocator)
+#pragma region メイン
+void KDirectXCommon::MainCommandListExecute()
 {
-	//キューをクリア
-	result = commandAllocator->Reset();
-	assert(SUCCEEDED(result));
-	//コマンドリストを貯める準備
-	if (commandList != 0)
-	{
-		result = commandList->Reset(commandAllocator, nullptr);
-		assert(SUCCEEDED(result));
-	}
-	else
-	{
-		assert(SUCCEEDED(0));
-	}
-}
-
-void KDirectXCommon::CloseCommnd(ID3D12GraphicsCommandList* commandList, ID3D12CommandQueue* commandQueue)
-{
-	//命令のクローズ
-	result = commandList->Close();
+	result = mainCommandList->Close();
 	assert(SUCCEEDED(result));
 	//コマンドリストの実行
-	ID3D12CommandList* commandListts[] = { commandList };
-	commandQueue->ExecuteCommandLists(1, commandListts);
+	ID3D12CommandList* commandListts[] = { mainCommandList.Get() };
+	mainCommandQueue->ExecuteCommandLists(1, commandListts);
 }
+
+void KDirectXCommon::MainCommandListReset()
+{
+	//キューをクリア
+	result = mainCommandAllocater->Reset();
+	assert(SUCCEEDED(result));
+
+	//コマンドリストを貯める準備
+	result = mainCommandList->Reset(mainCommandAllocater.Get(), nullptr);
+	assert(SUCCEEDED(result));
+}
+
+ID3D12GraphicsCommandList* KDirectXCommon::GetMainCommandList() const
+{
+	return mainCommandList.Get();
+}
+
+ID3D12CommandQueue* KDirectXCommon::GetMainCommandQueue() const
+{
+	return mainCommandQueue.Get();
+}
+
+ID3D12CommandAllocator* KDirectXCommon::GetMainCommandAllocator() const
+{
+	return mainCommandAllocater.Get();
+}
+#pragma endregion
+
+#pragma region コンピュート
+void KDirectXCommon::ComputeCommandListExecute()
+{
+	result = computeCommandList->Close();
+	assert(SUCCEEDED(result));
+	//コマンドリストの実行
+	ID3D12CommandList* commandListts[] = { computeCommandList.Get() };
+	computeCommandQueue->ExecuteCommandLists(1, commandListts);
+}
+
+void KDirectXCommon::ComputeCommandListReset()
+{
+	//キューをクリア
+	result = computeCommandAllocater->Reset();
+	assert(SUCCEEDED(result));
+
+	//コマンドリストを貯める準備
+	result = computeCommandList->Reset(computeCommandAllocater.Get(), nullptr);
+	assert(SUCCEEDED(result));
+}
+
+ID3D12GraphicsCommandList* KDirectXCommon::GetComputeCommandList() const
+{
+	return computeCommandList.Get();
+}
+
+ID3D12CommandQueue* KDirectXCommon::GetComputeCommandQueue() const
+{
+	return computeCommandQueue.Get();
+}
+
+ID3D12CommandAllocator* KDirectXCommon::GetComputeCommandAllocator() const
+{
+	return computeCommandAllocater.Get();
+}
+#pragma endregion
 
 void KDirectXCommon::FlashCommandQueue()
 {
 	//コマンド実行完了を待つ
 	fenceValMain++;
-	commandQueueMain->Signal(fenceMain.Get(), fenceValMain);
-	commandQueueCompute->Wait(fenceMain.Get(), fenceValMain);
+	mainCommandQueue->Signal(fenceMain.Get(), fenceValMain);
+	computeCommandQueue->Wait(fenceMain.Get(), fenceValMain);
 
 	if (fenceMain.Get()->GetCompletedValue() < fenceValMain)
 	{
@@ -527,6 +515,8 @@ void KDirectXCommon::FlashCommandQueue()
 		WaitForSingleObject(event, INFINITE);
 		CloseHandle(event);
 	}
+
+
 }
 
 D3D12_VIEWPORT KDirectXCommon::GetViewport()
@@ -587,7 +577,7 @@ KDirectXCommon* KDirectXCommon::GetInstance()
 	return directXCommon_;
 }
 
-void KDirectXCommon::ResourceTransition(ID3D12Resource* resource, D3D12_RESOURCE_STATES beforeState, D3D12_RESOURCE_STATES afterState, ID3D12GraphicsCommandList* commandList)
+void KDirectXCommon::ResourceTransition(ID3D12Resource* resource, D3D12_RESOURCE_STATES beforeState, D3D12_RESOURCE_STATES afterState)
 {
-	GetInstance()->Transition(resource, beforeState, afterState,commandList);
+	GetInstance()->Transition(resource, beforeState, afterState);
 }

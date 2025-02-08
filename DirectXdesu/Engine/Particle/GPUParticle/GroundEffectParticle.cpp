@@ -14,9 +14,9 @@ GroundEffectParticle::GroundEffectParticle(const Timer* timer, const KMyMath::Ma
 void GroundEffectParticle::Init(const Timer* timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection, Emitter* emitter)
 {
 	KDirectXCommon* directXCommon = KDirectXCommon::GetInstance();
-	ID3D12GraphicsCommandList* commandList = directXCommon->GetCommandListCompute();
-	ID3D12CommandQueue* commandQueue = directXCommon->GetCommandQueueCompute();
-	ID3D12CommandAllocator* commandAllocator = directXCommon->GetCommandAllocatorCompute();
+	ID3D12GraphicsCommandList* commandList = directXCommon->GetMainCommandList();
+	ID3D12CommandQueue* commandQueue = directXCommon->GetMainCommandQueue();
+	ID3D12CommandAllocator* commandAllocator = directXCommon->GetMainCommandAllocator();
 	ID3D12Fence* fence = KDirectXCommon::GetInstance()->GetFenceMain();
 
 	rootSignature_ = std::make_unique<RootSignature>();
@@ -83,7 +83,7 @@ void GroundEffectParticle::Init(const Timer* timer, const KMyMath::Matrix4& matV
 
 	directXCommon->FlashCommandQueue();
 
-	directXCommon->BeginCommnd(commandList, commandAllocator);
+	directXCommon->MainCommandListReset();
 }
 
 void GroundEffectParticle::Update(const Timer* timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection, Emitter* emitter)
@@ -115,7 +115,7 @@ void GroundEffectParticle::Update(const Timer* timer, const KMyMath::Matrix4& ma
 void GroundEffectParticle::Draw(const Timer* timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection, Emitter* emitter)
 {
 	KDirectXCommon* directXCommon = KDirectXCommon::GetInstance();
-	ID3D12GraphicsCommandList* commndList = directXCommon->GetCommandListCompute();
+	ID3D12GraphicsCommandList* commndList = directXCommon->GetMainCommandList();
 
 	auto currentCommandListAllocator = currentFrameResource->commandListAllocator;
 
@@ -405,7 +405,7 @@ void GroundEffectParticle::UpdateMainPassCB(const Timer* timer, const KMyMath::M
 
 void GroundEffectParticle::ParticleUpdate()
 {
-	ID3D12GraphicsCommandList* commndList = KDirectXCommon::GetInstance()->GetCommandListCompute();
+	ID3D12GraphicsCommandList* commndList = KDirectXCommon::GetInstance()->GetMainCommandList();
 
 	commndList->SetPipelineState(updatePSO_->GetPipelineState());
 	commndList->SetComputeRootSignature(particleRootSignature_->GetRootSignature());
@@ -433,7 +433,7 @@ void GroundEffectParticle::ParticleUpdate()
 
 void GroundEffectParticle::ParticleDraw()
 {
-	ID3D12GraphicsCommandList* commndList = KDirectXCommon::GetInstance()->GetCommandListCompute();
+	ID3D12GraphicsCommandList* commndList = KDirectXCommon::GetInstance()->GetMainCommandList();
 
 	commndList->SetPipelineState(copyDrawPSO_->GetPipelineState());
 	commndList->SetComputeRootSignature(particleRootSignature_->GetRootSignature());
@@ -461,7 +461,7 @@ void GroundEffectParticle::ParticleDraw()
 
 void GroundEffectParticle::DrawCommon()
 {
-	ID3D12GraphicsCommandList* commndList = KDirectXCommon::GetInstance()->GetCommandListMain();
+	ID3D12GraphicsCommandList* commndList = KDirectXCommon::GetInstance()->GetMainCommandList();
 
 	commndList->SetPipelineState(graphicPSO_->GetPipelineState());
 	commndList->SetGraphicsRootSignature(rootSignature_->GetRootSignature());

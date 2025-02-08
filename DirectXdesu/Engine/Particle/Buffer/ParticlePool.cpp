@@ -5,13 +5,11 @@ void ParticlePool::Create(ID3D12DescriptorHeap* uavHeap, uint32_t particleMax)
 {
 	KDirectXCommon* directXCommon = KDirectXCommon::GetInstance();
 	ID3D12Device* device = directXCommon->GetDevice();
+	ID3D12GraphicsCommandList* commandList = directXCommon->GetMainCommandList();
 
-	UINT64 particlePoolByteSize =
-		sizeof(Particle) * particleMax;
-	CD3DX12_HEAP_PROPERTIES heap =
-		CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
-	CD3DX12_RESOURCE_DESC resouceDesc =
-		CD3DX12_RESOURCE_DESC::Buffer(particlePoolByteSize,
+	UINT64 particlePoolByteSize = sizeof(Particle) * particleMax;
+	CD3DX12_HEAP_PROPERTIES heap = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
+	CD3DX12_RESOURCE_DESC resouceDesc = CD3DX12_RESOURCE_DESC::Buffer(particlePoolByteSize,
 			D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS);
 	device->CreateCommittedResource(
 		&heap,
@@ -21,7 +19,7 @@ void ParticlePool::Create(ID3D12DescriptorHeap* uavHeap, uint32_t particleMax)
 		nullptr,
 		IID_PPV_ARGS(&RWParticlePool));
 	resourseState = D3D12_RESOURCE_STATE_COMMON;
-	Translation(directXCommon->GetCommandListMain(), D3D12_RESOURCE_STATE_UNORDERED_ACCESS);
+	Translation(commandList, D3D12_RESOURCE_STATE_UNORDERED_ACCESS);
 	RWParticlePool->SetName(L"ParticlePool");
 
 	D3D12_UNORDERED_ACCESS_VIEW_DESC particlePoolUAVDescription = {};
@@ -80,8 +78,7 @@ CD3DX12_GPU_DESCRIPTOR_HANDLE& ParticlePool::GetGPUUAV()
 
 void ParticlePool::Translation(ID3D12GraphicsCommandList* cmdList, D3D12_RESOURCE_STATES afterState)
 {
-	CD3DX12_RESOURCE_BARRIER resourceBarrier =
-		CD3DX12_RESOURCE_BARRIER::Transition(RWParticlePool.Get(), resourseState, afterState);
+	CD3DX12_RESOURCE_BARRIER resourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(RWParticlePool.Get(), resourseState, afterState);
 	cmdList->ResourceBarrier(1, &resourceBarrier);
 	resourseState = afterState;
 }

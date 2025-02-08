@@ -9,10 +9,8 @@ void DeadList::Create(ID3D12DescriptorHeap* uavHeap, uint32_t particleMax)
 	UINT64 deadListByteSize = sizeof(unsigned int) * particleMax;
 	UINT64 countBufferOffset = AlignForUavCounter((UINT)deadListByteSize);
 
-	CD3DX12_HEAP_PROPERTIES heap =
-		CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
-	CD3DX12_RESOURCE_DESC resouceDesc =
-		CD3DX12_RESOURCE_DESC::Buffer(countBufferOffset + sizeof(UINT),
+	CD3DX12_HEAP_PROPERTIES heap = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
+	CD3DX12_RESOURCE_DESC resouceDesc = CD3DX12_RESOURCE_DESC::Buffer(countBufferOffset + sizeof(UINT),
 			D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS);
 	device->CreateCommittedResource(
 		&heap,

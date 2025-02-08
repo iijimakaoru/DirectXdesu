@@ -140,7 +140,7 @@ void FbxModel::LoadTexture()
 
 void FbxModel::Draw()
 {
-	ID3D12GraphicsCommandList* cmdList = KDirectXCommon::GetInstance()->GetCommandListMain();
+	ID3D12GraphicsCommandList* cmdList = KDirectXCommon::GetInstance()->GetMainCommandList();
 
 	// 頂点バッファビューの設定
 	cmdList->IASetVertexBuffers(0, 1, &vbView);

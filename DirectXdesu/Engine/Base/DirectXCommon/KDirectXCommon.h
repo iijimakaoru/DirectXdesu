@@ -26,6 +26,8 @@
 #include "KDescriptorHeap.h"
 #include "KDepthStencilBuffer.h"
 
+#include "CommandList.h"
+
 #pragma comment(lib, "d3d12.lib")
 #pragma comment(lib, "dxgi.lib")
 
@@ -49,8 +51,7 @@ public:
 	// シングルトンインスタンス
 	static KDirectXCommon* GetInstance();
 	// リソースの状態を変える
-	static void ResourceTransition(ID3D12Resource* resource, 
-		D3D12_RESOURCE_STATES beforeState, D3D12_RESOURCE_STATES afterState, ID3D12GraphicsCommandList* commandList);
+	static void ResourceTransition(ID3D12Resource* resource, D3D12_RESOURCE_STATES beforeState, D3D12_RESOURCE_STATES afterState);
 	// 初期化
 	void Init();
 	// 描画準備
@@ -74,22 +75,9 @@ public:
 	KRtvDescriptorHeap* GetRTVDescriptorHeap() const;
 	// DSV用のデスクリプタヒープ取得
 	KDsvDescriptorHeap* GetDsvDescriptorHrap() const;
-	// リソースの状態を変える
-	void Transition(ID3D12Resource* resource, D3D12_RESOURCE_STATES beforeState, D3D12_RESOURCE_STATES afterState, ID3D12GraphicsCommandList* commandList);
-	void BeginCommnd(ID3D12GraphicsCommandList* commandList, ID3D12CommandAllocator* commandAllocator);
-	void CloseCommnd(ID3D12GraphicsCommandList* commandList, ID3D12CommandQueue* commandQueue);
-	void FlashCommandQueue();
 
 	// デバイス取得
 	ID3D12Device* GetDevice() const;
-
-	// コマンド取得
-	ID3D12GraphicsCommandList* GetCommandListMain() const;
-	ID3D12GraphicsCommandList* GetCommandListCompute() const;
-	ID3D12CommandAllocator* GetCommandAllocatorMain() const;
-	ID3D12CommandAllocator* GetCommandAllocatorCompute() const;
-	ID3D12CommandQueue* GetCommandQueueMain() const;
-	ID3D12CommandQueue* GetCommandQueueCompute() const;
 
 	ID3D12Fence* GetFenceMain() const;
 	IDXGISwapChain4* GetSwapChain() const;
@@ -102,6 +90,25 @@ public:
 	UINT GetRTVDescriptorSize();
 	UINT GetDSVDescriptorSize();
 	UINT GetCBVSRVUAVDescriptorSize();
+
+	// コマンド
+#pragma region メイン
+	void MainCommandListExecute();
+	void MainCommandListReset();
+	void Transition(ID3D12Resource* resource, D3D12_RESOURCE_STATES beforeState, D3D12_RESOURCE_STATES afterState);// リソースの状態を変える
+	ID3D12GraphicsCommandList* GetMainCommandList() const;
+	ID3D12CommandAllocator* GetMainCommandAllocator() const;
+	ID3D12CommandQueue* GetMainCommandQueue() const;
+#pragma endregion
+
+#pragma region コンピュート
+	void ComputeCommandListExecute();
+	void ComputeCommandListReset();
+	ID3D12GraphicsCommandList* GetComputeCommandList() const;
+	ID3D12CommandAllocator* GetComputeCommandAllocator() const;
+	ID3D12CommandQueue* GetComputeCommandQueue() const;
+#pragma endregion
+	void FlashCommandQueue();
 
 private:
 	// DXGI初期化
@@ -142,21 +149,21 @@ private:
 	
 	/// アロケーター
 	// 描画用
-	ComPtr<ID3D12CommandAllocator> commandAllocaterMain;
+	ComPtr<ID3D12CommandAllocator> mainCommandAllocater;
 	// 計算用
-	ComPtr<ID3D12CommandAllocator> commandAllocaterCompute;
+	ComPtr<ID3D12CommandAllocator> computeCommandAllocater;
 
 	/// リスト
 	// 描画用
-	ComPtr<ID3D12GraphicsCommandList> commandListMain;
+	ComPtr<ID3D12GraphicsCommandList> mainCommandList;
 	// 計算用
-	ComPtr<ID3D12GraphicsCommandList> commandListCompute;
+	ComPtr<ID3D12GraphicsCommandList> computeCommandList;
 
 	/// キュー
 	// 描画用
-	ComPtr<ID3D12CommandQueue> commandQueueMain;
+	ComPtr<ID3D12CommandQueue> mainCommandQueue;
 	// 計算用
-	ComPtr<ID3D12CommandQueue> commandQueueCompute;
+	ComPtr<ID3D12CommandQueue> computeCommandQueue;
 
 	/// フェンスの生成
 	ComPtr<ID3D12Fence> fenceMain;

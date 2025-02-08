@@ -14,9 +14,9 @@ MeshGPUParticle::MeshGPUParticle(const Timer* timer,  const KMyMath::Matrix4& ma
 void MeshGPUParticle::Init(const Timer* timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection, Emitter* emitter)
 {
 	KDirectXCommon* directXCommon = KDirectXCommon::GetInstance();
-	ID3D12GraphicsCommandList* commandList = directXCommon->GetCommandListCompute();
-	ID3D12CommandAllocator* commandAllocator = directXCommon->GetCommandAllocatorCompute();
-	ID3D12CommandQueue* commandQueue = directXCommon->GetCommandQueueCompute();
+	ID3D12GraphicsCommandList* commandList = directXCommon->GetMainCommandList();
+	ID3D12CommandAllocator* commandAllocator = directXCommon->GetMainCommandAllocator();
+	ID3D12CommandQueue* commandQueue = directXCommon->GetMainCommandQueue();
 	ID3D12Fence* fence = KDirectXCommon::GetInstance()->GetFenceMain();
 
 	rootSignature_ = std::make_unique<RootSignature>();
@@ -83,13 +83,13 @@ void MeshGPUParticle::Init(const Timer* timer, const KMyMath::Matrix4& matView, 
 
 	directXCommon->FlashCommandQueue();
 
-	directXCommon->BeginCommnd(commandList, commandAllocator);
+	directXCommon->MainCommandListReset();
 }
 
 void MeshGPUParticle::Update(const Timer* timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection, Emitter* emitter)
 {
 	KDirectXCommon* directXCommon = KDirectXCommon::GetInstance();
-	ID3D12CommandQueue* commandQueue = directXCommon->GetCommandQueueCompute();
+	ID3D12CommandQueue* commandQueue = directXCommon->GetMainCommandQueue();
 	ID3D12Fence* fence = directXCommon->GetFenceMain();
 
 	// 円形のフレーム リソース配列を循環します
@@ -113,7 +113,7 @@ void MeshGPUParticle::Update(const Timer* timer, const KMyMath::Matrix4& matView
 
 void MeshGPUParticle::Draw(const Timer* timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection, Emitter* emitter)
 {
-	ID3D12GraphicsCommandList* commndList = KDirectXCommon::GetInstance()->GetCommandListCompute();
+	ID3D12GraphicsCommandList* commndList = KDirectXCommon::GetInstance()->GetMainCommandList();
 
 	auto currentCommandListAllocator = currentFrameResource->commandListAllocator;
 
@@ -349,10 +349,7 @@ void MeshGPUParticle::BuildFrameResources()
 	for (auto& f : frameFutures) FrameResources.push_back(f.get());
 }
 
-void MeshGPUParticle::UpdateMainPassCB(const Timer* timer,
-	const KMyMath::Matrix4& matView,
-	const KMyMath::Matrix4& matProjection,
-	Emitter* emitter)
+void MeshGPUParticle::UpdateMainPassCB(const Timer* timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection, Emitter* emitter)
 {
 	DirectX::XMMATRIX matScale = DirectX::XMMatrixIdentity();
 	matScale = 
@@ -411,7 +408,7 @@ void MeshGPUParticle::UpdateMainPassCB(const Timer* timer,
 
 void MeshGPUParticle::ParticleUpdate()
 {
-	ID3D12GraphicsCommandList* commndList = KDirectXCommon::GetInstance()->GetCommandListCompute();
+	ID3D12GraphicsCommandList* commndList = KDirectXCommon::GetInstance()->GetMainCommandList();
 
 	commndList->SetPipelineState(updatePSO_->GetPipelineState());
 	commndList->SetComputeRootSignature(particleRootSignature_->GetRootSignature());
@@ -439,7 +436,7 @@ void MeshGPUParticle::ParticleUpdate()
 
 void MeshGPUParticle::ParticleDraw()
 {
-	ID3D12GraphicsCommandList* commndList = KDirectXCommon::GetInstance()->GetCommandListCompute();
+	ID3D12GraphicsCommandList* commndList = KDirectXCommon::GetInstance()->GetMainCommandList();
 
 	commndList->SetPipelineState(copyDrawPSO_->GetPipelineState());
 	commndList->SetComputeRootSignature(particleRootSignature_->GetRootSignature());
@@ -467,8 +464,7 @@ void MeshGPUParticle::ParticleDraw()
 
 void MeshGPUParticle::DrawCommon()
 {
-	ID3D12GraphicsCommandList* cmdListMain = KDirectXCommon::GetInstance()->GetCommandListMain();
-	ID3D12GraphicsCommandList* cmdListCompute = KDirectXCommon::GetInstance()->GetCommandListCompute();
+	ID3D12GraphicsCommandList* cmdListMain = KDirectXCommon::GetInstance()->GetMainCommandList();
 
 	cmdListMain->SetPipelineState(graphicPSO_->GetPipelineState());
 	cmdListMain->SetGraphicsRootSignature(rootSignature_->GetRootSignature());

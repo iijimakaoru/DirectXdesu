@@ -6,14 +6,11 @@ void DrawList::Create(ID3D12DescriptorHeap* uavHeap, uint32_t particleMax)
 	KDirectXCommon* directXCommon = KDirectXCommon::GetInstance();
 	ID3D12Device* device = directXCommon->GetDevice();
 
-	UINT64 drawListByteSize =
-		sizeof(ParticleSort) * particleMax;
+	UINT64 drawListByteSize = sizeof(ParticleSort) * particleMax;
 	UINT64 countBufferOffset = AlignForUavCounter((UINT)drawListByteSize);
 
-	CD3DX12_HEAP_PROPERTIES heap =
-		CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
-	CD3DX12_RESOURCE_DESC resouceDesc =
-		CD3DX12_RESOURCE_DESC::Buffer(countBufferOffset + sizeof(UINT),
+	CD3DX12_HEAP_PROPERTIES heap = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
+	CD3DX12_RESOURCE_DESC resouceDesc = CD3DX12_RESOURCE_DESC::Buffer(countBufferOffset + sizeof(UINT),
 			D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS);
 	device->CreateCommittedResource(
 		&heap,

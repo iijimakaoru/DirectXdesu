@@ -7,7 +7,7 @@ void MultiPostEffect::Init() {
 
 	window = KWinApp::GetInstance();
 
-	cmdList = KDirectXCommon::GetInstance()->GetCommandListMain();
+	cmdList = KDirectXCommon::GetInstance()->GetMainCommandList();
 
 	clearColor[0] = {0.0f};
 	clearColor[1] = {0.0f};

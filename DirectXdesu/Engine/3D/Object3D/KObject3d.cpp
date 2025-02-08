@@ -117,7 +117,7 @@ void KObject3d::Draw() {
 	pipeline->Update(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	// 定数バッファビューをセット
-	KDirectXCommon::GetInstance()->GetCommandListMain()->SetGraphicsRootConstantBufferView(
+	KDirectXCommon::GetInstance()->GetMainCommandList()->SetGraphicsRootConstantBufferView(
 	    0, constBuffB0->GetGPUVirtualAddress());
 
 	light_->Draw(3);
@@ -130,7 +130,7 @@ void KObject3d::Draw(TextureData& texData_) {
 	pipeline->Update(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	// 定数バッファビューをセット
-	KDirectXCommon::GetInstance()->GetCommandListMain()->SetGraphicsRootConstantBufferView(
+	KDirectXCommon::GetInstance()->GetMainCommandList()->SetGraphicsRootConstantBufferView(
 	    0, constBuffB0->GetGPUVirtualAddress());
 
 	light_->Draw(3);

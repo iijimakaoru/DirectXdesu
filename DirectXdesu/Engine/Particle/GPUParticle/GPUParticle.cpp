@@ -16,9 +16,9 @@ void GPUParticle::Init(const Timer& timer,
 	Emitter* emitter)
 {
 	KDirectXCommon* directXCommon = KDirectXCommon::GetInstance();
-	ID3D12GraphicsCommandList* commandList = directXCommon->GetCommandListCompute();
-	ID3D12CommandQueue* commandQueue = directXCommon->GetCommandQueueCompute();
-	ID3D12CommandAllocator* commandAllocator = directXCommon->GetCommandAllocatorCompute();
+	ID3D12GraphicsCommandList* commandList = directXCommon->GetMainCommandList();
+	ID3D12CommandQueue* commandQueue = directXCommon->GetMainCommandQueue();
+	ID3D12CommandAllocator* commandAllocator = directXCommon->GetMainCommandAllocator();
 	ID3D12Fence* fence = KDirectXCommon::GetInstance()->GetFenceMain();
 
 	rootSignature_ = std::make_unique<RootSignature>();
@@ -84,7 +84,7 @@ void GPUParticle::Init(const Timer& timer,
 
 	directXCommon->FlashCommandQueue();
 
-	directXCommon->BeginCommnd(commandList,commandAllocator);
+	directXCommon->MainCommandListReset();
 }
 
 void GPUParticle::Update(const Timer& timer,
@@ -120,7 +120,7 @@ void GPUParticle::Draw(const Timer& timer,
 	Emitter* emitter)
 {
 	KDirectXCommon* directXCommon = KDirectXCommon::GetInstance();
-	ID3D12GraphicsCommandList* commndList = directXCommon->GetCommandListCompute();
+	ID3D12GraphicsCommandList* commndList = directXCommon->GetMainCommandList();
 
 	auto currentCommandListAllocator = currentFrameResource->commandListAllocator;
 

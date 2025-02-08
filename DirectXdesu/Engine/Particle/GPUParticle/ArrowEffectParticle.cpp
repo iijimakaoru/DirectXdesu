@@ -14,9 +14,9 @@ ArrowEffectParticle::ArrowEffectParticle(const Timer* timer, const KMyMath::Matr
 void ArrowEffectParticle::Init(const Timer* timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection, Emitter* emitter)
 {
 	KDirectXCommon* directXCommon = KDirectXCommon::GetInstance();
-	ID3D12GraphicsCommandList* commandList = directXCommon->GetCommandListCompute();
-	ID3D12CommandQueue* commandQueue = directXCommon->GetCommandQueueCompute();
-	ID3D12CommandAllocator* commandAllocator = directXCommon->GetCommandAllocatorCompute();
+	ID3D12GraphicsCommandList* commandList = directXCommon->GetMainCommandList();
+	ID3D12CommandQueue* commandQueue = directXCommon->GetMainCommandQueue();
+	ID3D12CommandAllocator* commandAllocator = directXCommon->GetMainCommandAllocator();
 	ID3D12Fence* fence = KDirectXCommon::GetInstance()->GetFenceMain();
 
 	rootSignature_ = std::make_unique<RootSignature>();
@@ -84,13 +84,13 @@ void ArrowEffectParticle::Init(const Timer* timer, const KMyMath::Matrix4& matVi
 
 	directXCommon->FlashCommandQueue();
 
-	directXCommon->BeginCommnd(commandList,commandAllocator);
+	directXCommon->MainCommandListReset();
 }
 
 void ArrowEffectParticle::Update(const Timer* timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection, Emitter* emitter)
 {
 	KDirectXCommon* directXCommon = KDirectXCommon::GetInstance();
-	ID3D12CommandQueue* commndQueue = directXCommon->GetCommandQueueCompute();
+	ID3D12CommandQueue* commndQueue = directXCommon->GetMainCommandQueue();
 	ID3D12Fence* fence = KDirectXCommon::GetInstance()->GetFenceMain();
 
 	// 円形のフレーム リソース配列を循環します
@@ -115,7 +115,7 @@ void ArrowEffectParticle::Update(const Timer* timer, const KMyMath::Matrix4& mat
 void ArrowEffectParticle::Draw(const Timer* timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection, Emitter* emitter)
 {
 	KDirectXCommon* directXCommon = KDirectXCommon::GetInstance();
-	ID3D12GraphicsCommandList* commndList = directXCommon->GetCommandListCompute();
+	ID3D12GraphicsCommandList* commndList = directXCommon->GetMainCommandList();
 
 	auto currentCommandListAllocator = currentFrameResource->commandListAllocator;
 
@@ -405,7 +405,7 @@ void ArrowEffectParticle::UpdateMainPassCB(const Timer* timer, const KMyMath::Ma
 
 void ArrowEffectParticle::ParticleUpdate()
 {
-	ID3D12GraphicsCommandList* commndList = KDirectXCommon::GetInstance()->GetCommandListCompute();
+	ID3D12GraphicsCommandList* commndList = KDirectXCommon::GetInstance()->GetMainCommandList();
 
 	commndList->SetPipelineState(updatePSO_->GetPipelineState());
 	commndList->SetComputeRootSignature(particleRootSignature_->GetRootSignature());
@@ -433,7 +433,7 @@ void ArrowEffectParticle::ParticleUpdate()
 
 void ArrowEffectParticle::ParticleDraw()
 {
-	ID3D12GraphicsCommandList* commndList = KDirectXCommon::GetInstance()->GetCommandListCompute();
+	ID3D12GraphicsCommandList* commndList = KDirectXCommon::GetInstance()->GetMainCommandList();
 
 	commndList->SetPipelineState(copyDrawPSO_->GetPipelineState());
 	commndList->SetComputeRootSignature(particleRootSignature_->GetRootSignature());
@@ -461,7 +461,7 @@ void ArrowEffectParticle::ParticleDraw()
 
 void ArrowEffectParticle::DrawCommon()
 {
-	ID3D12GraphicsCommandList* commndList = KDirectXCommon::GetInstance()->GetCommandListMain();
+	ID3D12GraphicsCommandList* commndList = KDirectXCommon::GetInstance()->GetMainCommandList();
 
 	commndList->SetPipelineState(graphicPSO_->GetPipelineState());
 	commndList->SetGraphicsRootSignature(rootSignature_->GetRootSignature());

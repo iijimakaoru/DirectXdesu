@@ -109,6 +109,7 @@
     <ClCompile Include="Application\Effect\ArrowEffect\ArrowEffect.cpp" />
     <ClCompile Include="Application\Effect\EffectSetter.cpp" />
     <ClCompile Include="Application\Object\CenterObject\CenterObject.cpp" />
+    <ClCompile Include="Engine\Base\DirectXCommon\CommandList.cpp" />
     <ClCompile Include="Engine\Particle\GPUParticle\ArrowEffectParticle.cpp" />
     <ClCompile Include="Engine\Particle\Emitter\Emitter.cpp" />
     <ClCompile Include="Engine\Particle\CommandSignature\CommandSignature.cpp" />
@@ -194,6 +195,7 @@
     <ClInclude Include="Application\Effect\ArrowEffect\ArrowEffect.h" />
     <ClInclude Include="Application\Effect\EffectSetter.h" />
     <ClInclude Include="Application\Object\CenterObject\CenterObject.h" />
+    <ClInclude Include="Engine\Base\DirectXCommon\CommandList.h" />
     <ClInclude Include="Engine\Particle\GPUParticle\ArrowEffectParticle.h" />
     <ClInclude Include="Engine\Particle\Emitter\Emitter.h" />
     <ClInclude Include="Engine\Particle\CommandSignature\CommandSignature.h" />

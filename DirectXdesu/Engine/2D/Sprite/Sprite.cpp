@@ -31,8 +31,6 @@ Sprite* Sprite::Create(KGPlin* pipeline_) {
 
 void Sprite::SetPipeline(KGPlin* pipeline_) { pipeline = pipeline_; }
 
-const KMyMath::Vector2 Sprite::GetPos() const { return KMyMath::Vector2(); }
-
 void Sprite::CreateCBMaterial() {
 	// 定数バッファ生成用
 	D3D12_HEAP_PROPERTIES cbHeapProp{};       // ヒープの設定
@@ -177,7 +175,7 @@ void Sprite::CreateCBTransform() {
 	assert(SUCCEEDED(result));
 }
 
-void Sprite::DrawCommand(TextureData texData) {
+void Sprite::DrawCommand(const TextureData& texData) {
 	// デスクリプタヒープの配列をセットするコマンド
 	ID3D12DescriptorHeap* ppHeaps[] = {texData.srvHeap.Get()};
 	cmdList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
@@ -211,9 +209,8 @@ void Sprite::Init() {
 	isInvisible = false;
 }
 
-void Sprite::Draw(
-    const TextureData& texData, KMyMath::Vector2 pos, KMyMath::Vector2 setSize_, float rot,
-    KMyMath::Vector4 color_, bool isFlipX_, bool isFlipY_, KMyMath::Vector2 anchorPoint_) {
+void Sprite::Draw(const TextureData& texData, const KMyMath::Vector2& pos, const KMyMath::Vector2& setSize_, float rot, const KMyMath::Vector4& color_, bool isFlipX_, bool isFlipY_, const KMyMath::Vector2& anchorPoint_)
+{
 	// 非表示処理
 	if (isInvisible) {
 		return;
@@ -272,10 +269,8 @@ void Sprite::Draw(
 	cmdList->DrawIndexedInstanced(6, 1, 0, 0, 0);
 }
 
-void Sprite::DivDraw(
-    TextureData& texData, KMyMath::Vector2 leftTop_, KMyMath::Vector2 divSize_,
-    KMyMath::Vector2 pos, KMyMath::Vector2 setSize_, float rot, KMyMath::Vector4 color_,
-    KMyMath::Vector2 anchorPoint_) {
+void Sprite::DivDraw(const TextureData& texData, const KMyMath::Vector2& leftTop_, const KMyMath::Vector2& divSize_, const KMyMath::Vector2& pos, const KMyMath::Vector2& setSize_, float rot, const KMyMath::Vector4& color_, const KMyMath::Vector2& anchorPoint_)
+{
 	// 非表示処理
 	if (isInvisible) {
 		return;
@@ -326,14 +321,14 @@ void Sprite::DivDraw(
 	cmdList->DrawIndexedInstanced(6, 1, 0, 0, 0);
 }
 
-void Sprite::AnimationDraw(const TextureData& texData,uint16_t radiusX, uint16_t radiusY, float& frame, float frameDiv,KMyMath::Vector2 pos, KMyMath::Vector2 setSize_, float rot,KMyMath::Vector4 color )
+void Sprite::AnimationDraw(const TextureData& texData,uint16_t radiusX, uint16_t radiusY, float& frame, float frameDiv, const KMyMath::Vector2& pos, const KMyMath::Vector2& setSize_, float rot, const KMyMath::Vector4& color )
 {
 	// 非表示処理
 	if (isInvisible)
 	{
 		return;
-	}
 
+	}
 	size_t lAnimeFrame = static_cast<size_t>(frame / frameDiv);
 
 	size_t lWidth = static_cast<size_t>(radiusX) * 2;
@@ -390,8 +385,7 @@ void Sprite::AnimationDraw(const TextureData& texData,uint16_t radiusX, uint16_t
 	cmdList->DrawIndexedInstanced(6, 1, 0, 0, 0);
 }
 
-void Sprite::Update(
-    KMyMath::Vector2 pos, KMyMath::Vector2 scale, float rot, KMyMath::Vector4 color_) {
+void Sprite::Update(const KMyMath::Vector2& pos, const KMyMath::Vector2& scale, float rot, const KMyMath::Vector4& color_) {
 	// ワールド変換
 	KMyMath::Matrix4 matWorld, matTrans, matRot;
 	// 移動行列

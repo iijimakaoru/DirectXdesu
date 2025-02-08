@@ -16,13 +16,13 @@ public:
 	static Sprite* Create(KGPlin* pipeline_);
 
 	// 更新
-	void Update(KMyMath::Vector2 pos, KMyMath::Vector2 scale, float rot, KMyMath::Vector4 color_);
+	void Update(const KMyMath::Vector2& pos, const KMyMath::Vector2& scale, float rot, const KMyMath::Vector4& color_);
 
 	/// <summary>
 	/// 描画情報
 	/// </summary>
 	/// <param name="texture"></param>
-	void DrawCommand(TextureData texData);
+	void DrawCommand(const TextureData& texData);
 
 	/// <summary>
 	/// 描画
@@ -35,24 +35,14 @@ public:
 	/// <param name="isFlipX_"></param>
 	/// <param name="isFlipY_"></param>
 	/// <param name="anchorPoint_"></param>
-	void Draw(
-	    const TextureData& texData, KMyMath::Vector2 pos = {0.0f, 0.0f},
-	    KMyMath::Vector2 setSize_ = {1.0f, 1.0f}, float rot = 0.0f,
-	    KMyMath::Vector4 color_ = {1.0f, 1.0f, 1.0f, 1.0f}, bool isFlipX_ = false,
-	    bool isFlipY_ = false, KMyMath::Vector2 anchorPoint_ = {0.5f, 0.5f});
+	void Draw(const TextureData& texData, const KMyMath::Vector2& pos = { 0.0f, 0.0f }, const KMyMath::Vector2& setSize_ = { 1.0f, 1.0f }, float rot = 0.0f, const KMyMath::Vector4& color_ = { 1.0f, 1.0f, 1.0f, 1.0f }, bool isFlipX_ = false, bool isFlipY_ = false, const KMyMath::Vector2& anchorPoint_ = { 0.5f, 0.5f });
 
-	void DivDraw(
-	    TextureData& texData, KMyMath::Vector2 leftTop_, KMyMath::Vector2 divSize_,
-	    KMyMath::Vector2 pos, KMyMath::Vector2 setSize_, float rot, KMyMath::Vector4 color_,
-	    KMyMath::Vector2 anchorPoint_);
+	void DivDraw(const TextureData& texData, const KMyMath::Vector2& leftTop_, const KMyMath::Vector2& divSize_, const KMyMath::Vector2& pos, const KMyMath::Vector2& setSize_, float rot, const KMyMath::Vector4& color_, const KMyMath::Vector2& anchorPoint_);
 
 	void AnimationDraw(const TextureData& texData, 
 		uint16_t radiusX, uint16_t radiusY, float& frame, float frameDiv,
-		KMyMath::Vector2 pos = { 0.0f, 0.0f },KMyMath::Vector2 setSize_ = { 1.0f, 1.0f }, float rot = 0.0f,
-		KMyMath::Vector4 color = { 1.0f, 1.0f, 1.0f, 1.0f });
-
-	// ポジションゲッター
-	const KMyMath::Vector2 GetPos() const;
+		const KMyMath::Vector2& pos = { 0.0f, 0.0f }, const KMyMath::Vector2& setSize_ = { 1.0f, 1.0f }, float rot = 0.0f,
+		const KMyMath::Vector4& color = { 1.0f, 1.0f, 1.0f, 1.0f });
 
 private:
 	/// <summary>

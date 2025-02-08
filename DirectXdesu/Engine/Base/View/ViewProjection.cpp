@@ -48,7 +48,7 @@ const KMyMath::Vector3& ViewProjection::GetUp() const
 	return up;
 }
 
-void ViewProjection::SetMatView(const KMyMath::Matrix4 mat_)
+void ViewProjection::SetMatView(const KMyMath::Matrix4& mat_)
 {
 	matView = mat_;
 }
@@ -68,12 +68,12 @@ void ViewProjection::SetUp(const KMyMath::Vector3& up_)
 	up = up_;
 }
 
-void ViewProjection::SetFarZ(const float& farZ_)
+void ViewProjection::SetFarZ( float farZ_)
 {
 	farZ = farZ_;
 }
 
-void ViewProjection::SetNearZ(const float& nearZ_)
+void ViewProjection::SetNearZ( float nearZ_)
 {
 	nearZ = nearZ_;
 }

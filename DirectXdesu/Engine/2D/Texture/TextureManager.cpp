@@ -104,7 +104,7 @@ TextureData TextureManager::LoadTexture(const std::string& fileName) {
 }
 
 TextureData TextureManager::LoadDivTexture(
-    const std::string& fileName_, KMyMath::Vector2 leftTop_, KMyMath::Vector2 divSize_) {
+    const std::string& fileName_, KMyMath::Vector2& leftTop_, KMyMath::Vector2& divSize_) {
 	HRESULT result;
 
 	if (texCount > 1024) {
@@ -251,7 +251,7 @@ void TextureManager::LoadTextures() {
 	
 }
 
-TextureData& TextureManager::GetTextures(std::string mapName)
+TextureData& TextureManager::GetTextures(const std::string& mapName)
 {
 	return textures[mapName];
 }

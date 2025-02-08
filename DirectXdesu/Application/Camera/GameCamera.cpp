@@ -4,8 +4,8 @@ void GameCamera::Init()
 {
 	Camera::Init();
 
-	cameraTransform.SetPos({ 0.0f, 90.0f, -130.0f });
-	cameraTransform.SetRot({ 20.0f, 0.0f, 0.0f });
+	cameraTransform.SetPos({ 0.0f, 50.0f, -155.0f });
+	cameraTransform.SetRot({ 0.0f, 0.0f, 0.0f });
 
 	cameraTransform.TransUpdate();
 

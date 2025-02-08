@@ -22,7 +22,7 @@ public:
 		@param [in]		pName　モデルの名前(任意)
 		@return			成功:モデルのポインタ、失敗:nullptr
 	/****************************************************************************/
-	static KModel* Load(const std::string& modelname,const char* pName = nullptr);
+	static KModel* Load(const std::string& modelname, const char* pName = nullptr, bool smoothing = false);
 
 	/****************************************************************************
 		@brief			objモデルを取得
@@ -33,7 +33,7 @@ public:
 
 private:
 
-	KModel* _Load(const std::string& modelname, const char* pName);
+	KModel* _Load(const std::string& modelname, const char* pName,bool smoothing);
 
 	KModel* _Find(const std::string& modelname, const char* pName);
 

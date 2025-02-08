@@ -4,7 +4,7 @@
 struct Beat
 {
 	int measure = 0;//小節番号
-	int beat = 0;//拍数
+	float beat = 0;//拍数
 	float LPB = 4;//1拍の長さ
 };
 
@@ -21,13 +21,30 @@ enum DIRECTION
 	dawn   //下
 };
 
+enum Hand {
+	L,  //左
+	R,  //右
+	max // 
+};
 
-struct Note
+class Note
 {
+public:
+	Note()=default;
 	Beat beat;//何拍目の音
 	int lane = 0;//レーン指定
 	DIRECTION direction=right;//方向
 	bool isHit = false;
+
+	// 移動コンストラクタ
+	Note(Note&& other) noexcept
+		: beat(std::move(other.beat)), lane(other.lane), direction(other.direction) {
+	}
+
+	// 必要に応じてコピーコンストラクタも実装
+	Note(const Note& other)
+		: beat(other.beat), lane(other.lane), direction(other.direction) {
+	}
 };
 
 class MusicDesc

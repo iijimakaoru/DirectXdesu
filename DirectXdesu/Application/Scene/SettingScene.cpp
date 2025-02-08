@@ -147,87 +147,55 @@ void SettingScene::ImguiUpdate()
 				extrinSicNum = 1;
 			}
 		}
-		if (ImGui::TreeNode("CalibrateDataCamera:0"))
+
+		for (int32_t i = 0; i < 2; i++)
 		{
-			IntrinsicParameterCalibrator::Parameter intParam = captureManager->GetYOLOPoseEstimation()
-																->GetInterinsParameter(0);
+			std::string temp = "CalibrateDataCamera:" + std::to_string(i);
+			if (ImGui::TreeNode(temp.c_str()))
+			{
+				IntrinsicParameterCalibrator::Parameter intParam = captureManager->GetYOLOPoseEstimation()
+					->GetInterinsParameter(i);
 
-			ImGui::Text("\n");
-			ImGui::Text("CameraMatrix");
-			ImGui::Text("%d,%d,%d", intParam.cameraMatrix.Get(0, 0),
-				intParam.cameraMatrix.Get(1, 0), intParam.cameraMatrix.Get(2, 0));
-			ImGui::Text("%d,%d,%d", intParam.cameraMatrix.Get(0, 1),
-				intParam.cameraMatrix.Get(1, 1), intParam.cameraMatrix.Get(2, 1));
-			ImGui::Text("%d,%d,%d", intParam.cameraMatrix.Get(0, 2),
-				intParam.cameraMatrix.Get(1, 2), intParam.cameraMatrix.Get(2, 2));
+				ExtrinsiParameterCalibrator::Parameter extParam = captureManager->GetYOLOPoseEstimation()
+					->GetExtrinsiParameter(i);
 
-			ImGui::Text("\n");
-			ImGui::Text("DistCoefee");
-			ImGui::Text("%d,%d,%d,%d,%d", intParam.distortionCoefficients.GetX(),
-				intParam.distortionCoefficients.GetY(), intParam.distortionCoefficients.GetZ(),
-				intParam.distortionCoefficients.GetW(), intParam.distortionCoefficients.GetV());
+				ImGui::Text("\n");
+				ImGui::Text("CameraMatrix");
+				ImGui::Text("%d,%d,%d", intParam.cameraMatrix.Get(0, 0),
+					intParam.cameraMatrix.Get(1, 0), intParam.cameraMatrix.Get(2, 0));
+				ImGui::Text("%d,%d,%d", intParam.cameraMatrix.Get(0, 1),
+					intParam.cameraMatrix.Get(1, 1), intParam.cameraMatrix.Get(2, 1));
+				ImGui::Text("%d,%d,%d", intParam.cameraMatrix.Get(0, 2),
+					intParam.cameraMatrix.Get(1, 2), intParam.cameraMatrix.Get(2, 2));
 
-			
-			ExtrinsiParameterCalibrator::Parameter extParam = captureManager->GetYOLOPoseEstimation()
-				->GetExtrinsiParameter(0);
+				ImGui::Text("\n");
+				ImGui::Text("DistCoefee");
+				ImGui::Text("%d,%d,%d,%d,%d", intParam.distortionCoefficients.GetX(),
+					intParam.distortionCoefficients.GetY(), intParam.distortionCoefficients.GetZ(),
+					intParam.distortionCoefficients.GetW(), intParam.distortionCoefficients.GetV());
 
-			ImGui::Text("\n");
-			ImGui::Text("CameraRotateMatrix");
-			ImGui::Text("%d,%d,%d", extParam.rotationMatrix.Get(0, 0),
-				extParam.rotationMatrix.Get(1, 0), extParam.rotationMatrix.Get(2, 0));
-			ImGui::Text("%d,%d,%d", extParam.rotationMatrix.Get(0, 1),
-				extParam.rotationMatrix.Get(1, 1), extParam.rotationMatrix.Get(2, 1));
-			ImGui::Text("%d,%d,%d", extParam.rotationMatrix.Get(0, 2),
-				extParam.rotationMatrix.Get(1, 2), extParam.rotationMatrix.Get(2, 2));
-			
-			ImGui::Text("\n");
-			ImGui::Text("CameraTranslateVector");
-			ImGui::Text("%d,%d,%d", extParam.translationVector.GetX(), extParam.translationVector.GetY(),
-										extParam.translationVector.GetZ());
 
-			ImGui::TreePop();
+
+				ImGui::Text("\n");
+				ImGui::Text("CameraRotateMatrix");
+				ImGui::Text("%d,%d,%d", extParam.rotationMatrix.Get(0, 0),
+					extParam.rotationMatrix.Get(1, 0), extParam.rotationMatrix.Get(2, 0));
+				ImGui::Text("%d,%d,%d", extParam.rotationMatrix.Get(0, 1),
+					extParam.rotationMatrix.Get(1, 1), extParam.rotationMatrix.Get(2, 1));
+				ImGui::Text("%d,%d,%d", extParam.rotationMatrix.Get(0, 2),
+					extParam.rotationMatrix.Get(1, 2), extParam.rotationMatrix.Get(2, 2));
+
+				ImGui::Text("\n");
+				ImGui::Text("CameraTranslateVector");
+				ImGui::Text("%d,%d,%d", extParam.translationVector.GetX(), extParam.translationVector.GetY(),
+					extParam.translationVector.GetZ());
+
+				ImGui::TreePop();
+				ImGui::SameLine();
+			}
 		}
-		ImGui::SameLine();
-		if (ImGui::TreeNode("CalibrateDataCamera:1"))
-		{
-			IntrinsicParameterCalibrator::Parameter intParam = captureManager->GetYOLOPoseEstimation()
-				->GetInterinsParameter(1);
+		
 
-			ImGui::Text("\n");
-			ImGui::Text("CameraMatrix");
-			ImGui::Text("%d,%d,%d", intParam.cameraMatrix.Get(0, 0),
-				intParam.cameraMatrix.Get(1, 0), intParam.cameraMatrix.Get(2, 0));
-			ImGui::Text("%d,%d,%d", intParam.cameraMatrix.Get(0, 1),
-				intParam.cameraMatrix.Get(1, 1), intParam.cameraMatrix.Get(2, 1));
-			ImGui::Text("%d,%d,%d", intParam.cameraMatrix.Get(0, 2),
-				intParam.cameraMatrix.Get(1, 2), intParam.cameraMatrix.Get(2, 2));
-
-			ImGui::Text("\n");
-			ImGui::Text("DistCoefee");
-			ImGui::Text("%d,%d,%d,%d,%d", intParam.distortionCoefficients.GetX(),
-				intParam.distortionCoefficients.GetY(), intParam.distortionCoefficients.GetZ(),
-				intParam.distortionCoefficients.GetW(), intParam.distortionCoefficients.GetV());
-
-
-			ExtrinsiParameterCalibrator::Parameter extParam = captureManager->GetYOLOPoseEstimation()
-				->GetExtrinsiParameter(1);
-
-			ImGui::Text("\n");
-			ImGui::Text("CameraRotateMatrix");
-			ImGui::Text("%d,%d,%d", extParam.rotationMatrix.Get(0, 0),
-				extParam.rotationMatrix.Get(1, 0), extParam.rotationMatrix.Get(2, 0));
-			ImGui::Text("%d,%d,%d", extParam.rotationMatrix.Get(0, 1),
-				extParam.rotationMatrix.Get(1, 1), extParam.rotationMatrix.Get(2, 1));
-			ImGui::Text("%d,%d,%d", extParam.rotationMatrix.Get(0, 2),
-				extParam.rotationMatrix.Get(1, 2), extParam.rotationMatrix.Get(2, 2));
-
-			ImGui::Text("\n");
-			ImGui::Text("CameraTranslateVector");
-			ImGui::Text("%d,%d,%d", extParam.translationVector.GetX(), extParam.translationVector.GetY(),
-				extParam.translationVector.GetZ());
-
-			ImGui::TreePop();
-		}
 		ImGui::TreePop();
 	}
 	ImGui::End();

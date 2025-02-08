@@ -14,9 +14,9 @@ ArrowEffectParticle::ArrowEffectParticle(const Timer* timer, const KMyMath::Matr
 void ArrowEffectParticle::Init(const Timer* timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection, Emitter* emitter)
 {
 	KDirectXCommon* directXCommon = KDirectXCommon::GetInstance();
-	ID3D12GraphicsCommandList* commandList = directXCommon->GetMainCommandList();
-	ID3D12CommandQueue* commandQueue = directXCommon->GetMainCommandQueue();
-	ID3D12CommandAllocator* commandAllocator = directXCommon->GetMainCommandAllocator();
+	ID3D12GraphicsCommandList* commandList = directXCommon->GetComputeCommandList();
+	ID3D12CommandQueue* commandQueue = directXCommon->GetComputeCommandQueue();
+	ID3D12CommandAllocator* commandAllocator = directXCommon->GetComputeCommandAllocator();
 	ID3D12Fence* fence = KDirectXCommon::GetInstance()->GetFenceMain();
 
 	rootSignature_ = std::make_unique<RootSignature>();
@@ -42,7 +42,7 @@ void ArrowEffectParticle::Init(const Timer* timer, const KMyMath::Matrix4& matVi
 	ID3D12CommandList* cmdsLists[] = { commandList };
 	commandQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
 
-	directXCommon->FlashMainCommandQueue();
+	directXCommon->FlashComputeCommandQueue();
 
 	ThrowIfFailed(commandAllocator->Reset());
 
@@ -81,15 +81,15 @@ void ArrowEffectParticle::Init(const Timer* timer, const KMyMath::Matrix4& matVi
 	ID3D12CommandList* cmdsLists1[] = { commandList };
 	commandQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists1);
 
-	directXCommon->FlashMainCommandQueue();
+	directXCommon->FlashComputeCommandQueue();
 
-	directXCommon->MainCommandListReset();
+	directXCommon->ComputeCommandListReset();
 }
 
 void ArrowEffectParticle::Update(const Timer* timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection, Emitter* emitter)
 {
 	KDirectXCommon* directXCommon = KDirectXCommon::GetInstance();
-	ID3D12CommandQueue* commndQueue = directXCommon->GetMainCommandQueue();
+	ID3D12CommandQueue* commndQueue = directXCommon->GetComputeCommandQueue();
 	ID3D12Fence* fence = KDirectXCommon::GetInstance()->GetFenceMain();
 
 	// 円形のフレーム リソース配列を循環します
@@ -108,69 +108,70 @@ void ArrowEffectParticle::Update(const Timer* timer, const KMyMath::Matrix4& mat
 
 	UpdateMainPassCB(timer, matView, matProjection, emitter);
 
-	directXCommon->FlashMainCommandQueue();
+	directXCommon->FlashComputeCommandQueue();
 }
 
 void ArrowEffectParticle::Draw(const Timer* timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection, Emitter* emitter)
 {
 	KDirectXCommon* directXCommon = KDirectXCommon::GetInstance();
-	ID3D12GraphicsCommandList* commndList = directXCommon->GetMainCommandList();
+	ID3D12GraphicsCommandList* mainCommndList = directXCommon->GetMainCommandList();
+	ID3D12GraphicsCommandList* computeCommndList = directXCommon->GetComputeCommandList();
 
 	auto currentCommandListAllocator = currentFrameResource->commandListAllocator;
 
 	if (!init)
 	{
 		init = true;
-		commndList->SetPipelineState(emitPSO_->GetPipelineState());
-		commndList->SetComputeRootSignature(particleRootSignature_->GetRootSignature());
+		computeCommndList->SetPipelineState(emitPSO_->GetPipelineState());
+		computeCommndList->SetComputeRootSignature(particleRootSignature_->GetRootSignature());
 
 		ID3D12DescriptorHeap* descriptorHeaps[] = { UAVHeap.Get() };
-		commndList->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);
+		computeCommndList->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);
 
 		auto objectCB = currentFrameResource->ObjectCB->Resource();
-		commndList->SetComputeRootConstantBufferView(0, objectCB->GetGPUVirtualAddress());
+		computeCommndList->SetComputeRootConstantBufferView(0, objectCB->GetGPUVirtualAddress());
 
 		auto timeCB = currentFrameResource->TimeCB->Resource();
-		commndList->SetComputeRootConstantBufferView(1, timeCB->GetGPUVirtualAddress());
+		computeCommndList->SetComputeRootConstantBufferView(1, timeCB->GetGPUVirtualAddress());
 
 		auto particleCB = currentFrameResource->ParticleCB->Resource();
-		commndList->SetComputeRootConstantBufferView(2, particleCB->GetGPUVirtualAddress());
+		computeCommndList->SetComputeRootConstantBufferView(2, particleCB->GetGPUVirtualAddress());
 
-		commndList->SetComputeRootDescriptorTable(3, particlePool_->GetGPUUAV());
-		commndList->SetComputeRootDescriptorTable(4, deadList_->GetGPUUAV());
-		commndList->SetComputeRootDescriptorTable(5, drawList_->GetGPUUAV());
-		commndList->SetComputeRootDescriptorTable(6, drawArgs_->GetGPUUAV());
-		commndList->SetComputeRootDescriptorTable(7, MeshSRV);
+		computeCommndList->SetComputeRootDescriptorTable(3, particlePool_->GetGPUUAV());
+		computeCommndList->SetComputeRootDescriptorTable(4, deadList_->GetGPUUAV());
+		computeCommndList->SetComputeRootDescriptorTable(5, drawList_->GetGPUUAV());
+		computeCommndList->SetComputeRootDescriptorTable(6, drawArgs_->GetGPUUAV());
+		computeCommndList->SetComputeRootDescriptorTable(7, MeshSRV);
 
 		UpdateMainPassCB(timer, matView, matProjection, emitter);
-		commndList->Dispatch(static_cast<uint32_t>(model_->GetVertices().size() / 1024 + 1), 1, 1);
+		computeCommndList->Dispatch(static_cast<uint32_t>(model_->GetVertices().size() / 1024 + 1), 1, 1);
 	}
 
-	drawList_->Translation(commndList, D3D12_RESOURCE_STATE_COPY_DEST);
+	drawList_->Translation(mainCommndList, D3D12_RESOURCE_STATE_COPY_DEST);
 
-	drawList_->Translation(commndList, D3D12_RESOURCE_STATE_UNORDERED_ACCESS);
+	drawList_->Translation(mainCommndList, D3D12_RESOURCE_STATE_UNORDERED_ACCESS);
 
 	// パーティクル更新シェーダー
 	ParticleUpdate();
 
 	CD3DX12_RESOURCE_BARRIER resourceBarrier = CD3DX12_RESOURCE_BARRIER::UAV(drawList_->GetDrawList());
-	commndList->ResourceBarrier(1, &resourceBarrier);
+	computeCommndList->ResourceBarrier(1, &resourceBarrier);
 
 	// パーティクル描画シェーダー
 	ParticleDraw();
 
-	drawList_->Translation(commndList, D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE);
+	drawList_->Translation(mainCommndList, D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE);
 
-	particlePool_->Translation(commndList, D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE);
+	particlePool_->Translation(mainCommndList, D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE);
 
 	// 描画
 	DrawCommon();
 
-	drawArgs_->Translation(commndList, D3D12_RESOURCE_STATE_UNORDERED_ACCESS);
+	drawArgs_->Translation(mainCommndList, D3D12_RESOURCE_STATE_UNORDERED_ACCESS);
 
-	drawList_->Translation(commndList, D3D12_RESOURCE_STATE_UNORDERED_ACCESS);
+	drawList_->Translation(mainCommndList, D3D12_RESOURCE_STATE_UNORDERED_ACCESS);
 
-	particlePool_->Translation(commndList, D3D12_RESOURCE_STATE_UNORDERED_ACCESS);
+	particlePool_->Translation(mainCommndList, D3D12_RESOURCE_STATE_UNORDERED_ACCESS);
 }
 
 void ArrowEffectParticle::BuildUAV()
@@ -405,7 +406,7 @@ void ArrowEffectParticle::UpdateMainPassCB(const Timer* timer, const KMyMath::Ma
 
 void ArrowEffectParticle::ParticleUpdate()
 {
-	ID3D12GraphicsCommandList* commndList = KDirectXCommon::GetInstance()->GetMainCommandList();
+	ID3D12GraphicsCommandList* commndList = KDirectXCommon::GetInstance()->GetComputeCommandList();
 
 	commndList->SetPipelineState(updatePSO_->GetPipelineState());
 	commndList->SetComputeRootSignature(particleRootSignature_->GetRootSignature());
@@ -433,7 +434,7 @@ void ArrowEffectParticle::ParticleUpdate()
 
 void ArrowEffectParticle::ParticleDraw()
 {
-	ID3D12GraphicsCommandList* commndList = KDirectXCommon::GetInstance()->GetMainCommandList();
+	ID3D12GraphicsCommandList* commndList = KDirectXCommon::GetInstance()->GetComputeCommandList();
 
 	commndList->SetPipelineState(copyDrawPSO_->GetPipelineState());
 	commndList->SetComputeRootSignature(particleRootSignature_->GetRootSignature());

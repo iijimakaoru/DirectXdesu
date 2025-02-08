@@ -12,6 +12,7 @@ void DrawList::Create(ID3D12DescriptorHeap* uavHeap, uint32_t particleMax)
 	CD3DX12_HEAP_PROPERTIES heap = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
 	CD3DX12_RESOURCE_DESC resouceDesc = CD3DX12_RESOURCE_DESC::Buffer(countBufferOffset + sizeof(UINT),
 			D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS);
+
 	device->CreateCommittedResource(
 		&heap,
 		D3D12_HEAP_FLAG_NONE,
@@ -20,7 +21,7 @@ void DrawList::Create(ID3D12DescriptorHeap* uavHeap, uint32_t particleMax)
 		nullptr,
 		IID_PPV_ARGS(&RWDrawList)
 	);
-	resourseState = D3D12_RESOURCE_STATE_COMMON;
+	
 	RWDrawList->SetName(L"DrawList");
 
 	D3D12_UNORDERED_ACCESS_VIEW_DESC drawListUAVDescription = {};
@@ -32,10 +33,8 @@ void DrawList::Create(ID3D12DescriptorHeap* uavHeap, uint32_t particleMax)
 	drawListUAVDescription.Buffer.Flags = D3D12_BUFFER_UAV_FLAG_NONE;
 	drawListUAVDescription.ViewDimension = D3D12_UAV_DIMENSION_BUFFER;
 
-	DrawListCPUUAV =
-		CD3DX12_CPU_DESCRIPTOR_HANDLE(uavHeap->GetCPUDescriptorHandleForHeapStart(), 2, directXCommon->GetCBVSRVUAVDescriptorSize());
-	DrawListGPUUAV =
-		CD3DX12_GPU_DESCRIPTOR_HANDLE(uavHeap->GetGPUDescriptorHandleForHeapStart(), 2, directXCommon->GetCBVSRVUAVDescriptorSize());
+	DrawListCPUUAV = CD3DX12_CPU_DESCRIPTOR_HANDLE(uavHeap->GetCPUDescriptorHandleForHeapStart(), 2, directXCommon->GetCBVSRVUAVDescriptorSize());
+	DrawListGPUUAV = CD3DX12_GPU_DESCRIPTOR_HANDLE(uavHeap->GetGPUDescriptorHandleForHeapStart(), 2, directXCommon->GetCBVSRVUAVDescriptorSize());
 	device->CreateUnorderedAccessView(RWDrawList.Get(), RWDrawList.Get(), &drawListUAVDescription, DrawListCPUUAV);
 
 	D3D12_SHADER_RESOURCE_VIEW_DESC drawListSRVDescription = {};
@@ -46,10 +45,8 @@ void DrawList::Create(ID3D12DescriptorHeap* uavHeap, uint32_t particleMax)
 	drawListSRVDescription.Buffer.NumElements = particleMax;
 	drawListSRVDescription.Buffer.StructureByteStride = sizeof(ParticleSort);
 
-	DrawListCPUSRV =
-		CD3DX12_CPU_DESCRIPTOR_HANDLE(uavHeap->GetCPUDescriptorHandleForHeapStart(), 5, directXCommon->GetCBVSRVUAVDescriptorSize());
-	DrawListGPUSRV =
-		CD3DX12_GPU_DESCRIPTOR_HANDLE(uavHeap->GetGPUDescriptorHandleForHeapStart(), 5, directXCommon->GetCBVSRVUAVDescriptorSize());
+	DrawListCPUSRV = CD3DX12_CPU_DESCRIPTOR_HANDLE(uavHeap->GetCPUDescriptorHandleForHeapStart(), 5, directXCommon->GetCBVSRVUAVDescriptorSize());
+	DrawListGPUSRV = CD3DX12_GPU_DESCRIPTOR_HANDLE(uavHeap->GetGPUDescriptorHandleForHeapStart(), 5, directXCommon->GetCBVSRVUAVDescriptorSize());
 	device->CreateShaderResourceView(RWDrawList.Get(), &drawListSRVDescription, DrawListCPUSRV);
 }
 

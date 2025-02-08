@@ -12,12 +12,13 @@ void DrawArgs::Create(ID3D12DescriptorHeap* uavHeap)
 	CD3DX12_HEAP_PROPERTIES heap = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
 	CD3DX12_RESOURCE_DESC resouceDesc = CD3DX12_RESOURCE_DESC::Buffer(countBufferOffset + sizeof(UINT),
 			D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS);
+
 	device->CreateCommittedResource(&heap,
 		D3D12_HEAP_FLAG_NONE,
 		&resouceDesc,
 		D3D12_RESOURCE_STATE_COMMON,
 		nullptr, IID_PPV_ARGS(&RWDrawArgs));
-	resourseState = D3D12_RESOURCE_STATE_COMMON;
+
 	RWDrawArgs.Get()->SetName(L"DrawArgs");
 
 	D3D12_UNORDERED_ACCESS_VIEW_DESC drawArgsUAVDescription = {};
@@ -51,8 +52,7 @@ CD3DX12_GPU_DESCRIPTOR_HANDLE DrawArgs::GetGPUUAV()
 
 void DrawArgs::Translation(ID3D12GraphicsCommandList* cmdList, D3D12_RESOURCE_STATES afterState)
 {
-	CD3DX12_RESOURCE_BARRIER resourceBarrier = 
-		CD3DX12_RESOURCE_BARRIER::Transition(RWDrawArgs.Get(), resourseState, afterState);
+	CD3DX12_RESOURCE_BARRIER resourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(RWDrawArgs.Get(), resourseState, afterState);
 	cmdList->ResourceBarrier(1, &resourceBarrier);
 	resourseState = afterState;
 }

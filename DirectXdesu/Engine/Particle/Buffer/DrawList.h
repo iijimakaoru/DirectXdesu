@@ -16,7 +16,7 @@ private:
 	CD3DX12_CPU_DESCRIPTOR_HANDLE DrawListCPUUAV;
 	CD3DX12_GPU_DESCRIPTOR_HANDLE DrawListGPUUAV;
 
-	D3D12_RESOURCE_STATES resourseState;
+	D3D12_RESOURCE_STATES resourseState = D3D12_RESOURCE_STATE_COMMON;
 
 public:
 	void Create(ID3D12DescriptorHeap* uavHeap, uint32_t particleMax);

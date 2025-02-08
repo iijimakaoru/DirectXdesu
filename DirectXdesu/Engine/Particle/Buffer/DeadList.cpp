@@ -30,10 +30,8 @@ void DeadList::Create(ID3D12DescriptorHeap* uavHeap, uint32_t particleMax)
 	deadListUAVDescription.Buffer.CounterOffsetInBytes = countBufferOffset;
 	deadListUAVDescription.ViewDimension = D3D12_UAV_DIMENSION_BUFFER;
 
-	ACDeadListCPUUAV =
-		CD3DX12_CPU_DESCRIPTOR_HANDLE(uavHeap->GetCPUDescriptorHandleForHeapStart(), 1, directXCommon->GetCBVSRVUAVDescriptorSize());
-	ACDeadListGPUUAV =
-		CD3DX12_GPU_DESCRIPTOR_HANDLE(uavHeap->GetGPUDescriptorHandleForHeapStart(), 1, directXCommon->GetCBVSRVUAVDescriptorSize());
+	ACDeadListCPUUAV = CD3DX12_CPU_DESCRIPTOR_HANDLE(uavHeap->GetCPUDescriptorHandleForHeapStart(), 1, directXCommon->GetCBVSRVUAVDescriptorSize());
+	ACDeadListGPUUAV = CD3DX12_GPU_DESCRIPTOR_HANDLE(uavHeap->GetGPUDescriptorHandleForHeapStart(), 1, directXCommon->GetCBVSRVUAVDescriptorSize());
 	device->CreateUnorderedAccessView(ACDeadList.Get(), ACDeadList.Get(), &deadListUAVDescription, ACDeadListCPUUAV);
 }
 

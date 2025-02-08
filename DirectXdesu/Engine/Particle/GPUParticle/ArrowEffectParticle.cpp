@@ -155,7 +155,7 @@ void ArrowEffectParticle::Draw(const Timer* timer, const KMyMath::Matrix4& matVi
 	ParticleUpdate();
 
 	CD3DX12_RESOURCE_BARRIER resourceBarrier = CD3DX12_RESOURCE_BARRIER::UAV(drawList_->GetDrawList());
-	computeCommndList->ResourceBarrier(1, &resourceBarrier);
+	mainCommndList->ResourceBarrier(1, &resourceBarrier);
 
 	// パーティクル描画シェーダー
 	ParticleDraw();
@@ -350,11 +350,7 @@ void ArrowEffectParticle::BuildFrameResources()
 void ArrowEffectParticle::UpdateMainPassCB(const Timer* timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection, Emitter* emitter)
 {
 	DirectX::XMMATRIX matScale = DirectX::XMMatrixIdentity();
-	matScale =
-		DirectX::XMMatrixScaling(
-			emitter->GetScaling().x,
-			emitter->GetScaling().y,
-			emitter->GetScaling().z);
+	matScale = DirectX::XMMatrixScaling(emitter->GetScaling().x, emitter->GetScaling().y, emitter->GetScaling().z);
 
 	DirectX::XMMATRIX matRotation = DirectX::XMMatrixIdentity();
 	matRotation *= DirectX::XMMatrixRotationZ(DirectX::XMConvertToRadians(emitter->GetRotation().z));
@@ -362,11 +358,7 @@ void ArrowEffectParticle::UpdateMainPassCB(const Timer* timer, const KMyMath::Ma
 	matRotation *= DirectX::XMMatrixRotationY(DirectX::XMConvertToRadians(emitter->GetRotation().y));
 
 	DirectX::XMMATRIX matTrans = DirectX::XMMatrixIdentity();
-	matTrans =
-		DirectX::XMMatrixTranslation(
-			emitter->GetPosition().x,
-			emitter->GetPosition().y,
-			emitter->GetPosition().z);
+	matTrans = DirectX::XMMatrixTranslation(emitter->GetPosition().x, emitter->GetPosition().y, emitter->GetPosition().z);
 
 	DirectX::XMMATRIX world = DirectX::XMMatrixIdentity();
 	world *= matScale * matRotation * matTrans;

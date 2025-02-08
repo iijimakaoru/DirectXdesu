@@ -9,11 +9,6 @@ RWStructuredBuffer<uint> DrawArgs : register(u3);
 [numthreads(1024, 1, 1)]
 void main(uint id : SV_DispatchThreadID)
 {
-    if (id.x >= (uint) maxParticles)
-    {
-        return;
-    }
-
     Particle particle = ParticlePool.Load(id.x);
 
     if (particle.Alive == 0.0f)

@@ -45,8 +45,9 @@ public:
 	//拍数　99.5まで
 	//レーン　9まで
 	int32_t SetKey(const Beat& beat, const int lane) {
-		int num = 0;
-		num += beat.measure * 1000 + beat.beat * 100 + lane;
+		int32_t num = 0;
+		float be = beat.beat * 100.0f;
+		num += beat.measure * 1000 + static_cast<int32_t>(be) + lane;
 
 		return num;
 	}

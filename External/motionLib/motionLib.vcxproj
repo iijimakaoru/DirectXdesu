@@ -71,7 +71,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(ProjectDir)Include\Math;$(ProjectDir)Include\Animation;$(ProjectDir)Include;$(SolutionDir)External\opencv\build\include;$(SolutionDir)External\OnnxRuntimeforDirectML\Include;$(SolutionDir)External\ModelLoader;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)Include\Math;$(ProjectDir)Include\Animation;$(ProjectDir)Include;$(SolutionDir)External\opencv\include;$(SolutionDir)External\OnnxRuntimeforDirectML\Include;$(SolutionDir)External\ModelLoader;$(IncludePath)</IncludePath>
     <LibraryPath>$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)Generated\Outputs\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)Generated\Obj\$(ProjectName)\$(Configuration)\</IntDir>

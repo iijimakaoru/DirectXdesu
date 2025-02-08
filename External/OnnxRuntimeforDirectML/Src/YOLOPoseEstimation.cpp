@@ -22,6 +22,8 @@
 #include "constants.h"
 #include "common.h"
 #include "onnx_model_base.h"
+#include "CameraCalibrator.h"
+
 
 using namespace MCBO;
 
@@ -72,7 +74,7 @@ public:
 
 public:
 
-	void CameraInitialize(void* cam,float cameraDistfromMeter = 1.0f) override;
+	void CameraInitialize(void* cam) override;
 
 	void ModelInitialize(const char* modelPath,float mask_threshold,float conf_threshold,float iou_threshold,ONNXP_ROVIDERS provider) override;
 
@@ -86,6 +88,13 @@ public:
 
 	const std::unordered_map <YOLO_POSE_INDEX,YVector3>* const GetFinalPositions() override;
 
+
+	void ExtrinsCalibrateUpdateSave(const std::string& filepath) override;
+	void InterinsCalibrateUpdateSave(const std::string& filepath) override;
+
+	void ExtrinsCalibrateLoad(const std::string& filepath) override;
+	void InterinsCalibrateLoad(const std::string& filepath) override;
+
 private:
 
 	void _Draw(cv::Mat& image,int index);
@@ -94,7 +103,7 @@ private:
 
 	void CalclateFinalCaptureDataFromCalibrateData();
 
-	void AddCameraData(std::string filepath);
+	void AddCameraData(const std::string& filepath);
 
 	cv::Mat computeLookAtRotation(const YVector3& camPos,const YVector3& target,const YVector3& up);
 
@@ -133,15 +142,15 @@ private:
 	std::array<std::unordered_map<YOLO_POSE_INDEX,CaptureData>,MAX_LOCATE> capturedata_;
 	std::unordered_map <YOLO_POSE_INDEX,YVector3> finalCaptureData_;
 
-	std::vector<float> cameradist;//メートル単位
-	std::vector<YVector3> cameraPosition_;
+	std::vector<cv::Mat> cameraT;//メートル単位
+	std::vector<cv::Mat> cameraR;
 	std::vector<float> focalLength_ = { 581.818f,581.818f,581.818f,581.818f };
 	YVector3 screenCenterPos_ = { CAMERA_WITH / 2,CAMERA_HIGHT / 2,0 };
 
 	std::vector<cv::Mat> distCoeffs;
-	std::vector<cv::Mat> K;
+	std::vector<cv::Mat> cameraK;
 
-
+	std::unique_ptr<CameraCalibrator> calibrator;
 
 };
 
@@ -166,10 +175,9 @@ YOLOPoseEstimationImp::~YOLOPoseEstimationImp()
 
 }
 
-void YOLOPoseEstimationImp::CameraInitialize(void* cam,float cameraDistFromMeter)
+void YOLOPoseEstimationImp::CameraInitialize(void* cam)
 {
 	m_pCams.push_back(( cv::VideoCapture* ) cam);
-	cameradist.push_back(cameraDistFromMeter);
 
 }
 
@@ -188,11 +196,15 @@ void YOLOPoseEstimationImp::Start(bool isDraw)
 	m_isDraw = isDraw;
 	isRunning = true;
 
+	calibrator = std::make_unique<CameraCalibrator>();
+
 	m_frame.resize(m_pCams.size());
 	m_baseLandmakes.resize(m_pCams.size());
 	m_landmakes.resize(m_pCams.size());
-	cameraPosition_.resize(m_pCams.size());
-	cameradist.resize(m_pCams.size());
+	cameraR.resize(m_pCams.size());
+	cameraT.resize(m_pCams.size());
+	cameraK.resize(m_pCams.size());
+	distCoeffs.resize(m_pCams.size());
 
 	for ( int i = 0; i < m_pCams.size(); i++ )
 	{
@@ -203,7 +215,7 @@ void YOLOPoseEstimationImp::Start(bool isDraw)
 	// 歪み係数（例、キャリブレーション結果から）
 		cv::Mat distCoeffstemp = ( cv::Mat_<double>(1,5) << 0.1,-0.05,0.001,0.001,0 );
 
-		K.push_back(temp);
+		cameraK.push_back(temp);
 		distCoeffs.push_back(distCoeffstemp);
 	}
 
@@ -311,6 +323,50 @@ const std::unordered_map<YOLO_POSE_INDEX,YVector3>* const YOLOPoseEstimationImp:
 	return &finalCaptureData_;
 }
 
+void YOLOPoseEstimationImp::ExtrinsCalibrateLoad(const std::string& filepath)
+{
+
+	for ( int32_t i = 0; i < m_pCams.size(); i++ )
+	{
+		ExtrinsiParameterCalibrator::Parameter param;
+		std::string fullPath = filepath + "ExtrinsCalibrate" + std::to_string(i) + "Camera.json";
+
+		param = calibrator->LoadExtrinsiParameter(fullPath);
+
+		cv::Mat R = ( cv::Mat_<double>(3,3) <<
+			 param.rotationMatrix.Get(0,0),param.rotationMatrix.Get(1,0),param.rotationMatrix.Get(2,0),
+			 param.rotationMatrix.Get(0,1),param.rotationMatrix.Get(1,1),param.rotationMatrix.Get(2,1),
+			 param.rotationMatrix.Get(0,2),param.rotationMatrix.Get(1,2),param.rotationMatrix.Get(2,2));
+		cameraR[i] = R;
+
+		cv::Mat T = ( cv::Mat_<double>(3,1) << param.translationVector.GetX(),
+			param.translationVector.GetY(),param.translationVector.GetZ() );
+		cameraT[ i ] = T;
+	}
+}
+
+void YOLOPoseEstimationImp::InterinsCalibrateLoad(const std::string& filepath)
+{
+
+	for ( int32_t i = 0; i < m_pCams.size(); i++ )
+	{
+		IntrinsicParameterCalibrator::Parameter param;
+		std::string fullPath = filepath + "InterinsCalibrate" + std::to_string(i) + "Camera.json";
+
+		param = calibrator->LoadIntrinsicParameter(fullPath);
+
+		cv::Mat K = ( cv::Mat_<double>(3,3) <<
+			 param.cameraMatrix.Get(0,0),param.cameraMatrix.Get(1,0),param.cameraMatrix.Get(2,0),
+			 param.cameraMatrix.Get(0,1),param.cameraMatrix.Get(1,1),param.cameraMatrix.Get(2,1),
+			 param.cameraMatrix.Get(0,2),param.cameraMatrix.Get(1,2),param.cameraMatrix.Get(2,2) );
+		cameraK[i] = K;
+
+		cv::Mat distCoe = ( cv::Mat_<double>(5,1) << param.distortionCoefficients.GetX(),
+			param.distortionCoefficients.GetY(),param.distortionCoefficients.GetZ(),param.distortionCoefficients.GetW(),param.distortionCoefficients.GetV() );
+		distCoeffs[ i ] = distCoe;
+	}
+}
+
 void YOLOPoseEstimationImp::_Draw(cv::Mat& image,int index)
 {
 	cv::cvtColor(image,image,cv::COLOR_RGB2BGR);
@@ -367,114 +423,14 @@ void YOLOPoseEstimationImp::_Draw(cv::Mat& image,int index)
 	cv::waitKey(1);
 }
 
-void YOLOPoseEstimationImp::AddCameraData(std::string filepath)
+void YOLOPoseEstimationImp::AddCameraData(const std::string& filepath)
 {
-	/*数値内訳
-	//===============================================================
-	 カメラ内部パラメータ (fx, fy, cx, cy) & 歪み係数が既知
-	   ここでは1台のカメラについて定義し、4台とも同じ値と仮定
-	//===============================================================
-	double fx=1000.0, fy=1000.0, cx=640.0, cy=360.0;
-	// 歪み係数 (k1, k2, p1, p2, k3...) の例
-	cv::Mat distCoeffs = (cv::Mat_<double>(1,5) <<
-							-0.10, 0.05, 0.001, 0.002, 0.0 // 例
-						 );
-	cv::Mat K = (cv::Mat_<double>(3,3) <<
-					fx,  0, cx,
-					 0, fy, cy,
-					 0,  0,  1);
-	*/
-	std::ifstream file;
-	file.open("Resources/camera_calibration.json");
-	if ( file.fail() )
-	{
-		assert(0 && "レベルデータ読み込み不良");
-	}
-	nlohmann::json loadData;
-	file >> loadData;
-
-	//
-	for ( int32_t i = 0; i < m_pCams.size(); i++ )
-	{
-		cv::Mat tempK = ( cv::Mat_<float>(3,3) <<
-						( float ) loadData[ "camera_matrix" ][ 0 ][ 0 ],( float ) loadData[ "camera_matrix" ][ 0 ][ 1 ],
-						( float ) loadData[ "camera_matrix" ][ 0 ][ 2 ],
-						( float ) loadData[ "camera_matrix" ][ 1 ][ 0 ],( float ) loadData[ "camera_matrix" ][ 1 ][ 1 ],
-						( float ) loadData[ "camera_matrix" ][ 1 ][ 2 ],
-						( float ) loadData[ "camera_matrix" ][ 2 ][ 0 ],( float ) loadData[ "camera_matrix" ][ 2 ][ 1 ],
-						( float ) loadData[ "camera_matrix" ][ 0 ][ 2 ] );
-		cv::Mat distCoeffs = ( cv::Mat_<double>(1,5) <<
-								loadData[ "distortion_coefficients" ][ 0 ],loadData[ "distortion_coefficients" ][ 1 ],
-								loadData[ "distortion_coefficients" ][ 2 ],loadData[ "distortion_coefficients" ][ 3 ],
-								loadData[ "distortion_coefficients" ][ 4 ] // 例
-							 );
-
-		//cv::Mat tempCameraMat;//ファイルから読み込み:カメラ行列
-		//cv::Mat tempCameraDistCoeffs;//読み込み:歪み係数
-
-		distCoeffs.push_back(distCoeffs);
-		K.push_back(tempK);
-	}
-
-	file.close();
-}
-
-// LookAt関数的な回転行列の生成
-// カメラ位置 camPos から target を見る場合、up ベクトルを用いて回転行列を求める
-// ※ OpenCVの外部パラメーターでは、Rはワールド座標からカメラ座標への変換を表すので注意
-cv::Mat YOLOPoseEstimationImp::computeLookAtRotation(const YVector3& camPos,const YVector3& target,const YVector3& up) {
-	// 対象方向（正面ベクトル）
-	YVector3 forward = target - camPos;
-	forward = camPos.GetV3Norm();
-
-	// 右方向ベクトル： forward と up の外積
-	YVector3 right = forward.GetV3Cross(up);
-	right = right.GetV3Norm();
-
-	// 本来の上方向： right と forward の外積
-	YVector3 trueUp = right.GetV3Cross(forward);
-
-	// カメラ座標系では、一般的に x軸:右, y軸:真の上, z軸:カメラから被写体方向の反対（= -forward）とする
-	cv::Mat R = ( cv::Mat_<double>(3,3) <<
-			 right.x,right.y,right.z,
-			 trueUp.x,trueUp.y,trueUp.z,
-			 -forward.x,-forward.y,-forward.z );
-	return R;
+	
 }
 
 void YOLOPoseEstimationImp::SetOutSideData()
 {
-	//外部パラメーターの計算
 
-	for ( int32_t i = 0; i < Locate::MAX_LOCATE; i++ )
-	{
-		YVector3 direction;//原点からの方向ベクトル
-		float cameraDist;//原点からの距離
-
-		cameraPosition_.push_back(direction);
-		cameradist.push_back(cameraDist);
-	}
-}
-
-// 外部パラメーター（カメラの位置・回転）の生成
-// direction: 原点からカメラ方向へのベクトル（任意の大きさ）
-// distance: 原点からの距離（メートル単位）
-// 出力: R（3×3回転行列）と t（3×1平行移動ベクトル、ワールド座標からカメラ座標への変換用）
-void YOLOPoseEstimationImp::createCameraExtrinsics(const YVector3& direction,float distance,cv::Mat& R,cv::Mat& t) {
-	// direction を正規化して、カメラ位置を計算
-	YVector3 normDir = direction.GetV3Norm();
-	YVector3 camPos = normDir * distance;  // カメラのワールド座標位置
-
-	// カメラは原点（対象）を注視するとする
-	YVector3 target(0,0,0);
-	// ワールド座標系での上方向。システムに合わせ (0, 1, 0) とする（必要に応じて変更）
-	YVector3 up(0,1,0);
-
-	// LookAt的回転行列を生成
-	R = computeLookAtRotation(camPos,target,up);
-	// 外部パラメーターの t は、ワールド座標からカメラ座標への変換で t = -R * camPos となる
-	cv::Mat camPosMat = ( cv::Mat_<double>(3,1) << camPos.x,camPos.y,camPos.z );
-	t = -R * camPosMat;
 }
 
 void YOLOPoseEstimationImp::CalclateFinalCaptureDataFromCalibrateData(){
@@ -489,18 +445,18 @@ void YOLOPoseEstimationImp::CalclateFinalCaptureDataFromCalibrateData(){
 		}
 		return;
 	}
-	cv::Mat R1,t1;
-	createCameraExtrinsics(cameraPosition_[Locate::FRONT],cameradist[Locate::FRONT],R1,t1);
+	cv::Mat R1 = cameraR[ Locate::FRONT ];
+	cv::Mat t1 = cameraT[ Locate::FRONT ];
 
-	cv::Mat R2,t2;
-	createCameraExtrinsics(cameraPosition_[ Locate::RIGHT ],cameradist[ Locate::RIGHT ],R2,t2);
+	cv::Mat R2 = cameraR[ Locate::RIGHT ];
+	cv::Mat t2 = cameraT[ Locate::RIGHT ];
 
 	// ③ 射影行列の生成： P = K * [R | t]
 	cv::Mat RT1,RT2,P1,P2;
 	hconcat(R1,t1,RT1);
 	hconcat(R2,t2,RT2);
-	P1 = K[ Locate::FRONT ] * RT1;
-	P2 = K[ Locate::RIGHT ] * RT2;
+	P1 = cameraK[ Locate::FRONT ] * RT1;
+	P2 = cameraK[ Locate::RIGHT ] * RT2;
 
 	// ⑤ 有効な検出のみフィルタリング（信頼性が閾値以上）
 	std::vector<cv::Point2f> points1,points2;

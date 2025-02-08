@@ -486,6 +486,9 @@
     <ClCompile Include="Engine\3D\Model\CaptureModel.cpp">
       <Filter>ソース ファイル\Engine\3d\Fbx</Filter>
     </ClCompile>
+    <ClCompile Include="SettingScene.cpp">
+      <Filter>ソース ファイル\Engine\Scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Input\KInput.h">
@@ -718,6 +721,9 @@
     </ClInclude>
     <ClInclude Include="Engine\3D\Model\CaptureModel.h">
       <Filter>ヘッダー ファイル\Engine\3d\Fbx</Filter>
+    </ClInclude>
+    <ClInclude Include="SettingScene.h">
+      <Filter>ヘッダー ファイル\Application\Scene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

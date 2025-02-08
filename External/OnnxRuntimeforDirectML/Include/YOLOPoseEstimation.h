@@ -58,7 +58,7 @@ public:
 
 	virtual ~YOLOPoseEstimation() = default;
 
-	virtual void CameraInitialize(void* cam,float cameraDistfromMeter = 1.0f) = 0;
+	virtual void CameraInitialize(void* cam) = 0;
 
 	virtual void ModelInitialize(const char* modelPath, float mask_threshold = 0.5f, float conf_threshold = 0.30f, float iou_threshold = 0.45f, ONNXP_ROVIDERS provider = ONNXP_ROVIDERS::DIRECTML) = 0;
 
@@ -69,6 +69,12 @@ public:
 	virtual const YOLO_POSE_LANDMAKE* const GetLandmakes() = 0;
 
 	virtual const std::unordered_map <YOLO_POSE_INDEX,MCBO::YVector3>* const GetFinalPositions() = 0;
+
+	virtual void ExtrinsCalibrateUpdateSave(const std::string& filepath) = 0;
+	virtual void InterinsCalibrateUpdateSave(const std::string& filepath) = 0;
+
+	virtual void ExtrinsCalibrateLoad(const std::string& filepath) = 0;
+	virtual void InterinsCalibrateLoad(const std::string& filepath) = 0;
 };
 
 

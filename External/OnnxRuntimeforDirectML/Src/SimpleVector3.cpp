@@ -20,9 +20,9 @@ MCBO::YVector3::YVector3()
 
 MCBO::YVector3::YVector3(float x, float y, float z)
 {
-	x = x;
-	y = y;
-	z = z;
+	this->x = x;
+	this->y = y;
+	this->z = z;
 }
 YVector3 MCBO::YVector3::Vector3Substruct(const YVector3& start, const YVector3& end)
 {

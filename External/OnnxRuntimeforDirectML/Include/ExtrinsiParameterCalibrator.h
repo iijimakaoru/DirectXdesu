@@ -23,4 +23,5 @@ public:
 	virtual void Reset() = 0;
 	virtual std::pair<bool,ExtrinsiParameterCalibrator::Parameter> Capture(cv::Mat& frame,const IntrinsicParameterCalibrator::Parameter& intrinsicParameter,bool capture) = 0;
 	virtual bool Save(const std::string& outPutFilePath) = 0;
+	virtual bool Save(const std::string& outPutFilePath,const ExtrinsiParameterCalibrator::Parameter& parameter) = 0;
 };

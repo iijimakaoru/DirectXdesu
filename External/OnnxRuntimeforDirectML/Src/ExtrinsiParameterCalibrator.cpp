@@ -18,6 +18,7 @@ public:
 	void Reset() override;
 	std::pair<bool,ExtrinsiParameterCalibrator::Parameter> Capture(cv::Mat& frame,const IntrinsicParameterCalibrator::Parameter& parameter,bool capture) override;
 	bool Save(const std::string& outPutFilePPath)override;
+	bool Save(const std::string& outPutFilePath,const ExtrinsiParameterCalibrator::Parameter& parameter)override;
 
 private:
 
@@ -151,6 +152,46 @@ bool ExtrinsiParameterCalibratorImp::Save(const std::string& outPutFilePPath)
 		fs << "rotation_matrix" << R;
 		fs << "rotation_vector" << m_rvecs[ 0 ];
 		fs << "translation_vector" << m_tvecs[ 0 ];
+		fs << "calibration_date" << datetime;
+
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+bool ExtrinsiParameterCalibratorImp::Save(const std::string& outPutFilePath,const ExtrinsiParameterCalibrator::Parameter& parameter)
+{
+	if ( m_capture )
+	{
+		// 現在の日時を取得
+		auto t = time(nullptr);
+		auto tm_ = tm();
+		char buf[ 256 ] = { 0 };
+		localtime_s(&tm_,&t);
+		strftime(buf,256,"%Y/%m/%d %H:%M:%S%z\n",&tm_);
+		std::string datetime = buf;
+		datetime.pop_back(); // 改行文字を削除
+
+		cv::FileStorage fs(outPutFilePath,cv::FileStorage::WRITE | cv::FileStorage::FORMAT_JSON);
+		if ( !fs.isOpened() )
+		{
+			return false;
+		}
+
+		cv::Mat R = ( cv::Mat_<double>(3,3) <<
+			parameter.rotationMatrix.Get(0,0),parameter.rotationMatrix.Get(1,0),parameter.rotationMatrix.Get(2,0),
+			parameter.rotationMatrix.Get(0,1),parameter.rotationMatrix.Get(1,1),parameter.rotationMatrix.Get(2,1),
+			parameter.rotationMatrix.Get(0,2),parameter.rotationMatrix.Get(1,2),parameter.rotationMatrix.Get(2,2) );
+
+		cv::Vec3d rvecs = { m_rvecs[ 0 ][ 0 ],m_rvecs[ 0 ][ 1 ] ,m_rvecs[ 0 ][ 2 ] };
+		cv::Vec3d tvecs = { m_tvecs[ 0 ][ 0 ],m_tvecs[ 0 ][ 1 ] ,m_tvecs[ 0 ][ 2 ] };
+
+		fs << "rotation_matrix" << R;
+		fs << "rotation_vector" << rvecs;
+		fs << "translation_vector" << tvecs;
 		fs << "calibration_date" << datetime;
 
 		return true;

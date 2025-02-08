@@ -70,6 +70,13 @@ bool CameraCalibrator::IntrinsicParameterSave(const std::string& outPutFilePath)
 	return m_intrinsicParameterCalibrator->Save(outPutFilePath + ".json");
 }
 
+bool CameraCalibrator::IntrinsicParameterSave(const std::string& outPutFilePath, const IntrinsicParameterCalibrator::Parameter& parameter)
+{
+	m_intrinsicParameterCalibration = false;
+
+	return m_intrinsicParameterCalibrator->Save(outPutFilePath + ".json", parameter);
+}
+
 const IntrinsicParameterCalibrator::Parameter& CameraCalibrator::GetIntrinsicParameter() const
 {
 	return m_intrinsicParameter;
@@ -162,6 +169,13 @@ bool CameraCalibrator::ExtrinsiParameterSave(const std::string& outPutFilePath)
 	m_extrinsiParameterCalibration = false;
 
 	return m_extrinsiParameterCalibrator->Save(outPutFilePath + ".json");
+}
+
+bool CameraCalibrator::ExtrinsiParameterSave(const std::string& outPutFilePath, const ExtrinsiParameterCalibrator::Parameter& parameter)
+{
+	m_extrinsiParameterCalibration = false;
+
+	return m_extrinsiParameterCalibrator->Save(outPutFilePath + ".json", parameter);
 }
 
 const ExtrinsiParameterCalibrator::Parameter& CameraCalibrator::GetExtrinsiParameter() const

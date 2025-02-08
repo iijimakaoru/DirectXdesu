@@ -19,12 +19,14 @@ public:
 public:
 	void IntrinsicParameterCalibration(void* pCap,bool imShow = false);
 	bool  IntrinsicParameterSave(const std::string& outPutFilePath);
+	bool  IntrinsicParameterSave(const std::string& outPutFilePath,const IntrinsicParameterCalibrator::Parameter& parameter);
 	const IntrinsicParameterCalibrator::Parameter& GetIntrinsicParameter() const;
 	void IntrinsicParameterCalibrationEnd();
 	IntrinsicParameterCalibrator::Parameter LoadIntrinsicParameter(const std::string& filePath);
 
 	void ExtrinsiParameterCalibration(void* pCap,const IntrinsicParameterCalibrator::Parameter& parameter,Callback* callback,bool imShow = false);
 	bool ExtrinsiParameterSave(const std::string& outPutFilePath);
+	bool  ExtrinsiParameterSave(const std::string& outPutFilePath,const ExtrinsiParameterCalibrator::Parameter& parameter);
 	const ExtrinsiParameterCalibrator::Parameter& GetExtrinsiParameter() const;
 	ExtrinsiParameterCalibrator::Parameter LoadExtrinsiParameter(const std::string& filePath);
 	void ExtrinsiParameterCalibrationEnd();

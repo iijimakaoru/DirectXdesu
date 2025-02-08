@@ -19,6 +19,7 @@ public:
 	std::pair<bool,int32_t> Capture(cv::Mat& frame,bool capture) override;
 	std::pair<bool,Parameter> Calibrate() override;
 	bool Save(const std::string& outPutFilePPath)override;
+	bool Save(const std::string& outPutFilePath,const IntrinsicParameterCalibrator::Parameter& parameter)override;
 	int32_t GetMaxCapturedImage()override;
 
 private:
@@ -191,6 +192,36 @@ bool IntrinsicParameterCalibratorImp::Save(const std::string& outPutFilePPath)
 	fs << "camera_matrix" << cameraMatrix;
 	fs << "distortion_coefficients" << distCoeffs;
 	fs << "reprojection_error" << m_parameter.repError;
+	fs << "calibration_time" << datetime;
+
+	return true;
+}
+
+bool IntrinsicParameterCalibratorImp::Save(const std::string& outPutFilePath,const IntrinsicParameterCalibrator::Parameter& parameter)
+{
+	cv::FileStorage fs(outPutFilePath,cv::FileStorage::WRITE | cv::FileStorage::FORMAT_JSON);
+	if ( !fs.isOpened() )
+	{
+		return false;
+	}
+
+	auto t = time(nullptr);
+	auto tm_ = tm();
+	char buf[ 256 ] = { 0 };
+	localtime_s(&tm_,&t);
+	strftime(buf,256,"%Y/%m/%d %H:%M:%S%z\n",&tm_);
+	std::string datetime = buf;
+	datetime.pop_back(); // 改行文字を削除
+
+	cv::Mat cameraMatrix = ( cv::Mat_<double>(3,3) <<
+	parameter.cameraMatrix.Get(0,0),parameter.cameraMatrix.Get(1,0),parameter.cameraMatrix.Get(2,0),
+	parameter.cameraMatrix.Get(0,1),parameter.cameraMatrix.Get(1,1),parameter.cameraMatrix.Get(2,1),
+	parameter.cameraMatrix.Get(0,2),parameter.cameraMatrix.Get(1,2),parameter.cameraMatrix.Get(2,2) );
+	cv::Mat distCoeffs = ( cv::Mat_<double>(1,5) << parameter.distortionCoefficients.GetX(),parameter.distortionCoefficients.GetY(),parameter.distortionCoefficients.GetZ(),parameter.distortionCoefficients.GetW(),parameter.distortionCoefficients.GetV() );
+
+	fs << "camera_matrix" << cameraMatrix;
+	fs << "distortion_coefficients" << distCoeffs;
+	fs << "reprojection_error" << parameter.repError;
 	fs << "calibration_time" << datetime;
 
 	return true;

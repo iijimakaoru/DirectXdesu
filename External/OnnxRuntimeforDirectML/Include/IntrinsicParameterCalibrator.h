@@ -30,4 +30,5 @@ public:
 	virtual std::pair<bool,int32_t> Capture(cv::Mat& frame,bool capture) = 0;
 	virtual std::pair<bool,Parameter> Calibrate() = 0;
 	virtual bool Save(const std::string& outPutFilePath) = 0;
+	virtual bool Save(const std::string& outPutFilePath,const IntrinsicParameterCalibrator::Parameter& parameter) = 0;
 };

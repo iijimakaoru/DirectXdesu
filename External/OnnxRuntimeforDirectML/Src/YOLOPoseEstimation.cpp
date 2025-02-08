@@ -207,7 +207,7 @@ void YOLOPoseEstimationImp::Start(bool isDraw)
 
 	for ( int32_t i = 0; i < Locate::MAX_LOCATE; i++ )
 	{
-		for ( int32_t j = 0; j < ( int32_t ) YOLO_POSE_INDEX::YOLO_POSE_INDEX_MAX; j++)
+		for ( int32_t j = 0; j < ( int32_t ) YOLO_POSE_INDEX::YOLO_POSE_INDEX_MAX; j++ )
 		{
 			capturedata_[ i ][ ( YOLO_POSE_INDEX ) j ].captureBonePos = { 0,0,0 };
 		}
@@ -232,14 +232,14 @@ void YOLOPoseEstimationImp::Initialize()
 const YOLO_POSE_LANDMAKE* const YOLOPoseEstimationImp::GetLandmakes(int32_t index)
 {
 	std::lock_guard<std::mutex> lock(value_mutex);
-	return m_landmakes[index].data();
+	return m_landmakes[ index ].data();
 }
 
 void YOLOPoseEstimationImp::End()
 {
 	isRunning = false;
 
-	if ( th .joinable())
+	if ( th.joinable() )
 	{
 		th.join();
 	}
@@ -253,7 +253,7 @@ void YOLOPoseEstimationImp::Update()
 	{
 		for ( size_t i = 0; i < m_pCams.size(); i++ )
 		{
-			m_pCams[ i ]->read(m_frame[i]);
+			m_pCams[ i ]->read(m_frame[ i ]);
 		}
 
 		for ( size_t i = 0; i < m_pCams.size(); i++ )
@@ -271,9 +271,9 @@ void YOLOPoseEstimationImp::Update()
 				for ( int j = 0; j < ( int ) YOLO_POSE_INDEX::YOLO_POSE_INDEX_MAX; j++ )
 				{
 					int idx = j * 3;
-					m_baseLandmakes[i][ j ].x = objs[ 0 ].keypoints[ idx ];
-					m_baseLandmakes[i][ j ].y = objs[ 0 ].keypoints[ idx + 1 ];
-					m_baseLandmakes[i][ j ].vi = objs[ 0 ].keypoints[ idx + 2 ];
+					m_baseLandmakes[ i ][ j ].x = objs[ 0 ].keypoints[ idx ];
+					m_baseLandmakes[ i ][ j ].y = objs[ 0 ].keypoints[ idx + 1 ];
+					m_baseLandmakes[ i ][ j ].vi = objs[ 0 ].keypoints[ idx + 2 ];
 				}
 
 				Vec2F mid = Midpoint({ m_baseLandmakes[ i ][ size_t(YOLO_POSE_INDEX::HIP_L) ].x, m_baseLandmakes[ i ][ size_t(YOLO_POSE_INDEX::HIP_L) ].y },{ m_baseLandmakes[ i ][ size_t(YOLO_POSE_INDEX::HIP_R) ].x, m_baseLandmakes[ i ][ size_t(YOLO_POSE_INDEX::HIP_R) ].y });
@@ -282,7 +282,7 @@ void YOLOPoseEstimationImp::Update()
 
 				for ( int j = 0; j < ( int ) YOLO_POSE_INDEX::YOLO_POSE_INDEX_MAX; j++ )
 				{
-					Vec2F newPoint = Translate({ m_baseLandmakes[i][ j ].x, m_baseLandmakes[ i ][ j ].y },mid);
+					Vec2F newPoint = Translate({ m_baseLandmakes[ i ][ j ].x, m_baseLandmakes[ i ][ j ].y },mid);
 
 					m_landmakes[ i ][ j ].x = newPoint.x;
 					m_landmakes[ i ][ j ].y = newPoint.y;
@@ -319,7 +319,7 @@ const std::unordered_map<YOLO_POSE_INDEX,YVector3>* const YOLOPoseEstimationImp:
 void YOLOPoseEstimationImp::InterinsCalibrateStart(int32_t cameraIndex)
 {
 	calibrator->IntrinsicParameterCalibration(m_pCams[ cameraIndex ],true);
-	instrinsiParams[cameraIndex] = calibrator->GetIntrinsicParameter();
+	instrinsiParams[ cameraIndex ] = calibrator->GetIntrinsicParameter();
 }
 
 void YOLOPoseEstimationImp::InterinsCalibrateSave(const std::string& filepath)
@@ -328,7 +328,7 @@ void YOLOPoseEstimationImp::InterinsCalibrateSave(const std::string& filepath)
 	{
 		std::string fullPath = filepath + "InterinsCalibrate" + std::to_string(i) + "Camera";
 
-		calibrator->IntrinsicParameterSave(fullPath);
+		calibrator->IntrinsicParameterSave(fullPath,instrinsiParams[ i ]);
 
 	}
 }
@@ -345,7 +345,7 @@ void YOLOPoseEstimationImp::ExtrinsCalibrateSave(const std::string& filepath)
 	{
 		std::string fullPath = filepath + "ExtrinsCalibrate" + std::to_string(i) + "Camera";
 
-		calibrator->ExtrinsiParameterSave(fullPath);
+		calibrator->ExtrinsiParameterSave(fullPath,extrinsiParams[ i ]);
 
 	}
 }
@@ -357,7 +357,7 @@ void YOLOPoseEstimationImp::ExtrinsCalibrateLoad(const std::string& filepath)
 	{
 		std::string fullPath = filepath + "ExtrinsCalibrate" + std::to_string(i) + "Camera.json";
 
-		extrinsiParams[i] = calibrator->LoadExtrinsiParameter(fullPath);
+		extrinsiParams[ i ] = calibrator->LoadExtrinsiParameter(fullPath);
 
 	}
 }
@@ -384,12 +384,12 @@ void YOLOPoseEstimationImp::SetCalibrateCallBack(CameraCalibrator::Callback* cal
 
 const ExtrinsiParameterCalibrator::Parameter YOLOPoseEstimationImp::GetExtrinsiParameter(int32_t cameraIndex)
 {
-	return extrinsiParams[cameraIndex];
+	return extrinsiParams[ cameraIndex ];
 }
 
 const IntrinsicParameterCalibrator::Parameter YOLOPoseEstimationImp::GetInterinsParameter(int32_t cameraIndex)
 {
-	return instrinsiParams[cameraIndex];
+	return instrinsiParams[ cameraIndex ];
 }
 
 void YOLOPoseEstimationImp::_Draw(cv::Mat& image,int index)
@@ -443,14 +443,14 @@ void YOLOPoseEstimationImp::_Draw(cv::Mat& image,int index)
 		}
 		CalclateFinalCaptureDataFromCalibrateData();
 	}
-	
+
 	cv::imshow(std::format("win{}",index),image);
 	cv::waitKey(1);
 }
 
 void YOLOPoseEstimationImp::AddCameraData(const std::string& filepath)
 {
-	
+
 }
 
 void YOLOPoseEstimationImp::SetOutSideData()
@@ -458,14 +458,14 @@ void YOLOPoseEstimationImp::SetOutSideData()
 
 }
 
-void YOLOPoseEstimationImp::CalclateFinalCaptureDataFromCalibrateData(){
+void YOLOPoseEstimationImp::CalclateFinalCaptureDataFromCalibrateData() {
 
 
 	if ( m_pCams.size() <= 1 )
 	{
 		for ( size_t i = 0; i < ( int32_t ) YOLO_POSE_INDEX::YOLO_POSE_INDEX_MAX; i++ )
 		{
-			finalCaptureData_[( YOLO_POSE_INDEX )i] = capturedata_[ Locate::FRONT ][ ( YOLO_POSE_INDEX ) i ].captureBonePos;
+			finalCaptureData_[ ( YOLO_POSE_INDEX ) i ] = capturedata_[ Locate::FRONT ][ ( YOLO_POSE_INDEX ) i ].captureBonePos;
 			finalCaptureData_[ ( YOLO_POSE_INDEX ) i ].z = 0;
 		}
 		return;
@@ -473,7 +473,7 @@ void YOLOPoseEstimationImp::CalclateFinalCaptureDataFromCalibrateData(){
 
 
 	cv::Mat R1 = ( cv::Mat_<double>(3,3) <<
-		extrinsiParams[Locate::FRONT].rotationMatrix.Get(0,0),
+		extrinsiParams[ Locate::FRONT ].rotationMatrix.Get(0,0),
 		extrinsiParams[ Locate::FRONT ].rotationMatrix.Get(1,0),
 		extrinsiParams[ Locate::FRONT ].rotationMatrix.Get(2,0),
 		extrinsiParams[ Locate::FRONT ].rotationMatrix.Get(0,1),
@@ -509,7 +509,7 @@ void YOLOPoseEstimationImp::CalclateFinalCaptureDataFromCalibrateData(){
 
 
 	cv::Mat K1 = ( cv::Mat_<double>(3,3) <<
-		 instrinsiParams[Locate::FRONT ].cameraMatrix.Get(0,0),
+		 instrinsiParams[ Locate::FRONT ].cameraMatrix.Get(0,0),
 		instrinsiParams[ Locate::FRONT ].cameraMatrix.Get(1,0),
 		instrinsiParams[ Locate::FRONT ].cameraMatrix.Get(2,0),
 		 instrinsiParams[ Locate::FRONT ].cameraMatrix.Get(0,1),
@@ -536,15 +536,15 @@ void YOLOPoseEstimationImp::CalclateFinalCaptureDataFromCalibrateData(){
 	// ⑤ 有効な検出のみフィルタリング（信頼性が閾値以上）
 	std::vector<cv::Point2f> points1,points2;
 	std::vector<int> validIndices;
-	for ( size_t i = 0; i < (int32_t)YOLO_POSE_INDEX::YOLO_POSE_INDEX_MAX; i++ )
+	for ( size_t i = 0; i < ( int32_t ) YOLO_POSE_INDEX::YOLO_POSE_INDEX_MAX; i++ )
 	{
-		if ( capturedata_[ Locate::FRONT ][(YOLO_POSE_INDEX)i].captureBonePos.z >= CONFIDENCE_THRESHOLD &&
+		if ( capturedata_[ Locate::FRONT ][ ( YOLO_POSE_INDEX ) i ].captureBonePos.z >= CONFIDENCE_THRESHOLD &&
 			 capturedata_[ Locate::RIGHT ][ ( YOLO_POSE_INDEX ) i ].captureBonePos.z >= CONFIDENCE_THRESHOLD )
 		{
 			cv::Point2f point1 = { capturedata_[ Locate::FRONT ][ ( YOLO_POSE_INDEX ) i ].captureBonePos.x,
-									capturedata_[ Locate::FRONT ][ ( YOLO_POSE_INDEX ) i ].captureBonePos.y};
+									capturedata_[ Locate::FRONT ][ ( YOLO_POSE_INDEX ) i ].captureBonePos.y };
 
-			cv::Point2f point2 = { capturedata_[ Locate::FRONT ][ ( YOLO_POSE_INDEX ) i ].captureBonePos.x,
+			cv::Point2f point2 = { capturedata_[ Locate::RIGHT ][ ( YOLO_POSE_INDEX ) i ].captureBonePos.x,
 									capturedata_[ Locate::RIGHT ][ ( YOLO_POSE_INDEX ) i ].captureBonePos.y };
 			points1.push_back(point1);
 			points2.push_back(point2);
@@ -570,11 +570,10 @@ void YOLOPoseEstimationImp::CalclateFinalCaptureDataFromCalibrateData(){
 	{
 		cv::Mat col = pts4D.col(i);
 		// 同次座標（4次元）を第4成分で正規化
-		col /= col.at<float>(3,0);
 		cv::Point3f pt3D(col.at<float>(0,0),
 					 col.at<float>(1,0),
 					 col.at<float>(2,0));
-		
-		finalCaptureData_[ ( YOLO_POSE_INDEX ) validIndices[ i ] ] = { pt3D.x,pt3D.y,pt3D.z };
+
+		finalCaptureData_[ ( YOLO_POSE_INDEX ) validIndices[ i ] ] = MCBO::YVector3(pt3D.x,pt3D.y,-pt3D.z);
 	}
 }

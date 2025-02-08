@@ -1,11 +1,10 @@
 #include "ParticlePool.h"
 #include "KDirectXCommon.h"
 
-void ParticlePool::Create(ID3D12DescriptorHeap* uavHeap, uint32_t particleMax)
+void ParticlePool::Create(ID3D12GraphicsCommandList* cmdList, ID3D12DescriptorHeap* uavHeap, uint32_t particleMax)
 {
 	KDirectXCommon* directXCommon = KDirectXCommon::GetInstance();
 	ID3D12Device* device = directXCommon->GetDevice();
-	ID3D12GraphicsCommandList* commandList = directXCommon->GetMainCommandList();
 
 	UINT64 particlePoolByteSize = sizeof(Particle) * particleMax;
 	CD3DX12_HEAP_PROPERTIES heap = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
@@ -19,7 +18,7 @@ void ParticlePool::Create(ID3D12DescriptorHeap* uavHeap, uint32_t particleMax)
 		nullptr,
 		IID_PPV_ARGS(&RWParticlePool));
 	resourseState = D3D12_RESOURCE_STATE_COMMON;
-	Translation(commandList, D3D12_RESOURCE_STATE_UNORDERED_ACCESS);
+	Translation(cmdList, D3D12_RESOURCE_STATE_UNORDERED_ACCESS);
 	RWParticlePool->SetName(L"ParticlePool");
 
 	D3D12_UNORDERED_ACCESS_VIEW_DESC particlePoolUAVDescription = {};

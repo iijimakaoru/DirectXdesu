@@ -118,7 +118,7 @@ void KDirectXCommon::DeleteCommand()
 	assert(SUCCEEDED(result));
 
 	// フラッシュ
-	FlashCommandQueue();
+	FlashMainCommandQueue();
 
 	// コマンドリセット
 	MainCommandListReset();
@@ -169,12 +169,6 @@ KRtvDescriptorHeap* KDirectXCommon::GetRTVDescriptorHeap() const
 KDsvDescriptorHeap* KDirectXCommon::GetDsvDescriptorHrap() const
 {
 	return dsvHeap.get();
-}
-
-void KDirectXCommon::Transition(ID3D12Resource* resource, D3D12_RESOURCE_STATES beforeState, D3D12_RESOURCE_STATES afterState)
-{
-	auto barrier = CD3DX12_RESOURCE_BARRIER::Transition(resource, beforeState, afterState);
-	mainCommandList->ResourceBarrier(1, &barrier);
 }
 
 size_t KDirectXCommon::GetBackBufferCount() const
@@ -448,6 +442,27 @@ void KDirectXCommon::MainCommandListReset()
 	assert(SUCCEEDED(result));
 }
 
+void KDirectXCommon::FlashMainCommandQueue()
+{
+	//コマンド実行完了を待つ
+	fenceValMain++;
+	mainCommandQueue->Signal(fenceMain.Get(), fenceValMain);
+
+	if (fenceMain.Get()->GetCompletedValue() < fenceValMain)
+	{
+		HANDLE event = CreateEvent(nullptr, false, false, nullptr);
+		fenceMain.Get()->SetEventOnCompletion(fenceValMain, event);
+		WaitForSingleObject(event, INFINITE);
+		CloseHandle(event);
+	}
+}
+
+void KDirectXCommon::Transition(ID3D12Resource* resource, D3D12_RESOURCE_STATES beforeState, D3D12_RESOURCE_STATES afterState)
+{
+	auto barrier = CD3DX12_RESOURCE_BARRIER::Transition(resource, beforeState, afterState);
+	mainCommandList->ResourceBarrier(1, &barrier);
+}
+
 ID3D12GraphicsCommandList* KDirectXCommon::GetMainCommandList() const
 {
 	return mainCommandList.Get();
@@ -485,6 +500,21 @@ void KDirectXCommon::ComputeCommandListReset()
 	assert(SUCCEEDED(result));
 }
 
+void KDirectXCommon::FlashComputeCommandQueue()
+{
+	//コマンド実行完了を待つ
+	fenceValMain++;
+	computeCommandQueue->Signal(fenceMain.Get(), fenceValMain);
+
+	if (fenceMain.Get()->GetCompletedValue() < fenceValMain)
+	{
+		HANDLE event = CreateEvent(nullptr, false, false, nullptr);
+		fenceMain.Get()->SetEventOnCompletion(fenceValMain, event);
+		WaitForSingleObject(event, INFINITE);
+		CloseHandle(event);
+	}
+}
+
 ID3D12GraphicsCommandList* KDirectXCommon::GetComputeCommandList() const
 {
 	return computeCommandList.Get();
@@ -500,24 +530,6 @@ ID3D12CommandAllocator* KDirectXCommon::GetComputeCommandAllocator() const
 	return computeCommandAllocater.Get();
 }
 #pragma endregion
-
-void KDirectXCommon::FlashCommandQueue()
-{
-	//コマンド実行完了を待つ
-	fenceValMain++;
-	mainCommandQueue->Signal(fenceMain.Get(), fenceValMain);
-	computeCommandQueue->Wait(fenceMain.Get(), fenceValMain);
-
-	if (fenceMain.Get()->GetCompletedValue() < fenceValMain)
-	{
-		HANDLE event = CreateEvent(nullptr, false, false, nullptr);
-		fenceMain.Get()->SetEventOnCompletion(fenceValMain, event);
-		WaitForSingleObject(event, INFINITE);
-		CloseHandle(event);
-	}
-
-
-}
 
 D3D12_VIEWPORT KDirectXCommon::GetViewport()
 {

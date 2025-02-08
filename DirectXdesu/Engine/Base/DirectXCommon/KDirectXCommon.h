@@ -96,6 +96,7 @@ public:
 	void MainCommandListExecute();
 	void MainCommandListReset();
 	void Transition(ID3D12Resource* resource, D3D12_RESOURCE_STATES beforeState, D3D12_RESOURCE_STATES afterState);// リソースの状態を変える
+	void FlashMainCommandQueue();
 	ID3D12GraphicsCommandList* GetMainCommandList() const;
 	ID3D12CommandAllocator* GetMainCommandAllocator() const;
 	ID3D12CommandQueue* GetMainCommandQueue() const;
@@ -104,11 +105,11 @@ public:
 #pragma region コンピュート
 	void ComputeCommandListExecute();
 	void ComputeCommandListReset();
+	void FlashComputeCommandQueue();
 	ID3D12GraphicsCommandList* GetComputeCommandList() const;
 	ID3D12CommandAllocator* GetComputeCommandAllocator() const;
 	ID3D12CommandQueue* GetComputeCommandQueue() const;
 #pragma endregion
-	void FlashCommandQueue();
 
 private:
 	// DXGI初期化

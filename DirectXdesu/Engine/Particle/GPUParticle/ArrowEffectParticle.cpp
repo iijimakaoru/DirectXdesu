@@ -42,12 +42,11 @@ void ArrowEffectParticle::Init(const Timer* timer, const KMyMath::Matrix4& matVi
 	ID3D12CommandList* cmdsLists[] = { commandList };
 	commandQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
 
-	directXCommon->FlashCommandQueue();
+	directXCommon->FlashMainCommandQueue();
 
 	ThrowIfFailed(commandAllocator->Reset());
 
-	ThrowIfFailed(commandList->Reset(
-		commandAllocator, deadListPSO_->GetPipelineState()));
+	ThrowIfFailed(commandList->Reset(commandAllocator, deadListPSO_->GetPipelineState()));
 
 	commandList->SetComputeRootSignature(particleRootSignature_->GetRootSignature());
 
@@ -82,7 +81,7 @@ void ArrowEffectParticle::Init(const Timer* timer, const KMyMath::Matrix4& matVi
 	ID3D12CommandList* cmdsLists1[] = { commandList };
 	commandQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists1);
 
-	directXCommon->FlashCommandQueue();
+	directXCommon->FlashMainCommandQueue();
 
 	directXCommon->MainCommandListReset();
 }
@@ -109,7 +108,7 @@ void ArrowEffectParticle::Update(const Timer* timer, const KMyMath::Matrix4& mat
 
 	UpdateMainPassCB(timer, matView, matProjection, emitter);
 
-	directXCommon->FlashCommandQueue();
+	directXCommon->FlashMainCommandQueue();
 }
 
 void ArrowEffectParticle::Draw(const Timer* timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection, Emitter* emitter)
@@ -178,6 +177,7 @@ void ArrowEffectParticle::BuildUAV()
 {
 	KDirectXCommon* directXCommon = KDirectXCommon::GetInstance();
 	ID3D12Device* device = directXCommon->GetDevice();
+	ID3D12GraphicsCommandList* commnadList = directXCommon->GetMainCommandList();
 
 	D3D12_DESCRIPTOR_HEAP_DESC uavHeapDesc = {};
 	uint32_t numDescriptors = std::min<uint32_t>(2048, (uint32_t)model_->GetVertices().size() * 2); // 必要な分だけ確保
@@ -191,7 +191,7 @@ void ArrowEffectParticle::BuildUAV()
 	// 並列
 	// Particle Pool
 	{
-		futures.push_back(std::async(std::launch::async, [&] { particlePool_->Create(UAVHeap.Get(), (uint32_t)model_->GetVertices().size()); }));
+		futures.push_back(std::async(std::launch::async, [&] { particlePool_->Create(commnadList, UAVHeap.Get(), (uint32_t)model_->GetVertices().size()); }));
 	}
 	// Dead List
 	{

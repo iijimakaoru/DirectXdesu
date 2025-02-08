@@ -18,7 +18,7 @@ private:
 	D3D12_RESOURCE_STATES resourseState;
 
 public:
-	void Create(ID3D12DescriptorHeap* uavHeap, uint32_t particleMax);
+	void Create(ID3D12GraphicsCommandList* cmdList,ID3D12DescriptorHeap* uavHeap, uint32_t particleMax);
 	ID3D12Resource* GetParticlePool();
 	CD3DX12_CPU_DESCRIPTOR_HANDLE& GetCPUSRV();
 	CD3DX12_GPU_DESCRIPTOR_HANDLE& GetGPUSRV();

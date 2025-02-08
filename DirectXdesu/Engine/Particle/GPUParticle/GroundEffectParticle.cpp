@@ -42,7 +42,7 @@ void GroundEffectParticle::Init(const Timer* timer, const KMyMath::Matrix4& matV
 	ID3D12CommandList* cmdsLists[] = { commandList };
 	commandQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
 
-	directXCommon->FlashCommandQueue();
+	directXCommon->FlashMainCommandQueue();
 
 	ThrowIfFailed(commandAllocator->Reset());
 
@@ -81,7 +81,7 @@ void GroundEffectParticle::Init(const Timer* timer, const KMyMath::Matrix4& matV
 	ID3D12CommandList* cmdsLists1[] = { commandList };
 	commandQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists1);
 
-	directXCommon->FlashCommandQueue();
+	directXCommon->FlashMainCommandQueue();
 
 	directXCommon->MainCommandListReset();
 }
@@ -178,6 +178,7 @@ void GroundEffectParticle::BuildUAV()
 {
 	KDirectXCommon* directXCommon = KDirectXCommon::GetInstance();
 	ID3D12Device* device = directXCommon->GetDevice();
+	ID3D12GraphicsCommandList* commandList = directXCommon->GetMainCommandList();
 
 	D3D12_DESCRIPTOR_HEAP_DESC uavHeapDesc = {};
 	uint32_t numDescriptors = std::min<uint32_t>(2048, (uint32_t)model_->GetVertices().size() * 2); // 必要な分だけ確保
@@ -191,7 +192,7 @@ void GroundEffectParticle::BuildUAV()
 	// 並列
 	// Particle Pool
 	{
-		futures.push_back(std::async(std::launch::async, [&] { particlePool_->Create(UAVHeap.Get(), (uint32_t)model_->GetVertices().size()); }));
+		futures.push_back(std::async(std::launch::async, [&] { particlePool_->Create(commandList, UAVHeap.Get(), (uint32_t)model_->GetVertices().size()); }));
 	}
 	// Dead List
 	{

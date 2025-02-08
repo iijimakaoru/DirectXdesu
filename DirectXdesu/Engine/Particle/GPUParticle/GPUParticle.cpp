@@ -44,7 +44,7 @@ void GPUParticle::Init(const Timer& timer,
 	ID3D12CommandList* cmdsLists[] = { commandList };
 	commandQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
 
-	directXCommon->FlashCommandQueue();
+	directXCommon->FlashMainCommandQueue();
 
 	ThrowIfFailed(commandAllocator->Reset());
 
@@ -82,7 +82,7 @@ void GPUParticle::Init(const Timer& timer,
 	ID3D12CommandList* cmdsLists1[] = { commandList };
 	commandQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists1);
 
-	directXCommon->FlashCommandQueue();
+	directXCommon->FlashMainCommandQueue();
 
 	directXCommon->MainCommandListReset();
 }
@@ -221,6 +221,7 @@ void GPUParticle::BuildUAV(Emitter* emitter)
 {
 	KDirectXCommon* directXCommon = KDirectXCommon::GetInstance();
 	ID3D12Device* device = directXCommon->GetDevice();
+	ID3D12GraphicsCommandList* commandList = directXCommon->GetMainCommandList();
 
 	D3D12_DESCRIPTOR_HEAP_DESC uavHeapDesc = {};
 	uavHeapDesc.NumDescriptors = 2048;
@@ -230,7 +231,7 @@ void GPUParticle::BuildUAV(Emitter* emitter)
 
 	// Particle Pool
 	{
-		particlePool_->Create(UAVHeap.Get(), (uint32_t)emitter->GetMaxParticles());
+		particlePool_->Create(commandList, UAVHeap.Get(), (uint32_t)emitter->GetMaxParticles());
 	}
 
 	// Dead List

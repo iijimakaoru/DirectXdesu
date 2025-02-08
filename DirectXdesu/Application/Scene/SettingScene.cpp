@@ -49,7 +49,7 @@ void SettingScene::Init() {
 void SettingScene::Update() {
 
 	if (input->IsTrigger(DIK_1)) {
-
+		SceneManager::GetInstance()->ChangeScene("GAME");
 	}
 	ImguiUpdate();
 	camera->Update();
@@ -141,6 +141,46 @@ void SettingScene::ImguiUpdate()
 					});
 				extrinSicNum = 1;
 			}
+		}
+		if (ImGui::TreeNode("CalibrateDataCamera:0"))
+		{
+			IntrinsicParameterCalibrator::Parameter intParam = captureManager->GetYOLOPoseEstimation()
+																->GetInterinsParameter(0);
+
+
+			if (ImGui::TreeNode("CameraMatrix"))
+			{
+				ImGui::Text("%d,%d,%d", intParam.cameraMatrix.Get(0, 0),
+					intParam.cameraMatrix.Get(1, 0), intParam.cameraMatrix.Get(2, 0));
+				ImGui::Text("%d,%d,%d", intParam.cameraMatrix.Get(0, 1),
+					intParam.cameraMatrix.Get(1, 1), intParam.cameraMatrix.Get(2, 1));
+				ImGui::Text("%d,%d,%d", intParam.cameraMatrix.Get(0, 2),
+					intParam.cameraMatrix.Get(1, 2), intParam.cameraMatrix.Get(2, 2));
+				ImGui::TreePop();
+			}
+
+			if (ImGui::TreeNode("DistCoefee"))
+			{
+				ImGui::Text("%d,%d,%d,%d,%d", intParam.distortionCoefficients.GetX(),
+					intParam.distortionCoefficients.GetY(), intParam.distortionCoefficients.GetZ(),
+					intParam.distortionCoefficients.GetW(), intParam.distortionCoefficients.GetV());
+				
+				ImGui::TreePop();
+			}
+
+			if (ImGui::TreeNode("DistCoefee"))
+			{
+
+			}
+			
+
+			ImGui::TreePop();
+		}
+
+		if (ImGui::TreeNode("CalibrateDataCamera:1"))
+		{
+
+			ImGui::TreePop();
 		}
 		ImGui::TreePop();
 	}

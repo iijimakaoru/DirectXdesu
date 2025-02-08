@@ -15,7 +15,7 @@ void KMyGame::Init() {
 	ModelManager::Load("arrow","S_Arrow");
 
 	// 最初のシーン
-	SceneManager::GetInstance()->ChangeScene("GAME");
+	SceneManager::GetInstance()->ChangeScene("SETTING");
 }
 
 void KMyGame::Update() {

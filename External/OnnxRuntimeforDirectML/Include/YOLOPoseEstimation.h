@@ -82,6 +82,9 @@ public:
 	virtual void InterinsCalibrateLoad(const std::string& filepath) = 0;
 
 	virtual void SetCalibrateCallBack(CameraCalibrator::Callback* callBackPtr) = 0;
+
+	virtual const ExtrinsiParameterCalibrator::Parameter GetExtrinsiParameter(int32_t cameraIndex) = 0;
+	virtual const IntrinsicParameterCalibrator::Parameter GetInterinsParameter(int32_t cameraIndex) = 0;
 };
 
 

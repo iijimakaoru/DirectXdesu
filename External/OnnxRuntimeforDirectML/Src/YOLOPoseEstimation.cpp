@@ -99,6 +99,9 @@ public:
 
 	void SetCalibrateCallBack(CameraCalibrator::Callback* callBackPtr) override;
 
+	const ExtrinsiParameterCalibrator::Parameter GetExtrinsiParameter(int32_t cameraIndex) override;
+	const IntrinsicParameterCalibrator::Parameter GetInterinsParameter(int32_t cameraIndex) override;
+
 private:
 
 	void _Draw(cv::Mat& image,int index);
@@ -364,6 +367,16 @@ void YOLOPoseEstimationImp::InterinsCalibrateLoad(const std::string& filepath)
 void YOLOPoseEstimationImp::SetCalibrateCallBack(CameraCalibrator::Callback* callBackPtr)
 {
 	callBack = callBackPtr;
+}
+
+const ExtrinsiParameterCalibrator::Parameter YOLOPoseEstimationImp::GetExtrinsiParameter(int32_t cameraIndex)
+{
+	return extrinsiParams[cameraIndex];
+}
+
+const IntrinsicParameterCalibrator::Parameter YOLOPoseEstimationImp::GetInterinsParameter(int32_t cameraIndex)
+{
+	return instrinsiParams[cameraIndex];
 }
 
 void YOLOPoseEstimationImp::_Draw(cv::Mat& image,int index)

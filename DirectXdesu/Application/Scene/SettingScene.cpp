@@ -43,6 +43,7 @@ void SettingScene::Init() {
 
 	camera->StartRound();
 
+
 	
 }
 
@@ -88,7 +89,7 @@ void SettingScene::ImguiUpdate()
 		}
 		else
 		{
-			if (ImGui::Button("InterCalibrateCamera0"))
+			if (ImGui::Button("InterCalibrateCamera0",{360,240}))
 			{
 				InterinsicCalibrating = true;
 				interCalibratingAsync = std::async(std::launch::async, [=]() {
@@ -96,7 +97,7 @@ void SettingScene::ImguiUpdate()
 					});
 				interSicNum = 0;
 			}
-			else if (ImGui::Button("InterCalibrateCamera1"))
+			else if (ImGui::Button("InterCalibrateCamera1",{360,240}))
 			{
 				InterinsicCalibrating = true;
 				interCalibratingAsync = std::async(std::launch::async, [=]() {
@@ -111,7 +112,7 @@ void SettingScene::ImguiUpdate()
 			std::string text = "ExtrinsCalibrationCamera:" + std::to_string(extrinSicNum);
 			ImGui::Text(text.c_str());
 
-			if (ImGui::Button("ExtrinsCalibrateCameraEnd"))
+			if (ImGui::Button("ExtrinsCalibrateCameraEnd", { 360,240 }))
 			{
 				callBack.SetCapture(true);
 			}
@@ -125,7 +126,7 @@ void SettingScene::ImguiUpdate()
 		}
 		else
 		{
-			if (ImGui::Button("ExtrinsCalibrateCamera0Start"))
+			if (ImGui::Button("ExtrinsCalibrateCamera0Start",{ 360,240 }))
 			{
 				ExtrinsiCalibrating = true;
 				extrinsiCalibratingAsync = std::async(std::launch::async, [=]() {
@@ -133,7 +134,7 @@ void SettingScene::ImguiUpdate()
 					});
 				extrinSicNum = 0;
 			}
-			else if (ImGui::Button("ExtrinsCalibrateCamera1Start"))
+			else if (ImGui::Button("ExtrinsCalibrateCamera1Start",{ 360,240 }))
 			{
 				ExtrinsiCalibrating = true;
 				extrinsiCalibratingAsync = std::async(std::launch::async, [=]() {
@@ -147,38 +148,79 @@ void SettingScene::ImguiUpdate()
 			IntrinsicParameterCalibrator::Parameter intParam = captureManager->GetYOLOPoseEstimation()
 																->GetInterinsParameter(0);
 
+			ImGui::Text("\n\n\n");
+			ImGui::Text("CameraMatrix");
+			ImGui::Text("%d,%d,%d", intParam.cameraMatrix.Get(0, 0),
+				intParam.cameraMatrix.Get(1, 0), intParam.cameraMatrix.Get(2, 0));
+			ImGui::Text("%d,%d,%d", intParam.cameraMatrix.Get(0, 1),
+				intParam.cameraMatrix.Get(1, 1), intParam.cameraMatrix.Get(2, 1));
+			ImGui::Text("%d,%d,%d", intParam.cameraMatrix.Get(0, 2),
+				intParam.cameraMatrix.Get(1, 2), intParam.cameraMatrix.Get(2, 2));
 
-			if (ImGui::TreeNode("CameraMatrix"))
-			{
-				ImGui::Text("%d,%d,%d", intParam.cameraMatrix.Get(0, 0),
-					intParam.cameraMatrix.Get(1, 0), intParam.cameraMatrix.Get(2, 0));
-				ImGui::Text("%d,%d,%d", intParam.cameraMatrix.Get(0, 1),
-					intParam.cameraMatrix.Get(1, 1), intParam.cameraMatrix.Get(2, 1));
-				ImGui::Text("%d,%d,%d", intParam.cameraMatrix.Get(0, 2),
-					intParam.cameraMatrix.Get(1, 2), intParam.cameraMatrix.Get(2, 2));
-				ImGui::TreePop();
-			}
+			ImGui::Text("\n\n\n");
+			ImGui::Text("DistCoefee");
+			ImGui::Text("%d,%d,%d,%d,%d", intParam.distortionCoefficients.GetX(),
+				intParam.distortionCoefficients.GetY(), intParam.distortionCoefficients.GetZ(),
+				intParam.distortionCoefficients.GetW(), intParam.distortionCoefficients.GetV());
 
-			if (ImGui::TreeNode("DistCoefee"))
-			{
-				ImGui::Text("%d,%d,%d,%d,%d", intParam.distortionCoefficients.GetX(),
-					intParam.distortionCoefficients.GetY(), intParam.distortionCoefficients.GetZ(),
-					intParam.distortionCoefficients.GetW(), intParam.distortionCoefficients.GetV());
-				
-				ImGui::TreePop();
-			}
-
-			if (ImGui::TreeNode("DistCoefee"))
-			{
-				ImGui::TreePop();
-			}
 			
+			ExtrinsiParameterCalibrator::Parameter extParam = captureManager->GetYOLOPoseEstimation()
+				->GetExtrinsiParameter(0);
+
+			ImGui::Text("\n\n\n");
+			ImGui::Text("CameraRotateMatrix");
+			ImGui::Text("%d,%d,%d", extParam.rotationMatrix.Get(0, 0),
+				extParam.rotationMatrix.Get(1, 0), extParam.rotationMatrix.Get(2, 0));
+			ImGui::Text("%d,%d,%d", extParam.rotationMatrix.Get(0, 1),
+				extParam.rotationMatrix.Get(1, 1), extParam.rotationMatrix.Get(2, 1));
+			ImGui::Text("%d,%d,%d", extParam.rotationMatrix.Get(0, 2),
+				extParam.rotationMatrix.Get(1, 2), extParam.rotationMatrix.Get(2, 2));
+			
+			ImGui::Text("\n\n\n");
+			ImGui::Text("CameraTranslateVector");
+			ImGui::Text("%d,%d,%d", extParam.translationVector.GetX(), extParam.translationVector.GetY(),
+										extParam.translationVector.GetZ());
 
 			ImGui::TreePop();
 		}
 
 		if (ImGui::TreeNode("CalibrateDataCamera:1"))
 		{
+			IntrinsicParameterCalibrator::Parameter intParam = captureManager->GetYOLOPoseEstimation()
+				->GetInterinsParameter(1);
+
+			ImGui::Text("\n\n\n");
+			ImGui::Text("CameraMatrix");
+			ImGui::Text("%d,%d,%d", intParam.cameraMatrix.Get(0, 0),
+				intParam.cameraMatrix.Get(1, 0), intParam.cameraMatrix.Get(2, 0));
+			ImGui::Text("%d,%d,%d", intParam.cameraMatrix.Get(0, 1),
+				intParam.cameraMatrix.Get(1, 1), intParam.cameraMatrix.Get(2, 1));
+			ImGui::Text("%d,%d,%d", intParam.cameraMatrix.Get(0, 2),
+				intParam.cameraMatrix.Get(1, 2), intParam.cameraMatrix.Get(2, 2));
+
+			ImGui::Text("\n\n\n");
+			ImGui::Text("DistCoefee");
+			ImGui::Text("%d,%d,%d,%d,%d", intParam.distortionCoefficients.GetX(),
+				intParam.distortionCoefficients.GetY(), intParam.distortionCoefficients.GetZ(),
+				intParam.distortionCoefficients.GetW(), intParam.distortionCoefficients.GetV());
+
+
+			ExtrinsiParameterCalibrator::Parameter extParam = captureManager->GetYOLOPoseEstimation()
+				->GetExtrinsiParameter(1);
+
+			ImGui::Text("\n\n\n");
+			ImGui::Text("CameraRotateMatrix");
+			ImGui::Text("%d,%d,%d", extParam.rotationMatrix.Get(0, 0),
+				extParam.rotationMatrix.Get(1, 0), extParam.rotationMatrix.Get(2, 0));
+			ImGui::Text("%d,%d,%d", extParam.rotationMatrix.Get(0, 1),
+				extParam.rotationMatrix.Get(1, 1), extParam.rotationMatrix.Get(2, 1));
+			ImGui::Text("%d,%d,%d", extParam.rotationMatrix.Get(0, 2),
+				extParam.rotationMatrix.Get(1, 2), extParam.rotationMatrix.Get(2, 2));
+
+			ImGui::Text("\n\n\n");
+			ImGui::Text("CameraTranslateVector");
+			ImGui::Text("%d,%d,%d", extParam.translationVector.GetX(), extParam.translationVector.GetY(),
+				extParam.translationVector.GetZ());
 
 			ImGui::TreePop();
 		}

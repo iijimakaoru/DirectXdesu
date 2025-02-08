@@ -19,6 +19,8 @@
 
 #include "ModelManager.h"
 
+#include<PModelLoader.h>
+
 GameScene::~GameScene() { Final(); };
 
 void GameScene::LoadResources() {
@@ -29,9 +31,14 @@ void GameScene::LoadResources() {
 		ModelManager::GetInstance()->GetModels("S_SkyDorm");
 	noteModel = 
 		ModelManager::GetInstance()->GetModels("S_Arrow");
+
+	TextureManager::Load("Resources/texture/boss1.png");
+
+
 }
 
 void GameScene::Init() {
+
 	BaseScene::Init();
 
 	LoadCSV("collision");
@@ -165,9 +172,55 @@ void GameScene::Init() {
 
 	start = { 500,500 };
 	lenRimit = 100.0f;//csvに落とし込む,値を仮設定
+
+	//------------------------------------------------------------------------------------------------------------------------------------------------------------//
+
+
+	PHONONLOADER::P_MODEL_DATA* pData = new PHONONLOADER::P_MODEL_DATA();
+	PHONONLOADER::PModelLoader::Load(pData, "obj/cube");
+
+	
+
+	cv::Mat img;
+
+	const std::string& modelPath = "Resources/Checkpoints/yolo11x-pose.onnx";
+
+	float mask_threshold = 0.5f;
+	float conf_threshold = 0.30f;
+	float iou_threshold = 0.45f;
+	int conversion_code = cv::COLOR_BGR2RGB;
+	
+	MCBM::AnimationModelManager::GetInstance()->Load("fox");
+	player = std::make_unique<CaptureModel>();
+	player->Initilize("fox");
+	sprite.reset(Sprite::Create(PipelineManager::GetInstance()->GetPipeline("Sprite")));
+
+	texData = TextureManager::GetInstance()->GetTextures("Resources/texture/boss1.png");
+
+	playerTrans.SetPos({ 0,87,-110 });
+	
+
 }
 
 void GameScene::Update() {
+
+	if (input->IsPush(DIK_R))
+	{
+		initialePoseSet = true;
+		initializetime_ = std::chrono::system_clock::now();
+	}
+
+
+	if (initialePoseSet)
+	{
+		player->InitializePose();
+		initializeCount_ = std::chrono::system_clock::now();
+		std::chrono::seconds sec = std::chrono::duration_cast<std::chrono::seconds>(initializeCount_ - initializetime_);
+		if (sec > std::chrono::seconds{ 5 })
+		{
+			initialePoseSet = false;
+		}
+	}
 
 	light_->SetLightRGB({lightRGB_.x, lightRGB_.y, lightRGB_.z});
 	light_->SetLightDir({lightDir_.x, lightDir_.y, lightDir_.z, 0.0f});
@@ -178,7 +231,7 @@ void GameScene::Update() {
 	playTime++;
 	Collision();
 
-	for (size_t i = 0; i < OBJ::max; i++)
+	/*for (size_t i = 0; i < OBJ::max; i++)
 	{
 		obj[i]->Update(camera->GetViewPro(), camera->GetWorldPos());
 	}
@@ -194,7 +247,7 @@ void GameScene::Update() {
 			objNote[i]->GetTransform().SetPos(move);
 			objNote[i]->Update(camera->GetViewPro(), camera->GetWorldPos());
 		}
-	}
+	}*/
 
 	for (size_t i = 0; i < OBJ::max; i++) 
 	{
@@ -202,29 +255,58 @@ void GameScene::Update() {
 	}
 
 	camera->Update();
+
+	if (input->GetInstance()->IsPush(DIK_UP))
+	{
+		float z = playerTrans.GetPos().z;
+		z += 0.1f;
+		playerTrans.SetPos({ 0,87,z });
+	}
+
+	if (input->GetInstance()->IsPush(DIK_DOWN))
+	{
+		float z = playerTrans.GetPos().z;
+		z -= 0.1f;
+		playerTrans.SetPos({ 0,87,z });
+	}
+
+	
+	playerTrans.SetScale({ 1,1,1 });
+	playerTrans.SetRot({ 0,0,0 });
+	player->Update(camera->GetViewPro(),playerTrans);
 }
 
 void GameScene::ObjDraw() 
-{
-	for (size_t i = 0; i < OBJ::max; i++) 
-	{
-		obj[i]->Draw();
-	}
+{	
+	//for (size_t i = 0; i < OBJ::max; i++) 
+	//{
+	//	obj[i]->Draw();
+	//}
 
-	for (size_t i = 0; i < objNote.size(); i++)
-	{
-		if (!notes[i].isHit)
-		{
-			objNote[i]->Draw();
-		}
-	}
+	//for (size_t i = 0; i < objNote.size(); i++)
+	//{
+	//	if (!notes[i].isHit)
+	//	{
+	//		objNote[i]->Draw();
+	//	}
+	//}
+
+
+	player->Draw();
 }
 
 void GameScene::SpriteDraw() {
-	
+
+	//------------------------------------------------------------------------------------------------------------------------------------------------------------//
+	f++;
+	fDiv = 7;
+	//sprite->AnimationDraw(texData, 64, 64, f, fDiv, {200,200});
 }
 
-void GameScene::Final() { delete collisionManager_; }
+void GameScene::Final() 
+{
+	delete collisionManager_; 
+}
 
 void GameScene::RotAndLenCalculationMouse()
 {

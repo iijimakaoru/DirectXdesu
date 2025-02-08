@@ -62,6 +62,8 @@ void KDirectXCommon::Init()
 	//デスクプリタヒープ生成
 	srvHeap = std::make_unique<KDescriptorHeap>();
 	srvHeap->Initialize();
+
+	CloseCommnd();
 }
 
 void KDirectXCommon::PreDraw()
@@ -133,20 +135,6 @@ void KDirectXCommon::DeleteCommand()
 			WaitForSingleObject(event, INFINITE);
 			CloseHandle(event);
 		}
-	}
-
-	//キューをクリア
-	result = cmdAllocater->Reset();
-	assert(SUCCEEDED(result));
-	//コマンドリストを貯める準備
-	if (cmdList != 0)
-	{
-		result = cmdList->Reset(cmdAllocater.Get(), nullptr);
-		assert(SUCCEEDED(result));
-	}
-	else
-	{
-		assert(SUCCEEDED(0));
 	}
 }
 

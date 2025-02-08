@@ -27,6 +27,12 @@
 
 #include "MusicDesc.h"
 
+#include <Animation/Skelton.h>
+
+#include<YOLOPoseEstimation.h>
+
+#include<CaptureModel.h>
+
 /**
  * @file GameScene.h
  * @brief ゲームシーン
@@ -106,6 +112,8 @@ private:
 	// 当たり判定マネージャー
 	CollisionManager* collisionManager_ = nullptr;
 
+
+
 private:
 	//ノーツ
 	std::unique_ptr<MusicDesc>music;
@@ -127,4 +135,17 @@ private:
 	const int32_t constblankSpace = 240;
 	int score[3];
 	int combo;
+
+	bool initialePoseSet = false;
+	std::chrono::system_clock::time_point initializetime_;
+	std::chrono::system_clock::time_point initializeCount_;
+
+	std::unique_ptr<CaptureModel> player;
+	Transform playerTrans;
+
+	std::unique_ptr<Sprite> sprite;
+	TextureData texData;
+	float f;
+	float fDiv;
+
 };

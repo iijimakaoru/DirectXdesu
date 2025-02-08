@@ -343,7 +343,7 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
-fbx_sdk
-motionLib
-OnnxRuntimeforDirectML
-Checkpoints
+
+.External\fbx_sdk\lib
+/External/fbx_sdk/lib
+/DirectXdesu/Resources/Checkpoints

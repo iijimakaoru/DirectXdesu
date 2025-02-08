@@ -73,7 +73,7 @@ void SettingScene::ImguiUpdate()
 {
 	ImGui::Begin("CalibrateInfo",nullptr,
 		ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
-	ImGui::SetWindowSize("CalibrateInfo", { 626 ,650 });
+	ImGui::SetWindowSize("CalibrateInfo", { 626  ,650 });
 	ImGui::SetWindowPos({10,10});
 	if (ImGui::TreeNode("Calibrate"))
 	{
@@ -149,55 +149,70 @@ void SettingScene::ImguiUpdate()
 			}
 		}
 
-		for (int32_t i = 0; i < 2; i++)
+		if (ImGui::BeginTable("CalibrateDataTable", 2, ImGuiTableFlags_SizingFixedFit))
 		{
-			std::string temp = "CalibrateDataCamera:" + std::to_string(i);
-			if (ImGui::TreeNode(temp.c_str()))
+			ImGui::TableSetupColumn("Camera 0", ImGuiTableColumnFlags_WidthFixed, 250.0f);
+			ImGui::TableSetupColumn("Camera 1", ImGuiTableColumnFlags_WidthFixed, 250.0f);
+			ImGui::TableHeadersRow(); // ヘッダー行を追加
+
+			for (int32_t i = 0; i < 2; i++)
 			{
-				IntrinsicParameterCalibrator::Parameter intParam = captureManager->GetYOLOPoseEstimation()
-					->GetInterinsParameter(i);
+				ImGui::TableNextColumn();
+				std::string temp = "CalibrateDataCamera:" + std::to_string(i);
+				bool node_open = ImGui::TreeNode(temp.c_str());
 
-				ExtrinsiParameterCalibrator::Parameter extParam = captureManager->GetYOLOPoseEstimation()
-					->GetExtrinsiParameter(i);
+				if (node_open)
+				{
+					IntrinsicParameterCalibrator::Parameter intParam = captureManager->GetYOLOPoseEstimation()
+						->GetInterinsParameter(i);
+					ExtrinsiParameterCalibrator::Parameter extParam = captureManager->GetYOLOPoseEstimation()
+						->GetExtrinsiParameter(i);
 
-				ImGui::Text("\n");
-				ImGui::Text("CameraMatrix");
-				ImGui::Text("%d,%d,%d", intParam.cameraMatrix.Get(0, 0),
-					intParam.cameraMatrix.Get(1, 0), intParam.cameraMatrix.Get(2, 0));
-				ImGui::Text("%d,%d,%d", intParam.cameraMatrix.Get(0, 1),
-					intParam.cameraMatrix.Get(1, 1), intParam.cameraMatrix.Get(2, 1));
-				ImGui::Text("%d,%d,%d", intParam.cameraMatrix.Get(0, 2),
-					intParam.cameraMatrix.Get(1, 2), intParam.cameraMatrix.Get(2, 2));
+					ImGui::Text("CameraMatrix");
+					ImGui::Text("%d, %d, %d", intParam.cameraMatrix.Get(0, 0),
+						intParam.cameraMatrix.Get(1, 0),
+						intParam.cameraMatrix.Get(2, 0));
+					ImGui::Text("%d, %d, %d", intParam.cameraMatrix.Get(0, 1),
+						intParam.cameraMatrix.Get(1, 1),
+						intParam.cameraMatrix.Get(2, 1));
+					ImGui::Text("%d, %d, %d", intParam.cameraMatrix.Get(0, 2),
+						intParam.cameraMatrix.Get(1, 2),
+						intParam.cameraMatrix.Get(2, 2));
 
-				ImGui::Text("\n");
-				ImGui::Text("DistCoefee");
-				ImGui::Text("%d,%d,%d,%d,%d", intParam.distortionCoefficients.GetX(),
-					intParam.distortionCoefficients.GetY(), intParam.distortionCoefficients.GetZ(),
-					intParam.distortionCoefficients.GetW(), intParam.distortionCoefficients.GetV());
+					ImGui::Spacing();
+					ImGui::Text("DistCoefee");
+					ImGui::Text("%d, %d, %d, %d, %d", intParam.distortionCoefficients.GetX(),
+						intParam.distortionCoefficients.GetY(),
+						intParam.distortionCoefficients.GetZ(),
+						intParam.distortionCoefficients.GetW(),
+						intParam.distortionCoefficients.GetV());
 
+					ImGui::Spacing();
+					ImGui::Text("CameraRotateMatrix");
+					ImGui::Text("%d, %d, %d", extParam.rotationMatrix.Get(0, 0),
+						extParam.rotationMatrix.Get(1, 0),
+						extParam.rotationMatrix.Get(2, 0));
+					ImGui::Text("%d, %d, %d", extParam.rotationMatrix.Get(0, 1),
+						extParam.rotationMatrix.Get(1, 1),
+						extParam.rotationMatrix.Get(2, 1));
+					ImGui::Text("%d, %d, %d", extParam.rotationMatrix.Get(0, 2),
+						extParam.rotationMatrix.Get(1, 2),
+						extParam.rotationMatrix.Get(2, 2));
 
+					ImGui::Spacing();
+					ImGui::Text("CameraTranslateVector");
+					ImGui::Text("%d, %d, %d", extParam.translationVector.GetX(),
+						extParam.translationVector.GetY(),
+						extParam.translationVector.GetZ());
 
-				ImGui::Text("\n");
-				ImGui::Text("CameraRotateMatrix");
-				ImGui::Text("%d,%d,%d", extParam.rotationMatrix.Get(0, 0),
-					extParam.rotationMatrix.Get(1, 0), extParam.rotationMatrix.Get(2, 0));
-				ImGui::Text("%d,%d,%d", extParam.rotationMatrix.Get(0, 1),
-					extParam.rotationMatrix.Get(1, 1), extParam.rotationMatrix.Get(2, 1));
-				ImGui::Text("%d,%d,%d", extParam.rotationMatrix.Get(0, 2),
-					extParam.rotationMatrix.Get(1, 2), extParam.rotationMatrix.Get(2, 2));
-
-				ImGui::Text("\n");
-				ImGui::Text("CameraTranslateVector");
-				ImGui::Text("%d,%d,%d", extParam.translationVector.GetX(), extParam.translationVector.GetY(),
-					extParam.translationVector.GetZ());
-
-				ImGui::TreePop();
-				ImGui::SameLine();
+					ImGui::TreePop();
+				}
 			}
-		}
-		
+			ImGui::EndTable();
 
-		ImGui::TreePop();
+		}
+			ImGui::TreePop();
+	
 	}
 	ImGui::End();
 }

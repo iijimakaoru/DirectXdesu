@@ -178,7 +178,10 @@ YOLOPoseEstimationImp::~YOLOPoseEstimationImp()
 void YOLOPoseEstimationImp::CameraInitialize(void* cam)
 {
 	m_pCams.push_back(( cv::VideoCapture* ) cam);
-
+	ExtrinsiParameterCalibrator::Parameter extrinsiParam;
+	IntrinsicParameterCalibrator::Parameter instrinsiParam;
+	instrinsiParams.push_back(instrinsiParam);
+	extrinsiParams.push_back(extrinsiParam);
 }
 
 void YOLOPoseEstimationImp::ModelInitialize(const char* modelPath,float maskThreshold,float confThreshold,float iouThreshold,ONNXP_ROVIDERS provider)
@@ -201,8 +204,7 @@ void YOLOPoseEstimationImp::Start(bool isDraw)
 	m_frame.resize(m_pCams.size());
 	m_baseLandmakes.resize(m_pCams.size());
 	m_landmakes.resize(m_pCams.size());
-	instrinsiParams.resize(m_pCams.size());
-	extrinsiParams.resize(m_pCams.size());
+
 
 	for ( int32_t i = 0; i < Locate::MAX_LOCATE; i++ )
 	{

@@ -233,7 +233,10 @@ void YOLOPoseEstimationImp::End()
 {
 	isRunning = false;
 
-	th.join();
+	if ( th .joinable())
+	{
+		th.join();
+	}
 }
 
 void YOLOPoseEstimationImp::Update()

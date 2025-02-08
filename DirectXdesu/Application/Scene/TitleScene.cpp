@@ -7,18 +7,19 @@
 
 #include <imgui.h>
 
-#include "Ease.h"
-
 #include "ModelManager.h"
 #include "PipelineManager.h"
-
-#include "PostEffectManager.h"
+#include "Ease.h"
 
 TitleScene::~TitleScene() { Final(); }
 
 void TitleScene::LoadResources() {
 	// 天球モデル
 	skyDomeModel = ModelManager::GetInstance()->GetModels("S_SkyDorm");
+	logoModel = ModelManager::GetInstance()->GetModels("titleLogo");
+
+	texBG = TextureManager::Load("Resources/texture/titleBg.png");
+	texPressA = TextureManager::Load("Resources/texture/pressA.png");
 }
 
 void TitleScene::Init() {
@@ -31,93 +32,91 @@ void TitleScene::Init() {
 
 	light_.reset(Light::Create());
 	light_->SetLightRGB({1.0f, 1.0f, 1.0f});
-	light_->SetLightDir({0, -1, 0, 0.0f});
 	KObject3d::SetLight(light_.get());
 
 	// カメラ読み込み
-	camera = std::make_unique<TitleCamera>();
+	camera = std::make_unique<GameCamera>();
 	camera->Init();
 
 	sceneManager = SceneManager::GetInstance();
 
 	skyDome.reset(
 	    KObject3d::Create(skyDomeModel, PipelineManager::GetInstance()->GetPipeline("Obj")));
-	skyDome->GetTransform().SetScale({400.0f, 400.0f, 400.0f});
-	skyDome->SetColor({ 0,0,0,0 });
+	skyDome->GetTransform().SetScale({ skydomeSize, skydomeSize, skydomeSize });
+	skyDome->GetTransform().SetPos({ 0.0f, 100.0f, 500.0f });
+
+	logo.reset(KObject3d::Create(logoModel, PipelineManager::GetInstance()->GetPipeline("Obj")));
+	logo->GetTransform().SetScale({ 100.0f, 100.0f, 100.0f });
+	logo->GetTransform().SetPos({ 0.0f, 60.0f, 100.0f });
+	logo->GetTransform().SetRot({ 0.0f, 180.0f, 0.0f});
+
+	backGround.reset(Sprite::Create(PipelineManager::GetInstance()->GetPipeline("Sprite")));
+	pressA.reset(Sprite::Create(PipelineManager::GetInstance()->GetPipeline("Sprite")));
 
 	audioManager = AudioManager::GetInstance();
-
-	emitter_ = new Emitter(
-		10000, 1, 1000.0f, 10.0f, 0.025f,
-		DirectX::XMFLOAT3(0.0f,0.0f,0.0f),
-		DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f),
-		DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f),
-		DirectX::XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f),
-		DirectX::XMFLOAT4(1.0f, 0.0f, 1.0f, 1.0f),
-		DirectX::XMFLOAT3(0.0f,	0.0f, 0.0f),
-		DirectX::XMFLOAT3(0.0f, 5.0f, 0.0f)
-	);
-
-	testM = std::make_unique<MeshModel>("GroundEffect");
-	testP = std::make_unique<MeshGPUParticle>(timer_.get(), camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro(), emitter_, testM.get());
-	
-
-	sprite.reset(Sprite::Create(PipelineManager::GetInstance()->GetPipeline("Sprite")));
-	texData = TextureManager::GetInstance()->GetTextures("Texture");
 }
 
 void TitleScene::Update() {
-	ImGui::Begin("MeshParticle");
-	ImGui::SliderFloat3("Position", &position.x, -6, 6, "%.1f");
-	ImGui::SliderFloat3("Rotation", &rotation.x, -180, 180, "%.1f");
-	ImGui::SliderFloat3("Scaling", &scaling.x, -2, 2, "%.1f");
-	ImGui::End();
-
-	timer_->UpdateTimer();
-
-	light_->SetLightRGB({lightRGB.x, lightRGB.y, lightRGB.z});
-	light_->SetLightDir({lightDir.x, lightDir.y, lightDir.z, 0.0f});
-
 	light_->Update();
 
 	skyDome->Update(camera->GetViewPro(), camera->GetWorldPos());
+	logo->Update(camera->GetViewPro(), camera->GetWorldPos());
 
-	//particleEditor_->Update();
-
-	if (input->IsTrigger(DIK_1)) 
-	{
-		
-	}
-
-	testP->Update(timer_.get(), camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro(), emitter_);
+	logo->GetTransform().SetRot({ 0.0f, 180.0f + RotationLogoY(rotationSpeed), 0.0f});
 
 	camera->Update();
+	
+	GoNextScene();
 }
 
 void TitleScene::ObjDraw() {
 	skyDome->Draw();
-
-	testP->Draw(timer_.get(), camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro(), emitter_);
+	backGround->Draw(texBG, { 640.0f,360.0f });
+	logo->Draw();
+	pressA->Draw(texPressA, { 640.0f,600.0f },{0.8f,0.8f});
 }
 
-void TitleScene::SpriteDraw() {
-	sprite->Draw(
-		texData, {0,0}, {32,32}, 0,
-		{1,0,0,1}, false, false, {0,0});
+void TitleScene::SpriteDraw()
+{
+	
 }
 
 void TitleScene::Final() {
-	delete emitter_;
-}
 
-void TitleScene::StartScene() {
-	
 }
 
 void TitleScene::GoNextScene() {
-	
+	if (input->GetPadButtonDown(A)) {
+		sceneManager->ChangeScene("GAME");
+	}
+	else if (input->IsTrigger(DIK_SPACE)) {
+		sceneManager->ChangeScene("GAME");
+	}
 }
 
-void TitleScene::TitleCall() {
-	
+float TitleScene::RotationLogoY(const float& speed)
+{
+	if (flag == true)
+	{
+		result += speed;
+	}
+
+	if (result >= 360.0f) 
+	{
+		flag = false;
+		result = 0.0f;
+	}
+
+	if (flag == false)
+	{
+		timer++;
+		//3秒経過で再スタート
+		if (timer >= 180.0f)
+		{
+			flag = true;
+			timer = 0.0f;
+		}
+	}
+
+	return result;
 }

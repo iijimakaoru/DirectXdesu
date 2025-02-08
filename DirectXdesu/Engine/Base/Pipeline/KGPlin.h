@@ -76,7 +76,7 @@ public:
 	/// <param name="shader"></param>
 	/// <param name="shaderName"></param>
 	/// <returns></returns>
-	static KGPlin* Create(KShader shader, std::string shaderName = "Null");
+	static KGPlin* Create(KShader& shader, const std::string& shaderName = "Null");
 
 	/// <summary>
 	/// 更新
@@ -95,5 +95,5 @@ private:
 	/// </summary>
 	/// <param name="shader"></param>
 	/// <param name="shaderName"></param>
-	void CreatePipelineAll(KShader shader, std::string shaderName = "Null");
+	void CreatePipelineAll(KShader& shader,const std::string& shaderName = "Null");
 };

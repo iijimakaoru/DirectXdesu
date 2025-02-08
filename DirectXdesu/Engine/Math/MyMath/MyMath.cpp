@@ -28,7 +28,7 @@ namespace MyMathUtility
 	    return vec3;
     }
 
-	KMyMath::Vector3 MakeVector3Normalize(KMyMath::Vector3 v)
+	KMyMath::Vector3 MakeVector3Normalize(KMyMath::Vector3& v)
 	{
 		float len = Vector3Length(v);
 		if (len != 0)
@@ -38,7 +38,7 @@ namespace MyMathUtility
 		return v;
 	}
 
-	KMyMath::Vector2 MakeVector2Normalize(KMyMath::Vector2 v)
+	KMyMath::Vector2 MakeVector2Normalize(KMyMath::Vector2& v)
 	{
 		float length = std::sqrt(v.x * v.x + v.y * v.y);
 		if (length != 0) {
@@ -117,7 +117,7 @@ namespace MyMathUtility
 		return matTranslation;
 	}
 
-	KMyMath::Matrix4 MakeWorld(KMyMath::Matrix4 translation, KMyMath::Matrix4 scaling, KMyMath::Matrix4 rotation)
+	KMyMath::Matrix4 MakeWorld(KMyMath::Matrix4& translation, KMyMath::Matrix4& scaling, KMyMath::Matrix4& rotation)
 	{
 		KMyMath::Matrix4 result;
 
@@ -424,7 +424,7 @@ namespace MyMathUtility
 		return false;
 	}
 
-	KMyMath::Vector3 HermiteGetPoint(KMyMath::Vector3 p0, KMyMath::Vector3 p1, KMyMath::Vector3 v0, KMyMath::Vector3 v1, float t)
+	KMyMath::Vector3 HermiteGetPoint(KMyMath::Vector3& p0, KMyMath::Vector3& p1, KMyMath::Vector3& v0, KMyMath::Vector3& v1, float t)
 	{
 		KMyMath::Vector3 c0 = 2.0f * p0 + -2.0f * p1 + v0 + v1;
 		KMyMath::Vector3 c1 = -3.0f * p0 + 3.0f * p1 + -2.0f * v0 - v1;
@@ -482,6 +482,10 @@ namespace MyMathUtility
 		result /= result.z;
 
 		return result;
+	}
+	float SimpleHarmonicMotion(float time, float amplitude, float period)
+	{
+		return amplitude * sinf((2 * PI) * time / period);
 	}
 }
 
@@ -549,7 +553,7 @@ namespace KMyMath
 
 namespace MyMathConvert
 {
-	DirectX::XMVECTOR ChangeVector4toXMVECTOR(KMyMath::Vector4 vector4)
+	DirectX::XMVECTOR ChangeVector4toXMVECTOR(KMyMath::Vector4& vector4)
 	{
 		DirectX::XMVECTOR result;
 		result.m128_f32[0] = vector4.x;
@@ -560,7 +564,7 @@ namespace MyMathConvert
 		return result;
 	}
 
-	KMyMath::Vector4 ChangeXMVECTORtoVector4(DirectX::XMVECTOR vector)
+	KMyMath::Vector4 ChangeXMVECTORtoVector4(DirectX::XMVECTOR& vector)
 	{
 		KMyMath::Vector4 result;
 		result.x = vector.m128_f32[0];
@@ -571,7 +575,7 @@ namespace MyMathConvert
 		return result;
 	}
 
-	KMyMath::Matrix4 ChangeXMMATRIXtoMatrix4(DirectX::XMMATRIX matrix)
+	KMyMath::Matrix4 ChangeXMMATRIXtoMatrix4(DirectX::XMMATRIX& matrix)
 	{
 		KMyMath::Matrix4 result;
 
@@ -586,7 +590,7 @@ namespace MyMathConvert
 		return result;
 	}
 
-	DirectX::XMMATRIX ChangeMatrix4toXMMATRIX(KMyMath::Matrix4 matrix)
+	DirectX::XMMATRIX ChangeMatrix4toXMMATRIX(const KMyMath::Matrix4& matrix)
 	{
 		DirectX::XMMATRIX result;
 
@@ -599,7 +603,7 @@ namespace MyMathConvert
 		return result;
 	}
 
-	KMyMath::Vector3 ChangeXMFloat3toVector3(DirectX::XMFLOAT3 float3)
+	KMyMath::Vector3 ChangeXMFloat3toVector3(DirectX::XMFLOAT3& float3)
 	{
 		KMyMath::Vector3 result;
 
@@ -610,7 +614,7 @@ namespace MyMathConvert
 		return result;
 	}
 
-	DirectX::XMFLOAT3 ChangeVector3toXMfloat3(KMyMath::Vector3 vector3)
+	DirectX::XMFLOAT3 ChangeVector3toXMfloat3(KMyMath::Vector3& vector3)
 	{
 		DirectX::XMFLOAT3 result;
 

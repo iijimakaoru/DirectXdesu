@@ -5,21 +5,20 @@
 #include "KInput.h"
 #include "PostEffect.h"
 #include "Sprite.h"
-#include "TitleCamera.h"
+#include "GameCamera.h"
 #include "AudioManager.h"
 #include "KObject3d.h"
 
-#include "d3dUtil.h"
 #include "FrameResource.h"
 #include "Timer.h"
 
-#include "GPUParticle.h"
-#include "MeshGPUParticle.h"
+#include "ParticleEditor.h"
 
 #include "Emitter.h"
 #include "MeshEmitter.h"
 
-#include "ArrowEffect.h"
+#include "TextureManager.h"
+#include "Sprite.h"
 
 /**
  * @file TitleScene.h
@@ -30,7 +29,7 @@
 class TitleScene : public BaseScene
 {
 public:
-	TitleScene(){};
+	TitleScene() = default;
 	~TitleScene();
 	void LoadResources()override;
 	void Init() override;
@@ -39,54 +38,46 @@ public:
 	void SpriteDraw() override;
 	void Final()override;
 
-	// タイトル導入演出
-	void StartScene();
-
 	// 次のシーンへ
 	void GoNextScene();
 
-	// タイトルコール
-	void TitleCall();
+private:
+
+	float RotationLogoY(const float& speed);
+
 private:
 	// インプット
 	KInput* input = nullptr;
 
 	// カメラ
-	std::unique_ptr<TitleCamera> camera = nullptr;
+	std::unique_ptr<GameCamera> camera = nullptr;
 
-#pragma region 天球
+#pragma region リソース
 	// オブジェクト
 	std::unique_ptr<KObject3d> skyDome = nullptr;
+	std::unique_ptr<KObject3d> logo = nullptr;
 
 	// モデル
 	KModel* skyDomeModel = nullptr;
-#pragma endregion
+	KModel* logoModel = nullptr;
 
-	// 画面サイズ
-	const float width = static_cast<float>(KWinApp::GetInstance()->GetWindowSizeW());
-	const float height = static_cast<float>(KWinApp::GetInstance()->GetWindowSizeH());
+	//テクスチャ
+	std::unique_ptr<Sprite> backGround;
+	std::unique_ptr<Sprite> pressA;
+	TextureData texBG;
+	TextureData texPressA;
+#pragma endregion
 
 	AudioManager* audioManager = nullptr;
 
 	std::unique_ptr<Light> light_ = nullptr;
 
-	KMyMath::Vector3 lightRGB = {1, 1, 1};
-	KMyMath::Vector3 lightDir = {0, -1, 0};
+private:
+	const float skydomeSize = 800.0f; 
 
-	std::unique_ptr<Timer> timer_;
-
-	Emitter* emitter_;
-
-	std::unique_ptr<MeshModel> testM;
-	std::unique_ptr<MeshGPUParticle> testP;
-
-	// Imgui用
-	DirectX::XMFLOAT3 position = { 0,0,0 };
-	DirectX::XMFLOAT3 rotation = { 0,0,0 };
-	DirectX::XMFLOAT3 scaling = { 1,1,1 };
-
-	// テスト用
-	std::unique_ptr<Sprite> sprite;
-	TextureData texData;
+	float rotationSpeed = 0.5f;
+	float result = 0.0f;
+	float timer = 0.0f;
+	bool flag = true;
 };
 

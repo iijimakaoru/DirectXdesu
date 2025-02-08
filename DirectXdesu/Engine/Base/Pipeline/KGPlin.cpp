@@ -7,7 +7,8 @@ void KGPlin::SetShader(KShader& shader) {
 	pipelineDesc.VS.BytecodeLength = shader.GetVSBlob()->GetBufferSize();
 
 	// GS
-	if (shader.GetGSBlob() && shader.GetGSBytecode()) {
+	if (shader.GetGSBlob() && shader.GetGSBytecode())
+	{
 		pipelineDesc.GS.pShaderBytecode = shader.GetGSBlob()->GetBufferPointer();
 		pipelineDesc.GS.BytecodeLength = shader.GetGSBlob()->GetBufferSize();
 	}
@@ -18,8 +19,8 @@ void KGPlin::SetShader(KShader& shader) {
 }
 
 void KGPlin::SetRootParam(
-    D3D12_ROOT_PARAMETER& rootParam, D3D12_ROOT_PARAMETER_TYPE type, UINT shaderRegister,
-    UINT registerSpace, D3D12_SHADER_VISIBILITY shaderVisibility) {
+	D3D12_ROOT_PARAMETER& rootParam, D3D12_ROOT_PARAMETER_TYPE type, UINT shaderRegister,
+	UINT registerSpace, D3D12_SHADER_VISIBILITY shaderVisibility) {
 	rootParam.ParameterType = type;
 	rootParam.Descriptor.ShaderRegister = shaderRegister;
 	rootParam.Descriptor.RegisterSpace = registerSpace;
@@ -27,9 +28,9 @@ void KGPlin::SetRootParam(
 }
 
 void KGPlin::SetRootParam(
-    D3D12_ROOT_PARAMETER& rootParam, D3D12_ROOT_PARAMETER_TYPE type,
-    D3D12_DESCRIPTOR_RANGE pDescripterRange, UINT numDescripterRanges,
-    D3D12_SHADER_VISIBILITY shaderVisibility) {
+	D3D12_ROOT_PARAMETER& rootParam, D3D12_ROOT_PARAMETER_TYPE type,
+	D3D12_DESCRIPTOR_RANGE pDescripterRange, UINT numDescripterRanges,
+	D3D12_SHADER_VISIBILITY shaderVisibility) {
 	rootParam.ParameterType = type;
 	rootParam.DescriptorTable.pDescriptorRanges = &pDescripterRange;
 	rootParam.DescriptorTable.NumDescriptorRanges = numDescripterRanges;
@@ -51,7 +52,8 @@ void KGPlin::SetRootSignature(UINT rootParamNum) {
 	std::vector<D3D12_ROOT_PARAMETER> rootParams = {};
 	rootParams.resize(rootParamNum + 1);
 	SetRootParam(rootParams[0], D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE, descripterRange, 1);
-	for (size_t i = 0; i < rootParamNum; i++) {
+	for (size_t i = 0; i < rootParamNum; i++)
+	{
 		SetRootParam(rootParams[i + 1], D3D12_ROOT_PARAMETER_TYPE_CBV, static_cast<UINT>(i), 0);
 	}
 
@@ -81,30 +83,35 @@ void KGPlin::SetRootSignature(UINT rootParamNum) {
 	ComPtr<ID3DBlob> rootSigBlob;
 	ComPtr<ID3DBlob> errorBlob;
 	result = D3D12SerializeRootSignature(
-	    &rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1_0, rootSigBlob.ReleaseAndGetAddressOf(),
-	    errorBlob.ReleaseAndGetAddressOf());
+		&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1_0, rootSigBlob.ReleaseAndGetAddressOf(),
+		errorBlob.ReleaseAndGetAddressOf());
 	assert(SUCCEEDED(result));
 	result = KDirectXCommon::GetInstance()->GetDevice()->CreateRootSignature(
-	    0, rootSigBlob->GetBufferPointer(), rootSigBlob->GetBufferSize(),
-	    IID_PPV_ARGS(rootSignature.ReleaseAndGetAddressOf()));
+		0, rootSigBlob->GetBufferPointer(), rootSigBlob->GetBufferSize(),
+		IID_PPV_ARGS(rootSignature.ReleaseAndGetAddressOf()));
 	assert(SUCCEEDED(result));
 }
 
-void KGPlin::SetScreenRootSignature() {}
+void KGPlin::SetScreenRootSignature() {
+}
 
 void KGPlin::Blending(D3D12_BLEND_DESC& blenddesc, const int mord) {
 	//	共通設定
-	if (mord != NONE) {
+	if (mord != NONE)
+	{
 		blenddesc.RenderTarget[0].RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
 		blenddesc.RenderTarget[0].BlendEnable = true;
 		blenddesc.RenderTarget[0].BlendOpAlpha = D3D12_BLEND_OP_ADD;
 		blenddesc.RenderTarget[0].SrcBlendAlpha = D3D12_BLEND_ONE;
 		blenddesc.RenderTarget[0].DestBlendAlpha = D3D12_BLEND_ZERO;
-	} else {
+	}
+	else
+	{
 		blenddesc.AlphaToCoverageEnable = false;
 	}
 
-	switch (mord) {
+	switch (mord)
+	{
 	case ADD:
 		blenddesc.RenderTarget->BlendOp = D3D12_BLEND_OP_ADD;
 		blenddesc.RenderTarget->SrcBlend = D3D12_BLEND_ONE;
@@ -132,18 +139,22 @@ void KGPlin::Blending(D3D12_BLEND_DESC& blenddesc, const int mord) {
 
 void KGPlin::RenderBlending(D3D12_RENDER_TARGET_BLEND_DESC& blendDesc, const int mord) {
 	//	共通設定
-	if (mord != NONE) {
+	if (mord != NONE)
+	{
 		blendDesc.RenderTargetWriteMask =
-		    D3D12_COLOR_WRITE_ENABLE_ALL; // RBGA全てのチャンネルを描画
+			D3D12_COLOR_WRITE_ENABLE_ALL; // RBGA全てのチャンネルを描画
 		blendDesc.BlendEnable = true;
 		blendDesc.BlendOpAlpha = D3D12_BLEND_OP_ADD;
 		blendDesc.SrcBlendAlpha = D3D12_BLEND_ONE;
 		blendDesc.DestBlendAlpha = D3D12_BLEND_ZERO;
-	} else {
+	}
+	else
+	{
 		blendDesc.BlendEnable = false;
 	}
 
-	switch (mord) {
+	switch (mord)
+	{
 	case ADD:
 		blendDesc.BlendOp = D3D12_BLEND_OP_ADD;
 		blendDesc.SrcBlend = D3D12_BLEND_ONE;
@@ -169,7 +180,7 @@ void KGPlin::RenderBlending(D3D12_RENDER_TARGET_BLEND_DESC& blendDesc, const int
 	}
 }
 
-void KGPlin::CreatePipelineAll(KShader shader, std::string shaderName) {
+void KGPlin::CreatePipelineAll(KShader& shader, const std::string& shaderName) {
 	HRESULT result;
 
 	ID3D12Device* device = KDirectXCommon::GetInstance()->GetDevice();
@@ -181,24 +192,25 @@ void KGPlin::CreatePipelineAll(KShader shader, std::string shaderName) {
 	ComPtr<ID3DBlob> errorBlob;
 
 	// Objシェーダー
-	if (shaderName == "Obj") {
+	if (shaderName == "Obj")
+	{
 		D3D12_INPUT_ELEMENT_DESC inputLayout[] = {
-		    {
-             // xyz座標
-		        "POSITION",           // セマンティック名
-		        0, // 同じセマンティック名が複数あるときに使うインデックス
-		        DXGI_FORMAT_R32G32B32_FLOAT, // 要素数とビット数を表す
-		        0, // 入力スロットインデックス
-		        D3D12_APPEND_ALIGNED_ELEMENT, // データのオフセット
-		        D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, // 入力データ種別
-		        0 // 一度に描画するインスタンス数
-		    },
-		    {// 法線ベクトル
-		     "NORMAL",   0,      DXGI_FORMAT_R32G32B32_FLOAT,                0,                D3D12_APPEND_ALIGNED_ELEMENT,
-		     D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,		                                                                                                                                                    0		                                                     },
-		    {// uv座標
-		     "TEXCOORD", 0,      DXGI_FORMAT_R32G32_FLOAT,                   0,                D3D12_APPEND_ALIGNED_ELEMENT,
-		     D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,		                                                                                                                                                    0		                                                     },
+			{
+			 // xyz座標
+				"POSITION",           // セマンティック名
+				0, // 同じセマンティック名が複数あるときに使うインデックス
+				DXGI_FORMAT_R32G32B32_FLOAT, // 要素数とビット数を表す
+				0, // 入力スロットインデックス
+				D3D12_APPEND_ALIGNED_ELEMENT, // データのオフセット
+				D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, // 入力データ種別
+				0 // 一度に描画するインスタンス数
+			},
+			{// 法線ベクトル
+			 "NORMAL",   0,      DXGI_FORMAT_R32G32B32_FLOAT,                0,                D3D12_APPEND_ALIGNED_ELEMENT,
+			 D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,		                                                                                                                                                    0		                                                     },
+			{// uv座標
+			 "TEXCOORD", 0,      DXGI_FORMAT_R32G32_FLOAT,                   0,                D3D12_APPEND_ALIGNED_ELEMENT,
+			 D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,		                                                                                                                                                    0		                                                     },
 		};
 
 		// サンプルマスクの設定
@@ -277,11 +289,11 @@ void KGPlin::CreatePipelineAll(KShader shader, std::string shaderName) {
 
 		// ルートシグネチャのシリアライズ
 		result = D3D12SerializeRootSignature(
-		    &rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1_0, &rootSigBlob, &errorBlob);
+			&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1_0, &rootSigBlob, &errorBlob);
 		assert(SUCCEEDED(result));
 		result = device->CreateRootSignature(
-		    0, rootSigBlob->GetBufferPointer(), rootSigBlob->GetBufferSize(),
-		    IID_PPV_ARGS(&rootSignature));
+			0, rootSigBlob->GetBufferPointer(), rootSigBlob->GetBufferSize(),
+			IID_PPV_ARGS(&rootSignature));
 		assert(SUCCEEDED(result));
 
 		// パイプラインにルートシグネチャをセット
@@ -291,22 +303,23 @@ void KGPlin::CreatePipelineAll(KShader shader, std::string shaderName) {
 		assert(SUCCEEDED(result));
 	}
 	// Spriteシェーダー
-	else if (shaderName == "Sprite") {
+	else if (shaderName == "Sprite")
+	{
 #pragma region 頂点レイアウト配列の宣言と設定
 		static D3D12_INPUT_ELEMENT_DESC inputLayout[] = {
-		    {
-             // xy座標
-		        "POSITION",           // セマンティック名
-		        0, // 同じセマンティック名が複数あるときに使うインデックス
-		        DXGI_FORMAT_R32G32B32_FLOAT, // 要素数とビット数を表す
-		        0, // 入力スロットインデックス
-		        D3D12_APPEND_ALIGNED_ELEMENT, // データのオフセット
-		        D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, // 入力データ種別
-		        0 // 一度に描画するインスタンス数
-		    },
-		    {// uv座標(1行で書いたほうが見やすい)
-		     "TEXCOORD", 0,      DXGI_FORMAT_R32G32_FLOAT,                   0,                D3D12_APPEND_ALIGNED_ELEMENT,
-		     D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,		                                                                                                                                                    0		                                                     },
+			{
+			 // xy座標
+				"POSITION",           // セマンティック名
+				0, // 同じセマンティック名が複数あるときに使うインデックス
+				DXGI_FORMAT_R32G32B32_FLOAT, // 要素数とビット数を表す
+				0, // 入力スロットインデックス
+				D3D12_APPEND_ALIGNED_ELEMENT, // データのオフセット
+				D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, // 入力データ種別
+				0 // 一度に描画するインスタンス数
+			},
+			{// uv座標(1行で書いたほうが見やすい)
+			 "TEXCOORD", 0,      DXGI_FORMAT_R32G32_FLOAT,                   0,                D3D12_APPEND_ALIGNED_ELEMENT,
+			 D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,		                                                                                                                                                    0		                                                     },
 		};
 #pragma endregion
 #pragma region パイプラインステート設定変数の宣言と各種項目の設定
@@ -390,11 +403,11 @@ void KGPlin::CreatePipelineAll(KShader shader, std::string shaderName) {
 
 		// ルートシグネチャのシリアライズ
 		result = D3D12SerializeRootSignature(
-		    &rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1_0, &rootSigBlob, &errorBlob);
+			&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1_0, &rootSigBlob, &errorBlob);
 		assert(SUCCEEDED(result));
 		result = device->CreateRootSignature(
-		    0, rootSigBlob->GetBufferPointer(), rootSigBlob->GetBufferSize(),
-		    IID_PPV_ARGS(&rootSignature));
+			0, rootSigBlob->GetBufferPointer(), rootSigBlob->GetBufferSize(),
+			IID_PPV_ARGS(&rootSignature));
 		assert(SUCCEEDED(result));
 
 		// パイプラインにルートシグネチャをセット
@@ -406,24 +419,25 @@ void KGPlin::CreatePipelineAll(KShader shader, std::string shaderName) {
 #pragma endregion
 	}
 	// Fbxシェーダー
-	else if (shaderName == "Fbx") {
-		// 頂点レイアウト
+	else if (shaderName == "Fbx")
+	{
+// 頂点レイアウト
 		D3D12_INPUT_ELEMENT_DESC inputLayout[] = {
-		    {// xy座標(1行で書いたほうが見やすい)
-		     "POSITION",    0, DXGI_FORMAT_R32G32B32_FLOAT,    0, D3D12_APPEND_ALIGNED_ELEMENT,
-		     D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},
-		    {// 法線ベクトル(1行で書いたほうが見やすい)
-		     "NORMAL",      0, DXGI_FORMAT_R32G32B32_FLOAT,    0, D3D12_APPEND_ALIGNED_ELEMENT,
-		     D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},
-		    {// uv座標(1行で書いたほうが見やすい)
-		     "TEXCOORD",    0, DXGI_FORMAT_R32G32_FLOAT,       0, D3D12_APPEND_ALIGNED_ELEMENT,
-		     D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},
-		    {// 影響を受けるボーン番号(4つ)
-		     "BONEINDICES", 0, DXGI_FORMAT_R32G32B32A32_UINT,  0, D3D12_APPEND_ALIGNED_ELEMENT,
-		     D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},
-		    {// ボーンスキンウェイト(4つ)
-		     "BONEWEIGHTS", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT,
-		     D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},
+			{// xy座標(1行で書いたほうが見やすい)
+			 "POSITION",    0, DXGI_FORMAT_R32G32B32_FLOAT,    0, D3D12_APPEND_ALIGNED_ELEMENT,
+			 D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},
+			{// 法線ベクトル(1行で書いたほうが見やすい)
+			 "NORMAL",      0, DXGI_FORMAT_R32G32B32_FLOAT,    0, D3D12_APPEND_ALIGNED_ELEMENT,
+			 D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},
+			{// uv座標(1行で書いたほうが見やすい)
+			 "TEXCOORD",    0, DXGI_FORMAT_R32G32_FLOAT,       0, D3D12_APPEND_ALIGNED_ELEMENT,
+			 D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},
+			{// 影響を受けるボーン番号(4つ)
+			 "BONEINDICES", 0, DXGI_FORMAT_R32G32B32A32_UINT,  0, D3D12_APPEND_ALIGNED_ELEMENT,
+			 D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},
+			{// ボーンスキンウェイト(4つ)
+			 "BONEWEIGHTS", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT,
+			 D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},
 		};
 
 		// サンプルマスク
@@ -438,7 +452,7 @@ void KGPlin::CreatePipelineAll(KShader shader, std::string shaderName) {
 		// レンダーターゲットのブレンド設定
 		D3D12_RENDER_TARGET_BLEND_DESC blenddesc{};
 		blenddesc.RenderTargetWriteMask =
-		    D3D12_COLOR_WRITE_ENABLE_ALL; // RBGA全てのチャンネルを描画
+			D3D12_COLOR_WRITE_ENABLE_ALL; // RBGA全てのチャンネルを描画
 		blenddesc.BlendEnable = true;
 		blenddesc.BlendOp = D3D12_BLEND_OP_ADD;
 		blenddesc.SrcBlend = D3D12_BLEND_SRC_ALPHA;
@@ -487,18 +501,19 @@ void KGPlin::CreatePipelineAll(KShader shader, std::string shaderName) {
 		// ルートシグネチャの設定
 		CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC rootSignatureDesc;
 		rootSignatureDesc.Init_1_0(
-		    _countof(rootparams), rootparams, 1, &samplerDesc,
-		    D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+			_countof(rootparams), rootparams, 1, &samplerDesc,
+			D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 
 		// バージョン自動判定のシリアライズ
 		result = D3DX12SerializeVersionedRootSignature(
-		    &rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1_0, &rootSigBlob, &errorBlob);
+			&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1_0, &rootSigBlob, &errorBlob);
 
 		// ルートシグネチャの生成
 		result = device->CreateRootSignature(
-		    0, rootSigBlob->GetBufferPointer(), rootSigBlob->GetBufferSize(),
-		    IID_PPV_ARGS(&rootSignature));
-		if (FAILED(result)) {
+			0, rootSigBlob->GetBufferPointer(), rootSigBlob->GetBufferSize(),
+			IID_PPV_ARGS(&rootSignature));
+		if (FAILED(result))
+		{
 			assert(0);
 		}
 
@@ -506,26 +521,28 @@ void KGPlin::CreatePipelineAll(KShader shader, std::string shaderName) {
 
 		// グラフィックスパイプラインの生成
 		result = device->CreateGraphicsPipelineState(&pipelineDesc, IID_PPV_ARGS(&pipelineState));
-		if (FAILED(result)) {
+		if (FAILED(result))
+		{
 			assert(0);
 		}
 	}
 	// PostEffectシェーダー
-	else if (shaderName == "PostEffect") {
+	else if (shaderName == "PostEffect")
+	{
 		D3D12_INPUT_ELEMENT_DESC inputLayout[] = {
-		    {
-             // xy座標
-		        "POSITION",           // セマンティック名
-		        0, // 同じセマンティック名が複数あるときに使うインデックス
-		        DXGI_FORMAT_R32G32B32_FLOAT, // 要素数とビット数を表す
-		        0, // 入力スロットインデックス
-		        D3D12_APPEND_ALIGNED_ELEMENT, // データのオフセット
-		        D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, // 入力データ種別
-		        0 // 一度に描画するインスタンス数
-		    },
-		    {// uv座標(1行で書いたほうが見やすい)
-		     "TEXCOORD", 0,      DXGI_FORMAT_R32G32_FLOAT,                   0,                D3D12_APPEND_ALIGNED_ELEMENT,
-		     D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,		                                                                                                                                                    0		                                                     },
+			{
+			 // xy座標
+				"POSITION",           // セマンティック名
+				0, // 同じセマンティック名が複数あるときに使うインデックス
+				DXGI_FORMAT_R32G32B32_FLOAT, // 要素数とビット数を表す
+				0, // 入力スロットインデックス
+				D3D12_APPEND_ALIGNED_ELEMENT, // データのオフセット
+				D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, // 入力データ種別
+				0 // 一度に描画するインスタンス数
+			},
+			{// uv座標(1行で書いたほうが見やすい)
+			 "TEXCOORD", 0,      DXGI_FORMAT_R32G32_FLOAT,                   0,                D3D12_APPEND_ALIGNED_ELEMENT,
+			 D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,		                                                                                                                                                    0		                                                     },
 		};
 
 		// サンプルマスク
@@ -553,7 +570,7 @@ void KGPlin::CreatePipelineAll(KShader shader, std::string shaderName) {
 
 		// スタティックサンプラー
 		CD3DX12_STATIC_SAMPLER_DESC samplerDesc =
-		    CD3DX12_STATIC_SAMPLER_DESC(0, D3D12_FILTER_MIN_MAG_MIP_LINEAR);
+			CD3DX12_STATIC_SAMPLER_DESC(0, D3D12_FILTER_MIN_MAG_MIP_LINEAR);
 		samplerDesc.AddressU = D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
 		samplerDesc.AddressV = D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
 		samplerDesc.AddressW = D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
@@ -561,21 +578,23 @@ void KGPlin::CreatePipelineAll(KShader shader, std::string shaderName) {
 		// ルートシグネチャの設定
 		CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC rootSignatureDesc;
 		rootSignatureDesc.Init_1_0(
-		    _countof(rootparams), rootparams, 1, &samplerDesc,
-		    D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+			_countof(rootparams), rootparams, 1, &samplerDesc,
+			D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 
 		// バージョン自動判定のシリアライズ
 		result = D3DX12SerializeVersionedRootSignature(
-		    &rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1_0, &rootSigBlob, &errorBlob);
-		if (FAILED(result)) {
+			&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1_0, &rootSigBlob, &errorBlob);
+		if (FAILED(result))
+		{
 			assert(0);
 		}
 
 		// ルートシグネチャの生成
 		result = device->CreateRootSignature(
-		    0, rootSigBlob->GetBufferPointer(), rootSigBlob->GetBufferSize(),
-		    IID_PPV_ARGS(&rootSignature));
-		if (FAILED(result)) {
+			0, rootSigBlob->GetBufferPointer(), rootSigBlob->GetBufferSize(),
+			IID_PPV_ARGS(&rootSignature));
+		if (FAILED(result))
+		{
 			assert(0);
 		}
 
@@ -598,20 +617,22 @@ void KGPlin::CreatePipelineAll(KShader shader, std::string shaderName) {
 
 		// グラフィックスパイプラインの生成
 		result = device->CreateGraphicsPipelineState(
-		    &pipelineDesc, IID_PPV_ARGS(&pipelineState));
-		if (FAILED(result)) {
+			&pipelineDesc, IID_PPV_ARGS(&pipelineState));
+		if (FAILED(result))
+		{
 			assert(0);
 		}
 	}
 	// Particleシェーダー
-	else if (shaderName == "Particle") {
-		// 頂点レイアウト
+	else if (shaderName == "Particle")
+	{
+// 頂点レイアウト
 		D3D12_INPUT_ELEMENT_DESC inputLayout[] = {
-		    {// xy座標(1行で書いたほうが見やすい)
-		     "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT,
-		     D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},
-		    {"TEXCOORD",              0, DXGI_FORMAT_R32_FLOAT,       0, D3D12_APPEND_ALIGNED_ELEMENT,
-		     D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},
+			{// xy座標(1行で書いたほうが見やすい)
+			 "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT,
+			 D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},
+			{"TEXCOORD",              0, DXGI_FORMAT_R32_FLOAT,       0, D3D12_APPEND_ALIGNED_ELEMENT,
+			 D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},
 		};
 
 		// サンプルマスク
@@ -626,7 +647,7 @@ void KGPlin::CreatePipelineAll(KShader shader, std::string shaderName) {
 		// レンダーターゲットのブレンド設定
 		D3D12_RENDER_TARGET_BLEND_DESC blenddesc{};
 		blenddesc.RenderTargetWriteMask =
-		    D3D12_COLOR_WRITE_ENABLE_ALL; // RBGA全てのチャンネルを描画
+			D3D12_COLOR_WRITE_ENABLE_ALL; // RBGA全てのチャンネルを描画
 		blenddesc.BlendEnable = true;
 
 		blenddesc.BlendOp = D3D12_BLEND_OP_ADD;
@@ -668,17 +689,17 @@ void KGPlin::CreatePipelineAll(KShader shader, std::string shaderName) {
 		// ルートシグネチャの設定
 		CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC rootSignatureDesc;
 		rootSignatureDesc.Init_1_0(
-		    _countof(rootparams), rootparams, 1, &samplerDesc,
-		    D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+			_countof(rootparams), rootparams, 1, &samplerDesc,
+			D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 
 		// バージョン自動判定のシリアライズ
 		result = D3DX12SerializeVersionedRootSignature(
-		    &rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1_0, &rootSigBlob, &errorBlob);
+			&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1_0, &rootSigBlob, &errorBlob);
 
 		// ルートシグネチャの生成
 		result = device->CreateRootSignature(
-		    0, rootSigBlob->GetBufferPointer(), rootSigBlob->GetBufferSize(),
-		    IID_PPV_ARGS(&rootSignature));
+			0, rootSigBlob->GetBufferPointer(), rootSigBlob->GetBufferSize(),
+			IID_PPV_ARGS(&rootSignature));
 		assert(SUCCEEDED(result));
 
 		pipelineDesc.pRootSignature = rootSignature.Get();
@@ -687,25 +708,26 @@ void KGPlin::CreatePipelineAll(KShader shader, std::string shaderName) {
 
 		// グラフィックスパイプラインの生成
 		result = device->CreateGraphicsPipelineState(
-		    &pipelineDesc, IID_PPV_ARGS(&pipelineState));
+			&pipelineDesc, IID_PPV_ARGS(&pipelineState));
 		assert(SUCCEEDED(result));
 	}
 	// Vignetteシェーダー
-	else if (shaderName == "Vignette") {
+	else if (shaderName == "Vignette")
+	{
 		D3D12_INPUT_ELEMENT_DESC inputLayout[] = {
-		    {
-             // xy座標
-		        "POSITION",           // セマンティック名
-		        0, // 同じセマンティック名が複数あるときに使うインデックス
-		        DXGI_FORMAT_R32G32B32_FLOAT, // 要素数とビット数を表す
-		        0, // 入力スロットインデックス
-		        D3D12_APPEND_ALIGNED_ELEMENT, // データのオフセット
-		        D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, // 入力データ種別
-		        0 // 一度に描画するインスタンス数
-		    },
-		    {// uv座標(1行で書いたほうが見やすい)
-		     "TEXCOORD", 0,      DXGI_FORMAT_R32G32_FLOAT,                   0,                D3D12_APPEND_ALIGNED_ELEMENT,
-		     D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,		                                                                                                                                                    0		                                                     },
+			{
+			 // xy座標
+				"POSITION",           // セマンティック名
+				0, // 同じセマンティック名が複数あるときに使うインデックス
+				DXGI_FORMAT_R32G32B32_FLOAT, // 要素数とビット数を表す
+				0, // 入力スロットインデックス
+				D3D12_APPEND_ALIGNED_ELEMENT, // データのオフセット
+				D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, // 入力データ種別
+				0 // 一度に描画するインスタンス数
+			},
+			{// uv座標(1行で書いたほうが見やすい)
+			 "TEXCOORD", 0,      DXGI_FORMAT_R32G32_FLOAT,                   0,                D3D12_APPEND_ALIGNED_ELEMENT,
+			 D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,		                                                                                                                                                    0		                                                     },
 		};
 
 		// サンプルマスク
@@ -733,7 +755,7 @@ void KGPlin::CreatePipelineAll(KShader shader, std::string shaderName) {
 
 		// スタティックサンプラー
 		CD3DX12_STATIC_SAMPLER_DESC samplerDesc =
-		    CD3DX12_STATIC_SAMPLER_DESC(0, D3D12_FILTER_MIN_MAG_MIP_LINEAR);
+			CD3DX12_STATIC_SAMPLER_DESC(0, D3D12_FILTER_MIN_MAG_MIP_LINEAR);
 		samplerDesc.AddressU = D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
 		samplerDesc.AddressV = D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
 		samplerDesc.AddressW = D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
@@ -741,21 +763,23 @@ void KGPlin::CreatePipelineAll(KShader shader, std::string shaderName) {
 		// ルートシグネチャの設定
 		CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC rootSignatureDesc;
 		rootSignatureDesc.Init_1_0(
-		    _countof(rootparams), rootparams, 1, &samplerDesc,
-		    D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+			_countof(rootparams), rootparams, 1, &samplerDesc,
+			D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 
 		// バージョン自動判定のシリアライズ
 		result = D3DX12SerializeVersionedRootSignature(
-		    &rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1_0, &rootSigBlob, &errorBlob);
-		if (FAILED(result)) {
+			&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1_0, &rootSigBlob, &errorBlob);
+		if (FAILED(result))
+		{
 			assert(0);
 		}
 
 		// ルートシグネチャの生成
 		result = device->CreateRootSignature(
-		    0, rootSigBlob->GetBufferPointer(), rootSigBlob->GetBufferSize(),
-		    IID_PPV_ARGS(&rootSignature));
-		if (FAILED(result)) {
+			0, rootSigBlob->GetBufferPointer(), rootSigBlob->GetBufferSize(),
+			IID_PPV_ARGS(&rootSignature));
+		if (FAILED(result))
+		{
 			assert(0);
 		}
 
@@ -778,27 +802,29 @@ void KGPlin::CreatePipelineAll(KShader shader, std::string shaderName) {
 
 		// グラフィックスパイプラインの生成
 		result = device->CreateGraphicsPipelineState(
-		    &pipelineDesc, IID_PPV_ARGS(&pipelineState));
-		if (FAILED(result)) {
+			&pipelineDesc, IID_PPV_ARGS(&pipelineState));
+		if (FAILED(result))
+		{
 			assert(0);
 		}
 	}
 	// マルチテクスチャ
-	else if (shaderName == "MultiTexture") {
+	else if (shaderName == "MultiTexture")
+	{
 		D3D12_INPUT_ELEMENT_DESC inputLayout[] = {
-		    {
-             // xy座標
-		        "POSITION",           // セマンティック名
-		        0, // 同じセマンティック名が複数あるときに使うインデックス
-		        DXGI_FORMAT_R32G32B32_FLOAT, // 要素数とビット数を表す
-		        0, // 入力スロットインデックス
-		        D3D12_APPEND_ALIGNED_ELEMENT, // データのオフセット
-		        D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, // 入力データ種別
-		        0 // 一度に描画するインスタンス数
-		    },
-		    {// uv座標(1行で書いたほうが見やすい)
-		     "TEXCOORD", 0,      DXGI_FORMAT_R32G32_FLOAT,                   0,                D3D12_APPEND_ALIGNED_ELEMENT,
-		     D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,		                                                                                                                                                    0		                                                     },
+			{
+			 // xy座標
+				"POSITION",           // セマンティック名
+				0, // 同じセマンティック名が複数あるときに使うインデックス
+				DXGI_FORMAT_R32G32B32_FLOAT, // 要素数とビット数を表す
+				0, // 入力スロットインデックス
+				D3D12_APPEND_ALIGNED_ELEMENT, // データのオフセット
+				D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, // 入力データ種別
+				0 // 一度に描画するインスタンス数
+			},
+			{// uv座標(1行で書いたほうが見やすい)
+			 "TEXCOORD", 0,      DXGI_FORMAT_R32G32_FLOAT,                   0,                D3D12_APPEND_ALIGNED_ELEMENT,
+			 D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,		                                                                                                                                                    0		                                                     },
 		};
 
 		// サンプルマスク
@@ -826,7 +852,7 @@ void KGPlin::CreatePipelineAll(KShader shader, std::string shaderName) {
 
 		// スタティックサンプラー
 		CD3DX12_STATIC_SAMPLER_DESC samplerDesc =
-		    CD3DX12_STATIC_SAMPLER_DESC(0, D3D12_FILTER_MIN_MAG_MIP_LINEAR);
+			CD3DX12_STATIC_SAMPLER_DESC(0, D3D12_FILTER_MIN_MAG_MIP_LINEAR);
 		samplerDesc.AddressU = D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
 		samplerDesc.AddressV = D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
 		samplerDesc.AddressW = D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
@@ -834,21 +860,23 @@ void KGPlin::CreatePipelineAll(KShader shader, std::string shaderName) {
 		// ルートシグネチャの設定
 		CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC rootSignatureDesc;
 		rootSignatureDesc.Init_1_0(
-		    _countof(rootparams), rootparams, 1, &samplerDesc,
-		    D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+			_countof(rootparams), rootparams, 1, &samplerDesc,
+			D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 
 		// バージョン自動判定のシリアライズ
 		result = D3DX12SerializeVersionedRootSignature(
-		    &rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1_0, &rootSigBlob, &errorBlob);
-		if (FAILED(result)) {
+			&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1_0, &rootSigBlob, &errorBlob);
+		if (FAILED(result))
+		{
 			assert(0);
 		}
 
 		// ルートシグネチャの生成
 		result = device->CreateRootSignature(
-		    0, rootSigBlob->GetBufferPointer(), rootSigBlob->GetBufferSize(),
-		    IID_PPV_ARGS(&rootSignature));
-		if (FAILED(result)) {
+			0, rootSigBlob->GetBufferPointer(), rootSigBlob->GetBufferSize(),
+			IID_PPV_ARGS(&rootSignature));
+		if (FAILED(result))
+		{
 			assert(0);
 		}
 
@@ -871,17 +899,19 @@ void KGPlin::CreatePipelineAll(KShader shader, std::string shaderName) {
 
 		// グラフィックスパイプラインの生成
 		result = device->CreateGraphicsPipelineState(&pipelineDesc, IID_PPV_ARGS(&pipelineState));
-		if (FAILED(result)) {
+		if (FAILED(result))
+		{
 			assert(0);
 		}
 	}
 	// なんもシェーダー入ってないとき
-	else {
+	else
+	{
 		assert(0);
 	}
 }
 
-KGPlin* KGPlin::Create(KShader shader, std::string shaderName) {
+KGPlin* KGPlin::Create(KShader& shader, const std::string& shaderName) {
 	// インスタンス生成
 	KGPlin* pipeline = new KGPlin();
 

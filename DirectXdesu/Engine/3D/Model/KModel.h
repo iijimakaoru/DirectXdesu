@@ -53,7 +53,7 @@ public:
 	void Draw(UINT rootParamIndex);
 
 	// 描画(テクスチャ指定)
-	void Draw(UINT rootParamIndex, TextureData texData);
+	void Draw(UINT rootParamIndex, const TextureData& texData);
 
 	// モデル生成
 	void CreateModel();
@@ -72,6 +72,7 @@ public:
 
 	ObjMaterialInfo objMtl;
 
+	std::unordered_map<uint16_t, std::vector<uint16_t>>smoothData;
 private:
 };
 
@@ -95,8 +96,10 @@ public:
 
 class MtlObj : public KModel {
 public:
-	MtlObj(const std::string modelname);
+	MtlObj(const std::string& modelname,bool smoothing = false);
 	~MtlObj();
+
+	void CalculateSmoothedVertexNormals();
 };
 
 class MeshModel {
@@ -105,7 +108,7 @@ private:
 	std::unique_ptr<KVertex> vertexs;
 
 public:
-	MeshModel(const std::string modelname);
+	MeshModel(const std::string& modelname);
 	~MeshModel();
 
 	std::vector<Vertex> GetVertices();

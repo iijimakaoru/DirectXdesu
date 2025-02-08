@@ -21,7 +21,7 @@ public:
 	virtual KMyMath::Vector3 GetWorldPosition() = 0;
 
 	// 半径セット
-	void SetRadius(const float& radius);
+	void SetRadius(float radius);
 
 	// 半径取得
 	const float& GetRadius() const;

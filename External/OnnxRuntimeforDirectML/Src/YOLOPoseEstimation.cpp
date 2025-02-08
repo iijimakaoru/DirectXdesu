@@ -580,25 +580,22 @@ void YOLOPoseEstimationImp::CalclateFinalCaptureDataFromCalibrateData() {
 	cv::undistortPoints(points1,points1_undistorted,K1,distCoeffs1);
 	cv::undistortPoints(points2,points2_undistorted,K2,distCoeffs2);
 
-
-	std::vector<cv::Point2f> points1_normalized,points2_normalized;
-	cv::undistortPoints(points1,points1_normalized,K1,cv::Mat(),cv::Mat());
-	cv::undistortPoints(points2,points2_normalized,K2,cv::Mat(),cv::Mat());
-
 	// ⑦ 三角測量による3次元復元（OpenCVの triangulatePoints を使用）
 	cv::Mat pts4D;
-	triangulatePoints(P1,P2,points1_normalized,points2_normalized,pts4D);
+	triangulatePoints(P1,P2,points1_undistorted,points2_undistorted,pts4D);
 
 	// ⑧ 同次座標から通常の3次元座標へ変換して出力
 
 	for ( int i = 0; i < pts4D.cols; i++ )
 	{
 		cv::Mat col = pts4D.col(i);
-		// 同次座標（4次元）を第4成分で正規化
-		cv::Point3f pt3D(col.at<float>(0,0),
-					 col.at<float>(1,0),
-					 col.at<float>(2,0));
+		double w = col.at<float>(3,0);  // 同次座標の第4成分
+		cv::Point3f pt3D(
+			col.at<float>(0,0) / w,
+			col.at<float>(1,0) / w,
+			col.at<float>(2,0) / w
+		);
 
-		finalCaptureData_[ ( YOLO_POSE_INDEX ) validIndices[ i ] ] = MCBO::YVector3(pt3D.x,pt3D.y,-pt3D.z);
+		finalCaptureData_[ ( YOLO_POSE_INDEX ) validIndices[ i ] ] = MCBO::YVector3(pt3D.x,pt3D.y,pt3D.z);
 	}
 }

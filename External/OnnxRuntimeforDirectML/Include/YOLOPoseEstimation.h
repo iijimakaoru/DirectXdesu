@@ -71,8 +71,10 @@ public:
 
 	virtual const std::unordered_map <YOLO_POSE_INDEX,MCBO::YVector3>* const GetFinalPositions() = 0;
 
-	virtual void ExtrinsCalibrateUpdateSave(const std::string& filepath) = 0;
-	virtual void InterinsCalibrateUpdateSave(const std::string& filepath) = 0;
+	//virtual void ExtrinsCalibrateSave(const std::string& filepath) = 0;
+	//virtual void ExtrinsCalibrate(const std::string& filepath) = 0;
+	//virtual void InterinsCalibrateSave(const std::string& filepath) = 0;
+	//virtual void InterinsCalibrate(const std::string& filepath) = 0;
 
 	virtual void ExtrinsCalibrateLoad(const std::string& filepath) = 0;
 	virtual void InterinsCalibrateLoad(const std::string& filepath) = 0;

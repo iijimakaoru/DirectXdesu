@@ -89,8 +89,10 @@ public:
 	const std::unordered_map <YOLO_POSE_INDEX,YVector3>* const GetFinalPositions() override;
 
 
-	void ExtrinsCalibrateUpdateSave(const std::string& filepath) override;
-	void InterinsCalibrateUpdateSave(const std::string& filepath) override;
+	//void ExtrinsCalibrate(const std::string& filepath) override;
+	//void ExtrinsCalibrateSave(const std::string& filepath) override;
+	//void InterinsCalibrate(const std::string& filepath) override;
+	//void InterinsCalibrateSave(const std::string& filepath) override;
 
 	void ExtrinsCalibrateLoad(const std::string& filepath) override;
 	void InterinsCalibrateLoad(const std::string& filepath) override;
@@ -99,13 +101,9 @@ private:
 
 	void _Draw(cv::Mat& image,int index);
 
-	void createCameraExtrinsics(const YVector3& direction,float distance,cv::Mat& R,cv::Mat& t);
-
 	void CalclateFinalCaptureDataFromCalibrateData();
 
 	void AddCameraData(const std::string& filepath);
-
-	cv::Mat computeLookAtRotation(const YVector3& camPos,const YVector3& target,const YVector3& up);
 
 	void SetOutSideData();
 
@@ -321,18 +319,6 @@ void YOLOPoseEstimationImp::Update()
 const std::unordered_map<YOLO_POSE_INDEX,YVector3>* const YOLOPoseEstimationImp::GetFinalPositions()
 {
 	return &finalCaptureData_;
-}
-
-void YOLOPoseEstimationImp::ExtrinsCalibrateUpdateSave(const std::string& filepath)
-{
-
-
-}
-
-void YOLOPoseEstimationImp::InterinsCalibrateUpdateSave(const std::string& filepath)
-{
-
-
 }
 
 void YOLOPoseEstimationImp::ExtrinsCalibrateLoad(const std::string& filepath)

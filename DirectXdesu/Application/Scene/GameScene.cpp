@@ -270,6 +270,8 @@ void GameScene::Update() {
 	playerTrans.SetScale({ 1,1,1 });
 	playerTrans.SetRot({ 0,0,0 });
 	player->Update(camera->GetViewPro(),playerTrans);
+
+	MCBM::CaptureManager::GetInstance()->YOLOStart();
 }
 
 void GameScene::ObjDraw() 

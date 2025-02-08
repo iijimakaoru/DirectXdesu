@@ -319,6 +319,7 @@ const std::unordered_map<YOLO_POSE_INDEX,YVector3>* const YOLOPoseEstimationImp:
 void YOLOPoseEstimationImp::InterinsCalibrateStart(int32_t cameraIndex)
 {
 	calibrator->IntrinsicParameterCalibration(m_pCams[ cameraIndex ],true);
+	instrinsiParams[cameraIndex] = calibrator->GetIntrinsicParameter();
 }
 
 void YOLOPoseEstimationImp::InterinsCalibrateSave(const std::string& filepath)
@@ -335,6 +336,7 @@ void YOLOPoseEstimationImp::InterinsCalibrateSave(const std::string& filepath)
 void YOLOPoseEstimationImp::ExtrinsCalibrateStart(int32_t cameraIndex)
 {
 	calibrator->ExtrinsiParameterCalibration(m_pCams[ cameraIndex ],instrinsiParams[ cameraIndex ],callBack,true);
+	extrinsiParams[ cameraIndex ] = calibrator->GetExtrinsiParameter();
 }
 
 void YOLOPoseEstimationImp::ExtrinsCalibrateSave(const std::string& filepath)

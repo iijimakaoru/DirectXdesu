@@ -44,6 +44,7 @@ void SettingScene::Init() {
 	camera->StartRound();
 
 	input = KInput::GetInstance();
+	captureManager->GetYOLOPoseEstimation()->SetCalibrateCallBack(&callBack);
 }
 
 void SettingScene::Update() {

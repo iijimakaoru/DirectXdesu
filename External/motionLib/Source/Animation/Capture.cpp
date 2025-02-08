@@ -3,7 +3,7 @@
 void MCBM::Capture::Initialize(int32_t index)
 {
 
-	capture_ = cv::VideoCapture(index,cv::CAP_DSHOW);
+	capture_ = cv::VideoCapture(index);
 	capture_.set(cv::CAP_PROP_FRAME_WIDTH, YOLOPoseEstimation::CAMERA_WITH);
 	capture_.set(cv::CAP_PROP_FRAME_HEIGHT, YOLOPoseEstimation::CAMERA_HIGHT);
 	capture_.set(cv::CAP_PROP_FPS, 30);

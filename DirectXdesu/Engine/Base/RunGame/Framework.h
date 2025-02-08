@@ -12,6 +12,7 @@
 #include "AudioManager.h"
 
 #include "PostEffectManager.h"
+#include <CaptureManager.h>
 
 /**
  * @file Framework.h
@@ -60,11 +61,13 @@ protected:
 	// シーンファクトリー
 	ASceneFactory* sceneFactory = nullptr;
 
-	ImguiManager imguiMane;
+	ImguiManager* imguiMane;
 
 	// ポストエフェクト
 	std::unique_ptr<PostEffectManager> postEffectManager = nullptr;
 
 	AudioManager* audioManager = nullptr;
+
+	MCBM::CaptureManager* captureManager;
 };
 

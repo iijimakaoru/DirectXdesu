@@ -3,8 +3,27 @@
 
 using namespace MCBM;
 
+MCBM::CaptureManager::~CaptureManager()
+{
+}
+
+MCBM::CaptureManager::CaptureManager()
+{
+}
+
+
+CaptureManager* MCBM::CaptureManager::GetInstance()
+{
+	static CaptureManager inst;
+	return &inst;
+}
+
 void CaptureManager::Initialize(int32_t cameraNum)
 {
+	if (initialized)
+	{
+		return;
+	}
 	cameraNum_ = cameraNum;
 
 	if (cameraNum > Locate::MAX_LOCATE)
@@ -101,6 +120,7 @@ void CaptureManager::Initialize(int32_t cameraNum)
 	capdatas[ Locate::FRONT ].cameraPosition = { 0.0f,0.0f,1.0f };
 	//capdatas[ Locate::LEFT ].cameraPosition = { -capdatas[ Locate::LEFT ].cameraDistance.x,0.0f,0.0f };
 	capdatas[ Locate::RIGHT ].cameraPosition = { 1.0f,0.0f,0.0f };
+	initialized = true;
 }
 
 void CaptureManager::Update()

@@ -24,9 +24,8 @@ void MCBM::Skelton::AddMesh(const M_MODEL_MESH& mesh)
 
 void MCBM::Skelton::Initialize()
 {
-	captureManager = std::make_unique<MCBM::CaptureManager>();
+	captureManager = MCBM::CaptureManager::GetInstance();
 
-	captureManager->Initialize(CAMERA_NUM);
 }
 
 

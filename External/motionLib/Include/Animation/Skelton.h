@@ -23,7 +23,7 @@ namespace MCBM
 
 		Bone* rootBone_;
 
-		std::unique_ptr<MCBM::CaptureManager> captureManager;
+		MCBM::CaptureManager* captureManager;
 
 		std::string name_;
 

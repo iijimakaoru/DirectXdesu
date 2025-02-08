@@ -15,8 +15,8 @@ namespace MCBM
 	{
 
 	private:
-		std::array<Capture,Locate::MAX_LOCATE> capdatas;
-		std::unordered_map<YOLO_POSE_INDEX,CaptureData> finalCaptureData_;
+		std::array<Capture, Locate::MAX_LOCATE> capdatas;
+		std::unordered_map<YOLO_POSE_INDEX, CaptureData> finalCaptureData_;
 		std::unique_ptr<YOLOPoseEstimation> m_YOLOPoseEstimation_;
 		const std::string& modelPath_ = "Resources/Checkpoints/yolo11x-pose.onnx";
 		const int32_t cameraFirstIndex = 0;
@@ -28,7 +28,16 @@ namespace MCBM
 													"none","none" };
 
 		int32_t cameraNum_;
+
+		CaptureManager();
+		CaptureManager(const CaptureManager& captureManager) = delete;
+		CaptureManager& operator=(const CaptureManager& captureManager) = delete;
+		~CaptureManager();
+
+		bool initialized = false;
+
 	public:
+		static CaptureManager* GetInstance();
 		void Initialize(int32_t cameraNum = Locate::MAX_LOCATE);
 		void Update();
 		void InitializePose();

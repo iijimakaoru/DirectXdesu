@@ -18,6 +18,7 @@ void ArrowEffectParticle::Init(const Timer* timer, const KMyMath::Matrix4& matVi
 	ID3D12CommandQueue* commndQueue = directXCommon->GetCommandQueue();
 
 	directXCommon->BeginCommnd();
+
 	rootSignature_ = std::make_unique<RootSignature>();
 	particleRootSignature_ = std::make_unique<RootSignature>();
 	graphicPSO_ = std::make_unique<GraphicPipelineState>();

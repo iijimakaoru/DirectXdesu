@@ -90,6 +90,8 @@ void GameScene::Init()
 	playTime = 0;
 	Meter meter = { 3,4 };
 	music = std::make_unique<MusicDesc>(85.0f, meter);
+	noteObj = std::make_unique<NoteObj>();
+	noteObj->Init(music.get());
 
 	start = { 500,500 };
 	lenRimit = 100.0f; // csvに落とし込む,値を仮設定
@@ -122,6 +124,8 @@ void GameScene::Update()
 		obj[i]->Update(camera->GetViewPro(), camera->GetWorldPos());
 	}
 
+	noteObj->Update(camera.get());
+
 	obj[OBJ::skydome]->GetTransform().SetRot({ 0.0f, playTime * 0.05f, 0.0f });
 	// エフェクトの更新
 	effectSetter->Update(timer_.get(), camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro());
@@ -138,6 +142,8 @@ void GameScene::ObjDraw()
 	{
 		obj[i]->Draw();
 	}
+
+	noteObj->Draw();
 
 	// エフェクト描画
 	effectSetter->Draw(timer_.get(), camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro());
@@ -329,32 +335,32 @@ void GameScene::Collision()
 				combo++;
 				noteObj->Notes()[i]->isHit = true;
 
-				//// エフェクト発生
-				//// 矢印
-				//{
-				//	KMyMath::Vector3 nowArrowPos = noteObj->Notes()[i]->GetTransform().GetPos();
-				//	KMyMath::Vector3 nowArrowRot = objNote[i]->GetTransform().GetRot();
-				//	KMyMath::Vector3 nowArrowScale = objNote[i]->GetTransform().GetScale();
-				//	KMyMath::Vector4 nowArrowColor = objNote[i]->GetColor();
-				//	effectSetter->SetArrowEffect(nowArrowPos, nowArrowRot, nowArrowScale, nowArrowColor,
-				//		timer_.get(), camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro());
-				//}
+				// エフェクト発生
+				// 矢印
+				{
+					KMyMath::Vector3 nowArrowPos = noteObj->Obj()[i]->GetTransform().GetPos();
+					KMyMath::Vector3 nowArrowRot = noteObj->Obj()[i]->GetTransform().GetRot();
+					KMyMath::Vector3 nowArrowScale = noteObj->Obj()[i]->GetTransform().GetScale();
+					KMyMath::Vector4 nowArrowColor = noteObj->Obj()[i]->GetColor();
+					effectSetter->SetArrowEffect(nowArrowPos, nowArrowRot, nowArrowScale, nowArrowColor,
+						timer_.get(), camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro());
+				}
 
-				//// パーフェクトゾーン
-				//{
-				//	KMyMath::Vector3 nowLinePos = { 
-				//		objNote[i]->GetTransform().GetPos().x,
-				//		obj[OBJ::line]->GetTransform().GetPos().y,
-				//		obj[OBJ::line]->GetTransform().GetPos().z };
-				//	KMyMath::Vector3 nowLineRot = {0.0f,0.0f,0.0f};
-				//	KMyMath::Vector3 nowLineScale = {
-				//		obj[OBJ::line]->GetTransform().GetScale().x / 2,
-				//		obj[OBJ::line]->GetTransform().GetScale().y,
-				//		obj[OBJ::line]->GetTransform().GetScale().z};
-				//	KMyMath::Vector4 nowLineColor = objNote[i]->GetColor();
-				//	effectSetter->SetGroundEffect(nowLinePos, nowLineRot, nowLineScale, nowLineColor,
-				//		timer_.get(), camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro());
-				//}
+				// パーフェクトゾーン
+				{
+					KMyMath::Vector3 nowLinePos = { 
+						noteObj->Obj()[i]->GetTransform().GetPos().x,
+						obj[OBJ::line]->GetTransform().GetPos().y,
+						obj[OBJ::line]->GetTransform().GetPos().z };
+					KMyMath::Vector3 nowLineRot = {0.0f,0.0f,0.0f};
+					KMyMath::Vector3 nowLineScale = {
+						obj[OBJ::line]->GetTransform().GetScale().x / 2,
+						obj[OBJ::line]->GetTransform().GetScale().y,
+						obj[OBJ::line]->GetTransform().GetScale().z};
+					KMyMath::Vector4 nowLineColor = noteObj->Obj()[i]->GetColor();
+					effectSetter->SetGroundEffect(nowLinePos, nowLineRot, nowLineScale, nowLineColor,
+						timer_.get(), camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro());
+				}
 			}
 			break;// for文から抜ける
 		}

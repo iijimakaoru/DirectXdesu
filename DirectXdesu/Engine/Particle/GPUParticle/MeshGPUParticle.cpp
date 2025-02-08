@@ -17,6 +17,8 @@ void MeshGPUParticle::Init(const Timer* timer, const KMyMath::Matrix4& matView, 
 	ID3D12GraphicsCommandList* commndList = directXCommon->GetCommandList();
 	ID3D12CommandQueue* commndQueue = directXCommon->GetCommandQueue();
 
+	directXCommon->BeginCommnd();
+
 	rootSignature_ = std::make_unique<RootSignature>();
 	particleRootSignature_ = std::make_unique<RootSignature>();
 	graphicPSO_ = std::make_unique<GraphicPipelineState>();
@@ -35,18 +37,7 @@ void MeshGPUParticle::Init(const Timer* timer, const KMyMath::Matrix4& matView, 
 	BuildFrameResources();
 	BuildPSOs();
 
-	// 初期化コマンドを実行する
-	ThrowIfFailed(commndList->Close());
-	ID3D12CommandList* cmdsLists[] = { commndList };
-	commndQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
-
-	directXCommon->FlashCommndQueue();
-
-	ThrowIfFailed(directXCommon->GetCommandAllocator()->Reset());
-
-	ThrowIfFailed(directXCommon->GetCommandList()->Reset(
-		directXCommon->GetCommandAllocator().Get(), deadListPSO_->GetPipelineState()));
-
+	directXCommon->GetCommandList()->SetPipelineState(deadListPSO_->GetPipelineState());
 	directXCommon->GetCommandList()->SetComputeRootSignature(particleRootSignature_->GetRootSignature());
 
 	currentFrameResourceIndex = (currentFrameResourceIndex + 1) % gNumberFrameResources;
@@ -74,15 +65,7 @@ void MeshGPUParticle::Init(const Timer* timer, const KMyMath::Matrix4& matView, 
 
 	commndList->Dispatch(static_cast<uint32_t>(model_->GetVertices().size() / 1024 + 1), 1, 1);
 
-	ThrowIfFailed(commndList->Close());
-
-	// コマンドリストを実行キューに追加します
-	ID3D12CommandList* cmdsLists1[] = { commndList };
-	commndQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists1);
-
-	directXCommon->FlashCommndQueue();
-
-	directXCommon->BeginCommnd();
+	directXCommon->CloseCommnd();
 }
 
 void MeshGPUParticle::Update(const Timer* timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection, Emitter* emitter)
@@ -180,26 +163,23 @@ void MeshGPUParticle::BuildUAV()
 	uavHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 	ThrowIfFailed(device->CreateDescriptorHeap(&uavHeapDesc, IID_PPV_ARGS(&UAVHeap)));
 
-	std::vector<std::future<void>> futures;
-
 	// 並列
 	// Particle Pool
 	{
-		futures.push_back(std::async(std::launch::async, [&] { particlePool_->Create(UAVHeap.Get(), (uint32_t)model_->GetVertices().size()); }));
+		particlePool_->Create(UAVHeap.Get(), (uint32_t)model_->GetVertices().size());
 	}
 	// Dead List
 	{
-		futures.push_back(std::async(std::launch::async, [&] { deadList_->Create(UAVHeap.Get(), (uint32_t)model_->GetVertices().size()); }));
+		deadList_->Create(UAVHeap.Get(), (uint32_t)model_->GetVertices().size());
 	}
 	// Draw List
 	{
-		futures.push_back(std::async(std::launch::async, [&] {drawList_->Create(UAVHeap.Get(), (uint32_t)model_->GetVertices().size()); }));
+		drawList_->Create(UAVHeap.Get(), (uint32_t)model_->GetVertices().size());
 	}
 	// Draw Args
 	{
-		futures.push_back(std::async(std::launch::async, [&] {drawArgs_->Create(UAVHeap.Get()); }));
+		drawArgs_->Create(UAVHeap.Get());
 	}
-	for (auto& f : futures) f.get();  // 全ての処理を待つ
 
 	// Mesh
 	{
@@ -281,63 +261,47 @@ void MeshGPUParticle::BuildPSOs()
 		graphicPSO_->Create(device);
 	}
 
-	std::vector<std::future<void>> psoFutures;
-
 	// EmitCS
 	{
-		psoFutures.push_back(std::async(std::launch::async, [&] { 
-			emitPSO_->CreateShader(L"MeshGPUParticle/MeshEmitCS.hlsl", "main");
-			emitPSO_->SetRootSignature(particleRootSignature_.get());
-			emitPSO_->SetFlag(D3D12_PIPELINE_STATE_FLAG_NONE);
-			emitPSO_->Create(device);
-			}));
+		emitPSO_->CreateShader(L"MeshGPUParticle/MeshEmitCS.hlsl", "main");
+		emitPSO_->SetRootSignature(particleRootSignature_.get());
+		emitPSO_->SetFlag(D3D12_PIPELINE_STATE_FLAG_NONE);
+		emitPSO_->Create(device);
 	}
 
 	// UpdateCS
 	{
-		psoFutures.push_back(std::async(std::launch::async, [&] {
-			updatePSO_->CreateShader(L"MeshGPUParticle/MeshUpdateCS.hlsl", "main");
-			updatePSO_->SetRootSignature(particleRootSignature_.get());
-			updatePSO_->SetFlag(D3D12_PIPELINE_STATE_FLAG_NONE);
-			updatePSO_->Create(device);
-			}));
+		updatePSO_->CreateShader(L"MeshGPUParticle/MeshUpdateCS.hlsl", "main");
+		updatePSO_->SetRootSignature(particleRootSignature_.get());
+		updatePSO_->SetFlag(D3D12_PIPELINE_STATE_FLAG_NONE);
+		updatePSO_->Create(device);
 	}
 
 	// CopyDrawCountCS
 	{
-		psoFutures.push_back(std::async(std::launch::async, [&] {
-			copyDrawPSO_->CreateShader(L"MeshGPUParticle/MeshCopyDrawCountCS.hlsl", "main");
-			copyDrawPSO_->SetRootSignature(particleRootSignature_.get());
-			copyDrawPSO_->SetFlag(D3D12_PIPELINE_STATE_FLAG_NONE);
-			copyDrawPSO_->Create(device);
-			}));
+		copyDrawPSO_->CreateShader(L"MeshGPUParticle/MeshCopyDrawCountCS.hlsl", "main");
+		copyDrawPSO_->SetRootSignature(particleRootSignature_.get());
+		copyDrawPSO_->SetFlag(D3D12_PIPELINE_STATE_FLAG_NONE);
+		copyDrawPSO_->Create(device);
 	}
 
 	// DeadListInitCS
 	{
-		psoFutures.push_back(std::async(std::launch::async, [&] {
-			deadListPSO_->CreateShader(L"MeshGPUParticle/MeshDeadListInitCS.hlsl", "main");
-			deadListPSO_->SetRootSignature(particleRootSignature_.get());
-			deadListPSO_->SetFlag(D3D12_PIPELINE_STATE_FLAG_NONE);
-			deadListPSO_->Create(device);
-			}));
+		deadListPSO_->CreateShader(L"MeshGPUParticle/MeshDeadListInitCS.hlsl", "main");
+		deadListPSO_->SetRootSignature(particleRootSignature_.get());
+		deadListPSO_->SetFlag(D3D12_PIPELINE_STATE_FLAG_NONE);
+		deadListPSO_->Create(device);
 	}
-
-	for (auto& f : psoFutures) f.get();
 }
 
 void MeshGPUParticle::BuildFrameResources()
 {
 	ID3D12Device* device = KDirectXCommon::GetInstance()->GetDevice();
-	std::vector<std::future<std::unique_ptr<FrameResource>>> frameFutures;
+	
 	for (int i = 0; i < gNumberFrameResources; ++i)
 	{
-		frameFutures.push_back(std::async(std::launch::async, [device]() 
-			{
-			return std::make_unique<FrameResource>(device, 1, 1, 1);
-			}));
+		FrameResources.push_back(std::make_unique<FrameResource>(device, 1, 1, 1));
 	}
-	for (auto& f : frameFutures) FrameResources.push_back(f.get());
 }
 
 void MeshGPUParticle::UpdateMainPassCB(const Timer* timer,

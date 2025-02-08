@@ -60,7 +60,7 @@ protected:
 	// シーンファクトリー
 	ASceneFactory* sceneFactory = nullptr;
 
-	ImguiManager imguiMane;
+	ImguiManager* imguiMane;
 
 	// ポストエフェクト
 	std::unique_ptr<PostEffectManager> postEffectManager = nullptr;

@@ -323,6 +323,18 @@ const std::unordered_map<YOLO_POSE_INDEX,YVector3>* const YOLOPoseEstimationImp:
 	return &finalCaptureData_;
 }
 
+void YOLOPoseEstimationImp::ExtrinsCalibrateUpdateSave(const std::string& filepath)
+{
+
+
+}
+
+void YOLOPoseEstimationImp::InterinsCalibrateUpdateSave(const std::string& filepath)
+{
+
+
+}
+
 void YOLOPoseEstimationImp::ExtrinsCalibrateLoad(const std::string& filepath)
 {
 

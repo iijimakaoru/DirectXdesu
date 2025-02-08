@@ -1,6 +1,7 @@
 #pragma once
 #include <unordered_map>
 #include <SimpleVector3.h>
+#include <string>
 
 enum class ONNXP_ROVIDERS
 {

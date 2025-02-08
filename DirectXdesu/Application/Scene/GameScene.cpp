@@ -195,6 +195,8 @@ void GameScene::Init() {
 
 	playerTrans.SetPos({ 0,87,-110 });
 	
+	MCBM::CaptureManager::GetInstance()->GetYOLOPoseEstimation()->ExtrinsCalibrateLoad("Resources\\CalibrateData");
+	MCBM::CaptureManager::GetInstance()->GetYOLOPoseEstimation()->InterinsCalibrateLoad("Resources\\CalibrateData");
 
 }
 

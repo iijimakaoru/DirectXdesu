@@ -176,3 +176,8 @@ CaptureData& MCBM::CaptureManager::GetLocateCaptureData(YOLO_POSE_INDEX key,Loca
 	return capdatas[ (int32_t)locate ].GetCaptureData(key);
 }
 
+YOLOPoseEstimation* MCBM::CaptureManager::GetYOLOPoseEstimation()
+{
+	return m_YOLOPoseEstimation_.get();
+}
+

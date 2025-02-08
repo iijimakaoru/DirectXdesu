@@ -9,6 +9,11 @@
 #include "TitleCamera.h"
 #include "AudioManager.h"
 #include "KObject3d.h"
+#include "CalibrationCallback.h"
+#include "ImguiManager.h"
+#include "CaptureManager.h"
+#include <future>
+#include <string>
 
 
 class SettingScene :public BaseScene
@@ -50,5 +55,20 @@ private:
 	KMyMath::Vector3 lightRGB = { 1, 1, 1 };
 	KMyMath::Vector3 lightDir = { 0, -1, 0 };
 
+	MCBM::CaptureManager* captureManager;
+	CalibrationCallback callBack;
+	bool ExtrinsiCalibrating = false;
+	bool InterinsicCalibrating = false;
+	
+	std::future<void> interCalibratingAsync;
+	std::future<void> extrinsiCalibratingAsync;
+
+
+	int32_t interSicNum = 0;
+	int32_t extrinSicNum = 0;
+
+	ImguiManager* imgui;
+	
+	void ImguiUpdate();
 };
 

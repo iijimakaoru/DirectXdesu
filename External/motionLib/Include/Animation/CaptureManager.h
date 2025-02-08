@@ -35,10 +35,13 @@ namespace MCBM
 		~CaptureManager();
 
 		bool initialized = false;
+		bool yoloStart = false;
 
 	public:
 		static CaptureManager* GetInstance();
 		void Initialize(int32_t cameraNum = Locate::MAX_LOCATE);
+		void YOLOStart();
+		void YOLOEnd();
 		void Update();
 		void InitializePose();
 		void Finalize();

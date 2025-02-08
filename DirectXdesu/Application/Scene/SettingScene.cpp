@@ -43,8 +43,7 @@ void SettingScene::Init() {
 
 	camera->StartRound();
 
-
-	
+	input = KInput::GetInstance();
 }
 
 void SettingScene::Update() {

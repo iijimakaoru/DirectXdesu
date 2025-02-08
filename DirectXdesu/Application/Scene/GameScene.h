@@ -32,6 +32,9 @@
 
 #include<YOLOPoseEstimation.h>
 
+#include "EffectSetter.h"
+#include "ObjectSetter.h"
+
 /**
  * @file GameScene.h
  * @brief ゲームシーン
@@ -73,16 +76,16 @@ private:
 	};
 
 private:
-	//マウス角度算出
+	// マウス角度算出
 	void RotAndLenCalculationMouse();
 
 	//スティック角度、長さ算出
 	void RotAndLenCalculationStick(KMyMath::Vector2& vec);
 
-	//当たり判定
+	// 当たり判定
 	void Collision();
 
-	//csv読み込み
+	// csv読み込み
 	void LoadCSV(const std::string& name);
 
 private:
@@ -110,7 +113,7 @@ private:
 	CollisionManager* collisionManager_ = nullptr;
 
 private:
-	//ノーツ
+	// ノーツ
 	std::unique_ptr<MusicDesc>music;
 	std::unique_ptr<NoteObj>noteObj;
 	KMyMath::Vector2 start, end;
@@ -130,11 +133,10 @@ private:
 	int score[3];
 	int combo;
 
-	std::unique_ptr<YOLOPoseEstimation> m_YOLOPoseEstimation;
-	cv::VideoCapture cap;
-	std::unique_ptr<Sprite> sprite;
-	TextureData texData;
-	float f;
-	float fDiv;
+	// エフェクト系
+	std::unique_ptr<Timer> timer_;
+	std::unique_ptr<EffectSetter> effectSetter;
 
+	// オブジェクト系
+	std::unique_ptr<ObjectSetter> objectSetter;
 };

@@ -69,6 +69,7 @@ cbuffer particleData : register(b2)
     float4 endColor;
     float3 velocity;
     float lifeTime;
+    float size;
     float3 acceleration;
     float pad;
     int emitCount;

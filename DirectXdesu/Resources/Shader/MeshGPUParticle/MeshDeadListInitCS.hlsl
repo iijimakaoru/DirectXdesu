@@ -6,13 +6,13 @@ AppendStructuredBuffer<uint> ADeadList : register(u1);
 RWStructuredBuffer<ParticleDraw> DrawList : register(u2);
 RWStructuredBuffer<uint> DrawArgs : register(u3);
 
-[numthreads(32, 1, 1)]
+[numthreads(1024, 1, 1)]
 void main(uint id : SV_DispatchThreadID)
 {
-	// outside range?
+	// 範囲外？
     if (id.x >= (uint) maxParticles) 
         return;
 
-	// add the index to the dead list
+	// デッドリストにインデックスを追加する
     ADeadList.Append(id.x);
 }

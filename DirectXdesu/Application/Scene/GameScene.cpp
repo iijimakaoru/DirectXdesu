@@ -24,21 +24,22 @@
 
 GameScene::~GameScene() { Final(); };
 
-void GameScene::LoadResources() {
+void GameScene::LoadResources() 
+{
+	ModelManager* modelManager = ModelManager::GetInstance();
+
 	// モデル
 	objModel[OBJ::stage] = 
-		ModelManager::GetInstance()->GetModels("S_Cube");
+		modelManager->GetModels("S_Cube");
 	objModel[OBJ::skydome] = 
-		ModelManager::GetInstance()->GetModels("S_SkyDorm");
-	/*noteModel = 
-		ModelManager::GetInstance()->GetModels("S_Arrow");*/
-
-	TextureManager::Load("Resources/texture/boss1.png");
-
-
+		modelManager->GetModels("S_SkyDorm");
+	noteModel = 
+		modelManager->GetModels("S_Arrow");
 }
 
-void GameScene::Init() {
+void GameScene::Init() 
+{
+	timer_ = std::make_unique<Timer>();
 
 	BaseScene::Init();
 
@@ -79,69 +80,100 @@ void GameScene::Init() {
 
 	collisionManager_ = new CollisionManager();
 
-	//ノーツ
+	// エフェクトの初期化
+	effectSetter = std::make_unique<EffectSetter>();
+	effectSetter->Init(timer_.get(), camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro());
+
+	// ゲーム内オブジェクトの初期化
+	objectSetter = std::make_unique<ObjectSetter>();
+	objectSetter->Init(timer_.get(), camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro());
+
+	// ノーツ
 	playTime = 0;
 	Meter meter = { 3,4 };
 	music = std::make_unique<MusicDesc>(85.0f, meter);
 
-	noteObj = std::make_unique<NoteObj>();
-	noteObj->Init(music.get());
-
-	start = { 500,500 };
-	lenRimit = 100.0f;//csvに落とし込む,値を仮設定
-
-	//------------------------------------------------------------------------------------------------------------------------------------------------------------//
-
-
-	PHONONLOADER::P_MODEL_DATA* pData = new PHONONLOADER::P_MODEL_DATA();
-	PHONONLOADER::PModelLoader::Load(pData, "obj/cube");
-
-	cap= cv::VideoCapture(0, cv::CAP_DSHOW);
-	cap.set(cv::CAP_PROP_FRAME_WIDTH, 600);
-	cap.set(cv::CAP_PROP_FRAME_HEIGHT, 720);
-
-	if (!cap.isOpened())
+	for (size_t i = 0; i < notes.size(); i++)
 	{
-		assert(0);
+		std::unique_ptr<KObject3d> obj_;
+		obj_.reset(KObject3d::Create(noteModel, 
+			PipelineManager::GetInstance()->GetPipeline("Obj")));
+		obj_->GetTransform().SetScale({ 15.0f,15.0f,5.0f });
+
+		//色設定
+		if (notes[i].lane == 0)
+		{
+			obj_->SetColor({ 0.5f,0.0f,0.0f,1.0f });
+		}
+		else
+		{
+			obj_->SetColor({ 0.0f,0.3f,1.0f,1.0f });
+		}
+
+		//方向設定
+		if (notes[i].direction == DIRECTION::left)//左
+		{
+			obj_->GetTransform().SetRot({ 0.0f,180.0f,0.0f });
+		}
+		else if (notes[i].direction == DIRECTION::up)//上
+		{
+			obj_->GetTransform().SetRot({ 0.0f,0.0f,-90.0f });
+		}
+		else if (notes[i].direction == DIRECTION::dawn)//下
+		{
+			obj_->GetTransform().SetRot({ 0.0f,180.0f,90.0f });
+		}
+		else										//右
+		{
+			obj_->GetTransform().SetRot({ 0.0f,0.0f,0.0f });
+		}
+		notePosZ = (sec * speed) * music->ConvertBeatToMiliSeconds(notes[i].beat);
+		obj_->GetTransform().SetPos({ -50.0f + (100.0f * notes[i].lane),25.0f,notePosZ });
+
+		objNote.push_back(std::move(obj_));
 	}
 
-	cv::Mat img;
+	start = { 500,500 };
+	lenRimit = 100.0f; // csvに落とし込む,値を仮設定
 
-	const std::string& modelPath = "Resources/Checkpoints/yolo11x-pose.onnx";
-
-	float mask_threshold = 0.5f;
-	float conf_threshold = 0.30f;
-	float iou_threshold = 0.45f;
-	int conversion_code = cv::COLOR_BGR2RGB;
-
-	m_YOLOPoseEstimation.reset(CreateYOLOPoseEstimation());
-
-	m_YOLOPoseEstimation->CameraInitialize(&cap);
-
-	m_YOLOPoseEstimation->ModelInitialize(modelPath.c_str(), mask_threshold, conf_threshold, iou_threshold,ONNXP_ROVIDERS::DIRECTML);
-
-	m_YOLOPoseEstimation->Start(true);
-
-	sprite.reset(Sprite::Create(PipelineManager::GetInstance()->GetPipeline("Sprite")));
-
-	texData = TextureManager::GetInstance()->GetTextures("Resources/texture/boss1.png");
+	// 音
+	audioManager_ = AudioManager::GetInstance();
+	audioManager_->BGMPlay_wav("maou_bgm_cyber44.wav");
 }
 
-void GameScene::Update() {
+void GameScene::Update() 
+{
+	ImGui::Begin("lo");
+	ImGui::DragInt("perfect", &score[PERFECT]);
+	ImGui::DragInt("great", &score[GREAT]);
+	ImGui::DragInt("miss", &score[MISS]);
+	ImGui::DragInt("combo", &combo);
+	ImGui::End();
+
+	timer_->UpdateTimer();
 
 	
 	light_->SetLightRGB({lightRGB_.x, lightRGB_.y, lightRGB_.z});
 	light_->SetLightDir({lightDir_.x, lightDir_.y, lightDir_.z, 0.0f});
 
+	// 角度算出
+	RotAndLenCalculationStick(input->GetPadLStick());
+
 	playTime++;
 	Collision();
 
-	for (size_t i = 0; i < OBJ::max; i++)
+	for (size_t i = 0; i < objNote.size(); i++)
 	{
-		obj[i]->Update(camera->GetViewPro(), camera->GetWorldPos());
-	}
+		if (!notes[i].isHit)
+		{
+			KMyMath::Vector3 move;
+			move = objNote[i]->GetTransform().GetPos();
+			move.z -= speed;
 
-	noteObj->Update(camera.get());
+			objNote[i]->GetTransform().SetPos(move);
+			objNote[i]->Update(camera->GetViewPro(), camera->GetWorldPos());
+		}
+	}
 
 	for (size_t i = 0; i < OBJ::max; i++) 
 	{
@@ -149,6 +181,11 @@ void GameScene::Update() {
 	}
 
 	obj[OBJ::skydome]->GetTransform().SetRot({ 0.0f, playTime * 0.05f, 0.0f });
+	// エフェクトの更新
+	effectSetter->Update(timer_.get(), camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro());
+
+	// オブジェクトの更新
+	objectSetter->Update(timer_.get(), camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro());
 
 	camera->Update();
 }
@@ -160,15 +197,24 @@ void GameScene::ObjDraw()
 		obj[i]->Draw();
 	}
 
-	noteObj->Draw();
+	for (size_t i = 0; i < objNote.size(); i++)
+	{
+		if (!notes[i].isHit)
+		{
+			objNote[i]->Draw();
+		}
+	}
+
+	// エフェクト描画
+	effectSetter->Draw(timer_.get(), camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro());
+
+	// オブジェクトの描画
+	objectSetter->Draw(timer_.get(), camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro());
 }
 
-void GameScene::SpriteDraw() {
-
-	//------------------------------------------------------------------------------------------------------------------------------------------------------------//
-	f++;
-	fDiv = 7;
-	sprite->AnimationDraw(texData, 64, 64, f, fDiv, {200,200});
+void GameScene::SpriteDraw() 
+{
+	
 }
 
 void GameScene::Final() 
@@ -181,14 +227,18 @@ void GameScene::RotAndLenCalculationMouse()
 	end = input->GetMousePos();
 
 	KMyMath::Vector2 mouseVec = { 0.0f,0.0f };
-	//ウィンドウの中心点とマウスの現在点のベクトルをとる
+
+	// ウィンドウの中心点とマウスの現在点のベクトルをとる
 	mouseVec.x = end.x - start.x;
 	mouseVec.y = end.y - start.y;
-	//長さ算出
+
+	// 長さ算出
 	length = MyMathUtility::Vector2Length(mouseVec);
-	//正規化
+
+	// 正規化
 	mouseVec = MyMathUtility::MakeVector2Normalize(mouseVec);
-	//角度を算出
+
+	// 角度を算出
 	angle = atan2(mouseVec.y, mouseVec.x);
 	angle = MyMathConvert::DegreeTransform(angle);
 }
@@ -200,21 +250,24 @@ void GameScene::RotAndLenCalculationStick(KMyMath::Vector2& vec)
 	KMyMath::Vector2 stickVec = { 0.0f,0.0f };
 	KMyMath::Vector2 s = { 0.0f,0.0f };
 
-	//ウィンドウの中心点とマウスの現在点のベクトルをとる
+	// ウィンドウの中心点とマウスの現在点のベクトルをとる
 	stickVec.x = end.x - s.x;
 	stickVec.y = end.y - s.y;
-	//長さ算出
+
+	// 長さ算出
 	length = MyMathUtility::Vector2Length(stickVec);
-	//正規化
+
+	// 正規化
 	stickVec = MyMathUtility::MakeVector2Normalize(stickVec);
-	//角度を算出
+
+	// 角度を算出
 	angle = atan2(stickVec.y, stickVec.x);
 	angle = MyMathConvert::DegreeTransform(angle);
 }
 
 void GameScene::Collision()
 {
-	//範囲の指定（一応45と設定）
+	// 範囲の指定（一応45と設定）
 	float scope = 45.0f;
 	float center;
 	bool isSuccess = false;
@@ -230,15 +283,15 @@ void GameScene::Collision()
 		//ノードと現在のタイムを比較
 		float notetime = sec * music->ConvertBeatToMiliSeconds(noteObj->Notes()[i]->beat);
 		float diff = notetime - playTime;
-		//60
+		// 60
 		if (diff <= 20 || !input->GetPadConnect())
 		{
 			start = input->GetMousePos();
 		}
-		//コントローラ、マウス
+		// コントローラ、マウス
 		if (std::abs(diff) <= perfect)
 		{
-			//1個前のノードのフラグが立っていないかつ同じ位置じゃない場合にしなければならない
+			// 1個前のノードのフラグが立っていないかつ同じ位置じゃない場合にしなければならない
 			if (i != 0)
 			{
 				if (!noteObj->Notes()[i - 1]->isHit)
@@ -275,7 +328,7 @@ void GameScene::Collision()
 				max = center + scope;
 				if (min <= angle && angle <= max)
 				{
-					//長さが一定以上超えていないなら
+					// 長さが一定以上超えていないなら
 					if (length < lenRimit)
 					{
 						continue;
@@ -293,7 +346,7 @@ void GameScene::Collision()
 				max = center + scope;
 				if (min <= angle && angle <= max)
 				{
-					//長さが一定以上超えていないなら
+					// 長さが一定以上超えていないなら
 					if (length < lenRimit)
 					{
 						continue;
@@ -310,7 +363,7 @@ void GameScene::Collision()
 				max = center + scope;
 				if (min <= angle && angle <= max)
 				{
-					//長さが一定以上超えていないなら
+					// 長さが一定以上超えていないなら
 					if (length < lenRimit)
 					{
 						continue;
@@ -327,7 +380,7 @@ void GameScene::Collision()
 				max = center - scope;
 				if (max <= angle || angle <= min)
 				{
-					//長さが一定以上超えていないなら
+					// 長さが一定以上超えていないなら
 					if (length < lenRimit)
 					{
 						continue;
@@ -341,10 +394,37 @@ void GameScene::Collision()
 			{
 				combo++;
 				noteObj->Notes()[i]->isHit = true;
+
+				// エフェクト発生
+				// 矢印
+				{
+					KMyMath::Vector3 nowArrowPos = objNote[i]->GetTransform().GetPos();
+					KMyMath::Vector3 nowArrowRot = objNote[i]->GetTransform().GetRot();
+					KMyMath::Vector3 nowArrowScale = objNote[i]->GetTransform().GetScale();
+					KMyMath::Vector4 nowArrowColor = objNote[i]->GetColor();
+					effectSetter->SetArrowEffect(nowArrowPos, nowArrowRot, nowArrowScale, nowArrowColor,
+						timer_.get(), camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro());
+				}
+
+				// パーフェクトゾーン
+				{
+					KMyMath::Vector3 nowLinePos = { 
+						objNote[i]->GetTransform().GetPos().x,
+						obj[OBJ::line]->GetTransform().GetPos().y,
+						obj[OBJ::line]->GetTransform().GetPos().z };
+					KMyMath::Vector3 nowLineRot = {0.0f,0.0f,0.0f};
+					KMyMath::Vector3 nowLineScale = {
+						obj[OBJ::line]->GetTransform().GetScale().x / 2,
+						obj[OBJ::line]->GetTransform().GetScale().y,
+						obj[OBJ::line]->GetTransform().GetScale().z};
+					KMyMath::Vector4 nowLineColor = objNote[i]->GetColor();
+					effectSetter->SetGroundEffect(nowLinePos, nowLineRot, nowLineScale, nowLineColor,
+						timer_.get(), camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro());
+				}
 			}
-			break;//for文から抜ける
+			break;// for文から抜ける
 		}
-		else if (diff < -(perfect))//一旦ノードがラインから過ぎ去ったらミスにする
+		else if (diff < -(perfect))// 一旦ノードがラインから過ぎ去ったらミスにする
 		{
 			combo = 0;
 			score[MISS]++;
@@ -362,13 +442,13 @@ void GameScene::LoadCSV(const std::string& name)
 	assert(file.is_open());
 
 
-	//1行分の文字列を入れる変数
+	// 1行分の文字列を入れる変数
 	std::string line;
 
 	while (std::getline(file, line))
 	{
 		std::istringstream line_stream(line);
-		//,区切りで行の先頭文字列を取得
+		// ,区切りで行の先頭文字列を取得
 		std::string key;
 		getline(line_stream, key, ',');
 		if (key == "perfect")
@@ -384,6 +464,6 @@ void GameScene::LoadCSV(const std::string& name)
 		}
 
 	}
-	//ファイルを閉じる
+	// ファイルを閉じる
 	file.close();
 }

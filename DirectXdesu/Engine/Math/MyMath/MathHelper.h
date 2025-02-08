@@ -47,7 +47,7 @@ public:
 		return x < low ? low : (x > high ? high : x);
 	}
 
-	// Returns the polar angle of the point (x,y) in [0, 2*PI).
+	// 点の極角を返します (x,y) in [0, 2*PI).
 	static float AngleFromXY(float x, float y);
 
 	static DirectX::XMVECTOR SphericalToCartesian(float radius, float theta, float phi)
@@ -61,9 +61,9 @@ public:
 
 	static DirectX::XMMATRIX InverseTranspose(DirectX::CXMMATRIX M)
 	{
-		// Inverse-transpose is just applied to normals.  So zero out 
-		// translation row so that it doesn't get into our inverse-transpose
-		// calculation--we don't want the inverse-transpose of the translation.
+		// 逆転置は法線に適用されるだけです。  だからゼロアウト 
+		// 逆転置に入らないように翻訳行を追加します。
+		// 計算 -- 翻訳の逆転置は望ましくありません。
 		DirectX::XMMATRIX A = M;
 		A.r[3] = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
 

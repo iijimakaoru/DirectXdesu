@@ -11,8 +11,6 @@
 #include "PipelineManager.h"
 #include "Ease.h"
 
-const int gNumberFrameResources = 3;
-
 TitleScene::~TitleScene() { Final(); }
 
 void TitleScene::LoadResources() {
@@ -25,6 +23,8 @@ void TitleScene::LoadResources() {
 }
 
 void TitleScene::Init() {
+	timer_ = std::make_unique<Timer>();
+
 	BaseScene::Init();
 
 	// インスタンス

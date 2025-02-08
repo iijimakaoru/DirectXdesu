@@ -285,6 +285,10 @@ namespace MyMathConvert
 	/// <returns></returns>
 	DirectX::XMFLOAT3 ChangeVector3toXMfloat3(KMyMath::Vector3& vector3);
 
+	KMyMath::Vector4 ChangeVector4(DirectX::XMFLOAT4 float4);
+
+	DirectX::XMFLOAT4 ChangeXMFLOAT4(KMyMath::Vector4 vector4);
+
 	/// <summary>
 	/// ラジアン変換
 	/// </summary>

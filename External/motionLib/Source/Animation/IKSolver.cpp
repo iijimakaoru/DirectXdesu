@@ -28,19 +28,19 @@ void MCBM::IKSolver::CCDIK()
 
 	while (iteration-- && run)
 	{
-		Quaternion idealRotation;
-		Quaternion realRotation;
-		Quaternion remainingRotation;
+		MQuaternion idealRotation;
+		MQuaternion realRotation;
+		MQuaternion remainingRotation;
 
-		Vector3 localTargetPos = targetPos_;
+		MVector3 localTargetPos = targetPos_;
 
 
 		Bone* effectorBone = effector_;
 		Bone* effectorParent = effectorBone->GetParent();
 		Bone* rootBone = nullptr;
 
-		Vector3 localEffectorPos = effectorBone->GetModelTranslate();
-		Vector3 localEffectorParentPos = effectorParent->GetModelTranslate();
+		MVector3 localEffectorPos = effectorBone->GetModelTranslate();
+		MVector3 localEffectorParentPos = effectorParent->GetModelTranslate();
 
 		for (int32_t i = 0; i < linkBoneCount_; i++)
 		{
@@ -49,13 +49,13 @@ void MCBM::IKSolver::CCDIK()
 			localEffectorParentPos = effectorParent->GetModelTranslate();
 
 			//—‘z‰ñ“]ì¬
-			Vector3 boneVec = Vector3(localEffectorParentPos, localEffectorPos);
-			Vector3 effectToTarget = Vector3(localEffectorParentPos, localTargetPos);
+			MVector3 boneVec = MVector3(localEffectorParentPos, localEffectorPos);
+			MVector3 effectToTarget = MVector3(localEffectorParentPos, localTargetPos);
 
 			boneVec.V3Norm();
 			effectToTarget.V3Norm();
 
-			Vector3 axis = boneVec.GetV3Cross(effectToTarget);
+			MVector3 axis = boneVec.GetV3Cross(effectToTarget);
 			float dotRadian = effectToTarget.GetV3Dot(boneVec);
 			float radian = MathUtil::Clamp(acos(dotRadian),-1,1);
 
@@ -75,7 +75,7 @@ void MCBM::IKSolver::CCDIK()
 
 			if (isLimit_)
 			{
-				Vector3 eulerRot = Matrix::GetQuaternionRotaMat(idealRotation).GetRotationToEuler();
+				MVector3 eulerRot = Matrix::GetQuaternionRotaMat(idealRotation).GetRotationToEuler();
 
 				eulerRot = eulerRot.Clamp(eulerRot, effectorParent->GetBottomLimitEulerRadian(),
 					effectorParent->GetTopLimitEulerRadian(), &remaining);
@@ -147,7 +147,7 @@ void MCBM::IKSolver::SetIKConfig(int32_t linkBone, int32_t iteration, bool isLim
 
 }
 
-void MCBM::IKSolver::SetTarget(Vector3 targetPos)
+void MCBM::IKSolver::SetTarget(MVector3 targetPos)
 {
 	targetPos_ = targetPos;
 }

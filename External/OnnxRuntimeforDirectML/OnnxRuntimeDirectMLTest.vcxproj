@@ -74,7 +74,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LibraryPath>$(SolutionDir)Thaad\opencv\build\x64\vc15\lib;$(SolutionDir)External\DirectML.1.15.1\bin\x64-win;$(SolutionDir)External\OnnxRuntime..19.2\runtimes\win-x64\native;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)Generated\Outputs\$(Configuration)\</OutDir>
-    <IncludePath>$(SolutionDir)External\DirectML.1.15.1\include;$(SolutionDir)External\OnnxRuntime..19.2\build\native\include;$(SolutionDir)External\opencv\build\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)External\DirectML.1.15.1\include;$(SolutionDir)External\OnnxRuntime..19.2\build\native\include;$(SolutionDir)External\opencv\build\include;$(SolutionDir)External\Json;$(IncludePath)</IncludePath>
     <IntDir>$(SolutionDir)Generated\Obj\$(ProjectName)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -162,16 +162,22 @@
     <ClInclude Include="Include\autobackend.h" />
     <ClInclude Include="Include\common.h" />
     <ClInclude Include="Include\constants.h" />
+    <ClInclude Include="Include\Matrix3x3.h" />
     <ClInclude Include="Include\onnx_model_base.h" />
     <ClInclude Include="Include\ops.h" />
+    <ClInclude Include="Include\SimpleMatrix3x3.h" />
+    <ClInclude Include="Include\SimpleVector3.h" />
+    <ClInclude Include="Include\YVector3.h" />
     <ClInclude Include="Include\YOLOPoseEstimation.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\augment.cpp" />
     <ClCompile Include="Src\autobackend.cpp" />
     <ClCompile Include="Src\common.cpp" />
+    <ClCompile Include="Src\SimpleMatrix3x3.cpp" />
     <ClCompile Include="Src\onnx_model_base.cpp" />
     <ClCompile Include="Src\ops.cpp" />
+    <ClCompile Include="Src\SimpleVector3.cpp" />
     <ClCompile Include="Src\YOLOPoseEstimation.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

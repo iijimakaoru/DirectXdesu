@@ -53,6 +53,7 @@ private:
 private:
 
 	const uint32_t ASSIMP_LOAD_FLAG_DEFAULT =
+		aiProcess_FlipUVs |
 		aiProcess_FlipWindingOrder |
 		aiProcess_Triangulate | //三角面化
 		aiProcess_CalcTangentSpace | //接線ベクトル生成

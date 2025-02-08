@@ -59,12 +59,14 @@ void GameScene::Init() {
 	sceneManager = SceneManager::GetInstance();
 
 	// モデル
+	/*ステージ*/
 	obj[OBJ::stage].reset(KObject3d::Create(objModel[OBJ::stage],
 		PipelineManager::GetInstance()->GetPipeline("Obj")));
 	obj[OBJ::stage]->GetTransform().SetPos({ 0.0f,0.0f,200.0f });
 	obj[OBJ::stage]->GetTransform().SetScale({ 100.0f,1.0f,300.0f });
 	obj[OBJ::stage]->SetColor({ 0.0f,0.0f,0.0f,1.0f });
 
+	/*ライン*/
 	float scaleZ = perfect;
 	obj[OBJ::line].reset(KObject3d::Create(objModel[OBJ::stage],
 		PipelineManager::GetInstance()->GetPipeline("Obj")));
@@ -72,6 +74,7 @@ void GameScene::Init() {
 	obj[OBJ::line]->GetTransform().SetPos({ 0.0f,4.0f,0.0f });
 	obj[OBJ::line]->SetColor({ 0.8f,0.8f,0.8f,1.0f });
 
+	/*天球*/
 	obj[OBJ::skydome].reset(KObject3d::Create(objModel[OBJ::skydome], 
 		PipelineManager::GetInstance()->GetPipeline("Obj")));
 	obj[OBJ::skydome]->GetTransform().SetScale({ 800.0f, 800.0f, 800.0f });
@@ -124,14 +127,7 @@ void GameScene::Init() {
 	PHONONLOADER::P_MODEL_DATA* pData = new PHONONLOADER::P_MODEL_DATA();
 	PHONONLOADER::PModelLoader::Load(pData, "obj/cube");
 
-	cap= cv::VideoCapture(0, cv::CAP_DSHOW);
-	cap.set(cv::CAP_PROP_FRAME_WIDTH, 600);
-	cap.set(cv::CAP_PROP_FRAME_HEIGHT, 720);
-
-	if (!cap.isOpened())
-	{
-		assert(0);
-	}
+	
 
 	cv::Mat img;
 
@@ -141,18 +137,17 @@ void GameScene::Init() {
 	float conf_threshold = 0.30f;
 	float iou_threshold = 0.45f;
 	int conversion_code = cv::COLOR_BGR2RGB;
-
-	m_YOLOPoseEstimation.reset(CreateYOLOPoseEstimation());
-
-	m_YOLOPoseEstimation->CameraInitialize(&cap);
-
-	m_YOLOPoseEstimation->ModelInitialize(modelPath.c_str(), mask_threshold, conf_threshold, iou_threshold,ONNXP_ROVIDERS::DIRECTML);
-
-	m_YOLOPoseEstimation->Start(true);
-
+	
+	MCBM::AnimationModelManager::GetInstance()->Load("fox");
+	player = std::make_unique<CaptureModel>();
+	player->Initilize("fox");
 	sprite.reset(Sprite::Create(PipelineManager::GetInstance()->GetPipeline("Sprite")));
 
 	texData = TextureManager::GetInstance()->GetTextures("Resources/texture/boss1.png");
+
+	playerTrans.SetPos({ 0,87,-110 });
+	
+
 }
 
 void GameScene::Update() {
@@ -214,7 +209,7 @@ void GameScene::SpriteDraw() {
 	//------------------------------------------------------------------------------------------------------------------------------------------------------------//
 	f++;
 	fDiv = 7;
-	sprite->AnimationDraw(texData, 64, 64, f, fDiv, {200,200});
+	//sprite->AnimationDraw(texData, 64, 64, f, fDiv, {200,200});
 }
 
 void GameScene::Final() 

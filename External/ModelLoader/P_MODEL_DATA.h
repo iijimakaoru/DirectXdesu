@@ -47,6 +47,9 @@ struct P_NODE
 	std::string name;
 	PMatrix4 transform;
 	PMatrix4 globalTransform;
+	PVector3 position;
+	PVector4 rotation;
+	PVector3 scale;
 	std::string parentNodeName;
 	std::vector<std::string>childrenNodeNames;
 };

@@ -71,6 +71,7 @@ void SettingScene::Final() {
 
 void SettingScene::ImguiUpdate()
 {
+	ImGui::Begin("CalibrateInfo");
 	if (ImGui::TreeNode("Calibrate"))
 	{
 		if (InterinsicCalibrating)
@@ -143,4 +144,5 @@ void SettingScene::ImguiUpdate()
 		}
 		ImGui::TreePop();
 	}
+	ImGui::End();
 }

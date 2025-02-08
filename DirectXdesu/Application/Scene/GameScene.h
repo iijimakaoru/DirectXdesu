@@ -136,11 +136,13 @@ private:
 	float minusShift = 10;
 	float perfect = 2;
 	float fovAngle;
+	float frame;
 	int32_t blankSpace = 0;
 	const int32_t constblankSpace = 240;
 	int score[3];
 	int combo;
 	bool test;
+	bool isFrame;
 
 	bool initialePoseSet = false;
 	std::chrono::system_clock::time_point initializetime_;

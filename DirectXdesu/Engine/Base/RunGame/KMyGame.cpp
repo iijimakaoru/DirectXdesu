@@ -37,7 +37,7 @@ void KMyGame::Draw() {
 
 	// Imgui描画
 #ifdef _DEBUG
-	imguiMane.Draw();
+	imguiMane->Draw();
 #endif
 
 	dx->PostDraw();

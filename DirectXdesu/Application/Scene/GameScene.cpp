@@ -145,22 +145,55 @@ void GameScene::Init() {
 
 	texData = TextureManager::GetInstance()->GetTextures("Resources/texture/boss1.png");
 
-	playerTrans.SetPos({ 0,87,-110 });
-	
-
+	playerTrans.SetPos({ 0,49,-147 });
+	playerTrans.SetRot({ 0,180,0 });
+	player->Update(camera->GetViewPro(), playerTrans);
+	frame = 0;
+	isFrame = false;
 }
 
 void GameScene::Update() {
+	if (input->IsPress(DIK_S))
+	{
+		KMyMath::Vector3 move=playerTrans.GetPos();
+		move.z -= 1.0f;
+		playerTrans.SetPos(move);
+	}
+	player->Update(camera->GetViewPro(), playerTrans);
+	if (input->IsPress(DIK_W))
+	{
+		KMyMath::Vector3 move = playerTrans.GetPos();
+		move.z += 1.0f;
+		playerTrans.SetPos(move);
+	}
 	if (input->IsTrigger(DIK_SPACE))
 	{
-		noteObj->OutputNote();
+		isFrame = true;
+		//noteObj->OutputNote();
+		
 	}
-	
-	float l[2] = { input->GetPadLStick().x,input->GetPadLStick().y };
-	float r[2] = { input->GetPadRStick().x,input->GetPadRStick().y };
+	if (isFrame)
+	{
+		if (frame<360)
+		{
+			player->InitializePose();
+		}
+		else
+		{
+			isFrame = false;
+			frame = 0;
+		}
+		frame++;
+	}
+	MCBM::MVector3 p = player->GetCapturePosFromThreeD(YOLO_POSE_INDEX::WRIST_L);
+	float L[2] = { p.x,p.y };
+	MCBM::MVector3 b = player->GetCapturePos(YOLO_POSE_INDEX::WRIST_R, Locate::FRONT);
+	float R[2] = { b.x,b.y };
+
 	ImGui::Begin("lo");
-	ImGui::DragFloat2("L", l, ImGuiColorEditFlags_Float);
-	ImGui::DragFloat2("R",r, ImGuiColorEditFlags_Float);
+	ImGui::InputFloat2("R", R);
+	ImGui::InputFloat2("L", L);
+	
 	ImGui::End();
 
 	playTime++;
@@ -192,7 +225,7 @@ void GameScene::Update() {
 
 void GameScene::ObjDraw() 
 {
-	for (size_t i = 0; i < OBJ::max; i++) 
+	/*for (size_t i = 0; i < OBJ::max; i++) 
 	{
 		obj[i]->Draw();
 	}
@@ -201,7 +234,8 @@ void GameScene::ObjDraw()
 		handObj[i]->Draw();
 	}
 
-	noteObj->Draw();
+	noteObj->Draw();*/
+	player->Draw();
 }
 
 void GameScene::SpriteDraw() {

@@ -37,14 +37,7 @@ MusicDesc::~MusicDesc()
 float MusicDesc::ConvertBeatToMiliSeconds(const Beat& beat)
 {
 	float beatTime = 0;
-	Beat now = { 0,0,1 };
-	for (const Beat& change:changeList )
-	{
-		if ( Comparison(beat,change) )
-		{
-			break;
-		}
-	}
+	
 	//全音符の長さを得る（ミリ秒）
 	float whole = ( ( 60 / bpm_ ) * 1000.0f ) * 4.0f;
 	//1小節の長さを得る

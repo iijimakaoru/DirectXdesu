@@ -343,7 +343,7 @@ MCBM::MQuaternion MCBM::MQuaternion::Slerp(MQuaternion start, const MQuaternion&
 }
 
 
-MCBM::MQuaternion MCBM::MQuaternion::Slerp(MQuaternion start, MQuaternion end, float time)//ŒW”‚ğ’¼‚Å“ü—Í‚·‚é—p
+MCBM::MQuaternion MCBM::MQuaternion::Slerp(MQuaternion start, MQuaternion end, float time)//ä¿‚æ•°ã‚’ç›´ã§å…¥åŠ›ã™ã‚‹ç”¨
 {
 	if (start.operator== (end))
 	{

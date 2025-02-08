@@ -450,10 +450,7 @@
     <ClCompile Include="Application\MusicDesc.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\3D\Model\CaptureModel.cpp">
-      <Filter>ソース ファイル\Engine\3d\Fbx</Filter>
-    </ClCompile>
-    <ClCompile Include="NoteObj.cpp">
+    <ClCompile Include="Application\NoteObj.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -686,11 +683,8 @@
     <ClInclude Include="Application\MusicDesc.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="NoteObj.h">
+    <ClInclude Include="Application\NoteObj.h">
       <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\3D\Model\CaptureModel.h">
-      <Filter>ヘッダー ファイル\Engine\3d\Fbx</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -733,11 +727,7 @@
       <Filter>シェーダー</Filter>
     </None>
     <None Include="Resources\Shader\MeshGPUParticle\MeshGPUParticle.hlsli" />
-      <Filter>シェーダー</Filter>
-    </None>
     <None Include="Resources\Shader\MeshGPUParticle\MeshSimplexNoise.hlsli" />
-    <Filter>シェーダー</Filter>
-      </None>
     <None Include="Resources\Shader\Basic\BasicPS.hlsl">
       <Filter>シェーダー</Filter>
     </None>
@@ -801,7 +791,7 @@
     <None Include="Resources\Shader\Vignette\VignetteVS.hlsl">
       <Filter>シェーダー</Filter>
     </None>
-    <None Include="Resources\Shader\GPUParticle\CopyDrawCountCS.hlsl">
+    <None Include="Resources\Shader\GPUParticle\CopyDrawCountCS.hlsl" />
     <None Include="Resources\Shader\GPUParticle\UpdateCS.hlsl" />
     <None Include="Resources\Shader\MeshGPUParticle\MeshUpdateCS.hlsl" />
     <None Include="Resources\Shader\MeshGPUParticle\MeshGPUParticleVS.hlsl" />
@@ -814,19 +804,6 @@
     <None Include="Resources\Shader\GPUParticle\DeadListInitCS.hlsl" />
     <None Include="Resources\Shader\Particle\ParticleVS.hlsl">
       <Filter>シェーダー</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\Shader\GPUParticle\UpdateCS.hlsl" />
-    <FxCompile Include="Resources\Shader\GPUParticle\DeadListInitCS.hlsl" />
-    <FxCompile Include="Resources\Shader\GPUParticle\EmitCS.hlsl" />
-    <FxCompile Include="Resources\Shader\MeshGPUParticle\MeshCopyDrawCountCS.hlsl" />
-    <FxCompile Include="Resources\Shader\MeshGPUParticle\MeshDeadListInitCS.hlsl" />
-    <FxCompile Include="Resources\Shader\MeshGPUParticle\MeshEmitCS.hlsl" />
-    <FxCompile Include="Resources\Shader\MeshGPUParticle\MeshGPUParticleGS.hlsl" />
-    <FxCompile Include="Resources\Shader\MeshGPUParticle\MeshGPUParticlePS.hlsl" />
-    <FxCompile Include="Resources\Shader\MeshGPUParticle\MeshGPUParticleVS.hlsl" />
-    <FxCompile Include="Resources\Shader\MeshGPUParticle\MeshUpdateCS.hlsl" />
-    <FxCompile Include="Resources\Shader\GPUParticle\CopyDrawCountCS.hlsl">
-      <Filter>リソース ファイル</Filter>
-    </FxCompile>
+    </None>
   </ItemGroup>
 </Project>

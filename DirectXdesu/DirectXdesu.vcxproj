@@ -181,7 +181,7 @@
     <ClCompile Include="Engine\Particle\ComputePipelineState.cpp" />
     <ClCompile Include="Engine\Particle\GraphicPipelineState.cpp" />
     <ClCompile Include="Engine\Particle\MeshEmitter.cpp" />
-    <ClCompile Include="SettingScene.cpp" />
+    <ClCompile Include="Application\Scene\SettingScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\CalibrationCallback.h" />
@@ -262,7 +262,7 @@
     <ClInclude Include="Engine\Particle\ComputePipelineState.h" />
     <ClInclude Include="Engine\Particle\GraphicPipelineState.h" />
     <ClInclude Include="Engine\Particle\MeshEmitter.h" />
-    <ClInclude Include="SettingScene.h" />
+    <ClInclude Include="Application\Scene\SettingScene.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DirectXdesu.rc" />

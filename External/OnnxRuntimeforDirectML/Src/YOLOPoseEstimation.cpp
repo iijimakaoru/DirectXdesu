@@ -372,6 +372,8 @@ void YOLOPoseEstimationImp::InterinsCalibrateLoad(const std::string& filepath)
 
 		param = calibrator->LoadIntrinsicParameter(fullPath);
 
+		instrinsiParams[i] = param;
+
 	}
 }
 

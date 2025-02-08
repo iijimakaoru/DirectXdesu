@@ -20,7 +20,6 @@ void ParticlePool::Create(ID3D12DescriptorHeap* uavHeap, uint32_t particleMax)
 		nullptr,
 		IID_PPV_ARGS(&RWParticlePool));
 	resourseState = D3D12_RESOURCE_STATE_COMMON;
-
 	Translation(directXCommon->GetCommandList(), D3D12_RESOURCE_STATE_UNORDERED_ACCESS);
 	RWParticlePool->SetName(L"ParticlePool");
 

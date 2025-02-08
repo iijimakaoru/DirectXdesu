@@ -17,6 +17,7 @@ void ArrowEffectParticle::Init(const Timer* timer, const KMyMath::Matrix4& matVi
 	ID3D12GraphicsCommandList* commndList = directXCommon->GetCommandList();
 	ID3D12CommandQueue* commndQueue = directXCommon->GetCommandQueue();
 
+	directXCommon->BeginCommnd();
 	rootSignature_ = std::make_unique<RootSignature>();
 	particleRootSignature_ = std::make_unique<RootSignature>();
 	graphicPSO_ = std::make_unique<GraphicPipelineState>();
@@ -30,23 +31,12 @@ void ArrowEffectParticle::Init(const Timer* timer, const KMyMath::Matrix4& matVi
 	drawArgs_ = std::make_unique<DrawArgs>();
 	commandSignature_ = std::make_unique<CommandSignature>();
 
+	BuildUAV();
 	BuildRootSignature();
 	BuildFrameResources();
 	BuildPSOs();
 
-	// 初期化コマンドを実行する
-	directXCommon->CloseCommnd();
-	ID3D12CommandList* cmdsLists[] = { commndList };
-	commndQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
-
-	directXCommon->FlashCommndQueue();
-
-	ThrowIfFailed(directXCommon->GetCommandAllocator()->Reset());
-
-	ThrowIfFailed(directXCommon->GetCommandList()->Reset(directXCommon->GetCommandAllocator().Get(), deadListPSO_->GetPipelineState()));
-
-	BuildUAV();
-
+	directXCommon->GetCommandList()->SetPipelineState(deadListPSO_->GetPipelineState());
 	directXCommon->GetCommandList()->SetComputeRootSignature(particleRootSignature_->GetRootSignature());
 
 	currentFrameResourceIndex = (currentFrameResourceIndex + 1) % gNumberFrameResources;
@@ -74,15 +64,7 @@ void ArrowEffectParticle::Init(const Timer* timer, const KMyMath::Matrix4& matVi
 
 	commndList->Dispatch(static_cast<uint32_t>(model_->GetVertices().size() / 1024 + 1), 1, 1);
 
-	ThrowIfFailed(commndList->Close());
-
-	// コマンドリストを実行キューに追加します
-	ID3D12CommandList* cmdsLists1[] = { commndList };
-	commndQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists1);
-
-	directXCommon->FlashCommndQueue();
-
-	directXCommon->BeginCommnd();
+	directXCommon->CloseCommnd();
 }
 
 void ArrowEffectParticle::Update(const Timer* timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection, Emitter* emitter)
@@ -179,6 +161,7 @@ void ArrowEffectParticle::BuildUAV()
 	uavHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
 	uavHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 	ThrowIfFailed(device->CreateDescriptorHeap(&uavHeapDesc, IID_PPV_ARGS(&UAVHeap)));
+
 
 	// 並列
 	// Particle Pool

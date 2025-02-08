@@ -20,9 +20,9 @@ MCBM::MVector3::MVector3()
 
 MCBM::MVector3::MVector3(float x, float y, float z)
 {
-	x = x;
-	y = y;
-	z = z;
+	this->x = x;
+	this->y = y;
+	this->z = z;
 }
 MVector3 MCBM::MVector3::Vector3Substruct(const MVector3& start, const MVector3& end)
 {
@@ -290,15 +290,18 @@ MVector3 MCBM::operator-(const MVector3& vecA)
 
 
 
-MVector3 MVector3::adjustVectorLength(const MVector3& base, const MVector3& target) {
+MVector3 MVector3::AdjustVectorLength(const MVector3& base, const MVector3& target) {
 	// ベースベクトルの長さの2乗を計算
 	double baseLengthSquared = base.x * base.x + base.y * base.y;
 
 	// targetのxy成分の長さの2乗を計算（zは0）
 	double targetXYLengthSquared = target.x * target.x + target.y * target.y;
-
+	if (baseLengthSquared <= targetXYLengthSquared)
+	{
+		return target;
+	}
 	// 必要なz成分を計算（sqrt計算を1回に削減）
-	double requiredZ = std::sqrt(baseLengthSquared - targetXYLengthSquared);
+	double requiredZ = std::sqrt(std::abs(baseLengthSquared - targetXYLengthSquared));
 
 	// 新しいベクトルを返す
 	return MVector3(target.x, target.y, requiredZ);

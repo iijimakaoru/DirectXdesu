@@ -107,11 +107,11 @@ const std::vector<Matrix> MCBM::Skelton::GetMeshBoneData(int32_t meshIndex)
 
 void MCBM::Skelton::CaptureBoneUpdate(YOLO_POSE_INDEX rootBoneName, uint32_t boneCount)
 {
-	//if (CAMERA_NUM <= 1)
-	//{
-	//	CaptureBoneUpdateTwoDimention(rootBoneName,boneCount);
-	//	return;
-	//}
+	if (CAMERA_NUM <= 1)
+	{
+		CaptureBoneUpdateTwoDimention(rootBoneName,boneCount);
+		return;
+	}
 	CaptureData rootCap = captureManager->GetCaptureData(rootBoneName);
 	MVector3 tempVec;
 	for (int i = 0; i < boneCount; i++)
@@ -184,7 +184,7 @@ void MCBM::Skelton::CaptureBoneUpdateTwoDimention(YOLO_POSE_INDEX rootBoneName, 
 			MVector3 initializeBone = MVector3(rootCap.initializedCaptureBonePos, child->initializedCaptureBonePos);
 			MVector3 nowBone = MVector3(rootCap.captureBonePos, child->captureBonePos);
 
-			MVector3 estimationZBone = nowBone.adjustVectorLength(initializeBone, nowBone);
+			MVector3 estimationZBone = nowBone.AdjustVectorLength(initializeBone, nowBone);
 
 			initializeBone.V3Norm();
 

@@ -77,6 +77,7 @@ namespace MCBM
 		static size_t findScaling(float AnimationTime, const NodeAnim* pNodeAnim);
 		//---------------------
 		void UpdateNodeMatrix(Bone* pNode);
+
 		void AllNodeMatrixForModelToBone();
 
 		void boneAnimTransform(float& timeInSeconds, Animation* animation = nullptr, bool loop = true, bool animtionPositionRock = false);//Animation前の準備等

@@ -47,6 +47,9 @@ private:
 	// 画面サイズ
 	const float width = static_cast<float>(KWinApp::GetInstance()->GetWindowSizeW());
 	const float height = static_cast<float>(KWinApp::GetInstance()->GetWindowSizeH());
+	
+	const int IMGUI_BUTTON_SIZE_WIDTH = 180;
+	const int IMGUI_BUTTON_SIZE_HEIGHT = 80;
 
 	AudioManager* audioManager = nullptr;
 

@@ -73,6 +73,8 @@ void SettingScene::Final() {
 void SettingScene::ImguiUpdate()
 {
 	ImGui::Begin("CalibrateInfo");
+	ImGui::SetWindowSize("CalibrateInfo", { 426 ,600 });
+	ImGui::SetWindowPos({10,10});
 	if (ImGui::TreeNode("Calibrate"))
 	{
 		if (InterinsicCalibrating)
@@ -89,7 +91,7 @@ void SettingScene::ImguiUpdate()
 		}
 		else
 		{
-			if (ImGui::Button("InterCalibrateCamera0",{360,240}))
+			if (ImGui::Button("InterCalibrateCamera0",{ IMGUI_BUTTON_SIZE_WIDTH,IMGUI_BUTTON_SIZE_HEIGHT }))
 			{
 				InterinsicCalibrating = true;
 				interCalibratingAsync = std::async(std::launch::async, [=]() {
@@ -97,7 +99,8 @@ void SettingScene::ImguiUpdate()
 					});
 				interSicNum = 0;
 			}
-			else if (ImGui::Button("InterCalibrateCamera1",{360,240}))
+			ImGui::SameLine();
+			if (ImGui::Button("InterCalibrateCamera1",{ IMGUI_BUTTON_SIZE_WIDTH,IMGUI_BUTTON_SIZE_HEIGHT }))
 			{
 				InterinsicCalibrating = true;
 				interCalibratingAsync = std::async(std::launch::async, [=]() {
@@ -112,7 +115,7 @@ void SettingScene::ImguiUpdate()
 			std::string text = "ExtrinsCalibrationCamera:" + std::to_string(extrinSicNum);
 			ImGui::Text(text.c_str());
 
-			if (ImGui::Button("ExtrinsCalibrateCameraEnd", { 360,240 }))
+			if (ImGui::Button("ExtrinsCalibrateCameraEnd", { IMGUI_BUTTON_SIZE_WIDTH,IMGUI_BUTTON_SIZE_HEIGHT }))
 			{
 				callBack.SetCapture(true);
 			}
@@ -126,7 +129,7 @@ void SettingScene::ImguiUpdate()
 		}
 		else
 		{
-			if (ImGui::Button("ExtrinsCalibrateCamera0Start",{ 360,240 }))
+			if (ImGui::Button("ExtrinsCalibrateCamera0Start",{ IMGUI_BUTTON_SIZE_WIDTH,IMGUI_BUTTON_SIZE_HEIGHT }))
 			{
 				ExtrinsiCalibrating = true;
 				extrinsiCalibratingAsync = std::async(std::launch::async, [=]() {
@@ -134,7 +137,8 @@ void SettingScene::ImguiUpdate()
 					});
 				extrinSicNum = 0;
 			}
-			else if (ImGui::Button("ExtrinsCalibrateCamera1Start",{ 360,240 }))
+			ImGui::SameLine();
+			if (ImGui::Button("ExtrinsCalibrateCamera1Start",{ IMGUI_BUTTON_SIZE_WIDTH,IMGUI_BUTTON_SIZE_HEIGHT }))
 			{
 				ExtrinsiCalibrating = true;
 				extrinsiCalibratingAsync = std::async(std::launch::async, [=]() {

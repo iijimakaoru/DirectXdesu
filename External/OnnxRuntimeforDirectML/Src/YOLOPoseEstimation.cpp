@@ -109,6 +109,8 @@ private:
 
 	void CalclateFinalCaptureDataFromCalibrateData();
 
+	void CalclateFinalCaptureDataFromCalibrateDataTest1();
+
 	void AddCameraData(const std::string& filepath);
 
 	void SetOutSideData();
@@ -441,7 +443,7 @@ void YOLOPoseEstimationImp::_Draw(cv::Mat& image,int index)
 			cv::Scalar color_limb = m_posePalette[ m_limbColorIndices[ i ] ];
 			cv::line(image,cv::Point(x1,y1),cv::Point(x2,y2),color_limb,2,cv::LINE_AA);
 		}
-		CalclateFinalCaptureDataFromCalibrateData();
+		CalclateFinalCaptureDataFromCalibrateDataTest1();
 	}
 
 	cv::imshow(std::format("win{}",index),image);
@@ -500,6 +502,20 @@ void YOLOPoseEstimationImp::CalclateFinalCaptureDataFromCalibrateData() {
 	cv::Mat t2 = ( cv::Mat_<double>(3,1) << extrinsiParams[ Locate::RIGHT ].translationVector.GetX(),
 		extrinsiParams[ Locate::RIGHT ].translationVector.GetY(),
 		extrinsiParams[ Locate::RIGHT ].translationVector.GetZ() );
+
+		// カメラの外部パラメータを正しい形式で構築
+	cv::Mat R1 = cv::Mat::eye(3,3,CV_64F);
+	cv::Mat R2 = cv::Mat::eye(3,3,CV_64F);
+
+	// 回転行列を正しい順序で設定
+	for ( int i = 0; i < 3; i++ )
+	{
+		for ( int j = 0; j < 3; j++ )
+		{
+			R1.at<double>(i,j) = extrinsiParams[ Locate::FRONT ].rotationMatrix.Get(i,j);
+			R2.at<double>(i,j) = extrinsiParams[ Locate::RIGHT ].rotationMatrix.Get(i,j);
+		}
+	}
 
 
 	// ③ 射影行列の生成： P = K * [R | t]
@@ -597,5 +613,136 @@ void YOLOPoseEstimationImp::CalclateFinalCaptureDataFromCalibrateData() {
 		);
 
 		finalCaptureData_[ ( YOLO_POSE_INDEX ) validIndices[ i ] ] = MCBO::YVector3(pt3D.x,pt3D.y,pt3D.z);
+	}
+}
+
+
+
+// 画像座標を正規化座標に変換
+cv::Mat NormalizeImagePoint(const cv::Point2f& p,const cv::Mat& K) {
+	// カメラ内部パラメータを使用して正規化
+	double fx = K.at<double>(0,0);
+	double fy = K.at<double>(1,1);
+	double cx = K.at<double>(0,2);
+	double cy = K.at<double>(1,2);
+
+	cv::Mat dir = ( cv::Mat_<double>(3,1) <<
+		( p.x - cx ) / fx,
+		( p.y - cy ) / fy,
+		1.0 );
+
+	cv::Mat ret;
+	cv::normalize(dir,ret);
+	return ret;
+}
+
+// 2つの視線ベクトルの最近接点を計算
+cv::Mat FindClosestPoint(const cv::Mat& C1,const cv::Mat& dir1,
+						const cv::Mat& C2,const cv::Mat& dir2) {
+	// 2つの直線の最近接点を計算
+	cv::Mat n = dir1.cross(dir2);
+	cv::Mat n1 = dir1.cross(n);
+	cv::Mat n2 = dir2.cross(n);
+
+	// 2つのカメラ中心を結ぶベクトル
+	cv::Mat C2_C1 = C2 - C1;
+
+	// パラメータt1, t2を計算
+	double t1 = C2_C1.dot(n2) / dir1.dot(n2);
+	double t2 = C2_C1.dot(n1) / dir2.dot(n1);
+
+	// 各直線上の点を計算
+	cv::Mat P1 = C1 + dir1 * t1;
+	cv::Mat P2 = C2 + dir2 * t2;
+
+	// 中点を返す
+	return ( P1 + P2 ) * 0.5;
+}
+
+void YOLOPoseEstimationImp::CalclateFinalCaptureDataFromCalibrateDataTest1() {
+	if ( m_pCams.size() <= 1 )
+	{
+// 単一カメラの場合の処理（現行のまま）
+		return;
+	}
+
+	// 各カメラの姿勢を取得
+	cv::Mat R1 = cv::Mat::eye(3,3,CV_64F);
+	cv::Mat R2 = cv::Mat::eye(3,3,CV_64F);
+	cv::Mat t1,t2;
+
+	// カメラ1（FRONT）の位置と姿勢
+	for ( int i = 0; i < 3; i++ )
+	{
+		for ( int j = 0; j < 3; j++ )
+		{
+			R1.at<double>(i,j) = extrinsiParams[ Locate::FRONT ].rotationMatrix.Get(i,j);
+		}
+	}
+	t1 = ( cv::Mat_<double>(3,1) <<
+		extrinsiParams[ Locate::FRONT ].translationVector.GetX(),
+		extrinsiParams[ Locate::FRONT ].translationVector.GetY(),
+		extrinsiParams[ Locate::FRONT ].translationVector.GetZ() );
+
+	// カメラ2（RIGHT）の位置と姿勢
+	for ( int i = 0; i < 3; i++ )
+	{
+		for ( int j = 0; j < 3; j++ )
+		{
+			R2.at<double>(i,j) = extrinsiParams[ Locate::RIGHT ].rotationMatrix.Get(i,j);
+		}
+	}
+	t2 = ( cv::Mat_<double>(3,1) <<
+		extrinsiParams[ Locate::RIGHT ].translationVector.GetX(),
+		extrinsiParams[ Locate::RIGHT ].translationVector.GetY(),
+		extrinsiParams[ Locate::RIGHT ].translationVector.GetZ() );
+
+	// カメラの位置（カメラ座標系からワールド座標系への変換）
+	cv::Mat C1 = -R1.t() * t1;
+	cv::Mat C2 = -R2.t() * t2;
+
+	// 各検出点について処理
+	for ( size_t i = 0; i < ( int32_t ) YOLO_POSE_INDEX::YOLO_POSE_INDEX_MAX; i++ )
+	{
+		if ( capturedata_[ Locate::FRONT ][ ( YOLO_POSE_INDEX ) i ].captureBonePos.z >= CONFIDENCE_THRESHOLD &&
+			capturedata_[ Locate::RIGHT ][ ( YOLO_POSE_INDEX ) i ].captureBonePos.z >= CONFIDENCE_THRESHOLD )
+		{
+
+// 2D検出点を正規化
+			cv::Point2f p1(capturedata_[ Locate::FRONT ][ ( YOLO_POSE_INDEX ) i ].captureBonePos.x,
+						  capturedata_[ Locate::FRONT ][ ( YOLO_POSE_INDEX ) i ].captureBonePos.y);
+			cv::Point2f p2(capturedata_[ Locate::RIGHT ][ ( YOLO_POSE_INDEX ) i ].captureBonePos.x,
+						  capturedata_[ Locate::RIGHT ][ ( YOLO_POSE_INDEX ) i ].captureBonePos.y);
+
+			cv::Mat CM1 = cv::Mat::eye(3,3,CV_64F);
+			cv::Mat CM2 = cv::Mat::eye(3,3,CV_64F);
+
+			// カメラ1（FRONT）の位置と姿勢
+			for ( int i = 0; i < 3; i++ )
+			{
+				for ( int j = 0; j < 3; j++ )
+				{
+					CM1.at<double>(i,j) = instrinsiParams[ Locate::FRONT ].cameraMatrix.Get(i,j);
+					CM2.at<double>(i,j) = instrinsiParams[ Locate::RIGHT ].cameraMatrix.Get(i,j);
+				}
+			}
+			// 検出点をカメラ座標系での方向ベクトルに変換
+			cv::Mat dir1 = NormalizeImagePoint(p1,CM1);
+			cv::Mat dir2 = NormalizeImagePoint(p2,CM2);
+
+			// カメラ座標系からワールド座標系への変換
+			dir1 = R1.t() * dir1;
+			dir2 = R2.t() * dir2;
+
+			// 2つの視線ベクトルの最近接点を計算
+			cv::Mat point3D = FindClosestPoint(C1,dir1,C2,dir2);
+
+			// 結果を保存
+			finalCaptureData_[ ( YOLO_POSE_INDEX ) i ] = MCBO::YVector3(
+				point3D.at<double>(0,0),
+				point3D.at<double>(1,0),
+				point3D.at<double>(2,0)
+			);
+		}
 	}
 }

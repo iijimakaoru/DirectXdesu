@@ -97,11 +97,11 @@ void GameScene::Init() {
 
 	//ノーツ
 	playTime = 0;
-	Meter meter = { 3,4 };
+	Meter meter = { 4,4 };
 	music = std::make_unique<MusicDesc>(85.0f, meter);
-
+	test = false;
 	noteObj = std::make_unique<NoteObj>();
-	noteObj->Init(music.get());
+	noteObj->Init(test,music.get());
 
 	lenRimit = 100.0f;//csvに落とし込む,値を仮設定
 	move = { 2.0f,2.0f,0.0f };//仮で設定
@@ -111,6 +111,10 @@ void GameScene::Init() {
 }
 
 void GameScene::Update() {
+	if (input->IsTrigger(DIK_SPACE))
+	{
+		noteObj->OutputNote();
+	}
 	
 	float l[2] = { input->GetPadLStick().x,input->GetPadLStick().y };
 	float r[2] = { input->GetPadRStick().x,input->GetPadRStick().y };
@@ -120,7 +124,10 @@ void GameScene::Update() {
 	ImGui::End();
 
 	playTime++;
-	OutPutCollision();
+
+	if (test)OutPutCollision();
+	else Collision();
+
 	for (size_t i = 0; i < Hand::max; i++)
 	{
 		Hand hand = static_cast<Hand>(i);
@@ -228,21 +235,20 @@ void GameScene::Collision()
 	float max, min;
 	int lane = 0;
 	bool isSuccess = false;
-	auto ago = noteObj->Notes().begin();
-	for (auto it = noteObj->Notes().begin(); it != noteObj->Notes().end(); ++it)
+	for (size_t i = 0; i < noteObj->Notes().size(); i++)
 	{
 		//フラグが立っているなら次のノードへ
-		if (noteObj->Notes()[it->first].isHit)
+		if (noteObj->Notes()[i].isHit)
 		{
 			continue;
 		}
 		//ノードと現在のタイムを比較
-		float notetime = sec * music->ConvertBeatToMiliSeconds(noteObj->Notes()[it->first].beat);
+		float notetime = sec * music->ConvertBeatToMiliSeconds(noteObj->Notes()[i].beat);
 		float diff = notetime - playTime;
 		//スタート位置の取得10から5フレーム前に取得
 		if (diff<= perfect +10&&diff>= perfect+5)
 		{
-			lane = noteObj->Notes()[it->first].lane;
+			lane = noteObj->Notes()[i].lane;
 			if (lane==0)//左
 			{
 				start[lane] = handObj[lane]->GetTransform().GetPos();
@@ -257,9 +263,9 @@ void GameScene::Collision()
 		if (std::abs(diff) <= perfect)
 		{
 			//1個前のノードのフラグが立っていないかつ同じレーンじゃない場合にしなければならない
-			if (it != noteObj->Notes().begin())
+			if (i != 0)
 			{
-				if (!noteObj->Notes()[ago->first].isHit)
+				if (!noteObj->Notes()[i-1].isHit)
 				{
 					continue;
 				}
@@ -272,7 +278,7 @@ void GameScene::Collision()
 			else
 			{
 				lenRimit = 5.0f;//仮
-				lane = noteObj->Notes()[it->first].lane;
+				lane = noteObj->Notes()[i].lane;
 				if (lane == 0)
 				{
 					RotAndLenCalculationStick(static_cast<Hand>(0));
@@ -284,7 +290,7 @@ void GameScene::Collision()
 			}
 
 
-			if (noteObj->Notes()[it->first].direction == DIRECTION::right)
+			if (noteObj->Notes()[i].direction == DIRECTION::right)
 			{
 				center = 0;
 				min = center - scope;
@@ -302,7 +308,7 @@ void GameScene::Collision()
 				}
 
 			}
-			else if (noteObj->Notes()[it->first].direction == DIRECTION::up)
+			else if (noteObj->Notes()[i].direction == DIRECTION::up)
 			{
 				center = -90;
 				min = center - scope;
@@ -319,7 +325,7 @@ void GameScene::Collision()
 				}
 
 			}
-			else if (noteObj->Notes()[it->first].direction == DIRECTION::dawn)
+			else if (noteObj->Notes()[i].direction == DIRECTION::dawn)
 			{
 				center = 90;
 				min = center - scope;
@@ -336,7 +342,7 @@ void GameScene::Collision()
 				}
 
 			}
-			else if (noteObj->Notes()[it->first].direction == DIRECTION::left)
+			else if (noteObj->Notes()[i].direction == DIRECTION::left)
 			{
 				center = 180;
 				min = -(center - scope);
@@ -361,7 +367,7 @@ void GameScene::Collision()
 				pos = resetPos;
 				pos.x += 100.0f * lane;
 				handObj[lane]->GetTransform().SetPos(pos);
-				noteObj->Notes()[it->first].isHit = true;
+				noteObj->Notes()[i].isHit = true;
 			}
 			break;//for文から抜ける
 		}
@@ -369,9 +375,8 @@ void GameScene::Collision()
 		{
 			combo = 0;
 			score[MISS]++;
-			noteObj->Notes()[it->first].isHit = true;
+			noteObj->Notes()[i].isHit = true;
 		}
-		ago = it;
 	}
 }
 
@@ -383,21 +388,21 @@ void GameScene::OutPutCollision()
 	float max, min;
 	int lane = 0;
 	bool isSuccess = false;
-	auto ago = noteObj->Notes().begin();
-	for (auto it = noteObj->Notes().begin(); it != noteObj->Notes().end(); ++it)
+	auto ago = noteObj->NotesMap().begin();
+	for (auto it = noteObj->NotesMap().begin(); it != noteObj->NotesMap().end(); ++it)
 	{
 		//フラグが立っているなら次のノードへ
-		if (noteObj->Notes()[it->first].isHit)
+		if (noteObj->NotesMap()[it->first].isHit)
 		{
 			continue;
 		}
 		//ノードと現在のタイムを比較
-		float notetime = sec * music->ConvertBeatToMiliSeconds(noteObj->Notes()[it->first].beat);
+		float notetime = sec * music->ConvertBeatToMiliSeconds(noteObj->NotesMap()[it->first].beat);
 		float diff = notetime - playTime;
 		//スタート位置の取得10から5フレーム前に取得
 		if (diff <= perfect + 10 && diff >= perfect + 5)
 		{
-			lane = noteObj->Notes()[it->first].lane;
+			lane = noteObj->NotesMap()[it->first].lane;
 			if (lane == 0)//左
 			{
 				start[lane] = handObj[lane]->GetTransform().GetPos();
@@ -412,9 +417,9 @@ void GameScene::OutPutCollision()
 		if (std::abs(diff) <= perfect)
 		{
 			//1個前のノードのフラグが立っていないかつ同じレーンじゃない場合にしなければならない
-			if (it != noteObj->Notes().begin())
+			if (it != noteObj->NotesMap().begin())
 			{
-				if (!noteObj->Notes()[ago->first].isHit)
+				if (!noteObj->NotesMap()[ago->first].isHit)
 				{
 					continue;
 				}
@@ -427,7 +432,7 @@ void GameScene::OutPutCollision()
 			else
 			{
 				lenRimit = 5.0f;//仮
-				lane = noteObj->Notes()[it->first].lane;
+				lane = noteObj->NotesMap()[it->first].lane;
 				if (lane == 0)
 				{
 					RotAndLenCalculationStick(static_cast<Hand>(0));
@@ -449,7 +454,7 @@ void GameScene::OutPutCollision()
 					continue;
 				}
 
-				noteObj->Notes()[it->first].direction = DIRECTION::right;
+				noteObj->NotesMap()[it->first].direction = DIRECTION::right;
 				isSuccess = true;
 			}
 			center = 90;
@@ -462,7 +467,7 @@ void GameScene::OutPutCollision()
 				{
 					continue;
 				}
-				noteObj->Notes()[it->first].direction = DIRECTION::up;
+				noteObj->NotesMap()[it->first].direction = DIRECTION::up;
 				isSuccess = true;
 			}
 
@@ -476,7 +481,7 @@ void GameScene::OutPutCollision()
 				{
 					continue;
 				}
-				noteObj->Notes()[it->first].direction = DIRECTION::dawn;
+				noteObj->NotesMap()[it->first].direction = DIRECTION::dawn;
 				isSuccess = true;
 			}
 			center = 180;
@@ -489,7 +494,7 @@ void GameScene::OutPutCollision()
 				{
 					continue;
 				}
-				noteObj->Notes()[it->first].direction = DIRECTION::left;
+				noteObj->NotesMap()[it->first].direction = DIRECTION::left;
 				isSuccess = true;
 
 			}
@@ -501,7 +506,7 @@ void GameScene::OutPutCollision()
 				pos = resetPos;
 				pos.x += 100.0f * lane;
 				handObj[lane]->GetTransform().SetPos(pos);
-				noteObj->Notes()[it->first].isHit = true;
+				noteObj->NotesMap()[it->first].isHit = true;
 			}
 			break;//for文から抜ける
 		}
@@ -509,7 +514,7 @@ void GameScene::OutPutCollision()
 		{
 			combo = 0;
 			score[MISS]++;
-			noteObj->Notes()[it->first].isHit = true;
+			noteObj->NotesMap()[it->first].isHit = true;
 		}
 		ago = it;
 	}

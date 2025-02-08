@@ -20,16 +20,25 @@ class NoteObj
 public:
 	NoteObj() ;
 	~NoteObj() ;
-	void Init(MusicDesc* music_);
+	void Init(bool test_,MusicDesc* music_);
 	void Update(Camera* camera_);
 	void Draw();
-	std::map<int32_t, std::unique_ptr<KObject3d>>& Obj() {
+	//配列
+	std::vector<std::unique_ptr<KObject3d>>& Obj() {
 		return obj;
 	}
-	std::map<int32_t, Note>& Notes() {
+	std::vector< Note>& Notes() {
 		return notes;
 	}
+	//マップ
+	std::map<int32_t, std::unique_ptr<KObject3d>>& ObjMap() {
+		return objMap;
+	}
+	std::map<int32_t, Note>& NotesMap() {
+		return notesMap;
+	}
 	void LoadNote(const std::string& name);
+	void LoadNoteSUS(const std::string& name);
 	void OutputNote();
 
 	//小節　サイズの限界まで
@@ -42,8 +51,10 @@ public:
 		return num;
 	}
 private:
-	std::map<int32_t, std::unique_ptr<KObject3d>>obj;
-	std::map<int32_t, Note>notes;
+	std::map<int32_t, std::unique_ptr<KObject3d>>objMap;
+	std::map<int32_t, Note>notesMap;
+	std::vector<std::unique_ptr<KObject3d>>obj;
+	std::vector<Note>notes;
 
 	std::vector<std::unique_ptr<KObject3d>>underObj;
 	ModelManager* modelM;
@@ -54,5 +65,7 @@ private:
 	float playTime;
 	float notePosZ;
 	float sec = 0.1f;
+	int32_t bpm;
 	MusicDesc* music;
+	bool test;
 };

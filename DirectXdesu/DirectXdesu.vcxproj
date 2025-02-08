@@ -104,6 +104,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Application\CalibrationCallback.cpp" />
     <ClCompile Include="Application\MusicDesc.cpp" />
     <ClCompile Include="Engine\3D\Model\CaptureModel.cpp" />
     <ClCompile Include="Engine\Particle\Emitter.cpp" />
@@ -183,6 +184,7 @@
     <ClCompile Include="SettingScene.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Application\CalibrationCallback.h" />
     <ClInclude Include="Application\MusicDesc.h" />
     <ClInclude Include="Engine\3D\Model\CaptureModel.h" />
     <ClInclude Include="Engine\Particle\Emitter.h" />

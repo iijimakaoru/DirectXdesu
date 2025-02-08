@@ -22,7 +22,7 @@
 #include "constants.h"
 #include "common.h"
 #include "onnx_model_base.h"
-#include "CameraCalibrator.h"
+
 
 
 using namespace MCBO;
@@ -89,13 +89,15 @@ public:
 	const std::unordered_map <YOLO_POSE_INDEX,YVector3>* const GetFinalPositions() override;
 
 
-	//void ExtrinsCalibrate(const std::string& filepath) override;
-	//void ExtrinsCalibrateSave(const std::string& filepath) override;
-	//void InterinsCalibrate(const std::string& filepath) override;
-	//void InterinsCalibrateSave(const std::string& filepath) override;
+	void InterinsCalibrateStart(int32_t cameraIndex) override;
+	void InterinsCalibrateSave(const std::string& filepath) override;
+	void ExtrinsCalibrateStart(int32_t cameraIndex) override;
+	void ExtrinsCalibrateSave(const std::string& filepath) override;
 
 	void ExtrinsCalibrateLoad(const std::string& filepath) override;
 	void InterinsCalibrateLoad(const std::string& filepath) override;
+
+	void SetCalibrateCallBack(CameraCalibrator::Callback* callBackPtr) override;
 
 private:
 
@@ -140,15 +142,12 @@ private:
 	std::array<std::unordered_map<YOLO_POSE_INDEX,CaptureData>,MAX_LOCATE> capturedata_;
 	std::unordered_map <YOLO_POSE_INDEX,YVector3> finalCaptureData_;
 
-	std::vector<cv::Mat> cameraT;//メートル単位
-	std::vector<cv::Mat> cameraR;
-	std::vector<float> focalLength_ = { 581.818f,581.818f,581.818f,581.818f };
-	YVector3 screenCenterPos_ = { CAMERA_WITH / 2,CAMERA_HIGHT / 2,0 };
-
-	std::vector<cv::Mat> distCoeffs;
-	std::vector<cv::Mat> cameraK;
+	std::vector<ExtrinsiParameterCalibrator::Parameter> extrinsiParams;
+	std::vector<IntrinsicParameterCalibrator::Parameter> instrinsiParams;
 
 	std::unique_ptr<CameraCalibrator> calibrator;
+
+	CameraCalibrator::Callback* callBack;
 
 };
 
@@ -199,23 +198,8 @@ void YOLOPoseEstimationImp::Start(bool isDraw)
 	m_frame.resize(m_pCams.size());
 	m_baseLandmakes.resize(m_pCams.size());
 	m_landmakes.resize(m_pCams.size());
-	cameraR.resize(m_pCams.size());
-	cameraT.resize(m_pCams.size());
-	cameraK.resize(m_pCams.size());
-	distCoeffs.resize(m_pCams.size());
-
-	for ( int i = 0; i < m_pCams.size(); i++ )
-	{
-		cv::Mat temp = ( cv::Mat_<double>(3,3) <<
-									800,0,450,
-								   0,800,450,
-								   0,0,1 );
-	// 歪み係数（例、キャリブレーション結果から）
-		cv::Mat distCoeffstemp = ( cv::Mat_<double>(1,5) << 0.1,-0.05,0.001,0.001,0 );
-
-		cameraK.push_back(temp);
-		distCoeffs.push_back(distCoeffstemp);
-	}
+	instrinsiParams.resize(m_pCams.size());
+	extrinsiParams.resize(m_pCams.size());
 
 	for ( int32_t i = 0; i < Locate::MAX_LOCATE; i++ )
 	{
@@ -320,26 +304,47 @@ const std::unordered_map<YOLO_POSE_INDEX,YVector3>* const YOLOPoseEstimationImp:
 {
 	return &finalCaptureData_;
 }
+void YOLOPoseEstimationImp::InterinsCalibrateStart(int32_t cameraIndex)
+{
+	calibrator->IntrinsicParameterCalibration(m_pCams[ cameraIndex ],true);
+}
+
+void YOLOPoseEstimationImp::InterinsCalibrateSave(const std::string& filepath)
+{
+	for ( int32_t i = 0; i < m_pCams.size(); i++ )
+	{
+		std::string fullPath = filepath + "InterinsCalibrate" + std::to_string(i) + "Camera";
+
+		calibrator->IntrinsicParameterSave(fullPath);
+
+	}
+}
+
+void YOLOPoseEstimationImp::ExtrinsCalibrateStart(int32_t cameraIndex)
+{
+	calibrator->ExtrinsiParameterCalibration(m_pCams[ cameraIndex ],instrinsiParams[ cameraIndex ],callBack,true);
+}
+
+void YOLOPoseEstimationImp::ExtrinsCalibrateSave(const std::string& filepath)
+{
+	for ( int32_t i = 0; i < m_pCams.size(); i++ )
+	{
+		std::string fullPath = filepath + "ExtrinsCalibrate" + std::to_string(i) + "Camera";
+
+		calibrator->ExtrinsiParameterSave(fullPath);
+
+	}
+}
 
 void YOLOPoseEstimationImp::ExtrinsCalibrateLoad(const std::string& filepath)
 {
 
 	for ( int32_t i = 0; i < m_pCams.size(); i++ )
 	{
-		ExtrinsiParameterCalibrator::Parameter param;
 		std::string fullPath = filepath + "ExtrinsCalibrate" + std::to_string(i) + "Camera.json";
 
-		param = calibrator->LoadExtrinsiParameter(fullPath);
+		extrinsiParams[i] = calibrator->LoadExtrinsiParameter(fullPath);
 
-		cv::Mat R = ( cv::Mat_<double>(3,3) <<
-			 param.rotationMatrix.Get(0,0),param.rotationMatrix.Get(1,0),param.rotationMatrix.Get(2,0),
-			 param.rotationMatrix.Get(0,1),param.rotationMatrix.Get(1,1),param.rotationMatrix.Get(2,1),
-			 param.rotationMatrix.Get(0,2),param.rotationMatrix.Get(1,2),param.rotationMatrix.Get(2,2));
-		cameraR[i] = R;
-
-		cv::Mat T = ( cv::Mat_<double>(3,1) << param.translationVector.GetX(),
-			param.translationVector.GetY(),param.translationVector.GetZ() );
-		cameraT[ i ] = T;
 	}
 }
 
@@ -353,16 +358,12 @@ void YOLOPoseEstimationImp::InterinsCalibrateLoad(const std::string& filepath)
 
 		param = calibrator->LoadIntrinsicParameter(fullPath);
 
-		cv::Mat K = ( cv::Mat_<double>(3,3) <<
-			 param.cameraMatrix.Get(0,0),param.cameraMatrix.Get(1,0),param.cameraMatrix.Get(2,0),
-			 param.cameraMatrix.Get(0,1),param.cameraMatrix.Get(1,1),param.cameraMatrix.Get(2,1),
-			 param.cameraMatrix.Get(0,2),param.cameraMatrix.Get(1,2),param.cameraMatrix.Get(2,2) );
-		cameraK[i] = K;
-
-		cv::Mat distCoe = ( cv::Mat_<double>(5,1) << param.distortionCoefficients.GetX(),
-			param.distortionCoefficients.GetY(),param.distortionCoefficients.GetZ(),param.distortionCoefficients.GetW(),param.distortionCoefficients.GetV() );
-		distCoeffs[ i ] = distCoe;
 	}
+}
+
+void YOLOPoseEstimationImp::SetCalibrateCallBack(CameraCalibrator::Callback* callBackPtr)
+{
+	callBack = callBackPtr;
 }
 
 void YOLOPoseEstimationImp::_Draw(cv::Mat& image,int index)
@@ -443,18 +444,68 @@ void YOLOPoseEstimationImp::CalclateFinalCaptureDataFromCalibrateData(){
 		}
 		return;
 	}
-	cv::Mat R1 = cameraR[ Locate::FRONT ];
-	cv::Mat t1 = cameraT[ Locate::FRONT ];
 
-	cv::Mat R2 = cameraR[ Locate::RIGHT ];
-	cv::Mat t2 = cameraT[ Locate::RIGHT ];
+
+	cv::Mat R1 = ( cv::Mat_<double>(3,3) <<
+		extrinsiParams[Locate::FRONT].rotationMatrix.Get(0,0),
+		extrinsiParams[ Locate::FRONT ].rotationMatrix.Get(1,0),
+		extrinsiParams[ Locate::FRONT ].rotationMatrix.Get(2,0),
+		extrinsiParams[ Locate::FRONT ].rotationMatrix.Get(0,1),
+		extrinsiParams[ Locate::FRONT ].rotationMatrix.Get(1,1),
+		extrinsiParams[ Locate::FRONT ].rotationMatrix.Get(2,1),
+		extrinsiParams[ Locate::FRONT ].rotationMatrix.Get(0,2),
+		extrinsiParams[ Locate::FRONT ].rotationMatrix.Get(1,2),
+		extrinsiParams[ Locate::FRONT ].rotationMatrix.Get(2,2) );
+
+	cv::Mat t1 = ( cv::Mat_<double>(3,1) << extrinsiParams[ Locate::FRONT ].translationVector.GetX(),
+		extrinsiParams[ Locate::FRONT ].translationVector.GetY(),extrinsiParams[ Locate::FRONT ].translationVector.GetZ() );
+
+	cv::Mat R2 = ( cv::Mat_<double>(3,3) <<
+	extrinsiParams[ Locate::RIGHT ].rotationMatrix.Get(0,0),
+	extrinsiParams[ Locate::RIGHT ].rotationMatrix.Get(1,0),
+	extrinsiParams[ Locate::RIGHT ].rotationMatrix.Get(2,0),
+	extrinsiParams[ Locate::RIGHT ].rotationMatrix.Get(0,1),
+	extrinsiParams[ Locate::RIGHT ].rotationMatrix.Get(1,1),
+	extrinsiParams[ Locate::RIGHT ].rotationMatrix.Get(2,1),
+	extrinsiParams[ Locate::RIGHT ].rotationMatrix.Get(0,2),
+	extrinsiParams[ Locate::RIGHT ].rotationMatrix.Get(1,2),
+	extrinsiParams[ Locate::RIGHT ].rotationMatrix.Get(2,2) );
+
+	cv::Mat t2 = ( cv::Mat_<double>(3,1) << extrinsiParams[ Locate::RIGHT ].translationVector.GetX(),
+		extrinsiParams[ Locate::RIGHT ].translationVector.GetY(),
+		extrinsiParams[ Locate::RIGHT ].translationVector.GetZ() );
+
 
 	// ③ 射影行列の生成： P = K * [R | t]
 	cv::Mat RT1,RT2,P1,P2;
 	hconcat(R1,t1,RT1);
 	hconcat(R2,t2,RT2);
-	P1 = cameraK[ Locate::FRONT ] * RT1;
-	P2 = cameraK[ Locate::RIGHT ] * RT2;
+
+
+	cv::Mat K1 = ( cv::Mat_<double>(3,3) <<
+		 instrinsiParams[Locate::FRONT ].cameraMatrix.Get(0,0),
+		instrinsiParams[ Locate::FRONT ].cameraMatrix.Get(1,0),
+		instrinsiParams[ Locate::FRONT ].cameraMatrix.Get(2,0),
+		 instrinsiParams[ Locate::FRONT ].cameraMatrix.Get(0,1),
+		instrinsiParams[ Locate::FRONT ].cameraMatrix.Get(1,1),
+		instrinsiParams[ Locate::FRONT ].cameraMatrix.Get(2,1),
+		 instrinsiParams[ Locate::FRONT ].cameraMatrix.Get(0,2),
+		instrinsiParams[ Locate::FRONT ].cameraMatrix.Get(1,2),
+		instrinsiParams[ Locate::FRONT ].cameraMatrix.Get(2,2) );
+
+	cv::Mat K2 = ( cv::Mat_<double>(3,3) <<
+	 instrinsiParams[ Locate::RIGHT ].cameraMatrix.Get(0,0),
+	instrinsiParams[ Locate::RIGHT ].cameraMatrix.Get(1,0),
+	instrinsiParams[ Locate::RIGHT ].cameraMatrix.Get(2,0),
+	 instrinsiParams[ Locate::RIGHT ].cameraMatrix.Get(0,1),
+	instrinsiParams[ Locate::RIGHT ].cameraMatrix.Get(1,1),
+	instrinsiParams[ Locate::RIGHT ].cameraMatrix.Get(2,1),
+	 instrinsiParams[ Locate::RIGHT ].cameraMatrix.Get(0,2),
+	instrinsiParams[ Locate::RIGHT ].cameraMatrix.Get(1,2),
+	instrinsiParams[ Locate::RIGHT ].cameraMatrix.Get(2,2) );
+
+	P1 = K1 * RT1;
+	P2 = K2 * RT2;
 
 	// ⑤ 有効な検出のみフィルタリング（信頼性が閾値以上）
 	std::vector<cv::Point2f> points1,points2;

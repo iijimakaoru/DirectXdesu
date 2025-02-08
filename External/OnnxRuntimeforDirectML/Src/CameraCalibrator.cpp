@@ -59,6 +59,8 @@ void CameraCalibrator::IntrinsicParameterCalibration(void* pCap,bool imShow)
 	{
 		cv::destroyWindow("IntrinsicParameterCalibration");
 	}
+
+	IntrinsicParameterCalibrationEnd();
 }
 
 bool CameraCalibrator::IntrinsicParameterSave(const std::string& outPutFilePath)
@@ -151,6 +153,8 @@ void CameraCalibrator::ExtrinsiParameterCalibration(void* pCap,const IntrinsicPa
 	{
 		cv::destroyWindow("ExtrinsiParameterCalibration");
 	}
+
+	ExtrinsiParameterCalibrationEnd();
 }
 
 bool CameraCalibrator::ExtrinsiParameterSave(const std::string& outPutFilePath)

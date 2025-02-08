@@ -81,7 +81,7 @@ public:
 	void Start(bool isDraw) override;
 	void Initialize() override;
 
-	const YOLO_POSE_LANDMAKE* const GetLandmakes() override;
+	const YOLO_POSE_LANDMAKE* const GetLandmakes(int32_t index) override;
 
 	void End() override;
 
@@ -229,10 +229,10 @@ void YOLOPoseEstimationImp::Initialize()
 	calibrator = std::make_unique<CameraCalibrator>();
 }
 
-const YOLO_POSE_LANDMAKE* const YOLOPoseEstimationImp::GetLandmakes()
+const YOLO_POSE_LANDMAKE* const YOLOPoseEstimationImp::GetLandmakes(int32_t index)
 {
 	std::lock_guard<std::mutex> lock(value_mutex);
-	return m_landmakes[0].data();
+	return m_landmakes[index].data();
 }
 
 void YOLOPoseEstimationImp::End()

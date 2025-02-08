@@ -198,6 +198,7 @@ void GameScene::Init() {
 	MCBM::CaptureManager::GetInstance()->GetYOLOPoseEstimation()->ExtrinsCalibrateLoad("Resources\\CalibrateData");
 	MCBM::CaptureManager::GetInstance()->GetYOLOPoseEstimation()->InterinsCalibrateLoad("Resources\\CalibrateData");
 
+	MCBM::CaptureManager::GetInstance()->YOLOStart();
 }
 
 void GameScene::Update() {

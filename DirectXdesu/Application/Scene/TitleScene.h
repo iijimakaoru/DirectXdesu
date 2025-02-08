@@ -1,25 +1,16 @@
 #pragma once
-#include "Camera.h"
 #include "KGPlin.h"
-#include "BaseScene.h"
 #include "KInput.h"
-#include "PostEffect.h"
-#include "Sprite.h"
-#include "GameCamera.h"
-#include "AudioManager.h"
-#include "KObject3d.h"
-
-#include "FrameResource.h"
-#include "Timer.h"
-
-#include "ParticleEditor.h"
-
-#include "Emitter.h"
-#include "MeshEmitter.h"
 
 #include "TextureManager.h"
 #include "Sprite.h"
 
+#include "BaseScene.h"
+#include "Camera.h"
+#include "Sprite.h"
+#include "KObject3d.h"
+#include "AudioManager.h"
+#include "GameCamera.h"
 /**
  * @file TitleScene.h
  * @brief タイトルシーン

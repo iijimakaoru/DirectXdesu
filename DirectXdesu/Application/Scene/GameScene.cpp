@@ -33,8 +33,6 @@ void GameScene::LoadResources()
 		modelManager->GetModels("S_Cube");
 	objModel[OBJ::skydome] = 
 		modelManager->GetModels("S_SkyDorm");
-	noteModel = 
-		modelManager->GetModels("S_Arrow");
 }
 
 void GameScene::Init() 
@@ -93,46 +91,6 @@ void GameScene::Init()
 	Meter meter = { 3,4 };
 	music = std::make_unique<MusicDesc>(85.0f, meter);
 
-	for (size_t i = 0; i < notes.size(); i++)
-	{
-		std::unique_ptr<KObject3d> obj_;
-		obj_.reset(KObject3d::Create(noteModel, 
-			PipelineManager::GetInstance()->GetPipeline("Obj")));
-		obj_->GetTransform().SetScale({ 15.0f,15.0f,5.0f });
-
-		//色設定
-		if (notes[i].lane == 0)
-		{
-			obj_->SetColor({ 0.5f,0.0f,0.0f,1.0f });
-		}
-		else
-		{
-			obj_->SetColor({ 0.0f,0.3f,1.0f,1.0f });
-		}
-
-		//方向設定
-		if (notes[i].direction == DIRECTION::left)//左
-		{
-			obj_->GetTransform().SetRot({ 0.0f,180.0f,0.0f });
-		}
-		else if (notes[i].direction == DIRECTION::up)//上
-		{
-			obj_->GetTransform().SetRot({ 0.0f,0.0f,-90.0f });
-		}
-		else if (notes[i].direction == DIRECTION::dawn)//下
-		{
-			obj_->GetTransform().SetRot({ 0.0f,180.0f,90.0f });
-		}
-		else										//右
-		{
-			obj_->GetTransform().SetRot({ 0.0f,0.0f,0.0f });
-		}
-		notePosZ = (sec * speed) * music->ConvertBeatToMiliSeconds(notes[i].beat);
-		obj_->GetTransform().SetPos({ -50.0f + (100.0f * notes[i].lane),25.0f,notePosZ });
-
-		objNote.push_back(std::move(obj_));
-	}
-
 	start = { 500,500 };
 	lenRimit = 100.0f; // csvに落とし込む,値を仮設定
 
@@ -156,24 +114,8 @@ void GameScene::Update()
 	light_->SetLightRGB({lightRGB_.x, lightRGB_.y, lightRGB_.z});
 	light_->SetLightDir({lightDir_.x, lightDir_.y, lightDir_.z, 0.0f});
 
-	// 角度算出
-	RotAndLenCalculationStick(input->GetPadLStick());
-
 	playTime++;
 	Collision();
-
-	for (size_t i = 0; i < objNote.size(); i++)
-	{
-		if (!notes[i].isHit)
-		{
-			KMyMath::Vector3 move;
-			move = objNote[i]->GetTransform().GetPos();
-			move.z -= speed;
-
-			objNote[i]->GetTransform().SetPos(move);
-			objNote[i]->Update(camera->GetViewPro(), camera->GetWorldPos());
-		}
-	}
 
 	for (size_t i = 0; i < OBJ::max; i++) 
 	{
@@ -195,14 +137,6 @@ void GameScene::ObjDraw()
 	for (size_t i = 0; i < OBJ::max; i++) 
 	{
 		obj[i]->Draw();
-	}
-
-	for (size_t i = 0; i < objNote.size(); i++)
-	{
-		if (!notes[i].isHit)
-		{
-			objNote[i]->Draw();
-		}
 	}
 
 	// エフェクト描画
@@ -395,32 +329,32 @@ void GameScene::Collision()
 				combo++;
 				noteObj->Notes()[i]->isHit = true;
 
-				// エフェクト発生
-				// 矢印
-				{
-					KMyMath::Vector3 nowArrowPos = objNote[i]->GetTransform().GetPos();
-					KMyMath::Vector3 nowArrowRot = objNote[i]->GetTransform().GetRot();
-					KMyMath::Vector3 nowArrowScale = objNote[i]->GetTransform().GetScale();
-					KMyMath::Vector4 nowArrowColor = objNote[i]->GetColor();
-					effectSetter->SetArrowEffect(nowArrowPos, nowArrowRot, nowArrowScale, nowArrowColor,
-						timer_.get(), camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro());
-				}
+				//// エフェクト発生
+				//// 矢印
+				//{
+				//	KMyMath::Vector3 nowArrowPos = noteObj->Notes()[i]->GetTransform().GetPos();
+				//	KMyMath::Vector3 nowArrowRot = objNote[i]->GetTransform().GetRot();
+				//	KMyMath::Vector3 nowArrowScale = objNote[i]->GetTransform().GetScale();
+				//	KMyMath::Vector4 nowArrowColor = objNote[i]->GetColor();
+				//	effectSetter->SetArrowEffect(nowArrowPos, nowArrowRot, nowArrowScale, nowArrowColor,
+				//		timer_.get(), camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro());
+				//}
 
-				// パーフェクトゾーン
-				{
-					KMyMath::Vector3 nowLinePos = { 
-						objNote[i]->GetTransform().GetPos().x,
-						obj[OBJ::line]->GetTransform().GetPos().y,
-						obj[OBJ::line]->GetTransform().GetPos().z };
-					KMyMath::Vector3 nowLineRot = {0.0f,0.0f,0.0f};
-					KMyMath::Vector3 nowLineScale = {
-						obj[OBJ::line]->GetTransform().GetScale().x / 2,
-						obj[OBJ::line]->GetTransform().GetScale().y,
-						obj[OBJ::line]->GetTransform().GetScale().z};
-					KMyMath::Vector4 nowLineColor = objNote[i]->GetColor();
-					effectSetter->SetGroundEffect(nowLinePos, nowLineRot, nowLineScale, nowLineColor,
-						timer_.get(), camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro());
-				}
+				//// パーフェクトゾーン
+				//{
+				//	KMyMath::Vector3 nowLinePos = { 
+				//		objNote[i]->GetTransform().GetPos().x,
+				//		obj[OBJ::line]->GetTransform().GetPos().y,
+				//		obj[OBJ::line]->GetTransform().GetPos().z };
+				//	KMyMath::Vector3 nowLineRot = {0.0f,0.0f,0.0f};
+				//	KMyMath::Vector3 nowLineScale = {
+				//		obj[OBJ::line]->GetTransform().GetScale().x / 2,
+				//		obj[OBJ::line]->GetTransform().GetScale().y,
+				//		obj[OBJ::line]->GetTransform().GetScale().z};
+				//	KMyMath::Vector4 nowLineColor = objNote[i]->GetColor();
+				//	effectSetter->SetGroundEffect(nowLinePos, nowLineRot, nowLineScale, nowLineColor,
+				//		timer_.get(), camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro());
+				//}
 			}
 			break;// for文から抜ける
 		}

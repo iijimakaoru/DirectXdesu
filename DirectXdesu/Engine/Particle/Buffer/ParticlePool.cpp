@@ -10,8 +10,7 @@ void ParticlePool::Create(ID3D12DescriptorHeap* uavHeap, uint32_t particleMax)
 		sizeof(Particle) * particleMax;
 	CD3DX12_HEAP_PROPERTIES heap =
 		CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
-	CD3DX12_RESOURCE_DESC resouceDesc =
-		CD3DX12_RESOURCE_DESC::Buffer(particlePoolByteSize,
+	CD3DX12_RESOURCE_DESC resouceDesc = CD3DX12_RESOURCE_DESC::Buffer(particlePoolByteSize,
 			D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS);
 	device->CreateCommittedResource(
 		&heap,
@@ -21,6 +20,7 @@ void ParticlePool::Create(ID3D12DescriptorHeap* uavHeap, uint32_t particleMax)
 		nullptr,
 		IID_PPV_ARGS(&RWParticlePool));
 	resourseState = D3D12_RESOURCE_STATE_COMMON;
+
 	Translation(directXCommon->GetCommandList(), D3D12_RESOURCE_STATE_UNORDERED_ACCESS);
 	RWParticlePool->SetName(L"ParticlePool");
 

@@ -30,13 +30,13 @@ void ArrowEffectParticle::Init(const Timer* timer, const KMyMath::Matrix4& matVi
 	drawArgs_ = std::make_unique<DrawArgs>();
 	commandSignature_ = std::make_unique<CommandSignature>();
 
-	BuildUAV();
 	BuildRootSignature();
 	BuildFrameResources();
 	BuildPSOs();
+	BuildUAV();
 
 	// 初期化コマンドを実行する
-	ThrowIfFailed(commndList->Close());
+	directXCommon->CloseCommnd();
 	ID3D12CommandList* cmdsLists[] = { commndList };
 	commndQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
 
@@ -44,8 +44,7 @@ void ArrowEffectParticle::Init(const Timer* timer, const KMyMath::Matrix4& matVi
 
 	ThrowIfFailed(directXCommon->GetCommandAllocator()->Reset());
 
-	ThrowIfFailed(directXCommon->GetCommandList()->Reset(
-		directXCommon->GetCommandAllocator().Get(), deadListPSO_->GetPipelineState()));
+	ThrowIfFailed(directXCommon->GetCommandList()->Reset(directXCommon->GetCommandAllocator().Get(), deadListPSO_->GetPipelineState()));
 
 	directXCommon->GetCommandList()->SetComputeRootSignature(particleRootSignature_->GetRootSignature());
 
@@ -180,26 +179,23 @@ void ArrowEffectParticle::BuildUAV()
 	uavHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 	ThrowIfFailed(device->CreateDescriptorHeap(&uavHeapDesc, IID_PPV_ARGS(&UAVHeap)));
 
-	std::vector<std::future<void>> futures;
-
 	// 並列
 	// Particle Pool
 	{
-		futures.push_back(std::async(std::launch::async, [&] { particlePool_->Create(UAVHeap.Get(), (uint32_t)model_->GetVertices().size()); }));
+		particlePool_->Create(UAVHeap.Get(), (uint32_t)model_->GetVertices().size());
 	}
 	// Dead List
 	{
-		futures.push_back(std::async(std::launch::async, [&] { deadList_->Create(UAVHeap.Get(), (uint32_t)model_->GetVertices().size()); }));
+		deadList_->Create(UAVHeap.Get(), (uint32_t)model_->GetVertices().size());
 	}
 	// Draw List
 	{
-		futures.push_back(std::async(std::launch::async, [&] {drawList_->Create(UAVHeap.Get(), (uint32_t)model_->GetVertices().size()); }));
+		drawList_->Create(UAVHeap.Get(), (uint32_t)model_->GetVertices().size());
 	}
 	// Draw Args
 	{
-		futures.push_back(std::async(std::launch::async, [&] {drawArgs_->Create(UAVHeap.Get()); }));
+		drawArgs_->Create(UAVHeap.Get());
 	}
-	for (auto& f : futures) f.get();  // 全ての処理を待つ
 
 	// Mesh
 	{

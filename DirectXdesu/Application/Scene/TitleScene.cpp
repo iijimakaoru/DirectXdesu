@@ -1,15 +1,9 @@
 #include "TitleScene.h"
-#include "FbxLoader.h"
-
-#include "DebugCamera.h"
 
 #include "SceneManager.h"
 
-#include <imgui.h>
-
 #include "ModelManager.h"
 #include "PipelineManager.h"
-#include "Ease.h"
 
 TitleScene::~TitleScene() { Final(); }
 
@@ -23,8 +17,6 @@ void TitleScene::LoadResources() {
 }
 
 void TitleScene::Init() {
-	timer_ = std::make_unique<Timer>();
-
 	BaseScene::Init();
 
 	// インスタンス

@@ -179,12 +179,6 @@
     <ClCompile Include="Engine\Base\DirectXCommon\Timer.cpp" />
     <ClCompile Include="Engine\Particle\GPUParticle\GPUParticle.cpp" />
     <ClCompile Include="Engine\Particle\ParticleEditor.cpp" />
-    <ClCompile Include="Engine\Particle\MeshGPUParticle.cpp" />
-    <ClCompile Include="Engine\Particle\ParticlePool.cpp" />
-    <ClCompile Include="Engine\Particle\RootSignature.cpp" />
-    <ClCompile Include="Engine\Particle\ComputePipelineState.cpp" />
-    <ClCompile Include="Engine\Particle\GraphicPipelineState.cpp" />
-    <ClCompile Include="Engine\Particle\MeshEmitter.cpp" />
     <ClCompile Include="Application\NoteObj.cpp" />
     <ClCompile Include="Engine\Particle\GPUParticle\MeshGPUParticle.cpp" />
     <ClCompile Include="Engine\Particle\Buffer\ParticlePool.cpp" />
@@ -272,12 +266,6 @@
     <ClInclude Include="Engine\Base\DirectXCommon\Timer.h" />
     <ClInclude Include="Engine\Particle\GPUParticle\GPUParticle.h" />
     <ClInclude Include="Engine\Particle\ParticleEditor.h" />
-    <ClInclude Include="Engine\Particle\MeshGPUParticle.h" />
-    <ClInclude Include="Engine\Particle\ParticlePool.h" />
-    <ClInclude Include="Engine\Particle\RootSignature.h" />
-    <ClInclude Include="Engine\Particle\ComputePipelineState.h" />
-    <ClInclude Include="Engine\Particle\GraphicPipelineState.h" />
-    <ClInclude Include="Engine\Particle\MeshEmitter.h" />
     <ClInclude Include="Application\NoteObj.h" />
     <ClInclude Include="Engine\Particle\GPUParticle\MeshGPUParticle.h" />
     <ClInclude Include="Engine\Particle\Buffer\ParticlePool.h" />

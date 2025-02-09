@@ -1,8 +1,8 @@
 #pragma once
 
-#include <Math/Vector3.h>
+#include <Math/MVector3.h>
 #include <array>
-#include <Math/Quaternion.h>
+#include <Math/MQuaternion.h>
 
 namespace MCBM
 {
@@ -31,11 +31,11 @@ namespace MCBM
 
 		static Matrix MatrixTranslate(float x, float y, float z);
 
-		static Matrix MatrixTranslate(Vector3 pos);
+		static Matrix MatrixTranslate(MVector3 pos);
 
 		static Matrix MatrixScaling(float x, float y, float z);
 
-		static Matrix MatrixScaling(Vector3 scale);
+		static Matrix MatrixScaling(MVector3 scale);
 
 		void ConvertMatrixArray(float** ArrayMat);
 
@@ -51,7 +51,7 @@ namespace MCBM
 
 		static Matrix MatrixRotaZ(float angle);
 
-		static Matrix GetQuaternionRotaMat(const Quaternion& rotaQ);
+		static Matrix GetQuaternionRotaMat(const MQuaternion& rotaQ);
 
 		static Matrix ReturnMatrixIdentity();
 
@@ -59,11 +59,11 @@ namespace MCBM
 
 		static Matrix MatrixInverse(Matrix mat);
 
-		static Vector3 Transform(const Vector3& v, const Matrix& m);
+		static MVector3 Transform(const MVector3& v, const Matrix& m);
 
-		static Vector3 GetTranslate(const Matrix& m);
+		static MVector3 GetTranslate(const Matrix& m);
 
-		Vector3 GetRotationToEuler();
+		MVector3 GetRotationToEuler();
 
 
 		Matrix operator*(float s);

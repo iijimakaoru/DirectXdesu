@@ -6,15 +6,16 @@
 #include <string>
 #include <vector>
 #include <unordered_map>
-#include <Math/Vector3.h>
+#include <Math/MVector3.h>
+#include <SimpleVector3.h>
 namespace MCBM
 {
 
 	struct CaptureData
 	{
 		std::string captureBoneName;
-		Vector3 captureBonePos;
-		Vector3 initializedCaptureBonePos;
+		MVector3 captureBonePos;
+		MVector3 initializedCaptureBonePos;
 		std::vector<CaptureData*> captureChildren;
 		CaptureData* parent;
 
@@ -24,15 +25,17 @@ namespace MCBM
 	{
 	private:
 		std::array<std::string, 17> linkBoneNames = { "none","none" ,"none" ,"none" ,"none" ,
-													"upper_arm.L","upper_arm.R","forearm.L","forearm.R","hand.L",
+														"upper_arm.L","upper_arm.R",
+														"forearm.L","forearm.R","hand.L",
 													"hand.R" ,"none" ,"none" ,"none" ,"none" ,
 													"none","none" };
 
 		std::unordered_map<YOLO_POSE_INDEX, CaptureData> capturedata_;
+		const std::unordered_map<YOLO_POSE_INDEX, MCBO::YVector3>* finalPoints_;
 		cv::VideoCapture capture_;
 		cv::Mat img_;
 		const std::string& modelPath_ = "Checkpoints/yolo11x-pose.onnx";
-		std::unique_ptr<YOLOPoseEstimation> m_YOLOPoseEstimation_;
+		YOLOPoseEstimation* m_YOLOPoseEstimation_;
 		const YOLO_POSE_LANDMAKE* land_;
 		float mask_threshold_ = 0.5f;
 		float conf_threshold_ = 0.30f;
@@ -40,10 +43,14 @@ namespace MCBM
 		int conversion_code_ = cv::COLOR_BGR2RGB;
 		bool initialized_ = true;
 	public:
-		void Initialize();
+		MVector3 cameraPosition;
+		float cameraDistance = 0.f;
+		void Initialize(int32_t index = 0);
 		void Update();
 		void SetInitialPose();
 		void Finalize();
 		CaptureData& GetCaptureData(YOLO_POSE_INDEX key);
+		MVector3& GetFinalPositionData(YOLO_POSE_INDEX key);
+		void SetYOLOEstimation(YOLOPoseEstimation* yoloPoseEst);
 	};
 }

@@ -58,12 +58,14 @@ void GameScene::Init()
 	sceneManager = SceneManager::GetInstance();
 
 	// モデル
+	/*ステージ*/
 	obj[OBJ::stage].reset(KObject3d::Create(objModel[OBJ::stage],
 		PipelineManager::GetInstance()->GetPipeline("Obj")));
 	obj[OBJ::stage]->GetTransform().SetPos({ 0.0f,0.0f,200.0f });
 	obj[OBJ::stage]->GetTransform().SetScale({ 100.0f,1.0f,300.0f });
 	obj[OBJ::stage]->SetColor({ 0.0f,0.0f,0.0f,1.0f });
 
+	/*ライン*/
 	float scaleZ = perfect;
 	obj[OBJ::line].reset(KObject3d::Create(objModel[OBJ::stage],
 		PipelineManager::GetInstance()->GetPipeline("Obj")));
@@ -71,10 +73,12 @@ void GameScene::Init()
 	obj[OBJ::line]->GetTransform().SetPos({ 0.0f,4.0f,0.0f });
 	obj[OBJ::line]->SetColor({ 0.8f,0.8f,0.8f,1.0f });
 
+	/*天球*/
 	obj[OBJ::skydome].reset(KObject3d::Create(objModel[OBJ::skydome], 
 		PipelineManager::GetInstance()->GetPipeline("Obj")));
 	obj[OBJ::skydome]->GetTransform().SetScale({ 800.0f, 800.0f, 800.0f });
 	obj[OBJ::skydome]->GetTransform().SetPos({ 0.0f, 100.0f, 500.0f });
+
 
 	collisionManager_ = new CollisionManager();
 
@@ -99,6 +103,16 @@ void GameScene::Init()
 	// 音
 	audioManager_ = AudioManager::GetInstance();
 	audioManager_->BGMPlay_wav("maou_bgm_cyber44.wav");
+
+	MCBM::AnimationModelManager::GetInstance()->Load("fox");
+	player = std::make_unique<CaptureModel>();
+	player->Initilize("fox");
+	sprite.reset(Sprite::Create(PipelineManager::GetInstance()->GetPipeline("Sprite")));
+
+	texData = TextureManager::GetInstance()->GetTextures("Resources/texture/boss1.png");
+
+	playerTrans.SetPos({ 0,87,-110 });
+	
 }
 
 void GameScene::Update() 
@@ -112,7 +126,24 @@ void GameScene::Update()
 
 	timer_->UpdateTimer();
 
-	
+	if (input->IsPush(DIK_R))
+	{
+		initialePoseSet = true;
+		initializetime_ = std::chrono::system_clock::now();
+	}
+
+
+	if (initialePoseSet)
+	{
+		player->InitializePose();
+		initializeCount_ = std::chrono::system_clock::now();
+		std::chrono::seconds sec = std::chrono::duration_cast<std::chrono::seconds>(initializeCount_ - initializetime_);
+		if (sec > std::chrono::seconds{ 5 })
+		{
+			initialePoseSet = false;
+		}
+	}
+
 	light_->SetLightRGB({lightRGB_.x, lightRGB_.y, lightRGB_.z});
 	light_->SetLightDir({lightDir_.x, lightDir_.y, lightDir_.z, 0.0f});
 
@@ -134,16 +165,37 @@ void GameScene::Update()
 	objectSetter->Update(timer_.get(), camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro());
 
 	camera->Update();
+
+	if (input->GetInstance()->IsPush(DIK_UP))
+	{
+		float z = playerTrans.GetPos().z;
+		z += 0.1f;
+		playerTrans.SetPos({ 0,87,z });
+	}
+
+	if (input->GetInstance()->IsPush(DIK_DOWN))
+	{
+		float z = playerTrans.GetPos().z;
+		z -= 0.1f;
+		playerTrans.SetPos({ 0,87,z });
+	}
+
+	
+	playerTrans.SetScale({ 1,1,1 });
+	playerTrans.SetRot({ 0,0,0 });
+	player->Update(camera->GetViewPro(),playerTrans);
 }
 
 void GameScene::ObjDraw() 
-{
-	for (size_t i = 0; i < OBJ::max; i++) 
-	{
-		obj[i]->Draw();
-	}
+{	
+	//for (size_t i = 0; i < OBJ::max; i++) 
+	//{
+	//	obj[i]->Draw();
+	//}
 
 	noteObj->Draw();
+
+	player->Draw();
 
 	// エフェクト描画
 	effectSetter->Draw(timer_.get(), camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro());

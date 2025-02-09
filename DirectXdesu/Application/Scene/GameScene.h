@@ -34,6 +34,7 @@
 
 #include "EffectSetter.h"
 #include "ObjectSetter.h"
+#include<CaptureModel.h>
 
 /**
  * @file GameScene.h
@@ -112,6 +113,8 @@ private:
 	// 当たり判定マネージャー
 	CollisionManager* collisionManager_ = nullptr;
 
+
+
 private:
 	// ノーツ
 	std::unique_ptr<MusicDesc>music;
@@ -133,9 +136,15 @@ private:
 	int score[3];
 	int combo;
 
-	// エフェクト系
+
 	std::unique_ptr<Timer> timer_;
 	std::unique_ptr<EffectSetter> effectSetter;
+	bool initialePoseSet = false;
+	std::chrono::system_clock::time_point initializetime_;
+	std::chrono::system_clock::time_point initializeCount_;
+
+	std::unique_ptr<CaptureModel> player;
+	Transform playerTrans;
 
 	// オブジェクト系
 	std::unique_ptr<ObjectSetter> objectSetter;

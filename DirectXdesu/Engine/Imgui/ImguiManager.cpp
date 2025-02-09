@@ -1,6 +1,12 @@
 #include "ImguiManager.h"
 #include "KDescriptorHeap.h"
 
+ImguiManager* ImguiManager::GetInstance()
+{
+    static ImguiManager instance;
+    return &instance;
+}
+
 void ImguiManager::Init()
 {
     //ImGuiのコンテキストを生成
@@ -33,11 +39,6 @@ void ImguiManager::Finalize()
     ImGui::DestroyContext();
 }
 
-void ImguiManager::Update()
-{
-   
-}
-
 void ImguiManager::Begin()
 {
     // Start the Dear ImGui frame
@@ -63,3 +64,6 @@ void ImguiManager::End()
     // Rendering
     ImGui::Render();
 }
+
+ImguiManager::ImguiManager() {}
+ImguiManager::~ImguiManager() {}

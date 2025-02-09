@@ -15,6 +15,9 @@ class ImguiManager
 {
 private:
 	template<class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
+public://静的メンバ関数
+	//インスタンス生成
+	static ImguiManager* GetInstance();
 
 public:
 	// 初期化
@@ -22,9 +25,6 @@ public:
 
 	// 最終処理
 	void Finalize();
-
-	// 更新
-	void Update();
 
 	// 処理の始め
 	void Begin();
@@ -38,5 +38,10 @@ public:
 private:
 	KWinApp* win = KWinApp::GetInstance();
 	KDirectXCommon* dx = KDirectXCommon::GetInstance();
+private:
+	ImguiManager();
+	~ImguiManager();
+	ImguiManager(const ImguiManager& obj) = delete;
+	ImguiManager& operator=(const ImguiManager& obj) = delete;
 };
 

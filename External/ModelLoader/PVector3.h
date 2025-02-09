@@ -80,14 +80,23 @@ public:
 
 private:
 
-	union
+	struct VEC
 	{
-		float m_x;
-		float m_y;
-		float m_z;
-
-		float m_values[ 3 ];
+		float x;
+		float y;
+		float z;
 	};
+
+	union VALUE
+	{
+		float elements[ 3 ];
+
+		VEC vec;
+	};
+
+private:
+
+	VALUE m_value;
 
 };
 

@@ -42,7 +42,8 @@ void Framework::Init() {
 	textureManager->LoadTextures();
 
 	// Imgui初期化
-	imguiMane.Init();
+	imguiMane = ImguiManager::GetInstance();
+	imguiMane->Init();
 
 	// ポストエフェクトテスト
 	postEffectManager = std::make_unique<PostEffectManager>();
@@ -71,13 +72,13 @@ void Framework::Update() {
 	input->Update();
 
 	// Imgui更新はじめ
-	imguiMane.Begin();
+	imguiMane->Begin();
 
 	// シーンマネージャーの更新
 	sceneManager->Update();
 
 	// Imgui更新終了
-	imguiMane.End();
+	imguiMane->End();
 }
 
 bool Framework::IsEndRwquest() {

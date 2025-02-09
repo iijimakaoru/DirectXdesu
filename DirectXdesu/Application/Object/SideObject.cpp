@@ -1,4 +1,5 @@
 #include "SideObject.h"
+#include "Ease.h"
 
 void SideObject::Init(MeshModel* model, const Timer* timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection)
 {
@@ -12,6 +13,9 @@ void SideObject::Init(MeshModel* model, const Timer* timer, const KMyMath::Matri
 		DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f),
 		DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
 	object_ = std::make_unique<MeshGPUParticle>(timer, matView, matProjection, emitter_.get(), meshModel_);
+
+	scaleEaseLimit_ = 20.0f;
+	scaleEaseTimer_ = scaleEaseLimit_;
 }
 
 void SideObject::Update(const Timer* timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection)
@@ -19,6 +23,8 @@ void SideObject::Update(const Timer* timer, const KMyMath::Matrix4& matView, con
 	MoveUpdate();
 
 	RotUpdate();
+
+	ScaleUpdate();
 
 	object_->Update(timer, matView, matProjection, emitter_.get());
 }
@@ -35,6 +41,9 @@ void SideObject::SetObject(KMyMath::Vector3& pos, KMyMath::Vector3& rotation, KM
 	DirectX::XMFLOAT3 nowScale = MyMathConvert::ChangeVector3toXMfloat3(scale);
 	DirectX::XMFLOAT4 nowColor = MyMathConvert::ChangeXMFLOAT4(color);
 	float nowParticleSize = 2.0f;
+
+	startScale_ = scale * 2.0f;
+	endScale_ = scale;
 
 	emitter_->SetPosition(nowPos);
 	emitter_->SetScaling(nowScale);
@@ -74,4 +83,29 @@ void SideObject::RotUpdate()
 	DirectX::XMFLOAT3 rot = MyMathConvert::ChangeVector3toXMfloat3(rot_);
 
 	emitter_->SetRotation(rot);
+}
+
+void SideObject::ScaleUpdate()
+{
+	if (isVibration)
+	{
+		scaleEaseTimer_ = 0.0f;
+		isVibration = false;
+	}
+
+	if (scaleEaseTimer_ < scaleEaseLimit_)
+	{
+		scaleEaseTimer_++;
+	}
+
+	KMyMath::Vector3 easeS = MyEase::OutCubicVec3(startScale_, endScale_, scaleEaseTimer_ / scaleEaseLimit_);
+
+	DirectX::XMFLOAT3 scale = MyMathConvert::ChangeVector3toXMfloat3(easeS);
+
+	emitter_->SetScaling(scale);
+}
+
+void SideObject::SetVibration()
+{
+	isVibration = true;
 }

@@ -15,6 +15,11 @@ void PAssimpLoader::Load(P_MODEL_DATA* pData,const std::string& filePath)
 	GetInstance()->_Load(pData,filePath);
 }
 
+void PAssimpLoader::SmoothingLoad(P_MODEL_DATA* pData,const std::string& filePath)
+{
+	GetInstance()->_SmoothingLoad(pData,filePath);
+}
+
 PAssimpLoader::PAssimpLoader()
 {
 }
@@ -68,6 +73,62 @@ void PAssimpLoader::_Load(P_MODEL_DATA* pData,const std::string& filePath)
 		aiAnimation* pAnimation = pScene->mAnimations[ i ];
 
 		pAnimationData.duration = (float)pAnimation->mDuration;
+		pAnimationData.ticksPerSecond = ( float ) pAnimation->mTicksPerSecond;
+		pAnimationData.name = pAnimation->mName.C_Str();
+
+		for ( uint32_t j = 0; j < pAnimation->mNumChannels; j++ )
+		{
+			P_MOTION_NODE& pMotionNode = pAnimationData.channels.emplace_back();
+			aiNodeAnim* pNodeAnim = pAnimation->mChannels[ j ];
+
+			_ParseNodeAnime(pNodeAnim,pMotionNode);
+		}
+	}
+
+	aiReleaseImport(pScene);
+
+	pScene = nullptr;
+}
+
+void PAssimpLoader::_SmoothingLoad(P_MODEL_DATA* pData,const std::string& filePath)
+{
+	assert(pData != nullptr);
+
+	const aiScene* pScene = nullptr;
+
+	std::vector<std::string> files = _GetFileNames(filePath);
+
+	for ( size_t i = 0; i < files.size(); i++ )
+	{
+		pScene = aiImportFile(files[ i ].c_str(),ASSIMP_LOAD_FLAG_SMOOTHING);
+
+		if ( pScene != nullptr )
+		{
+			break;
+		}
+	}
+
+	assert(pScene != nullptr);
+
+	pData->canAnimation = false;
+
+	pData->name = pScene->mName.C_Str();
+
+	uint32_t nodeNum = 0;
+	_GetNodeNum(pScene->mRootNode,nodeNum);
+
+	pData->nodes.reserve(nodeNum);
+
+	_ConvertMatrix(pData->globalInverseTransform,pScene->mRootNode->mTransformation.Inverse());
+
+	_ParseNodeRecursive(pData,filePath,pScene,pScene->mRootNode);
+
+	for ( uint32_t i = 0; i < pScene->mNumAnimations; i++ )
+	{
+		P_ANIMATION_DATA& pAnimationData = pData->animations.emplace_back();
+		aiAnimation* pAnimation = pScene->mAnimations[ i ];
+
+		pAnimationData.duration = ( float ) pAnimation->mDuration;
 		pAnimationData.ticksPerSecond = ( float ) pAnimation->mTicksPerSecond;
 		pAnimationData.name = pAnimation->mName.C_Str();
 

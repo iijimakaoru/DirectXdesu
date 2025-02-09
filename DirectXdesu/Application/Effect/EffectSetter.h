@@ -1,9 +1,10 @@
 #pragma once
-#include <list>
 #include "ArrowEffect.h"
-#include "GroundEffect/GroundEffect.h"
+#include "GroundEffect.h"
+#include "SideObjectEffect.h"
 
 const size_t maxEffectNum = 10;
+const size_t maxSideObjectEffectNum = 40;
 
 class EffectSetter
 {
@@ -20,6 +21,8 @@ public:
 		const Timer* timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection);
 	void SetGroundEffect(KMyMath::Vector3& pos, KMyMath::Vector3& rotation, KMyMath::Vector3& scale, KMyMath::Vector4& color,
 		const Timer* timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection);
+	void SetSideObjectEffect(KMyMath::Vector3& pos, KMyMath::Vector3& rotation, KMyMath::Vector3& scale, KMyMath::Vector4& color,
+		const Timer* timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection);
 
 private:
 	void DeleteEffect();
@@ -30,5 +33,8 @@ private:
 
 	std::unique_ptr<MeshModel> groundModel_;
 	std::array<std::unique_ptr<GroundEffect>, maxEffectNum> groundEffect_;
+
+	std::unique_ptr<MeshModel> sideObjectModel_;
+	std::array<std::unique_ptr<SideObjectEffect>, maxSideObjectEffectNum> sideObjectEffect_;
 };
 

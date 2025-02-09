@@ -40,7 +40,7 @@ void TitleScene::Init() {
 	logo.reset(KObject3d::Create(logoModel, PipelineManager::GetInstance()->GetPipeline("Obj")));
 	logo->GetTransform().SetScale({ 100.0f, 100.0f, 100.0f });
 	logo->GetTransform().SetPos({ 0.0f, 60.0f, 100.0f });
-	logo->GetTransform().SetRot({ 0.0f, 180.0f, 0.0f});
+	logo->GetTransform().SetRot({ 0.0f, 0.0f, 0.0f});
 
 	backGround.reset(Sprite::Create(PipelineManager::GetInstance()->GetPipeline("Sprite")));
 	pressA.reset(Sprite::Create(PipelineManager::GetInstance()->GetPipeline("Sprite")));
@@ -54,7 +54,7 @@ void TitleScene::Update() {
 	skyDome->Update(camera->GetViewPro(), camera->GetWorldPos());
 	logo->Update(camera->GetViewPro(), camera->GetWorldPos());
 
-	logo->GetTransform().SetRot({ 0.0f, 180.0f + RotationLogoY(rotationSpeed), 0.0f});
+	logo->GetTransform().SetRot({ 0.0f,  RotationLogoY(rotationSpeed), 0.0f});
 
 	camera->Update();
 	

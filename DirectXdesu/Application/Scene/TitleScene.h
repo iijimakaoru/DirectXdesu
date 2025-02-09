@@ -7,7 +7,6 @@
 
 #include "BaseScene.h"
 #include "Camera.h"
-#include "Sprite.h"
 #include "KObject3d.h"
 #include "AudioManager.h"
 #include "GameCamera.h"

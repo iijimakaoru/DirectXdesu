@@ -17,12 +17,18 @@ void EffectSetter::Init(const Timer* timer, const KMyMath::Matrix4& matView, con
 		groundEffect_[i] = std::make_unique<GroundEffect>();
 		groundEffect_[i]->Init(groundModel_.get(), timer, matView, matProjection);
 	}
+
+	sideObjectModel_ = std::make_unique<MeshModel>("SideObject");
+
+	for (size_t i = 0; i < maxSideObjectEffectNum; i++)
+	{
+		sideObjectEffect_[i] = std::make_unique<SideObjectEffect>();
+		sideObjectEffect_[i]->Init(sideObjectModel_.get(), timer, matView, matProjection);
+	}
 }
 
 void EffectSetter::Update(const Timer* timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection)
 {
-	DeleteEffect();
-
 	for (std::unique_ptr<ArrowEffect>& arrowEffect : arrowEffect_)
 	{
 		arrowEffect->Update(timer, matView, matProjection);
@@ -31,6 +37,11 @@ void EffectSetter::Update(const Timer* timer, const KMyMath::Matrix4& matView, c
 	for (std::unique_ptr<GroundEffect>& groundEffect : groundEffect_)
 	{
 		groundEffect->Update(timer, matView, matProjection);
+	}
+
+	for (std::unique_ptr<SideObjectEffect>& sideObjectEffect : sideObjectEffect_)
+	{
+		sideObjectEffect->Update(timer, matView, matProjection);
 	}
 }
 
@@ -44,6 +55,11 @@ void EffectSetter::Draw(const Timer* timer, const KMyMath::Matrix4& matView, con
 	for (std::unique_ptr<GroundEffect>& groundEffect : groundEffect_)
 	{
 		groundEffect->Draw(timer, matView, matProjection);
+	}
+
+	for (std::unique_ptr<SideObjectEffect>& sideObjectEffect : sideObjectEffect_)
+	{
+		sideObjectEffect->Draw(timer, matView, matProjection);
 	}
 }
 
@@ -73,6 +89,19 @@ void EffectSetter::SetGroundEffect(KMyMath::Vector3& pos, KMyMath::Vector3& rota
 		if (groundEffect_[i]->GetIsDead())
 		{
 			groundEffect_[i]->SetParticle(pos, rotation, scale, color, timer, matView, matProjection);
+			break;
+		}
+	}
+}
+
+void EffectSetter::SetSideObjectEffect(KMyMath::Vector3& pos, KMyMath::Vector3& rotation, KMyMath::Vector3& scale, KMyMath::Vector4& color,
+	const Timer* timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection)
+{
+	for (size_t i = 0; i < maxSideObjectEffectNum; i++)
+	{
+		if (sideObjectEffect_[i]->GetIsDead())
+		{
+			sideObjectEffect_[i]->SetParticle(pos, rotation, scale, color, timer, matView, matProjection);
 			break;
 		}
 	}

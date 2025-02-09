@@ -2,6 +2,7 @@
 #include "GameScene.h"
 #include "TitleScene.h"
 #include "SettingScene.h"
+#include "ResultScene.h"
 
 BaseScene* SceneFactory::CreateScene(const std::string& sceneName) {
 	// 次のシーン生成
@@ -14,6 +15,8 @@ BaseScene* SceneFactory::CreateScene(const std::string& sceneName) {
 	} else if (sceneName == "SETTING")
 	{
 		newScene = new SettingScene();
+	} else if (sceneName == "RESULT") {
+		newScene = new ResultScene();
 	}
 
 	return newScene;

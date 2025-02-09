@@ -14,9 +14,12 @@ public:
 
 	bool GetIsDead();
 
+	void SetVibration();
+
 private:
 	void MoveUpdate();
 	void RotUpdate();
+	void ScaleUpdate();
 
 private:
 	MeshModel* meshModel_ = nullptr;
@@ -26,9 +29,17 @@ private:
 	KMyMath::Vector3 rot_;
 	KMyMath::Vector3 rotPower_;
 
+	KMyMath::Vector3 startScale_;
+	KMyMath::Vector3 endScale_;
+
 	KMyMath::Vector3 move_;
 	float movePower_;
 
 	bool isDead = false;
+
+	bool isVibration = false;
+
+	float scaleEaseTimer_;
+	float scaleEaseLimit_;
 };
 

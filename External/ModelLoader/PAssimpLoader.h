@@ -19,7 +19,7 @@ class PAssimpLoader final
 public:
 
 	static void Load(P_MODEL_DATA* pData,const std::string& filePath);
-
+	static void SmoothingLoad(P_MODEL_DATA* pData,const std::string& filePath);
 private:
 
 	PAssimpLoader();
@@ -30,6 +30,7 @@ private:
 	static PAssimpLoader* GetInstance();
 
 	void _Load(P_MODEL_DATA* pData,const std::string& filePath);
+	void _SmoothingLoad(P_MODEL_DATA* pData,const std::string& filePath);
 
 	void _ParseNodeRecursive(P_MODEL_DATA* pData,const std::string& directoryPath,const aiScene* pScene,aiNode* pAiNode,P_NODE* pParent = nullptr);
 	void _ParseMesh(P_MODEL_DATA* pData,const std::string& directoryPath,const aiScene* pScene,aiMesh* pAiMesh);
@@ -53,6 +54,19 @@ private:
 private:
 
 	const uint32_t ASSIMP_LOAD_FLAG_DEFAULT =
+		aiProcess_FlipUVs |
+		aiProcess_FlipWindingOrder |
+		aiProcess_Triangulate | //三角面化
+		aiProcess_CalcTangentSpace | //接線ベクトル生成
+		aiProcess_GenUVCoords | //非マッピングを適切なUV座標に変換
+		aiProcess_RemoveRedundantMaterials | //冗長なマテリアルを削除
+		aiProcess_OptimizeMeshes | //メッシュ数を最適化
+		aiProcess_MakeLeftHanded | //ノードを左手座標系に
+		aiProcess_JoinIdenticalVertices |//インデックスを生成
+		aiProcess_LimitBoneWeights;//各頂点が影響を受けるボーンを4に制限
+
+	const uint32_t ASSIMP_LOAD_FLAG_SMOOTHING =
+		aiProcess_GenSmoothNormals |
 		aiProcess_FlipUVs |
 		aiProcess_FlipWindingOrder |
 		aiProcess_Triangulate | //三角面化

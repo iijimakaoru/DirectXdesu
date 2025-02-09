@@ -161,7 +161,9 @@ void MCBM::Skelton::CaptureBoneUpdate(YOLO_POSE_INDEX rootBoneName, uint32_t bon
 void MCBM::Skelton::CaptureBoneUpdateTwoDimention(YOLO_POSE_INDEX rootBoneName, uint32_t boneCount)
 {
 	CaptureData rootCap = captureManager->GetCaptureData(rootBoneName);
+	
 	MVector3 tempVec;
+
 	for (int i = 0; i < boneCount; i++)
 	{
 		Bone* rootBone = GetBone(rootCap.captureBoneName);
@@ -170,6 +172,7 @@ void MCBM::Skelton::CaptureBoneUpdateTwoDimention(YOLO_POSE_INDEX rootBoneName, 
 		{
 			break;
 		}
+
 
 		for (int k = 0; k < 1; k++)
 		{
@@ -208,6 +211,8 @@ void MCBM::Skelton::CaptureBoneUpdateTwoDimention(YOLO_POSE_INDEX rootBoneName, 
 			temp.Normalize();
 			rootBone->SetRotation(temp);
 		}
+
+
 		rootCap = *rootCap.captureChildren[0];
 
 
@@ -713,7 +718,7 @@ void MCBM::Skelton::UpDate(std::vector<YOLO_POSE_INDEX> rootBoneName,float& time
 	Animation* anim = animations_.GetAnimation(currentAnimation);
 	for (int32_t i = 0; i < rootBoneName.size(); i++)
 	{
-		CaptureBoneUpdate(rootBoneName[i]);
+		CaptureBoneUpdateTwoDimention(rootBoneName[i]);
 	}
 	boneAnimTransform(timeInSeconds, anim, loop, animtionPositionRock);
 
@@ -723,7 +728,7 @@ void MCBM::Skelton::CaptureUpDate(std::vector<YOLO_POSE_INDEX> rootBoneNames)
 	captureManager->Update();
 	for (int32_t i = 0; i < rootBoneNames.size(); i++)
 	{
-		CaptureBoneUpdate(rootBoneNames[i]);
+		CaptureBoneUpdateTwoDimention(rootBoneNames[i]);
 	}
 	float temp = 0;
 	boneAnimTransform(temp, nullptr, true, true);

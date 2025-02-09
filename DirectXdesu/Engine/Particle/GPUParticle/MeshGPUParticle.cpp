@@ -70,22 +70,6 @@ void MeshGPUParticle::Init(const Timer* timer, const KMyMath::Matrix4& matView, 
 
 void MeshGPUParticle::Update(const Timer* timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection, Emitter* emitter)
 {
-	ID3D12Fence* fence = KDirectXCommon::GetInstance()->GetFence();
-
-	// 円形のフレーム リソース配列を循環します
-	currentFrameResourceIndex = (currentFrameResourceIndex + 1) % gNumberFrameResources;
-	currentFrameResource = FrameResources[currentFrameResourceIndex].get();
-
-	// GPU は現在のフレーム リソースのコマンドの処理を終了しましたか?
-	// そうでない場合は、GPU がこのフェンス ポイントまでのコマンドを完了するまで待ちます
-	if (currentFrameResource->Fence != 0 && fence->GetCompletedValue() < currentFrameResource->Fence)
-	{
-		HANDLE eventHandle = CreateEventEx(nullptr, (LPCWSTR)false, false, EVENT_ALL_ACCESS);
-		ThrowIfFailed(fence->SetEventOnCompletion(currentFrameResource->Fence, eventHandle));
-		WaitForSingleObject(eventHandle, INFINITE);
-		CloseHandle(eventHandle);
-	}
-
 	UpdateMainPassCB(timer, matView, matProjection, emitter);
 }
 

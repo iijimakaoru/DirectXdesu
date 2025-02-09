@@ -207,16 +207,15 @@ void GameScene::ObjDraw()
 		obj[i]->Draw();
 	}
 
-
-	noteObj->Draw();
-
-	player->Draw();
-
 	// エフェクト描画
 	effectSetter->Draw(timer_.get(), camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro());
 
 	// オブジェクトの描画
 	objectSetter->Draw(timer_.get(), camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro());
+
+	noteObj->Draw();
+
+	player->Draw();
 }
 
 void GameScene::SpriteDraw() 

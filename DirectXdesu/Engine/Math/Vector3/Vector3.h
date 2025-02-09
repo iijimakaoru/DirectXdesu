@@ -30,6 +30,7 @@ namespace KMyMath
 		float Dot(const Vector3& v)const;
 		// 外積
 		Vector3 Cross(const Vector3& v)const;
+		static Vector3 Cross(const Vector3& a, const Vector3& b);
 
 		// 単項演算子オーバーロード
 		Vector3 operator+()const;

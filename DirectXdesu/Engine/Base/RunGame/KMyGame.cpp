@@ -11,13 +11,16 @@ void KMyGame::Init() {
 	// シーンマネージャーにセット
 	SceneManager::GetInstance()->SetSceneFactory(sceneFactory);
 
-	ModelManager::Load("skydome", "S_SkyDorm",true);
+	ModelManager::Load("skydome", "S_SkyDorm");
 	ModelManager::Load("cube","S_Cube");
 	ModelManager::Load("arrow","S_Arrow");
-	ModelManager::Load("logo","titleLogo");
+	ModelManager::Load("logo", "titleLogo");
+	ModelManager::Load("clearStage", "clearStage");
+	ModelManager::Load("clearFox","clearFox",true);
 
 	TextureManager::Load("Resources/texture/titleBg.png");
 	TextureManager::Load("Resources/texture/pressA.png");
+	TextureManager::Load("Resources/texture/thanks.png");
 
 	// 最初のシーン
 	SceneManager::GetInstance()->ChangeScene("SETTING");

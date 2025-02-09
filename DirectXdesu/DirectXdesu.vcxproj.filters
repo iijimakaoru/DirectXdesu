@@ -89,6 +89,7 @@
     <ClCompile Include="Application\CalibrationCallback.cpp" />
     <ClCompile Include="Application\Scene\SettingScene.cpp" />
     <ClCompile Include="Application\Effect\SideObjectEffect\SideObjectEffect.cpp" />
+    <ClCompile Include="Application\Scene\ResultScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Math\Vector2\Vector2.cpp">
@@ -557,6 +558,7 @@
     <ClInclude Include="Application\CalibrationCallback.h" />
     <ClInclude Include="Application\Scene\SettingScene.h" />
     <ClInclude Include="Application\Effect\SideObjectEffect\SideObjectEffect.h" />
+    <ClInclude Include="Application\Scene\ResultScene.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shader\Effect\ArrowEffect\ArrowEffect.hlsli" />

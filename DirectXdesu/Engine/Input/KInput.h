@@ -19,23 +19,23 @@
  * @brief 入力
  * @author 飯島 薫
  */
+ enum MouseBotton
+{
+	Left,
+	Right,
+	Wheel,
+};
 
 class KInput
 {
 public:
-	 enum MouseBotton
-	{
-		Left,
-		Right,
-		Wheel,
-	};
 
 public:
 	// 初期化
-	static void Init();
+	void Init();
 
 	// 更新
-	static void Update();
+	void Update();
 
 	// キーボード
 	// 押してるか
@@ -49,29 +49,29 @@ public:
 
 	//マウス
 	//マウスの状態を得る
-	static inline DIMOUSESTATE2 GetMouseState()
+	inline DIMOUSESTATE GetMouseState()
 	{
 		return GetInstance()->mouseState;
 	}
 	// 前回のマウスの状態を得る
-	static inline DIMOUSESTATE2 GetOldMouseState()
+	inline DIMOUSESTATE GetOldMouseState()
 	{
 		return GetInstance()->oldMouseState;
 	}
 	// マウスクリックされてるか
-	static bool GetMouseClick(int bottonNum);
+	bool GetMouseClick(MouseBotton bottonNum);
 	// マウスクリックが離れた瞬間
-	static bool GetMouseClickRelease(int bottonNum);
+	bool GetMouseClickRelease(MouseBotton bottonNum);
 	// マウスクリックが押された瞬間
-	static bool GetMouseClickTrigger(int bottonNum);
+	bool GetMouseClickTrigger(MouseBotton bottonNum);
 	// ホイール
-	static LONG GetMouseWheel();
+	LONG GetMouseWheel();
 	// マウスの位置取得
-	static KMyMath::Vector2 GetMousePos();
+	KMyMath::Vector2 GetMousePos();
 	// 前回のマウスの位置を取得
-	static KMyMath::Vector2 GetOldMousePos();
+	KMyMath::Vector2 GetOldMousePos();
 	// マウスの移動量を取得
-	static KMyMath::Vector3 GetMouseMove();
+	KMyMath::Vector3 GetMouseMove();
 
 	// ゲームパッド
 	//パッドに接続されてるか
@@ -127,8 +127,8 @@ private:
 	Microsoft::WRL::ComPtr<IDirectInputDevice8> keyboard = nullptr;
 
 	Microsoft::WRL::ComPtr<IDirectInputDevice8> mouse = nullptr;
-	DIMOUSESTATE2 mouseState = {};
-	DIMOUSESTATE2 oldMouseState = {};
+	DIMOUSESTATE mouseState = {};
+	DIMOUSESTATE oldMouseState = {};
 	KMyMath::Vector2 mousePos;
 	KMyMath::Vector2 oldMousePos;
 

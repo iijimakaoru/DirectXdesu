@@ -76,11 +76,6 @@ private:
 	};
 
 private:
-	KMyMath::Vector3 PosHand(Hand hand_);
-
-
-	//マウス角度算出
-	void RotAndLenCalculationMouse();
 
 	//スティック角度、長さ算出
 	void RotAndLenCalculationStick(Hand hand_);
@@ -101,7 +96,6 @@ private:
 
 	// オブジェクト
 	std::array<std::unique_ptr<KObject3d>, OBJ::max> obj;
-	std::array<std::unique_ptr<KObject3d>, Hand::max> handObj;
 
 	// モデル
 	std::array<KModel*, OBJ::max> objModel;
@@ -123,7 +117,7 @@ private:
 	//ノーツ
 	std::unique_ptr<MusicDesc>music;
 	std::unique_ptr<NoteObj>noteObj;
-	std::array < KMyMath::Vector3, Hand::max>start, end;
+	std::array < MCBM::MVector3, Hand::max>start, end;
 	KMyMath::Vector3  resetPos, move;
 	float angle;
 	float length;

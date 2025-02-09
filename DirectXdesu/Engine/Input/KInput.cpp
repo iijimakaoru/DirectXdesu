@@ -38,6 +38,20 @@ void KInput::InitInternal()
 	result = keyboard->SetCooperativeLevel(KWinApp::GetHWND(), DISCL_FOREGROUND | DISCL_NONEXCLUSIVE | DISCL_NOWINKEY);
 	assert(SUCCEEDED(result));
 
+	/*                                 マウス                                     */
+	//マウスデバイスの生成
+	result = directInput->CreateDevice(GUID_SysMouse, &mouse, NULL);
+	assert(SUCCEEDED(result));
+
+	//入力データ形式のセット
+	result = mouse->SetDataFormat(&c_dfDIMouse);//標準形式
+	assert(SUCCEEDED(result));
+
+	//排他制御レベルのセット
+	result = mouse->SetCooperativeLevel(
+		KWinApp::GetHWND(), DISCL_FOREGROUND | DISCL_NONEXCLUSIVE | DISCL_NOWINKEY);
+	assert(SUCCEEDED(result));
+
 	ZeroMemory(&xInputState, sizeof(XINPUT_STATE));
 	DWORD dresult;
 	dresult = XInputGetState(0, &xInputState);
@@ -54,44 +68,52 @@ void KInput::InitInternal()
 
 void KInput::Update() 
 {
-	KInput* instance = GetInstance();
-
 	// キーボードの情報取得
-	instance->keyboard->Acquire();
+	keyboard->Acquire();
 
 	// 全キー入力情報を取得
 	for (int i = 0; i < 256; i++)
 	{
-		instance->oldkey[i] = instance->key[i];
+		oldkey[i] = key[i];
 	}
-	instance->keyboard->GetDeviceState(sizeof(key), instance->key);
+	keyboard->GetDeviceState(sizeof(key), key);
 
-	instance->oldXInputState = instance->xInputState;
-	DWORD dresult = XInputGetState(0, &instance->xInputState);
+	oldXInputState = xInputState;
+	DWORD dresult = XInputGetState(0, &xInputState);
 	if (dresult == ERROR_SUCCESS) {
-		instance->isConnectPad = true;
+		isConnectPad = true;
 	}
 	else {
-		instance->isConnectPad = false;
+		isConnectPad = false;
 	}
 
-	if ((instance->xInputState.Gamepad.sThumbLX <  XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE &&
-		instance->xInputState.Gamepad.sThumbLX > -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE) &&
-		(instance->xInputState.Gamepad.sThumbLY <  XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE &&
-			instance->xInputState.Gamepad.sThumbLY > -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE))
+	if ((xInputState.Gamepad.sThumbLX <  XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE &&
+		xInputState.Gamepad.sThumbLX > -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE) &&
+		(xInputState.Gamepad.sThumbLY <  XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE &&
+			xInputState.Gamepad.sThumbLY > -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE))
 	{
-		instance->xInputState.Gamepad.sThumbLX = 0;
-		instance->xInputState.Gamepad.sThumbLY = 0;
+		xInputState.Gamepad.sThumbLX = 0;
+		xInputState.Gamepad.sThumbLY = 0;
 	}
 
-	if ((instance->xInputState.Gamepad.sThumbRX <  XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE &&
-		instance->xInputState.Gamepad.sThumbRX > -XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE) &&
-		(instance->xInputState.Gamepad.sThumbRY <  XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE &&
-			instance->xInputState.Gamepad.sThumbRY > -XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE))
+	if ((xInputState.Gamepad.sThumbRX <  XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE &&
+		xInputState.Gamepad.sThumbRX > -XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE) &&
+		(xInputState.Gamepad.sThumbRY <  XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE &&
+			xInputState.Gamepad.sThumbRY > -XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE))
 	{
-		instance->xInputState.Gamepad.sThumbRX = 0;
-		instance->xInputState.Gamepad.sThumbRY = 0;
+		xInputState.Gamepad.sThumbRX = 0;
+		xInputState.Gamepad.sThumbRY = 0;
 	}
+
+	/*マウス*/
+	HRESULT hr;
+	hr = mouse->Acquire();
+	//最新にする前に保存
+	oldMouseState = mouseState;
+	//最新のマウス情報の取得
+	hr = mouse->GetDeviceState(sizeof(DIMOUSESTATE), &mouseState);
+	ShowCursor(-1);
+	if (FAILED(hr))return;
 }
 
 bool KInput::IsPush(int keyNum) {
@@ -122,21 +144,24 @@ bool KInput::IsRelease(int keyNum) {
 	return false;
 }
 
-bool KInput::GetMouseClick(int bottonNum)
+bool KInput::GetMouseClick(MouseBotton bottonNum)
 {
 	return (GetInstance()->mouseState.rgbButtons[bottonNum] & 0x80) != 0;
 }
 
-bool KInput::GetMouseClickRelease(int bottonNum)
+bool KInput::GetMouseClickRelease(MouseBotton bottonNum)
 {
 	return (GetInstance()->mouseState.rgbButtons[bottonNum] & 0x80) == 0 &&
 		(GetInstance()->oldMouseState.rgbButtons[bottonNum] & 0x80) != 0;
 }
 
-bool KInput::GetMouseClickTrigger(int bottonNum)
+bool KInput::GetMouseClickTrigger(MouseBotton bottonNum)
 {
-	return (GetInstance()->mouseState.rgbButtons[bottonNum] & 0x80) != 0 &&
-		(GetInstance()->oldMouseState.rgbButtons[bottonNum] & 0x80) == 0;
+	if (mouseState.rgbButtons[bottonNum] && !oldMouseState.rgbButtons[bottonNum])
+	{
+		return true;
+	}
+	return false;
 }
 
 LONG KInput::GetMouseWheel()

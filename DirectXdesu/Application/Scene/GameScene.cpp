@@ -82,30 +82,7 @@ void GameScene::Init() {
 
 	resetPos = { -50.0f,50.0f,10.0f };
 
-	for (size_t i = 0; i < Hand::max; i++)
-	{
-		KMyMath::Vector4 color;
-		KMyMath::Vector3 pos;
-		KMyMath::Vector3 scale;
-		handObj[i].reset(KObject3d::Create(objModel[OBJ::stage],PipelineManager::GetInstance()->GetPipeline("Obj")));
-		if (i==0)
-		{
-			color = { 0.5f,0.2f,0.2f,1.0f };
-			handObj[i]->SetColor(color);
-		}
-		else
-		{
-			color = { 0.2f,0.3f,1.0f,1.0f };
-			handObj[i]->SetColor(color);
-		}
-		pos = resetPos;
-		pos.x += 100.0f*i;
-		scale = { 5.0f,5.0f,5.0f };
-		handObj[i]->GetTransform().SetPos(pos);
-		handObj[i]->GetTransform().SetScale(scale);
-
-	}
-
+	
 	collisionManager_ = new CollisionManager();
 
 	//ノーツ
@@ -153,25 +130,11 @@ void GameScene::Init() {
 }
 
 void GameScene::Update() {
-	if (input->IsPress(DIK_S))
-	{
-		KMyMath::Vector3 move=playerTrans.GetPos();
-		move.z -= 1.0f;
-		playerTrans.SetPos(move);
-	}
+	
 	player->Update(camera->GetViewPro(), playerTrans);
-	if (input->IsPress(DIK_W))
-	{
-		KMyMath::Vector3 move = playerTrans.GetPos();
-		move.z += 1.0f;
-		playerTrans.SetPos(move);
-	}
-	if (input->IsTrigger(DIK_SPACE))
-	{
-		isFrame = true;
-		//noteObj->OutputNote();
+	
+	if (input->IsTrigger(DIK_SPACE))isFrame = true;
 		
-	}
 	if (isFrame)
 	{
 		if (frame<360)
@@ -181,43 +144,45 @@ void GameScene::Update() {
 		else
 		{
 			isFrame = false;
+			initialePoseSet = true;
 			frame = 0;
 		}
 		frame++;
 	}
-	MCBM::MVector3 p = player->GetCapturePos(YOLO_POSE_INDEX::WRIST_L);
-	float L[2] = { p.x,p.y };
-	MCBM::MVector3 b = player->GetCapturePos(YOLO_POSE_INDEX::WRIST_R);
-	float R[2] = { b.x,b.y };
 
+	if (input->GetMouseClickTrigger(MouseBotton::Left))
+	{
+		start[1] = player->GetCapturePos(YOLO_POSE_INDEX::WRIST_R);
+		start[1].y -= start[1].y * 2.0f;
+
+	}
+	if (input->GetMouseClickTrigger(MouseBotton::Right))
+	{
+		RotAndLenCalculationStick(Hand::R);
+	}
+	float a[2] = { start[1].x,start[1].y };
+	float b[2] = { end[1].x,end[1].y };
 	ImGui::Begin("lo");
-	ImGui::Text("R");
-	ImGui::Text("%f,%f",b.x,b.y);
-	ImGui::InputFloat2("L", L);
 	
-	ImGui::End();
+	ImGui::InputFloat2("start", a);
+	ImGui::InputFloat2("end", b);
+	ImGui::InputFloat("angle", &angle);
+	ImGui::InputFloat("len", &length);
 
-	playTime++;
+	ImGui::End();
 
 	if (test)OutPutCollision();
 	else Collision();
-
-	for (size_t i = 0; i < Hand::max; i++)
+	if (initialePoseSet)
 	{
-		Hand hand = static_cast<Hand>(i);
-		KMyMath::Vector3 pos = PosHand(hand);
-		handObj[i]->GetTransform().SetPos({ pos });
-	}
-	for (size_t i = 0; i < OBJ::max; i++)
-	{
-		obj[i]->Update(camera->GetViewPro(), camera->GetWorldPos());
-	}
+		playTime++;
 
-	noteObj->Update(camera.get());
+		for (size_t i = 0; i < OBJ::max; i++)
+		{
+			obj[i]->Update(camera->GetViewPro(), camera->GetWorldPos());
+		}
 
-	for (size_t i = 0; i < Hand::max; i++) 
-	{
-		handObj[i]->Update(camera->GetViewPro(), camera->GetWorldPos());
+		noteObj->Update(camera.get());
 	}
 
 	camera->Update();
@@ -226,16 +191,16 @@ void GameScene::Update() {
 
 void GameScene::ObjDraw() 
 {
-	/*for (size_t i = 0; i < OBJ::max; i++) 
+	for (size_t i = 0; i < OBJ::max; i++) 
 	{
 		obj[i]->Draw();
 	}
-	for (size_t i = 0; i < Hand::max; i++)
+	/*for (size_t i = 0; i < Hand::max; i++)
 	{
 		handObj[i]->Draw();
-	}
+	}*/
 
-	noteObj->Draw();*/
+	noteObj->Draw();
 	player->Draw();
 }
 
@@ -252,46 +217,12 @@ void GameScene::Final()
 	delete collisionManager_; 
 }
 
-KMyMath::Vector3 GameScene::PosHand(Hand hand_)
-{
-	KMyMath::Vector2 len;
-	KMyMath::Vector3 pos;
-	if (hand_==Hand::L)
-	{
-		len = input->GetPadLStick();
-	}
-	else
-	{
-		len = input->GetPadRStick();
-	}
-	pos = handObj[hand_]->GetTransform().GetPos();
-	pos.x += move.x * len.x;
-	pos.y += move.y * len.y;
-
-	return pos;
-}
-
-void GameScene::RotAndLenCalculationMouse()
-{
-	//end = input->GetMousePos();
-
-	//KMyMath::Vector2 mouseVec = { 0.0f,0.0f };
-	////ウィンドウの中心点とマウスの現在点のベクトルをとる
-	//mouseVec.x = end.x - start.x;
-	//mouseVec.y = end.y - start.y;
-	////長さ算出
-	//length = MyMathUtility::Vector2Length(mouseVec);
-	////正規化
-	//mouseVec = MyMathUtility::MakeVector2Normalize(mouseVec);
-	////角度を算出
-	//angle = atan2(mouseVec.y, mouseVec.x);
-	//angle = MyMathConvert::DegreeTransform(angle);
-}
-
 void GameScene::RotAndLenCalculationStick(Hand hand_)
 {
-	end[hand_] = handObj[hand_]->GetTransform().GetPos();
-
+	if (hand_==Hand::L)	end[hand_] = player->GetCapturePos(YOLO_POSE_INDEX::WRIST_L);
+	else end[hand_] = player->GetCapturePos(YOLO_POSE_INDEX::WRIST_R);
+	
+	end[hand_].y -= end[hand_].y * 2.0f;
 	KMyMath::Vector2 stickVec = { 0.0f,0.0f };
 
 	//スタート位置からの現在点のベクトルをとる
@@ -309,7 +240,7 @@ void GameScene::RotAndLenCalculationStick(Hand hand_)
 void GameScene::Collision()
 {
 	//範囲の指定（一応45と設定）
-	float scope = 45.0f;
+	float scope = 60.0f;
 	float center=0.0f;
 	float max, min;
 	int lane = 0;
@@ -330,11 +261,15 @@ void GameScene::Collision()
 			lane = noteObj->Notes()[i].lane;
 			if (lane==0)//左
 			{
-				start[lane] = handObj[lane]->GetTransform().GetPos();
+				start[lane] = player->GetCapturePos(YOLO_POSE_INDEX::WRIST_L);
+				start[0].y -= start[0].y * 2.0f;
+
 			}
 			else if(lane==1)//右
 			{
-				start[lane] = handObj[lane]->GetTransform().GetPos();
+				start[lane] = player->GetCapturePos(YOLO_POSE_INDEX::WRIST_R);
+				start[0].y -= start[0].y * 2.0f;
+
 			}
 		}
 		
@@ -349,27 +284,69 @@ void GameScene::Collision()
 					continue;
 				}
 			}
-			if (!input->GetPadConnect())
+			lenRimit = 20.0f;//仮
+			lane = noteObj->Notes()[i].lane;
+			if (lane == 0)
 			{
-				RotAndLenCalculationMouse();
-				lenRimit = 100.0f;//仮
+				RotAndLenCalculationStick(static_cast<Hand>(0));
 			}
-			else
+			else if (lane == 1)
 			{
-				lenRimit = 5.0f;//仮
-				lane = noteObj->Notes()[i].lane;
-				if (lane == 0)
-				{
-					RotAndLenCalculationStick(static_cast<Hand>(0));
-				}
-				else if (lane == 1)
-				{
-					RotAndLenCalculationStick(static_cast<Hand>(1));
-				}
+				RotAndLenCalculationStick(static_cast<Hand>(1));
 			}
-
 
 			if (noteObj->Notes()[i].direction == DIRECTION::right)
+			{
+				center = 180;
+				min = -(center - scope);
+				max = center - scope;
+				if (max <= angle || angle <= min)
+				{
+					//長さが一定以上超えていないなら
+					if (length < lenRimit)
+					{
+						continue;
+					}
+					score[PERFECT]++;
+					isSuccess = true;
+
+				}
+			}
+			else if (noteObj->Notes()[i].direction == DIRECTION::up)
+			{
+				center = 90;
+				min = center - scope;
+				max = center + scope;
+				if (min <= angle && angle <= max)
+				{
+					//長さが一定以上超えていないなら
+					if (length < lenRimit)
+					{
+						continue;
+					}
+					score[PERFECT]++;
+					isSuccess = true;
+				}
+
+			}
+			else if (noteObj->Notes()[i].direction == DIRECTION::dawn)
+			{
+				center = -90;
+				min = center - scope;
+				max = center + scope;
+				if (min <= angle && angle <= max)
+				{
+					//長さが一定以上超えていないなら
+					if (length < lenRimit)
+					{
+						continue;
+					}
+					score[PERFECT]++;
+					isSuccess = true;
+				}
+
+			}
+			else if (noteObj->Notes()[i].direction == DIRECTION::left)
 			{
 				center = 0;
 				min = center - scope;
@@ -387,65 +364,9 @@ void GameScene::Collision()
 				}
 
 			}
-			else if (noteObj->Notes()[i].direction == DIRECTION::up)
-			{
-				center = -90;
-				min = center - scope;
-				max = center + scope;
-				if (min <= angle && angle <= max)
-				{
-					//長さが一定以上超えていないなら
-					if (length < lenRimit)
-					{
-						continue;
-					}
-					score[PERFECT]++;
-					isSuccess = true;
-				}
-
-			}
-			else if (noteObj->Notes()[i].direction == DIRECTION::dawn)
-			{
-				center = 90;
-				min = center - scope;
-				max = center + scope;
-				if (min <= angle && angle <= max)
-				{
-					//長さが一定以上超えていないなら
-					if (length < lenRimit)
-					{
-						continue;
-					}
-					score[PERFECT]++;
-					isSuccess = true;
-				}
-
-			}
-			else if (noteObj->Notes()[i].direction == DIRECTION::left)
-			{
-				center = 180;
-				min = -(center - scope);
-				max = center - scope;
-				if (max <= angle || angle <= min)
-				{
-					//長さが一定以上超えていないなら
-					if (length < lenRimit)
-					{
-						continue;
-					}
-					score[PERFECT]++;
-					isSuccess = true;
-					
-				}
-
-			}
 			if (isSuccess)
 			{
-				KMyMath::Vector3 pos;
 				combo++;
-				pos = resetPos;
-				pos.x += 100.0f * lane;
-				handObj[lane]->GetTransform().SetPos(pos);
 				noteObj->Notes()[i].isHit = true;
 			}
 			break;//for文から抜ける
@@ -478,17 +399,20 @@ void GameScene::OutPutCollision()
 		//ノードと現在のタイムを比較
 		float notetime = sec * music->ConvertBeatToMiliSeconds(noteObj->NotesMap()[it->first].beat);
 		float diff = notetime - playTime;
-		//スタート位置の取得10から5フレーム前に取得
-		if (diff <= perfect + 10 && diff >= perfect + 5)
+		//スタート位置の取得5から1フレーム前に取得
+		if (diff <= perfect + 5 && diff >= perfect + 1)
 		{
 			lane = noteObj->NotesMap()[it->first].lane;
 			if (lane == 0)//左
 			{
-				start[lane] = handObj[lane]->GetTransform().GetPos();
+				start[lane] = player->GetCapturePos(YOLO_POSE_INDEX::WRIST_L);
+				start[0].y -= start[0].y * 2.0f;
+
 			}
 			else if (lane == 1)//右
 			{
-				start[lane] = handObj[lane]->GetTransform().GetPos();
+				start[lane] = player->GetCapturePos(YOLO_POSE_INDEX::WRIST_R);
+				start[0].y -= start[0].y * 2.0f;
 			}
 		}
 
@@ -503,23 +427,15 @@ void GameScene::OutPutCollision()
 					continue;
 				}
 			}
-			if (!input->GetPadConnect())
+			lenRimit = 20.0f;//仮
+			lane = noteObj->NotesMap()[it->first].lane;
+			if (lane == 0)
 			{
-				RotAndLenCalculationMouse();
-				lenRimit = 100.0f;//仮
+				RotAndLenCalculationStick(static_cast<Hand>(0));
 			}
-			else
+			else if (lane == 1)
 			{
-				lenRimit = 5.0f;//仮
-				lane = noteObj->NotesMap()[it->first].lane;
-				if (lane == 0)
-				{
-					RotAndLenCalculationStick(static_cast<Hand>(0));
-				}
-				else if (lane == 1)
-				{
-					RotAndLenCalculationStick(static_cast<Hand>(1));
-				}
+				RotAndLenCalculationStick(static_cast<Hand>(1));
 			}
 
 			center = 0;
@@ -580,11 +496,7 @@ void GameScene::OutPutCollision()
 			
 			if (isSuccess)
 			{
-				KMyMath::Vector3 pos;
 				combo++;
-				pos = resetPos;
-				pos.x += 100.0f * lane;
-				handObj[lane]->GetTransform().SetPos(pos);
 				noteObj->NotesMap()[it->first].isHit = true;
 			}
 			break;//for文から抜ける

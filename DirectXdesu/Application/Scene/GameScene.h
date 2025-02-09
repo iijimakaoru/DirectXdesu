@@ -63,6 +63,7 @@ public:
 
 	void InitializePoseUpdate();
 	void InitializePoseDraw();
+	void GoNextScene();
 private:
 	enum OBJ
 	{

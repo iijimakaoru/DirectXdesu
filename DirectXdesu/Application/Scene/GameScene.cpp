@@ -96,7 +96,7 @@ void GameScene::Init()
 	playTime = 0;
 	Meter meter = { 4,4 };
 	music = std::make_unique<MusicDesc>(85.0f, meter);
-	test = false;
+	test = true;
 	noteObj = std::make_unique<NoteObj>();
 	noteObj->Init(test,music.get());
 
@@ -108,7 +108,6 @@ void GameScene::Init()
 	
 	// 音
 	audioManager_ = AudioManager::GetInstance();
-	audioManager_->BGMPlay_wav("maou_bgm_cyber44.wav");
 	//------------------------------------------------------------------------------------------------------------------------------------------------------------//
 
 	MCBM::AnimationModelManager::GetInstance()->Load("fox");
@@ -151,7 +150,12 @@ void GameScene::Update() {
 		}
 		frame++;
 	}
+	
+	if (input->IsTrigger(DIK_H)) { 
+		initialePoseSet = true;
+		audioManager_->BGMPlay_wav("maou_bgm_cyber44.wav");
 
+	}
 	if (input->GetMouseClickTrigger(MouseBotton::Left))
 	{
 		start[1] = player->GetCapturePos(YOLO_POSE_INDEX::WRIST_R);
@@ -173,8 +177,8 @@ void GameScene::Update() {
 
 	ImGui::End();
 
-	if (test)OutPutCollision();
-	else Collision();
+	/*if (test)OutPutCollision();
+	else Collision();*/
 	if (initialePoseSet)
 	{
 		playTime++;

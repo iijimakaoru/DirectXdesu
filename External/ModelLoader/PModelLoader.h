@@ -29,6 +29,8 @@ public:
 
 	static void Load(P_MODEL_DATA* pData,const std::string& filePath);
 
+	static void SmoothingLoad(P_MODEL_DATA* pData,const std::string& filePath);
+
 private:
 
 	PModelLoader();
@@ -40,6 +42,7 @@ private:
 
 	void _Load(P_MODEL_DATA* pData,const std::string& filePath);
 
+	void _SmoothingLoad(P_MODEL_DATA* pData,const std::string& filePath);
 private:
 
 	std::string baseDirectory = "Resources/";

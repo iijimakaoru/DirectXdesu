@@ -1,6 +1,8 @@
 #include "KModel.h"
 #include "KDirectXCommon.h"
 
+#include<PModelLoader.h>
+
 #pragma warning(push)
 #pragma warning(disable : 4244)
 #include <xutility>
@@ -10,55 +12,56 @@ Cube::Cube() {
 	vertices = {
   //  x	  y	    z	 n    u	   v
   // 前
-	    {{-1.0f, -1.0f, -1.0f}, {}, {0.0f, 1.0f}}, // 左下
-	    {{-1.0f, 1.0f, -1.0f},  {}, {0.0f, 0.0f}}, // 左上
-	    {{1.0f, -1.0f, -1.0f},  {}, {1.0f, 1.0f}}, // 右下
-	    {{1.0f, 1.0f, -1.0f},   {}, {1.0f, 0.0f}}, // 右上
+		{{-1.0f, -1.0f, -1.0f}, {}, {0.0f, 1.0f}}, // 左下
+		{{-1.0f, 1.0f, -1.0f},  {}, {0.0f, 0.0f}}, // 左上
+		{{1.0f, -1.0f, -1.0f},  {}, {1.0f, 1.0f}}, // 右下
+		{{1.0f, 1.0f, -1.0f},   {}, {1.0f, 0.0f}}, // 右上
   // 後
-	    {{1.0f, -1.0f, 1.0f},   {}, {1.0f, 1.0f}}, // 右下
-	    {{1.0f, 1.0f, 1.0f},    {}, {1.0f, 0.0f}}, // 右上
-	    {{-1.0f, -1.0f, 1.0f},  {}, {0.0f, 1.0f}}, // 左下
-	    {{-1.0f, 1.0f, 1.0f},   {}, {0.0f, 0.0f}}, // 左上
+		{{1.0f, -1.0f, 1.0f},   {}, {1.0f, 1.0f}}, // 右下
+		{{1.0f, 1.0f, 1.0f},    {}, {1.0f, 0.0f}}, // 右上
+		{{-1.0f, -1.0f, 1.0f},  {}, {0.0f, 1.0f}}, // 左下
+		{{-1.0f, 1.0f, 1.0f},   {}, {0.0f, 0.0f}}, // 左上
   // 左
-	    {{-1.0f, -1.0f, -1.0f}, {}, {0.0f, 1.0f}}, // 左下
-	    {{-1.0f, -1.0f, 1.0f},  {}, {0.0f, 0.0f}}, // 左上
-	    {{-1.0f, 1.0f, -1.0f},  {}, {1.0f, 1.0f}}, // 右下
-	    {{-1.0f, 1.0f, 1.0f},   {}, {1.0f, 0.0f}}, // 右上
+		{{-1.0f, -1.0f, -1.0f}, {}, {0.0f, 1.0f}}, // 左下
+		{{-1.0f, -1.0f, 1.0f},  {}, {0.0f, 0.0f}}, // 左上
+		{{-1.0f, 1.0f, -1.0f},  {}, {1.0f, 1.0f}}, // 右下
+		{{-1.0f, 1.0f, 1.0f},   {}, {1.0f, 0.0f}}, // 右上
   // 右
-	    {{1.0f, 1.0f, -1.0f},   {}, {1.0f, 1.0f}}, // 右下
-	    {{1.0f, 1.0f, 1.0f},    {}, {1.0f, 0.0f}}, // 右上
-	    {{1.0f, -1.0f, -1.0f},  {}, {0.0f, 1.0f}}, // 左下
-	    {{1.0f, -1.0f, 1.0f},   {}, {0.0f, 0.0f}}, // 左上
+		{{1.0f, 1.0f, -1.0f},   {}, {1.0f, 1.0f}}, // 右下
+		{{1.0f, 1.0f, 1.0f},    {}, {1.0f, 0.0f}}, // 右上
+		{{1.0f, -1.0f, -1.0f},  {}, {0.0f, 1.0f}}, // 左下
+		{{1.0f, -1.0f, 1.0f},   {}, {0.0f, 0.0f}}, // 左上
   // 下
-	    {{1.0f, -1.0f, -1.0f},  {}, {1.0f, 1.0f}}, // 右下
-	    {{1.0f, -1.0f, 1.0f},   {}, {1.0f, 0.0f}}, // 右上
-	    {{-1.0f, -1.0f, -1.0f}, {}, {0.0f, 1.0f}}, // 左下
-	    {{-1.0f, -1.0f, 1.0f},  {}, {0.0f, 0.0f}}, // 左上
+		{{1.0f, -1.0f, -1.0f},  {}, {1.0f, 1.0f}}, // 右下
+		{{1.0f, -1.0f, 1.0f},   {}, {1.0f, 0.0f}}, // 右上
+		{{-1.0f, -1.0f, -1.0f}, {}, {0.0f, 1.0f}}, // 左下
+		{{-1.0f, -1.0f, 1.0f},  {}, {0.0f, 0.0f}}, // 左上
   // 上
-	    {{-1.0f, 1.0f, -1.0f},  {}, {0.0f, 1.0f}}, // 左下
-	    {{-1.0f, 1.0f, 1.0f},   {}, {0.0f, 0.0f}}, // 左上
-	    {{1.0f, 1.0f, -1.0f},   {}, {1.0f, 1.0f}}, // 右下
-	    {{1.0f, 1.0f, 1.0f},    {}, {1.0f, 0.0f}}  // 右上
+		{{-1.0f, 1.0f, -1.0f},  {}, {0.0f, 1.0f}}, // 左下
+		{{-1.0f, 1.0f, 1.0f},   {}, {0.0f, 0.0f}}, // 左上
+		{{1.0f, 1.0f, -1.0f},   {}, {1.0f, 1.0f}}, // 右下
+		{{1.0f, 1.0f, 1.0f},    {}, {1.0f, 0.0f}}  // 右上
 	};
 
 	indices = {         // 前
-	           0, 1, 2, // 三角形1つ目
-	           2, 1, 3, // 三角形2つ目
-	                    // 後
-	           4, 5, 6, 6, 5, 7,
-	           // 左
-	           8, 9, 10, 10, 9, 11,
-	           // 右
-	           12, 13, 14, 14, 13, 15,
-	           // 下
-	           16, 17, 18, 18, 17, 19,
-	           // 上
-	           20, 21, 22, 22, 21, 23};
+			   0, 1, 2, // 三角形1つ目
+			   2, 1, 3, // 三角形2つ目
+						// 後
+			   4, 5, 6, 6, 5, 7,
+			   // 左
+			   8, 9, 10, 10, 9, 11,
+			   // 右
+			   12, 13, 14, 14, 13, 15,
+			   // 下
+			   16, 17, 18, 18, 17, 19,
+			   // 上
+			   20, 21, 22, 22, 21, 23 };
 
 	CreateModel();
 }
 
-Cube::~Cube() {}
+Cube::~Cube() {
+}
 
 Triangle::Triangle() {
 	std::ifstream file;
@@ -72,22 +75,25 @@ Triangle::Triangle() {
 	std::vector<KMyMath::Vector2> texcoords;
 
 	std::string line;
-	while (getline(file, line)) {
+	while (getline(file, line))
+	{
 		std::istringstream line_stream(line);
 
 		std::string key;
 		std::getline(line_stream, key, ' ');
 
-		if (key == "v") {
+		if (key == "v")
+		{
 			KMyMath::Vector3 pos{};
 			line_stream >> pos.x;
 			line_stream >> pos.y;
 			line_stream >> pos.z;
-			
+
 			positions.emplace_back(pos);
 		}
 
-		if (key == "vt") {
+		if (key == "vt")
+		{
 			KMyMath::Vector2 texcoord{};
 			line_stream >> texcoord.x;
 			line_stream >> texcoord.y;
@@ -97,7 +103,8 @@ Triangle::Triangle() {
 			texcoords.emplace_back(texcoord);
 		}
 
-		if (key == "vn") {
+		if (key == "vn")
+		{
 			KMyMath::Vector3 normal{};
 			line_stream >> normal.x;
 			line_stream >> normal.y;
@@ -107,9 +114,11 @@ Triangle::Triangle() {
 			normals.emplace_back(normal);
 		}
 
-		if (key == "f") {
+		if (key == "f")
+		{
 			std::string index_string;
-			while (std::getline(line_stream, index_string, ' ')) {
+			while (std::getline(line_stream, index_string, ' '))
+			{
 				std::istringstream index_stream(index_string);
 
 				unsigned short indexPosition, indexNormal, indexTexcoord;
@@ -135,60 +144,62 @@ Triangle::Triangle() {
 	CreateModel();
 }
 
-Triangle::~Triangle() {}
+Triangle::~Triangle() {
+}
 
 Line::Line() {
 	vertices = {
   // 前
-	    {{-0.1f, -0.1f, -40.0f}, {}, {0.0f, 1.0f}}, // 左下
-	    {{-0.1f, 0.1f, -40.0f},  {}, {0.0f, 0.0f}}, // 左上
-	    {{0.1f, -0.1f, -40.0f},  {}, {1.0f, 1.0f}}, // 右下
-	    {{0.1f, 0.1f, -40.0f},   {}, {1.0f, 0.0f}}, // 右上
+		{{-0.1f, -0.1f, -40.0f}, {}, {0.0f, 1.0f}}, // 左下
+		{{-0.1f, 0.1f, -40.0f},  {}, {0.0f, 0.0f}}, // 左上
+		{{0.1f, -0.1f, -40.0f},  {}, {1.0f, 1.0f}}, // 右下
+		{{0.1f, 0.1f, -40.0f},   {}, {1.0f, 0.0f}}, // 右上
   // 後
-	    {{0.1f, -0.1f, 40.0f},   {}, {1.0f, 1.0f}}, // 右下
-	    {{0.1f, 0.1f, 40.0f},    {}, {1.0f, 0.0f}}, // 右上
-	    {{-0.1f, -0.1f, 40.0f},  {}, {0.0f, 1.0f}}, // 左下
-	    {{-0.1f, 0.1f, 40.0f},   {}, {0.0f, 0.0f}}, // 左上
+		{{0.1f, -0.1f, 40.0f},   {}, {1.0f, 1.0f}}, // 右下
+		{{0.1f, 0.1f, 40.0f},    {}, {1.0f, 0.0f}}, // 右上
+		{{-0.1f, -0.1f, 40.0f},  {}, {0.0f, 1.0f}}, // 左下
+		{{-0.1f, 0.1f, 40.0f},   {}, {0.0f, 0.0f}}, // 左上
   // 左
-	    {{-0.1f, -0.1f, -40.0f}, {}, {0.0f, 1.0f}}, // 左下
-	    {{-0.1f, -0.1f, 40.0f},  {}, {0.0f, 0.0f}}, // 左上
-	    {{-0.1f, 0.1f, -40.0f},  {}, {1.0f, 1.0f}}, // 右下
-	    {{-0.1f, 0.1f, 40.0f},   {}, {1.0f, 0.0f}}, // 右上
+		{{-0.1f, -0.1f, -40.0f}, {}, {0.0f, 1.0f}}, // 左下
+		{{-0.1f, -0.1f, 40.0f},  {}, {0.0f, 0.0f}}, // 左上
+		{{-0.1f, 0.1f, -40.0f},  {}, {1.0f, 1.0f}}, // 右下
+		{{-0.1f, 0.1f, 40.0f},   {}, {1.0f, 0.0f}}, // 右上
   // 右
-	    {{0.1f, 0.1f, -40.0f},   {}, {1.0f, 1.0f}}, // 右下
-	    {{0.1f, 0.1f, 40.0f},    {}, {1.0f, 0.0f}}, // 右上
-	    {{0.1f, -0.1f, -40.0f},  {}, {0.0f, 1.0f}}, // 左下
-	    {{0.1f, -0.1f, 40.0f},   {}, {0.0f, 0.0f}}, // 左上
+		{{0.1f, 0.1f, -40.0f},   {}, {1.0f, 1.0f}}, // 右下
+		{{0.1f, 0.1f, 40.0f},    {}, {1.0f, 0.0f}}, // 右上
+		{{0.1f, -0.1f, -40.0f},  {}, {0.0f, 1.0f}}, // 左下
+		{{0.1f, -0.1f, 40.0f},   {}, {0.0f, 0.0f}}, // 左上
   // 下
-	    {{0.1f, -0.1f, -40.0f},  {}, {1.0f, 1.0f}}, // 右下
-	    {{0.1f, -0.1f, 40.0f},   {}, {1.0f, 0.0f}}, // 右上
-	    {{-0.1f, -0.1f, -40.0f}, {}, {0.0f, 1.0f}}, // 左下
-	    {{-0.1f, -0.1f, 40.0f},  {}, {0.0f, 0.0f}}, // 左上
+		{{0.1f, -0.1f, -40.0f},  {}, {1.0f, 1.0f}}, // 右下
+		{{0.1f, -0.1f, 40.0f},   {}, {1.0f, 0.0f}}, // 右上
+		{{-0.1f, -0.1f, -40.0f}, {}, {0.0f, 1.0f}}, // 左下
+		{{-0.1f, -0.1f, 40.0f},  {}, {0.0f, 0.0f}}, // 左上
   // 上
-	    {{-0.1f, 0.1f, -40.0f},  {}, {0.0f, 1.0f}}, // 左下
-	    {{-0.1f, 0.1f, 40.0f},   {}, {0.0f, 0.0f}}, // 左上
-	    {{0.1f, 0.1f, -40.0f},   {}, {1.0f, 1.0f}}, // 右下
-	    {{0.1f, 0.1f, 40.0f},    {}, {1.0f, 0.0f}}  // 右上
+		{{-0.1f, 0.1f, -40.0f},  {}, {0.0f, 1.0f}}, // 左下
+		{{-0.1f, 0.1f, 40.0f},   {}, {0.0f, 0.0f}}, // 左上
+		{{0.1f, 0.1f, -40.0f},   {}, {1.0f, 1.0f}}, // 右下
+		{{0.1f, 0.1f, 40.0f},    {}, {1.0f, 0.0f}}  // 右上
 	};
 
 	indices = {         // 前
-	           0, 1, 2, // 三角形1つ目
-	           2, 1, 3, // 三角形2つ目
-	                    // 後
-	           4, 5, 6, 6, 5, 7,
-	           // 左
-	           8, 9, 10, 10, 9, 11,
-	           // 右
-	           12, 13, 14, 14, 13, 15,
-	           // 下
-	           16, 17, 18, 18, 17, 19,
-	           // 上
-	           20, 21, 22, 22, 21, 23};
+			   0, 1, 2, // 三角形1つ目
+			   2, 1, 3, // 三角形2つ目
+						// 後
+			   4, 5, 6, 6, 5, 7,
+			   // 左
+			   8, 9, 10, 10, 9, 11,
+			   // 右
+			   12, 13, 14, 14, 13, 15,
+			   // 下
+			   16, 17, 18, 18, 17, 19,
+			   // 上
+			   20, 21, 22, 22, 21, 23 };
 
 	CreateModel();
 }
 
-Line::~Line() {}
+Line::~Line() {
+}
 
 void KModel::LoadMaterial(const std::string& directoryPath, const std::string& filename) {
 	// ファイルストリーム
@@ -196,47 +207,55 @@ void KModel::LoadMaterial(const std::string& directoryPath, const std::string& f
 	// マテリアルファイルを開く
 	file.open(directoryPath + filename);
 	// ファイルオープン失敗をチェック
-	if (file.fail()) {
+	if (file.fail())
+	{
 		assert(0);
 	}
 	// 1行ずつ読み込む
 	std::string line;
-	while (getline(file, line)) {
-		// 1行分の文字列をストリームに変換
+	while (getline(file, line))
+	{
+// 1行分の文字列をストリームに変換
 		std::istringstream line_stream(line);
 		// 半角スペース区切りで先頭文字列を取得
 		std::string key;
 		getline(line_stream, key, ' ');
 		// 先頭のタブ文字は無視する
-		if (key[0] == '\t') {
+		if (key[0] == '\t')
+		{
 			key.erase(key.begin());
 		}
 		// 先頭文字列がnewmtlならマテリアル名
-		if (key == "newmtl") {
-			// マテリアル名読み込み
+		if (key == "newmtl")
+		{
+// マテリアル名読み込み
 			line_stream >> objMtl.name;
 		}
 		// 先頭文字列がKaならアンビエント色
-		if (key == "Ka") {
+		if (key == "Ka")
+		{
 			line_stream >> objMtl.ambient.x;
 			line_stream >> objMtl.ambient.y;
 			line_stream >> objMtl.ambient.z;
 		}
 		// 先頭文字列がKdならアンビエント色
-		if (key == "Kd") {
+		if (key == "Kd")
+		{
 			line_stream >> objMtl.diffuse.x;
 			line_stream >> objMtl.diffuse.y;
 			line_stream >> objMtl.diffuse.z;
 		}
 		// 先頭文字列がKsならアンビエント色
-		if (key == "Ks") {
+		if (key == "Ks")
+		{
 			line_stream >> objMtl.specular.x;
 			line_stream >> objMtl.specular.y;
 			line_stream >> objMtl.specular.z;
 		}
 		// 先頭文字列がmap_Kdならテクスチャファイル名
-		if (key == "map_Kd") {
-			// テクスチャのファイル名読み込み
+		if (key == "map_Kd")
+		{
+// テクスチャのファイル名読み込み
 			line_stream >> objMtl.textureFilename;
 			// テクスチャ読み込み
 			texData = TextureManager::Load(directoryPath + objMtl.textureFilename);
@@ -246,7 +265,9 @@ void KModel::LoadMaterial(const std::string& directoryPath, const std::string& f
 	file.close();
 }
 
-void KModel::Init() { CreateConstBuffer(); }
+void KModel::Init() {
+	CreateConstBuffer();
+}
 
 void KModel::CreateConstBuffer() {
 	HRESULT result;
@@ -268,8 +289,8 @@ void KModel::CreateConstBuffer() {
 
 	// 定数バッファの生成
 	result = KDirectXCommon::GetInstance()->GetDevice()->CreateCommittedResource(
-	    &heapProp, D3D12_HEAP_FLAG_NONE, &b1ResourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ,
-	    nullptr, IID_PPV_ARGS(&constBuffB1));
+		&heapProp, D3D12_HEAP_FLAG_NONE, &b1ResourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ,
+		nullptr, IID_PPV_ARGS(&constBuffB1));
 	assert(SUCCEEDED(result));
 }
 
@@ -295,40 +316,40 @@ void KModel::CreateModel() {
 void KModel::Draw(UINT rootParamIndex) {
 	// 頂点バッファビューの設定
 	KDirectXCommon::GetInstance()->GetCommandList()->IASetVertexBuffers(
-	    0, 1, &vertexs->GetVertBuffView());
+		0, 1, &vertexs->GetVertBuffView());
 
 	// インデックスバッファビューの設定
 	KDirectXCommon::GetInstance()->GetCommandList()->IASetIndexBuffer(&vertexs->GetIndexBuffView());
 
 	KDirectXCommon::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(
-	    rootParamIndex, constBuffB1->GetGPUVirtualAddress());
+		rootParamIndex, constBuffB1->GetGPUVirtualAddress());
 
 	// デスクリプタヒープのセット
-	ID3D12DescriptorHeap* ppHeaps[] = {texData.srvHeap.Get()};
+	ID3D12DescriptorHeap* ppHeaps[] = { texData.srvHeap.Get() };
 	KDirectXCommon::GetInstance()->GetCommandList()->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 
 	// シェーダーリソースビューをセット
 	KDirectXCommon::GetInstance()->GetCommandList()->SetGraphicsRootDescriptorTable(
-	    2, texData.gpuHandle);
+		2, texData.gpuHandle);
 
 	// 描画
 	KDirectXCommon::GetInstance()->GetCommandList()->DrawIndexedInstanced(
-	    (UINT)indices.size(), 1, 0, 0, 0);
+		(UINT)indices.size(), 1, 0, 0, 0);
 }
 
 void KModel::Draw(UINT rootParamIndex, const TextureData& texData_) {
 	// 頂点バッファビューの設定
 	KDirectXCommon::GetInstance()->GetCommandList()->IASetVertexBuffers(
-	    0, 1, &vertexs->GetVertBuffView());
+		0, 1, &vertexs->GetVertBuffView());
 
 	// インデックスバッファビューの設定
 	KDirectXCommon::GetInstance()->GetCommandList()->IASetIndexBuffer(&vertexs->GetIndexBuffView());
 
 	KDirectXCommon::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(
-	    rootParamIndex, constBuffB1->GetGPUVirtualAddress());
+		rootParamIndex, constBuffB1->GetGPUVirtualAddress());
 
 	// デスクリプタヒープのセット
-	ID3D12DescriptorHeap* ppHeaps[] = {texData_.srvHeap.Get()};
+	ID3D12DescriptorHeap* ppHeaps[] = { texData_.srvHeap.Get() };
 	KDirectXCommon::GetInstance()->GetCommandList()->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 
 	// 先頭ハンドルを取得
@@ -339,106 +360,53 @@ void KModel::Draw(UINT rootParamIndex, const TextureData& texData_) {
 
 	// 描画
 	KDirectXCommon::GetInstance()->GetCommandList()->DrawIndexedInstanced(
-	    static_cast<UINT>(indices.size()), 1, 0, 0, 0);
+		static_cast<UINT>(indices.size()), 1, 0, 0, 0);
 }
 
 MtlObj::MtlObj(const std::string& modelname, bool smoothing) {
-	std::ifstream file;
 
-	const std::string filename = modelname + ".obj";
-	const std::string directoryPath = "Resources/obj/" + modelname + "/";
-	file.open(directoryPath + filename);
-
-	assert(!file.fail());
-
-	std::vector<KMyMath::Vector3> positions;
-	std::vector<KMyMath::Vector3> normals;
-	std::vector<KMyMath::Vector2> texcoords;
-
-	std::string line;
-	while (getline(file, line)) {
-
-		std::istringstream line_stream(line);
-
-		std::string key;
-		std::getline(line_stream, key, ' ');
-
-		if (key == "mtllib") {
-			//
-			std::string filename_;
-			line_stream >> filename_;
-			//
-			LoadMaterial(directoryPath, filename_);
-		}
-
-		if (key == "v") {
-			KMyMath::Vector3 pos{};
-			line_stream >> pos.x;
-			line_stream >> pos.y;
-			line_stream >> pos.z;
-			pos.x *= -1.0f;
-			positions.emplace_back(pos);
-		}
-
-		if (key == "vt") {
-			KMyMath::Vector2 texcoord{};
-			line_stream >> texcoord.x;
-			line_stream >> texcoord.y;
-
-			texcoord.y = 1.0f - texcoord.y;
-
-			texcoords.emplace_back(texcoord);
-		}
-
-		if (key == "vn") {
-			KMyMath::Vector3 normal{};
-			line_stream >> normal.x;
-			line_stream >> normal.y;
-			line_stream >> normal.z;
-
-			normals.emplace_back(normal);
-		}
-
-		if (key == "f") {
-			std::string index_string;
-			while (std::getline(line_stream, index_string, ' ')) {
-				std::istringstream index_stream(index_string);
-
-				unsigned short indexPosition, indexNormal, indexTexcoord;
-
-				index_stream >> indexPosition;
-				index_stream.seekg(1, std::ios_base::cur);
-				index_stream >> indexTexcoord;
-				index_stream.seekg(1, std::ios_base::cur);
-				index_stream >> indexNormal;
-
-				VertexPosNormalUV vertex{};
-				vertex.pos = positions[indexPosition - 1];
-				vertex.normal = normals[indexNormal - 1];
-				vertex.uv = texcoords[indexTexcoord - 1];
-				vertices.emplace_back(vertex);
-
-				if (smoothing)
-				{
-					smoothData[static_cast<size_t>(indexPosition)].emplace_back(static_cast<uint16_t>(vertices.size() - 1));
-				}
-
-				indices.emplace_back((unsigned short)indices.size());
-			}
-		}
-	}
-	file.close();
-
+	PHONONLOADER::P_MODEL_DATA data;
 
 	if (smoothing)
 	{
-		CalculateSmoothedVertexNormals();
+		PHONONLOADER::PModelLoader::SmoothingLoad(&data, "obj/" + modelname);
+	}
+	else
+	{
+		PHONONLOADER::PModelLoader::Load(&data, "obj/" + modelname);
+	}
+
+	PHONONLOADER::P_MODEL_MESH& mesh = data.meshes[0];
+
+	for (size_t i = 0; i < mesh.vertices.size(); i++)
+	{
+		VertexPosNormalUV ver;
+		ver.pos = { mesh.vertices[i].position.GetX(),mesh.vertices[i].position.GetY(),mesh.vertices[i].position.GetZ() };
+		ver.normal = { mesh.vertices[i].normal.GetX(),mesh.vertices[i].normal.GetY(),mesh.vertices[i].normal.GetZ() };
+		ver.uv = { mesh.vertices[i].uv.GetX(),mesh.vertices[i].uv.GetY() };
+
+		vertices.push_back(ver);
+	}
+
+	for (size_t i = 0; i < mesh.indices.size(); i++)
+	{
+		indices.push_back((uint16_t)mesh.indices[i]);
+	}
+
+	texData = TextureManager::Load(mesh.textures[0]);
+
+	{
+		objMtl.alpha = mesh.material.alpha;
+		objMtl.ambient = { mesh.material.ambient.GetX(),mesh.material.ambient.GetY(),mesh.material.ambient.GetZ() };
+		objMtl.diffuse = { mesh.material.diffuse.GetX(),mesh.material.diffuse.GetY(),mesh.material.diffuse.GetZ() };
+		objMtl.specular = { mesh.material.specular.GetX(),mesh.material.specular.GetY(),mesh.material.specular.GetZ() };
 	}
 
 	CreateModel();
 }
 
-MtlObj::~MtlObj() {}
+MtlObj::~MtlObj() {
+}
 
 void MtlObj::CalculateSmoothedVertexNormals()
 {
@@ -466,9 +434,9 @@ void MtlObj::CalculateSmoothedVertexNormals()
 }
 
 KModel::ObjMaterialInfo::ObjMaterialInfo() {
-	ambient = {0.3f, 0.3f, 0.3f};
-	diffuse = {0.0f, 0.0f, 0.0f};
-	specular = {0.0f, 0.0f, 0.0f};
+	ambient = { 0.3f, 0.3f, 0.3f };
+	diffuse = { 0.0f, 0.0f, 0.0f };
+	specular = { 0.0f, 0.0f, 0.0f };
 	alpha = 1.0f;
 }
 

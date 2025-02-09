@@ -142,12 +142,6 @@ void GameScene::Update() {
 	
 	if (initializedPose)
 	{
-		ImGui::Begin("lo");
-		ImGui::DragInt("perfect", &score[PERFECT]);
-		ImGui::DragInt("great", &score[GREAT]);
-		ImGui::DragInt("miss", &score[MISS]);
-		ImGui::DragInt("combo", &combo);
-		ImGui::End();
 		if (flag && !audioManager_->IsPlaying("maou_bgm_cyber44.wav"))
 		{
 			GoNextScene();
@@ -173,16 +167,6 @@ void GameScene::Update() {
 		{
 			RotAndLenCalculationStick(Hand::R);
 		}
-		float a[2] = { start[1].x,start[1].y };
-		float b[2] = { end[1].x,end[1].y };
-		ImGui::Begin("lo");
-
-		ImGui::InputFloat2("start", a);
-		ImGui::InputFloat2("end", b);
-		ImGui::InputFloat("angle", &angle);
-		ImGui::InputFloat("len", &length);
-
-		ImGui::End();
 
 		if (test)OutPutCollision();
 		else Collision();
@@ -206,6 +190,7 @@ void GameScene::Update() {
 	else
 	{
 		InitializePoseUpdate();
+		InitializePoseDraw();
 	}
 	camera->Update();
 	
@@ -228,12 +213,7 @@ void GameScene::ObjDraw()
 		objectSetter->Draw(timer_.get(), camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro());
 
 		noteObj->Draw();
-
 		
-	}
-	else
-	{
-		InitializePoseDraw();
 	}
 
 	player->Draw();
@@ -267,33 +247,35 @@ void GameScene::InitializePoseUpdate()
 
 void GameScene::InitializePoseDraw()
 {
-	ImGui::Begin("InitializePoseInfo", nullptr,
-		ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
-	ImGui::SetWindowSize("InitializePoseInfo", { 480  ,280 });
-	ImGui::SetWindowPos({ 640 - 240,360 - 140 });
-
-	if (!initialePoseSet)
+	if (ImGui::Begin("InitializePoseInfo", nullptr,
+		ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove))
 	{
-		if (ImGui::Button("PoseInit\n##PleaseTPoseKeep##", { 140, 240 }))
-		{
-			initialePoseSet = true;
-			initializetime_ = std::chrono::system_clock::now();
-		}
+		ImGui::SetWindowSize("InitializePoseInfo", { 626 ,650 });
+		ImGui::SetWindowPos({ 10,10 });
+		ImGui::Text("SetInitialize");
 
-		if (ImGui::Button("MoveGame", { 140, 240 }))
+		if (!initialePoseSet)
 		{
-			initializedPose = true;
-		}
-	}
-	else
-	{
-		std::chrono::seconds sec = std::chrono::duration_cast<std::chrono::seconds>(initializeCount_ - initializetime_);
-		
-		ImGui::Text("PleseTposeKeep!!!!: %d/%d Sec", sec,5);
-	
-	}
+			if (ImGui::Button("PoseInit\nPleaseTPoseKeep", { 140, 240 }))
+			{
+				initialePoseSet = true;
+				initializetime_ = std::chrono::system_clock::now();
+			}
 
-	ImGui::End();
+			if (ImGui::Button("MoveGame", { 140, 240 }))
+			{
+				initializedPose = true;
+			}
+		}
+		else
+		{
+			std::chrono::seconds sec = std::chrono::duration_cast<std::chrono::seconds>(initializeCount_ - initializetime_);
+
+			ImGui::Text("PleseTposeKeep!!!!: %d/%d Sec", sec, 5);
+
+		}
+		ImGui::End();
+	}
 
 }
 

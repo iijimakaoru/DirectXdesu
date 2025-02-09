@@ -20,6 +20,8 @@ public:
 
 	void SetSideVibration();
 
+
+
 private:
 	std::unique_ptr<MeshModel> centerModel_;
 	std::unique_ptr<CenterObject> centerObject_;

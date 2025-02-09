@@ -9,8 +9,8 @@ void ObjectSetter::Init(const Timer* timer, const KMyMath::Matrix4& matView, con
 
 	sideModel_ = std::make_unique<MeshModel>("SideObject");
 
-	leftSide_ = -160.0f;
-	rightSide_ = 160.0f;
+	leftSide_ = -180.0f;
+	rightSide_ = 180.0f;
 
 	{
 		KMyMath::Vector3 centerObjectPos = { 0.0f,100.0f,800.0f };
@@ -29,7 +29,7 @@ void ObjectSetter::Init(const Timer* timer, const KMyMath::Matrix4& matView, con
 			leftObjects_[i]->Init(sideModel_.get(), timer, matView, matProjection);
 
 			// 初期セット
-			KMyMath::Vector3 pos = { leftSide_ + MyMathUtility::GetRandF(-10.0f,10.0f),MyMathUtility::GetRandF(25.0f,100.0f) ,200.0f * (i + 2) };
+			KMyMath::Vector3 pos = { leftSide_ + MyMathUtility::GetRandF(-15.0f,15.0f),MyMathUtility::GetRandF(25.0f,100.0f) ,200.0f * (i + 2) };
 			float scaleNum = MyMathUtility::GetRandF(10.0f, 20.0f);
 			KMyMath::Vector3 scale = { scaleNum,scaleNum ,scaleNum };
 			KMyMath::Vector3 rot = { MyMathUtility::GetRandF(0.0f,180.0f),MyMathUtility::GetRandF(0.0f,180.0f) ,MyMathUtility::GetRandF(0.0f,180.0f) };
@@ -44,7 +44,7 @@ void ObjectSetter::Init(const Timer* timer, const KMyMath::Matrix4& matView, con
 			rightObjects_[i]->Init(sideModel_.get(), timer, matView, matProjection);
 
 			// 初期セット
-			KMyMath::Vector3 pos = { rightSide_ + MyMathUtility::GetRandF(-10.0f,10.0f),MyMathUtility::GetRandF(25.0f,100.0f) ,200.0f * (i + 2) };
+			KMyMath::Vector3 pos = { rightSide_ + MyMathUtility::GetRandF(-15.0f,15.0f),MyMathUtility::GetRandF(25.0f,100.0f) ,200.0f * (i + 2) };
 			float scaleNum = MyMathUtility::GetRandF(10.0f, 20.0f);
 			KMyMath::Vector3 scale = { scaleNum,scaleNum ,scaleNum };
 			KMyMath::Vector3 rot = { MyMathUtility::GetRandF(0.0f,180.0f),MyMathUtility::GetRandF(0.0f,180.0f) ,MyMathUtility::GetRandF(0.0f,180.0f) };

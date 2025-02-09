@@ -128,10 +128,6 @@ void MCBM::Skelton::CaptureBoneUpdate(YOLO_POSE_INDEX rootBoneName, uint32_t bon
 
 			nowBone.V3Norm();
 
-			nowBone.z += 0.025f;
-
-			nowBone.V3Norm();
-
 			if (i != 0)
 			{
 				initializeBone = tempVec;

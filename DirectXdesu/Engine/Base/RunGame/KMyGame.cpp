@@ -19,8 +19,10 @@ void KMyGame::Init() {
 	TextureManager::Load("Resources/texture/titleBg.png");
 	TextureManager::Load("Resources/texture/pressA.png");
 
+	AudioManager::GetInstance()->AllLoad();
+
 	// 最初のシーン
-	SceneManager::GetInstance()->ChangeScene("SETTING");
+	SceneManager::GetInstance()->ChangeScene("TITLE");
 }
 
 void KMyGame::Update() {

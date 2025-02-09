@@ -96,7 +96,7 @@ void GameScene::Init()
 	playTime = 0;
 	Meter meter = { 4,4 };
 	music = std::make_unique<MusicDesc>(85.0f, meter);
-	test = true;
+	test = false;
 	noteObj = std::make_unique<NoteObj>();
 	noteObj->Init(test,music.get());
 
@@ -124,11 +124,16 @@ void GameScene::Init()
 	player->Initilize("fox");
 
 	playerTrans.SetPos({ 0,49,-147 });
+	playerTrans.SetRot({ 0,180,0 });
 	
 	MCBM::CaptureManager::GetInstance()->GetYOLOPoseEstimation()->ExtrinsCalibrateLoad("Resources\\CalibrateData");
 	MCBM::CaptureManager::GetInstance()->GetYOLOPoseEstimation()->InterinsCalibrateLoad("Resources\\CalibrateData");
 
 	MCBM::CaptureManager::GetInstance()->YOLOStart();
+
+	audioManager_ = AudioManager::GetInstance();
+	isFrame = false;
+	frame = 0;
 }
 
 void GameScene::Update() {
@@ -142,9 +147,13 @@ void GameScene::Update() {
 	ImGui::DragInt("miss", &score[MISS]);
 	ImGui::DragInt("combo", &combo);
 	ImGui::End();
+	if (flag && !audioManager_->IsPlaying("maou_bgm_cyber44.wav"))
+	{
+		GoNextScene();
+	}
 
 	timer_->UpdateTimer();
-	if (flag && !audioManager_->IsPlaying("maou_bgm_cyber44.wav"))
+	if (input->IsTrigger(DIK_S)&&test)
 	{
 		noteObj->OutputNote();
 	}
@@ -677,4 +686,18 @@ void GameScene::LoadCSV(const std::string& name)
 	}
 	// ファイルを閉じる
 	file.close();
+}
+
+void GameScene::GoNextScene() {
+	if (input->GetPadButtonDown(A)) {
+		sceneManager->ChangeScene("TITLE");
+	}
+	else if (input->IsTrigger(DIK_SPACE)) {
+		sceneManager->ChangeScene("TITLE");
+	}
+
+	if (input->IsPress(DIK_LSHIFT) && input->IsPress(DIK_RSHIFT))
+	{
+		sceneManager->ChangeScene("SETTING");
+	}
 }

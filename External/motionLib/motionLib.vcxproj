@@ -78,7 +78,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LibraryPath>$(LibraryPath)</LibraryPath>
-    <IncludePath>$(ProjectDir)Include\Math;$(ProjectDir)Include\Animation;$(ProjectDir)Include;$(SolutionDir)External\opencv\build\include;$(SolutionDir)External\OnnxRuntimeforDirectML\Include;$(SolutionDir)External\ModelLoader</IncludePath>
+    <IncludePath>$(ProjectDir)Include\Math;$(ProjectDir)Include\Animation;$(ProjectDir)Include;$(SolutionDir)External\opencv\include;$(SolutionDir)External\OnnxRuntimeforDirectML\Include;$(SolutionDir)External\ModelLoader;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)Generated\Outputs\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)Generated\Obj\$(ProjectName)\$(Configuration)\</IntDir>
   </PropertyGroup>

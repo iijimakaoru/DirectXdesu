@@ -86,6 +86,8 @@
     <ClCompile Include="Application\Object\SideObject.cpp" />
     <ClCompile Include="Engine\Particle\GPUParticle\GroundEffectParticle.cpp" />
     <ClCompile Include="Engine\3D\Model\CaptureModel.cpp" />
+    <ClCompile Include="Application\CalibrationCallback.cpp" />
+    <ClCompile Include="Application\Scene\SettingScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Math\Vector2\Vector2.cpp">
@@ -272,12 +274,6 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Application\NoteObj.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Application\Scene\SettingScene.cpp">
-      <Filter>ソース ファイル\Application\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="Application\CalibrationCallback.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -536,16 +532,10 @@
     <ClInclude Include="Engine\2D\PostEffect\VignettePostEffect.h">
       <Filter>ヘッダー ファイル\Engine\2d\Sprites\PostEffect</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Particle\Emitter.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Base\DirectXCommon\d3dUtil.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Math\MyMath\MathHelper.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Particle\FrameResource.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Base\DirectXCommon\UploadBuffer.h">
@@ -554,43 +544,7 @@
     <ClInclude Include="Engine\Base\DirectXCommon\Timer.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Particle\GPUParticle.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Particle\ParticleEditor.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Particle\MeshGPUParticle.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Particle\ParticlePool.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Particle\RootSignature.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Particle\ComputePipelineState.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Particle\GraphicPipelineState.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Particle\CreateBlend.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Particle\DeadList.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Particle\DrawList.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Particle\DrawArgs.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Particle\CommandSignature.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Particle\MeshEmitter.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Application\MusicDesc.h">
@@ -599,12 +553,8 @@
     <ClInclude Include="Engine\3D\Model\CaptureModel.h">
       <Filter>ヘッダー ファイル\Engine\3d\Fbx</Filter>
     </ClInclude>
-    <ClInclude Include="Application\Scene\SettingScene.h">
-      <Filter>ヘッダー ファイル\Application\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="Application\CalibrationCallback.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
+    <ClInclude Include="Application\CalibrationCallback.h" />
+    <ClInclude Include="Application\Scene\SettingScene.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shader\Effect\ArrowEffect\ArrowEffect.hlsli" />

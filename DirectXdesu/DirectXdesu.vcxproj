@@ -52,8 +52,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)External\DirectXTex;$(SolutionDir)External\imgui;$(SolutionDir)External\fbx_sdk\include;$(SolutionDir)External\Json;$(SolutionDir)External\motionLib\Include;$(SolutionDir)External\opencv\build\include;$(SolutionDir)External\OnnxRuntimeforDirectML\Include;$(SolutionDir)External\ModelLoader</IncludePath>
-    <LibraryPath>$(SolutionDir)External\fbx_sdk\lib\release;$(SolutionDir)External\opencv\build\x64\vc15\lib;$(SolutionDir)External\DirectML.1.15.1\bin\x64-win;$(SolutionDir)External\OnnxRuntime..19.2\runtimes\win-x64\native;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)External\DirectXTex;$(SolutionDir)External\imgui;$(SolutionDir)External\fbx_sdk\include;$(SolutionDir)External\Json;$(SolutionDir)External\opencv\include;$(SolutionDir)External\OnnxRuntimeforDirectML\Include;$(SolutionDir)External\ModelLoader;$(SolutionDir)External\motionLib\Include;$(SolutionDir)External\motionLib\Include\Animation;$(SolutionDir)External\motionLib\Include\Math</IncludePath>
+    <LibraryPath>$(SolutionDir)External\fbx_sdk\lib\release;$(SolutionDir)External\opencv\lib;$(SolutionDir)External\DirectML.1.15.1\bin\x64-win;$(SolutionDir)External\OnnxRuntime..19.2\runtimes\win-x64\native;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)Generated\Outputs\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)Generated\Obj\$(ProjectName)\$(Configuration)\</IntDir>
   </PropertyGroup>
@@ -100,7 +100,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>libfbxsdk-md.lib;libxml2-md.lib;opencv_world3410.lib;onnxruntime.lib;DirectML.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libfbxsdk-md.lib;libxml2-md.lib;opencv_world4100.lib;onnxruntime.lib;DirectML.lib;opencv_sfm4100.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <TreatLinkerWarningAsErrors>false</TreatLinkerWarningAsErrors>
       <AdditionalOptions>/IGNORE:4099 %(AdditionalOptions)</AdditionalOptions>
     </Link>

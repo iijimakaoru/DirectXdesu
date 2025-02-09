@@ -79,7 +79,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LibraryPath>$(SolutionDir)Thaad\opencv\build\x64\vc15\lib;$(SolutionDir)Thaad\OnnxRuntime.DirectML\DirectML.1.15.1\bin\x64-win;$(SolutionDir)Thaad\OnnxRuntime.DirectML\OnnxRuntime..19.2\runtimes\win-x64\native</LibraryPath>
-    <IncludePath>$(SolutionDir)External\DirectML.1.15.1\include;$(SolutionDir)External\OnnxRuntime..19.2\build\native\include;$(SolutionDir)External\opencv\build\include;$(SolutionDir)External\Json;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)External\DirectML.1.15.1\include;$(SolutionDir)External\OnnxRuntime..19.2\build\native\include;$(SolutionDir)External\opencv\include;$(SolutionDir)External\Json;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)Generated\Outputs\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)Generated\Obj\$(ProjectName)\$(Configuration)\</IntDir>
   </PropertyGroup>

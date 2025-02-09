@@ -85,6 +85,7 @@
     <ClCompile Include="Application\Effect\GroundEffect\GroundEffect.cpp" />
     <ClCompile Include="Application\Object\SideObject.cpp" />
     <ClCompile Include="Engine\Particle\GPUParticle\GroundEffectParticle.cpp" />
+    <ClCompile Include="Engine\3D\Model\CaptureModel.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\MusicDesc.h" />
@@ -172,6 +173,7 @@
     <ClInclude Include="Application\Effect\GroundEffect\GroundEffect.h" />
     <ClInclude Include="Application\Object\SideObject.h" />
     <ClInclude Include="Engine\Particle\GPUParticle\GroundEffectParticle.h" />
+    <ClInclude Include="Engine\3D\Model\CaptureModel.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DirectXdesu.rc" />

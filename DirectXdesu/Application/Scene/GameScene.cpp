@@ -107,9 +107,6 @@ void GameScene::Init()
 	MCBM::AnimationModelManager::GetInstance()->Load("fox");
 	player = std::make_unique<CaptureModel>();
 	player->Initilize("fox");
-	sprite.reset(Sprite::Create(PipelineManager::GetInstance()->GetPipeline("Sprite")));
-
-	texData = TextureManager::GetInstance()->GetTextures("Resources/texture/boss1.png");
 
 	playerTrans.SetPos({ 0,87,-110 });
 	

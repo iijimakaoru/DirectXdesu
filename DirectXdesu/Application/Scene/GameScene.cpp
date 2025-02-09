@@ -122,9 +122,6 @@ void GameScene::Init()
 	MCBM::AnimationModelManager::GetInstance()->Load("fox");
 	player = std::make_unique<CaptureModel>();
 	player->Initilize("fox");
-	sprite.reset(Sprite::Create(PipelineManager::GetInstance()->GetPipeline("Sprite")));
-
-	texData = TextureManager::GetInstance()->GetTextures("Resources/texture/boss1.png");
 
 	playerTrans.SetPos({ 0,87,-110 });
 	
@@ -132,45 +129,6 @@ void GameScene::Init()
 	MCBM::CaptureManager::GetInstance()->GetYOLOPoseEstimation()->InterinsCalibrateLoad("Resources\\CalibrateData");
 
 	MCBM::CaptureManager::GetInstance()->YOLOStart();
-}
-
-void GameScene::Update() {
-
-	if (input->IsPush(DIK_R))
-	{
-		initialePoseSet = true;
-		initializetime_ = std::chrono::system_clock::now();
-	}
-
-	ImGui::Begin("Test");
-	if (initialePoseSet)
-	{
-		ImGui::Text("PleseTposeKeep!!!");
-		player->InitializePose();
-		initializeCount_ = std::chrono::system_clock::now();
-		std::chrono::seconds sec = std::chrono::duration_cast<std::chrono::seconds>(initializeCount_ - initializetime_);
-		if (sec > std::chrono::seconds{ 5 })
-		{
-			initialePoseSet = false;
-		}
-	}
-	ImGui::End();
-	light_->SetLightRGB({lightRGB_.x, lightRGB_.y, lightRGB_.z});
-	light_->SetLightDir({lightDir_.x, lightDir_.y, lightDir_.z, 0.0f});
-	
-	// 音
-	audioManager_ = AudioManager::GetInstance();
-	//------------------------------------------------------------------------------------------------------------------------------------------------------------//
-
-	MCBM::AnimationModelManager::GetInstance()->Load("fox");
-	player = std::make_unique<CaptureModel>();
-	player->Initilize("fox");
-
-	playerTrans.SetPos({ 0,49,-147 });
-	playerTrans.SetRot({ 0,180,0 });
-	player->Update(camera->GetViewPro(), playerTrans);
-	frame = 0;
-	isFrame = false;
 }
 
 void GameScene::Update() {
@@ -187,22 +145,6 @@ void GameScene::Update() {
 
 	timer_->UpdateTimer();
 
-	if (input->IsTrigger(DIK_SPACE))isFrame = true;
-	if (isFrame)
-	{
-		if (frame<360)
-		{
-			player->InitializePose();
-		}
-		else
-		{
-			isFrame = false;
-			initialePoseSet = true;
-			frame = 0;
-		}
-		frame++;
-	}
-	
 	if (input->IsTrigger(DIK_H)) { 
 		initialePoseSet = true;
 		audioManager_->BGMPlay_wav("maou_bgm_cyber44.wav");
@@ -250,7 +192,26 @@ void GameScene::Update() {
 
 	camera->Update();
 
-	MCBM::CaptureManager::GetInstance()->YOLOStart();
+
+	if (input->IsPush(DIK_R))
+	{
+		initialePoseSet = true;
+		initializetime_ = std::chrono::system_clock::now();
+	}
+
+	ImGui::Begin("Test");
+	if (initialePoseSet)
+	{
+		ImGui::Text("PleseTposeKeep!!!");
+		player->InitializePose();
+		initializeCount_ = std::chrono::system_clock::now();
+		std::chrono::seconds sec = std::chrono::duration_cast<std::chrono::seconds>(initializeCount_ - initializetime_);
+		if (sec > std::chrono::seconds{ 5 })
+		{
+			initialePoseSet = false;
+		}
+	}
+	ImGui::End();
 }
 
 void GameScene::ObjDraw() 

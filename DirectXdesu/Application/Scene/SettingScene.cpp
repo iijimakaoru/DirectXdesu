@@ -29,10 +29,6 @@ void SettingScene::Init() {
 
 	BaseScene::Init();
 
-	// カメラ読み込み
-	camera = std::make_unique<TitleCamera>();
-	camera->Init();
-
 	sceneManager = SceneManager::GetInstance();
 
 	audioManager = AudioManager::GetInstance();
@@ -41,7 +37,6 @@ void SettingScene::Init() {
 
 	captureManager = MCBM::CaptureManager::GetInstance();
 
-	camera->StartRound();
 
 	input = KInput::GetInstance();
 	captureManager->GetYOLOPoseEstimation()->SetCalibrateCallBack(&callBack);
@@ -53,7 +48,7 @@ void SettingScene::Update() {
 		SceneManager::GetInstance()->ChangeScene("GAME");
 	}
 	ImguiUpdate();
-	camera->Update();
+
 }
 
 void SettingScene::ObjDraw() {

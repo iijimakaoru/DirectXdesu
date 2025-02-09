@@ -25,7 +25,8 @@ void ResultScene::Init()
 	// カメラ読み込み
 	camera = std::make_unique<GameCamera>();
 	camera->Init();
-	camera->SetCameraPos({1,2,-5 });
+	camera->SetCameraPos({-3.0f,2.5f,-2.0f });
+	camera->SetCameraRot({0.0f,20.0f,0.0f});
 
 	sceneManager = SceneManager::GetInstance();
 
@@ -34,8 +35,9 @@ void ResultScene::Init()
 	skydome->GetTransform().SetPos({ 0.0f, 100.0f, 500.0f });
 
 	stage.reset(KObject3d::Create(stageModel, PipelineManager::GetInstance()->GetPipeline("Obj")));
+	stage->GetTransform().SetRot({0.0f,180.0f,0.0f});
 	fox.reset(KObject3d::Create(foxModel, PipelineManager::GetInstance()->GetPipeline("Obj")));
-
+	fox->GetTransform().SetRot({ 0.0f,180.0f,0.0f });
 }
 
 void ResultScene::Update()

@@ -20,9 +20,9 @@ MCBM::MVector3::MVector3()
 
 MCBM::MVector3::MVector3(float x, float y, float z)
 {
-	x = x;
-	y = y;
-	z = z;
+	this->x = x;
+	this->y = y;
+	this->z = z;
 }
 MVector3 MCBM::MVector3::Vector3Substruct(const MVector3& start, const MVector3& end)
 {

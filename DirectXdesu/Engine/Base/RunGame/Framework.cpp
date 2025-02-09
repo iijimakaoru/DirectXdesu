@@ -41,9 +41,11 @@ void Framework::Init() {
 	textureManager->Init();
 	textureManager->LoadTextures();
 
-	// Imgui初期化
 	imguiMane = ImguiManager::GetInstance();
 	imguiMane->Init();
+
+	captureManager = MCBM::CaptureManager::GetInstance();
+	captureManager->Initialize();
 
 	// ポストエフェクトテスト
 	postEffectManager = std::make_unique<PostEffectManager>();
@@ -59,6 +61,10 @@ void Framework::Final() {
 
 	audioManager->Finalize();
 
+	imguiMane->Finalize();
+
+	captureManager->Finalize();
+
 	// シーンファクトリー解放
 	delete sceneFactory;
 
@@ -72,13 +78,13 @@ void Framework::Update() {
 	input->Update();
 
 	// Imgui更新はじめ
-	imguiMane->Begin();
+	ImguiManager::GetInstance()->Begin();
 
 	// シーンマネージャーの更新
 	sceneManager->Update();
 
 	// Imgui更新終了
-	imguiMane->End();
+	ImguiManager::GetInstance()->End();
 }
 
 bool Framework::IsEndRwquest() {

@@ -61,6 +61,8 @@ public:
 	void SpriteDraw() override;
 	void Final() override;
 
+	void InitializePoseUpdate();
+	void InitializePoseDraw();
 private:
 	enum OBJ
 	{

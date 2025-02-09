@@ -101,24 +101,34 @@ void GameScene::Init()
 	noteObj->Init(test,music.get());
 
 	lenRimit = 100.0f;//csvに落とし込む,値を仮設定
-	move = { 2.0f,2.0f,0.0f };//仮で設定
 
-	light_->SetLightRGB({lightRGB_.x, lightRGB_.y, lightRGB_.z});
-	light_->SetLightDir({lightDir_.x, lightDir_.y, lightDir_.z, 0.0f});
-	
-	// 音
-	audioManager_ = AudioManager::GetInstance();
 	//------------------------------------------------------------------------------------------------------------------------------------------------------------//
 
+
+	PHONONLOADER::P_MODEL_DATA* pData = new PHONONLOADER::P_MODEL_DATA();
+	PHONONLOADER::PModelLoader::Load(pData, "obj/cube");
+
+	
+
+	cv::Mat img;
+
+	const std::string& modelPath = "Resources/Checkpoints/yolo11x-pose.onnx";
+
+	float mask_threshold = 0.5f;
+	float conf_threshold = 0.30f;
+	float iou_threshold = 0.45f;
+	int conversion_code = cv::COLOR_BGR2RGB;
+	
 	MCBM::AnimationModelManager::GetInstance()->Load("fox");
 	player = std::make_unique<CaptureModel>();
 	player->Initilize("fox");
 
 	playerTrans.SetPos({ 0,49,-147 });
-	playerTrans.SetRot({ 0,180,0 });
-	player->Update(camera->GetViewPro(), playerTrans);
-	frame = 0;
-	isFrame = false;
+	
+	MCBM::CaptureManager::GetInstance()->GetYOLOPoseEstimation()->ExtrinsCalibrateLoad("Resources\\CalibrateData");
+	MCBM::CaptureManager::GetInstance()->GetYOLOPoseEstimation()->InterinsCalibrateLoad("Resources\\CalibrateData");
+
+	MCBM::CaptureManager::GetInstance()->YOLOStart();
 }
 
 void GameScene::Update() {
@@ -134,27 +144,10 @@ void GameScene::Update() {
 	ImGui::End();
 
 	timer_->UpdateTimer();
-	if (flag&&!audioManager_->IsPlaying("maou_bgm_cyber44.wav"))
+	if (flag && !audioManager_->IsPlaying("maou_bgm_cyber44.wav"))
 	{
 		noteObj->OutputNote();
-
 	}
-	if (input->IsTrigger(DIK_SPACE))isFrame = true;
-	if (isFrame)
-	{
-		if (frame<360)
-		{
-			player->InitializePose();
-		}
-		else
-		{
-			isFrame = false;
-			initialePoseSet = true;
-			frame = 0;
-		}
-		frame++;
-	}
-	
 	if (input->IsTrigger(DIK_H)) { 
 		initialePoseSet = true;
 		audioManager_->SEPlay_wav("maou_bgm_cyber44.wav");
@@ -201,7 +194,7 @@ void GameScene::Update() {
 	objectSetter->Update(timer_.get(), camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro());
 
 	camera->Update();
-
+	
 }
 
 void GameScene::ObjDraw() 
@@ -230,6 +223,51 @@ void GameScene::SpriteDraw()
 void GameScene::Final() 
 {
 	delete collisionManager_; 
+}
+
+void GameScene::InitializePoseUpdate()
+{
+	
+
+	if (initialePoseSet)
+	{
+		player->InitializePose();
+		initializeCount_ = std::chrono::system_clock::now();
+		std::chrono::seconds sec = std::chrono::duration_cast<std::chrono::seconds>(initializeCount_ - initializetime_);
+		if (sec > std::chrono::seconds{ 5 })
+		{
+			initialePoseSet = false;
+		}
+	}
+}
+
+void GameScene::InitializePoseDraw()
+{
+	ImGui::Begin("InitializePoseInfo", nullptr,
+		ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
+	ImGui::SetWindowSize("InitializePoseInfo", { 480  ,280 });
+	ImGui::SetWindowPos({ 640 - 240,360 - 140 });
+
+	if (!initialePoseSet)
+	{
+		if (ImGui::Button("PoseInit\n##PleaseTPoseKeep##", { 240, 140 }))
+		{
+			initialePoseSet = true;
+			initializetime_ = std::chrono::system_clock::now();
+		}
+	}
+	else
+	{
+		std::chrono::seconds sec = std::chrono::duration_cast<std::chrono::seconds>(initializeCount_ - initializetime_);
+		
+		ImGui::Text("PleseTposeKeep!!!!: %d/%d Sec", sec,5);
+	
+	}
+	ImGui::End();
+
+
+
+	player->Draw();
 }
 
 void GameScene::RotAndLenCalculationStick(Hand hand_)

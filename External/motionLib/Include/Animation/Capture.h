@@ -42,6 +42,7 @@ namespace MCBM
 		float iou_threshold_ = 0.45f;
 		int conversion_code_ = cv::COLOR_BGR2RGB;
 		bool initialized_ = true;
+		int32_t myCameraIndex;
 	public:
 		MVector3 cameraPosition;
 		float cameraDistance = 0.f;

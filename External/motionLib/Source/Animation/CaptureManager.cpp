@@ -3,8 +3,27 @@
 
 using namespace MCBM;
 
+MCBM::CaptureManager::~CaptureManager()
+{
+}
+
+MCBM::CaptureManager::CaptureManager()
+{
+}
+
+
+CaptureManager* MCBM::CaptureManager::GetInstance()
+{
+	static CaptureManager inst;
+	return &inst;
+}
+
 void CaptureManager::Initialize(int32_t cameraNum)
 {
+	if (initialized)
+	{
+		return;
+	}
 	cameraNum_ = cameraNum;
 
 	if (cameraNum > Locate::MAX_LOCATE)
@@ -25,8 +44,7 @@ void CaptureManager::Initialize(int32_t cameraNum)
 		capdatas[ i ].Initialize(static_cast< int32_t >( i + cameraFirstIndex));
 	}
 
-	m_YOLOPoseEstimation_->Start(true);
-
+	m_YOLOPoseEstimation_->Initialize();
 
 	for (int32_t i = 0; i < (int32_t)YOLO_POSE_INDEX::YOLO_POSE_INDEX_MAX; i++)
 	{
@@ -101,6 +119,25 @@ void CaptureManager::Initialize(int32_t cameraNum)
 	capdatas[ Locate::FRONT ].cameraPosition = { 0.0f,0.0f,1.0f };
 	//capdatas[ Locate::LEFT ].cameraPosition = { -capdatas[ Locate::LEFT ].cameraDistance.x,0.0f,0.0f };
 	capdatas[ Locate::RIGHT ].cameraPosition = { 1.0f,0.0f,0.0f };
+	initialized = true;
+}
+
+void MCBM::CaptureManager::YOLOStart()
+{
+	if (!yoloStart)
+	{
+		yoloStart = true;
+		m_YOLOPoseEstimation_->Start(true);
+	}
+}
+
+void MCBM::CaptureManager::YOLOEnd()
+{
+	if (yoloStart)
+	{
+		m_YOLOPoseEstimation_->End();
+		yoloStart = false;
+	}
 }
 
 void CaptureManager::Update()
@@ -154,5 +191,10 @@ CaptureData& CaptureManager::GetCaptureData(YOLO_POSE_INDEX key)
 CaptureData& MCBM::CaptureManager::GetLocateCaptureData(YOLO_POSE_INDEX key,Locate locate)
 {
 	return capdatas[ (int32_t)locate ].GetCaptureData(key);
+}
+
+YOLOPoseEstimation* MCBM::CaptureManager::GetYOLOPoseEstimation()
+{
+	return m_YOLOPoseEstimation_.get();
 }
 

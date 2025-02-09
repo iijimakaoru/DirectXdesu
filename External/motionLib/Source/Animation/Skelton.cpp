@@ -24,9 +24,8 @@ void MCBM::Skelton::AddMesh(const M_MODEL_MESH& mesh)
 
 void MCBM::Skelton::Initialize()
 {
-	captureManager = std::make_unique<MCBM::CaptureManager>();
+	captureManager = MCBM::CaptureManager::GetInstance();
 
-	captureManager->Initialize(CAMERA_NUM);
 }
 
 
@@ -107,11 +106,6 @@ const std::vector<Matrix> MCBM::Skelton::GetMeshBoneData(int32_t meshIndex)
 
 void MCBM::Skelton::CaptureBoneUpdate(YOLO_POSE_INDEX rootBoneName, uint32_t boneCount)
 {
-	//if (CAMERA_NUM <= 1)
-	//{
-	//	CaptureBoneUpdateTwoDimention(rootBoneName,boneCount);
-	//	return;
-	//}
 	CaptureData rootCap = captureManager->GetCaptureData(rootBoneName);
 	MVector3 tempVec;
 	for (int i = 0; i < boneCount; i++)

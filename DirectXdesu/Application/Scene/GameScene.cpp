@@ -123,7 +123,8 @@ void GameScene::Init()
 	player = std::make_unique<CaptureModel>();
 	player->Initilize("fox");
 
-	playerTrans.SetPos({ 0,49,-147 });
+	playerTrans.SetPos({ 0,47,-127 });
+	playerTrans.SetScale({ 7,7,7 });
 	playerTrans.SetRot({ 0,180,0 });
 	
 	MCBM::CaptureManager::GetInstance()->GetYOLOPoseEstimation()->ExtrinsCalibrateLoad("Resources\\CalibrateData");
@@ -139,7 +140,34 @@ void GameScene::Init()
 void GameScene::Update() {
 	
 	player->Update(camera->GetViewPro(), playerTrans);
-	
+	if (input->IsPush(DIK_S))
+	{
+		KMyMath::Vector3 pos = playerTrans.GetPos();
+		pos.z -= 1.0f;
+		playerTrans.SetPos(pos);
+	}
+	if (input->IsPush(DIK_W))
+	{
+		KMyMath::Vector3 pos = playerTrans.GetPos();
+		pos.z += 1.0f;
+		playerTrans.SetPos(pos);
+	}
+	if (input->IsPush(DIK_Q))
+	{
+		KMyMath::Vector3 pos = playerTrans.GetScale();
+		pos.x -= 0.1f;
+		pos.y -= 0.1f;
+		pos.z -= 0.1f;
+		playerTrans.SetScale(pos);
+	}
+	if (input->IsPush(DIK_E))
+	{
+		KMyMath::Vector3 pos = playerTrans.GetScale();
+		pos.x += 0.1f;
+		pos.y += 0.1f;
+		pos.z += 0.1f;
+		playerTrans.SetScale(pos);
+	}
 	if (initializedPose)
 	{
 		if (flag && !audioManager_->IsPlaying("maou_bgm_cyber44.wav"))
@@ -151,11 +179,6 @@ void GameScene::Update() {
 		if (input->IsTrigger(DIK_S) && test)
 		{
 			noteObj->OutputNote();
-		}
-		if (input->IsTrigger(DIK_H)) {
-			initialePoseSet = true;
-			audioManager_->SEPlay_wav("maou_bgm_cyber44.wav");
-			flag = true;
 		}
 		if (input->GetMouseClickTrigger(MouseBotton::Left))
 		{
@@ -265,6 +288,9 @@ void GameScene::InitializePoseDraw()
 			if (ImGui::Button("MoveGame", { 140, 240 }))
 			{
 				initializedPose = true;
+				initialePoseSet = true;
+				audioManager_->SEPlay_wav("maou_bgm_cyber44.wav");
+				flag = true;
 			}
 		}
 		else
@@ -692,13 +718,8 @@ void GameScene::GoNextScene() {
 		sceneManager->ChangeScene("RESULT");
 		MCBM::CaptureManager::GetInstance()->YOLOEnd();
 	}
-	else if (input->IsTrigger(DIK_SPACE)) {
+	else if (flag&&!audioManager_->IsPlaying("maou_bgm_cyber44.wav")) {
 		sceneManager->ChangeScene("RESULT");
 		MCBM::CaptureManager::GetInstance()->YOLOEnd();
-	}
-
-	if (input->IsPress(DIK_LSHIFT) && input->IsPress(DIK_RSHIFT))
-	{
-		sceneManager->ChangeScene("SETTING");
 	}
 }

@@ -45,7 +45,7 @@ void Framework::Init() {
 	imguiMane->Init();
 
 	captureManager = MCBM::CaptureManager::GetInstance();
-	captureManager->Initialize(1);
+	captureManager->Initialize();
 
 	// ポストエフェクトテスト
 	postEffectManager = std::make_unique<PostEffectManager>();

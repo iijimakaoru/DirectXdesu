@@ -608,7 +608,7 @@ void YOLOPoseEstimationImp::CalclateFinalCaptureDataFromCalibrateData() {
 			col.at<float>(2,0)
 		);
 
-		finalCaptureData_[ ( YOLO_POSE_INDEX ) validIndices[ i ] ] = MCBO::YVector3(pt3D.x,pt3D.y,pt3D.z);
+		finalCaptureData_[ ( YOLO_POSE_INDEX ) validIndices[ i ] ] = MCBO::YVector3(pt3D.x,pt3D.y,pt3D.z + pt3D.z * 0.01f);
 	}
 }
 

@@ -143,6 +143,9 @@ private:
 	bool test;
 	bool isFrame;
 	bool flag;
+	
+	bool initializedPose;
+
 
 	std::unique_ptr<Timer> timer_;
 	std::unique_ptr<EffectSetter> effectSetter;

@@ -140,86 +140,101 @@ void GameScene::Update() {
 	
 	player->Update(camera->GetViewPro(), playerTrans);
 	
-	
-	ImGui::Begin("lo");
-	ImGui::DragInt("perfect", &score[PERFECT]);
-	ImGui::DragInt("great", &score[GREAT]);
-	ImGui::DragInt("miss", &score[MISS]);
-	ImGui::DragInt("combo", &combo);
-	ImGui::End();
-	if (flag && !audioManager_->IsPlaying("maou_bgm_cyber44.wav"))
+	if (initializedPose)
 	{
-		GoNextScene();
-	}
+		ImGui::Begin("lo");
+		ImGui::DragInt("perfect", &score[PERFECT]);
+		ImGui::DragInt("great", &score[GREAT]);
+		ImGui::DragInt("miss", &score[MISS]);
+		ImGui::DragInt("combo", &combo);
+		ImGui::End();
+		if (flag && !audioManager_->IsPlaying("maou_bgm_cyber44.wav"))
+		{
+			GoNextScene();
+		}
 
-	timer_->UpdateTimer();
-	if (input->IsTrigger(DIK_S)&&test)
+		timer_->UpdateTimer();
+		if (input->IsTrigger(DIK_S) && test)
+		{
+			noteObj->OutputNote();
+		}
+		if (input->IsTrigger(DIK_H)) {
+			initialePoseSet = true;
+			audioManager_->SEPlay_wav("maou_bgm_cyber44.wav");
+			flag = true;
+		}
+		if (input->GetMouseClickTrigger(MouseBotton::Left))
+		{
+			start[1] = player->GetCapturePos(YOLO_POSE_INDEX::WRIST_R);
+			start[1].y -= start[1].y * 2.0f;
+
+		}
+		if (input->GetMouseClickTrigger(MouseBotton::Right))
+		{
+			RotAndLenCalculationStick(Hand::R);
+		}
+		float a[2] = { start[1].x,start[1].y };
+		float b[2] = { end[1].x,end[1].y };
+		ImGui::Begin("lo");
+
+		ImGui::InputFloat2("start", a);
+		ImGui::InputFloat2("end", b);
+		ImGui::InputFloat("angle", &angle);
+		ImGui::InputFloat("len", &length);
+
+		ImGui::End();
+
+		if (test)OutPutCollision();
+		else Collision();
+		if (initialePoseSet)
+		{
+			playTime++;
+			noteObj->Update(camera.get());
+		}
+		obj[OBJ::skydome]->GetTransform().SetRot({ 0.0f, playTime * 0.05f, 0.0f });
+		for (size_t i = 0; i < OBJ::max; i++)
+		{
+			obj[i]->Update(camera->GetViewPro(), camera->GetWorldPos());
+		}
+
+		// エフェクトの更新
+		effectSetter->Update(timer_.get(), camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro());
+
+		// オブジェクトの更新
+		objectSetter->Update(timer_.get(), camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro());
+	}
+	else
 	{
-		noteObj->OutputNote();
+		InitializePoseUpdate();
 	}
-	if (input->IsTrigger(DIK_H)) { 
-		initialePoseSet = true;
-		audioManager_->SEPlay_wav("maou_bgm_cyber44.wav");
-		flag = true;
-	}
-	if (input->GetMouseClickTrigger(MouseBotton::Left))
-	{
-		start[1] = player->GetCapturePos(YOLO_POSE_INDEX::WRIST_R);
-		start[1].y -= start[1].y * 2.0f;
-
-	}
-	if (input->GetMouseClickTrigger(MouseBotton::Right))
-	{
-		RotAndLenCalculationStick(Hand::R);
-	}
-	float a[2] = { start[1].x,start[1].y };
-	float b[2] = { end[1].x,end[1].y };
-	ImGui::Begin("lo");
-	
-	ImGui::InputFloat2("start", a);
-	ImGui::InputFloat2("end", b);
-	ImGui::InputFloat("angle", &angle);
-	ImGui::InputFloat("len", &length);
-
-	ImGui::End();
-
-	if (test)OutPutCollision();
-	else Collision();
-	if (initialePoseSet)
-	{
-		playTime++;
-		noteObj->Update(camera.get());
-	}
-	obj[OBJ::skydome]->GetTransform().SetRot({ 0.0f, playTime * 0.05f, 0.0f });
-	for (size_t i = 0; i < OBJ::max; i++)
-	{
-		obj[i]->Update(camera->GetViewPro(), camera->GetWorldPos());
-	}
-
-	// エフェクトの更新
-	effectSetter->Update(timer_.get(), camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro());
-
-	// オブジェクトの更新
-	objectSetter->Update(timer_.get(), camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro());
-
 	camera->Update();
 	
 }
 
 void GameScene::ObjDraw() 
 {
-	for (size_t i = 0; i < OBJ::max; i++) 
+
+	if (initializedPose)
 	{
-		obj[i]->Draw();
+		for (size_t i = 0; i < OBJ::max; i++)
+		{
+			obj[i]->Draw();
+		}
+
+		// エフェクト描画
+		effectSetter->Draw(timer_.get(), camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro());
+
+		// オブジェクトの描画
+		objectSetter->Draw(timer_.get(), camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro());
+
+		noteObj->Draw();
+
+		
 	}
-
-	// エフェクト描画
-	effectSetter->Draw(timer_.get(), camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro());
-
-	// オブジェクトの描画
-	objectSetter->Draw(timer_.get(), camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro());
-
-	noteObj->Draw();
+	else
+	{
+		InitializePoseDraw();
+	}
 
 	player->Draw();
 }
@@ -259,10 +274,15 @@ void GameScene::InitializePoseDraw()
 
 	if (!initialePoseSet)
 	{
-		if (ImGui::Button("PoseInit\n##PleaseTPoseKeep##", { 240, 140 }))
+		if (ImGui::Button("PoseInit\n##PleaseTPoseKeep##", { 140, 240 }))
 		{
 			initialePoseSet = true;
 			initializetime_ = std::chrono::system_clock::now();
+		}
+
+		if (ImGui::Button("MoveGame", { 140, 240 }))
+		{
+			initializedPose = true;
 		}
 	}
 	else
@@ -272,11 +292,9 @@ void GameScene::InitializePoseDraw()
 		ImGui::Text("PleseTposeKeep!!!!: %d/%d Sec", sec,5);
 	
 	}
+
 	ImGui::End();
 
-
-
-	player->Draw();
 }
 
 void GameScene::RotAndLenCalculationStick(Hand hand_)
@@ -689,10 +707,12 @@ void GameScene::LoadCSV(const std::string& name)
 
 void GameScene::GoNextScene() {
 	if (input->GetPadButtonDown(A)) {
-		sceneManager->ChangeScene("TITLE");
+		sceneManager->ChangeScene("RESULT");
+		MCBM::CaptureManager::GetInstance()->YOLOEnd();
 	}
 	else if (input->IsTrigger(DIK_SPACE)) {
-		sceneManager->ChangeScene("TITLE");
+		sceneManager->ChangeScene("RESULT");
+		MCBM::CaptureManager::GetInstance()->YOLOEnd();
 	}
 
 	if (input->IsPress(DIK_LSHIFT) && input->IsPress(DIK_RSHIFT))

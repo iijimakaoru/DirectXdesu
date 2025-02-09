@@ -20,7 +20,7 @@ void KMyGame::Init() {
 	TextureManager::Load("Resources/texture/pressA.png");
 
 	// 最初のシーン
-	SceneManager::GetInstance()->ChangeScene("GAME");
+	SceneManager::GetInstance()->ChangeScene("SETTING");
 }
 
 void KMyGame::Update() {

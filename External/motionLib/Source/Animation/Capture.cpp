@@ -9,7 +9,7 @@ void MCBM::Capture::Initialize(int32_t index)
 	capture_.set(cv::CAP_PROP_FPS, 30);
 	capture_.set(cv::CAP_PROP_FOURCC, cv::VideoWriter::fourcc('H', '2', '6', '4'));
 
-
+	myCameraIndex = index;
 
 	if (!capture_.isOpened())
 	{
@@ -99,6 +99,7 @@ void MCBM::Capture::Initialize(int32_t index)
 void MCBM::Capture::Update()
 {
 
+	land_ = m_YOLOPoseEstimation_->GetLandmakes(myCameraIndex);
 	finalPoints_ = m_YOLOPoseEstimation_->GetFinalPositions();
 
 	//skelton構成
@@ -113,7 +114,7 @@ void MCBM::Capture::Update()
 
 void MCBM::Capture::SetInitialPose()
 {
-	land_ = m_YOLOPoseEstimation_->GetLandmakes();
+	land_ = m_YOLOPoseEstimation_->GetLandmakes(myCameraIndex);
 
 	//skelton構成
 	for (int32_t i = 0; i < (int32_t)YOLO_POSE_INDEX::YOLO_POSE_INDEX_MAX; i++)

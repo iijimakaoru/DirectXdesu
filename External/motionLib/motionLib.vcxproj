@@ -71,7 +71,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(ProjectDir)Include\Math;$(ProjectDir)Include\Animation;$(ProjectDir)Include;$(SolutionDir)External\opencv\build\include;$(SolutionDir)External\OnnxRuntimeforDirectML\Include;$(SolutionDir)External\ModelLoader;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)Include\Math;$(ProjectDir)Include\Animation;$(ProjectDir)Include;$(SolutionDir)External\opencv\include;$(SolutionDir)External\OnnxRuntimeforDirectML\Include;$(SolutionDir)External\ModelLoader;$(IncludePath)</IncludePath>
     <LibraryPath>$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)Generated\Outputs\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)Generated\Obj\$(ProjectName)\$(Configuration)\</IntDir>
@@ -166,7 +166,6 @@
     <ClInclude Include="Include\Animation\Bone.h" />
     <ClInclude Include="Include\Animation\Capture.h" />
     <ClInclude Include="Include\Animation\CaptureManager.h" />
-    <ClInclude Include="Include\Animation\IKSolver.h" />
     <ClInclude Include="Include\Animation\Skelton.h" />
     <ClInclude Include="Include\Math\MathUtil.h" />
     <ClInclude Include="Include\Math\Matrix.h" />
@@ -182,7 +181,6 @@
     <ClCompile Include="Source\Animation\Bone.cpp" />
     <ClCompile Include="Source\Animation\Capture.cpp" />
     <ClCompile Include="Source\Animation\CaptureManager.cpp" />
-    <ClCompile Include="Source\Animation\IKSolver.cpp" />
     <ClCompile Include="Source\Animation\Skelton.cpp" />
     <ClCompile Include="Source\Math\MathUtil.cpp" />
     <ClCompile Include="Source\Math\Matrix.cpp" />

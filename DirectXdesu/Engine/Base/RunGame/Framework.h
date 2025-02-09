@@ -12,6 +12,7 @@
 #include "AudioManager.h"
 
 #include "PostEffectManager.h"
+#include <CaptureManager.h>
 
 /**
  * @file Framework.h
@@ -66,5 +67,7 @@ protected:
 	std::unique_ptr<PostEffectManager> postEffectManager = nullptr;
 
 	AudioManager* audioManager = nullptr;
+
+	MCBM::CaptureManager* captureManager;
 };
 

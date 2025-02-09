@@ -101,8 +101,60 @@ void GameScene::Init()
 	noteObj->Init(test,music.get());
 
 	lenRimit = 100.0f;//csvに落とし込む,値を仮設定
-	move = { 2.0f,2.0f,0.0f };//仮で設定
 
+	//------------------------------------------------------------------------------------------------------------------------------------------------------------//
+
+
+	PHONONLOADER::P_MODEL_DATA* pData = new PHONONLOADER::P_MODEL_DATA();
+	PHONONLOADER::PModelLoader::Load(pData, "obj/cube");
+
+	
+
+	cv::Mat img;
+
+	const std::string& modelPath = "Resources/Checkpoints/yolo11x-pose.onnx";
+
+	float mask_threshold = 0.5f;
+	float conf_threshold = 0.30f;
+	float iou_threshold = 0.45f;
+	int conversion_code = cv::COLOR_BGR2RGB;
+	
+	MCBM::AnimationModelManager::GetInstance()->Load("fox");
+	player = std::make_unique<CaptureModel>();
+	player->Initilize("fox");
+	sprite.reset(Sprite::Create(PipelineManager::GetInstance()->GetPipeline("Sprite")));
+
+	texData = TextureManager::GetInstance()->GetTextures("Resources/texture/boss1.png");
+
+	playerTrans.SetPos({ 0,87,-110 });
+	
+	MCBM::CaptureManager::GetInstance()->GetYOLOPoseEstimation()->ExtrinsCalibrateLoad("Resources\\CalibrateData");
+	MCBM::CaptureManager::GetInstance()->GetYOLOPoseEstimation()->InterinsCalibrateLoad("Resources\\CalibrateData");
+
+	MCBM::CaptureManager::GetInstance()->YOLOStart();
+}
+
+void GameScene::Update() {
+
+	if (input->IsPush(DIK_R))
+	{
+		initialePoseSet = true;
+		initializetime_ = std::chrono::system_clock::now();
+	}
+
+	ImGui::Begin("Test");
+	if (initialePoseSet)
+	{
+		ImGui::Text("PleseTposeKeep!!!");
+		player->InitializePose();
+		initializeCount_ = std::chrono::system_clock::now();
+		std::chrono::seconds sec = std::chrono::duration_cast<std::chrono::seconds>(initializeCount_ - initializetime_);
+		if (sec > std::chrono::seconds{ 5 })
+		{
+			initialePoseSet = false;
+		}
+	}
+	ImGui::End();
 	light_->SetLightRGB({lightRGB_.x, lightRGB_.y, lightRGB_.z});
 	light_->SetLightDir({lightDir_.x, lightDir_.y, lightDir_.z, 0.0f});
 	
@@ -198,6 +250,7 @@ void GameScene::Update() {
 
 	camera->Update();
 
+	MCBM::CaptureManager::GetInstance()->YOLOStart();
 }
 
 void GameScene::ObjDraw() 

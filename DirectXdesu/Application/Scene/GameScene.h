@@ -155,7 +155,8 @@ private:
 
 	std::unique_ptr<CaptureModel> player;
 	Transform playerTrans;
-
+	std::unique_ptr<Sprite> settingSprite;
+	TextureData settingTexture;
 	// オブジェクト系
 	std::unique_ptr<ObjectSetter> objectSetter;
 };

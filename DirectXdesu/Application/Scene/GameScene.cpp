@@ -33,6 +33,7 @@ void GameScene::LoadResources()
 		modelManager->GetModels("S_Cube");
 	objModel[OBJ::skydome] = 
 		modelManager->GetModels("S_SkyDorm");
+	settingTexture = TextureManager::Load("Resources/texture/tutorial.png");
 }
 
 void GameScene::Init() 
@@ -107,8 +108,7 @@ void GameScene::Init()
 
 	PHONONLOADER::P_MODEL_DATA* pData = new PHONONLOADER::P_MODEL_DATA();
 	PHONONLOADER::PModelLoader::Load(pData, "obj/cube");
-
-	
+	settingSprite.reset(Sprite::Create(PipelineManager::GetInstance()->GetPipeline("Sprite")));
 
 	cv::Mat img;
 
@@ -215,7 +215,10 @@ void GameScene::ObjDraw()
 		noteObj->Draw();
 		
 	}
-
+	else
+	{
+		settingSprite->Draw(settingTexture, { 1280 - (1280.f * 0.4f) / 2,(720.0f * 0.4f) / 2  }, { 0.4f,0.4f });
+	}
 	player->Draw();
 }
 
@@ -250,19 +253,19 @@ void GameScene::InitializePoseDraw()
 	if (ImGui::Begin("InitializePoseInfo", nullptr,
 		ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove))
 	{
-		ImGui::SetWindowSize("InitializePoseInfo", { 626 ,650 });
+		ImGui::SetWindowSize("InitializePoseInfo", { 400 ,325 });
 		ImGui::SetWindowPos({ 10,10 });
 		ImGui::Text("SetInitialize");
 
 		if (!initialePoseSet)
 		{
-			if (ImGui::Button("PoseInit\nPleaseTPoseKeep", { 140, 240 }))
+			if (ImGui::Button("PoseInit\nPleaseTPoseKeep", { 240, 140 }))
 			{
 				initialePoseSet = true;
 				initializetime_ = std::chrono::system_clock::now();
 			}
 
-			if (ImGui::Button("MoveGame", { 140, 240 }))
+			if (ImGui::Button("MoveGame", { 240, 140 }))
 			{
 				initializedPose = true;
 			}

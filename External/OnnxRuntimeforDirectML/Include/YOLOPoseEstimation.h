@@ -54,7 +54,7 @@ public:
 
 	static constexpr float CAMERA_WITH = 480;
 	static constexpr float CAMERA_HIGHT = 480;
-	static constexpr float CONFIDENCE_THRESHOLD = 0.15f;
+	static constexpr float CONFIDENCE_THRESHOLD = 0.75f;
 
 	YOLOPoseEstimation() = default;
 

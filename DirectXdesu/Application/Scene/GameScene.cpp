@@ -134,7 +134,11 @@ void GameScene::Update() {
 	ImGui::End();
 
 	timer_->UpdateTimer();
+	if (flag&&!audioManager_->IsPlaying("maou_bgm_cyber44.wav"))
+	{
+		noteObj->OutputNote();
 
+	}
 	if (input->IsTrigger(DIK_SPACE))isFrame = true;
 	if (isFrame)
 	{
@@ -153,8 +157,8 @@ void GameScene::Update() {
 	
 	if (input->IsTrigger(DIK_H)) { 
 		initialePoseSet = true;
-		audioManager_->BGMPlay_wav("maou_bgm_cyber44.wav");
-
+		audioManager_->SEPlay_wav("maou_bgm_cyber44.wav");
+		flag = true;
 	}
 	if (input->GetMouseClickTrigger(MouseBotton::Left))
 	{
@@ -177,8 +181,8 @@ void GameScene::Update() {
 
 	ImGui::End();
 
-	/*if (test)OutPutCollision();
-	else Collision();*/
+	if (test)OutPutCollision();
+	else Collision();
 	if (initialePoseSet)
 	{
 		playTime++;

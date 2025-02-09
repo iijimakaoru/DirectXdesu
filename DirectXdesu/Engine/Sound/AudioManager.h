@@ -69,6 +69,9 @@ public:
 
 	void AllLoad();
 
+	bool IsPlaying(const std::string& fileName);
+
+
 private:
 	// XAudioのインスタンス
 	Microsoft::WRL::ComPtr<IXAudio2> xAudio2;

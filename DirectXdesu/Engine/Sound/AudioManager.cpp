@@ -210,3 +210,21 @@ void AudioManager::AllLoad() {
 	static AudioManager instance;
 	return &instance;
  }
+
+ bool AudioManager::IsPlaying(const std::string& fileName) {
+	 std::string fullPath = directoryPath + fileName;
+	 auto it = soundDatas.find(fullPath);
+	 if (it == soundDatas.end()) {
+		 return false; // 未読み込み
+	 }
+
+	 SoundData& soundData = it->second;
+	 if (!soundData.pSourceVoice) {
+		 return false;
+	 }
+
+	 XAUDIO2_VOICE_STATE state;
+	 soundData.pSourceVoice->GetState(&state);
+
+	 return state.BuffersQueued > 0; // 再生中なら true、終了なら false
+ }

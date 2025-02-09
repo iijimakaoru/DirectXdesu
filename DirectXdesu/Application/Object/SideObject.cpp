@@ -36,6 +36,8 @@ void SideObject::SetObject(KMyMath::Vector3& pos, KMyMath::Vector3& rotation, KM
 	DirectX::XMFLOAT4 nowColor = MyMathConvert::ChangeXMFLOAT4(color);
 	float nowParticleSize = 2.0f;
 
+	nowScale_ = scale;
+
 	emitter_->SetPosition(nowPos);
 	emitter_->SetScaling(nowScale);
 	emitter_->SetRotation(nowRot);
@@ -51,6 +53,10 @@ void SideObject::SetObject(KMyMath::Vector3& pos, KMyMath::Vector3& rotation, KM
 bool SideObject::GetIsDead()
 {
 	return isDead;
+}
+
+void SideObject::SetVibration()
+{
 }
 
 void SideObject::MoveUpdate()

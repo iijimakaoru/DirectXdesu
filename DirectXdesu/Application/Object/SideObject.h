@@ -14,6 +14,8 @@ public:
 
 	bool GetIsDead();
 
+	void SetVibration();
+
 private:
 	void MoveUpdate();
 	void RotUpdate();
@@ -29,6 +31,11 @@ private:
 	KMyMath::Vector3 move_;
 	float movePower_;
 
+	KMyMath::Vector3 scale_;
+	KMyMath::Vector3 nowScale_;
+
 	bool isDead = false;
+
+	bool isVibration = false;
 };
 

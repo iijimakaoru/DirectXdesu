@@ -26,13 +26,6 @@
 	Wheel,
 };
 
-enum MouseBotton
-{
-	Left,
-	Right,
-	Wheel,
-};
-
 enum ControllerButton
 {
 	B = XINPUT_GAMEPAD_B,

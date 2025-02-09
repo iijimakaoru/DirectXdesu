@@ -15,9 +15,9 @@ void DrawArgs::Create(ID3D12DescriptorHeap* uavHeap)
 	device->CreateCommittedResource(&heap,
 		D3D12_HEAP_FLAG_NONE,
 		&resouceDesc,
-		D3D12_RESOURCE_STATE_COMMON,
+		D3D12_RESOURCE_STATE_UNORDERED_ACCESS,
 		nullptr, IID_PPV_ARGS(&RWDrawArgs));
-	resourseState = D3D12_RESOURCE_STATE_COMMON;
+	resourseState = D3D12_RESOURCE_STATE_UNORDERED_ACCESS;
 	RWDrawArgs.Get()->SetName(L"DrawArgs");
 
 	D3D12_UNORDERED_ACCESS_VIEW_DESC drawArgsUAVDescription = {};

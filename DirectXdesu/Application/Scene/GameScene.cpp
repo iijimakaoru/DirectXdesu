@@ -381,7 +381,7 @@ void GameScene::Collision()
 				}
 
 			}
-			else if (noteObj->Notes()[i]->direction == DIRECTION::up)
+			else if (noteObj->Notes()[i].direction == DIRECTION::up)
 			{
 				center = -90;
 				min = center - scope;
@@ -398,7 +398,7 @@ void GameScene::Collision()
 				}
 
 			}
-			else if (noteObj->Notes()[i]->direction == DIRECTION::dawn)
+			else if (noteObj->Notes()[i].direction == DIRECTION::dawn)
 			{
 				center = 90;
 				min = center - scope;
@@ -415,7 +415,7 @@ void GameScene::Collision()
 				}
 
 			}
-			else if (noteObj->Notes()[i]->direction == DIRECTION::left)
+			else if (noteObj->Notes()[i].direction == DIRECTION::left)
 			{
 				center = 180;
 				min = -(center - scope);
@@ -435,7 +435,7 @@ void GameScene::Collision()
 			if (isSuccess)
 			{
 				combo++;
-				noteObj->Notes()[i]->isHit = true;
+				noteObj->Notes()[i].isHit = true;
 
 				// エフェクト発生
 				// 矢印

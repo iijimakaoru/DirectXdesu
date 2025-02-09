@@ -45,7 +45,7 @@ void SettingScene::Init() {
 void SettingScene::Update() {
 
 	if (input->IsTrigger(DIK_1)) {
-		SceneManager::GetInstance()->ChangeScene("GAME");
+		SceneManager::GetInstance()->ChangeScene("TITLE");
 	}
 	ImguiUpdate();
 

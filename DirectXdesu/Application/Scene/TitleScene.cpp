@@ -84,6 +84,11 @@ void TitleScene::GoNextScene() {
 	else if (input->IsTrigger(DIK_SPACE)) {
 		sceneManager->ChangeScene("GAME");
 	}
+
+	if (input->IsPress(DIK_LSHIFT) && input->IsPress(DIK_RSHIFT))
+	{
+		sceneManager->ChangeScene("SETTING");
+	}
 }
 
 float TitleScene::RotationLogoY(const float& speed)

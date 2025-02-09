@@ -193,25 +193,9 @@ void GameScene::Update() {
 	camera->Update();
 
 
-	if (input->IsPush(DIK_R))
-	{
-		initialePoseSet = true;
-		initializetime_ = std::chrono::system_clock::now();
-	}
+	
 
-	ImGui::Begin("Test");
-	if (initialePoseSet)
-	{
-		ImGui::Text("PleseTposeKeep!!!");
-		player->InitializePose();
-		initializeCount_ = std::chrono::system_clock::now();
-		std::chrono::seconds sec = std::chrono::duration_cast<std::chrono::seconds>(initializeCount_ - initializetime_);
-		if (sec > std::chrono::seconds{ 5 })
-		{
-			initialePoseSet = false;
-		}
-	}
-	ImGui::End();
+	
 }
 
 void GameScene::ObjDraw() 
@@ -245,12 +229,47 @@ void GameScene::Final()
 
 void GameScene::InitializePoseUpdate()
 {
+	
 
+	if (initialePoseSet)
+	{
+		player->InitializePose();
+		initializeCount_ = std::chrono::system_clock::now();
+		std::chrono::seconds sec = std::chrono::duration_cast<std::chrono::seconds>(initializeCount_ - initializetime_);
+		if (sec > std::chrono::seconds{ 5 })
+		{
+			initialePoseSet = false;
+		}
+	}
 }
 
 void GameScene::InitializePoseDraw()
 {
+	ImGui::Begin("InitializePoseInfo", nullptr,
+		ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
+	ImGui::SetWindowSize("InitializePoseInfo", { 480  ,280 });
+	ImGui::SetWindowPos({ 640 - 240,360 - 140 });
 
+	if (!initialePoseSet)
+	{
+		if (ImGui::Button("PoseInit\n##PleaseTPoseKeep##", { 240, 140 }))
+		{
+			initialePoseSet = true;
+			initializetime_ = std::chrono::system_clock::now();
+		}
+	}
+	else
+	{
+		std::chrono::seconds sec = std::chrono::duration_cast<std::chrono::seconds>(initializeCount_ - initializetime_);
+		
+		ImGui::Text("PleseTposeKeep!!!!: %d/%d Sec", sec,5);
+	
+	}
+	ImGui::End();
+
+
+
+	player->Draw();
 }
 
 void GameScene::RotAndLenCalculationStick(Hand hand_)

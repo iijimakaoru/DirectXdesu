@@ -74,19 +74,19 @@ void NoteObj::Init(bool test_,MusicDesc* music_)
 			//方向設定
 			if (notes[i].direction == DIRECTION::left)//左
 			{
-				obj_->GetTransform().SetRot({ 0.0f,180.0f,0.0f });
+				obj_->GetTransform().SetRot({ 0.0f,0.0f,0.0f });
 			}
 			else if (notes[i].direction == DIRECTION::up)//上
 			{
-				obj_->GetTransform().SetRot({ 0.0f,0.0f,-90.0f });
+				obj_->GetTransform().SetRot({ 0.0f,180.0f,-90.0f });
 			}
 			else if (notes[i].direction == DIRECTION::dawn)//下
 			{
-				obj_->GetTransform().SetRot({ 0.0f,180.0f,90.0f });
+				obj_->GetTransform().SetRot({ 0.0f,0.0f,90.0f });
 			}
 			else											  //右
 			{
-				obj_->GetTransform().SetRot({ 0.0f,0.0f,0.0f });
+				obj_->GetTransform().SetRot({ 0.0f,180.0f,0.0f });
 			}
 			notePosZ = (sec * speed) * music->ConvertBeatToMiliSeconds(notes[i].beat);
 			obj_->GetTransform().SetPos({ -50.0f + (100.0f * notes[i].lane),25.0f,notePosZ });

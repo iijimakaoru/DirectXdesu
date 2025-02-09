@@ -11,7 +11,7 @@ void ResultScene::LoadResources()
 	foxModel = ModelManager::GetInstance()->GetModels("clearFox");
 
 	texThanks = TextureManager::Load("Resources/texture/thanks.png");
-	texPress = TextureManager::Load("Resources/texture/boss1.png");
+	texPress = TextureManager::Load("Resources/texture/pressA.png");
 }
 
 void ResultScene::Init()
@@ -51,6 +51,13 @@ void ResultScene::Update()
 	fox->Update(camera->GetViewPro(), camera->GetWorldPos());
 
 	camera->Update();
+
+	if (input->GetPadButtonDown(A)) {
+		sceneManager->ChangeScene("TITLE");
+	}
+	else if (input->IsTrigger(DIK_SPACE)) {
+		sceneManager->ChangeScene("TITLE");
+	}
 }
 
 void ResultScene::ObjDraw()
@@ -63,7 +70,7 @@ void ResultScene::ObjDraw()
 void ResultScene::SpriteDraw()
 {
 	thanks->Draw(texThanks, { 880.0f, 300.0f});
-	press->Draw(texPress, { 880.0f ,400.0f }, { 0.5f,0.5f });
+	press->Draw(texPress, { 880.0f ,480.0f }, { 0.5f,0.5f });
 }
 
 void ResultScene::Final()

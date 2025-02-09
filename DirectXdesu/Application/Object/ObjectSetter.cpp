@@ -62,7 +62,7 @@ void ObjectSetter::Update(const Timer* timer, const KMyMath::Matrix4& matView, c
 	{
 		if (sideObject->GetIsDead()) 
 		{
-			KMyMath::Vector3 pos = { leftSide_ + MyMathUtility::GetRandF(-1.0f,1.0f),MyMathUtility::GetRandF(-1.0f,1.0f) ,900.0f };
+			KMyMath::Vector3 pos = { leftSide_ + MyMathUtility::GetRandF(-10.0f,10.0f),MyMathUtility::GetRandF(25.0f,100.0f) ,900.0f };
 			float scaleNum = MyMathUtility::GetRandF(10.0f, 20.0f);
 			KMyMath::Vector3 scale = { scaleNum,scaleNum ,scaleNum };
 			KMyMath::Vector3 rot = { MyMathUtility::GetRandF(0.0f,180.0f),MyMathUtility::GetRandF(0.0f,180.0f) ,MyMathUtility::GetRandF(0.0f,180.0f) };
@@ -78,7 +78,7 @@ void ObjectSetter::Update(const Timer* timer, const KMyMath::Matrix4& matView, c
 	{
 		if (sideObject->GetIsDead())
 		{
-			KMyMath::Vector3 pos = { rightSide_ + MyMathUtility::GetRandF(-1.0f,1.0f),MyMathUtility::GetRandF(-1.0f,1.0f) ,900.0f };
+			KMyMath::Vector3 pos = { rightSide_ + MyMathUtility::GetRandF(-10.0f,10.0f),MyMathUtility::GetRandF(25.0f,100.0f) ,900.0f };
 			float scaleNum = MyMathUtility::GetRandF(10.0f, 20.0f);
 			KMyMath::Vector3 scale = { scaleNum,scaleNum ,scaleNum };
 			KMyMath::Vector3 rot = { MyMathUtility::GetRandF(0.0f,180.0f),MyMathUtility::GetRandF(0.0f,180.0f) ,MyMathUtility::GetRandF(0.0f,180.0f) };

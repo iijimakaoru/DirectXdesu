@@ -2,7 +2,7 @@
 #include "CenterObject.h"
 #include "SideObject.h"
 
-const size_t maxObjectNum = 10;
+const size_t maxObjectNum = 20;
 
 class ObjectSetter
 {

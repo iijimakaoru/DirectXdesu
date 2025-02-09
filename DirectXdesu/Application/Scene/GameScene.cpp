@@ -191,10 +191,6 @@ void GameScene::Update() {
 	objectSetter->Update(timer_.get(), camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro());
 
 	camera->Update();
-
-
-	
-
 	
 }
 

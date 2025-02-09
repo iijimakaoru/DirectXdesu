@@ -44,7 +44,10 @@ private:
 	KModel* stageModel = nullptr;
 
 	//テクスチャ
-
+	std::unique_ptr<Sprite> press;
+	std::unique_ptr<Sprite> thanks;
+	TextureData texPress;
+	TextureData texThanks;
 #pragma endregion
 
 private:

@@ -41,9 +41,7 @@ void KMyGame::Draw() {
 	postEffectManager->Draw();
 
 	// Imgui描画
-#ifdef _DEBUG
 	imguiMane->Draw();
-#endif
 
 	dx->PostDraw();
 }

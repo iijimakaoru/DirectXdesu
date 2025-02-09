@@ -123,7 +123,7 @@ void GameScene::Init()
 	player = std::make_unique<CaptureModel>();
 	player->Initilize("fox");
 
-	playerTrans.SetPos({ 0,87,-110 });
+	playerTrans.SetPos({ 0,49,-147 });
 	
 	MCBM::CaptureManager::GetInstance()->GetYOLOPoseEstimation()->ExtrinsCalibrateLoad("Resources\\CalibrateData");
 	MCBM::CaptureManager::GetInstance()->GetYOLOPoseEstimation()->InterinsCalibrateLoad("Resources\\CalibrateData");
@@ -241,6 +241,16 @@ void GameScene::SpriteDraw()
 void GameScene::Final() 
 {
 	delete collisionManager_; 
+}
+
+void GameScene::InitializePoseUpdate()
+{
+
+}
+
+void GameScene::InitializePoseDraw()
+{
+
 }
 
 void GameScene::RotAndLenCalculationStick(Hand hand_)

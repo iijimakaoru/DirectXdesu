@@ -18,12 +18,14 @@ public:
 	void SetCenterObject(KMyMath::Vector3& pos, KMyMath::Vector3& rotation, KMyMath::Vector3& scale, KMyMath::Vector4& color);
 	void SetSideObject(size_t& i, KMyMath::Vector3& pos, KMyMath::Vector3& rotation, KMyMath::Vector3& scale, KMyMath::Vector4& color);
 
+	void SetSideVibration();
+
 private:
 	std::unique_ptr<MeshModel> centerModel_;
 	std::unique_ptr<CenterObject> centerObject_;
 
 	std::unique_ptr<MeshModel> sideModel_;
-	std::array<std::unique_ptr<SideObject>,maxObjectNum> sideObjects_;
+	std::array<std::unique_ptr<SideObject>,maxObjectNum> leftObjects_;
 	std::array<std::unique_ptr<SideObject>, maxObjectNum> rightObjects_;
 
 	float leftSide_;

@@ -265,9 +265,22 @@ void NoteObj::LoadNoteSUS(const std::string& name)
 
 	//1行分の文字列を入れる変数
 	std::string line;
-	for (size_t i = 0; i < 10; i++)
+	//ノーツ以外の行をスキップする
+	for (size_t i = 0; i < 12; i++)
 	{
 		std::getline(file, line);
+		//BPMのみ取得を行う
+		if (line.find("BPM") != std::string::npos)
+		{
+			// スペースの位置を見つける
+			size_t spacePos = line.find(':');
+			if (spacePos != std::string::npos) {
+				// スペースの次の部分を切り出す
+				std::string value = line.substr(spacePos + 1);
+
+				bpm = std::stoi(value);
+			}
+		}
 	}
 	while (std::getline(file, line))
 	{
@@ -279,70 +292,49 @@ void NoteObj::LoadNoteSUS(const std::string& name)
 		//文字列にBPMがあるか
 		if (line[0] == '#')
 		{
-			//BPMの代入
-			if (line.find("BPM")!= std::string::npos)
-			{
-				// スペースの位置を見つける
-				size_t spacePos = line.find(':');
-				if (spacePos != std::string::npos) {
-					// スペースの次の部分を切り出す
-					std::string value = line.substr(spacePos + 1);
-
-					bpm = std::stoi(value);
-				}
-			}
-			//BPMの次の行をスキップ
-			else if (line.find('8') != std::string::npos)
-			{
-				continue;
-			}
-			//ノーツの算出
-			else
-			{
+			// スペースの次の部分を切り出す
+			std::string value = line.substr(2, 2);//小節番号
+			int32_t measure = std::stoi(value);
+			value = line.substr(5, 1);//レーン
+			int32_t lane = std::stoi(value) - 2;//レーンの始まりを0にするため値を-2する(文字を使うようになったら改良必須)
+			//拍数
+			// スペースの位置を見つける
+			size_t spacePos = line.find(':');
+			if (spacePos != std::string::npos) {
 				// スペースの次の部分を切り出す
-				std::string value = line.substr(2, 2);//小節番号
-				int32_t measure = std::stoi(value);
-				value = line.substr(5, 1);//レーン
-				int32_t lane = std::stoi(value) - 2;//レーンの始まりを0にするため値を-2する(文字を使うようになったら改良必須)
-				//拍数
-				// スペースの位置を見つける
-				size_t spacePos = line.find(':');
-				if (spacePos != std::string::npos) {
-					// スペースの次の部分を切り出す
-					std::string value = line.substr(spacePos + 1);
-					int32_t num = static_cast<int32_t>( value.size() / 2);
-					float pos;
-					switch (num)
-					{
-					case 1:
-						pos = 0.0f;
-						break;
-					case 2:
-						pos = 2.0f;
-						break;
-					case 4:
-						pos = 1.0f;
-						break;
-					case 8:
-						pos = 0.5f;
-						break;
-					default:
-						pos = 0.5f;
-						break;
-					}
-					for (int32_t i = 0; i < num; i++)
-					{
-						int32_t posBeat = 2 * i;
-						std::string beat = value.substr(posBeat, 2);
-						if (beat == "11") {
-							Note note;
-							//値を代入
-							note.beat.measure = measure;
-							note.lane = lane;
-							note.beat.beat = pos * i;
-							note.direction = DIRECTION::right;//一旦代入
-							notesMap.emplace(SetKey(note.beat, lane), std::move(note));
-						}
+				std::string value = line.substr(spacePos + 1);
+				int32_t num = static_cast<int32_t>(value.size() / 2);
+				float pos;
+				switch (num)
+				{
+				case 1:
+					pos = 0.0f;
+					break;
+				case 2:
+					pos = 2.0f;
+					break;
+				case 4:
+					pos = 1.0f;
+					break;
+				case 8:
+					pos = 0.5f;
+					break;
+				default:
+					pos = 0.5f;
+					break;
+				}
+				for (int32_t i = 0; i < num; i++)
+				{
+					int32_t posBeat = 2 * i;
+					std::string beat = value.substr(posBeat, 2);
+					if (beat == "11") {
+						Note note;
+						//値を代入
+						note.beat.measure = measure;
+						note.lane = lane;
+						note.beat.beat = pos * i;
+						note.direction = DIRECTION::right;//一旦代入
+						notesMap.emplace(SetKey(note.beat, lane), std::move(note));
 					}
 				}
 			}

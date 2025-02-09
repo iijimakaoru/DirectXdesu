@@ -141,7 +141,7 @@ private:
 	int combo;
 	bool test;
 	bool isFrame;
-
+	bool flag;
 
 	std::unique_ptr<Timer> timer_;
 	std::unique_ptr<EffectSetter> effectSetter;

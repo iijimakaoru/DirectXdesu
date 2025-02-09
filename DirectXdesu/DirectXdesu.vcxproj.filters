@@ -86,6 +86,7 @@
     <ClCompile Include="Application\Object\SideObject.cpp" />
     <ClCompile Include="Engine\Particle\GPUParticle\GroundEffectParticle.cpp" />
     <ClCompile Include="Engine\3D\Model\CaptureModel.cpp" />
+    <ClCompile Include="Application\Scene\ResultScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Math\Vector2\Vector2.cpp">
@@ -362,6 +363,7 @@
     <ClInclude Include="Application\Effect\GroundEffect\GroundEffect.h" />
     <ClInclude Include="Application\Object\SideObject.h" />
     <ClInclude Include="Engine\Particle\GPUParticle\GroundEffectParticle.h" />
+    <ClInclude Include="Application\Scene\ResultScene.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shader\Effect\ArrowEffect\ArrowEffect.hlsli" />

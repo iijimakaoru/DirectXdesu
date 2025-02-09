@@ -516,7 +516,10 @@ void GameScene::Collision()
 				// 矢印
 				{
 					KMyMath::Vector3 nowArrowPos = noteObj->Obj()[i]->GetTransform().GetPos();
-					KMyMath::Vector3 nowArrowRot = noteObj->Obj()[i]->GetTransform().GetRot();
+					KMyMath::Vector3 nowArrowRot = { 
+						noteObj->Obj()[i]->GetTransform().GetRot().x,
+						noteObj->Obj()[i]->GetTransform().GetRot().y,
+						noteObj->Obj()[i]->GetTransform().GetRot().z + 180.0f };
 					KMyMath::Vector3 nowArrowScale = noteObj->Obj()[i]->GetTransform().GetScale();
 					KMyMath::Vector4 nowArrowColor = noteObj->Obj()[i]->GetColor();
 					effectSetter->SetArrowEffect(nowArrowPos, nowArrowRot, nowArrowScale, nowArrowColor,

@@ -74,17 +74,17 @@ void ArrowEffect::SetParticle(KMyMath::Vector3& pos, KMyMath::Vector3& rotation,
 	float particlePower = 40.0f;
 
 	// 右
-	if (nowRot.y == 0.0f && nowRot.z == 0.0f) {
+	if (nowRot.y == 180.0f && nowRot.z == -180.0f) {
 		startPos_ = pos;
 		endPos_ = { pos.x + particlePower,pos.y,pos.z };
 	}
 	// 左
-	else if (nowRot.y == 180.0f && nowRot.z == 0.0f) {
+	else if (nowRot.y == 180.0f && nowRot.z == -180.0f) {
 		startPos_ = pos;
 		endPos_ = { pos.x - particlePower,pos.y,pos.z };
 	}
 	// 上
-	else if (nowRot.y == 0.0f && nowRot.z == -90.0f) {
+	else if (nowRot.y == 180.0f && nowRot.z == -270.0f) {
 		startPos_ = pos;
 		endPos_ = { pos.x ,pos.y - particlePower,pos.z };
 	}

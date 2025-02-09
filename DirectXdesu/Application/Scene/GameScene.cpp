@@ -126,9 +126,6 @@ void GameScene::Update() {
 	
 	player->Update(camera->GetViewPro(), playerTrans);
 	
-	if (input->IsTrigger(DIK_SPACE))isFrame = true;
-		
-	if (isFrame)
 	playerTrans.SetPos({ 0,87,-110 });
 	
 	ImGui::Begin("lo");
@@ -140,7 +137,8 @@ void GameScene::Update() {
 
 	timer_->UpdateTimer();
 
-	if (input->IsPush(DIK_R))
+	if (input->IsTrigger(DIK_SPACE))isFrame = true;
+	if (isFrame)
 	{
 		if (frame<360)
 		{
@@ -207,10 +205,7 @@ void GameScene::ObjDraw()
 	{
 		obj[i]->Draw();
 	}
-	/*for (size_t i = 0; i < Hand::max; i++)
-	{
-		handObj[i]->Draw();
-	}*/
+
 
 	noteObj->Draw();
 

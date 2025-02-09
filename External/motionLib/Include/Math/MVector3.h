@@ -23,7 +23,6 @@ namespace MCBM
 		MVector3 GetV3Cross(const MVector3& aVector, const MVector3& bVector);
 
 
-		MVector3 GetFrontVec(MVector3 RightVec, MVector3 UpVec = { 0,1,0 });
 		MVector3 GetUpVec(MVector3 RightVec, MVector3 frontVec = { 0,0,1 });
 		MVector3 GetRightVec(MVector3 frontVec, MVector3 UpVec = { 0,1,0 });
 

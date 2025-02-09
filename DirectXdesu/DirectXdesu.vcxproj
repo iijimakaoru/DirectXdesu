@@ -548,6 +548,9 @@
     <ProjectReference Include="..\External\motionLib\motionLib.vcxproj">
       <Project>{ca689646-a941-4556-899d-db36debe0ccd}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\External\OnnxRuntimeforDirectML\OnnxRuntimeDirectMLTest.vcxproj">
+      <Project>{87851c67-72b5-4993-b0e9-b643dc3b2054}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

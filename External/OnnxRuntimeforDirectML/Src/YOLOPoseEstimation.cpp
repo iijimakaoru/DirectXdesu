@@ -23,6 +23,7 @@
 #include "common.h"
 #include "onnx_model_base.h"
 
+#include <opencv2/sfm.hpp>
 
 
 using namespace MCBO;
@@ -574,10 +575,27 @@ void YOLOPoseEstimationImp::CalclateFinalCaptureDataFromCalibrateData() {
 	cv::undistortPoints(points1,points1_undistorted,K1,distCoeffs1);
 	cv::undistortPoints(points2,points2_undistorted,K2,distCoeffs2);
 
+	cv::Mat points2d_cam1 = cv::Mat::eye(2,( int ) YOLO_POSE_INDEX::YOLO_POSE_INDEX_MAX,CV_64F);
+	cv::Mat points2d_cam2 = cv::Mat::eye(2,( int ) YOLO_POSE_INDEX::YOLO_POSE_INDEX_MAX,CV_64F);
+	for ( int i = 0; i < (int)YOLO_POSE_INDEX::YOLO_POSE_INDEX_MAX; i++ )
+	{
+		points2d_cam1.at<float>(0,i) = points1_undistorted[ i ].x;
+		points2d_cam1.at<float>(1,i) = points1_undistorted[ i ].y;
+
+		points2d_cam2.at<float>(0,i) = points2_undistorted[ i ].x;
+		points2d_cam2.at<float>(1,i) = points2_undistorted[ i ].y;
+	}
+
+	std::vector<cv::Mat> points2d = { points2d_cam1, points2d_cam2 };
+	std::vector<cv::Mat> projection_matrices = { P1, P2 };
+
+
+
 	// ⑦ 三角測量による3次元復元（OpenCVの triangulatePoints を使用）
 	cv::Mat pts4D;
-	triangulatePoints(P1,P2,points1_undistorted,points2_undistorted,pts4D);
+	//triangulatePoints(P1,P2,points1_undistorted,points2_undistorted,pts4D);
 
+	cv::sfm::triangulatePoints(points2d,projection_matrices,pts4D);
 	// ⑧ 同次座標から通常の3次元座標へ変換して出力
 
 	for ( int i = 0; i < pts4D.cols; i++ )
@@ -585,9 +603,9 @@ void YOLOPoseEstimationImp::CalclateFinalCaptureDataFromCalibrateData() {
 		cv::Mat col = pts4D.col(i);
 		double w = col.at<float>(3,0);  // 同次座標の第4成分
 		cv::Point3f pt3D(
-			col.at<float>(0,0) / w,
-			col.at<float>(1,0) / w,
-			col.at<float>(2,0) / w
+			col.at<float>(0,0),
+			col.at<float>(1,0),
+			col.at<float>(2,0)
 		);
 
 		finalCaptureData_[ ( YOLO_POSE_INDEX ) validIndices[ i ] ] = MCBO::YVector3(pt3D.x,pt3D.y,pt3D.z);

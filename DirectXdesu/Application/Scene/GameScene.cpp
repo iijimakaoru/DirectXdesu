@@ -126,7 +126,6 @@ void GameScene::Update() {
 	
 	player->Update(camera->GetViewPro(), playerTrans);
 	
-	playerTrans.SetPos({ 0,87,-110 });
 	
 	ImGui::Begin("lo");
 	ImGui::DragInt("perfect", &score[PERFECT]);
@@ -179,16 +178,14 @@ void GameScene::Update() {
 	if (initialePoseSet)
 	{
 		playTime++;
-
-		for (size_t i = 0; i < OBJ::max; i++)
-		{
-			obj[i]->Update(camera->GetViewPro(), camera->GetWorldPos());
-		}
+		noteObj->Update(camera.get());
+	}
+	obj[OBJ::skydome]->GetTransform().SetRot({ 0.0f, playTime * 0.05f, 0.0f });
+	for (size_t i = 0; i < OBJ::max; i++)
+	{
+		obj[i]->Update(camera->GetViewPro(), camera->GetWorldPos());
 	}
 
-	noteObj->Update(camera.get());
-
-	obj[OBJ::skydome]->GetTransform().SetRot({ 0.0f, playTime * 0.05f, 0.0f });
 	// エフェクトの更新
 	effectSetter->Update(timer_.get(), camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro());
 

@@ -78,8 +78,6 @@ private:
 	};
 
 private:
-	// マウス角度算出
-	void RotAndLenCalculationMouse();
 
 	//スティック角度、長さ算出
 	void RotAndLenCalculationStick(Hand hand_);

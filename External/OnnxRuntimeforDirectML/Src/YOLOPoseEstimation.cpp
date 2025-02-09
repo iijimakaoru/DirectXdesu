@@ -575,9 +575,9 @@ void YOLOPoseEstimationImp::CalclateFinalCaptureDataFromCalibrateData() {
 	cv::undistortPoints(points1,points1_undistorted,K1,distCoeffs1);
 	cv::undistortPoints(points2,points2_undistorted,K2,distCoeffs2);
 
-	cv::Mat points2d_cam1 = cv::Mat::eye(2,( int ) YOLO_POSE_INDEX::YOLO_POSE_INDEX_MAX,CV_64F);
-	cv::Mat points2d_cam2 = cv::Mat::eye(2,( int ) YOLO_POSE_INDEX::YOLO_POSE_INDEX_MAX,CV_64F);
-	for ( int i = 0; i < (int)YOLO_POSE_INDEX::YOLO_POSE_INDEX_MAX; i++ )
+	cv::Mat points2d_cam1 = cv::Mat::eye(2,( int ) YOLO_POSE_INDEX::YOLO_POSE_INDEX_MAX,CV_32F);
+	cv::Mat points2d_cam2 = cv::Mat::eye(2,( int ) YOLO_POSE_INDEX::YOLO_POSE_INDEX_MAX,CV_32F);
+	for ( int i = 0; i < min(points1_undistorted.size(),points2_undistorted.size()); i++ )
 	{
 		points2d_cam1.at<float>(0,i) = points1_undistorted[ i ].x;
 		points2d_cam1.at<float>(1,i) = points1_undistorted[ i ].y;
@@ -598,17 +598,17 @@ void YOLOPoseEstimationImp::CalclateFinalCaptureDataFromCalibrateData() {
 	cv::sfm::triangulatePoints(points2d,projection_matrices,pts4D);
 	// ⑧ 同次座標から通常の3次元座標へ変換して出力
 
-	for ( int i = 0; i < pts4D.cols; i++ )
+
+	for ( int i = 0; i < min(pts4D.cols,validIndices.size()); i++ )
 	{
-		cv::Mat col = pts4D.col(i);
-		double w = col.at<float>(3,0);  // 同次座標の第4成分
+		cv::Mat col = pts4D.col(i); // 同次座標の第4成分
 		cv::Point3f pt3D(
-			col.at<float>(0,0),
-			col.at<float>(1,0),
-			col.at<float>(2,0)
+			(float)col.at<double>(0,0),
+			(float)col.at<double>(1,0),
+			(float)col.at<double>(2,0)
 		);
 
-		finalCaptureData_[ ( YOLO_POSE_INDEX ) validIndices[ i ] ] = MCBO::YVector3(pt3D.x,pt3D.y,pt3D.z + pt3D.z * 0.01f);
+		finalCaptureData_[ ( YOLO_POSE_INDEX ) validIndices[ i ] ] = MCBO::YVector3(pt3D.x,-pt3D.y,- pt3D.z);
 	}
 }
 

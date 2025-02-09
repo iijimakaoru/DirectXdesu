@@ -24,21 +24,20 @@
 
 GameScene::~GameScene() { Final(); };
 
-void GameScene::LoadResources() {
+void GameScene::LoadResources() 
+{
+	ModelManager* modelManager = ModelManager::GetInstance();
+
 	// モデル
 	objModel[OBJ::stage] = 
-		ModelManager::GetInstance()->GetModels("S_Cube");
+		modelManager->GetModels("S_Cube");
 	objModel[OBJ::skydome] = 
-		ModelManager::GetInstance()->GetModels("S_SkyDorm");
-	/*noteModel = 
-		ModelManager::GetInstance()->GetModels("S_Arrow");*/
-
-	TextureManager::Load("Resources/texture/boss1.png");
-
-
+		modelManager->GetModels("S_SkyDorm");
 }
 
-void GameScene::Init() {
+void GameScene::Init() 
+{
+	timer_ = std::make_unique<Timer>();
 
 	BaseScene::Init();
 
@@ -78,14 +77,22 @@ void GameScene::Init() {
 	obj[OBJ::skydome].reset(KObject3d::Create(objModel[OBJ::skydome], 
 		PipelineManager::GetInstance()->GetPipeline("Obj")));
 	obj[OBJ::skydome]->GetTransform().SetScale({ 800.0f, 800.0f, 800.0f });
-	obj[OBJ::skydome]->SetColor({ 0.1f,0.0f,1.0f,1.0f });
+	obj[OBJ::skydome]->GetTransform().SetPos({ 0.0f, 100.0f, 500.0f });
 
 	resetPos = { -50.0f,50.0f,10.0f };
 
 	
 	collisionManager_ = new CollisionManager();
 
-	//ノーツ
+	// エフェクトの初期化
+	effectSetter = std::make_unique<EffectSetter>();
+	effectSetter->Init(timer_.get(), camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro());
+
+	// ゲーム内オブジェクトの初期化
+	objectSetter = std::make_unique<ObjectSetter>();
+	objectSetter->Init(timer_.get(), camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro());
+
+	// ノーツ
 	playTime = 0;
 	Meter meter = { 4,4 };
 	music = std::make_unique<MusicDesc>(85.0f, meter);
@@ -98,29 +105,15 @@ void GameScene::Init() {
 
 	light_->SetLightRGB({lightRGB_.x, lightRGB_.y, lightRGB_.z});
 	light_->SetLightDir({lightDir_.x, lightDir_.y, lightDir_.z, 0.0f});
+	
+	// 音
+	audioManager_ = AudioManager::GetInstance();
+	audioManager_->BGMPlay_wav("maou_bgm_cyber44.wav");
 	//------------------------------------------------------------------------------------------------------------------------------------------------------------//
 
-
-	PHONONLOADER::P_MODEL_DATA* pData = new PHONONLOADER::P_MODEL_DATA();
-	PHONONLOADER::PModelLoader::Load(pData, "obj/cube");
-
-	
-
-	cv::Mat img;
-
-	const std::string& modelPath = "Resources/Checkpoints/yolo11x-pose.onnx";
-
-	float mask_threshold = 0.5f;
-	float conf_threshold = 0.30f;
-	float iou_threshold = 0.45f;
-	int conversion_code = cv::COLOR_BGR2RGB;
-	
 	MCBM::AnimationModelManager::GetInstance()->Load("fox");
 	player = std::make_unique<CaptureModel>();
 	player->Initilize("fox");
-	sprite.reset(Sprite::Create(PipelineManager::GetInstance()->GetPipeline("Sprite")));
-
-	texData = TextureManager::GetInstance()->GetTextures("Resources/texture/boss1.png");
 
 	playerTrans.SetPos({ 0,49,-147 });
 	playerTrans.SetRot({ 0,180,0 });
@@ -136,6 +129,18 @@ void GameScene::Update() {
 	if (input->IsTrigger(DIK_SPACE))isFrame = true;
 		
 	if (isFrame)
+	playerTrans.SetPos({ 0,87,-110 });
+	
+	ImGui::Begin("lo");
+	ImGui::DragInt("perfect", &score[PERFECT]);
+	ImGui::DragInt("great", &score[GREAT]);
+	ImGui::DragInt("miss", &score[MISS]);
+	ImGui::DragInt("combo", &combo);
+	ImGui::End();
+
+	timer_->UpdateTimer();
+
+	if (input->IsPush(DIK_R))
 	{
 		if (frame<360)
 		{
@@ -181,9 +186,16 @@ void GameScene::Update() {
 		{
 			obj[i]->Update(camera->GetViewPro(), camera->GetWorldPos());
 		}
-
-		noteObj->Update(camera.get());
 	}
+
+	noteObj->Update(camera.get());
+
+	obj[OBJ::skydome]->GetTransform().SetRot({ 0.0f, playTime * 0.05f, 0.0f });
+	// エフェクトの更新
+	effectSetter->Update(timer_.get(), camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro());
+
+	// オブジェクトの更新
+	objectSetter->Update(timer_.get(), camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro());
 
 	camera->Update();
 
@@ -201,15 +213,19 @@ void GameScene::ObjDraw()
 	}*/
 
 	noteObj->Draw();
+
 	player->Draw();
+
+	// エフェクト描画
+	effectSetter->Draw(timer_.get(), camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro());
+
+	// オブジェクトの描画
+	objectSetter->Draw(timer_.get(), camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro());
 }
 
-void GameScene::SpriteDraw() {
-
-	//------------------------------------------------------------------------------------------------------------------------------------------------------------//
-	f++;
-	fDiv = 7;
-	//sprite->AnimationDraw(texData, 64, 64, f, fDiv, {200,200});
+void GameScene::SpriteDraw() 
+{
+	
 }
 
 void GameScene::Final() 
@@ -230,9 +246,11 @@ void GameScene::RotAndLenCalculationStick(Hand hand_)
 	stickVec.y = end[hand_].y - start[hand_].y;
 	//長さ算出
 	length = MyMathUtility::Vector2Length(stickVec);
-	//正規化
+
+	// 正規化
 	stickVec = MyMathUtility::MakeVector2Normalize(stickVec);
-	//角度を算出
+
+	// 角度を算出
 	angle = atan2(stickVec.y, stickVec.x);
 	angle = MyMathConvert::DegreeTransform(angle);
 }
@@ -272,11 +290,10 @@ void GameScene::Collision()
 
 			}
 		}
-		
-		//コントローラ、マウス
+		// コントローラ、マウス
 		if (std::abs(diff) <= perfect)
 		{
-			//1個前のノードのフラグが立っていないかつ同じレーンじゃない場合にしなければならない
+			// 1個前のノードのフラグが立っていないかつ同じ位置じゃない場合にしなければならない
 			if (i != 0)
 			{
 				if (!noteObj->Notes()[i-1].isHit)
@@ -353,7 +370,7 @@ void GameScene::Collision()
 				max = center + scope;
 				if (min <= angle && angle <= max)
 				{
-					//長さが一定以上超えていないなら
+					// 長さが一定以上超えていないなら
 					if (length < lenRimit)
 					{
 						continue;
@@ -364,14 +381,92 @@ void GameScene::Collision()
 				}
 
 			}
+			else if (noteObj->Notes()[i]->direction == DIRECTION::up)
+			{
+				center = -90;
+				min = center - scope;
+				max = center + scope;
+				if (min <= angle && angle <= max)
+				{
+					// 長さが一定以上超えていないなら
+					if (length < lenRimit)
+					{
+						continue;
+					}
+					score[PERFECT]++;
+					isSuccess = true;
+				}
+
+			}
+			else if (noteObj->Notes()[i]->direction == DIRECTION::dawn)
+			{
+				center = 90;
+				min = center - scope;
+				max = center + scope;
+				if (min <= angle && angle <= max)
+				{
+					// 長さが一定以上超えていないなら
+					if (length < lenRimit)
+					{
+						continue;
+					}
+					score[PERFECT]++;
+					isSuccess = true;
+				}
+
+			}
+			else if (noteObj->Notes()[i]->direction == DIRECTION::left)
+			{
+				center = 180;
+				min = -(center - scope);
+				max = center - scope;
+				if (max <= angle || angle <= min)
+				{
+					// 長さが一定以上超えていないなら
+					if (length < lenRimit)
+					{
+						continue;
+					}
+					score[PERFECT]++;
+					isSuccess = true;
+				}
+
+			}
 			if (isSuccess)
 			{
 				combo++;
-				noteObj->Notes()[i].isHit = true;
+				noteObj->Notes()[i]->isHit = true;
+
+				// エフェクト発生
+				// 矢印
+				{
+					KMyMath::Vector3 nowArrowPos = noteObj->Obj()[i]->GetTransform().GetPos();
+					KMyMath::Vector3 nowArrowRot = noteObj->Obj()[i]->GetTransform().GetRot();
+					KMyMath::Vector3 nowArrowScale = noteObj->Obj()[i]->GetTransform().GetScale();
+					KMyMath::Vector4 nowArrowColor = noteObj->Obj()[i]->GetColor();
+					effectSetter->SetArrowEffect(nowArrowPos, nowArrowRot, nowArrowScale, nowArrowColor,
+						timer_.get(), camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro());
+				}
+
+				// パーフェクトゾーン
+				{
+					KMyMath::Vector3 nowLinePos = { 
+						noteObj->Obj()[i]->GetTransform().GetPos().x,
+						obj[OBJ::line]->GetTransform().GetPos().y,
+						obj[OBJ::line]->GetTransform().GetPos().z };
+					KMyMath::Vector3 nowLineRot = {0.0f,0.0f,0.0f};
+					KMyMath::Vector3 nowLineScale = {
+						obj[OBJ::line]->GetTransform().GetScale().x / 2,
+						obj[OBJ::line]->GetTransform().GetScale().y,
+						obj[OBJ::line]->GetTransform().GetScale().z};
+					KMyMath::Vector4 nowLineColor = noteObj->Obj()[i]->GetColor();
+					effectSetter->SetGroundEffect(nowLinePos, nowLineRot, nowLineScale, nowLineColor,
+						timer_.get(), camera->GetViewPro()->GetMatView(), camera->GetViewPro()->GetMatPro());
+				}
 			}
-			break;//for文から抜ける
+			break;// for文から抜ける
 		}
-		else if (diff < -(perfect))//一旦ノードがラインから過ぎ去ったらミスにする
+		else if (diff < -(perfect))// 一旦ノードがラインから過ぎ去ったらミスにする
 		{
 			combo = 0;
 			score[MISS]++;
@@ -520,13 +615,13 @@ void GameScene::LoadCSV(const std::string& name)
 	assert(file.is_open());
 
 
-	//1行分の文字列を入れる変数
+	// 1行分の文字列を入れる変数
 	std::string line;
 
 	while (std::getline(file, line))
 	{
 		std::istringstream line_stream(line);
-		//,区切りで行の先頭文字列を取得
+		// ,区切りで行の先頭文字列を取得
 		std::string key;
 		getline(line_stream, key, ',');
 		if (key == "perfect")
@@ -542,6 +637,6 @@ void GameScene::LoadCSV(const std::string& name)
 		}
 
 	}
-	//ファイルを閉じる
+	// ファイルを閉じる
 	file.close();
 }

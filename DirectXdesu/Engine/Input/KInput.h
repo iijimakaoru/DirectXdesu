@@ -26,11 +26,31 @@
 	Wheel,
 };
 
+enum MouseBotton
+{
+	Left,
+	Right,
+	Wheel,
+};
+
+enum ControllerButton
+{
+	B = XINPUT_GAMEPAD_B,
+	A = XINPUT_GAMEPAD_A,
+	X = XINPUT_GAMEPAD_X,
+	Y = XINPUT_GAMEPAD_Y,
+	START = XINPUT_GAMEPAD_START,
+	BACK = XINPUT_GAMEPAD_BACK,
+	LB = XINPUT_GAMEPAD_LEFT_SHOULDER,
+	RB = XINPUT_GAMEPAD_RIGHT_SHOULDER,
+	LT,
+	RT
+};
+
 class KInput
 {
 public:
 
-public:
 	// 初期化
 	void Init();
 
@@ -77,11 +97,11 @@ public:
 	//パッドに接続されてるか
 	bool GetPadConnect();
 	//パッドのボタンが押されているか
-	bool GetPadButton(UINT button);
+	bool GetPadButton(ControllerButton button);
 	//パッドのボタンが離れた瞬間か
-	bool GetPadButtonUp(UINT button);
+	bool GetPadButtonUp(ControllerButton button);
 	//パッドのボタンが押された瞬間か
-	bool GetPadButtonDown(UINT button);
+	bool GetPadButtonDown(ControllerButton button);
 	//パッドの左スティック
 	KMyMath::Vector2 GetPadLStick();
 	//パッドの右スティック

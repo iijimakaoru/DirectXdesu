@@ -21,18 +21,6 @@ public:
 	// 更新
 	void Update();
 
-	// タイトルカメラワーク
-	void RoundCamera();
-
-	// 回転スタート
-	void StartRound();
-
-	// 出撃カメラワーク
-	void SortieCamera();
-
-	// 出撃スタート
-	void StartSortie();
-
 private:
 	// 角度
 	float rotAngle = 0;

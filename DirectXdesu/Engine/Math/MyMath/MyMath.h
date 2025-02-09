@@ -201,6 +201,15 @@ namespace MyMathUtility
 	/// <param name="m"></param>
 	/// <returns></returns>
 	KMyMath::Vector3 MatrixTransformWDivision(const KMyMath::Vector3& v, const KMyMath::Matrix4& m);
+
+	/// <summary>
+	/// 単振動をした値を返す
+	/// </summary>
+	/// <param name="time">経過時間</param>
+	/// <param name="amplitude">振幅</param>
+	/// <param name="period">周期</param>
+	/// <returns></returns>
+	float SimpleHarmonicMotion(float time, float amplitude = 10.0f, float period = 60.0f);
 }
 
 namespace KMyMath
@@ -275,6 +284,10 @@ namespace MyMathConvert
 	/// <param name="vector3"></param>
 	/// <returns></returns>
 	DirectX::XMFLOAT3 ChangeVector3toXMfloat3(KMyMath::Vector3& vector3);
+
+	KMyMath::Vector4 ChangeVector4(DirectX::XMFLOAT4 float4);
+
+	DirectX::XMFLOAT4 ChangeXMFLOAT4(KMyMath::Vector4 vector4);
 
 	/// <summary>
 	/// ラジアン変換

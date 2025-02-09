@@ -47,7 +47,7 @@ Microsoft::WRL::ComPtr<ID3D12Resource> d3dUtil::CreateDefaultBuffer(
 
 	CD3DX12_HEAP_PROPERTIES heap = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
 	CD3DX12_RESOURCE_DESC resourceDesc = CD3DX12_RESOURCE_DESC::Buffer(byteSize);
-	// Create the actual default buffer resource.
+	// 実際のデフォルトバッファリソースを作成します。
 	ThrowIfFailed(device->CreateCommittedResource(
 		&heap,
 		D3D12_HEAP_FLAG_NONE,
@@ -56,8 +56,8 @@ Microsoft::WRL::ComPtr<ID3D12Resource> d3dUtil::CreateDefaultBuffer(
 		nullptr,
 		IID_PPV_ARGS(defaultBuffer.GetAddressOf())));
 
-	// In order to copy CPU memory data into our default buffer, we need to create
-	// an intermediate upload heap. 
+	// CPU メモリ データをデフォルトのバッファにコピーするには、以下を作成する必要があります。
+	// 中間アップロードヒープ 
 	heap = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
 	resourceDesc = CD3DX12_RESOURCE_DESC::Buffer(byteSize);
 	ThrowIfFailed(device->CreateCommittedResource(
@@ -69,15 +69,15 @@ Microsoft::WRL::ComPtr<ID3D12Resource> d3dUtil::CreateDefaultBuffer(
 		IID_PPV_ARGS(uploadBuffer.GetAddressOf())));
 
 
-	// Describe the data we want to copy into the default buffer.
+	// デフォルトのバッファにコピーしたいデータを記述します。
 	D3D12_SUBRESOURCE_DATA subResourceData = {};
 	subResourceData.pData = initData;
 	subResourceData.RowPitch = byteSize;
 	subResourceData.SlicePitch = subResourceData.RowPitch;
 
-	// Schedule to copy the data to the default buffer resource.  At a high level, the helper function UpdateSubresources
-	// will copy the CPU memory into the intermediate upload heap.  Then, using ID3D12CommandList::CopySubresourceRegion,
-	// the intermediate upload heap data will be copied to mBuffer.
+	// データをデフォルトのバッファー リソースにコピーするようにスケジュールします。 
+	// 高レベルでは、ヘルパー関数 UpdateSubresources が CPU メモリを中間アップロード ヒープにコピーします。
+	// 次に、ID3D12CommandList::CopySubresourceRegion を使用して、中間アップロード ヒープ データが mBuffer にコピーされます。
 	CD3DX12_RESOURCE_BARRIER resourceBarrier =
 		CD3DX12_RESOURCE_BARRIER::Transition(
 			defaultBuffer.Get(),
@@ -97,9 +97,9 @@ Microsoft::WRL::ComPtr<ID3D12Resource> d3dUtil::CreateDefaultBuffer(
 		D3D12_RESOURCE_STATE_GENERIC_READ);
 	cmdList->ResourceBarrier(1, &resourceBarrier);
 
-	// Note: uploadBuffer has to be kept alive after the above function calls because
-	// the command list has not been executed yet that performs the actual copy.
-	// The caller can Release the uploadBuffer after it knows the copy has been executed.
+	// 注: 上記の関数呼び出し後は、uploadBuffer を生きたままにしておく必要があります。
+	// 実際のコピーを実行するコマンド リストはまだ実行されていません。
+	// 呼び出し元は、コピーが実行されたことを認識した後、uploadBuffer を解放できます。
 
 	return defaultBuffer;
 }
@@ -134,7 +134,7 @@ ComPtr<ID3DBlob> d3dUtil::CompileShader(
 
 std::wstring DxException::ToString()const
 {
-	// Get the string description of the error code.
+	// エラーコードの説明文字列を取得します。
 	_com_error err(ErrorCode);
 	std::wstring msg = err.ErrorMessage();
 

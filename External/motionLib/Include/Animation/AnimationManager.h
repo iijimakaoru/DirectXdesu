@@ -33,9 +33,9 @@ namespace MCBM
     {
         std::unordered_map<std::string, std::unique_ptr<Animation>> animations_;
     public:
-        Animation* GetAnimation(std::string name); //ƒAƒjƒ[ƒVƒ‡ƒ“‚ğæ“¾
+        Animation* GetAnimation(std::string name); //ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚’å–å¾—
 
-        void SetAnimation(std::unique_ptr<Animation> animation);//ƒAƒjƒ[ƒVƒ‡ƒ“‚ğ’Ç‰Á
+        void SetAnimation(std::unique_ptr<Animation> animation);//ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚’è¿½åŠ 
         AnimationManager();
         AnimationManager(const AnimationManager&) = delete;
         AnimationManager& operator= (const AnimationManager&) = delete;

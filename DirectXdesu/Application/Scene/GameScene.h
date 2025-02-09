@@ -33,6 +33,8 @@
 
 #include<YOLOPoseEstimation.h>
 
+#include "EffectSetter.h"
+#include "ObjectSetter.h"
 #include<CaptureModel.h>
 
 /**
@@ -76,15 +78,17 @@ private:
 	};
 
 private:
+	// マウス角度算出
+	void RotAndLenCalculationMouse();
 
 	//スティック角度、長さ算出
 	void RotAndLenCalculationStick(Hand hand_);
 
-	//当たり判定
+	// 当たり判定
 	void Collision();
 	void OutPutCollision();
 
-	//csv読み込み
+	// csv読み込み
 	void LoadCSV(const std::string& name);
 
 private:
@@ -114,7 +118,7 @@ private:
 
 
 private:
-	//ノーツ
+	// ノーツ
 	std::unique_ptr<MusicDesc>music;
 	std::unique_ptr<NoteObj>noteObj;
 	std::array < MCBM::MVector3, Hand::max>start, end;
@@ -138,6 +142,9 @@ private:
 	bool test;
 	bool isFrame;
 
+
+	std::unique_ptr<Timer> timer_;
+	std::unique_ptr<EffectSetter> effectSetter;
 	bool initialePoseSet = false;
 	std::chrono::system_clock::time_point initializetime_;
 	std::chrono::system_clock::time_point initializeCount_;
@@ -145,9 +152,6 @@ private:
 	std::unique_ptr<CaptureModel> player;
 	Transform playerTrans;
 
-	std::unique_ptr<Sprite> sprite;
-	TextureData texData;
-	float f;
-	float fDiv;
-
+	// オブジェクト系
+	std::unique_ptr<ObjectSetter> objectSetter;
 };

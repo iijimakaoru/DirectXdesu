@@ -203,7 +203,7 @@ void AudioManager::SoundStopWave(const std::string& fileName) {
 }
 
 void AudioManager::AllLoad() {
-	
+	SoundLoadWave("maou_bgm_cyber44.wav");
 }
 
  AudioManager* AudioManager::GetInstance() {

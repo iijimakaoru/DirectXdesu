@@ -9,8 +9,9 @@ RWStructuredBuffer<uint> DrawArgs : register(u3);
 [numthreads(1, 1, 1)]
 void main(uint3 id : SV_DispatchThreadID)
 {
-	// increment the counter to get the previous value, which happens to be how many particles we want to draw
-    DrawArgs[0] = DrawList.IncrementCounter(); // vertexCountPerInstance (or index count if using an index buffer)
+	// カウンタをインクリメントして前の値を取得します。
+    // これは、描画したいパーティクルの数になります。
+    DrawArgs[0] = DrawList.IncrementCounter(); // vertexCountPerInstance (インデックス バッファーを使用している場合はインデックス数)
     DrawArgs[1] = 1; // instanceCount
     DrawArgs[2] = 0; // offsets
     DrawArgs[3] = 0; // offsets

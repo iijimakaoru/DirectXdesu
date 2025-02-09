@@ -1,228 +1,91 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="ソース ファイル">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="ヘッダー ファイル">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
-    <Filter Include="リソース ファイル">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
-    <Filter Include="シェーダー">
-      <UniqueIdentifier>{8d46f641-b509-490f-b94c-6d3bb85c48ee}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Engine">
-      <UniqueIdentifier>{7a417a43-dfb6-4ccf-a28a-f2de8fc04c4b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Application">
-      <UniqueIdentifier>{bff5575c-4478-4dff-91c3-1075e39dfd85}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Engine\2d">
-      <UniqueIdentifier>{374eef6e-6849-4a43-8dff-bb6a3bae3ca9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Engine\2d\Sprites">
-      <UniqueIdentifier>{7b352d5f-324e-4fea-95d7-6ff15dc34a94}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Engine\3d">
-      <UniqueIdentifier>{985b7254-9fdb-4d3d-8720-e46b07fe6cb4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Engine\3d\Fbx">
-      <UniqueIdentifier>{3f9238d9-588c-4dac-9ca6-7bcd769249a8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Engine\Base">
-      <UniqueIdentifier>{8f4f318f-ce54-46c6-8403-961ccb7da717}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Engine\Base\RunGame">
-      <UniqueIdentifier>{d40b385e-0119-4832-a295-41bb97c4f82d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Engine\Base\Depth">
-      <UniqueIdentifier>{ba76feeb-4a88-4679-b004-890d1a1758e1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Engine\Base\RenderTarget">
-      <UniqueIdentifier>{962f48d2-5493-4410-bcfe-2dd3050ab7a4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Engine\Base\Window">
-      <UniqueIdentifier>{f573d9ba-4a05-4b35-b34e-331016a425b7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Engine\Base\Pipeline">
-      <UniqueIdentifier>{8cd73527-204b-48bf-b934-14125e5fb2af}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Engine\Base\Descriptor">
-      <UniqueIdentifier>{0fd70e1b-6c65-4124-a44d-f27225d8daf1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Engine\Base\DirectX12">
-      <UniqueIdentifier>{13f60230-e6d1-4616-a759-aa2c685b9eac}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Engine\Base\Level">
-      <UniqueIdentifier>{77d58046-fea2-40d1-a7b4-6f8b252f6503}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Engine\Base\View">
-      <UniqueIdentifier>{5fab7d23-732e-4f54-9e2f-93fdedb3884e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Application\Camera">
-      <UniqueIdentifier>{cfeff549-3a75-4832-9448-527beb443ad6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Engine\Input">
-      <UniqueIdentifier>{a6fc733e-9579-44a3-9ca8-3d30c1f90fb1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Engine\Imgui">
-      <UniqueIdentifier>{01ed9b63-df34-42a5-bd4d-799a392506df}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Engine\Math">
-      <UniqueIdentifier>{44f57321-e750-4101-ad02-1d4dbfb5e406}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Engine\Collision">
-      <UniqueIdentifier>{df3cea26-343b-422d-8224-1cab16c5bee4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Engine\Sound">
-      <UniqueIdentifier>{fcbd73ff-83b4-40ca-b661-6fea37d7aa27}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Application\Scene">
-      <UniqueIdentifier>{641c0b4e-4754-44c3-93a7-76e2ec740f5a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Engine">
-      <UniqueIdentifier>{5bcdbf68-1656-4fc1-901a-11fa3088e5e8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Application">
-      <UniqueIdentifier>{a70ae257-e47c-4079-8058-58c2cdde62e4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Engine\2d">
-      <UniqueIdentifier>{df1b85c0-f1c3-43ff-8270-092168214283}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Engine\2d\Sprites">
-      <UniqueIdentifier>{abcda634-7949-481e-9ced-f426e79639ea}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Engine\3d">
-      <UniqueIdentifier>{a9589cb1-64ef-4155-b9ef-5f2b858815ae}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Engine\3d\Fbx">
-      <UniqueIdentifier>{d8aa243b-a3d3-44f8-acda-c020bb1c08fc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Engine\Base">
-      <UniqueIdentifier>{cc7fb756-bd14-4afa-8dff-a7e5c3d72ef6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Engine\Base\RunGame">
-      <UniqueIdentifier>{33f4c9cb-0e02-4ade-aacd-0a8eea4a15be}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Engine\Base\Depth">
-      <UniqueIdentifier>{c857289b-0081-45d3-a12c-80e1df70538f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Engine\Base\Descriptor">
-      <UniqueIdentifier>{31fbbbc9-944a-485c-8470-5693a38ff3c5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Engine\Base\DirectX12">
-      <UniqueIdentifier>{76c77eb6-bef1-44aa-b022-721995855169}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Engine\Base\RenderTarget">
-      <UniqueIdentifier>{0ac369b8-d5ff-4349-b2fa-35e266060922}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Engine\Base\Window">
-      <UniqueIdentifier>{7af7e369-b56b-41e6-9c1d-ac6ed90d9a6d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Engine\Base\Level">
-      <UniqueIdentifier>{c41ce2b9-844a-4b3e-92d5-3a07b89cd168}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Engine\Base\View">
-      <UniqueIdentifier>{de035a25-2272-4b73-9b39-e4d0bfce42e1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Engine\Input">
-      <UniqueIdentifier>{67e2c9ab-d078-4a16-b356-f05622c8118a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Engine\Math">
-      <UniqueIdentifier>{966c2c0b-0747-4189-a3e1-9e24f6077845}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Engine\Imgui">
-      <UniqueIdentifier>{62ff15d8-6f2d-4ec4-a4c2-e9698382df57}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Engine\Collision">
-      <UniqueIdentifier>{bcab9ba8-332c-4f63-8cec-0eb596eab473}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Application\Camera">
-      <UniqueIdentifier>{9cc0ccbb-3013-4f4e-9c01-5fcc08d20c18}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Engine\Sound">
-      <UniqueIdentifier>{5c31a1bb-53d5-4a68-bfb2-1e9b628acf30}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Application\Scene">
-      <UniqueIdentifier>{17875ed8-7555-4fb0-9567-69a17d3c6121}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Engine\Base\TextureManager">
-      <UniqueIdentifier>{306f562b-137e-4000-839b-ff24d0f1799a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Engine\Base\TextureManager">
-      <UniqueIdentifier>{67bde7ad-17ce-4f0e-a87c-2aef69606d94}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Application\MobEnemy">
-      <UniqueIdentifier>{febd25cc-c43b-472f-a11e-3ca5a1614415}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Application\Bullet">
-      <UniqueIdentifier>{fa9cbb0d-6fff-4572-98a9-fb5f1254ede2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Application\Effect">
-      <UniqueIdentifier>{0468cab9-3c10-4c14-a314-3f83a7b174db}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Application\BossEnemy">
-      <UniqueIdentifier>{336f9e3d-f7e5-44a9-8e62-b0980140bd6c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Application\Reticle">
-      <UniqueIdentifier>{c4de3b0d-f464-4589-99fd-d8121d957877}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Application\Stage">
-      <UniqueIdentifier>{a1de99ab-6643-41cb-b453-ae33777a1734}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Application\Player">
-      <UniqueIdentifier>{d84a6c93-4c49-4005-9329-ec6af1c2a410}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Application\BossEnemy\Blaster">
-      <UniqueIdentifier>{bbaabdb8-f663-4d3e-b5d9-5b6d449f370f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Application\Score">
-      <UniqueIdentifier>{492e2a89-39a8-4a85-9898-65068a9ecca1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Application\Particle">
-      <UniqueIdentifier>{da2f9fc0-c3e2-47a3-91a1-8ab82d4317a1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Engine\Base\Pipeline">
-      <UniqueIdentifier>{e86145cc-fd0a-49cd-bd01-8c2a2bd8ef16}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Engine\Camera">
-      <UniqueIdentifier>{e975677e-0632-4ebf-ae3d-6c46fb2608c3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Engine\Camera">
-      <UniqueIdentifier>{0c3b6276-69ef-43ff-b45a-f41efd801bbb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Engine\Scene">
-      <UniqueIdentifier>{b4be8d4d-ef2b-471a-8fe7-d606c91c5820}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Engine\Scene">
-      <UniqueIdentifier>{7b482469-1118-4363-a78b-0667f935a5ee}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Engine\Base\Light">
-      <UniqueIdentifier>{652bd21a-4aa3-44b6-adba-b8217e748e19}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Engine\Base\Light">
-      <UniqueIdentifier>{297a679a-e1ca-42bb-a474-6ec62ac24d78}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Engine\3d\Transform">
-      <UniqueIdentifier>{3f37a71a-111a-47ec-acf2-50bc8f9ecc39}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Engine\3d\Transform">
-      <UniqueIdentifier>{27b55d0d-37ec-4209-b233-0d694dcc946f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Application\Movie">
-      <UniqueIdentifier>{403cdc20-d460-49cd-b3b9-7a90caaa9e30}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Engine\2d\Sprites\PostEffect">
-      <UniqueIdentifier>{0b50b264-86ed-44d8-8d5b-386d7e85889d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Engine\2d\Sprites\PostEffect">
-      <UniqueIdentifier>{ddfe394d-35bf-4bb6-992b-1b701dd21fc7}</UniqueIdentifier>
-    </Filter>
+    <ClCompile Include="Application\MusicDesc.cpp" />
+    <ClCompile Include="Application\Effect\ArrowEffect\ArrowEffect.cpp" />
+    <ClCompile Include="Application\Effect\EffectSetter.cpp" />
+    <ClCompile Include="Application\Object\CenterObject\CenterObject.cpp" />
+    <ClCompile Include="Engine\Particle\GPUParticle\ArrowEffectParticle.cpp" />
+    <ClCompile Include="Engine\Particle\Emitter\Emitter.cpp" />
+    <ClCompile Include="Engine\Particle\CommandSignature\CommandSignature.cpp" />
+    <ClCompile Include="Engine\Particle\Buffer\DrawArgs.cpp" />
+    <ClCompile Include="Engine\Particle\Buffer\DrawList.cpp" />
+    <ClCompile Include="Engine\Particle\Buffer\DeadList.cpp" />
+    <ClCompile Include="Engine\Particle\CreateBlend\CreateBlend.cpp" />
+    <ClCompile Include="Engine\Base\DirectXCommon\d3dUtil.cpp" />
+    <ClCompile Include="Engine\Collision\CollisionManager.cpp" />
+    <ClCompile Include="Engine\Collision\Collider.cpp" />
+    <ClCompile Include="Engine\Sound\AudioManager.cpp" />
+    <ClCompile Include="Engine\Base\BaseScene\ASceneFactory.cpp" />
+    <ClCompile Include="Engine\Base\BaseScene\BaseScene.cpp" />
+    <ClCompile Include="Engine\Base\BaseCamera\Camera.cpp" />
+    <ClCompile Include="Engine\Collision\Collision.cpp" />
+    <ClCompile Include="Engine\Collision\CollisionPrimitive.cpp" />
+    <ClCompile Include="Engine\Camera\DebugCamera.cpp" />
+    <ClCompile Include="Engine\Math\Ease\Ease.cpp" />
+    <ClCompile Include="Engine\3D\Loader\FbxLoader.cpp" />
+    <ClCompile Include="Engine\3D\Model\FbxModel.cpp" />
+    <ClCompile Include="Engine\3D\Object3D\FbxObject3D.cpp" />
+    <ClCompile Include="Engine\Base\RunGame\Framework.cpp" />
+    <ClCompile Include="Application\Camera\GameCamera.cpp" />
+    <ClCompile Include="Application\Scene\GameScene.cpp" />
+    <ClCompile Include="Engine\Imgui\ImguiManager.cpp" />
+    <ClCompile Include="Engine\Base\Depth\KDepthStencilBuffer.cpp" />
+    <ClCompile Include="Engine\Base\Descriptor\KDescriptorHeap.cpp" />
+    <ClCompile Include="Engine\Base\Descriptor\KDsvDescriptorHeap.cpp" />
+    <ClCompile Include="Engine\Base\Pipeline\KGPlin.cpp" />
+    <ClCompile Include="Engine\Base\DirectXCommon\KDirectXCommon.cpp" />
+    <ClCompile Include="Engine\Input\KInput.cpp" />
+    <ClCompile Include="Engine\3D\Model\KModel.cpp" />
+    <ClCompile Include="Engine\Base\RunGame\KMyGame.cpp" />
+    <ClCompile Include="Engine\Base\RenderTarget\KRenderTargetBuffer.cpp" />
+    <ClCompile Include="Engine\Base\Descriptor\KRtvDescriptorHeap.cpp" />
+    <ClCompile Include="Engine\Base\Pipeline\KShader.cpp" />
+    <ClCompile Include="Engine\2D\Vertex\KVertex.cpp" />
+    <ClCompile Include="Engine\Level\LevelLoader.cpp" />
+    <ClCompile Include="Engine\Base\RunGame\main.cpp" />
+    <ClCompile Include="Engine\Base\Window\KWinApp.cpp" />
+    <ClCompile Include="Engine\3D\Object3D\KObject3d.cpp" />
+    <ClCompile Include="Engine\Math\Matrix4\Matrix4.cpp" />
+    <ClCompile Include="Engine\Math\MyMath\MyMath.cpp" />
+    <ClCompile Include="Engine\2D\PostEffect\PostEffect.cpp" />
+    <ClCompile Include="Engine\Math\Quaternion\Quaternion.cpp" />
+    <ClCompile Include="Engine\Scene\SceneFactory.cpp" />
+    <ClCompile Include="Engine\Base\BaseScene\SceneManager.cpp" />
+    <ClCompile Include="Engine\2D\Sprite\Sprite.cpp" />
+    <ClCompile Include="Application\Scene\TitleScene.cpp" />
+    <ClCompile Include="Engine\Math\Vector2\Vector2.cpp" />
+    <ClCompile Include="Engine\Math\Vector3\Vector3.cpp" />
+    <ClCompile Include="Engine\Math\Vector4\Vector4.cpp" />
+    <ClCompile Include="Engine\Base\View\ViewProjection.cpp" />
+    <ClCompile Include="Engine\2D\Texture\TextureManager.cpp" />
+    <ClCompile Include="Application\Camera\TitleCamera.cpp" />
+    <ClCompile Include="Application\GameManager.cpp" />
+    <ClCompile Include="Engine\Base\Pipeline\PipelineManager.cpp" />
+    <ClCompile Include="Engine\3D\Model\ModelManager.cpp" />
+    <ClCompile Include="Engine\Light\Light.cpp" />
+    <ClCompile Include="Engine\3D\Transform.cpp" />
+    <ClCompile Include="Engine\2D\PostEffect\TestPostEffect.cpp" />
+    <ClCompile Include="Engine\2D\PostEffect\VignettePostEffect.cpp" />
+    <ClCompile Include="Engine\2D\PostEffect\PostEffectManager.cpp" />
+    <ClCompile Include="Engine\2D\PostEffect\MultiPostEffect.cpp" />
+    <ClCompile Include="Engine\Math\MyMath\MathHelper.cpp" />
+    <ClCompile Include="Engine\Particle\FrameResource\FrameResource.cpp" />
+    <ClCompile Include="Engine\Base\DirectXCommon\Timer.cpp" />
+    <ClCompile Include="Engine\Particle\GPUParticle\GPUParticle.cpp" />
+    <ClCompile Include="Engine\Particle\ParticleEditor.cpp" />
+    <ClCompile Include="Application\NoteObj.cpp" />
+    <ClCompile Include="Engine\Particle\GPUParticle\MeshGPUParticle.cpp" />
+    <ClCompile Include="Engine\Particle\Buffer\ParticlePool.cpp" />
+    <ClCompile Include="Engine\Particle\RootSignature\RootSignature.cpp" />
+    <ClCompile Include="Engine\Particle\ComputePipelineState\ComputePipelineState.cpp" />
+    <ClCompile Include="Engine\Particle\GraphicPipelineState\GraphicPipelineState.cpp" />
+    <ClCompile Include="Engine\Particle\Emitter\MeshEmitter.cpp" />
+    <ClCompile Include="Application\Object\ObjectSetter.cpp" />
+    <ClCompile Include="Application\Effect\GroundEffect\GroundEffect.cpp" />
+    <ClCompile Include="Application\Object\SideObject.cpp" />
+    <ClCompile Include="Engine\Particle\GPUParticle\GroundEffectParticle.cpp" />
+    <ClCompile Include="Engine\3D\Model\CaptureModel.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Math\Vector2\Vector2.cpp">
@@ -688,112 +551,36 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="DirectXdesu.rc">
-      <Filter>リソース ファイル</Filter>
-    </ResourceCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Shader\Basic\Basic.hlsli">
-      <Filter>シェーダー</Filter>
-    </None>
-    <None Include="Resources\Shader\Obj\Obj.hlsli">
-      <Filter>シェーダー</Filter>
-    </None>
-    <None Include="Resources\Shader\Sprite\Sprite.hlsli">
-      <Filter>シェーダー</Filter>
-    </None>
-    <None Include="Resources\Shader\Particle\Particle.hlsli">
-      <Filter>シェーダー</Filter>
-    </None>
-    <None Include="Resources\Shader\Fbx\FBX.hlsli">
-      <Filter>シェーダー</Filter>
-    </None>
-    <None Include="Resources\Shader\PostEffect\PostEffect.hlsli">
-      <Filter>シェーダー</Filter>
-    </None>
-    <None Include="Resources\Shader\LightObj\lightOBJ.hlsli">
-      <Filter>シェーダー</Filter>
-    </None>
-    <None Include="Resources\Shader\Vignette\Vignette.hlsli">
-      <Filter>シェーダー</Filter>
-    </None>
-    <None Include="Resources\Shader\MultiTexture\MultiTextureHeader.hlsli">
-      <Filter>シェーダー</Filter>
-    </None>
-    <None Include="Resources\Shader\GPUParticle\GPUParticleHeader.hlsli">
-      <Filter>シェーダー</Filter>
-    </None>
-    <None Include="Resources\Shader\GPUParticle\SimplexNoise.hlsli">
-      <Filter>シェーダー</Filter>
-    </None>
+    <None Include="Resources\Shader\Effect\ArrowEffect\ArrowEffect.hlsli" />
+    <None Include="Resources\Shader\Effect\ArrowEffect\ArrowEffectSimplexNoise.hlsli" />
+    <None Include="Resources\Shader\Effect\GroundEffect\GroundEffect.hlsli" />
+    <None Include="Resources\Shader\Effect\GroundEffect\GroundEffectSimplexNoise.hlsli" />
+    <None Include="Resources\Shader\GPUParticle\GPUParticleHeader.hlsli" />
+    <None Include="Resources\Shader\LightObj\lightOBJ.hlsli" />
+    <None Include="Resources\Shader\Basic\Basic.hlsli" />
+    <None Include="Resources\Shader\Fbx\FBX.hlsli" />
     <None Include="Resources\Shader\MeshGPUParticle\MeshGPUParticle.hlsli" />
     <None Include="Resources\Shader\MeshGPUParticle\MeshSimplexNoise.hlsli" />
-    <None Include="Resources\Shader\Basic\BasicPS.hlsl">
-      <Filter>シェーダー</Filter>
-    </None>
-    <None Include="Resources\Shader\Basic\BasicVS.hlsl">
-      <Filter>シェーダー</Filter>
-    </None>
-    <None Include="Resources\Shader\Fbx\FBXPS.hlsl">
-      <Filter>シェーダー</Filter>
-    </None>
-    <None Include="Resources\Shader\Fbx\FBXVS.hlsl">
-      <Filter>シェーダー</Filter>
-    </None>
-    <None Include="Resources\Shader\GPUParticle\GPUParticleGS.hlsl">
-      <Filter>シェーダー</Filter>
-    </None>
-    <None Include="Resources\Shader\GPUParticle\GPUParticlePS.hlsl">
-      <Filter>シェーダー</Filter>
-    </None>
-    <None Include="Resources\Shader\GPUParticle\GPUParticleVS.hlsl">
-      <Filter>シェーダー</Filter>
-    </None>
-    <None Include="Resources\Shader\LightObj\lightOBJPS.hlsl">
-      <Filter>シェーダー</Filter>
-    </None>
-    <None Include="Resources\Shader\LightObj\lightOBJVS.hlsl">
-      <Filter>シェーダー</Filter>
-    </None>
-    <None Include="Resources\Shader\MultiTexture\MultiTexturePS.hlsl">
-      <Filter>シェーダー</Filter>
-    </None>
-    <None Include="Resources\Shader\MultiTexture\MultiTextureVS.hlsl">
-      <Filter>シェーダー</Filter>
-    </None>
-    <None Include="Resources\Shader\Obj\ObjPS.hlsl">
-      <Filter>シェーダー</Filter>
-    </None>
-    <None Include="Resources\Shader\Obj\ObjVS.hlsl">
-      <Filter>シェーダー</Filter>
-    </None>
-    <None Include="Resources\Shader\Particle\ParticlePS.hlsl">
-      <Filter>シェーダー</Filter>
-    </None>
-    <None Include="Resources\Shader\Particle\ParticleGS.hlsl">
-      <Filter>シェーダー</Filter>
-    </None>
-    <None Include="Resources\Shader\PostEffect\PostEffectPS.hlsl">
-      <Filter>シェーダー</Filter>
-    </None>
-    <None Include="Resources\Shader\PostEffect\PostEffectVS.hlsl">
-      <Filter>シェーダー</Filter>
-    </None>
-    <None Include="Resources\Shader\Sprite\SpritePS.hlsl">
-      <Filter>シェーダー</Filter>
-    </None>
-    <None Include="Resources\Shader\Sprite\SpriteVS.hlsl">
-      <Filter>シェーダー</Filter>
-    </None>
-    <None Include="Resources\Shader\Vignette\VignettePS.hlsl">
-      <Filter>シェーダー</Filter>
-    </None>
-    <None Include="Resources\Shader\Vignette\VignetteVS.hlsl">
-      <Filter>シェーダー</Filter>
-    </None>
+    <None Include="Resources\Shader\MultiTexture\MultiTextureHeader.hlsli" />
+    <None Include="Resources\Shader\Obj\Obj.hlsli" />
+    <None Include="Resources\Shader\Particle\Particle.hlsli" />
+    <None Include="Resources\Shader\PostEffect\PostEffect.hlsli" />
+    <None Include="Resources\Shader\GPUParticle\SimplexNoise.hlsli" />
+    <None Include="Resources\Shader\Sprite\Sprite.hlsli" />
+    <None Include="Resources\Shader\Vignette\Vignette.hlsli" />
+    <None Include="Resources\Shader\Basic\BasicPS.hlsl" />
+    <None Include="Resources\Shader\Basic\BasicVS.hlsl" />
+    <None Include="Resources\Shader\Fbx\FBXPS.hlsl" />
+    <None Include="Resources\Shader\Fbx\FBXVS.hlsl" />
     <None Include="Resources\Shader\GPUParticle\CopyDrawCountCS.hlsl" />
+    <None Include="Resources\Shader\GPUParticle\DeadListInitCS.hlsl" />
+    <None Include="Resources\Shader\GPUParticle\EmitCS.hlsl" />
+    <None Include="Resources\Shader\GPUParticle\GPUParticleGS.hlsl" />
+    <None Include="Resources\Shader\GPUParticle\GPUParticlePS.hlsl" />
+    <None Include="Resources\Shader\GPUParticle\GPUParticleVS.hlsl" />
     <None Include="Resources\Shader\GPUParticle\UpdateCS.hlsl" />
-    <None Include="Resources\Shader\MeshGPUParticle\MeshUpdateCS.hlsl" />
+    <None Include="Resources\Shader\LightObj\lightOBJPS.hlsl" />
+    <None Include="Resources\Shader\LightObj\lightOBJVS.hlsl" />
     <None Include="Resources\Shader\MeshGPUParticle\MeshGPUParticleVS.hlsl" />
     <None Include="Resources\Shader\MeshGPUParticle\MeshGPUParticlePS.hlsl" />
     <None Include="Resources\Shader\MeshGPUParticle\MeshGPUParticleGS.hlsl" />

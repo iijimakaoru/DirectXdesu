@@ -62,9 +62,9 @@
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ConformanceMode>false</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)Engine\2D\PostEffect;$(ProjectDir)Engine\2D\Sprite;$(ProjectDir)Engine\2D\Texture;$(ProjectDir)Engine\2D\Vertex;$(ProjectDir)Engine\3D\Loader;$(ProjectDir)Engine\3D\Model;$(ProjectDir)Engine\3D\Object3D;$(ProjectDir)Engine\Base\BaseCamera;$(ProjectDir)Engine\Base\BaseScene;$(ProjectDir)Engine\Base\Depth;$(ProjectDir)Engine\Base\Descriptor;$(ProjectDir)Engine\Base\DirectXCommon;$(ProjectDir)Engine\Base\Pipeline;$(ProjectDir)Engine\Base\RenderTarget;$(ProjectDir)Engine\Base\RunGame;$(ProjectDir)Engine\Base\View;$(ProjectDir)Engine\Base\Window;$(ProjectDir)Engine\Collision;$(ProjectDir)Engine\Imgui;$(ProjectDir)Engine\Input;$(ProjectDir)Engine\Level;$(ProjectDir)Engine\Math\Ease;$(ProjectDir)Engine\Sound;$(ProjectDir)Application\Camera;$(ProjectDir)Application\Scene;$(ProjectDir)Engine\Math\Matrix4;$(ProjectDir)Engine\Math\MyMath;$(ProjectDir)Engine\Math\Quaternion;$(ProjectDir)Engine\Math\Vector2;$(ProjectDir)Engine\Math\Vector3;$(ProjectDir)Engine\Math\Vector4;$(ProjectDir)DirectXdesu;$(ProjectDir)Application;$(ProjectDir)Application\Particle;$(ProjectDir)Engine\Base;$(ProjectDir)Application\Stage;$(ProjectDir)Application\Reticle;$(ProjectDir)Application\Player;$(ProjectDir)Application\MobEnemy;$(ProjectDir)Application\Effect;$(ProjectDir)Application\Bullet;$(ProjectDir)Application\BossEnemy;$(ProjectDir)Application\BossEnemy\Blaster;$(ProjectDir)Application\Score;$(ProjectDir)Engine\Camera;$(ProjectDir)Engine\Scene;$(ProjectDir)Engine\Particle;$(ProjectDir)Engine;$(ProjectDir)Engine\Light;$(ProjectDir)Engine\3D;$(ProjectDir)Application\Movie;$(ProjectDir)motinLib\Include</AdditionalIncludeDirectories>
-      <TreatWarningAsError>false</TreatWarningAsError>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(ProjectDir)Engine\2D\PostEffect;$(ProjectDir)Engine\2D\Sprite;$(ProjectDir)Engine\2D\Texture;$(ProjectDir)Engine\2D\Vertex;$(ProjectDir)Engine\3D\Loader;$(ProjectDir)Engine\3D\Model;$(ProjectDir)Engine\3D\Object3D;$(ProjectDir)Engine\Base\BaseCamera;$(ProjectDir)Engine\Base\BaseScene;$(ProjectDir)Engine\Base\Depth;$(ProjectDir)Engine\Base\Descriptor;$(ProjectDir)Engine\Base\DirectXCommon;$(ProjectDir)Engine\Base\Pipeline;$(ProjectDir)Engine\Base\RenderTarget;$(ProjectDir)Engine\Base\RunGame;$(ProjectDir)Engine\Base\View;$(ProjectDir)Engine\Base\Window;$(ProjectDir)Engine\Collision;$(ProjectDir)Engine\Imgui;$(ProjectDir)Engine\Input;$(ProjectDir)Engine\Level;$(ProjectDir)Engine\Math\Ease;$(ProjectDir)Engine\Sound;$(ProjectDir)Application\Camera;$(ProjectDir)Application\Scene;$(ProjectDir)Engine\Math\Matrix4;$(ProjectDir)Engine\Math\MyMath;$(ProjectDir)Engine\Math\Quaternion;$(ProjectDir)Engine\Math\Vector2;$(ProjectDir)Engine\Math\Vector3;$(ProjectDir)Engine\Math\Vector4;$(ProjectDir)DirectXdesu;$(ProjectDir)Application;$(ProjectDir)Application\Particle;$(ProjectDir)Engine\Base;$(ProjectDir)Application\Stage;$(ProjectDir)Application\Reticle;$(ProjectDir)Application\Player;$(ProjectDir)Application\MobEnemy;$(ProjectDir)Application\Effect;$(ProjectDir)Application\Bullet;$(ProjectDir)Application\BossEnemy;$(ProjectDir)Application\BossEnemy\Blaster;$(ProjectDir)Application\Score;$(ProjectDir)Engine\Camera;$(ProjectDir)Engine\Scene;$(ProjectDir)Engine\Particle;$(ProjectDir)Engine;$(ProjectDir)Engine\Light;$(ProjectDir)Engine\3D;$(ProjectDir)Application\Movie;$(ProjectDir)Application\Effect\ArrowEffect;$(ProjectDir)Application\Object\CenterObject;$(ProjectDir)Application\Object;$(ProjectDir)Application\Effect\GroundEffect;$(ProjectDir)Engine\Particle\Buffer;$(ProjectDir)Engine\Particle\CommandSignature;$(ProjectDir)Engine\Particle\ComputePipelineState;$(ProjectDir)Engine\Particle\CreateBlend;$(ProjectDir)Engine\Particle\FrameResource;$(ProjectDir)Engine\Particle\GraphicPipelineState;$(ProjectDir)Engine\Particle\RootSignature;$(ProjectDir)Engine\Particle\Emitter;$(ProjectDir)Engine\Particle\GPUParticle;$(ProjectDir)motinLib\Include</AdditionalIncludeDirectories>
+      <TreatWarningAsError>true</TreatWarningAsError>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -87,11 +87,13 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-      <AdditionalIncludeDirectories>$(ProjectDir)Engine\2D\PostEffect;$(ProjectDir)Engine\2D\Sprite;$(ProjectDir)Engine\2D\Texture;$(ProjectDir)Engine\2D\Vertex;$(ProjectDir)Engine\3D\Loader;$(ProjectDir)Engine\3D\Model;$(ProjectDir)Engine\3D\Object3D;$(ProjectDir)Engine\Base\BaseCamera;$(ProjectDir)Engine\Base\BaseScene;$(ProjectDir)Engine\Base\Depth;$(ProjectDir)Engine\Base\Descriptor;$(ProjectDir)Engine\Base\DirectXCommon;$(ProjectDir)Engine\Base\Pipeline;$(ProjectDir)Engine\Base\RenderTarget;$(ProjectDir)Engine\Base\RunGame;$(ProjectDir)Engine\Base\View;$(ProjectDir)Engine\Base\Window;$(ProjectDir)Engine\Collision;$(ProjectDir)Engine\Imgui;$(ProjectDir)Engine\Input;$(ProjectDir)Engine\Level;$(ProjectDir)Engine\Math\Ease;$(ProjectDir)Engine\Sound;$(ProjectDir)Application\Camera;$(ProjectDir)Application\Scene;$(ProjectDir)Engine\Math\Matrix4;$(ProjectDir)Engine\Math\MyMath;$(ProjectDir)Engine\Math\Quaternion;$(ProjectDir)Engine\Math\Vector2;$(ProjectDir)Engine\Math\Vector3;$(ProjectDir)Engine\Math\Vector4;$(ProjectDir)DirectXdesu;$(ProjectDir)Application;$(ProjectDir)Application\Particle;$(ProjectDir)Engine\Base;$(ProjectDir)Application\Stage;$(ProjectDir)Application\Reticle;$(ProjectDir)Application\Player;$(ProjectDir)Application\MobEnemy;$(ProjectDir)Application\Effect;$(ProjectDir)Application\Bullet;$(ProjectDir)Application\BossEnemy;$(ProjectDir)Application\BossEnemy\Blaster;$(ProjectDir)Application\Score;$(ProjectDir)Engine\Camera;$(ProjectDir)Engine\Scene;$(ProjectDir)Engine\Particle;$(ProjectDir)Engine;$(ProjectDir)Engine\Light;$(ProjectDir)Engine\3D;$(ProjectDir)Application\Movie;$(ProjectDir)motinLib\External\motion\Thaad\include;$(ProjectDir)motinLib\Include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Engine\2D\PostEffect;$(ProjectDir)Engine\2D\Sprite;$(ProjectDir)Engine\2D\Texture;$(ProjectDir)Engine\2D\Vertex;$(ProjectDir)Engine\3D\Loader;$(ProjectDir)Engine\3D\Model;$(ProjectDir)Engine\3D\Object3D;$(ProjectDir)Engine\Base\BaseCamera;$(ProjectDir)Engine\Base\BaseScene;$(ProjectDir)Engine\Base\Depth;$(ProjectDir)Engine\Base\Descriptor;$(ProjectDir)Engine\Base\DirectXCommon;$(ProjectDir)Engine\Base\Pipeline;$(ProjectDir)Engine\Base\RenderTarget;$(ProjectDir)Engine\Base\RunGame;$(ProjectDir)Engine\Base\View;$(ProjectDir)Engine\Base\Window;$(ProjectDir)Engine\Collision;$(ProjectDir)Engine\Imgui;$(ProjectDir)Engine\Input;$(ProjectDir)Engine\Level;$(ProjectDir)Engine\Math\Ease;$(ProjectDir)Engine\Sound;$(ProjectDir)Application\Camera;$(ProjectDir)Application\Scene;$(ProjectDir)Engine\Math\Matrix4;$(ProjectDir)Engine\Math\MyMath;$(ProjectDir)Engine\Math\Quaternion;$(ProjectDir)Engine\Math\Vector2;$(ProjectDir)Engine\Math\Vector3;$(ProjectDir)Engine\Math\Vector4;$(ProjectDir)DirectXdesu;$(ProjectDir)Application;$(ProjectDir)Application\Particle;$(ProjectDir)Engine\Base;$(ProjectDir)Application\Stage;$(ProjectDir)Application\Reticle;$(ProjectDir)Application\Player;$(ProjectDir)Application\MobEnemy;$(ProjectDir)Application\Effect;$(ProjectDir)Application\Bullet;$(ProjectDir)Application\BossEnemy;$(ProjectDir)Application\BossEnemy\Blaster;$(ProjectDir)Application\Score;$(ProjectDir)Engine\Camera;$(ProjectDir)Engine\Scene;$(ProjectDir)Engine\Particle;$(ProjectDir)Engine;$(ProjectDir)Engine\Light;$(ProjectDir)Engine\3D;$(ProjectDir)Application\Movie;$(ProjectDir)Application\Effect\ArrowEffect;$(ProjectDir)Application\Object\CenterObject;$(ProjectDir)Application\Object;$(ProjectDir)Application\Effect\GroundEffect;$(ProjectDir)Engine\Particle\CommandSignature;$(ProjectDir)Engine\Particle\ComputePipelineState;$(ProjectDir)Engine\Particle\CreateBlend;$(ProjectDir)Engine\Particle\FrameResource;$(ProjectDir)Engine\Particle\GraphicPipelineState;$(ProjectDir)Engine\Particle\RootSignature;$(ProjectDir)Engine\Particle\Buffer;$(ProjectDir)Engine\Particle\Emitter;$(ProjectDir)Engine\Particle\GPUParticle</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <FloatingPointModel>Precise</FloatingPointModel>
+      <Optimization>MinSpace</Optimization>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -105,13 +107,17 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Application\MusicDesc.cpp" />
+    <ClCompile Include="Application\Effect\ArrowEffect\ArrowEffect.cpp" />
+    <ClCompile Include="Application\Effect\EffectSetter.cpp" />
+    <ClCompile Include="Application\Object\CenterObject\CenterObject.cpp" />
     <ClCompile Include="Engine\3D\Model\CaptureModel.cpp" />
-    <ClCompile Include="Engine\Particle\Emitter.cpp" />
-    <ClCompile Include="Engine\Particle\CommandSignature.cpp" />
-    <ClCompile Include="Engine\Particle\DrawArgs.cpp" />
-    <ClCompile Include="Engine\Particle\DrawList.cpp" />
-    <ClCompile Include="Engine\Particle\DeadList.cpp" />
-    <ClCompile Include="Engine\Particle\CreateBlend.cpp" />
+    <ClCompile Include="Engine\Particle\GPUParticle\ArrowEffectParticle.cpp" />
+    <ClCompile Include="Engine\Particle\Emitter\Emitter.cpp" />
+    <ClCompile Include="Engine\Particle\CommandSignature\CommandSignature.cpp" />
+    <ClCompile Include="Engine\Particle\Buffer\DrawArgs.cpp" />
+    <ClCompile Include="Engine\Particle\Buffer\DrawList.cpp" />
+    <ClCompile Include="Engine\Particle\Buffer\DeadList.cpp" />
+    <ClCompile Include="Engine\Particle\CreateBlend\CreateBlend.cpp" />
     <ClCompile Include="Engine\Base\DirectXCommon\d3dUtil.cpp" />
     <ClCompile Include="Engine\Collision\CollisionManager.cpp" />
     <ClCompile Include="Engine\Collision\Collider.cpp" />
@@ -170,27 +176,35 @@
     <ClCompile Include="Engine\2D\PostEffect\PostEffectManager.cpp" />
     <ClCompile Include="Engine\2D\PostEffect\MultiPostEffect.cpp" />
     <ClCompile Include="Engine\Math\MyMath\MathHelper.cpp" />
-    <ClCompile Include="Engine\Particle\FrameResource.cpp" />
+    <ClCompile Include="Engine\Particle\FrameResource\FrameResource.cpp" />
     <ClCompile Include="Engine\Base\DirectXCommon\Timer.cpp" />
-    <ClCompile Include="Engine\Particle\GPUParticle.cpp" />
+    <ClCompile Include="Engine\Particle\GPUParticle\GPUParticle.cpp" />
     <ClCompile Include="Engine\Particle\ParticleEditor.cpp" />
-    <ClCompile Include="Engine\Particle\MeshGPUParticle.cpp" />
-    <ClCompile Include="Engine\Particle\ParticlePool.cpp" />
-    <ClCompile Include="Engine\Particle\RootSignature.cpp" />
-    <ClCompile Include="Engine\Particle\ComputePipelineState.cpp" />
-    <ClCompile Include="Engine\Particle\GraphicPipelineState.cpp" />
-    <ClCompile Include="Engine\Particle\MeshEmitter.cpp" />
-    <ClCompile Include="NoteObj.cpp" />
+    <ClCompile Include="Application\NoteObj.cpp" />
+    <ClCompile Include="Engine\Particle\GPUParticle\MeshGPUParticle.cpp" />
+    <ClCompile Include="Engine\Particle\Buffer\ParticlePool.cpp" />
+    <ClCompile Include="Engine\Particle\RootSignature\RootSignature.cpp" />
+    <ClCompile Include="Engine\Particle\ComputePipelineState\ComputePipelineState.cpp" />
+    <ClCompile Include="Engine\Particle\GraphicPipelineState\GraphicPipelineState.cpp" />
+    <ClCompile Include="Engine\Particle\Emitter\MeshEmitter.cpp" />
+    <ClCompile Include="Application\Object\ObjectSetter.cpp" />
+    <ClCompile Include="Application\Effect\GroundEffect\GroundEffect.cpp" />
+    <ClCompile Include="Application\Object\SideObject.cpp" />
+    <ClCompile Include="Engine\Particle\GPUParticle\GroundEffectParticle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\MusicDesc.h" />
+    <ClInclude Include="Application\Effect\ArrowEffect\ArrowEffect.h" />
+    <ClInclude Include="Application\Effect\EffectSetter.h" />
+    <ClInclude Include="Application\Object\CenterObject\CenterObject.h" />
     <ClInclude Include="Engine\3D\Model\CaptureModel.h" />
-    <ClInclude Include="Engine\Particle\Emitter.h" />
-    <ClInclude Include="Engine\Particle\CommandSignature.h" />
-    <ClInclude Include="Engine\Particle\DrawArgs.h" />
-    <ClInclude Include="Engine\Particle\DrawList.h" />
-    <ClInclude Include="Engine\Particle\DeadList.h" />
-    <ClInclude Include="Engine\Particle\CreateBlend.h" />
+    <ClInclude Include="Engine\Particle\GPUParticle\ArrowEffectParticle.h" />
+    <ClInclude Include="Engine\Particle\Emitter\Emitter.h" />
+    <ClInclude Include="Engine\Particle\CommandSignature\CommandSignature.h" />
+    <ClInclude Include="Engine\Particle\Buffer\DrawArgs.h" />
+    <ClInclude Include="Engine\Particle\Buffer\DrawList.h" />
+    <ClInclude Include="Engine\Particle\Buffer\DeadList.h" />
+    <ClInclude Include="Engine\Particle\CreateBlend\CreateBlend.h" />
     <ClInclude Include="Engine\Base\DirectXCommon\d3dUtil.h" />
     <ClInclude Include="Engine\Collision\CollisionManager.h" />
     <ClInclude Include="Engine\Collision\Collider.h" />
@@ -249,23 +263,31 @@
     <ClInclude Include="Engine\2D\PostEffect\PostEffectManager.h" />
     <ClInclude Include="Engine\2D\PostEffect\MultiPostEffect.h" />
     <ClInclude Include="Engine\Math\MyMath\MathHelper.h" />
-    <ClInclude Include="Engine\Particle\FrameResource.h" />
+    <ClInclude Include="Engine\Particle\FrameResource\FrameResource.h" />
     <ClInclude Include="Engine\Base\DirectXCommon\UploadBuffer.h" />
     <ClInclude Include="Engine\Base\DirectXCommon\Timer.h" />
-    <ClInclude Include="Engine\Particle\GPUParticle.h" />
+    <ClInclude Include="Engine\Particle\GPUParticle\GPUParticle.h" />
     <ClInclude Include="Engine\Particle\ParticleEditor.h" />
-    <ClInclude Include="Engine\Particle\MeshGPUParticle.h" />
-    <ClInclude Include="Engine\Particle\ParticlePool.h" />
-    <ClInclude Include="Engine\Particle\RootSignature.h" />
-    <ClInclude Include="Engine\Particle\ComputePipelineState.h" />
-    <ClInclude Include="Engine\Particle\GraphicPipelineState.h" />
-    <ClInclude Include="Engine\Particle\MeshEmitter.h" />
-    <ClInclude Include="NoteObj.h" />
+    <ClInclude Include="Application\NoteObj.h" />
+    <ClInclude Include="Engine\Particle\GPUParticle\MeshGPUParticle.h" />
+    <ClInclude Include="Engine\Particle\Buffer\ParticlePool.h" />
+    <ClInclude Include="Engine\Particle\RootSignature\RootSignature.h" />
+    <ClInclude Include="Engine\Particle\ComputePipelineState\ComputePipelineState.h" />
+    <ClInclude Include="Engine\Particle\GraphicPipelineState\GraphicPipelineState.h" />
+    <ClInclude Include="Engine\Particle\Emitter\MeshEmitter.h" />
+    <ClInclude Include="Application\Object\ObjectSetter.h" />
+    <ClInclude Include="Application\Effect\GroundEffect\GroundEffect.h" />
+    <ClInclude Include="Application\Object\SideObject.h" />
+    <ClInclude Include="Engine\Particle\GPUParticle\GroundEffectParticle.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DirectXdesu.rc" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\Shader\Effect\ArrowEffect\ArrowEffect.hlsli" />
+    <None Include="Resources\Shader\Effect\ArrowEffect\ArrowEffectSimplexNoise.hlsli" />
+    <None Include="Resources\Shader\Effect\GroundEffect\GroundEffect.hlsli" />
+    <None Include="Resources\Shader\Effect\GroundEffect\GroundEffectSimplexNoise.hlsli" />
     <None Include="Resources\Shader\GPUParticle\GPUParticleHeader.hlsli" />
     <None Include="Resources\Shader\LightObj\lightOBJ.hlsli" />
     <None Include="Resources\Shader\Basic\Basic.hlsli" />

@@ -9,37 +9,25 @@ RWStructuredBuffer<Mesh> meshes : register(u4);
 
 StructuredBuffer<Mesh> meshs : register(t0);
 
-[numthreads(32, 1, 1)]
+[numthreads(1024, 1, 1)]
 void main(uint id : SV_DispatchThreadID)
 {
-    if (id.x >= (uint) emitCount)
-        return;
-    
     if (id.x >= (uint) meshSize)
+    {
         return;
+    }
+    
+	// ParticlePool で更新します
+    Particle emitParticle = (Particle)0;
 
-    uint emitIndex = CDeadList.Consume();
-
-    //float3 gridPosition;
-    //uint gridIndex = emitIndex;
-    //gridPosition.x = gridIndex % (gridSize + 1);
-    //gridIndex /= (gridSize + 1);
-    //gridPosition.y = gridIndex % (gridSize + 1);
-    //gridIndex /= (gridSize + 1);
-    //gridPosition.z = gridIndex;
-
-	// update it in ParticlePool
-    Particle emitParticle = ParticlePool.Load(emitIndex);
-
-	//color and position depend on the grid position and size
+	// 色と位置はグリッドの位置とサイズによって異なります
     emitParticle.Position = meshs[id.x].pos;
-    emitParticle.Velocity = float3(0, 0.0f, 0.0f);
-    //emitParticle.Color = float4(gridPosition / gridSize, 1);
-    emitParticle.Color = float4(1, 1, 1, 1);
+    emitParticle.Velocity = velocity;
+    emitParticle.Color = startColor;
     emitParticle.Age = 0.0f;
-    emitParticle.Size = 0.1f;
+    emitParticle.Size = size;
     emitParticle.Alive = 1.0f;
 
-	//Put it back
-    ParticlePool[emitIndex] = emitParticle;
+	// 元に戻してください
+    ParticlePool[id.x] = emitParticle;
 }

@@ -347,3 +347,4 @@ FodyWeavers.xsd
 .External\fbx_sdk\lib
 /External/fbx_sdk/lib
 /DirectXdesu/Resources/Checkpoints
+/External/opencv/bin

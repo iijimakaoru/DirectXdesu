@@ -3,7 +3,7 @@
 
 void ArrowEffect::Init(MeshModel* model, const Timer* timer, const KMyMath::Matrix4& matView, const KMyMath::Matrix4& matProjection)
 {
-	lifeLimit_ = 20.0f;
+	lifeLimit_ = 30.0f;
 	meshModel_ = model;
 	isDead = true;
 	emitter_ = std::make_unique<Emitter>(100, 1, 1.0f, 2.5f, 0.5f,
